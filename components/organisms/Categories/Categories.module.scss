@@ -1,0 +1,25 @@
+.categories {
+  padding: 3rem;
+  font-size: initial;
+
+  a {
+    width: 10rem;
+    line-height: 2;
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 280px) and (max-width: 424px) {
+  .categories {
+    font-size: 1.7rem;
+    margin: 0 auto;
+  }
+}
+
+.hiddenElement {
+  display: none;
+}
+
+.showedElement {
+  display: inline-block;
+}

@@ -1,0 +1,36 @@
+/*LIGHT MODE*/
+
+.light__mode {
+  height: 4rem;
+  margin: auto 0;
+  background: url('../public/resources/Icons/light__mode.svg') no-repeat;
+  background-size: 4rem;
+  border: none;
+  cursor: pointer;
+}
+
+/*DARK MODE*/
+
+.a__dark {
+  color: #fff;
+}
+
+.dark {
+  background-color: #333;
+  color: #fff;
+}
+
+.left__arrow__dark {
+  top: 50%;
+  left: 0;
+  transform: translate(50%, -50%);
+  display: flex;
+  background-image: url('../public/resources/Icons/left__arrow__dark__mode.svg');
+}
+
+.right__arrow__dark {
+  top: 50%;
+  right: 0;
+  transform: translate(-50%, -50%);
+  background-image: url('../public/resources/Icons/right__arrow__dark__mode.svg');
+}

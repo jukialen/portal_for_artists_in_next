@@ -1,0 +1,19 @@
+@use 'styles/variables' as *;
+
+.up {
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+  display: none;
+  right: 3rem;
+  bottom: 2rem;
+  font-size: 3rem;
+  padding: 1rem;
+  background-color: $another__background__color;
+  color: black;
+  border-radius: 50%;
+}
+
+.up__active {
+  display: block;
+}

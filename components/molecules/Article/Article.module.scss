@@ -1,0 +1,68 @@
+@use 'styles/variables' as *;
+
+.article {
+  background-color: $third__background__color;
+}
+
+.item {
+  width: 25rem;
+  height: 25rem;
+  display: block;
+}
+
+.author__name {
+  width: 12.5rem;
+  height: 2rem;
+  float: left;
+  text-align: left;
+  margin: 0.5rem 0 0.5rem 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.share__options {
+  width: 12rem;
+  height: 2.5rem;
+  float: right;
+  display: flex;
+}
+
+.facebook__icon,
+.twitter__icon,
+.discord__icon,
+.copy__icon {
+  width: 2rem;
+  height: 2rem;
+  display: block;
+  margin: 0.5rem 0.25rem;
+  background-repeat: no-repeat;
+  flex: 1;
+}
+
+.facebook__icon {
+  background-image: url('../../../public/resources/Icons/facebook.svg');
+}
+
+.twitter__icon {
+  background-image: url('../../../public/resources/Icons/twitter.svg');
+}
+
+.discord__icon {
+  background-image: url('../../../public/resources/Icons/discord.svg');
+}
+
+.copy__icon {
+  background-image: url('../../../public/resources/Icons/copy.svg');
+}
+
+@media (min-width: 280px) and (max-width: 767px) {
+  .subscribed__wrapper {
+    margin: 5rem 0;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .subscribed__wrapper {
+    margin: 0 auto;
+  }
+}

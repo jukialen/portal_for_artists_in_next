@@ -1,0 +1,95 @@
+.user__gallery__in__account {
+  font-size: 2rem;
+
+  em {
+    display: inline-block;
+    margin: 3rem auto;
+  }
+}
+
+.user__photos,
+.like__photos {
+  width: 60%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 1.5rem 18%;
+}
+
+@media (min-width: 280px) and (max-width: 424px) {
+  .user__gallery__in__account {
+    width: 100vw;
+  }
+
+  .user__photos,
+  .like__photos {
+    width: 96vw;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 1.5rem 2%;
+  }
+}
+
+@media (min-width: 425px) and (max-width: 767px) {
+  .user__gallery__in__account {
+    width: 100vw;
+  }
+
+  .user__photos,
+  .like__photos {
+    width: 96%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 1.5rem 2%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .user__gallery__in__account {
+    width: 80vw;
+  }
+
+  .user__photos,
+  .like__photos {
+    width: 80vw;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 1.5rem auto;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .user__gallery__in__account {
+    width: 74vw;
+  }
+
+  .user__photos,
+  .like__photos {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 1.5rem 0;
+    padding: 3%;
+  }
+}
+
+@media (min-width: 1440px) {
+  .user__photos,
+  .like__photos {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 1.5rem auto;
+  }
+}
+
+@media (min-width: 2060px) {
+  .account__data input,
+  .account__data button {
+    width: 21rem;
+  }
+
+  .user__photos,
+  .like__photos {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}

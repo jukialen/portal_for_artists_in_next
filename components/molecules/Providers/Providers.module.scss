@@ -1,0 +1,29 @@
+.providers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  margin: 1.5rem auto 3rem;
+
+  .google,
+  .yahoo,
+  .apple {
+    width: 4rem;
+    height: 4rem;
+    margin: 1rem 1.5rem;
+    border: 0.1rem solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+
+    svg {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+  }
+
+  .google {
+    color: #db4437;
+  }
+  .yahoo {
+    color: #400090;
+  }
+}

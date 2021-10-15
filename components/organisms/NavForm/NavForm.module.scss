@@ -1,0 +1,78 @@
+@use 'styles/variables' as *;
+@use 'components/atoms/Button/Button.module';
+
+.create__account,
+.login {
+  position: absolute;
+  grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 38rem;
+  top: 5rem;
+  right: 0;
+  background-color: #1e90ff;
+  border-bottom: 0.5rem inset $borders__background__color;
+  border-left: 0.5rem inset $borders__background__color;
+  border-right: 0.5rem inset $borders__background__color;
+  z-index: 999;
+
+  h2 {
+    margin: 2rem 0.5rem;
+  }
+
+  p {
+    margin: auto 14%;
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .form__field {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 1rem;
+
+    label {
+      margin: auto 1rem;
+      font-size: 2rem;
+    }
+
+    input {
+      margin: 0;
+      width: 16rem;
+    }
+  }
+
+  button {
+    margin: 1.5rem 4rem 1rem 14rem;
+  }
+
+  .separator {
+    margin: 1rem auto 2rem;
+  }
+
+  h4 {
+    display: inline-block;
+    margin: 0.5rem auto;
+    font-size: 2rem;
+  }
+}
+
+.create__account {
+  display: none;
+}
+
+.login {
+  display: none;
+}
+
+.form__menu--active {
+  display: grid;
+}
+
+.success__info {
+  width: 28rem;
+  display: inline-block;
+  //position: absolute;
+  //top: 0;
+  //margin: 0 auto;
+  padding: 1rem 2rem;
+}

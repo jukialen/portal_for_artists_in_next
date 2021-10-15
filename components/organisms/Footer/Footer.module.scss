@@ -1,0 +1,104 @@
+@use 'styles/variables' as *;
+
+.footer {
+  height: 4rem;
+  display: flex;
+  position: relative;
+  background-color: $third__background__color;
+  font-size: 1.5rem;
+
+  .button {
+    flex: 1;
+    width: 20%;
+    margin: auto;
+    padding: 0.5% 0;
+    background-color: inherit;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .change__language {
+    background-color: initial;
+  }
+}
+
+@media (min-width: 280px) and (max-width: 767px) {
+  footer .button {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  footer .button {
+    padding: 1.5rem 0;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  footer .button {
+    padding: 1% 0;
+  }
+}
+
+/*LANGUAGES*/
+
+.languages {
+  width: 15rem;
+  height: 0;
+  display: flex;
+  position: absolute;
+  font-size: 1.5rem;
+  bottom: 4rem;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  //transform: translateY(3.6rem);
+
+  & a {
+    width: 6rem;
+    height: inherit;
+    border: #12fff8;
+    border-radius: 10%;
+    background-color: #12fff8;
+    cursor: pointer;
+    margin: auto;
+  }
+}
+
+@media (min-device-width: 950px) and (max-device-width: 1306px) {
+  .languages {
+    right: 2vw;
+  }
+}
+
+@media (min-width: 1307px) and (max-width: 1439px) {
+  .languages {
+    right: 4vw;
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1610px) {
+  .languages {
+    right: 5vw;
+  }
+}
+
+@media (min-width: 1611px) and (max-width: 2049px) {
+  .languages {
+    right: 6vw;
+  }
+}
+
+@media (min-width: 2050px) {
+  .languages {
+    right: 7vw;
+  }
+}
+
+.languages--show {
+  height: 2rem;
+  opacity: 1;
+  visibility: visible;
+  //transform: translateY(0);
+  transition: all 0.5s ease-in-out;
+}

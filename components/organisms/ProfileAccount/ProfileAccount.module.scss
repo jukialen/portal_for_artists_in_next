@@ -1,0 +1,43 @@
+.profile {
+  justify-items: center;
+  display: grid;
+  margin: 3rem auto;
+  font-size: 2rem;
+}
+
+.photo__profile {
+  width: 10rem;
+  height: 10rem;
+  background-color: #12fff8;
+  margin: 3rem;
+}
+
+.user__name,
+.about__me {
+  margin: 3rem;
+  display: flex;
+  flex-flow: column wrap;
+
+  label {
+    margin-bottom: 1rem;
+  }
+
+  input,
+  textarea {
+    margin: 1rem auto;
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 425px) and (max-width: 1439px) {
+  .user__name,
+  .about__me {
+    line-height: 2.5rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .profile {
+    margin: 8rem auto;
+  }
+}

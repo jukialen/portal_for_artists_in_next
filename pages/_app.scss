@@ -1,0 +1,62 @@
+@use 'styles/variables' as *;
+@use 'styles/reset';
+
+* {
+  box-sizing: border-box;
+  text-align: center;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode',
+    'Geneva', 'Verdana', sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2.5rem;
+}
+
+h3 {
+  font-size: 2rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+a {
+  text-decoration: none;
+  color: $link__color;
+  cursor: pointer;
+
+  &:hover {
+    color: $link__hover;
+  }
+
+  &:active {
+    color: $link__active;
+  }
+
+  &:visited {
+    color: $link__visited;
+  }
+
+  &:focus {
+    color: $link__focus;
+  }
+}
+
+.whole__page {
+  position: relative;
+  display: flex;
+}
+
+input:required,
+textarea:required,
+select:required {
+  border: 0.1rem solid #80000000;
+}
