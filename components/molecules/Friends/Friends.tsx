@@ -1,15 +1,16 @@
-import './Friends.module.scss';
-import { Image } from 'antd';
+import Image from 'next/image';
+
+import styles from './Friends.module.scss';
 
 export const Friends = () => {
   return (
     <div className="friends">
-      <Image src="#" className="friends__item" alt="friend one" />
-      <Image src="#" className="friends__item" alt="friend two" />
-      <Image src="#" className="friends__item" alt="friend three" />
-      <Image src="#" className="friends__item" alt="friend four" />
-      <Image src="#" className="friends__item" alt="friend five" />
-      <Image src="#" className="friends__item" alt="friend six" />
+      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend one" />
+      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend two" />
+      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend three" />
+      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend four" />
+      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend five" />
+      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend six" />
     </div>
   );
 };

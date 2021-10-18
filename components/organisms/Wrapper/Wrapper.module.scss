@@ -35,13 +35,13 @@
   left: 0;
   transform: translate(50%, -50%);
   display: flex;
-  background-image: url('../../../public/resources/Icons/left__arrow__light__mode.svg');
+  background-image: url('/public/resources/Icons/left__arrow__light__mode.svg');
 }
 
 .top__right__arrow {
   right: 0;
   transform: translate(-50%, -50%);
-  background-image: url('../../../public/resources/Icons/right__arrow__light__mode.svg');
+  background-image: url('/public/resources/Icons/right__arrow__light__mode.svg');
 }
 
 .content {
@@ -82,19 +82,19 @@
 }
 
 .facebook__icon {
-  background-image: url('../../../public/resources/Icons/facebook.svg');
+  background-image: url('/public/resources/Icons/facebook.svg');
 }
 
 .twitter__icon {
-  background-image: url('../../../public/resources/Icons/twitter.svg');
+  background-image: url('/public/resources/Icons/twitter.svg');
 }
 
 .discord__icon {
-  background-image: url('../../../public/resources/Icons/discord.svg');
+  background-image: url('/public/resources/Icons/discord.svg');
 }
 
 .copy__icon {
-  background-image: url('../../../public/resources/Icons/copy.svg');
+  background-image: url('/public/resources/Icons/copy.svg');
 }
 
 @media (min-width: 280px) and (max-width: 1023px) {

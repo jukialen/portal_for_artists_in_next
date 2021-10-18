@@ -16,9 +16,10 @@ export const Layout: FC = ({ children }) => {
 
   const router = useRouter();
 
-  const user = localStorage.getItem('user');
+  let user;
 
   useEffect(() => {
+    user = localStorage.getItem('user');
     !!user ? router.push('/app') : router.push('/');
   }, [router, user]);
 

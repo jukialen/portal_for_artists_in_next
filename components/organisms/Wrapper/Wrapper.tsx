@@ -1,6 +1,6 @@
 import { Article } from 'components/molecules/Article/Article';
 
-import './Wrapper.module.scss';
+import styles from './Wrapper.module.scss';
 
 type wrapperType = {
   idWrapper: string;
@@ -8,9 +8,9 @@ type wrapperType = {
 
 export const Wrapper = ({ idWrapper }: wrapperType) => {
   return (
-    <div className="wrapper">
-      <div id={idWrapper} className="carousel">
-        <div className="content">
+    <div className={styles.wrapper}>
+      <div id={idWrapper} className={styles.carousel}>
+        <div className={styles.content}>
           <Article imgLink="#" imgDescription="Photo title" authorName="Z bazy" />
           <Article imgLink="#" imgDescription="Photo title" authorName="Z bazy" />
           <Article imgLink="#" imgDescription="Photo title" authorName="Z bazy" />
@@ -24,8 +24,8 @@ export const Wrapper = ({ idWrapper }: wrapperType) => {
         </div>
       </div>
 
-      <button className="top__left__arrow" aria-label="top left arrow" />
-      <button className="top__right__arrow" aria-label="top right arrow" />
+      <button className={styles.top__left__arrow} aria-label="top left arrow" />
+      <button className={styles.top__right__arrow} aria-label="top right arrow" />
     </div>
   );
 };

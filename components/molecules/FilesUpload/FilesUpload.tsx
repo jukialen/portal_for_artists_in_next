@@ -27,50 +27,54 @@ type FileDataType = {
 };
 
 export const FilesUpload: FC = () => {
-  const user = localStorage.getItem('user');
+  // const user = localStorage.getItem('user');
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [valuesFields, setValuesFields] = useState<boolean>(false);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [errorMessage, setErrorMessage] = useState<string>('');
+  // const [valuesFields, setValuesFields] = useState<boolean>(false);
 
   const [files, setFiles] = useState<FileList | File>();
-  const [description, setDescription] = useState('');
+  // const [description, setDescription] = useState('');
 
-  //
+  // //
   const onFileChange = (e: FileDataType) => {
     // @ts-ignore
     setFiles(e.currentTarget.files);
   };
 
-  const uploadToDb = useCallback(
-    async ({ e }: FileDataType, { resetForm }) => {
-      setIsLoading(true);
-      // @ts-ignore
-      e.preventDefault();
-      const formData = new FormData();
-      // @ts-ignore
-      formData.append('files', files[0]);
-      try {
-        setDescription(description);
-        const { data } = await axios.post(`http://localhost:1337/files`, formData, {
-          headers: {
-            Authorization: `Bearer ${user}`,
-          },
-        });
-        console.log(user);
-        console.log('New files were upload', data);
+  const uploadToDb = () => {
+    console.log("upload")
+  }
 
-        setValuesFields(!valuesFields);
-        // @ts-ignore
-        resetForm(initialValues);
-      } catch ({ response }) {
-        console.log(response);
-        setErrorMessage('Nie mogliśmy Cię zarejestrować');
-      }
-      setIsLoading(false);
-    },
-    [valuesFields, user, files, description],
-  );
+  // const uploadToDb = useCallback(
+  //   async ({ e }: FileDataType, { resetForm }) => {
+  //     setIsLoading(true);
+  //     // @ts-ignore
+  //     e.preventDefault();
+  //     const formData = new FormData();
+  //     // @ts-ignore
+  //     formData.append('files', files[0]);
+  //     try {
+  //       setDescription(description);
+  //       const { data } = await axios.post(`http://localhost:1337/files`, formData, {
+  //         headers: {
+  //           Authorization: `Bearer ${user}`,
+  //         },
+  //       });
+  //       console.log(user);
+  //       console.log('New files were upload', data);
+
+  //       setValuesFields(!valuesFields);
+  //       // @ts-ignore
+  //       resetForm(initialValues);
+  //     } catch ({ response }) {
+  //       console.log(response);
+  //       setErrorMessage('Nie mogliśmy Cię zarejestrować');
+  //     }
+  //     setIsLoading(false);
+  //   },
+  //   [valuesFields, user, files, description],
+  // );
   return (
     <Formik // @ts-ignore
       initialValues={initialValues}
@@ -117,7 +121,7 @@ export const FilesUpload: FC = () => {
         <FormError nameError="description" />
 
         <button // @ts-ignore
-          onClick={uploadToDb}
+          // onClick={uploadToDb}
         >
           Upload
         </button>

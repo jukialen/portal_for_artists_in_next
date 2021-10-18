@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-import './Footer.module.scss';
+import styles from './Footer.module.scss';
 
 export function Footer() {
   const [isLanguage, setLanguage] = useState(false);
@@ -11,28 +11,28 @@ export function Footer() {
   };
 
   return (
-    <footer className="footer">
-      <button className="button authors">
+    <footer className={styles.footer}>
+      <button className={styles.button}>
         <Link href="/authors">
           <a>Autorzy</a>
         </Link>
       </button>
-      <button className="button terms">
+      <button className={styles.button}>
         <Link href="/terms">
           <a>Warunki korzystania</a>
         </Link>
       </button>
-      <button className="button privacy">
+      <button className={styles.button}>
         <Link href="/privacy">
-          <a>Polityka prywatność</a>i
+          <a>Polityka prywatność</a>
         </Link>
       </button>
-      <button className="button faq">
+      <button className={styles.button}>
         <Link href="/faq">
           <a>FAQ</a>
         </Link>
       </button>
-      <button className="button change__language" onClick={showLanguages}>
+      <button className={styles.button && styles.change__language} onClick={showLanguages}>
         Zmiana języka
         <div className={`languages ${isLanguage ? 'languages--show' : ''}`}>
           <Link href="/en">

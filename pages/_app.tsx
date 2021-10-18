@@ -1,19 +1,14 @@
-import type { ReactElement, ReactNode } from 'react'
-import type { NextPage } from 'next'
-import type { AppProps } from 'next/app'
+import { Layout } from 'layout/Layout'
 
-type NextPageWithLayout = NextPage & {
-  getLayout?: (page: ReactElement) => ReactNode
-}
+import 'styles/darkLightMode.scss';
+import './_app.scss';
 
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout
-}
-
-export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  // Use the layout defined at the page level, if available
-  const getLayout = Component.getLayout ?? ((page) => page)
-
-  return getLayout(<Component {...pageProps} />)
+// @ts-ignore
+export default function MyApp({ Component, pageProps }) {
+  return (
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+  )
 }
 

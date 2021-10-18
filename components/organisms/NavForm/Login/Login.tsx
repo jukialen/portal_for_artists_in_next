@@ -8,7 +8,7 @@ import { Providers } from 'components/molecules/Providers/Providers';
 
 import { Button } from 'components/atoms/Button/Button';
 
-import '../NavForm.module.scss';
+import styles from '../NavForm.module.scss';
 
 import { NavFormContext } from 'providers/NavFormProvider';
 import { Formik, Form } from 'formik';
@@ -69,7 +69,7 @@ export const Login: FC = () => {
       })}
       onSubmit={submitAccountData}
     >
-      <Form className={`login ${isLogin ? 'form__menu--active' : ''}`}>
+      <Form className={styles.login && isLogin ? styles.form__menu__active : ''}>
         <h2>Zaloguj się!</h2>
 
         <FormField
@@ -92,12 +92,12 @@ export const Login: FC = () => {
 
         <Button
           typeButton="submit"
-          classButton="button"
+          classButton={styles.button}
           ariaLabel="login button"
           title="Zaloguj się"
         />
 
-        {!!valuesFields ? <p className="success__info">{valuesFields}.</p> : null}
+        {!!valuesFields ? <p className={styles.success__info}>{valuesFields}.</p> : null}
 
         {errorMessage ? <p>{errorMessage}</p> : null}
 

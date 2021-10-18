@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import Link from 'next/link';
 
-import './Header.module.scss';
+import styles from './Header.module.scss';
 
 import { Nav } from 'components/molecules/Nav/Nav';
 import { Button } from 'components/atoms/Button/Button';
@@ -29,9 +29,9 @@ export function Header() {
   }
 
   return (
-    <header className="header">
-      <h1 className="title">
-        <Link href={!!user ? '/app' : '/'}>Portal dla artystów</Link>
+    <header className={styles.header}>
+      <h1 className={styles.title}>
+        <Link href={!!user ? '/app' : '/'}><a>Portal dla artystów</a></Link>
       </h1>
 
       <Button
@@ -42,7 +42,7 @@ export function Header() {
 
       <Nav titleFirstNav={titleFirstNav} titleSecondNav={titleSecondNav} />
 
-      <Button classButton="hamburger__menu" ariaLabel="menu button" onClick={showMenu} />
+      <Button classButton={styles.hamburger__menu} ariaLabel="menu button" onClick={showMenu} />
     </header>
   );
 }

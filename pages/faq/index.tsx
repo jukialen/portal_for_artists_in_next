@@ -2,7 +2,7 @@ import './Faq.module.scss';
 
 import { Collapse } from 'antd';
 
-const Faq = () => {
+export default function Faq(){
   const { Panel } = Collapse;
 
   return (
@@ -36,4 +36,3 @@ const Faq = () => {
   );
 };
 
-export default Faq;

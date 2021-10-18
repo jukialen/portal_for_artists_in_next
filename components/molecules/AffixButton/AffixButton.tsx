@@ -1,4 +1,4 @@
-import { MouseEventHandler, useState } from 'react';
+import {MouseEventHandler, useState} from 'react';
 
 import './AffixButton.module.scss';
 
@@ -11,11 +11,14 @@ export const AffixButton = () => {
   const [visible, setVisible] = useState<boolean>(false);
 
   const toggleVisible = () => {
-    const scrolled = document.documentElement.scrollTop;
-    if (scrolled > 300) {
-      setVisible(true);
-    } else if (scrolled <= 300) {
-      setVisible(false);
+    let scrolled;
+    if (typeof document !== 'undefined') {
+      scrolled = document.documentElement.scrollTop;
+      if (scrolled > 300) {
+        setVisible(true);
+      } else if (scrolled <= 300) {
+        setVisible(false);
+      }
     }
   };
 
@@ -23,7 +26,7 @@ export const AffixButton = () => {
     setBottom(0);
   };
 
-  window.addEventListener('scroll', toggleVisible);
+  typeof window !== 'undefined' && window.addEventListener('scroll', toggleVisible);
 
   return (
     <Affix offsetBottom={bottom}>

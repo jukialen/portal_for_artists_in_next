@@ -1,10 +1,12 @@
+import { useContext } from 'react';
+import { useRouter } from 'next/router';
+
+import styles from './Providers.module.scss';
+
 import { Button } from 'components/atoms/Button/Button';
 
-import './Providers.module.scss';
 import { AppleFilled, GoogleOutlined, YahooFilled } from '@ant-design/icons';
-import { useRouter } from 'next/router';
 import { NavFormContext } from 'providers/NavFormProvider';
-import { useContext } from 'react';
 
 export const Providers = () => {
   const { isLogin } = useContext(NavFormContext);
@@ -14,9 +16,9 @@ export const Providers = () => {
   isLogin && router.push('/app');
 
   return (
-    <div className="providers">
+    <div className={styles.providers}>
       <Button
-        classButton="google"
+        classButton={styles.google}
         typeButton="submit"
         ariaLabel="google provider"
         elementButton={<GoogleOutlined />}
@@ -24,13 +26,13 @@ export const Providers = () => {
         // onClick={signInWithGoogle}
       />
       <Button
-        classButton="apple"
+        classButton={styles.apple}
         typeButton="submit"
         ariaLabel="apple provider"
         elementButton={<AppleFilled />}
       />
       <Button
-        classButton="yahoo"
+        classButton={styles.yahoo}
         typeButton="submit"
         ariaLabel="yahoo provider"
         elementButton={<YahooFilled />}

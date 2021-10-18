@@ -1,11 +1,11 @@
 import Image from 'next/image';
 
-import './index.module.scss';
+import styles from './index.module.scss';
 
 
 export default function Home() {
   return (
-    <div className="workspace">
+    <div className={styles.workspace}>
       <h1>Welcome artysto!</h1>
 
       <h3>
@@ -23,37 +23,37 @@ export default function Home() {
         Od niedzielnych artystów po ludzi tworzących swoje wirtualne podręczne portfolio.
       </h2>
 
-      <div className="main__container">
-        <div className="container">
+      <div className={styles.main__container}>
+        <div className={styles.container}>
           <h4>Krótki film? Jakiś Gif? Rysunek? Obraz? Zdjęcie?</h4>
           <p>Nie ma problemu! Wysyłasz na serwer i już!</p>
         </div>
 
-        <Image src="#" className="image" alt="picture.jpg" />
+        <img src="#" className={styles.image} alt="picture.jpg" />
       </div>
 
-      <div className="main__container">
-        <div className="container">
+      <div className={styles.main__container}>
+        <div className={styles.container}>
           <h4>Chcesz zobaczyć co inni robią?</h4>
 
           <p>Kliknij w nick i przeglądaj.</p>
         </div>
 
-        <Image src="#" className="image" alt="picture.jpg" />
+          <img src="#" className={styles.image} alt="obraz.jpg" />
       </div>
 
-      <div className="main__container">
-        <div className="container">
+      <div className={styles.main__container}>
+        <div className={styles.container}>
           <h4>Chcesz zobaczyć co jest na topie?</h4>
 
           <p>Już to masz na głównej stronie. Wystarczy się zalogować!</p>
         </div>
 
-        <Image src="#" className="image" alt="picture.jpg" />
+          <img src="#" className={styles.image} alt="obraz.jpg" />
       </div>
 
-      <div className="main__container">
-        <div className="container">
+      <div className={styles.main__container}>
+        <div className={styles.container}>
           <h4>
             Chcesz zobaczyć co ostatnio polubiłeś/aś? <br />
           </h4>
@@ -61,11 +61,11 @@ export default function Home() {
           <p>Wystarczy się zalogować i już masz to!</p>
         </div>
 
-        <Image src="#" className="image" alt="picture.jpg" />
+          <img src="#" className={styles.image} alt="obraz.jpg" />
       </div>
 
-      <div className="main__container">
-        <div className="container">
+      <div className={styles.main__container}>
+        <div className={styles.container}>
           <h4>Design?</h4>
 
           <p>
@@ -74,21 +74,21 @@ export default function Home() {
           </p>
         </div>
 
-        <Image src="#" className="image" alt="picture.jpg" />
+          <img src="#" className={styles.image} alt="obraz.jpg" />
       </div>
 
-      <div className="main__container">
-        <div className="container">
+      <div className={styles.main__container}>
+        <div className={styles.container}>
           <h4>Interfejs jest za jasny?</h4>
 
           <p>No to cyk i masz ciemny!</p>
         </div>
 
-        <Image src="#" className="image" alt="picture.jpeg" />
+          <img src="#" className={styles.image} alt="obraz.jpg" />
       </div>
 
-      <div className="main__container">
-        <div className="container">
+      <div className={styles.main__container}>
+        <div className={styles.container}>
           <h4>Chcesz znaleźć coś o określonym typie?</h4>
 
           <p>
@@ -97,27 +97,27 @@ export default function Home() {
           </p>
         </div>
 
-        <Image src="#" className="image" alt="obraz.jpg" />
+          <img src="#" className={styles.image} alt="obraz.jpg" />
       </div>
 
-      <div className="main__container">
-        <div className="container">
+      <div className={styles.main__container}>
+        <div className={styles.container}>
           <h4>Szukasz ludzi o podobnym upodobaniach?</h4>
 
           <p>Wybierz grupę lub, jeszcze lepiej sam/a ją stwórz!</p>
         </div>
 
-        <Image src="#" className="image" alt="obraz.jpg" />
+        <img src="#" className={styles.image} alt="obraz.jpg" />
       </div>
 
-      <div className="main__container">
-        <div className="container">
+      <div className={styles.main__container}>
+        <div className={styles.container}>
           <h4>Masz tutaj artystycznych przyjaciół?</h4>
 
           <p>Zawsze masz ich pod ręką. Szybko, więc wiesz czym się ostatnio pochwalili.</p>
         </div>
 
-        <Image src="#" className="image" alt="picture.jpg" />
+        <img src="#" className={styles.image} alt="picture.jpg" />
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Links } from 'components/atoms/Links/Links';
 
-import './Categories.module.scss';
+import styles from './Categories.module.scss';
 
 export const Categories = () => {
   const [openSubCategories, setOpenCategories] = useState(false);
@@ -10,14 +10,14 @@ export const Categories = () => {
   const changeOpenCategories = () => setOpenCategories(!openSubCategories);
 
   return (
-    <ol className="categories">
+    <ol className={styles.categories}>
       <li>
         <Links hrefLink="#" title="Wszystko" />
       </li>
 
       <li onClick={changeOpenCategories}>
         <Links hrefLink="#" title="Rysunki" />
-        <ol className={openSubCategories ? '' : 'hiddenElement'}>
+        <ol className={openSubCategories ? '' : styles.hiddenElement}>
           <li>
             <Links hrefLink="#" title="Realistyczne" />
           </li>

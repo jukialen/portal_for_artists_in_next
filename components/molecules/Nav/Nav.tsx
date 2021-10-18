@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import './Nav.module.scss';
+import styles from './Nav.module.scss';
 
 import { NavFormContext } from 'providers/NavFormProvider';
 import { ShowMenuContext } from 'providers/ShowMenuProvider';
@@ -32,18 +32,18 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   };
 
   return (
-    <nav className={`nav ${isMenu ? 'menu--active' : ''}`}>
+    <nav className={styles.nav && isMenu ? styles.menu__active : ''}>
       <ul>
-        <li className="menu">
+        <li className={styles.menu}>
           <Link href="#">
-            <a className="sign__in" onClick={titleFirstNav === 'Wyloguj' ? signOut : hideMenuLogin}>
+            <a className={styles.sign__in} onClick={titleFirstNav === 'Wyloguj' ? signOut : hideMenuLogin}>
               {titleFirstNav}
             </a>
           </Link>
         </li>
-        <li className="menu">
+        <li className={styles.menu}>
           <Link href={titleSecondNav === 'Konto' ? '/account' : '#'}>
-            <a className="sign__out" onClick={hideMenuCreate}>
+            <a className={styles.sign__out} onClick={hideMenuCreate}>
               {titleSecondNav}
             </a>
           </Link>

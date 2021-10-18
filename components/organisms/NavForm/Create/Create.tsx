@@ -6,7 +6,7 @@ import { FormField } from 'components/molecules/FormField/FormField';
 import { Providers } from 'components/molecules/Providers/Providers';
 import { Button } from 'components/atoms/Button/Button';
 
-import '../NavForm.module.scss';
+import styles from '../NavForm.module.scss';
 
 import { NavFormContext } from 'providers/NavFormProvider';
 
@@ -30,9 +30,9 @@ type UserDataType = {
 // @ts-ignore
 export const Create: FC = () => {
   const { isCreate } = useContext(NavFormContext);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-
   const [valuesFields, setValuesFields] = useState<boolean>(false);
 
   const submitAccountData = useCallback(
@@ -103,7 +103,7 @@ export const Create: FC = () => {
       })}
       onSubmit={submitAccountData}
     >
-      <Form className={`create__account ${isCreate ? 'form__menu--active' : ''}`}>
+      <Form className={styles.create__account && isCreate ? styles.form__menu__active : ''}>
         <h2>Zarejestruj się za darmo!</h2>
 
         <FormField
@@ -144,13 +144,13 @@ export const Create: FC = () => {
 
         <Button
           typeButton="submit"
-          classButton="button"
+          classButton={styles.button}
           ariaLabel="login button"
           title={isLoading ? 'Rejestruję Cię...' : 'Zarejestruj się'}
         />
 
         {valuesFields ? (
-          <p className="success__info">
+          <p className={styles.success__info}>
             Gratulacje! Zostałeś zarejestrowany. Sprawdź skrzynkę mailową i potwierdź e-mail, aby
             móc się zalogować.
           </p>

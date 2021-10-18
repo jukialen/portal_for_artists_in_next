@@ -1,8 +1,8 @@
-import './AccountMenu.module.scss';
+import styles from './AccountMenu.module.scss';
 
 export const AccountMenu = () => {
   return (
-    <article className="account__menu">
+    <article className={styles.account__menu}>
       <div>
         <a href="#account__data">Ogólne</a>
       </div>
