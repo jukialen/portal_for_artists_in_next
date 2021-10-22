@@ -32,14 +32,14 @@ export function Footer() {
           <a>FAQ</a>
         </Link>
       </button>
-      <button className={styles.button && styles.change__language} onClick={showLanguages}>
+      <button className={styles.button} onClick={showLanguages}>
         Zmiana języka
-        <div className={`languages ${isLanguage ? 'languages--show' : ''}`}>
+        <div className={`${styles.languages} ${isLanguage && styles.languages__active}`}>
           <Link href="/en">
-            <a>EN</a>
+            <a className={styles.languages__version}>EN</a>
           </Link>
           <Link href="/jp">
-            <a>JP</a>
+            <a className={styles.languages__version}>JP</a>
           </Link>
         </div>
       </button>

@@ -13,7 +13,7 @@ export const Providers = () => {
 
   const router = useRouter();
 
-  isLogin && router.push('/app');
+  isLogin && router.push('/application');
 
   return (
     <div className={styles.providers}>
@@ -21,7 +21,7 @@ export const Providers = () => {
         classButton={styles.google}
         typeButton="submit"
         ariaLabel="google provider"
-        elementButton={<GoogleOutlined />}
+        elementButton={<GoogleOutlined className={styles.svg} />}
         // @ts-ignore
         // onClick={signInWithGoogle}
       />
@@ -29,13 +29,13 @@ export const Providers = () => {
         classButton={styles.apple}
         typeButton="submit"
         ariaLabel="apple provider"
-        elementButton={<AppleFilled />}
+        elementButton={<AppleFilled className={styles.svg} />}
       />
       <Button
         classButton={styles.yahoo}
         typeButton="submit"
         ariaLabel="yahoo provider"
-        elementButton={<YahooFilled />}
+        elementButton={<YahooFilled className={styles.svg} />}
         // @ts-ignore
         // onClick={signInWithYahoo}
       />

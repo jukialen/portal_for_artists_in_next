@@ -61,23 +61,14 @@ select:required {
   display: flex;
 }
 
-.workspace {
-  width: 75vw;
-  padding: 8rem 0;
+.main__container {
   margin: 0 auto;
 }
-@media (min-width: 280px) and (max-width: 767px) {
-  .workspace {
-    width: 100vw;
-    margin-bottom: 5rem;
-    padding-top: 4rem;
-  }
-}
 
-@media (min-width: 1440px) {
-  .workspace {
-    width: 75vw;
-    padding: 8rem 0;
-  }
+.workspace {
+  display: flex;
+  flex-direction: column;
+  margin: 5rem auto;
+  padding-top: 4rem;
 }
 

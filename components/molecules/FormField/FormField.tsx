@@ -1,4 +1,5 @@
 import { Field } from 'formik';
+import styles from './FormField.module.scss';
 
 type fF = {
   titleField: string;
@@ -17,8 +18,8 @@ export const FormField = ({
   ...props
 }: fF) => {
   return (
-    <div className="form__field">
-      <label htmlFor="pseudonym">
+    <div className={styles.form__field}>
+      <label htmlFor="pseudonym" className={styles.label}>
         {titleField}
         {element}
       </label>
@@ -28,6 +29,7 @@ export const FormField = ({
         id={nameField}
         placeholder={placeholderField}
         {...props}
+        className={styles.input}
       />
     </div>
   );

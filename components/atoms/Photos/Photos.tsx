@@ -1,5 +1,5 @@
-import './Photos.module.scss';
+import styles from './Photos.module.scss';
 
-export const Photos = (...props: []) => {
-  return <div className="photos" {...props} />;
+export const Photos = (...props: any[] ) => {
+  return <div className={styles.photos} {...props} />;
 };

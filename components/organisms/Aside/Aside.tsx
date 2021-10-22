@@ -16,7 +16,7 @@ export function Aside() {
   const leftMenuClick = () => setLeftMenu(!isLeftMenu);
 
   return (
-    <aside id="top__menu" className={`styles.aside ${isLeftMenu ? 'styles.aside--active' : ''}`}>
+    <aside id="top__menu" className={`${styles.aside} ${isLeftMenu && styles.aside__active}`}>
       <Button
         elementButton={isLeftMenu ? <LeftOutlined /> : <RightOutlined />}
         classButton={styles.aside__right}
@@ -25,7 +25,7 @@ export function Aside() {
         onClick={leftMenuClick}
       />
 
-      <h3 className={`styles.h3 ${isLeftMenu ? styles.first__h3 : ''}`}>Kategorie</h3>
+      <h3 className={`${styles.h3} ${isLeftMenu && styles.first__h3}`}>Kategorie</h3>
 
       <Categories />
 

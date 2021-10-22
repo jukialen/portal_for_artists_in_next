@@ -1,6 +1,6 @@
 import {MouseEventHandler, useState} from 'react';
 
-import './AffixButton.module.scss';
+import styles from './AffixButton.module.scss';
 
 import { Affix, Button } from 'antd';
 import { UpOutlined } from '@ant-design/icons';
@@ -32,7 +32,7 @@ export const AffixButton = () => {
     <Affix offsetBottom={bottom}>
       <Button type="primary" href="#" onClick={setBootom}>
         <UpOutlined
-          className={`up ${visible ? 'up__active' : null}`}
+          className={`${styles.up} ${visible && styles.up__active}`}
           aria-label="top of page button"
         />
       </Button>

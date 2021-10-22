@@ -6,7 +6,7 @@
   grid-template-columns: 1fr 1fr 1fr;
   margin: 0 20% 3rem 20%;
 
-  div {
+  .div {
     height: 4rem;
     margin: 0 2rem;
     font-size: 2rem;
@@ -38,7 +38,7 @@
     width: 96%;
     margin: 0 2%;
 
-    div {
+    .div {
       height: 4rem;
       margin: 0 1rem;
     }
@@ -50,7 +50,7 @@
     width: 100vw;
     margin: 0;
 
-    div {
+    .div {
       height: 4rem;
       margin: 0 1rem;
     }
@@ -62,7 +62,7 @@
     width: 55vw;
     margin: 0 12%;
 
-    div {
+    .div {
       height: 4rem;
       margin: 0 3rem;
     }
@@ -74,7 +74,7 @@
     width: 48vw;
     margin: 0 15%;
 
-    div {
+    .div {
       height: 4rem;
       margin: 0 1rem;
     }

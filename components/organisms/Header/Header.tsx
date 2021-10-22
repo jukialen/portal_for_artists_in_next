@@ -28,14 +28,14 @@ export function Header() {
     titleSecondNav = 'Zarejestruj';
   }
 
-  return (
+    return (
     <header className={styles.header}>
       <h1 className={styles.title}>
-        <Link href={!!user ? '/app' : '/'}><a>Portal dla artystów</a></Link>
+        <Link href={!!user ? '/application' : '/'}><a>Portal dla artystów</a></Link>
       </h1>
 
       <Button
-        classButton={isMode ? 'light__mode' : 'dark__mode'}
+        classButton={`${isMode ? styles.light__mode : styles.dark__mode}`}
         ariaLabel="mode button"
         onClick={changeMode}
       />

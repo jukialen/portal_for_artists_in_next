@@ -20,8 +20,8 @@ export const Layout: FC = ({ children }) => {
 
   useEffect(() => {
     user = localStorage.getItem('user');
-    !!user ? router.push('/app') : router.push('/');
-  }, [router, user]);
+    !!user ? router.push('/application') : router.push('/');
+  }, []);
 
   return (
     <>
@@ -36,9 +36,9 @@ export const Layout: FC = ({ children }) => {
           ) : null}
         </ShowMenuProvider>
         <Aside />
-        <main>{children}</main>
-        <AffixButton />
+        <main className="main__container">{children}</main>
       </div>
+      <AffixButton />
       <Footer />
     </>
   );

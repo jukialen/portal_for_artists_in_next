@@ -16,26 +16,22 @@
     border: 0;
     cursor: pointer;
   }
-
-  .change__language {
-    background-color: initial;
-  }
 }
 
 @media (min-width: 280px) and (max-width: 767px) {
-  footer .button {
+  .footer .button {
     font-size: 1rem;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
-  footer .button {
+  .footer .button {
     padding: 1.5rem 0;
   }
 }
 
 @media (min-width: 1024px) and (max-width: 1439px) {
-  footer .button {
+  .footer .button {
     padding: 1% 0;
   }
 }
@@ -52,9 +48,8 @@
   right: 0;
   opacity: 0;
   visibility: hidden;
-  //transform: translateY(3.6rem);
 
-  & a {
+  .languages__version {
     width: 6rem;
     height: inherit;
     border: #12fff8;
@@ -95,7 +90,7 @@
   }
 }
 
-.languages--show {
+.languages__active {
   height: 2rem;
   opacity: 1;
   visibility: visible;

@@ -2,7 +2,7 @@
   font-size: 2rem;
   margin: auto 1rem;
 
-  ul {
+  .list {
     height: 4rem;
     display: flex;
     flex-direction: row-reverse;
@@ -23,7 +23,7 @@
     margin-right: -17rem;
     flex-direction: column-reverse;
 
-    ul {
+    .list {
       display: grid;
       height: 8rem;
       background-color: #1e90ff;

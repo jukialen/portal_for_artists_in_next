@@ -13,20 +13,24 @@
     margin: auto 1rem;
   }
 
-  .dark__mode {
+  .dark__mode, .light__mode {
     height: 4rem;
+    width: 4rem;
     margin: auto 0;
-    background: url('/public/resources/Icons/dark__mode.svg') no-repeat;
     background-size: 4rem;
     border: none;
     cursor: pointer;
+  }
+
+  .dark__mode {
+    background: url('/public/dark__mode.svg') no-repeat;
   }
 
   .hamburger__menu {
     height: 5rem;
     display: none;
     margin: 0 0.5rem;
-    background: url('/public/resources/Icons/menu.svg') no-repeat;
+    background: url('/public/menu.svg') no-repeat;
     border: none;
     cursor: pointer;
   }
@@ -64,7 +68,7 @@
       margin: auto 0;
     }
 
-    .dark__mode {
+    .dark__mode, .light__mode {
       margin: 0.5rem 0;
     }
 
@@ -82,7 +86,7 @@
       margin: auto 2.5rem auto 0;
     }
 
-    .dark__mode {
+    .dark__mode, .light__mode {
       margin: 0.5rem 1rem;
     }
 
@@ -90,4 +94,10 @@
       padding: 0 0.5rem;
     }
   }
+}
+
+/*LIGHT MODE*/
+
+.light__mode {
+  background: url('/public/light__mode.svg') no-repeat;
 }

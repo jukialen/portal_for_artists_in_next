@@ -34,7 +34,7 @@ export const Login: FC = () => {
   const submitAccountData = async ({ email, password }: LoginType, { resetForm }) => {
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_API_URL}${process.env.REACT_APP_API_LOGIN_USER}`,
+        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_LOGIN_USER}`,
         {
           identifier: email,
           password,
@@ -45,7 +45,7 @@ export const Login: FC = () => {
       resetForm(initialValues);
       // @ts-ignore
       setValuesFields(`${data.user.pseudonym} zostałaś/eś zalogowana/y`);
-      return router.push(`${process.env.REACT_APP_FRONT_HOST_URL}/app`);
+      return router.push(`${process.env.REACT_APP_FRONT_HOST_URL}/application`);
     } catch (error) {
       setErrorMessage('Nie mogliśmy Cię zalogować');
     }
@@ -69,8 +69,8 @@ export const Login: FC = () => {
       })}
       onSubmit={submitAccountData}
     >
-      <Form className={styles.login && isLogin ? styles.form__menu__active : ''}>
-        <h2>Zaloguj się!</h2>
+      <Form className={`${styles.login} ${isLogin ? styles.form__menu__active : ''}`}>
+        <h2 className={styles.title}>Zaloguj się!</h2>
 
         <FormField
           titleField="E-mail:"
@@ -79,7 +79,7 @@ export const Login: FC = () => {
           placeholderField="E-mail"
         />
 
-        <FormError nameError="email" />
+        <FormError className={styles.error} nameError="email" />
 
         <FormField
           titleField="Hasło:"
@@ -88,22 +88,22 @@ export const Login: FC = () => {
           placeholderField="Password"
         />
 
-        <FormError nameError="password" />
+        <FormError className={styles.error} nameError="password" />
 
         <Button
           typeButton="submit"
-          classButton={styles.button}
+          classButton={styles.submit__button}
           ariaLabel="login button"
           title="Zaloguj się"
         />
 
         {!!valuesFields ? <p className={styles.success__info}>{valuesFields}.</p> : null}
 
-        {errorMessage ? <p>{errorMessage}</p> : null}
+        {errorMessage ? <p className={styles.error}>{errorMessage}</p> : null}
 
-        <p className="separator">______________________________________</p>
+        <p className={styles.separator}>______________________________________</p>
 
-        <h4>Lub zaloguj się za pomocą:</h4>
+        <h4 className={styles.provider__title}>Lub zaloguj się za pomocą:</h4>
 
         <Providers />
       </Form>

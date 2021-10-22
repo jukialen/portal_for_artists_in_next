@@ -1,40 +1,48 @@
-.workspace {
+.title {
+  margin: 7rem auto 5rem;
+
+  @media (min-width: 767px) {
+    margin: 4rem auto 5rem;
+  }
+}
+
+.h2,
+.h3 {
+  width: 25rem;
+  margin: 2rem auto;
+  line-height: 1.2;
+
+  @media (min-width: 400px) {
+    width: 36rem;
+  }
+  @media (min-width: 532px) {
+    width: 47rem;
+  }
+}
+
+.main__container {
+  margin: 2rem auto;
   display: flex;
-  flex-direction: column;
-  h1 {
-    margin: 5rem auto 3rem;
+  flex-flow: row wrap;
+
+  .container {
+    display: grid;
+    margin: 2rem 1rem;
+    flex-direction: column;
+    max-width: 28rem;
+    background: aliceblue;
+
+  .answer {
+    font-size: 1.4rem;
+    line-height: 1.4;
+    margin: 3rem 10vh;
+    }
   }
 
-  h2,
-  h3 {
-    width: 25rem;
-    margin: 2rem auto;
-    line-height: 1.2;
-  }
-  .main__container {
-    margin: 2rem auto;
-    display: flex;
-    flex-flow: row wrap;
-
-    .container {
-      display: grid;
-      margin: 2rem 1rem;
-      flex-direction: column;
-      max-width: 28rem;
-      background: aliceblue;
-
-      p {
-        font-size: 1.4rem;
-        line-height: 1.4;
-        margin: 3rem 10vh;
-      }
-    }
-
-    .image {
-      width: 28rem;
-      height: 28rem;
-      margin: 1rem auto;
-      background-color: antiquewhite;
-    }
+  .image {
+    width: 28rem;
+    height: 28rem;
+    margin: 1rem auto;
+    background-color: antiquewhite;
   }
 }

@@ -4,13 +4,13 @@ import styles from './Friends.module.scss';
 
 export const Friends = () => {
   return (
-    <div className="friends">
-      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend one" />
-      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend two" />
-      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend three" />
-      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend four" />
-      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend five" />
-      <Image src="/resources/icons/copy" className={styles.friends__item} layout='fill' alt="friend six" />
+    <div className={styles.friends}>
+      <img src="#" className={styles.friends__item} alt="friend one" />
+      <img src="#" className={styles.friends__item} alt="friend two" />
+      <img src="#" className={styles.friends__item} alt="friend three" />
+      <img src="#" className={styles.friends__item} alt="friend four" />
+      <img src="#" className={styles.friends__item} alt="friend five" />
+      <img src="#" className={styles.friends__item} alt="friend six" />
     </div>
   );
 };

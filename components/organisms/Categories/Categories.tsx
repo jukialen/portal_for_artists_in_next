@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Links } from 'components/atoms/Links/Links';
+import Link from 'next/link';
 
 import styles from './Categories.module.scss';
 
@@ -11,37 +11,21 @@ export const Categories = () => {
 
   return (
     <ol className={styles.categories}>
-      <li>
-        <Links hrefLink="#" title="Wszystko" />
-      </li>
+      <Link href="#"><a className={styles.link}>Wszystko</a></Link>
 
       <li onClick={changeOpenCategories}>
-        <Links hrefLink="#" title="Rysunki" />
+        <Link href="#"><a className={styles.link}>Rysunki</a></Link>
         <ol className={openSubCategories ? '' : styles.hiddenElement}>
-          <li>
-            <Links hrefLink="#" title="Realistyczne" />
-          </li>
-          <li>
-            <Links hrefLink="#" title="Manga" />
-          </li>
-          <li>
-            <Links hrefLink="#" title="Anime" />
-          </li>
-          <li>
-            <Links hrefLink="#" title="Komiksy" />
-          </li>
+          <Link href="#"><a className={styles.link}>Realistyczne</a></Link>
+          <Link href="#"><a className={styles.link}>Manga</a></Link>
+          <Link href="#"><a className={styles.link}>Anime</a></Link>
+          <Link href="#"><a className={styles.link}>Komiksy</a></Link>
         </ol>
       </li>
 
-      <li>
-        <Links hrefLink="#" title="Fotografie" />
-      </li>
-      <li>
-        <Links hrefLink="#" title="Animacje" />
-      </li>
-      <li>
-        <Links hrefLink="#" title="Inne" />
-      </li>
+      <Link href="#"><a className={styles.link}>Fotografie</a></Link>
+      <Link href="#"><a className={styles.link}>Animacje</a></Link>
+      <Link href="#"><a className={styles.link}>Inne</a></Link>
     </ol>
   );
 };

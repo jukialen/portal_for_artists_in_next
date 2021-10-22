@@ -1,0 +1,15 @@
+.form__field {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	margin: 1rem;
+
+	.label {
+		margin: auto 1rem;
+		font-size: 2rem;
+	}
+
+	.input {
+		margin: 0;
+		width: 16rem;
+	}
+}

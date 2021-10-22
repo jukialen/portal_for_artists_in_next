@@ -40,7 +40,7 @@ export const Create: FC = () => {
       setIsLoading(true);
       try {
         await axios.post(
-          `${process.env.REACT_APP_API_URL}${process.env.REACT_APP_API_CREATE_USER}`,
+          `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_CREATE_USER}`,
           {
             username,
             pseudonym,
@@ -103,8 +103,8 @@ export const Create: FC = () => {
       })}
       onSubmit={submitAccountData}
     >
-      <Form className={styles.create__account && isCreate ? styles.form__menu__active : ''}>
-        <h2>Zarejestruj się za darmo!</h2>
+      <Form className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
+        <h2 className={styles.title}>Zarejestruj się za darmo!</h2>
 
         <FormField
           titleField="Imię:"
@@ -113,7 +113,7 @@ export const Create: FC = () => {
           placeholderField="Name"
         />
 
-        <FormError nameError="username" />
+        <FormError className={styles.error} nameError="username" />
 
         <FormField
           titleField="Pseudonim:"
@@ -122,7 +122,7 @@ export const Create: FC = () => {
           placeholderField="Pseudonym"
         />
 
-        <FormError nameError="pseudonym" />
+        <FormError className={styles.error} nameError="pseudonym" />
 
         <FormField
           titleField="E-mail:"
@@ -131,7 +131,7 @@ export const Create: FC = () => {
           placeholderField="E-mail"
         />
 
-        <FormError nameError="email" />
+        <FormError className={styles.error} nameError="email" />
 
         <FormField
           titleField="Hasło:"
@@ -140,11 +140,11 @@ export const Create: FC = () => {
           placeholderField="Password"
         />
 
-        <FormError nameError="password" />
+        <FormError className={styles.error} nameError="password" />
 
         <Button
           typeButton="submit"
-          classButton={styles.button}
+          classButton={styles.submit__button}
           ariaLabel="login button"
           title={isLoading ? 'Rejestruję Cię...' : 'Zarejestruj się'}
         />
@@ -156,11 +156,11 @@ export const Create: FC = () => {
           </p>
         ) : null}
 
-        {errorMessage ? <p>{errorMessage}</p> : null}
+        {errorMessage ? <p className={styles.error}>{errorMessage}</p> : null}
 
-        <p className="separator">______________________________________</p>
+        <p className={styles.separator}>______________________________________</p>
 
-        <h4>Lub zarejestruj się za pomocą:</h4>
+        <h4 className={styles.provider__title}>Lub zarejestruj się za pomocą:</h4>
 
         <Providers />
       </Form>

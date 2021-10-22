@@ -22,18 +22,20 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
     showLoginForm();
     showMenu();
   };
+
   const hideMenuCreate = () => {
     showCreateForm();
     showMenu();
   };
+
   const signOut = () => {
     typeof window !== 'undefined' && localStorage.removeItem('user');
     return router.push('/');
   };
 
   return (
-    <nav className={styles.nav && isMenu ? styles.menu__active : ''}>
-      <ul>
+      <nav className={`${styles.nav} ${isMenu && styles.menu__active}`}>
+      <ul className={styles.list}>
         <li className={styles.menu}>
           <Link href="#">
             <a className={styles.sign__in} onClick={titleFirstNav === 'Wyloguj' ? signOut : hideMenuLogin}>
