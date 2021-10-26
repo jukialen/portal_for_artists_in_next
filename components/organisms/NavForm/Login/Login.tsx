@@ -45,7 +45,7 @@ export const Login: FC = () => {
       resetForm(initialValues);
       // @ts-ignore
       setValuesFields(`${data.user.pseudonym} zostałaś/eś zalogowana/y`);
-      return router.push(`${process.env.REACT_APP_FRONT_HOST_URL}/application`);
+      return router.push('/application');
     } catch (error) {
       setErrorMessage('Nie mogliśmy Cię zalogować');
     }

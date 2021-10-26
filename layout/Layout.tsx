@@ -1,5 +1,4 @@
 import { FC, useContext, useEffect } from 'react';
-import { useRouter } from 'next/router';
 
 import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
 import { Footer } from 'components/organisms/Footer/Footer';
@@ -10,30 +9,29 @@ import { Aside } from 'components/organisms/Aside/Aside';
 
 import { ModeContext } from 'providers/ModeProvider';
 import { ShowMenuProvider } from 'providers/ShowMenuProvider';
+import { NavFormProvider } from 'providers/NavFormProvider';
 
 export const Layout: FC = ({ children }) => {
   const { isMode } = useContext(ModeContext);
-
-  const router = useRouter();
 
   let user;
 
   useEffect(() => {
     user = localStorage.getItem('user');
-    !!user ? router.push('/application') : router.push('/');
-  }, []);
+  }, [user]);
 
   return (
     <>
       <div className={`whole__page ${isMode ? 'dark' : ''}`}>
         <ShowMenuProvider>
-          <Header />
           {!user ? (
-            <>
+            <NavFormProvider>
+              <Header titleFirstNav='Zaloguj' titleSecondNav='Zarejestruj'logoLink='/' />
               <Create />
               <Login />
-            </>
-          ) : null}
+            </NavFormProvider>
+          ) : <Header titleFirstNav='Wyloguj' titleSecondNav='Konto' logoLink='/application'/>
+          }
         </ShowMenuProvider>
         <Aside />
         <main className="main__container">{children}</main>

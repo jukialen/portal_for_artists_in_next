@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 
 export const useLocalState = (defaultValue: boolean, key: string) => {
   const [value, setValue] = useState(() => {
-    const localValue = localStorage.getItem(key);
-    return localValue !== null ? JSON.parse(localValue) : defaultValue;
+    if (typeof localStorage !== 'undefined') {
+      const localValue = localStorage.getItem(key);
+      return localValue !== null ? JSON.parse(localValue) : defaultValue;
+    }
   });
 
   useEffect(() => {

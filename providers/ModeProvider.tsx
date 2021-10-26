@@ -14,7 +14,7 @@ export const ModeContext = React.createContext({
 export const ModeProvider = ({ children }: childrenType) => {
   const [isMode, setMode] = useLocalState(false, 'mode');
 
-  const changeMode = useCallback(() => setMode(!isMode), [isMode]);
+  const changeMode = () => setMode(!isMode);
 
   return (
     <ModeContext.Provider

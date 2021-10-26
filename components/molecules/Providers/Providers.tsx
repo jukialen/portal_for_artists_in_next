@@ -1,19 +1,12 @@
 import { useContext } from 'react';
-import { useRouter } from 'next/router';
-
-import styles from './Providers.module.scss';
 
 import { Button } from 'components/atoms/Button/Button';
 
+import styles from './Providers.module.scss';
+
 import { AppleFilled, GoogleOutlined, YahooFilled } from '@ant-design/icons';
-import { NavFormContext } from 'providers/NavFormProvider';
 
 export const Providers = () => {
-  const { isLogin } = useContext(NavFormContext);
-
-  const router = useRouter();
-
-  isLogin && router.push('/application');
 
   return (
     <div className={styles.providers}>

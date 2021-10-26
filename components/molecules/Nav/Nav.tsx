@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import {useContext, useEffect} from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -29,7 +29,7 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   };
 
   const signOut = () => {
-    typeof window !== 'undefined' && localStorage.removeItem('user');
+    typeof localStorage !== 'undefined' && localStorage.removeItem('user');
     return router.push('/');
   };
 
@@ -37,14 +37,14 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
       <nav className={`${styles.nav} ${isMenu && styles.menu__active}`}>
       <ul className={styles.list}>
         <li className={styles.menu}>
-          <Link href="#">
+          <Link href=''>
             <a className={styles.sign__in} onClick={titleFirstNav === 'Wyloguj' ? signOut : hideMenuLogin}>
               {titleFirstNav}
             </a>
           </Link>
         </li>
         <li className={styles.menu}>
-          <Link href={titleSecondNav === 'Konto' ? '/account' : '#'}>
+          <Link href={titleSecondNav === 'Konto' ? '/account' : ''}>
             <a className={styles.sign__out} onClick={hideMenuCreate}>
               {titleSecondNav}
             </a>

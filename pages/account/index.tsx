@@ -12,11 +12,9 @@ export default function Account() {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const user = window.localStorage.getItem('user');
+      const user = localStorage.getItem('user');
       !user && router.push('/');
-    }
-  }, [router]);
+  }, []);
 
   return (
     <section className="workspace">

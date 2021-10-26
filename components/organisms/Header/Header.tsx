@@ -1,7 +1,5 @@
-import { useContext } from 'react';
+import {useContext, useEffect} from 'react';
 import Link from 'next/link';
-
-import styles from './Header.module.scss';
 
 import { Nav } from 'components/molecules/Nav/Nav';
 import { Button } from 'components/atoms/Button/Button';
@@ -9,40 +7,34 @@ import { Button } from 'components/atoms/Button/Button';
 import { ModeContext } from 'providers/ModeProvider';
 import { ShowMenuContext } from 'providers/ShowMenuProvider';
 
-export function Header() {
+import styles from './Header.module.scss';
+
+type TitleNav = {
+  titleFirstNav: string;
+  titleSecondNav: string;
+  logoLink: string;
+}
+
+export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
   const { isMode, changeMode } = useContext(ModeContext);
 
   const { showMenu } = useContext(ShowMenuContext);
 
-  let user;
+  return (
+  <header className={styles.header}>
+    <h1 className={styles.title}>
+      <Link href={logoLink}><a>Portal dla artystów</a></Link>
+    </h1>
 
-  let titleFirstNav: string;
-  let titleSecondNav: string;
+    <Button
+      classButton={!!isMode ? styles.light__mode : styles.dark__mode}
+      ariaLabel="mode button"
+      onClick={changeMode}
+    />
 
-  if (typeof window !== 'undefined') {
-    user = window.localStorage.getItem('user');
-    titleFirstNav = 'Wyloguj';
-    titleSecondNav = 'Konto';
-  } else {
-    titleFirstNav = 'Zaloguj';
-    titleSecondNav = 'Zarejestruj';
-  }
+    <Nav titleFirstNav={titleFirstNav} titleSecondNav={titleSecondNav} />
 
-    return (
-    <header className={styles.header}>
-      <h1 className={styles.title}>
-        <Link href={!!user ? '/application' : '/'}><a>Portal dla artystów</a></Link>
-      </h1>
-
-      <Button
-        classButton={`${isMode ? styles.light__mode : styles.dark__mode}`}
-        ariaLabel="mode button"
-        onClick={changeMode}
-      />
-
-      <Nav titleFirstNav={titleFirstNav} titleSecondNav={titleSecondNav} />
-
-      <Button classButton={styles.hamburger__menu} ariaLabel="menu button" onClick={showMenu} />
-    </header>
+    <Button classButton={styles.hamburger__menu} ariaLabel="menu button" onClick={showMenu} />
+  </header>
   );
 }

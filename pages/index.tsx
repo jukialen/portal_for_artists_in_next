@@ -1,10 +1,20 @@
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 import styles from './index.module.scss';
 
-
 export default function Home() {
-  return (
+    const router = useRouter();
+    let user;
+
+    useEffect(() => {
+        user = localStorage.getItem('user');
+        !!user && router.push('/application');
+    }, [user]);
+
+
+    return (
     <div className="workspace">
       <h1 className={styles.title}>Welcome artysto!</h1>
 
