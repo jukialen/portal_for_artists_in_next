@@ -7,16 +7,15 @@
 @media (min-width: 280px) and (max-width: 767px) {
   .top__among__users,
   .liked {
-    font-size: 2rem;
     text-align: center;
     width: 100vw;
     margin: 6rem auto;
   }
 }
 
-@media (min-width: 1024px) and (max-width: 1439px) {
+@media (min-width: 1024px) {
   .top__among__users,
   .liked {
-    width: 75vw;
+    width: 73vw;
   }
 }

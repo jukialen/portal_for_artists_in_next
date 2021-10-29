@@ -17,20 +17,16 @@
     height: 4rem;
     width: 4rem;
     margin: auto 0;
-    background-size: 4rem;
     border: none;
+    background: none;
     cursor: pointer;
-  }
-
-  .dark__mode {
-    background: url('/public/dark__mode.svg') no-repeat;
   }
 
   .hamburger__menu {
     height: 5rem;
     display: none;
     margin: 0 0.5rem;
-    background: url('/public/menu.svg') no-repeat;
+    background: none;
     border: none;
     cursor: pointer;
   }
@@ -94,10 +90,4 @@
       padding: 0 0.5rem;
     }
   }
-}
-
-/*LIGHT MODE*/
-
-.light__mode {
-  background: url('/public/light__mode.svg') no-repeat;
 }

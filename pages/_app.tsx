@@ -1,5 +1,5 @@
-import {AppProps} from "next/app";
-import {NextPage} from "next";
+import { AppProps } from "next/app";
+import { NextPage } from "next";
 
 import { Layout } from 'layout/Layout'
 

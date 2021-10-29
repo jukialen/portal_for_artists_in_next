@@ -1,13 +1,15 @@
 @use 'styles/variables' as *;
 
 .article {
+  width: 28rem;
   background-color: $third__background__color;
+  position: relative;
 }
 
 .item {
-  width: 25rem;
-  height: 25rem;
   display: block;
+  position: absolute;
+  object-fit: contain;
 }
 
 .author__name {
@@ -24,45 +26,15 @@
   height: 2.5rem;
   float: right;
   display: flex;
+  position: relative;
 }
 
-.facebook__icon,
-.twitter__icon,
-.discord__icon,
-.copy__icon {
+.icon {
   width: 2rem;
   height: 2rem;
-  display: block;
+  //display: block;
+  position: relative;
   margin: 0.5rem 0.25rem;
   background-repeat: no-repeat;
   flex: 1;
-}
-
-.facebook__icon {
-  background-image: url('/public/facebook.svg');
-}
-
-.twitter__icon {
-  background-image: url('/public/twitter.svg');
-}
-
-.discord__icon {
-  background-image: url('/public/discord.svg');
-}
-
-.copy__icon {
-  background-image: url('/public/copy.svg');
-}
-
-@media (min-width: 280px) and (max-width: 767px) {
-  .subscribed__wrapper {
-    margin: 5rem 0;
-    width: 100%;
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .subscribed__wrapper {
-    margin: 0 auto;
-  }
 }

@@ -1,7 +1,7 @@
 @use 'styles/variables' as *;
 
 .wrapper {
-  width: 75%;
+  width: 100vw;
   margin: 5rem auto;
   position: relative;
 }
@@ -14,6 +14,15 @@
 
 .carousel::-webkit-scrollbar {
   height: 0;
+}
+
+.content {
+  display: grid;
+  grid-gap: 2rem;
+  grid-auto-flow: column;
+  margin: auto;
+  box-sizing: border-box;
+  font-size: 1.2rem;
 }
 
 .top__left__arrow,
@@ -34,85 +43,40 @@
 .top__left__arrow {
   left: 0;
   transform: translate(50%, -50%);
-  display: flex;
-  background-image: url('/public/left__arrow__light__mode.svg');
 }
 
 .top__right__arrow {
   right: 0;
   transform: translate(-50%, -50%);
-  background-image: url('/public/right__arrow__light__mode.svg');
 }
 
-.content {
-  display: grid;
-  grid-gap: 2rem;
-  grid-auto-flow: column;
-  margin: auto;
-  box-sizing: border-box;
-  font-size: 1.2rem;
-}
-
-.author__name {
-  width: 12.5rem;
-  height: 2rem;
-  float: left;
-  text-align: left;
-  margin: 0.5rem 0 0.5rem 0.5rem;
-  padding: 0.5rem 0;
-}
-
-.share__options {
-  width: 12rem;
-  height: 2.5rem;
-  float: right;
-  display: flex;
-}
-
-.facebook__icon,
-.twitter__icon,
-.discord__icon,
-.copy__icon {
-  width: 2rem;
-  height: 2rem;
-  display: block;
-  margin: 0.5rem 0.25rem;
-  background-repeat: no-repeat;
-  flex: 1;
-}
-
-.facebook__icon {
-  background-image: url('/public/facebook.svg');
-}
-
-.twitter__icon {
-  background-image: url('/public/twitter.svg');
-}
-
-.discord__icon {
-  background-image: url('/public/discord.svg');
-}
-
-.copy__icon {
-  background-image: url('/public/copy.svg');
-}
-
-@media (min-width: 280px) and (max-width: 1023px) {
+@media (min-width: 600px) and (max-width: 767px) {
   .wrapper {
-    margin: 5rem 0;
-    width: 100%;
+    width: 86vw;
   }
 }
 
-@media (min-width: 1024px) and (max-width: 1439px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .wrapper {
-    margin: 0 auto;
-  }
-
-  .content {
-    display: grid;
-    margin: auto;
-    box-sizing: border-box;
-    font-size: 1.2rem;
+    width: 80vw;
   }
 }
+
+@media (min-width: 1024px) {
+  .wrapper {
+    width: 63vw;
+  }
+}
+//
+//@media (min-width: 1024px) and (max-width: 1439px) {
+//  .wrapper {
+//    margin: 0 auto;
+//  }
+//
+//  .content {
+//    display: grid;
+//    margin: auto;
+//    box-sizing: border-box;
+//    font-size: 1.2rem;
+//  }
+//}

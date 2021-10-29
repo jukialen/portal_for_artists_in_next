@@ -14,11 +14,12 @@ export const ModeContext = React.createContext({
 export const ModeProvider = ({ children }: childrenType) => {
   const [isMode, setMode] = useLocalState(false, 'mode');
 
+  // @ts-ignore
   const changeMode = () => setMode(!isMode);
 
   return (
     <ModeContext.Provider
-      value={{
+      value={{ // @ts-ignore
         isMode,
         changeMode,
       }}

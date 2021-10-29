@@ -24,13 +24,15 @@ export const Layout: FC = ({ children }) => {
     <>
       <div className={`whole__page ${isMode ? 'dark' : ''}`}>
         <ShowMenuProvider>
-          {!user ? (
+          {user ?
+            <Header titleFirstNav='Wyloguj' titleSecondNav='Konto' logoLink='/application'/>
+            : (
             <NavFormProvider>
               <Header titleFirstNav='Zaloguj' titleSecondNav='Zarejestruj'logoLink='/' />
               <Create />
               <Login />
             </NavFormProvider>
-          ) : <Header titleFirstNav='Wyloguj' titleSecondNav='Konto' logoLink='/application'/>
+            )
           }
         </ShowMenuProvider>
         <Aside />
