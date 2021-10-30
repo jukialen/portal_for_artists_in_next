@@ -12,12 +12,12 @@ type TitleNavType = {
   titleSecondNav: string;
 };
 
-export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
+export const Nav = ({titleFirstNav, titleSecondNav}: TitleNavType) => {
   const router = useRouter();
   
-  const { showLoginForm, showCreateForm } = useContext(NavFormContext);
+  const {showLoginForm, showCreateForm} = useContext(NavFormContext);
+  const {isMenu, showMenu} = useContext(ShowMenuContext);
   
-  const { isMenu, showMenu } = useContext(ShowMenuContext);
   const hideMenuLogin = () => {
     showLoginForm();
     showMenu();
@@ -30,7 +30,7 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   
   const signOut = () => {
     typeof localStorage !== 'undefined' && localStorage.removeItem('user');
-    return router.push( '/' );
+    return router.push('/');
   };
   
   return (

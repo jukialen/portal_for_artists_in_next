@@ -21,7 +21,7 @@ export const Article = ({ imgLink, imgDescription, authorName }: articleImg) => 
           target='_blank'
           rel='noreferrer'
         >
-          <Image src={'/faceebook'} layout='fill' />
+          <Image src={'/facebook.svg'} layout='fill' aria-label='facebook icon' />
         </a>
         <a
           href='https://www.twitter.com'
@@ -29,7 +29,7 @@ export const Article = ({ imgLink, imgDescription, authorName }: articleImg) => 
           target='_blank'
           rel='noreferrer'
         >
-          <Image src={'/twitter.svg'} layout='fill' />
+          <Image src={'/twitter.svg'} layout='fill' aria-label='twitter icon' />
         </a>
         <a
           href='https://www.discord.com'
@@ -37,10 +37,10 @@ export const Article = ({ imgLink, imgDescription, authorName }: articleImg) => 
           target='_blank'
           rel='noreferrer'
         >
-          <Image src={'/faceebook.svg'} layout='fill' />
+          <Image src={'/discord.svg'} layout='fill' aria-label='discord icon' />
         </a>
         <a href='#' className={styles.icon}>
-          <Image src={'/faceebook.svg'} layout='fill' />
+          <Image src={'/copy.svg'} layout='fill' aria-label='copy icon' />
         </a>
       </div>
     </article>

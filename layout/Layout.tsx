@@ -11,32 +11,32 @@ import { ModeContext } from 'providers/ModeProvider';
 import { ShowMenuProvider } from 'providers/ShowMenuProvider';
 import { NavFormProvider } from 'providers/NavFormProvider';
 
-export const Layout: FC = ({ children }) => {
-  const { isMode } = useContext(ModeContext);
-
+export const Layout: FC = ({children}) => {
+  const {isMode} = useContext(ModeContext);
+  
   let user;
-
+  
   useEffect(() => {
     user = localStorage.getItem('user');
   }, [user]);
-
+  
   return (
     <>
       <div className={`whole__page ${isMode ? 'dark' : ''}`}>
         <ShowMenuProvider>
           {user ?
-            <Header titleFirstNav='Wyloguj' titleSecondNav='Konto' logoLink='/application'/>
+            <Header titleFirstNav='Wyloguj' titleSecondNav='Konto' logoLink='/application' />
             : (
-            <NavFormProvider>
-              <Header titleFirstNav='Zaloguj' titleSecondNav='Zarejestruj'logoLink='/' />
-              <Create />
-              <Login />
-            </NavFormProvider>
+              <NavFormProvider>
+                <Header titleFirstNav='Zaloguj' titleSecondNav='Zarejestruj' logoLink='/' />
+                <Create />
+                <Login />
+              </NavFormProvider>
             )
           }
         </ShowMenuProvider>
         <Aside />
-        <main className="main__container">{children}</main>
+        <main className='main__container'>{children}</main>
       </div>
       <AffixButton />
       <Footer />

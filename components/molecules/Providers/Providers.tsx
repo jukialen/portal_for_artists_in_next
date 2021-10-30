@@ -1,37 +1,37 @@
-import { useContext } from 'react';
-
-import { Button } from 'components/atoms/Button/Button';
-
 import styles from './Providers.module.scss';
 
 import { AppleFilled, GoogleOutlined, YahooFilled } from '@ant-design/icons';
 
 export const Providers = () => {
-
+  
   return (
     <div className={styles.providers}>
-      <Button
-        classButton={styles.google}
-        typeButton="submit"
-        ariaLabel="google provider"
-        elementButton={<GoogleOutlined className={styles.svg} />}
+      <button
+        className={styles.google}
+        type='submit'
+        aria-label='google provider'
         // @ts-ignore
         // onClick={signInWithGoogle}
-      />
-      <Button
-        classButton={styles.apple}
-        typeButton="submit"
-        ariaLabel="apple provider"
-        elementButton={<AppleFilled className={styles.svg} />}
-      />
-      <Button
-        classButton={styles.yahoo}
-        typeButton="submit"
-        ariaLabel="yahoo provider"
-        elementButton={<YahooFilled className={styles.svg} />}
+      >
+        <GoogleOutlined className={styles.svg} />
+      </button>
+      
+      <button
+        className={styles.apple}
+        type='submit'
+        aria-label='apple provider'
+      >
+        <AppleFilled className={styles.svg} />
+      </button>
+      <button
+        className={styles.yahoo}
+        type='submit'
+        aria-label='yahoo provider'
         // @ts-ignore
         // onClick={signInWithYahoo}
-      />
+      >
+        <YahooFilled className={styles.svg} />
+      </button>
     </div>
   );
 };

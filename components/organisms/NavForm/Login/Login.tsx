@@ -6,12 +6,10 @@ import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Providers } from 'components/molecules/Providers/Providers';
 
-import { Button } from 'components/atoms/Button/Button';
-
 import styles from '../NavForm.module.scss';
 
 import { NavFormContext } from 'providers/NavFormProvider';
-import { Formik, Form } from 'formik';
+import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
 type LoginType = {
@@ -25,10 +23,10 @@ const initialValues = {
 };
 
 export const Login: FC = () => {
-  const { isLogin } = useContext(NavFormContext);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [valuesFields, setValuesFields] = useState<string>('');
-
+  const { isLogin } = useContext( NavFormContext );
+  const [errorMessage, setErrorMessage] = useState<string>( '' );
+  const [valuesFields, setValuesFields] = useState<string>( '' );
+  
   const router = useRouter();
   // @ts-ignore
   const submitAccountData = async ({ email, password }: LoginType, { resetForm }) => {
@@ -41,70 +39,71 @@ export const Login: FC = () => {
         },
       );
       // @ts-ignore
-      typeof window !== 'undefined' && localStorage.setItem('user', JSON.stringify(data.jwt));
-      resetForm(initialValues);
+      typeof window !== 'undefined' && localStorage.setItem( 'user', JSON.stringify( data.jwt ) );
+      resetForm( initialValues );
       // @ts-ignore
-      setValuesFields(`${data.user.pseudonym} zostałaś/eś zalogowana/y`);
-      return router.push('/application');
+      setValuesFields( `${data.user.pseudonym} zostałaś/eś zalogowana/y` );
+      return router.push( '/application' );
     } catch (error) {
-      setErrorMessage('Nie mogliśmy Cię zalogować');
+      setErrorMessage( 'Nie mogliśmy Cię zalogować' );
     }
   };
-
+  
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={Yup.object({
-        email: Yup.string().email('Invalid email address').required('Required'),
-
+      validationSchema={Yup.object( {
+        email: Yup.string().email( 'Invalid email address' ).required( 'Required' ),
+        
         password: Yup.string()
-          .min(9, 'Hasło jest za krótkie. Minimum 9 znaków')
-          .matches(/^(?=.*?[A-Z])/, 'Hasło musi zawierać conajmniej jedną dużą literę')
-          .matches(/(?=[0-9])+/g, 'Hasło musi mieć conajmniej 1 cyfrę.')
-          .matches(
-            /(?=.*?[#?!@$%^&*-]+)/,
-            'Hasło musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-',
-          )
-          .required('Required'),
-      })}
+        .min( 9, 'Hasło jest za krótkie. Minimum 9 znaków' )
+        .matches( /^(?=.*?[A-Z])/, 'Hasło musi zawierać conajmniej jedną dużą literę' )
+        .matches( /(?=[0-9])+/g, 'Hasło musi mieć conajmniej 1 cyfrę.' )
+        .matches(
+          /(?=.*?[#?!@$%^&*-]+)/,
+          'Hasło musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-',
+        )
+        .required( 'Required' ),
+      } )}
       onSubmit={submitAccountData}
     >
       <Form className={`${styles.login} ${isLogin ? styles.form__menu__active : ''}`}>
         <h2 className={styles.title}>Zaloguj się!</h2>
-
+        
         <FormField
-          titleField="E-mail:"
-          nameField="email"
-          typeField="email"
-          placeholderField="E-mail"
+          titleField='E-mail:'
+          nameField='email'
+          typeField='email'
+          placeholderField='E-mail'
         />
-
-        <FormError className={styles.error} nameError="email" />
-
+        
+        <FormError className={styles.error} nameError='email' />
+        
         <FormField
-          titleField="Hasło:"
-          nameField="password"
-          typeField="password"
-          placeholderField="Password"
+          titleField='Hasło:'
+          nameField='password'
+          typeField='password'
+          placeholderField='Password'
         />
-
-        <FormError className={styles.error} nameError="password" />
-
-        <Button
-          typeButton="submit"
-          classButton={styles.submit__button}
-          ariaLabel="login button"
-          title="Zaloguj się"
-        />
-
+        
+        <FormError className={styles.error} nameError='password' />
+        
+        <button
+          type='submit'
+          className={styles.submit__button}
+          aria-label='login button'
+        >
+          Zaloguj się
+        </button>
+        
         {!!valuesFields ? <p className={styles.success__info}>{valuesFields}.</p> : null}
-
+        
         {errorMessage ? <p className={styles.error}>{errorMessage}</p> : null}
-
+        
         <p className={styles.separator}>______________________________________</p>
-
+        
         <h4 className={styles.provider__title}>Lub zaloguj się za pomocą:</h4>
-
+        
         <Providers />
       </Form>
     </Formik>

@@ -1,15 +1,16 @@
-import { Button } from 'components/atoms/Button/Button';
-
 export const SubscriptiomAccountData = () => {
   return (
     <form>
-      <label htmlFor="subscription__info">Subskrypcja:</label>
-      <Button
-        idButton="subscription__info"
-        title="Aktualny plan"
-        ariaLabel="Info about subscription"
-      />
-      <Button classButton="subscription__check" title="Zmień" ariaLabel="Change subscription" />
+      <label htmlFor='subscription__info'>Subskrypcja:</label>
+      <button
+        id='subscription__info'
+        aria-label='Info about subscription'
+      >
+        Aktualny plan
+      </button>
+      <button className='subscription__check' aria-label='Change subscription'>
+        Zmień
+      </button>
     </form>
   );
 };
