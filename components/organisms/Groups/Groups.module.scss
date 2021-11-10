@@ -1,23 +1,25 @@
+@use 'styles/variables' as *;
+
 .groups {
-  height: auto;
   margin-bottom: 3rem;
 
   h3 {
     margin-bottom: 1rem;
   }
 
-  &__item {
-    width: 70%;
-    height: 3rem;
-    justify-content: center;
-    align-items: center;
-    margin: 1rem auto;
-    line-height: 2;
+  &__button {
+    font-size: 1rem;
+    background: none;
+    color: $borders__background__color;
+    margin-bottom: 1rem;
   }
 
-  button {
-    font-size: 1.5rem;
-    border: 0;
-    background: none;
+  &__item {
+    width: 70%;
+    height: 2.4rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: .5rem;
   }
 }

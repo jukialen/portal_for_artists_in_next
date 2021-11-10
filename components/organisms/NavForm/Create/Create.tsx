@@ -22,13 +22,18 @@ type UserDataType = {
 
 // @ts-ignore
 export const Create: FC = () => {
-  const {isCreate} = useContext(NavFormContext);
+  const { isCreate } = useContext(NavFormContext);
   
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [valuesFields, setValuesFields] = useState<boolean>(false);
   
-  const submitAccountData = useCallback(async ({username, pseudonym, email, password}: UserDataType, {resetForm}) => {
+  const submitAccountData = useCallback(async ({
+    username,
+    pseudonym,
+    email,
+    password
+  }: UserDataType, { resetForm }) => {
     setIsLoading(true);
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_CREATE_USER}`, {
@@ -37,7 +42,7 @@ export const Create: FC = () => {
       setValuesFields(!valuesFields);
       // @ts-ignore
       resetForm(initialValues);
-    } catch ({response}) {
+    } catch (error) {
       setErrorMessage('Nie mogliśmy Cię zarejestrować');
     }
     setIsLoading(false);
@@ -115,7 +120,7 @@ export const Create: FC = () => {
       
       <button
         type='submit'
-        className={styles.submit__button}
+        className={`button ${styles.submit__button}`}
         aria-label='login button'
       >
         {isLoading ? 'Rejestruję Cię...' : 'Zarejestruj się'}
@@ -128,7 +133,7 @@ export const Create: FC = () => {
       
       {errorMessage ? <p className={styles.error}>{errorMessage}</p> : null}
       
-      <p className={styles.separator}>______________________________________</p>
+      <p className={styles.separator}>__________________</p>
       
       <h4 className={styles.provider__title}>Lub zarejestruj się za pomocą:</h4>
       

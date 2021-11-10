@@ -23,9 +23,9 @@ const initialValues = {
 };
 
 export const Login: FC = () => {
-  const { isLogin } = useContext( NavFormContext );
-  const [errorMessage, setErrorMessage] = useState<string>( '' );
-  const [valuesFields, setValuesFields] = useState<string>( '' );
+  const { isLogin } = useContext(NavFormContext);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [valuesFields, setValuesFields] = useState<string>('');
   
   const router = useRouter();
   // @ts-ignore
@@ -39,32 +39,32 @@ export const Login: FC = () => {
         },
       );
       // @ts-ignore
-      typeof window !== 'undefined' && localStorage.setItem( 'user', JSON.stringify( data.jwt ) );
-      resetForm( initialValues );
+      typeof window !== 'undefined' && localStorage.setItem('user', JSON.stringify(data.jwt));
+      resetForm(initialValues);
       // @ts-ignore
-      setValuesFields( `${data.user.pseudonym} zostałaś/eś zalogowana/y` );
-      return router.push( '/application' );
+      setValuesFields(`${data.user.pseudonym} zostałaś/eś zalogowana/y`);
+      return router.push('/application');
     } catch (error) {
-      setErrorMessage( 'Nie mogliśmy Cię zalogować' );
+      setErrorMessage('Nie mogliśmy Cię zalogować');
     }
   };
   
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={Yup.object( {
-        email: Yup.string().email( 'Invalid email address' ).required( 'Required' ),
+      validationSchema={Yup.object({
+        email: Yup.string().email('Invalid email address').required('Required'),
         
         password: Yup.string()
-        .min( 9, 'Hasło jest za krótkie. Minimum 9 znaków' )
-        .matches( /^(?=.*?[A-Z])/, 'Hasło musi zawierać conajmniej jedną dużą literę' )
-        .matches( /(?=[0-9])+/g, 'Hasło musi mieć conajmniej 1 cyfrę.' )
+        .min(9, 'Hasło jest za krótkie. Minimum 9 znaków')
+        .matches(/^(?=.*?[A-Z])/, 'Hasło musi zawierać conajmniej jedną dużą literę')
+        .matches(/(?=[0-9])+/g, 'Hasło musi mieć conajmniej 1 cyfrę.')
         .matches(
           /(?=.*?[#?!@$%^&*-]+)/,
           'Hasło musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-',
         )
-        .required( 'Required' ),
-      } )}
+        .required('Required'),
+      })}
       onSubmit={submitAccountData}
     >
       <Form className={`${styles.login} ${isLogin ? styles.form__menu__active : ''}`}>
@@ -90,7 +90,7 @@ export const Login: FC = () => {
         
         <button
           type='submit'
-          className={styles.submit__button}
+          className={`button ${styles.submit__button}`}
           aria-label='login button'
         >
           Zaloguj się
@@ -100,7 +100,7 @@ export const Login: FC = () => {
         
         {errorMessage ? <p className={styles.error}>{errorMessage}</p> : null}
         
-        <p className={styles.separator}>______________________________________</p>
+        <p className={styles.separator}>__________________</p>
         
         <h4 className={styles.provider__title}>Lub zaloguj się za pomocą:</h4>
         

@@ -1,62 +1,44 @@
 @use 'styles/variables' as *;
 
 .footer {
-  height: 4rem;
   display: flex;
   position: relative;
   background-color: $third__background__color;
-  font-size: 1.5rem;
 
   .button {
-    flex: 1;
     width: 20%;
-    margin: auto;
-    padding: 0.5% 0;
     background-color: inherit;
     border: 0;
     cursor: pointer;
   }
 }
 
-@media (min-width: 280px) and (max-width: 767px) {
-  .footer .button {
-    font-size: 1rem;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .footer .button {
-    padding: 1.5rem 0;
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .footer .button {
-    padding: 1% 0;
-  }
-}
-
 /*LANGUAGES*/
 
 .languages {
-  width: 15rem;
+  width: 10rem;
   height: 0;
   display: flex;
   position: absolute;
-  font-size: 1.5rem;
-  bottom: 4rem;
+  font-size: 1.2rem;
+  bottom: 3rem;
   right: 0;
   opacity: 0;
   visibility: hidden;
 
   .languages__version {
-    width: 6rem;
-    height: inherit;
-    border: #12fff8;
-    border-radius: 10%;
-    background-color: #12fff8;
-    cursor: pointer;
-    margin: auto;
+    display: inline-flex;
+    width: 4rem;
+    justify-content: center;
+    align-items: center;
+    background-color: $secondary__background__color;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 717px) {
+  .footer {
+    height: 2.5rem;
   }
 }
 

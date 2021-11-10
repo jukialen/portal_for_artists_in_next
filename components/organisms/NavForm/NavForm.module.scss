@@ -3,37 +3,34 @@
 .create__account,
 .login {
   position: absolute;
-  grid-template-columns: 1fr;
+  //grid-template-columns: 1fr;
   width: 100%;
-  max-width: 38rem;
-  top: 5rem;
+  max-width: 23rem;
+  top: 3rem;
   right: 0;
-  background-color: #1e90ff;
+  background-color: $link__hover;
   border-bottom: 0.5rem inset $borders__background__color;
   border-left: 0.5rem inset $borders__background__color;
   border-right: 0.5rem inset $borders__background__color;
   z-index: 999;
 
   .title {
-    margin: 2rem 0.5rem;
+    margin: 2rem auto;
   }
 
   .error {
     margin: auto 14%;
-    font-size: 1.7rem;
+    font-size: 1.2rem;
     line-height: 1.2;
   }
 
   .submit__button {
-    margin: 1.5rem 4rem 1rem 16rem;
-    padding: .25rem 3.5rem;
-    border: .2rem inset $borders__background__color;
-    border-radius: 2rem;
-    cursor: pointer;
+    width: 10rem;
+    margin: 1rem 4rem 1rem 37%;
   }
 
   .separator {
-    margin: 1rem auto 2rem;
+    margin: 0 auto 2rem;
     font-size: 1.5rem;
     line-height: 1.2;
   }
@@ -41,7 +38,7 @@
   .provider__title {
     display: inline-block;
     margin: 0.5rem auto;
-    font-size: 2rem;
+    font-size: 1.4rem;
   }
 }
 

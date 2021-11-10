@@ -1,76 +1,86 @@
 @use 'styles/variables' as *;
 
-.h3 {
-  margin: 2rem 0;
-}
-
 .aside,
 .aside__right {
   transition: transform 0.3s 0.1s ease-in-out;
 }
 
 .aside {
-  width: 14vw;
+  width: 15rem;
   font-size: 1.5rem;
-  padding: 9rem 0 0;
+  position: absolute;
+  margin: 3rem 0 0 -15rem;
   background-color: $aside__background__color;
   z-index: 2;
 
   &__right {
-    width: 3rem;
-    height: 5rem;
-    display: none;
-    margin-left: 29rem;
+    width: 2.5rem;
+    height: 3.5rem;
+    position: sticky;
+    top: 8rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     font-size: 2rem;
+    margin: 7rem 0 0 100%;
+    border: 0;
     background-color: $another__background__color;
     cursor: pointer;
-    border: 0;
+  }
+
+  .h3 {
+    margin-top: -6rem;
+  }
+
+  .group__title, .friend__title {
+    margin: 1rem auto;
   }
 
   .contact {
-    height: 4rem;
-    margin-top: 4rem;
-    padding: 1rem 0;
+    margin: 0 auto;
+    padding: 1rem;
     background: $another__background__color;
   }
 }
 
-@media (min-width: 280px) and (max-width: 424px) {
+@media (min-width: 320px) and (max-width: 767px) {
   .aside {
-    width: 29rem;
-    position: absolute;
-    margin-left: -29rem;
+    width: 17rem;
+    margin: 3rem 0 0 -17rem;
+  }
+}
+
+@media (min-width: 674px) and (max-width: 767px){
+  .aside {
+    width: 18rem;
+    margin: 3rem 0 0 -18rem;
+
+  }
+}
+
+@media (min-width: 768px) {
+  .aside {
+    position: static;
+    margin: 0;
+    padding: 6rem 0 0;
 
     &__right {
-      display: inline-block;
+      display: none;
+    }
+
+    .h3 {
+      margin: 1rem 0;
     }
   }
 }
 
-@media (min-width: 425px) and (max-width: 1023px) {
-  .aside {
-    width: 29rem;
-    position: absolute;
-    margin-left: -29rem;
-
-    &__right {
-      display: inline-block;
-    }
-  }
-}
-
-@media (min-width: 1024px) {
-  .aside {
-    width: 27rem;
-  }
-}
-
-.aside__active {
-  margin-left: 0;
-  transition: margin-left 0.8s ease-in-out;
-}
 
 .first__h3 {
   margin-top: -3rem;
   margin-bottom: 0;
+}
+
+.aside__active {
+  margin: 3rem 0 0 0;
+  transition: margin-left 0.8s ease-in-out;
 }

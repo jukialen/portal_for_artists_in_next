@@ -1,0 +1,19 @@
+.adding__files {
+    display: flex;
+    flex-flow: column wrap;
+
+  .input {
+    width: 14rem;
+    margin: .5rem auto;
+  }
+
+  .icons {
+    font-size: 1.4rem;
+    margin: .4rem;
+  }
+
+  .button {
+    width: 8rem;
+    margin: .5rem auto;
+  }
+}

@@ -1,12 +1,9 @@
-/*DARK MODE*/
+@use 'styles/variables' as *;
 
-.a__dark {
-  color: #fff;
-}
 
 .dark {
-  background-color: #333;
-  color: #fff;
+  background-color: $dark__background;
+  color: $dark__color;
 }
 
 .left__arrow__dark {

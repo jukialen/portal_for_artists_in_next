@@ -10,9 +10,9 @@ import styles from './Aside.module.scss';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 export function Aside() {
-  const [isLeftMenu, setLeftMenu] = useState<boolean>( false );
+  const [isLeftMenu, setLeftMenu] = useState<boolean>(false);
   
-  const leftMenuClick = () => setLeftMenu( !isLeftMenu );
+  const leftMenuClick = () => setLeftMenu(!isLeftMenu);
   
   return (
     <aside id='top__menu' className={`${styles.aside} ${isLeftMenu && styles.aside__active}`}>
@@ -29,11 +29,11 @@ export function Aside() {
       
       <Categories />
       
-      <h3>Grupy</h3>
+      <h3 className={styles.group__title}>Grupy</h3>
       
       <Groups />
       
-      <h3>Przyjaciele</h3>
+      <h3 className={styles.friend__title}>Przyjaciele</h3>
       
       <Friends />
       

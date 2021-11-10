@@ -11,10 +11,10 @@ export default function Account() {
   const router = useRouter();
   let user;
   
-  useEffect( () => {
+  useEffect(() => {
     user = localStorage.getItem('user');
     !user && router.push('/');
-  }, [user] );
+  }, [user]);
   
   return (
     <section className='workspace'>

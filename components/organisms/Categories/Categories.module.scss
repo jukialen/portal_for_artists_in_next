@@ -1,19 +1,12 @@
 .categories {
-  padding: 3rem;
-  font-size: initial;
+  padding: 1rem;
+  font-size: 1.2rem;
 
   .link {
     display: inline-block;
     width: 12rem;
     line-height: 2;
     cursor: pointer;
-  }
-}
-
-@media (min-width: 280px) and (max-width: 424px) {
-  .categories {
-    font-size: 1.7rem;
-    margin: 0 auto;
   }
 }
 

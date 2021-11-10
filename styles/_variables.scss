@@ -7,18 +7,27 @@ $another__background__color: #8c566f;
 
 //BORDERS
 $borders__background__color: #6bb5ff;
+$borders__required__color: #800000;
 
 //DARK MODE
-$dark__background: #000;
-$dark__color: #fff;
+$dark__background: #333;
+$dark__color: #ddf;
 
 //LIGHT MODE
-$light__background__color: #fff;
-$light__color: #000;
+$light__background__color: #ddf;
+$light__color: #333;
 
 //LINKS
-$link__color: #000;
+$link__color: #919191;
 $link__hover: #1e90ff;
 $link__active: #12fff8;
 $link__focus: #ffa205;
 $link__visited: #ff7f38;
+
+//MAIN__PAGE
+$main__container: #559fbc;
+$image__container: #3983cd;
+
+//PROVIDERS__ICONS
+$google__provide: #db4437;
+$yahoo_provider: #400090;

@@ -4,13 +4,13 @@ export const AccountMenu = () => {
   return (
     <article className={styles.account__menu}>
       <div className={styles.div}>
-        <a href="#account__data">Ogólne</a>
+        <a href='#account__data'>Ogólne</a>
       </div>
       <div className={styles.div}>
-        <a href="#user__gallery__in__account">Galeria</a>
+        <a href='#user__gallery__in__account'>Galeria</a>
       </div>
       <div className={styles.div}>
-        <a href="#profile">Profil</a>
+        <a href='#profile'>Profil</a>
       </div>
     </article>
   );

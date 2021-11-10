@@ -1,15 +1,22 @@
 .form__field {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	margin: 1rem;
+  display: flex;
+  margin: 0.7rem auto;
+  flex-direction: row;
 
-	.label {
-		margin: auto 1rem;
-		font-size: 2rem;
-	}
+  .label {
+    display: inherit;
+    width: 7rem;
+    margin: 0 0.8rem;
+    justify-content: flex-start;
+    font-size: 1.5rem;
+  }
 
-	.input {
-		margin: 0;
-		width: 16rem;
-	}
+  .input {
+    width: 7rem;
+    margin: 0;
+
+    @media (min-width: 317px) {
+      width: 10rem;
+    }
+  }
 }

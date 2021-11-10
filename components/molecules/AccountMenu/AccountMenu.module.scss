@@ -1,18 +1,16 @@
 @use 'styles/variables' as *;
 
 .account__menu {
-  width: 45%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  margin: 0 20% 3rem 20%;
+  grid-template-columns: 1fr;
+  margin: 0 auto;
 
   .div {
-    height: 4rem;
-    margin: 0 2rem;
-    font-size: 2rem;
+    margin: 1.4rem;
+    font-size: 1.5rem;
 
     a:first-child {
-      border-bottom: 0.3rem inset black;
+      border-bottom: 0.3rem inset $borders__background__color;
     }
 
     a:hover {
@@ -33,56 +31,8 @@
   }
 }
 
-@media (min-width: 280px) and (max-width: 424px) {
+@media (min-width: 360px) {
   .account__menu {
-    width: 96%;
-    margin: 0 2%;
-
-    .div {
-      height: 4rem;
-      margin: 0 1rem;
-    }
-  }
-}
-
-@media (min-width: 425px) and (max-width: 767px) {
-  .account__menu {
-    width: 100vw;
-    margin: 0;
-
-    .div {
-      height: 4rem;
-      margin: 0 1rem;
-    }
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .account__menu {
-    width: 55vw;
-    margin: 0 12%;
-
-    .div {
-      height: 4rem;
-      margin: 0 3rem;
-    }
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .account__menu {
-    width: 48vw;
-    margin: 0 15%;
-
-    .div {
-      height: 4rem;
-      margin: 0 1rem;
-    }
-  }
-}
-
-@media (min-width: 1440px) {
-  .account__menu {
-    margin: 4rem 25%;
+    grid-template-columns: repeat(3, 1fr);
   }
 }

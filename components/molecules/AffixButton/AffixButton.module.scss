@@ -1,14 +1,14 @@
 @use 'styles/variables' as *;
 
 .up {
-  width: 5rem;
-  height: 5rem;
+  width: 3rem;
+  height: 3rem;
   position: absolute;
   display: none;
-  right: 3rem;
+  right: 2rem;
   bottom: 2rem;
-  font-size: 3rem;
-  padding: 1rem;
+  font-size: 2rem;
+  padding: .5rem;
   background-color: $another__background__color;
   color: black;
   border-radius: 50%;

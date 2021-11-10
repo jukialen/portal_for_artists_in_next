@@ -12,11 +12,11 @@ type TitleNavType = {
   titleSecondNav: string;
 };
 
-export const Nav = ({titleFirstNav, titleSecondNav}: TitleNavType) => {
+export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   const router = useRouter();
   
-  const {showLoginForm, showCreateForm} = useContext(NavFormContext);
-  const {isMenu, showMenu} = useContext(ShowMenuContext);
+  const { showLoginForm, showCreateForm } = useContext(NavFormContext);
+  const { isMenu, showMenu } = useContext(ShowMenuContext);
   
   const hideMenuLogin = () => {
     showLoginForm();

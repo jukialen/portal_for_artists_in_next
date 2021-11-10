@@ -5,7 +5,7 @@ import styles from './Groups.module.scss';
 export const Groups = () => {
   return (
     <div className={styles.groups}>
-      <button className={styles.groups__item} aria-label='Adding a group'>
+      <button className={`${styles.groups__button} button`} aria-label='Adding a group'>
         Dodaj grupę
       </button>
       

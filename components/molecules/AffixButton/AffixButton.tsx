@@ -24,12 +24,14 @@ export const AffixButton = () => {
   
   typeof window !== 'undefined' && window.addEventListener('scroll', toggleVisible);
   
-  return (<Affix offsetBottom={bottom}>
-    <Button type='primary' href='#' onClick={setBootom}>
-      <UpOutlined
-        className={`${styles.up} ${visible && styles.up__active}`}
-        aria-label='top of page button'
-      />
-    </Button>
-  </Affix>);
+  return (
+    <Affix offsetBottom={bottom}>
+      <Button type='primary' href='#' onClick={setBootom}>
+        <UpOutlined
+          className={`${styles.up} ${visible && styles.up__active}`}
+          aria-label='top of page button'
+        />
+      </Button>
+    </Affix>
+  );
 };

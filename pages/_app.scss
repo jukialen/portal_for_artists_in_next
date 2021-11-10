@@ -5,11 +5,7 @@
   box-sizing: border-box;
   text-align: center;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode',
-    'Geneva', 'Verdana', sans-serif;
-}
-
-html {
-  font-size: 62.5%;
+  'Geneva', 'Verdana', sans-serif;
 }
 
 h1 {
@@ -17,15 +13,15 @@ h1 {
 }
 
 h2 {
-  font-size: 2.5rem;
-}
-
-h3 {
   font-size: 2rem;
 }
 
+h3 {
+  font-size: 1.6rem;
+}
+
 h4 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 a {
@@ -53,7 +49,7 @@ a {
 input:required,
 textarea:required,
 select:required {
-  border: 0.1rem solid #80000000;
+  border: 0.1rem solid $borders__required__color;
 }
 
 .whole__page {
@@ -68,13 +64,13 @@ select:required {
 .workspace {
   display: flex;
   flex-direction: column;
-  margin: 5rem auto;
-  padding-top: 4rem;
+  margin: 2rem auto;
+  padding-top: 3rem;
 }
 
 .button {
   padding: 0.25rem 1.5rem;
-  border: 0.2rem inset $borders__background__color;
+  border: .2rem inset $borders__background__color;
   border-radius: 2rem;
   cursor: pointer;
 }

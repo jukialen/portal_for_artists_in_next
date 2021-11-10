@@ -2,10 +2,9 @@ type InputsTypes = {
   idInputs?: string;
   typeInput?: string;
   placeholderInput: string;
-
-  props?: string[];
+  className: string;
 };
 
-export const Inputs = ({ idInputs, typeInput, placeholderInput, ...props }: InputsTypes) => {
-  return <input type={typeInput} id={idInputs} placeholder={placeholderInput} {...props} />;
+export const Inputs = ({ idInputs, typeInput, placeholderInput, className }: InputsTypes) => {
+  return <input type={typeInput} id={idInputs} placeholder={placeholderInput} className={className} />;
 };

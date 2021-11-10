@@ -1,39 +1,41 @@
+@use 'styles/variables' as *;
+
 .profile {
   justify-items: center;
   display: grid;
-  margin: 3rem auto;
-  font-size: 2rem;
+  margin: 2rem auto;
+  font-size: 1.8rem;
 }
 
 .photo__profile {
   width: 10rem;
   height: 10rem;
-  background-color: #12fff8;
-  margin: 3rem;
+  background-color: $secondary__background__color;
+  margin: 2rem;
 }
 
 .user__name,
 .about__me {
-  margin: 3rem;
+  margin: 1.5rem;
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column;
 
-  label {
-    margin-bottom: 1rem;
+  .title {
+    margin: .5rem;
+    align-self: center;
   }
 
-  input,
-  textarea {
+  .input,
+  .description {
+    width: 14rem;
     margin: 1rem auto;
-    max-width: 100%;
+    font-size: 1rem;
   }
 }
 
-@media (min-width: 425px) and (max-width: 1439px) {
-  .user__name,
-  .about__me {
-    line-height: 2.5rem;
-  }
+.button {
+  width: 7rem;
+  font-size: 1rem;
 }
 
 @media (min-width: 1440px) {

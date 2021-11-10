@@ -1,21 +1,5 @@
-.top__among__users,
-.liked {
-  text-align: center;
-  margin: 3rem auto 5rem auto;
-}
-
-@media (min-width: 280px) and (max-width: 767px) {
-  .top__among__users,
+ .top__among__users,
   .liked {
     text-align: center;
-    width: 100vw;
-    margin: 6rem auto;
+    margin: 3rem auto;
   }
-}
-
-@media (min-width: 1024px) {
-  .top__among__users,
-  .liked {
-    width: 73vw;
-  }
-}

@@ -15,21 +15,21 @@ type TitleNav = {
   logoLink: string;
 }
 
-export function Header({titleFirstNav, titleSecondNav, logoLink}: TitleNav) {
-  const {isMode, changeMode} = useContext(ModeContext);
+export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
+  const { isMode, changeMode } = useContext(ModeContext);
   
-  const {showMenu} = useContext(ShowMenuContext);
+  const { showMenu } = useContext(ShowMenuContext);
   
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>
         <Link href={logoLink}>
-          <a>Portal dla artystów</a>
+          <a>PFartists</a>
         </Link>
       </h1>
       
       <button
-        className={!!isMode ? styles.light__mode : styles.dark__mode}
+        className={isMode ? styles.light__mode : styles.dark__mode}
         aria-label='mode button'
         onClick={changeMode}
         //it only work in dev tools
@@ -37,7 +37,7 @@ export function Header({titleFirstNav, titleSecondNav, logoLink}: TitleNav) {
         //   backgroundImage: `url('dark__mode.svg')`
         // } : { backgroundImage: `url('light__mode.svg')` }}
       >
-        {/*<Image src={!!isMode ? '/light__mode.svg' : '/dark__mode.svg'} width='50' height='50' aria-label='mode icon' />*/}
+        <Image src={isMode ? '/light__mode.svg' : '/dark__mode.svg'} width='40' height='40' aria-label='mode icon' />
       </button>
       
       <Nav titleFirstNav={titleFirstNav} titleSecondNav={titleSecondNav} />
@@ -47,7 +47,7 @@ export function Header({titleFirstNav, titleSecondNav, logoLink}: TitleNav) {
         aria-label='menu button'
         onClick={showMenu}
       >
-        <Image src={'/menu.svg'} width='50' height='50' aria-label='menu icon' />
+        <Image src={'/menu.svg'} width='40' height='40' aria-label='menu icon' />
       </button>
     </header>
   );

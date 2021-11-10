@@ -1,0 +1,33 @@
+.form {
+  display: flex;
+  flex-flow: column wrap;
+  margin: 1.5rem auto;
+
+  @media (min-width: 516px) {
+    margin: 2rem;
+  }
+
+  .title {
+    width: 100%;
+    height: 3rem;
+    display: inline-block;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .button {
+    display: flex;
+    width: 12rem;
+    height: 2rem;
+    justify-content: center;
+    margin: 0.5rem auto;
+    text-align: center;
+  }
+
+  .input {
+    width: 12rem;
+    height: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+}

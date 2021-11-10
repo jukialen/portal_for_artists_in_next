@@ -1,4 +1,4 @@
-import React, { useState, createContext, useCallback, ReactNode } from 'react';
+import { createContext, ReactNode, useCallback, useState } from 'react';
 
 export const ShowMenuContext = createContext({
   isMenu: false,
@@ -11,9 +11,9 @@ type childrenType = {
 
 export const ShowMenuProvider = ({ children }: childrenType) => {
   const [isMenu, setMenu] = useState<boolean>(false);
-
+  
   const showMenu = useCallback(() => setMenu(!isMenu), [isMenu]);
-
+  
   return (
     <ShowMenuContext.Provider
       value={{

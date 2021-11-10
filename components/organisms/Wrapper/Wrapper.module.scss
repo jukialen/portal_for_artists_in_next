@@ -2,7 +2,7 @@
 
 .wrapper {
   width: 100vw;
-  margin: 5rem auto;
+  margin: 4rem auto;
   position: relative;
 }
 
@@ -27,8 +27,8 @@
 
 .top__left__arrow,
 .top__right__arrow {
-  width: 4rem;
-  height: 4rem;
+  width: 3rem;
+  height: 3rem;
   display: flex;
   justify-content: center;
   align-content: center;
@@ -58,7 +58,7 @@
 
 @media (min-width: 768px) and (max-width: 1023px) {
   .wrapper {
-    width: 80vw;
+    width: 61vw;
   }
 }
 
@@ -67,16 +67,3 @@
     width: 63vw;
   }
 }
-//
-//@media (min-width: 1024px) and (max-width: 1439px) {
-//  .wrapper {
-//    margin: 0 auto;
-//  }
-//
-//  .content {
-//    display: grid;
-//    margin: auto;
-//    box-sizing: border-box;
-//    font-size: 1.2rem;
-//  }
-//}
