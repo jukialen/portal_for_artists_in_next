@@ -27,10 +27,10 @@ export const Wrapper = ({ idWrapper }: wrapperType) => {
       </div>
       
       <button className={styles.top__left__arrow} aria-label='top left arrow'>
-        <Image src={'/left__arrow__light__mode.svg'} layout='fill' aria-label='left arrow icon' />
+        <Image src='/left__arrow__light__mode.svg' layout='fill' aria-label='left arrow icon' />
       </button>
       <button className={styles.top__right__arrow} aria-label='top right arrow'>
-        <Image src={'/right__arrow__light__mode.svg'} layout='fill' aria-label='right arrow icon' />
+        <Image src='/right__arrow__light__mode.svg' layout='fill' aria-label='right arrow icon' />
       </button>
     </div>
   );

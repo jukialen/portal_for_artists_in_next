@@ -1,14 +1,16 @@
 import { FC, useCallback, useContext, useState } from 'react';
-import axios from 'axios';
+import { useRouter } from "next/router";
+import useSWR from "swr";
 
+import axios from 'axios';
 import { FormError } from 'components/molecules/FormError/FormError';
 import { FormField } from 'components/molecules/FormField/FormField';
+
 import { Providers } from 'components/molecules/Providers/Providers';
 
 import styles from '../NavForm.module.scss';
 
 import { NavFormContext } from 'providers/NavFormProvider';
-
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -27,6 +29,11 @@ export const Create: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [valuesFields, setValuesFields] = useState<boolean>(false);
+  
+  const { locale } = useRouter();
+  // @ts-ignore
+  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
+  const { data, error } = useSWR(`/languages/${locale}.json`, fetcher);
   
   const submitAccountData = useCallback(async ({
     username,
@@ -80,40 +87,40 @@ export const Create: FC = () => {
     onSubmit={submitAccountData}
   >
     <Form className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
-      <h2 className={styles.title}>Zarejestruj się za darmo!</h2>
+      <h2 className={styles.title}>{data?.NavForm?.titleOfRegistration}</h2>
       
       <FormField
-        titleField='Imię:'
+        titleField={`${data?.NavForm?.name}:`}
         nameField='username'
         typeField='text'
-        placeholderField='Name'
+        placeholderField={data?.NavForm?.name}
       />
       
       <FormError className={styles.error} nameError='username' />
       
       <FormField
-        titleField='Pseudonim:'
+        titleField={`${data?.NavForm?.pseudonym}:`}
         nameField='pseudonym'
         typeField='text'
-        placeholderField='Pseudonym'
+        placeholderField={data?.NavForm?.pseudonym}
       />
       
       <FormError className={styles.error} nameError='pseudonym' />
       
       <FormField
-        titleField='E-mail:'
+        titleField={`${data?.NavForm?.email}:`}
         nameField='email'
         typeField='email'
-        placeholderField='E-mail'
+        placeholderField={data?.NavForm?.email}
       />
       
       <FormError className={styles.error} nameError='email' />
       
       <FormField
-        titleField='Hasło:'
+        titleField={`${data?.NavForm?.password}:`}
         nameField='password'
         typeField='password'
-        placeholderField='Password'
+        placeholderField={data?.NavForm?.password}
       />
       
       <FormError className={styles.error} nameError='password' />
@@ -123,7 +130,7 @@ export const Create: FC = () => {
         className={`button ${styles.submit__button}`}
         aria-label='login button'
       >
-        {isLoading ? 'Rejestruję Cię...' : 'Zarejestruj się'}
+        {isLoading ? 'Rejestruję Cię...' : data?.NavForm?.createSubmit}
       </button>
       
       {valuesFields ? (<p className={styles.success__info}>

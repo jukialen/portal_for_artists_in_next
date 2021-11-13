@@ -1,4 +1,6 @@
-import { FC, useContext, useEffect } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
+import { useRouter } from "next/router";
+import useSWR from "swr";
 
 import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
 import { Footer } from 'components/organisms/Footer/Footer';
@@ -11,13 +13,19 @@ import { ModeContext } from 'providers/ModeProvider';
 import { ShowMenuProvider } from 'providers/ShowMenuProvider';
 import { NavFormProvider } from 'providers/NavFormProvider';
 
-export const Layout: FC = ({children}) => {
-  const {isMode} = useContext(ModeContext);
+export const Layout: FC = ({ children }) => {
+  const { isMode } = useContext(ModeContext);
   
-  let user;
+  const [user, setUser] = useState();
+  
+  const { locale } = useRouter();
+  // @ts-ignore
+  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
+  const { data, error } = useSWR(`/languages/${locale}.json`, fetcher);
   
   useEffect(() => {
-    user = localStorage.getItem('user');
+    // @ts-ignore
+    setUser(localStorage.getItem('user'));
   }, [user]);
   
   return (
@@ -25,10 +33,10 @@ export const Layout: FC = ({children}) => {
       <div className={`whole__page ${isMode ? 'dark' : ''}`}>
         <ShowMenuProvider>
           {user ?
-            <Header titleFirstNav='Wyloguj' titleSecondNav='Konto' logoLink='/application' />
+            <Header titleFirstNav={data?.Nav?.signOut} titleSecondNav={data?.Nav?.account} logoLink='/app' />
             : (
               <NavFormProvider>
-                <Header titleFirstNav='Zaloguj' titleSecondNav='Zarejestruj' logoLink='/' />
+                <Header titleFirstNav={data?.Nav?.signIn} titleSecondNav={data?.Nav?.signUp} logoLink='/' />
                 <Create />
                 <Login />
               </NavFormProvider>

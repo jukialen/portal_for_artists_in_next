@@ -24,7 +24,7 @@ export const Article = ({ imgLink, imgDescription, authorName }: articleImg) => 
             target='_blank'
             rel='noreferrer'
           >
-            <Image src={'/facebook.svg'} width={icon} height={icon} aria-label='facebook icon' />
+            <Image src='/facebook.svg' width={icon} height={icon} aria-label='facebook icon' />
           </a>
           <a
             href='https://www.twitter.com'
@@ -32,7 +32,7 @@ export const Article = ({ imgLink, imgDescription, authorName }: articleImg) => 
             target='_blank'
             rel='noreferrer'
           >
-            <Image src={'/twitter.svg'} width={icon} height={icon} aria-label='twitter icon' />
+            <Image src='/twitter.svg' width={icon} height={icon} aria-label='twitter icon' />
           </a>
           <a
             href='https://www.discord.com'
@@ -40,13 +40,13 @@ export const Article = ({ imgLink, imgDescription, authorName }: articleImg) => 
             target='_blank'
             rel='noreferrer'
           >
-            <Image src={'/discord.svg'} width={icon} height={icon} aria-label='discord icon' />
+            <Image src='/discord.svg' width={icon} height={icon} aria-label='discord icon' />
           </a>
           <a href='#' className={styles.icon}>
-            <Image src={'/copy.svg'} width={icon} height={icon} aria-label='copy icon' />
+            <Image src='/copy.svg' width={icon} height={icon} aria-label='copy icon' />
           </a>
         </div>
       </div>
-      </article>
+    </article>
   );
 };

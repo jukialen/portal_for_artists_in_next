@@ -1,15 +1,13 @@
-import { AccountMenu } from 'components/molecules/AccountMenu/AccountMenu';
-import { AccountData } from 'components/organisms/AccountData/AccountData';
-import { GalleryAccount } from 'components/organisms/GalleryAccount/GalleryAccount';
-import { ProfileAccount } from 'components/organisms/ProfileAccount/ProfileAccount';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-
-import styles from './index.module.scss';
 import Head from "next/head";
 import useSWR from "swr";
 
-export default function Account() {
+import { useEffect } from 'react';
+
+import { Wrapper } from 'components/organisms/Wrapper/Wrapper';
+import styles from './index.module.scss';
+
+export default function Application() {
   const router = useRouter();
   // @ts-ignore
   const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
@@ -32,19 +30,15 @@ export default function Account() {
         />
         <meta charSet='utf-8' />
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
-        <meta name='description' content='Account portal site.' />
+        <meta name='description' content='Main site for logged in users.' />
         <title>{data?.title}</title>
       </Head>
       
-      <h2 className={styles.account__h2}>Konto</h2>
       
-      <AccountMenu />
-      
-      <AccountData />
-      
-      <GalleryAccount />
-      
-      <ProfileAccount />
+      <h2 className={styles.top__among__users}>{data?.App?.topAmongUsers}</h2>
+      <Wrapper idWrapper='carouselTop' />
+      <h2 className={styles.liked}>{data?.App?.liked}</h2>
+      <Wrapper idWrapper='carouselLiked' />
     </section>
   );
-}
+};

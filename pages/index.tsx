@@ -1,20 +1,37 @@
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import Head from "next/head";
+import useSWR from "swr";
 
 import styles from './index.module.scss';
 
 export default function Home() {
   const router = useRouter();
+  // @ts-ignore
+  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
+  const { data, error } = useSWR(`/languages/${router.locale}.json`, fetcher);
+  
   let user;
   
   useEffect(() => {
     user = localStorage.getItem('user');
-    !!user && router.push('/application');
+    user && router.push('/app');
   }, [user]);
-  
   
   return (
     <div className='workspace'>
+      <Head>
+        <link
+          rel='alternate'
+          hrefLang={router.locale}
+          href={`${process.env.NEXT_PUBLIC_PAGE}${router.locale === 'en' ? '' : `/${router.locale}`}${router.asPath}`}
+        />
+        <meta charSet='utf-8' />
+        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+        <title>{data?.title}</title>
+      </Head>
+      
+      
       <h1 className={styles.title}>Welcome artysto!</h1>
       
       <h3 className={styles.h3}>

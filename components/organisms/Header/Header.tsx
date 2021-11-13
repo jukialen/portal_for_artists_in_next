@@ -19,7 +19,7 @@ export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
   const { isMode, changeMode } = useContext(ModeContext);
   
   const { showMenu } = useContext(ShowMenuContext);
-  
+
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>

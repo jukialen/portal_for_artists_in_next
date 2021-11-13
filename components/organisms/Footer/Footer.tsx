@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from "next/router";
+import useSWR from "swr";
 
 import styles from './Footer.module.scss';
 
 export function Footer() {
+  const { locale, asPath } = useRouter();
+  // @ts-ignore
+  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
+  const { data, error } = useSWR(`/languages/${locale}.json`, fetcher);
+  
   const [isLanguage, setLanguage] = useState(false);
   
   const showLanguages = () => {
@@ -13,33 +20,37 @@ export function Footer() {
   return (
     <footer className={styles.footer}>
       <button className={styles.button}>
-        <Link href='/authors'>
-          <a>Autorzy</a>
+        <Link href={`${locale}/authors`}>
+          <a>{data?.Footer?.authors}</a>
         </Link>
       </button>
       <button className={styles.button}>
-        <Link href='/terms'>
-          <a>Warunki korzystania</a>
+        <Link href={`${locale}/terms`}>
+          <a>{data?.Footer?.termsOfUse}</a>
         </Link>
       </button>
       <button className={styles.button}>
-        <Link href='/privacy'>
-          <a>Polityka prywatność</a>
+        <Link href={`${locale}/privacy`}>
+          <a>{data?.Footer?.privacyPolice}</a>
         </Link>
       </button>
       <button className={styles.button}>
-        <Link href='/faq'>
-          <a>FAQ</a>
+        <Link href={`${locale}/faq`}>
+          <a>{data?.Footer?.faq}</a>
         </Link>
       </button>
       <button className={styles.button} onClick={showLanguages}>
-        Zmiana języka
+        {data?.Footer?.changeLanguage}
         <div className={`${styles.languages} ${isLanguage && styles.languages__active}`}>
-          <Link href='/en'>
+          
+          <Link href={`${asPath}/`} locale='en'>
             <a className={`${styles.languages__version} button`}>EN</a>
           </Link>
-          <Link href='/jp'>
+          <Link href={`${asPath}/`} locale='jp'>
             <a className={`${styles.languages__version} button`}>JP</a>
+          </Link>
+          <Link href={`${asPath}/`} locale='pl'>
+            <a className={`${styles.languages__version} button`}>PL</a>
           </Link>
         </div>
       </button>

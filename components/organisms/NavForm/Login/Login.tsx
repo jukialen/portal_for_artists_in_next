@@ -11,6 +11,7 @@ import styles from '../NavForm.module.scss';
 import { NavFormContext } from 'providers/NavFormProvider';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import useSWR from "swr";
 
 type LoginType = {
   email: string;
@@ -29,6 +30,10 @@ export const Login: FC = () => {
   
   const router = useRouter();
   // @ts-ignore
+  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
+  const { data, error } = useSWR(`/languages/${router.locale}.json`, fetcher);
+  
+  // @ts-ignore
   const submitAccountData = async ({ email, password }: LoginType, { resetForm }) => {
     try {
       const { data } = await axios.post(
@@ -43,7 +48,7 @@ export const Login: FC = () => {
       resetForm(initialValues);
       // @ts-ignore
       setValuesFields(`${data.user.pseudonym} zostałaś/eś zalogowana/y`);
-      return router.push('/application');
+      return router.push('/app');
     } catch (error) {
       setErrorMessage('Nie mogliśmy Cię zalogować');
     }
@@ -68,22 +73,22 @@ export const Login: FC = () => {
       onSubmit={submitAccountData}
     >
       <Form className={`${styles.login} ${isLogin ? styles.form__menu__active : ''}`}>
-        <h2 className={styles.title}>Zaloguj się!</h2>
+        <h2 className={styles.title}>{data?.NavForm?.titleOfLogin}</h2>
         
         <FormField
-          titleField='E-mail:'
+          titleField={`${data?.NavForm?.email}:`}
           nameField='email'
           typeField='email'
-          placeholderField='E-mail'
+          placeholderField={data?.NavForm?.email}
         />
         
         <FormError className={styles.error} nameError='email' />
         
         <FormField
-          titleField='Hasło:'
+          titleField={`${data?.NavForm?.password}:`}
           nameField='password'
           typeField='password'
-          placeholderField='Password'
+          placeholderField={data?.NavForm?.password}
         />
         
         <FormError className={styles.error} nameError='password' />
@@ -93,7 +98,7 @@ export const Login: FC = () => {
           className={`button ${styles.submit__button}`}
           aria-label='login button'
         >
-          Zaloguj się
+          {data?.NavForm?.loginSubmit}
         </button>
         
         {!!valuesFields ? <p className={styles.success__info}>{valuesFields}.</p> : null}

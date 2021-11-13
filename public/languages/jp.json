@@ -1,0 +1,50 @@
+{
+  "title": "芸術家に取ってポータル",
+  "Nav": {
+    "signIn": "サインイン",
+    "signUp": "サインアップ",
+    "signOut": "サインアウト",
+    "account": "アカウント"
+  },
+  "NavForm": {
+    "titleOfRegistration": "無料録する！",
+    "titleOfLogin": "ログイン！",
+    "name": "名前:",
+    "pseudonym": "あだ名：",
+    "email": "メール：",
+    "password": "パスポート：",
+    "login": "ログイン：",
+    "createSubmit": "録する",
+    "loginSubmit": "ログイン"
+  },
+  "Aside": {
+    "category": "部分け",
+    "all": "皆",
+    "drawings": "描画",
+    "realistic": "写実的",
+    "manga": "マンガ",
+    "anime": "アニメ",
+    "comics": "コミック",
+    "photographs": "写真",
+    "animations": "アニメーション",
+    "others": "他",
+    "friends": "友達",
+    "groups": "団体",
+    "addingGroup": "団体が増設",
+    "contact": "連絡"
+  },
+  "Footer": {
+    "authors": "原著者",
+    "termsOfUse": "利用条件",
+    "privacyPolice": "プライバシーポリシー",
+    "faq": "FAQ",
+    "changeLanguage": "言語"
+  },
+  "App": {
+    "topAmongUsers": "ベストに依るとユーザーズ",
+    "liked": "クライアントサブスクリプション"
+  },
+  "Account": {
+    "subscription": "Subscrypcja"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "title": "Portal for artists",
+  "Nav": {
+    "signIn": "Log In",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "account": "Account"
+  },
+  "NavForm": {
+    "titleOfRegistration": "Register for free!",
+    "titleOfLogin": "Login!",
+    "name": "Name",
+    "pseudonym": "Pseudonym",
+    "email": "E-mail",
+    "password": "Password",
+    "login": "Login:",
+    "createSubmit": "Register",
+    "loginSubmit": "Login"
+  },
+  "Aside": {
+    "category": "Categories",
+    "all": "All",
+    "drawings": "Drawings",
+    "addingGroup": "Adding a group",
+    "realistic": "Realistic",
+    "manga": "Manga",
+    "anime": "Anime",
+    "comics": "Comics",
+    "photographs": "Photographs",
+    "animations": "Animations",
+    "others": "Others",
+    "friends": "Friends",
+    "groups": "Groups",
+    "contact": "Contact"
+  },
+  "Footer": {
+    "authors": "Authors",
+    "termsOfUse": "Terms of use",
+    "privacyPolice": "Privacy police",
+    "faq": "FAQ",
+    "changeLanguage": "Change language"
+  },
+  "App": {
+    "topAmongUsers": "Top10 among users",
+    "liked": "Subscribed"
+  },
+  "Account": {
+    "subscription": "Subscription"
+  }
+}
