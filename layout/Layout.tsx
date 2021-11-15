@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 
 import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
-import { Footer } from 'components/organisms/Footer/Footer';
+import { Footer } from 'components/molecules/Footer/Footer';
 import { Header } from 'components/organisms/Header/Header';
 import { Create } from 'components/organisms/NavForm/Create/Create';
 import { Login } from 'components/organisms/NavForm/Login/Login';

@@ -4,7 +4,7 @@
   width: 100%;
   position: fixed;
   display: grid;
-  grid-template-columns: 10rem auto 4rem;
+  grid-template-columns: 10rem 1fr auto;
   background-color: $primary__background__color;
   z-index: 9999;
   padding: .2rem 0;
@@ -28,8 +28,6 @@
   }
 
   .hamburger__menu {
-    //width: 3rem;
-    //height: 3rem;
     display: inline-flex;
     justify-self: end;
     align-items: center;
@@ -42,8 +40,6 @@
 
 @media (min-width: 768px) {
   .header {
-    grid-template-columns: 11rem auto 18rem;
-
     .hamburger__menu {
       display: none;
     }

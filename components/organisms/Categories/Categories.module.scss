@@ -1,10 +1,14 @@
 .categories {
+  display: flex;
+  flex-direction: column;
   padding: 1rem;
+  justify-content: center;
+  align-items: center;
   font-size: 1.2rem;
 
   .link {
-    display: inline-block;
-    width: 12rem;
+    display: flex;
+    flex-direction: column;
     line-height: 2;
     cursor: pointer;
   }

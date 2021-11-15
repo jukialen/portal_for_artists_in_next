@@ -7,6 +7,10 @@
     margin: 2rem;
   }
 
+  @media (min-width: 625px) and (max-width: 770px) {
+    margin: 3rem;
+  }
+
   .title {
     width: 100%;
     height: 3rem;
@@ -27,7 +31,7 @@
   .input {
     width: 12rem;
     height: 2rem;
-    margin-bottom: 1rem;
+    margin: 0 auto 1rem auto;
     text-align: center;
   }
 }

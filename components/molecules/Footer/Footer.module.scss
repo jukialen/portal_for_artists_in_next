@@ -1,0 +1,52 @@
+@use 'styles/variables' as *;
+
+.footer {
+  display: flex;
+  flex-flow: row wrap;
+  background-color: $third__background__color;
+
+  .button {
+    width: 9rem;
+    height: 2rem;
+    background-color: inherit;
+    border: 0;
+    cursor: pointer;
+    margin: 0.5rem auto;
+  }
+}
+
+/*LANGUAGES*/
+
+.languages {
+  height: 0;
+  display: flex;
+  position: relative;
+  font-size: 1.2rem;
+  bottom: 4rem;
+  right: 4rem;
+  opacity: 0;
+  visibility: hidden;
+  width: fit-content;
+  margin: 0 auto;
+
+  .languages__version {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $secondary__background__color;
+    margin: 0 .1rem;
+  }
+}
+
+@media (min-width: 720px) and (max-width: 1026px) {
+  .languages {
+    right: 6rem
+  }
+}
+
+.languages__active {
+  height: 2rem;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.5s ease-in-out;
+}

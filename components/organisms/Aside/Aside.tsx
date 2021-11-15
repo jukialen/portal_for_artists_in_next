@@ -4,10 +4,9 @@ import useSWR from "swr";
 
 import { Categories } from 'components/organisms/Categories/Categories';
 import { Groups } from 'components/organisms/Groups/Groups';
-
 import { Friends } from 'components/molecules/Friends/Friends';
-
 import { Links } from 'components/atoms/Links/Links';
+
 import styles from './Aside.module.scss';
 
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';

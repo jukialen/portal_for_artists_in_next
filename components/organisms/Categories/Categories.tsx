@@ -21,7 +21,7 @@ export const Categories = () => {
       </Link>
       
       <li onClick={changeOpenCategories}>
-        <Link href={`${asPath}/#`}>
+        <Link href={`${asPath}/`}>
           <a className={styles.link}>{data?.Aside?.drawings}</a>
         </Link>
         <ol className={openSubCategories ? '' : styles.hiddenElement}>

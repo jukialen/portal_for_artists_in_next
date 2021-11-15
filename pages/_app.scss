@@ -7,6 +7,38 @@
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode',
   'Geneva', 'Verdana', sans-serif;
 }
+html {
+  scrollbar-width: thin;
+  scrollbar-color: $light__color black;
+
+  &:hover {
+    scrollbar-color: $secondary__background__color black;
+  }
+
+  &:active {
+    scrollbar-color: $borders__background__color black;
+  }
+}
+html::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background-color: black;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: $light__color;
+}
+html::-webkit-scrollbar-thumb:hover {
+  background: $secondary__background__color;
+  border-radius: 20px;
+}
+
+html::-webkit-scrollbar-thumb:active {
+  background: $borders__background__color;
+  border-radius: 20px;
+}
 
 h1 {
   font-size: 3rem;
