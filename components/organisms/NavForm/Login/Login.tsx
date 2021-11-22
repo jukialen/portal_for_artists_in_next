@@ -1,19 +1,18 @@
 import React, { FC, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
+import useSWR from "swr";
 import axios from 'axios';
-// @ts-ignore
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Providers } from 'components/molecules/Providers/Providers';
 
-import styles from '../NavForm.module.scss';
-
 import { NavFormContext } from 'providers/NavFormProvider';
-import { Form, Formik } from 'formik';
-import * as Yup from 'yup';
-import useSWR from "swr";
+
+import styles from '../NavForm.module.scss';
 
 type LoginType = {
   email: string;
@@ -46,7 +45,7 @@ export const Login: FC = () => {
         },
       );
       // @ts-ignore
-      typeof window !== 'undefined' && Cookies.set('user', JSON.stringify(data.jwt), { expires: 20 } ); // {secure: true} todo
+      typeof window !== 'undefined' && Cookies.set('user', JSON.stringify(data.jwt), { expires: 20 } );
       
       resetForm(initialValues);
       // @ts-ignore

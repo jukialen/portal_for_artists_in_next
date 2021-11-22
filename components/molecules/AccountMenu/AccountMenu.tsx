@@ -1,7 +1,6 @@
 import styles from './AccountMenu.module.scss';
 
 export const AccountMenu = ({ data }:any) => {
-  // console.log(data);
   return (
     <article className={styles.account__menu}>
       <div className={styles.div}>
