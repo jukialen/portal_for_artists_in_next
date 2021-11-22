@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import Link from 'next/link';
 import useSWR from "swr";
+import Cookies from 'js-cookie';
 
 import { useRouter } from 'next/router';
 
@@ -32,7 +33,8 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   };
   
   const signOut = () => {
-    typeof localStorage !== 'undefined' && localStorage.removeItem('user');
+    Cookies.remove('user');
+    typeof localStorage !== 'undefined' && localStorage.removeItem('pseudonym');
     return router.push(`${router.locale}/`);
   };
   

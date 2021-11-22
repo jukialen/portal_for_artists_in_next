@@ -3,7 +3,6 @@
 .create__account,
 .login {
   position: absolute;
-  //grid-template-columns: 1fr;
   width: 100%;
   max-width: 23rem;
   top: 3rem;
@@ -15,13 +14,14 @@
   z-index: 999;
 
   .title {
-    margin: 2rem auto;
+    margin: 3rem auto 2rem;
   }
 
-  .error {
-    margin: auto 14%;
-    font-size: 1.2rem;
+  .success__info, .error {
+    margin: .2rem auto;
+    font-size: 1.1rem;
     line-height: 1.2;
+    width: 16rem;
   }
 
   .submit__button {
@@ -52,10 +52,4 @@
 
 .form__menu__active {
   display: grid;
-}
-
-.success__info {
-  width: 28rem;
-  display: inline-block;
-  padding: 1rem 2rem;
 }

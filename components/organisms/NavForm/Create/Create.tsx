@@ -50,101 +50,102 @@ export const Create: FC = () => {
       // @ts-ignore
       resetForm(initialValues);
     } catch (error) {
-      setErrorMessage('Nie mogliśmy Cię zarejestrować');
+      setErrorMessage(data?.NavForm?.setErrorMessageCreate);
     }
     setIsLoading(false);
-  }, [valuesFields],);
+  }, [data?.NavForm?.setErrorMessageCreate, valuesFields],);
   
   // @ts-ignore
-  return (<Formik
-    initialValues={initialValues}
-    validationSchema={Yup.object({
-      username: Yup.string()
-      .matches(/^[A-Z]/g, 'Pierwsza litera musi być duża.')
-      .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, 'Imię przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji',)
-      .matches(/\D/g, 'Imię nie może zawierać cyfr')
-      .min(3, 'Imię jest za krótkie.')
-      .required('Required'),
-      
-      pseudonym: Yup.string()
-      .matches(/[0-9０-９]+/g, 'Pseudonym musi mieć conajmniej 1 cyfrę.')
-      .matches(/[#?!@$%^&*-]+/g, 'Pseudonym musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-',)
-      .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, 'Pseudonym przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji',)
-      .min(5, 'Pseudonym jest za krótkie.')
-      .max(15, 'Pseudonym jest za długi. Maksymalnie musi mieć 15 znaków.')
-      .required('Required'),
-      
-      email: Yup.string().email('Invalid email address').required('Required'),
-      
-      password: Yup.string()
-      .min(9, 'Hasło jest za krótkie. Minimum 9 znaków')
-      .matches(/[A-Z]+/g, 'Hasło musi zawierać conajmniej jedną dużą literę')
-      .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, 'Hasło przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji',)
-      .matches(/[0-9]+/g, 'Hasło musi mieć conajmniej 1 cyfrę.')
-      .matches(/[#?!@$%^&*-]+/g, 'Hasło musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-')
-      .required('Required'),
-    })}
-    onSubmit={submitAccountData}
-  >
-    <Form className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
-      <h2 className={styles.title}>{data?.NavForm?.titleOfRegistration}</h2>
-      
-      <FormField
-        titleField={`${data?.NavForm?.name}:`}
-        nameField='username'
-        typeField='text'
-        placeholderField={data?.NavForm?.name}
-      />
-      
-      <FormError className={styles.error} nameError='username' />
-      
-      <FormField
-        titleField={`${data?.NavForm?.pseudonym}:`}
-        nameField='pseudonym'
-        typeField='text'
-        placeholderField={data?.NavForm?.pseudonym}
-      />
-      
-      <FormError className={styles.error} nameError='pseudonym' />
-      
-      <FormField
-        titleField={`${data?.NavForm?.email}:`}
-        nameField='email'
-        typeField='email'
-        placeholderField={data?.NavForm?.email}
-      />
-      
-      <FormError className={styles.error} nameError='email' />
-      
-      <FormField
-        titleField={`${data?.NavForm?.password}:`}
-        nameField='password'
-        typeField='password'
-        placeholderField={data?.NavForm?.password}
-      />
-      
-      <FormError className={styles.error} nameError='password' />
-      
-      <button
-        type='submit'
-        className={`button ${styles.submit__button}`}
-        aria-label='login button'
-      >
-        {isLoading ? 'Rejestruję Cię...' : data?.NavForm?.createSubmit}
-      </button>
-      
-      {valuesFields ? (<p className={styles.success__info}>
-        Gratulacje! Zostałeś zarejestrowany. Sprawdź skrzynkę mailową i potwierdź e-mail, aby
-        móc się zalogować.
-      </p>) : null}
-      
-      {errorMessage ? <p className={styles.error}>{errorMessage}</p> : null}
-      
-      <p className={styles.separator}>__________________</p>
-      
-      <h4 className={styles.provider__title}>Lub zarejestruj się za pomocą:</h4>
-      
-      <Providers />
-    </Form>
-  </Formik>);
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={Yup.object({
+        username: Yup.string()
+        .matches(/^[A-Z]/g, data?.NavForm?.validateUsernameFl)
+        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validateUsernameHKik)
+        .matches(/\D/g, data?.NavForm?.validateUsernameNum)
+        .min(3, data?.NavForm?.validateUsernameMin)
+        .required(data?.NavForm.validateRequired),
+        
+        pseudonym: Yup.string()
+        .matches(/[0-9０-９]+/g, data?.NavForm?.validatePseudonymNum)
+        .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePseudonymSpec)
+        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePseudonymHKik)
+        .min(5, data?.NavForm?.validatePseudonymMin)
+        .max(15, data?.NavForm?.validatePseudonymMax)
+        .required(data?.NavForm.validateRequired),
+        
+        email: Yup.string().email(data?.NavForm.validateEmail).required(data?.NavForm.validateRequired),
+        
+        password: Yup.string()
+        .min(9, data?.NavForm?.validatePasswordNum)
+        .matches(/[A-Z]+/g, data?.NavForm?.validatePasswordOl)
+        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePasswordHKik)
+        .matches(/[0-9]+/g, data?.NavForm?.validatePasswordOn)
+        .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePasswordSpec)
+        .required(data?.NavForm.validateRequired),
+      })}
+      onSubmit={submitAccountData}
+    >
+      <Form className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
+        <h2 className={styles.title}>{data?.NavForm?.titleOfRegistration}</h2>
+        
+        <FormField
+          titleField={`${data?.NavForm?.name}:`}
+          nameField='username'
+          typeField='text'
+          placeholderField={data?.NavForm?.name}
+        />
+        
+        <FormError className={styles.error} nameError='username' />
+        
+        <FormField
+          titleField={`${data?.NavForm?.pseudonym}:`}
+          nameField='pseudonym'
+          typeField='text'
+          placeholderField={data?.NavForm?.pseudonym}
+        />
+        
+        <FormError className={styles.error} nameError='pseudonym' />
+        
+        <FormField
+          titleField={`${data?.NavForm?.email}:`}
+          nameField='email'
+          typeField='email'
+          placeholderField={data?.NavForm?.email}
+        />
+        
+        <FormError className={styles.error} nameError='email' />
+        
+        <FormField
+          titleField={`${data?.NavForm?.password}:`}
+          nameField='password'
+          typeField='password'
+          placeholderField={data?.NavForm?.password}
+        />
+        
+        <FormError className={styles.error} nameError='password' />
+        
+        <button
+          type='submit'
+          className={`button ${styles.submit__button}`}
+          aria-label='login button'
+        >
+          {isLoading ? data?.NavForm?.loadingRegistration : data?.NavForm?.createSubmit}
+        </button>
+        
+        {valuesFields && (<p className={styles.success__info}>
+          {data?.NavForm?.successInfoRegistration}
+        </p>)}
+        
+        {!!errorMessage && <p className={styles.error}>{errorMessage}</p>}
+        
+        <p className={styles.separator}>__________________</p>
+        
+        <h4 className={styles.provider__title}>{data?.NavForm?.providerTitleRegistration}</h4>
+        
+        <Providers />
+      </Form>
+    </Formik>
+  );
 };

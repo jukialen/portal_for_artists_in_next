@@ -20,13 +20,16 @@
   display: flex;
   margin: 1rem auto;
   flex-flow: row wrap;
+  justify-content: space-evenly;
 
   .container {
     display: flex;
-    margin: 0 auto;
+    max-width: 25rem;
+    margin: 2rem auto;
     flex-direction: column;
     line-height: 1.6;
     background: $main__container;
+    padding: .5rem;
 
     .question {
       display: flex;
@@ -40,18 +43,12 @@
   }
 
   .image {
-    width: 80vw;
-    height: 80vw;
-    max-width: 20rem;
-    max-height: 20rem;
-    margin: 1rem auto;
     background-color: $image__container;
   }
 
   @media (min-width: 394px) {
     .container {
-      width: 22rem;
-      margin: 0 2rem;
+      margin: 1.5rem;
       justify-content: center;
 
       .question {

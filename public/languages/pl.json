@@ -7,6 +7,25 @@
     "account": "Konto"
   },
   "NavForm": {
+    "setErrorMessageCreate": "Nie mogliśmy Cię zarejestrować.",
+    "setErrorMessageLogin": "Nie mogliśmy Cię zalogować",
+    "statusLogin": ", zostałaś/eś zalogowana/y",
+    "validateRequired": "Wymagane",
+    "validateUsernameFl": "Pierwsza litera musi być duża.",
+    "validateUsernameHKik": "Imię przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji",
+    "validateUsernameNum": "Imię nie może zawierać cyfr",
+    "validateUsernameMin": "Imię jest za krótkie.",
+    "validatePseudonymNum": "Pseudonym musi mieć conajmniej 1 cyfrę.",
+    "validatePseudonymSpec": "Pseudonym musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-",
+    "validatePseudonymHKik":"Pseudonym przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji",
+    "validatePseudonymMin": "Pseudonym jest za krótkie.",
+    "validatePseudonymMax": "Pseudonym jest za długi. Maksymalnie musi mieć 15 znaków.",
+    "validateEmail": "Niepoprawny adres e-mail.",
+    "validatePasswordNum": "Hasło jest za krótkie. Musi mieć minimum 9 znaków.",
+    "validatePasswordOl": "Hasło musi zawierać conajmniej jedną dużą literę.",
+    "validatePasswordHKik": "Hasło przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji.",
+    "validatePasswordOn": "Hasło musi mieć conajmniej 1 cyfrę.",
+    "validatePasswordSpec": "Hasło musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-",
     "titleOfRegistration": "Zarejestruj się za darmo!",
     "titleOfLogin": "Zaloguj!",
     "name": "Imię:",
@@ -15,7 +34,11 @@
     "password": "Hasło",
     "login": "Login",
     "createSubmit": "Zarejestruj",
-    "loginSubmit": "Zaloguj"
+    "loginSubmit": "Zaloguj",
+    "loadingRegistration": "Rejestruję cię...",
+    "successInfoRegistration": "Gratulacje! Zostałeś zarejestrowany. Sprawdź skrzynkę mailową i potwierdź e-mail, aby móc się zalogować.",
+    "providerTitleRegistration": "Lub zarejestruj się za pomocą:",
+    "providerTitleLogin": "Lub zaloguj się za pomocą"
   },
   "Aside": {
     "category": "Kategorie",
@@ -45,6 +68,55 @@
     "liked": "Ostatnie 10 polubionych"
   },
   "Account": {
-    "subscription": "Subscrypcja"
+    "aMenu": {
+      "general": "Ogólne",
+      "gallery": "Galeria",
+      "profile": "Profil"
+    },
+    "aData": {
+      "subscription": "Subskrypcja:",
+      "currentPlan": "Aktualny plan",
+      "changeButton": "Zmień",
+      "actualEmail": "Aktualny e-mail",
+      "changeEmail": "Zmień adres e-mail",
+      "currentPassword": "Wpisz aktualne hasło",
+      "newPassword": "Wpisz nowe hasło",
+      "againNewPassword": "Powtórz nowe hasło",
+      "changePassword": "Zmień hasło"
+    },
+    "gallery": {
+      "userFilesTitle": "Twoje zdjęcia i rysunki",
+      "userLikedFiles": "Polubione zdjęcia i rysunki"
+    },
+    "profile": {
+      "name": "Twoja nazwa użytkownika:",
+      "aboutMe": "O mnie:",
+      "save": "Zapisz"
+    }
+  },
+  "Main": {
+    "title": "Witaj artysto!",
+    "firstQuestion": "Szukasz serwisu, który będzie dedykowany tobie?",
+    "secondQuestion": "Szukasz serwisu, który sprawdzi się jako graficzny pamiętnik? A może chcesz pochwalić się swoimi artystycznymi dziełami?",
+    "firstAnswer": "Dobrze trafiłeś! Jest to serwis dedykowany takim osobom jak ty.",
+    "secondAnswer": "Od niedzielnych artystów po ludzi tworzących swoje wirtualne podręczne portfolio.",
+    "containerFirstQuestion": "Krótki film? Jakiś Gif? Rysunek? Obraz? Zdjęcie?",
+    "containerFirstAnswer": "Nie ma problemu! Wysyłasz na serwer i już!",
+    "containerSecondQuestion": "Chcesz zobaczyć co inni robią?",
+    "containerSecondAnswer": "Kliknij w nick i przeglądaj.",
+    "containerThirdQuestion": "Chcesz zobaczyć co jest na topie?",
+    "containerThirdAnswer": "Już to masz na głównej stronie. Wystarczy się zalogować!",
+    "containerFourthQuestion": "Chcesz zobaczyć co ostatnio polubiłeś/aś?",
+    "containerFourthAnswer": "Wystarczy się zalogować i już masz to!",
+    "containerFifthQuestion": "Design?",
+    "containerFifthAnswer": "Oczywiście minimalistyczny! Twoje ma być na wierzchu, nie nasze. Dzięki temu wszystko jest też czytelniejsze.",
+    "containerSixthQuestion": "Nie lubisz jasnej strony?",
+    "containerSixthAnswer": "No to cyk i masz tryb ciemny!",
+    "containerSeventhQuestion": "Chcesz znaleźć coś o określonym typie?",
+    "containerSeventhAnswer": "Wybierz tag. A może sam coś dodałeś/aś i chcesz by łatwiej ludzie znaleźli? Dodaj tag.",
+    "containerEighthQuestion": "Szukasz ludzi o podobnym upodobaniach?",
+    "containerEighthAnswer": "Wybierz grupę lub, jeszcze lepiej sam/a ją stwórz!",
+    "containerNinthQuestion": "Masz tutaj artystycznych przyjaciół?",
+    "containerNinthAnswer": "Zawsze masz ich pod ręką. Szybko, więc wiesz czym się ostatnio pochwalili."
   }
 }

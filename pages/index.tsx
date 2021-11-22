@@ -1,21 +1,25 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from "next/head";
+import Image from "next/image";
 import useSWR from "swr";
+
+import Cookies from "js-cookie";
 
 import styles from './index.module.scss';
 
 export default function Home() {
+  const [user, setUser] = useState<string | undefined>('')
   const router = useRouter();
   // @ts-ignore
   const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
   const { data, error } = useSWR(`/languages/${router.locale}.json`, fetcher);
   
-  let user;
+  const image = 320;
   
   useEffect(() => {
-    user = localStorage.getItem('user');
-    user && router.push('/app');
+    setUser(Cookies.get('user'));
+    !!user && router.push('/app');
   }, [user]);
   
   return (
@@ -32,119 +36,145 @@ export default function Home() {
         <title>{data?.title}</title>
       </Head>
       
-      
-      <h1 className={styles.title}>Welcome artysto!</h1>
+      <h1 className={styles.title}>{data?.Main?.title}</h1>
       
       <h3 className={styles.h3}>
-        Szukasz serwisu, który spełni będzie dedykowany tobie, a nie milionom osób więc nikomu?
+        {data?.Main?.firstQuestion}
         <br />
         <br />
-        Szukasz serwisu, który sprawdzi się jako graficzny pamiętnik? A może chcesz się pochwalić
-        swoimi artystycznymi dziełami?
+        {data?.Main?.secondQuestion}
       </h3>
       
       <h2 className={styles.h2}>
-        Dobrze trafiłeś! Jest to serwis dedykowany takim osobom jak ty.
+        {data?.Main?.firstAnswer}
         <br />
         <br />
-        Od niedzielnych artystów po ludzi tworzących swoje wirtualne podręczne portfolio.
+        {data?.Main?.secondAnswer}
       </h2>
       
       <div className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>Krótki film? Jakiś Gif? Rysunek? Obraz? Zdjęcie?</h4>
-          <p className={styles.answer}>Nie ma problemu! Wysyłasz na serwer i już!</p>
+          <h4 className={styles.question}>
+            {data?.Main?.containerFirstQuestion}
+          </h4>
+          <p className={styles.answer}>
+            {data?.Main?.containerFirstAnswer}
+          </p>
         </div>
         
-        <img src='#' className={styles.image} alt='picture.jpg' />
-      </div>
-      
-      <div className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>Chcesz zobaczyć co inni robią?</h4>
-          
-          <p className={styles.answer}>Kliknij w nick i przeglądaj.</p>
-        </div>
-        
-        <img src='#' className={styles.image} alt='obraz.jpg' />
-      </div>
-      
-      <div className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>Chcesz zobaczyć co jest na topie?</h4>
-          
-          <p className={styles.answer}>Już to masz na głównej stronie. Wystarczy się zalogować!</p>
-        </div>
-        
-        <img src='#' className={styles.image} alt='obraz.jpg' />
+        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
       </div>
       
       <div className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            Chcesz zobaczyć co ostatnio polubiłeś/aś? <br />
+            {data?.Main?.containerSecondQuestion}
           </h4>
           
-          <p className={styles.answer}>Wystarczy się zalogować i już masz to!</p>
-        </div>
-        
-        <img src='#' className={styles.image} alt='obraz.jpg' />
-      </div>
-      
-      <div className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>Design?</h4>
-          
           <p className={styles.answer}>
-            Oczywiście minimalistyczny! Twoje ma być na wierzchu, nie nasze. Dzięki temu wszystko
-            wszystko jest też czytelniejsze, więc nic się nie zlewa w jedną animację lub obraz.
+            {data?.Main?.containerSecondAnswer}
           </p>
         </div>
         
-        <img src='#' className={styles.image} alt='obraz.jpg' />
+        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
       </div>
       
       <div className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>Interfejs jest za jasny?</h4>
-          
-          <p className={styles.answer}>No to cyk i masz ciemny!</p>
-        </div>
-        
-        <img src='#' className={styles.image} alt='obraz.jpg' />
-      </div>
-      
-      <div className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>Chcesz znaleźć coś o określonym typie?</h4>
+          <h4 className={styles.question}>
+            {data?.Main?.containerThirdQuestion}
+          </h4>
           
           <p className={styles.answer}>
-            Wybierz tag. A może sam coś dodałeś/aś i chcesz by łatwiej ludzie znaleźli? <br />
-            Dodaj tag.
+            {data?.Main?.containerThirdAnswer}
           </p>
         </div>
         
-        <img src='#' className={styles.image} alt='obraz.jpg' />
+        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
       </div>
       
       <div className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>Szukasz ludzi o podobnym upodobaniach?</h4>
+          <h4 className={styles.question}>
+            {data?.Main?.containerFourthQuestion}<br />
+          </h4>
           
-          <p className={styles.answer}>Wybierz grupę lub, jeszcze lepiej sam/a ją stwórz!</p>
+          <p className={styles.answer}>
+            {data?.Main?.containerFourthAnswer}
+          </p>
         </div>
         
-        <img src='#' className={styles.image} alt='obraz.jpg' />
+        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
       </div>
       
       <div className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>Masz tutaj artystycznych przyjaciół?</h4>
+          <h4 className={styles.question}>
+            {data?.Main?.containerFifthQuestion}
+          </h4>
           
-          <p className={styles.answer}>Zawsze masz ich pod ręką. Szybko, więc wiesz czym się ostatnio pochwalili.</p>
+          <p className={styles.answer}>
+            {data?.Main?.containerFifthAnswer}
+          </p>
         </div>
         
-        <img src='#' className={styles.image} alt='picture.jpg' />
+        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+      </div>
+      
+      <div className={styles.main__container}>
+        <div className={styles.container}>
+          <h4 className={styles.question}>
+            {data?.Main?.containerSixthQuestion}
+          </h4>
+          
+          <p className={styles.answer}>
+            {data?.Main?.containerSixthAnswer}
+          </p>
+        </div>
+        
+        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+      </div>
+      
+      <div className={styles.main__container}>
+        <div className={styles.container}>
+          <h4 className={styles.question}>
+            {data?.Main?.containerSeventhQuestion}
+          </h4>
+          
+          <p className={styles.answer}>
+            {data?.Main?.containerSeventhAnswer}
+          </p>
+        </div>
+        
+        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+      </div>
+      
+      <div className={styles.main__container}>
+        <div className={styles.container}>
+          <h4 className={styles.question}>
+            {data?.Main?.containerEighthQuestion}
+          </h4>
+          
+          <p className={styles.answer}>
+            {data?.Main?.containerEighthAnswer}
+          </p>
+        </div>
+        
+        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+      </div>
+      
+      <div className={styles.main__container}>
+        <div className={styles.container}>
+          <h4 className={styles.question}>
+            {data?.Main?.containerNinthQuestion}
+          </h4>
+          
+          <p className={styles.answer}>
+            {data?.Main?.containerNinthAnswer}
+          </p>
+        </div>
+        
+        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
       </div>
     </div>
   );

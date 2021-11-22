@@ -1,13 +1,15 @@
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import Head from 'next/head';
+import useSWR from 'swr';
+import Cookies from 'js-cookie';
+
 import { AccountMenu } from 'components/molecules/AccountMenu/AccountMenu';
 import { AccountData } from 'components/organisms/AccountData/AccountData';
 import { GalleryAccount } from 'components/organisms/GalleryAccount/GalleryAccount';
-import { ProfileAccount } from 'components/organisms/ProfileAccount/ProfileAccount';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 
+import { ProfileAccount } from 'components/organisms/ProfileAccount/ProfileAccount';
 import styles from './index.module.scss';
-import Head from "next/head";
-import useSWR from "swr";
 
 export default function Account() {
   const router = useRouter();
@@ -18,7 +20,7 @@ export default function Account() {
   let user;
   
   useEffect(() => {
-    user = localStorage.getItem('user');
+    user = Cookies.get('user');
     !user && router.push('/');
   }, [user]);
   
@@ -36,15 +38,15 @@ export default function Account() {
         <title>{data?.title}</title>
       </Head>
       
-      <h2 className={styles.account__h2}>Konto</h2>
+      <h2 className={styles.account__h2}>{data?.Nav?.account}</h2>
       
-      <AccountMenu />
+      <AccountMenu data={data} />
       
-      <AccountData />
+      <AccountData data={data} />
       
-      <GalleryAccount />
+      <GalleryAccount data={data} />
       
-      <ProfileAccount />
+      <ProfileAccount data={data} />
     </section>
   );
 }

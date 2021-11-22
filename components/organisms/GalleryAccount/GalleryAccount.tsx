@@ -5,10 +5,10 @@ import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 
 import styles from './GalleryAccount.module.scss';
 
-export const GalleryAccount: FC = () => {
+export const GalleryAccount: FC = ({ data }: any) => {
   return (
     <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
-      <em className={styles.title}>Twoje zdjęcia i rysunki</em>
+      <em className={styles.title}>{data?.Account?.gallery?.userFilesTitle}</em>
       
       <FilesUpload />
     
@@ -21,7 +21,7 @@ export const GalleryAccount: FC = () => {
         <Photos />
       </div>
       
-      <em className={styles.title}>Polubione zdjęcia i rysunki</em>
+      <em className={styles.title}>{data?.Account?.gallery?.userLikedFiles}</em>
       
       <div className={styles.like__photos}>
         <Photos />

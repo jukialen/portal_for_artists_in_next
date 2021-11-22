@@ -8,7 +8,7 @@ import { Header } from 'components/organisms/Header/Header';
 import { Create } from 'components/organisms/NavForm/Create/Create';
 import { Login } from 'components/organisms/NavForm/Login/Login';
 import { Aside } from 'components/organisms/Aside/Aside';
-
+import Cookies from 'js-cookie';
 import { ModeContext } from 'providers/ModeProvider';
 import { ShowMenuProvider } from 'providers/ShowMenuProvider';
 import { NavFormProvider } from 'providers/NavFormProvider';
@@ -25,7 +25,7 @@ export const Layout: FC = ({ children }) => {
   
   useEffect(() => {
     // @ts-ignore
-    setUser(localStorage.getItem('user'));
+    setUser(Cookies.get('user'));
   }, [user]);
   
   return (

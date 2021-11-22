@@ -1,6 +1,8 @@
 import React, { FC, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+// @ts-ignore
+import Cookies from 'js-cookie'
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
@@ -44,13 +46,14 @@ export const Login: FC = () => {
         },
       );
       // @ts-ignore
-      typeof window !== 'undefined' && localStorage.setItem('user', JSON.stringify(data.jwt));
+      typeof window !== 'undefined' && Cookies.set('user', JSON.stringify(data.jwt), { expires: 20 } ); // {secure: true} todo
+      
       resetForm(initialValues);
       // @ts-ignore
-      setValuesFields(`${data.user.pseudonym} zostałaś/eś zalogowana/y`);
+      setValuesFields(`${data.user.pseudonym}${data?.NavForm?.statusLogin}`);
       return router.push('/app');
     } catch (error) {
-      setErrorMessage('Nie mogliśmy Cię zalogować');
+      setErrorMessage(data?.MavForm?.setErrorMessageLogin);
     }
   };
   
@@ -58,17 +61,15 @@ export const Login: FC = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={Yup.object({
-        email: Yup.string().email('Invalid email address').required('Required'),
+        email: Yup.string().email(data?.NavForm.validateEmail).required(data?.NavForm.validateRequired),
         
         password: Yup.string()
-        .min(9, 'Hasło jest za krótkie. Minimum 9 znaków')
-        .matches(/^(?=.*?[A-Z])/, 'Hasło musi zawierać conajmniej jedną dużą literę')
-        .matches(/(?=[0-9])+/g, 'Hasło musi mieć conajmniej 1 cyfrę.')
-        .matches(
-          /(?=.*?[#?!@$%^&*-]+)/,
-          'Hasło musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-',
-        )
-        .required('Required'),
+        .min(9, data?.NavForm?.validatePasswordNum)
+        .matches(/[A-Z]+/g, data?.NavForm?.validatePasswordOl)
+        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePasswordHKik)
+        .matches(/[0-9]+/g, data?.NavForm?.validatePasswordOn)
+        .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePasswordSpec)
+        .required(data?.NavForm.validateRequired),
       })}
       onSubmit={submitAccountData}
     >
@@ -101,13 +102,13 @@ export const Login: FC = () => {
           {data?.NavForm?.loginSubmit}
         </button>
         
-        {!!valuesFields ? <p className={styles.success__info}>{valuesFields}.</p> : null}
+        {!!valuesFields && <p className={styles.success__info}>{valuesFields}</p>}
         
-        {errorMessage ? <p className={styles.error}>{errorMessage}</p> : null}
+        {!!errorMessage && <p className={styles.error}>{errorMessage}</p>}
         
         <p className={styles.separator}>__________________</p>
         
-        <h4 className={styles.provider__title}>Lub zaloguj się za pomocą:</h4>
+        <h4 className={styles.provider__title}>{data?.NavForm?.providerTitleLogin}</h4>
         
         <Providers />
       </Form>

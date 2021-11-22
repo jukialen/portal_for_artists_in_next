@@ -1,16 +1,17 @@
 import styles from './AccountMenu.module.scss';
 
-export const AccountMenu = () => {
+export const AccountMenu = ({ data }:any) => {
+  // console.log(data);
   return (
     <article className={styles.account__menu}>
       <div className={styles.div}>
-        <a href='#account__data'>Ogólne</a>
+        <a href='#account__data'>{data?.Account?.aMenu?.general}</a>
       </div>
       <div className={styles.div}>
-        <a href='#user__gallery__in__account'>Galeria</a>
+        <a href='#user__gallery__in__account'>{data?.Account?.aMenu?.gallery}</a>
       </div>
       <div className={styles.div}>
-        <a href='#profile'>Profil</a>
+        <a href='#profile'>{data?.Account?.aMenu?.profile}</a>
       </div>
     </article>
   );

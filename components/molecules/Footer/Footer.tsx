@@ -20,22 +20,22 @@ export function Footer() {
   return (
     <footer className={styles.footer}>
       <button className={styles.button}>
-        <Link href={`${locale}/authors`}>
+        <Link href={'/authors'}>
           <a>{data?.Footer?.authors}</a>
         </Link>
       </button>
       <button className={styles.button}>
-        <Link href={`${locale}/terms`}>
+        <Link href={'/terms'}>
           <a>{data?.Footer?.termsOfUse}</a>
         </Link>
       </button>
       <button className={styles.button}>
-        <Link href={`${locale}/privacy`}>
+        <Link href={'/privacy'}>
           <a>{data?.Footer?.privacyPolice}</a>
         </Link>
       </button>
       <button className={styles.button}>
-        <Link href={`${locale}/faq`}>
+        <Link href={'/faq'}>
           <a>{data?.Footer?.faq}</a>
         </Link>
       </button>

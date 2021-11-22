@@ -4,14 +4,14 @@ import { PasswordAccountData } from 'components/molecules/PasswordAccountData/Pa
 
 import styles from './AccountData.module.scss';
 
-export const AccountData = () => {
+export const AccountData = ({ data }: any) => {
   return (
     <article id='account__data' className={styles.account__data}>
-      <SubscriptiomAccountData />
+      <SubscriptiomAccountData data={data} />
       
-      <MailAccountData />
+      <MailAccountData data={data} />
       
-      <PasswordAccountData />
+      <PasswordAccountData data={data} />
     </article>
   );
 };

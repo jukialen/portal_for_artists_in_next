@@ -1,74 +1,81 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC } from 'react';
+import axios from "axios";
+import Cookies from "js-cookie";
 
 import { FormError } from 'components/molecules/FormError/FormError';
-
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { LoadingOutlined, PauseCircleTwoTone, ReloadOutlined, UploadOutlined, } from '@ant-design/icons';
+import { UploadOutlined, } from '@ant-design/icons';
 import styles from './FileUpload.module.scss';
 
+
 const initialValues = {
-  files: null,
+  files: '',
   description: '',
+  tags: ''
 };
 
 type FileDataType = {
-  files: FileList[] | File;
+  files: FileList;
   description: string;
   e: ChangeEvent<HTMLInputElement>;
   accept: string;
 };
 
 export const FilesUpload: FC = () => {
-  // const user = localStorage.getItem('user');
   
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [errorMessage, setErrorMessage] = useState<string>('');
-  // const [valuesFields, setValuesFields] = useState<boolean>(false);
+  const tagsArray = ['Choose tag', 'realistic', 'manga', 'anime', 'comics', 'photographs', 'animations', 'others'];
   
-  const [files, setFiles] = useState<FileList | File>();
-  // const [description, setDescription] = useState('');
+  const user = Cookies.get('user');
   
-  // //
-  const onFileChange = (e: FileDataType) => {
+  // @ts-ignore
+  const uploadImage = async ({ files, description, tags }: FileDataType, { resetForm }) => {
+    
+    
+    const formData = new FormData();
+    
+    
     // @ts-ignore
-    setFiles(e.currentTarget.files);
-  };
-  
-  const uploadToDb = () => {
-    console.log("upload")
+    for (let i; i < formData.length; i++) {
+      // @ts-ignore
+      formData.append('files', files[i]);
+      console.log(formData)
+    }
+    
+    console.log("formData", formData);
+    
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/upload`, formData)
+      // @ts-ignore
+      const imageId = response.data[i].id;
+      console.log(imageId);
+      
+      try {
+        const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/files`, {
+            multimedia: imageId,
+            description,
+            tags
+          }, {
+            headers:
+              {
+                Authorization: `Bearer ${user}`
+              }
+          }
+        )
+        console.log(data);
+        resetForm(initialValues)
+        
+      } catch (error) {
+        //handle error
+      }
+    } catch (error) {
+      //handle error
+      console.log(error)
+    }
+    
   }
   
-  // const uploadToDb = useCallback(
-  //   async ({ e }: FileDataType, { resetForm }) => {
-  //     setIsLoading(true);
-  //     // @ts-ignore
-  //     e.preventDefault();
-  //     const formData = new FormData();
-  //     // @ts-ignore
-  //     formData.append('files', files[0]);
-  //     try {
-  //       setDescription(description);
-  //       const { data } = await axios.post(`http://localhost:1337/files`, formData, {
-  //         headers: {
-  //           Authorization: `Bearer ${user}`,
-  //         },
-  //       });
-  //       console.log(user);
-  //       console.log('New files were upload', data);
-  
-  //       setValuesFields(!valuesFields);
-  //       // @ts-ignore
-  //       resetForm(initialValues);
-  //     } catch ({ response }) {
-  //       console.log(response);
-  //       setErrorMessage('Nie mogliśmy Cię zarejestrować');
-  //     }
-  //     setIsLoading(false);
-  //   },
-  //   [valuesFields, user, files, description],
-  // );
   return (
     <Formik // @ts-ignore
       initialValues={initialValues}
@@ -77,9 +84,10 @@ export const FilesUpload: FC = () => {
         .min(3, 'Opis jest zbyt krótki')
         .max(20, 'Opis nie może być dłuższy niż 20 liter')
         .matches(/[a-zA-Z0-9]/g, 'Może zawierać tylko litery i cyfry'),
-        files: Yup.mixed().required('Required'),
+        files: Yup.object().required('Required'),
+        tags: Yup.string().required("Required")
       })} // @ts-ignore
-      onSubmit={uploadToDb}
+      onSubmit={uploadImage}
     >
       <Form className={styles.adding__files}>
         <label>
@@ -93,7 +101,6 @@ export const FilesUpload: FC = () => {
             type='file'
             className={styles.input}
             placeholder='Select files' // @ts-ignore
-            onChange={onFileChange}
             accept='.jpg, .jpeg, .png, .svg, .gif, video/*'
             multiple={true}
             required='required'
@@ -108,7 +115,7 @@ export const FilesUpload: FC = () => {
         
         <Field
           title='Description:'
-          name='descriptions'
+          name='description'
           type='text'
           className={styles.input}
           placeholder='Description'
@@ -118,9 +125,15 @@ export const FilesUpload: FC = () => {
         
         <FormError nameError='description' />
         
+        <Field name='tags' as='select' className={styles.tags} required='required' aria-required='true'>
+          {tagsArray.map(tag => <option key={tag} value={tag} className={styles.options}>{tag}</option>)}
+        </Field>
+        
+        <FormError nameError='tags' />
+        
         <button
-          className={`button ${styles.button}`}// @ts-ignore
-          // onClick={uploadToDb}
+          type='submit'
+          className={`button ${styles.button}`}
         >
           Upload
         </button>

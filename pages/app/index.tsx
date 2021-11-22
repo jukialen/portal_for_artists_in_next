@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from "next/head";
 import useSWR from "swr";
-
-import { useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 import { Wrapper } from 'components/organisms/Wrapper/Wrapper';
+
 import styles from './index.module.scss';
 
 export default function Application() {
@@ -16,7 +17,7 @@ export default function Application() {
   let user;
   
   useEffect(() => {
-    user = localStorage.getItem('user');
+    user = Cookies.get('user');
     !user && router.push('/');
   }, [user]);
   

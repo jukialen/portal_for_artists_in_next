@@ -2,36 +2,36 @@ import { Inputs } from 'components/atoms/Inputs/Inputs';
 
 import styles from './PasswordAccountData.module.scss';
 
-export const PasswordAccountData = () => {
+export const PasswordAccountData = ({ data }: any) => {
   return (
     <form className={styles.form}>
-      <label className={styles.title} htmlFor='password'>Hasło:</label>
+      <label className={styles.title} htmlFor='password'>{`${data?.Nav?.account}:`}</label>
       
       <Inputs
         idInputs='password'
         className={styles.input}
         typeInput='password'
-        placeholderInput='Wpisz aktualne hasło'
+        placeholderInput={data?.Account?.aData?.currentPassword}
         // @ts-ignore
         required='required'
       />
       <Inputs
         className={styles.input}
         typeInput='password'
-        placeholderInput='Wpisz nowe hasło'
+        placeholderInput={data?.Account?.aData?.newPassword}
         // @ts-ignore
         required='required'
       />
       <Inputs
         className={styles.input}
         typeInput='password'
-        placeholderInput='Powtórz nowe hasło'
+        placeholderInput={data?.Account?.aData?.againNewPassword}
         // @ts-ignore
         required='required'
       />
       
       <button className={`${styles.button} button`} type='submit' aria-label='Submit new password'>
-        Zmień hasło
+        {data?.Account?.aData?.changePassword}
       </button>
     </form>
   );
