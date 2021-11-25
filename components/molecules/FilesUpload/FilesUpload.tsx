@@ -1,6 +1,5 @@
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent } from 'react';
 import axios from "axios";
-import Cookies from "js-cookie";
 
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Field, Form, Formik } from 'formik';
@@ -23,54 +22,34 @@ type FileDataType = {
   accept: string;
 };
 
-export const FilesUpload: FC = () => {
-  
+export const FilesUpload = () => {
   const tagsArray = ['Choose tag', 'realistic', 'manga', 'anime', 'comics', 'photographs', 'animations', 'others'];
   
-  const user = Cookies.get('user');
-  
   // @ts-ignore
-  const uploadImage = async ({ files, description, tags }: FileDataType, { resetForm }) => {
-    
+  const uploadFiles = async ({ files, description, tags }: FileDataType, { resetForm }) => {
     
     const formData = new FormData();
-    
-    
     // @ts-ignore
-    for (let i; i < formData.length; i++) {
-      // @ts-ignore
-      formData.append('files', files[i]);
-      console.log(formData)
-    }
-    
-    console.log("formData", formData);
+    formData.append('files', files[0]);
     
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/upload`, formData)
       // @ts-ignore
-      const imageId = response.data[i].id;
-      console.log(imageId);
+      const imageId = response.data[0].id;
       
       try {
-        const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/files`, {
+         await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/files`, {
             multimedia: imageId,
             description,
             tags
-          }, {
-            headers:
-              {
-                Authorization: `Bearer ${user}`
-              }
-          }
+          },
         )
-        console.log(data);
         resetForm(initialValues)
         
       } catch (error) {
-        //handle error
+        console.log(error);
       }
     } catch (error) {
-      //handle error
       console.log(error)
     }
     
@@ -87,7 +66,7 @@ export const FilesUpload: FC = () => {
         files: Yup.object().required('Required'),
         tags: Yup.string().required("Required")
       })} // @ts-ignore
-      onSubmit={uploadImage}
+      onSubmit={uploadFiles}
     >
       <Form className={styles.adding__files}>
         <label>

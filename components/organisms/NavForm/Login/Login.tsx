@@ -43,9 +43,10 @@ export const Login: FC = () => {
           identifier: email,
           password,
         },
+        {
+          withCredentials: true,
+        }
       );
-      // @ts-ignore
-      typeof window !== 'undefined' && Cookies.set('user', JSON.stringify(data.jwt), { expires: 20 } );
       
       resetForm(initialValues);
       // @ts-ignore
