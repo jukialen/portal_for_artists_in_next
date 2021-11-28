@@ -1,28 +1,21 @@
+import { GetServerSideProps } from "next";
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import Head from 'next/head';
 import useSWR from 'swr';
-import Cookies from 'js-cookie';
 
 import { AccountMenu } from 'components/molecules/AccountMenu/AccountMenu';
 import { AccountData } from 'components/organisms/AccountData/AccountData';
 import { GalleryAccount } from 'components/organisms/GalleryAccount/GalleryAccount';
-
 import { ProfileAccount } from 'components/organisms/ProfileAccount/ProfileAccount';
+
 import styles from './index.module.scss';
 
+// @ts-ignore
 export default function Account() {
   const router = useRouter();
   // @ts-ignore
   const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
   const { data, error } = useSWR(`/languages/${router.locale}.json`, fetcher);
-  
-  let user;
-  
-  useEffect(() => {
-    user = Cookies.get('user');
-    !user && router.push('/');
-  }, [user]);
   
   return (
     <section className='workspace'>
@@ -49,4 +42,21 @@ export default function Account() {
       <ProfileAccount data={data} />
     </section>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const cookie = await req.cookies;
+  
+  if (!cookie) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  };
+  
+  return {
+    props: {}
+  }
 }

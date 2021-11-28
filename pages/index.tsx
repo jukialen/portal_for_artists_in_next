@@ -1,26 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Head from "next/head";
-import Image from "next/image";
-import useSWR from "swr";
+import Head from 'next/head';
+import Image from 'next/image';
+import useSWR from 'swr';
 
-import Cookies from "js-cookie";
+import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from './index.module.scss';
 
 export default function Home() {
-  const [user, setUser] = useState<string | undefined>('')
-  const router = useRouter();
-  // @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data, error } = useSWR(`/languages/${router.locale}.json`, fetcher);
+  const { isUser } = useContext(StatusLoginContext);
   
-  const image = 320;
+  const router = useRouter();
   
   useEffect(() => {
-    setUser(Cookies.get('user'));
-    !!user && router.push('/app');
-  }, [user]);
+    isUser && router.push('/app');
+  }, [isUser]);
+  
+  // @ts-ignore
+  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
+  const { data } = useSWR(`/languages/${router.locale}.json`, fetcher);
+  
+  const image = 320;
   
   return (
     <div className='workspace'>

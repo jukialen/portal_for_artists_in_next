@@ -8,31 +8,26 @@ import { Header } from 'components/organisms/Header/Header';
 import { Create } from 'components/organisms/NavForm/Create/Create';
 import { Login } from 'components/organisms/NavForm/Login/Login';
 import { Aside } from 'components/organisms/Aside/Aside';
-import Cookies from 'js-cookie';
+
 import { ModeContext } from 'providers/ModeProvider';
 import { ShowMenuProvider } from 'providers/ShowMenuProvider';
 import { NavFormProvider } from 'providers/NavFormProvider';
+import { StatusLoginContext } from "providers/StatusLogin";
 
 export const Layout: FC = ({ children }) => {
   const { isMode } = useContext(ModeContext);
-  
-  const [user, setUser] = useState();
+  const { isUser } = useContext(StatusLoginContext);
   
   const { locale } = useRouter();
   // @ts-ignore
   const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data, error } = useSWR(`/languages/${locale}.json`, fetcher);
-  
-  useEffect(() => {
-    // @ts-ignore
-    setUser(Cookies.get('user'));
-  }, [user]);
+  const { data } = useSWR(`/languages/${locale}.json`, fetcher);
   
   return (
     <>
       <div className={`whole__page ${isMode ? 'dark' : ''}`}>
         <ShowMenuProvider>
-          {user ?
+          {isUser ?
             <Header titleFirstNav={data?.Nav?.signOut} titleSecondNav={data?.Nav?.account} logoLink='/app' />
             : (
               <NavFormProvider>

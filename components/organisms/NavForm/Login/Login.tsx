@@ -2,7 +2,6 @@ import React, { FC, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from "swr";
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -11,6 +10,7 @@ import { FormError } from 'components/molecules/FormError/FormError';
 import { Providers } from 'components/molecules/Providers/Providers';
 
 import { NavFormContext } from 'providers/NavFormProvider';
+import { StatusLoginContext } from "providers/StatusLogin";
 
 import styles from '../NavForm.module.scss';
 
@@ -26,6 +26,9 @@ const initialValues = {
 
 export const Login: FC = () => {
   const { isLogin } = useContext(NavFormContext);
+  const { showUser } = useContext(StatusLoginContext);
+  
+  
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [valuesFields, setValuesFields] = useState<string>('');
   
@@ -51,7 +54,8 @@ export const Login: FC = () => {
       resetForm(initialValues);
       // @ts-ignore
       setValuesFields(`${data.user.pseudonym}${data?.NavForm?.statusLogin}`);
-      return router.push('/app');
+      await router.push('/app');
+      await showUser();
     } catch (error) {
       setErrorMessage(data?.MavForm?.setErrorMessageLogin);
     }

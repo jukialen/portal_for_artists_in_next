@@ -1,13 +1,13 @@
 import { useContext } from 'react';
 import Link from 'next/link';
-import useSWR from "swr";
-import Cookies from 'js-cookie';
-
 import { useRouter } from 'next/router';
+import useSWR from "swr";
 
-import styles from './Nav.module.scss';
 import { NavFormContext } from 'providers/NavFormProvider';
 import { ShowMenuContext } from 'providers/ShowMenuProvider';
+
+import styles from './Nav.module.scss';
+import axios from "axios";
 
 type TitleNavType = {
   titleFirstNav: string;
@@ -18,7 +18,8 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   const router = useRouter();
 // @ts-ignore
   const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data, error } = useSWR(`/languages/${router.locale}.json`, fetcher);
+  const { data } = useSWR(`/languages/${router.locale}.json`, fetcher);
+  
   const { showLoginForm, showCreateForm } = useContext(NavFormContext);
   const { isMenu, showMenu } = useContext(ShowMenuContext);
   
@@ -32,10 +33,10 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
     showMenu();
   };
   
-  const signOut = () => {
-    Cookies.remove('user');
-    typeof localStorage !== 'undefined' && localStorage.removeItem('pseudonym');
-    return router.push(`${router.locale}/`);
+  const signOut = async () => {
+    typeof localStorage !== 'undefined' && localStorage.removeItem('SL');
+    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/logout`);
+    return router.push('/');
   };
   
   return (

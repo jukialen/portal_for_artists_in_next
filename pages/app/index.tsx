@@ -1,25 +1,19 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useEffect } from "react";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { useRouter } from 'next/router';
 import useSWR from "swr";
-import Cookies from 'js-cookie';
 
 import { Wrapper } from 'components/organisms/Wrapper/Wrapper';
 
 import styles from './index.module.scss';
 
-export default function Application() {
+export default function Application({ cookie }: any) {
+  console.log(cookie);
   const router = useRouter();
   // @ts-ignore
   const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data, error } = useSWR(`/languages/${router.locale}.json`, fetcher);
-  
-  let user;
-  
-  useEffect(() => {
-    user = Cookies.get('user');
-    !user && router.push('/');
-  }, [user]);
+  const { data } = useSWR(`/languages/${router.locale}.json`, fetcher);
   
   return (
     <section className='workspace'>
@@ -43,3 +37,20 @@ export default function Application() {
     </section>
   );
 };
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const cookie = await req.cookies;
+  
+  if (!cookie) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+  
+  return {
+    props: { cookie }
+  }
+}
