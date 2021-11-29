@@ -57,7 +57,7 @@ export const Login: FC = () => {
       await router.push('/app');
       await showUser();
     } catch (error) {
-      setErrorMessage(data?.MavForm?.setErrorMessageLogin);
+      setErrorMessage(data?.NavForm?.setErrorMessageLogin);
     }
   };
   

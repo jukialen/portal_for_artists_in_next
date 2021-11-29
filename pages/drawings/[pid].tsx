@@ -4,6 +4,7 @@ import Head from "next/head";
 import useSWR from "swr";
 
 import { Wrapper } from "components/organisms/Wrapper/Wrapper";
+import { useEffect } from "react";
 
 type DrawingsType = {
   context: string,
@@ -13,12 +14,11 @@ type DrawingsType = {
   tags: string
 }
 
-export default function Drawings({ cookie }: any) {
+export default function Drawings() {
   const { locale, asPath } = useRouter();
   // @ts-ignore
   const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
   const { data } = useSWR(`/languages/${locale}.json`, fetcher);
-  
   
   return (
     <div className='workspace'>
@@ -52,6 +52,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   }
   
   return {
-    props: {cookie}
+    props: {}
   }
 }

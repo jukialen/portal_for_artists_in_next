@@ -11,15 +11,15 @@ import styles from './index.module.scss';
 export default function Home() {
   const { isUser } = useContext(StatusLoginContext);
   
-  const router = useRouter();
+  const { locale, asPath, push } = useRouter();
   
   useEffect(() => {
-    isUser && router.push('/app');
+    isUser && push('/app')
   }, [isUser]);
   
   // @ts-ignore
   const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data } = useSWR(`/languages/${router.locale}.json`, fetcher);
+  const { data } = useSWR(`/languages/${locale}.json`, fetcher);
   
   const image = 320;
   
@@ -28,8 +28,8 @@ export default function Home() {
       <Head>
         <link
           rel='alternate'
-          hrefLang={router.locale}
-          href={`${process.env.NEXT_PUBLIC_PAGE}${router.locale === 'en' ? '' : `/${router.locale}`}${router.asPath}`}
+          hrefLang={locale}
+          href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '' : `/${locale}`}${asPath}`}
         />
         <meta charSet='utf-8' />
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
