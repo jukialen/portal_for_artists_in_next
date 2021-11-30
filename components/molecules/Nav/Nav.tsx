@@ -37,9 +37,15 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   };
   
   const signOut = async () => {
-    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/logout`,{}, {withCredentials: true});
-    await push('/');
-    await showUser();
+    try {
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {}, { withCredentials: true });
+      showUser();
+      // @ts-ignore
+      console.log(data.message)
+      return push('/');
+    } catch (error) {
+      console.log(error);
+    }
   };
   
   return (
