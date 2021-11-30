@@ -1,5 +1,5 @@
-import { createContext, ReactNode} from 'react';
-import { useLocalState } from "../hooks/useLocalState";
+import { createContext, ReactNode } from 'react';
+import { useLocalState } from 'hooks/useLocalState';
 
 type childrenType = {
   children: ReactNode;
@@ -8,12 +8,10 @@ type childrenType = {
 export const StatusLoginContext = createContext({
   isUser: false,
   showUser: () => {},
-  
 });
 
 export const StatusLoginProvider = ({ children }: childrenType) => {
   const [isUser, setUser] = useLocalState(false, 'SL');
-  
   // @ts-ignore
   const showUser = () => setUser(!isUser);
   

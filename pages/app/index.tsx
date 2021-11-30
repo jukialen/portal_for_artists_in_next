@@ -38,7 +38,7 @@ export default function Application() {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const cookie = await req.cookies;
+  const cookie = req.headers.cookie;
   
   if (!cookie) {
     return {

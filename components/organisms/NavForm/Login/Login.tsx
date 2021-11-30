@@ -28,7 +28,6 @@ export const Login: FC = () => {
   const { isLogin } = useContext(NavFormContext);
   const { showUser } = useContext(StatusLoginContext);
   
-  
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [valuesFields, setValuesFields] = useState<string>('');
   

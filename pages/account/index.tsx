@@ -44,7 +44,7 @@ export default function Account() {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const cookie = await req.cookies;
+  const cookie = req.headers.cookie;
   
   if (!cookie) {
     return {
@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
         permanent: false,
       },
     }
-  };
+  }
   
   return {
     props: {}

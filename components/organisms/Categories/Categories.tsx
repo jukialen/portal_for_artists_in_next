@@ -9,13 +9,12 @@ export const Categories = () => {
   const { locale, asPath } = useRouter();
 // @ts-ignore
   const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data, error } = useSWR(`/languages/${locale}.json`, fetcher);
+  const { data } = useSWR(`/languages/${locale}.json`, fetcher);
   
   const [openSubCategories, setOpenCategories] = useState(false);
   const changeOpenCategories = () => setOpenCategories(!openSubCategories);
   
-  let valueLocale;
-  locale === 'en' ? valueLocale = '' : valueLocale = `/${locale}`
+  
   return (
     <ol className={styles.categories}>
       <Link href='/all'>
@@ -23,32 +22,32 @@ export const Categories = () => {
       </Link>
       
       <li onClick={changeOpenCategories}>
-        <Link href={`${asPath}/`}>
+        <Link href={asPath}>
           <a className={styles.link}>{data?.Aside?.drawings}</a>
         </Link>
         <ol className={openSubCategories ? '' : styles.hiddenElement}>
-          <Link href={'/drawings/realistic'}>
+          <Link href='/drawings/realistic'>
             <a className={styles.link}>{data?.Aside?.realistic}</a>
           </Link>
-          <Link href={'/drawings/manga'}>
+          <Link href='/drawings/manga'>
             <a className={styles.link}>{data?.Aside?.manga}</a>
           </Link>
-          <Link href={'/drawings/anime'}>
+          <Link href='/drawings/anime'>
             <a className={styles.link}>{data?.Aside?.anime}</a>
           </Link>
-          <Link href={'/drawings/comics'}>
+          <Link href='/drawings/comics'>
             <a className={styles.link}>{data?.Aside?.comics}</a>
           </Link>
         </ol>
       </li>
       
-      <Link href={'/photographs'}>
+      <Link href='/photographs'>
         <a className={styles.link}>{data?.Aside?.photographs}</a>
       </Link>
-      <Link href={'/animations'}>
+      <Link href='/animations'>
         <a className={styles.link}>{data?.Aside?.animations}</a>
       </Link>
-      <Link href={'/others'}>
+      <Link href='/others'>
         <a className={styles.link}>{data?.Aside?.others}</a>
       </Link>
     </ol>

@@ -11,10 +11,10 @@ import styles from './index.module.scss';
 export default function Home() {
   const { isUser } = useContext(StatusLoginContext);
   
-  const { locale, asPath, push } = useRouter();
+  const { locale, asPath, back } = useRouter();
   
   useEffect(() => {
-    isUser && push('/app')
+    isUser && back();
   }, [isUser]);
   
   // @ts-ignore

@@ -46,14 +46,14 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
     <nav className={`${styles.nav} ${isMenu && styles.menu__active}`}>
       <ul className={styles.list}>
         <li className={styles.menu}>
-          <Link href={`${asPath}`}>
+          <Link href={asPath}>
             <a className={styles.sign__in} onClick={titleFirstNav === `${data?.Nav?.signOut}` ? signOut : hideMenuLogin}>
               {titleFirstNav}
             </a>
           </Link>
         </li>
         <li className={styles.menu}>
-          <Link href={titleSecondNav === `${data?.Nav?.account}` ? '/account' : `${asPath}/`}>
+          <Link href={titleSecondNav === `${data?.Nav?.account}` ? '/account' : asPath}>
             <a className={styles.sign__out} onClick={hideMenuCreate}>
               {titleSecondNav}
             </a>

@@ -1,6 +1,5 @@
 @use 'styles/variables' as *;
 
-
 .dark {
   background-color: $dark__background;
   color: $dark__color;
@@ -10,13 +9,10 @@
   top: 50%;
   left: 0;
   transform: translate(50%, -50%);
-  display: flex;
-  background-image: url('/public/left__arrow__dark__mode.svg');
 }
 
 .right__arrow__dark {
   top: 50%;
   right: 0;
   transform: translate(-50%, -50%);
-  background-image: url('/public/right__arrow__dark__mode.svg');
 }

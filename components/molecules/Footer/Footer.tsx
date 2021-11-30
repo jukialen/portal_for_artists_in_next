@@ -20,22 +20,22 @@ export function Footer() {
   return (
     <footer className={styles.footer}>
       <button className={styles.button}>
-        <Link href={'/authors'}>
+        <Link href='/authors'>
           <a>{data?.Footer?.authors}</a>
         </Link>
       </button>
       <button className={styles.button}>
-        <Link href={'/terms'}>
+        <Link href='/terms'>
           <a>{data?.Footer?.termsOfUse}</a>
         </Link>
       </button>
       <button className={styles.button}>
-        <Link href={'/privacy'}>
+        <Link href='/privacy'>
           <a>{data?.Footer?.privacyPolice}</a>
         </Link>
       </button>
       <button className={styles.button}>
-        <Link href={'/faq'}>
+        <Link href='/faq'>
           <a>{data?.Footer?.faq}</a>
         </Link>
       </button>
@@ -43,13 +43,13 @@ export function Footer() {
         {data?.Footer?.changeLanguage}
         <div className={`${styles.languages} ${isLanguage && styles.languages__active}`}>
           
-          <Link href={`${asPath}/`} locale='en'>
+          <Link href={asPath} locale='en'>
             <a className={`${styles.languages__version} button`}>EN</a>
           </Link>
-          <Link href={`${asPath}/`} locale='jp'>
+          <Link href={asPath} locale='jp'>
             <a className={`${styles.languages__version} button`}>JP</a>
           </Link>
-          <Link href={`${asPath}/`} locale='pl'>
+          <Link href={asPath} locale='pl'>
             <a className={`${styles.languages__version} button`}>PL</a>
           </Link>
         </div>
