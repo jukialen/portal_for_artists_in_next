@@ -1,0 +1,27 @@
+.reset {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .title {
+    margin: 3rem auto 2rem;
+  }
+
+  .subtitle {
+    margin: 2rem auto;
+  }
+
+  .error {
+    margin: .2rem auto;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    width: 16rem;
+  }
+
+  .submit__button {
+    width: 10rem;
+    margin: 1rem 4rem 1rem 37%;
+  }
+}
