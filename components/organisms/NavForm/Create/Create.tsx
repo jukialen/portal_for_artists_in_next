@@ -1,18 +1,17 @@
-import { FC, useCallback, useContext, useState } from 'react';
-import { useRouter } from "next/router";
-import useSWR from "swr";
-
-import axios from 'axios';
-import { FormError } from 'components/molecules/FormError/FormError';
-import { FormField } from 'components/molecules/FormField/FormField';
-
-import { Providers } from 'components/molecules/Providers/Providers';
-
-import styles from '../NavForm.module.scss';
-
-import { NavFormContext } from 'providers/NavFormProvider';
+import { useCallback, useContext, useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
+
+import useSWR from "swr";
+
+import { FormError } from 'components/molecules/FormError/FormError';
+import { FormField } from 'components/molecules/FormField/FormField';
+import { Providers } from 'components/molecules/Providers/Providers';
+
+import { NavFormContext } from 'providers/NavFormProvider';
+
+import styles from '../NavForm.module.scss';
 
 const initialValues = {
   username: '', pseudonym: '', email: '', password: '',
@@ -23,17 +22,12 @@ type UserDataType = {
 };
 
 // @ts-ignore
-export const Create: FC = () => {
+export const Create = ({ data }: any) => {
   const { isCreate } = useContext(NavFormContext);
   
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [valuesFields, setValuesFields] = useState<boolean>(false);
-  
-  const { locale } = useRouter();
-  // @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data, error } = useSWR(`/languages/${locale}.json`, fetcher);
   
   const submitAccountData = useCallback(async ({
     username,
@@ -65,7 +59,7 @@ export const Create: FC = () => {
         .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validateUsernameHKik)
         .matches(/\D/g, data?.NavForm?.validateUsernameNum)
         .min(3, data?.NavForm?.validateUsernameMin)
-        .required(data?.NavForm.validateRequired),
+        .required(data?.NavForm?.validateRequired),
         
         pseudonym: Yup.string()
         .matches(/[0-9０-９]+/g, data?.NavForm?.validatePseudonymNum)
@@ -73,9 +67,9 @@ export const Create: FC = () => {
         .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePseudonymHKik)
         .min(5, data?.NavForm?.validatePseudonymMin)
         .max(15, data?.NavForm?.validatePseudonymMax)
-        .required(data?.NavForm.validateRequired),
+        .required(data?.NavForm?.validateRequired),
         
-        email: Yup.string().email(data?.NavForm.validateEmail).required(data?.NavForm.validateRequired),
+        email: Yup.string().email(data?.NavForm?.validateEmail).required(data?.NavForm?.validateRequired),
         
         password: Yup.string()
         .min(9, data?.NavForm?.validatePasswordNum)
@@ -83,7 +77,7 @@ export const Create: FC = () => {
         .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePasswordHKik)
         .matches(/[0-9]+/g, data?.NavForm?.validatePasswordOn)
         .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePasswordSpec)
-        .required(data?.NavForm.validateRequired),
+        .required(data?.NavForm?.validateRequired),
       })}
       onSubmit={submitAccountData}
     >

@@ -2,7 +2,8 @@ import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
-import useSWR from 'swr';
+
+import { useHookSWR } from 'hooks/useHookSWR';
 
 import { StatusLoginContext } from 'providers/StatusLogin';
 
@@ -17,10 +18,6 @@ export default function Home() {
     isUser && back();
   }, [isUser]);
   
-  // @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data } = useSWR(`/languages/${locale}.json`, fetcher);
-  
   const image = 320;
   
   return (
@@ -34,32 +31,32 @@ export default function Home() {
         <meta charSet='utf-8' />
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
         <meta name='description' content='Main site.' />
-        <title>{data?.title}</title>
+        <title>{useHookSWR()?.title}</title>
       </Head>
       
-      <h1 className={styles.title}>{data?.Main?.title}</h1>
+      <h1 className={styles.title}>{useHookSWR()?.Main?.title}</h1>
       
       <h3 className={styles.h3}>
-        {data?.Main?.firstQuestion}
+        {useHookSWR()?.Main?.firstQuestion}
         <br />
         <br />
-        {data?.Main?.secondQuestion}
+        {useHookSWR()?.Main?.secondQuestion}
       </h3>
       
       <h2 className={styles.h2}>
-        {data?.Main?.firstAnswer}
+        {useHookSWR()?.Main?.firstAnswer}
         <br />
         <br />
-        {data?.Main?.secondAnswer}
+        {useHookSWR()?.Main?.secondAnswer}
       </h2>
       
       <div className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            {data?.Main?.containerFirstQuestion}
+            {useHookSWR()?.Main?.containerFirstQuestion}
           </h4>
           <p className={styles.answer}>
-            {data?.Main?.containerFirstAnswer}
+            {useHookSWR()?.Main?.containerFirstAnswer}
           </p>
         </div>
         
@@ -69,11 +66,11 @@ export default function Home() {
       <div className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            {data?.Main?.containerSecondQuestion}
+            {useHookSWR()?.Main?.containerSecondQuestion}
           </h4>
           
           <p className={styles.answer}>
-            {data?.Main?.containerSecondAnswer}
+            {useHookSWR()?.Main?.containerSecondAnswer}
           </p>
         </div>
         
@@ -83,11 +80,11 @@ export default function Home() {
       <div className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            {data?.Main?.containerThirdQuestion}
+            {useHookSWR()?.Main?.containerThirdQuestion}
           </h4>
           
           <p className={styles.answer}>
-            {data?.Main?.containerThirdAnswer}
+            {useHookSWR()?.Main?.containerThirdAnswer}
           </p>
         </div>
         
@@ -97,11 +94,11 @@ export default function Home() {
       <div className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            {data?.Main?.containerFourthQuestion}<br />
+            {useHookSWR()?.Main?.containerFourthQuestion}<br />
           </h4>
           
           <p className={styles.answer}>
-            {data?.Main?.containerFourthAnswer}
+            {useHookSWR()?.Main?.containerFourthAnswer}
           </p>
         </div>
         
@@ -111,11 +108,11 @@ export default function Home() {
       <div className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            {data?.Main?.containerFifthQuestion}
+            {useHookSWR()?.Main?.containerFifthQuestion}
           </h4>
           
           <p className={styles.answer}>
-            {data?.Main?.containerFifthAnswer}
+            {useHookSWR()?.Main?.containerFifthAnswer}
           </p>
         </div>
         
@@ -125,11 +122,11 @@ export default function Home() {
       <div className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            {data?.Main?.containerSixthQuestion}
+            {useHookSWR()?.Main?.containerSixthQuestion}
           </h4>
           
           <p className={styles.answer}>
-            {data?.Main?.containerSixthAnswer}
+            {useHookSWR()?.Main?.containerSixthAnswer}
           </p>
         </div>
         
@@ -139,11 +136,11 @@ export default function Home() {
       <div className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            {data?.Main?.containerSeventhQuestion}
+            {useHookSWR()?.Main?.containerSeventhQuestion}
           </h4>
           
           <p className={styles.answer}>
-            {data?.Main?.containerSeventhAnswer}
+            {useHookSWR()?.Main?.containerSeventhAnswer}
           </p>
         </div>
         
@@ -153,11 +150,11 @@ export default function Home() {
       <div className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            {data?.Main?.containerEighthQuestion}
+            {useHookSWR()?.Main?.containerEighthQuestion}
           </h4>
           
           <p className={styles.answer}>
-            {data?.Main?.containerEighthAnswer}
+            {useHookSWR()?.Main?.containerEighthAnswer}
           </p>
         </div>
         
@@ -167,11 +164,11 @@ export default function Home() {
       <div className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            {data?.Main?.containerNinthQuestion}
+            {useHookSWR()?.Main?.containerNinthQuestion}
           </h4>
           
           <p className={styles.answer}>
-            {data?.Main?.containerNinthAnswer}
+            {useHookSWR()?.Main?.containerNinthAnswer}
           </p>
         </div>
         

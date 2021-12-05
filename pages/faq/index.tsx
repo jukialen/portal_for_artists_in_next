@@ -1,17 +1,15 @@
-import styles from './index.module.scss';
-
-import { Collapse } from 'antd';
 import Head from "next/head";
 import { useRouter } from "next/router";
-import useSWR from "swr";
+import { Collapse } from 'antd';
+
+import { useHookSWR } from 'hooks/useHookSWR';
+
+import styles from './index.module.scss';
 
 export default function Faq() {
   const { Panel } = Collapse;
   
-  const { locale, asPath } = useRouter()
-  // @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data, error } = useSWR(`/languages/${locale}.json`, fetcher);
+  const { locale, asPath } = useRouter();
   
   return (
     <section className='workspace'>
@@ -24,7 +22,7 @@ export default function Faq() {
         <meta charSet='utf-8' />
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
         <meta name='description' content='Main site for logged in users.' />
-        <title>{data?.title}</title>
+        <title>{useHookSWR()?.title}</title>
       </Head>
       
       <h2 className={styles.h2}>Częste pytania</h2>

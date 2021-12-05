@@ -1,4 +1,5 @@
 import { Field } from 'formik';
+
 import styles from './FormField.module.scss';
 
 type fF = {
@@ -19,7 +20,7 @@ export const FormField = ({
 }: fF) => {
   return (
     <div className={styles.form__field}>
-      <label htmlFor='pseudonym' className={styles.label}>
+      <label htmlFor={nameField} className={styles.label}>
         {titleField}
         {element}
       </label>

@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-import axios from "axios";
-import { Form, Formik } from "formik";
-import * as Yup from "yup";
-import useSWR from "swr";
+import { useState } from 'react';
+import axios from 'axios';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
+
+import { useHookSWR } from 'hooks/useHookSWR';
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
@@ -18,33 +18,31 @@ const initialValues = {
   email: '',
 };
 
-export default function Reset({ email }: ResetType, { resetForm }: any) {
+export default function Forgotten() {
+  const [valuesFields, setValuesFields] = useState<string>('');
   
-  const router = useRouter();
-  // @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data } = useSWR(`/languages/${router.locale}.json`, fetcher);
-  
-  const reset__password = async () => {
+  const reset__password = async ({ email }: ResetType, { resetForm }: any) => {
     try {
-      const res= await axios
+      const res = await axios
       .post(`${process.env.NEXT_PUBLIC_API_URL}/auth/forgot-password`, {
         email,
-      })
-        console.log('Your user received an email:', res);
+      });
+      console.log('Your user received an email:', res);
       resetForm(initialValues);
+      setValuesFields('Sprawdź skrzynkę e-mailową');
     } catch (error) {
       // @ts-ignore
       console.log('An error occurred:', error.response);
+      setValuesFields('Spróbuj ponownie lub lub sprawdź połączenie z internetem');
+      
     }
-  }
+  };
   
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={Yup.object({
-        email: Yup.string().email(data?.NavForm.validateEmail).required(data?.NavForm.validateRequired),
-        
+        email: Yup.string().email(useHookSWR()?.NavForm.validateEmail).required(useHookSWR()?.NavForm.validateRequired),
       })}
       onSubmit={reset__password}
     >
@@ -53,10 +51,10 @@ export default function Reset({ email }: ResetType, { resetForm }: any) {
         <h3 className={styles.subtitle}>Please enter your e-mail.</h3>
         
         <FormField
-          titleField={`${data?.NavForm?.email}:`}
+          titleField={`${useHookSWR()?.NavForm?.email}:`}
           nameField='email'
           typeField='email'
-          placeholderField={data?.NavForm?.email}
+          placeholderField={useHookSWR()?.NavForm?.email}
         />
         
         <FormError className={styles.error} nameError='email' />
@@ -64,14 +62,13 @@ export default function Reset({ email }: ResetType, { resetForm }: any) {
         <button
           type='submit'
           className={`button ${styles.submit__button}`}
-          aria-label='login button'
+          aria-label='button for forgotten password'
         >
-          {data?.NavForm?.loginSubmit}
+          Wyślij
         </button>
         
-        {/*{!!valuesFields && <p className={styles.success__info}>{valuesFields}</p>}*/}
-        
-        {/*{!!errorMessage && <p className={styles.error}>{errorMessage}</p>}*/}
+        {!!valuesFields && <p className={styles.submit__info}>{valuesFields}</p>}
+      
       </Form>
     </Formik>
   );

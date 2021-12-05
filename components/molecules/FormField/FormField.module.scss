@@ -6,17 +6,15 @@
   .label {
     display: inherit;
     width: 7rem;
-    margin: 0 0.8rem;
+    margin: 0 0.8rem 0 0;
     justify-content: flex-start;
+    align-self: center;
     font-size: 1.3rem;
   }
 
   .input {
-    width: 7rem;
+    width: 44vw;
     margin: 0;
-
-    @media (min-width: 317px) {
-      width: 10rem;
-    }
+    max-width: 11rem;
   }
 }

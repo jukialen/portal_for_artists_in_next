@@ -1,5 +1,6 @@
-import styles from './Article.module.scss';
 import Image from 'next/image';
+
+import styles from './Article.module.scss';
 
 type articleImg = {
   imgLink: string;

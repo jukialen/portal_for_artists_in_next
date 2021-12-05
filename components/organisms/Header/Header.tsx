@@ -32,10 +32,6 @@ export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
         className={isMode ? styles.light__mode : styles.dark__mode}
         aria-label='mode button'
         onClick={changeMode}
-        //it only work in dev tools
-        // style={isMode ? {
-        //   backgroundImage: `url('dark__mode.svg')`
-        // } : { backgroundImage: `url('light__mode.svg')` }}
       >
         <Image src={isMode ? '/light__mode.svg' : '/dark__mode.svg'} width='40' height='40' aria-label='mode icon' />
       </button>

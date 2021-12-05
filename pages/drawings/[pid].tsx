@@ -1,10 +1,10 @@
 import { GetServerSideProps } from 'next'
 import { useRouter } from "next/router";
 import Head from "next/head";
-import useSWR from "swr";
+
+import { useHookSWR } from 'hooks/useHookSWR';
 
 import { Wrapper } from "components/organisms/Wrapper/Wrapper";
-import { useEffect } from "react";
 
 type DrawingsType = {
   context: string,
@@ -16,9 +16,6 @@ type DrawingsType = {
 
 export default function Drawings() {
   const { locale, asPath } = useRouter();
-  // @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data } = useSWR(`/languages/${locale}.json`, fetcher);
   
   return (
     <div className='workspace'>
@@ -31,7 +28,7 @@ export default function Drawings() {
         <meta charSet='utf-8' />
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
         <meta name='description' content='Main site.' />
-        <title>{data?.title}</title>
+        <title>{useHookSWR()?.title}</title>
       </Head>
       <h1>podstrona z rysunkami</h1>
       <Wrapper idWrapper='drawingsWrapper' />

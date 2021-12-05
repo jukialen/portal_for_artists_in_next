@@ -1,15 +1,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import useSWR from 'swr';
 
 import styles from './Categories.module.scss';
 
-export const Categories = () => {
-  const { locale, asPath } = useRouter();
-// @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data } = useSWR(`/languages/${locale}.json`, fetcher);
+export const Categories = ({ data }: any) => {
+  const { asPath } = useRouter();
   
   const [openSubCategories, setOpenCategories] = useState(false);
   const changeOpenCategories = () => setOpenCategories(!openSubCategories);

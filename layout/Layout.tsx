@@ -1,6 +1,6 @@
-import { FC, useContext, useEffect, useState } from 'react';
-import { useRouter } from "next/router";
-import useSWR from "swr";
+import { FC, useContext } from 'react';
+
+import { useHookSWR } from 'hooks/useHookSWR';
 
 import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
 import { Footer } from 'components/molecules/Footer/Footer';
@@ -18,10 +18,7 @@ export const Layout: FC = ({ children }) => {
   const { isMode } = useContext(ModeContext);
   const { isUser } = useContext(StatusLoginContext);
   
-  const { locale } = useRouter();
-  // @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data } = useSWR(`/languages/${locale}.json`, fetcher);
+  const data = useHookSWR();
   
   return (
     <>
@@ -32,8 +29,8 @@ export const Layout: FC = ({ children }) => {
             : (
               <NavFormProvider>
                 <Header titleFirstNav={data?.Nav?.signIn} titleSecondNav={data?.Nav?.signUp} logoLink='/' />
-                <Create />
-                <Login />
+                <Create data={data} />
+                <Login data={data} />
               </NavFormProvider>
             )
           }

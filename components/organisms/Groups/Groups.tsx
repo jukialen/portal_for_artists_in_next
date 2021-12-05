@@ -1,14 +1,8 @@
 import { Links } from 'components/atoms/Links/Links';
 
 import styles from './Groups.module.scss';
-import { useRouter } from "next/router";
-import useSWR from "swr";
 
-export const Groups = () => {
-  const { locale } = useRouter();
-  // @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data, error } = useSWR(`/languages/${locale}.json`, fetcher);
+export const Groups = ({ data }: any) => {
   
   return (
     <div className={styles.groups}>

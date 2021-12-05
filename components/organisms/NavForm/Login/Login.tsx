@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from "swr";
 import axios from 'axios';
@@ -11,6 +11,7 @@ import { Providers } from 'components/molecules/Providers/Providers';
 
 import { NavFormContext } from 'providers/NavFormProvider';
 import { StatusLoginContext } from "providers/StatusLogin";
+import { ShowMenuContext } from "providers/ShowMenuProvider";
 
 import styles from '../NavForm.module.scss';
 
@@ -24,17 +25,21 @@ const initialValues = {
   password: '',
 };
 
-export const Login: FC = () => {
-  const { isLogin } = useContext(NavFormContext);
+export const Login = ({ data }: any) => {
+  const { isLogin, showLoginForm } = useContext(NavFormContext);
   const { showUser } = useContext(StatusLoginContext);
+  const { showMenu } = useContext(ShowMenuContext);
+  
+  const hideMenuLogin = () => {
+    showLoginForm();
+    showMenu();
+  };
   
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [valuesFields, setValuesFields] = useState<string>('');
   
-  const router = useRouter();
-  // @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data, error } = useSWR(`/languages/${router.locale}.json`, fetcher);
+  const { push } = useRouter();
+
   
   // @ts-ignore
   const submitAccountData = async ({ email, password }: LoginType, { resetForm }) => {
@@ -53,18 +58,22 @@ export const Login: FC = () => {
       resetForm(initialValues);
       // @ts-ignore
       setValuesFields(`${data.user.pseudonym}${data?.NavForm?.statusLogin}`);
-      await router.push('/app');
+      await push('/app');
       await showUser();
     } catch (error) {
       setErrorMessage(data?.NavForm?.setErrorMessageLogin);
     }
   };
   
+  const forgotten__password = () => {
+    hideMenuLogin();
+    return push('/forgotten');
+  }
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={Yup.object({
-        email: Yup.string().email(data?.NavForm.validateEmail).required(data?.NavForm.validateRequired),
+        email: Yup.string().email(data?.NavForm?.validateEmail).required(data?.NavForm?.validateRequired),
         
         password: Yup.string()
         .min(9, data?.NavForm?.validatePasswordNum)
@@ -72,7 +81,7 @@ export const Login: FC = () => {
         .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePasswordHKik)
         .matches(/[0-9]+/g, data?.NavForm?.validatePasswordOn)
         .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePasswordSpec)
-        .required(data?.NavForm.validateRequired),
+        .required(data?.NavForm?.validateRequired),
       })}
       onSubmit={submitAccountData}
     >
@@ -109,12 +118,16 @@ export const Login: FC = () => {
         
         {!!errorMessage && <p className={styles.error}>{errorMessage}</p>}
         
+        <button className={`button ${styles.forgotten}`} onClick={forgotten__password}>I forgot my password</button>
+        
         <p className={styles.separator}>__________________</p>
         
         <h4 className={styles.provider__title}>{data?.NavForm?.providerTitleLogin}</h4>
         
         <Providers />
+      
       </Form>
     </Formik>
   );
 };
+
