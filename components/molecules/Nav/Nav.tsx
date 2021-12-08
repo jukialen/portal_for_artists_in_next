@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -36,10 +35,7 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   
   const signOut = async () => {
     try {
-      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {}, { withCredentials: true });
       showUser();
-      // @ts-ignore
-      console.log(data.message);
       return push('/');
     } catch (error) {
       console.log(error);

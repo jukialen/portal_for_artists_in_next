@@ -1,9 +1,8 @@
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import useSWR from "swr";
-import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { signIn } from 'pages/api/signin';
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
@@ -44,22 +43,13 @@ export const Login = ({ data }: any) => {
   // @ts-ignore
   const submitAccountData = async ({ email, password }: LoginType, { resetForm }) => {
     try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_LOGIN_USER}`,
-        {
-          identifier: email,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      await signIn(email, password);
       
       resetForm(initialValues);
       // @ts-ignore
       setValuesFields(`${data.user.pseudonym}${data?.NavForm?.statusLogin}`);
       await push('/app');
-      await showUser();
+      return showUser();
     } catch (error) {
       setErrorMessage(data?.NavForm?.setErrorMessageLogin);
     }

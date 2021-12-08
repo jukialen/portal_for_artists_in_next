@@ -1,9 +1,8 @@
 import { useCallback, useContext, useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 
-import useSWR from "swr";
+import { createUser } from 'pages/api/signup';
 
 import { FormError } from 'components/molecules/FormError/FormError';
 import { FormField } from 'components/molecules/FormField/FormField';
@@ -37,9 +36,8 @@ export const Create = ({ data }: any) => {
   }: UserDataType, { resetForm }) => {
     setIsLoading(true);
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_API_CREATE_USER}`, {
-        username, pseudonym, email, password,
-      },);
+      await createUser(username, pseudonym, email, password);
+  
       setValuesFields(!valuesFields);
       // @ts-ignore
       resetForm(initialValues);
