@@ -54,7 +54,7 @@ export const Create = ({ data }: any) => {
       validationSchema={Yup.object({
         username: Yup.string()
         .matches(/^[A-Z]/g, data?.NavForm?.validateUsernameFl)
-        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validateUsernameHKik)
+        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validateUsernameHKik)
         .matches(/\D/g, data?.NavForm?.validateUsernameNum)
         .min(3, data?.NavForm?.validateUsernameMin)
         .required(data?.NavForm?.validateRequired),
@@ -62,7 +62,7 @@ export const Create = ({ data }: any) => {
         pseudonym: Yup.string()
         .matches(/[0-9０-９]+/g, data?.NavForm?.validatePseudonymNum)
         .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePseudonymSpec)
-        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePseudonymHKik)
+        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validatePseudonymHKik)
         .min(5, data?.NavForm?.validatePseudonymMin)
         .max(15, data?.NavForm?.validatePseudonymMax)
         .required(data?.NavForm?.validateRequired),

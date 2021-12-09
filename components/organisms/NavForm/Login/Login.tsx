@@ -43,13 +43,13 @@ export const Login = ({ data }: any) => {
   // @ts-ignore
   const submitAccountData = async ({ email, password }: LoginType, { resetForm }) => {
     try {
-      await signIn(email, password);
+      const response =  await signIn(email, password);
       
       resetForm(initialValues);
       // @ts-ignore
-      setValuesFields(`${data.user.pseudonym}${data?.NavForm?.statusLogin}`);
+      setValuesFields(`${response.pseudonym}${data?.NavForm?.statusLogin}`);
       await push('/app');
-      return showUser();
+      await showUser();
     } catch (error) {
       setErrorMessage(data?.NavForm?.setErrorMessageLogin);
     }
@@ -68,7 +68,7 @@ export const Login = ({ data }: any) => {
         password: Yup.string()
         .min(9, data?.NavForm?.validatePasswordNum)
         .matches(/[A-Z]+/g, data?.NavForm?.validatePasswordOl)
-        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePasswordHKik)
+        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validatePasswordHKik)
         .matches(/[0-9]+/g, data?.NavForm?.validatePasswordOn)
         .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePasswordSpec)
         .required(data?.NavForm?.validateRequired),

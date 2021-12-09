@@ -1,9 +1,9 @@
 import { gql } from 'graphql-request';
 import { client } from './constants/client';
 
-const CreateNextUserByEmail = gql`
-  mutation CreateNextUserByEmail($username: String!, $pseudonym: String!, $email: String!, $password: String!) {
-    newUser: createNextUser(data: { username: $username, pseudonym: $pseudonym email: $email, password: $password }) {
+const CreateArtist = gql`
+  mutation CreateArtist($username: String!, $pseudonym: String!, $email: String!, $password: String!) {
+    newArtist: createArtist(data: { username: $username, pseudonym: $pseudonym email: $email, password: $password }) {
       id
     }
   }
@@ -11,7 +11,7 @@ const CreateNextUserByEmail = gql`
 
 export const createUser = async (username, pseudonym, email, password) => {
   await client.request(
-    CreateNextUserByEmail,
+    CreateArtist,
     {
       username, pseudonym, email, password
     }
