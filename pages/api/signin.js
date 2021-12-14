@@ -1,5 +1,6 @@
 import { gql } from 'graphql-request';
 import { client } from './constants/client';
+let bcrypt = require('bcryptjs');
 
 const GetArtist = gql`
   query GetArtist($email: String!) {
@@ -18,6 +19,11 @@ export const signIn = async (email, password) => {
     password
   });
   
+  const isValid = await bcrypt.compare(password, user.password);
+  
+  if (!isValid) {
+    throw new Error("Wrong credentials. Try again.");
+  }
   console.log(user, email, password);
   return {
     id: user.id,
