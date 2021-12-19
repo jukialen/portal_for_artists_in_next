@@ -1,6 +1,8 @@
 import { useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../firebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -16,12 +18,11 @@ type TitleNavType = {
 };
 
 export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
-  const { showUser } = useContext(StatusLoginContext);
-  
   const { asPath, push } = useRouter();
   
-  const { showLoginForm, showCreateForm } = useContext(NavFormContext);
+  const { showUser } = useContext(StatusLoginContext);
   const { isMenu, showMenu } = useContext(ShowMenuContext);
+  const { showLoginForm, showCreateForm } = useContext(NavFormContext);
   
   const hideMenuLogin = () => {
     showLoginForm();
@@ -33,14 +34,17 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
     showMenu();
   };
   
-  const signOut = async () => {
+  const sign__out = async () => {
     try {
       showUser();
+      await signOut(auth);
       return push('/');
     } catch (error) {
       console.log(error);
     }
   };
+  
+  const currentUser = auth.currentUser;
   
   return (
     <nav className={`${styles.nav} ${isMenu && styles.menu__active}`}>
@@ -49,14 +53,14 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
           <Link href={asPath}>
             <a
               className={styles.sign__in}
-              onClick={titleFirstNav !== `${useHookSWR()?.Nav?.signOut}` ? hideMenuLogin : signOut}
+              onClick={titleFirstNav !== `${useHookSWR()?.Nav?.signOut}` ? hideMenuLogin : sign__out}
             >
               {titleFirstNav}
             </a>
           </Link>
         </li>
         <li className={styles.menu}>
-          <Link href={titleSecondNav === `${useHookSWR()?.Nav?.account}` ? '/account' : asPath}>
+          <Link href={titleSecondNav === `${useHookSWR()?.Nav?.account}` ? `/account/${currentUser?.displayName}` : asPath}>
             <a className={styles.sign__out} onClick={hideMenuCreate}>
               {titleSecondNav}
             </a>

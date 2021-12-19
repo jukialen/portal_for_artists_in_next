@@ -8,7 +8,7 @@
   },
   "NavForm": {
     "setErrorMessage": "We weren't able to register you.",
-    "setErrorMessageLogin": "We weren't able to log in you",
+    "setErrorMessageLogin": "Your e-mail or password is incorrect.",
     "statusLogin": ", you're logged in",
     "validateRequired": "Required",
     "validateUsernameFl": "First letter must be a big.",

@@ -1,8 +1,9 @@
 import { useCallback, useContext, useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-
-import { createUser } from 'pages/api/signup';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { UserDataType } from '../../../../next-env';
+import { auth } from '../../../../firebase'
 
 import { FormError } from 'components/molecules/FormError/FormError';
 import { FormField } from 'components/molecules/FormField/FormField';
@@ -12,61 +13,49 @@ import { NavFormContext } from 'providers/NavFormProvider';
 
 import styles from '../NavForm.module.scss';
 
+auth.useDeviceLanguage();
+
 const initialValues = {
-  username: '', pseudonym: '', email: '', password: '',
+  email: '', password: '',
 };
 
-type UserDataType = {
-  username: string; pseudonym: string; email: string; password: string;
-};
-
-// @ts-ignore
 export const Create = ({ data }: any) => {
   const { isCreate } = useContext(NavFormContext);
   
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [valuesFields, setValuesFields] = useState<boolean>(false);
+  const [valuesFields, setValuesFields] = useState<string>('');
   
   const submitAccountData = useCallback(async ({
-    username,
-    pseudonym,
     email,
     password
   }: UserDataType, { resetForm }) => {
     setIsLoading(true);
-    try {
-      await createUser(username, pseudonym, email, password);
-  
-      setValuesFields(!valuesFields);
-      // @ts-ignore
+    console.log('api key', process.env.NEXT_PUBLIC_API_KEY);
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      console.log(user);
       resetForm(initialValues);
-    } catch (error) {
-      setErrorMessage(data?.NavForm?.setErrorMessageCreate);
-    }
+      // @ts-ignore
+      sendEmailVerification(auth.currentUser);
+      setValuesFields(data?.NavForm?.successInfoRegistration);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode);
+      console.log(errorMessage);
+      setValuesFields(data?.NavForm?.setErrorMessageCreate);
+      
+    });
     setIsLoading(false);
-  }, [data?.NavForm?.setErrorMessageCreate, valuesFields],);
+  }, [data?.NavForm?.setErrorMessageCreate, valuesFields]);
   
   // @ts-ignore
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={Yup.object({
-        username: Yup.string()
-        .matches(/^[A-Z]/g, data?.NavForm?.validateUsernameFl)
-        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validateUsernameHKik)
-        .matches(/\D/g, data?.NavForm?.validateUsernameNum)
-        .min(3, data?.NavForm?.validateUsernameMin)
-        .required(data?.NavForm?.validateRequired),
-        
-        pseudonym: Yup.string()
-        .matches(/[0-9０-９]+/g, data?.NavForm?.validatePseudonymNum)
-        .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePseudonymSpec)
-        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validatePseudonymHKik)
-        .min(5, data?.NavForm?.validatePseudonymMin)
-        .max(15, data?.NavForm?.validatePseudonymMax)
-        .required(data?.NavForm?.validateRequired),
-        
         email: Yup.string().email(data?.NavForm?.validateEmail).required(data?.NavForm?.validateRequired),
         
         password: Yup.string()
@@ -82,23 +71,23 @@ export const Create = ({ data }: any) => {
       <Form className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
         <h2 className={styles.title}>{data?.NavForm?.titleOfRegistration}</h2>
         
-        <FormField
-          titleField={`${data?.NavForm?.name}:`}
-          nameField='username'
-          typeField='text'
-          placeholderField={data?.NavForm?.name}
-        />
+        {/*<FormField*/}
+        {/*  titleField={`${data?.NavForm?.name}:`}*/}
+        {/*  nameField='username'*/}
+        {/*  typeField='text'*/}
+        {/*  placeholderField={data?.NavForm?.name}*/}
+        {/*/>*/}
         
-        <FormError className={styles.error} nameError='username' />
+        {/*<FormError className={styles.error} nameError='username' />*/}
         
-        <FormField
-          titleField={`${data?.NavForm?.pseudonym}:`}
-          nameField='pseudonym'
-          typeField='text'
-          placeholderField={data?.NavForm?.pseudonym}
-        />
+        {/*<FormField*/}
+        {/*  titleField={`${data?.NavForm?.pseudonym}:`}*/}
+        {/*  nameField='pseudonym'*/}
+        {/*  typeField='text'*/}
+        {/*  placeholderField={data?.NavForm?.pseudonym}*/}
+        {/*/>*/}
         
-        <FormError className={styles.error} nameError='pseudonym' />
+        {/*<FormError className={styles.error} nameError='pseudonym' />*/}
         
         <FormField
           titleField={`${data?.NavForm?.email}:`}
@@ -126,11 +115,7 @@ export const Create = ({ data }: any) => {
           {isLoading ? data?.NavForm?.loadingRegistration : data?.NavForm?.createSubmit}
         </button>
         
-        {valuesFields && (<p className={styles.success__info}>
-          {data?.NavForm?.successInfoRegistration}
-        </p>)}
-        
-        {!!errorMessage && <p className={styles.error}>{errorMessage}</p>}
+        {valuesFields && <p className={styles.fields__info}>{valuesFields}</p>}
         
         <p className={styles.separator}>__________________</p>
         

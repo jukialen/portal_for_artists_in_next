@@ -2,7 +2,9 @@ import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { signIn } from 'pages/api/signin';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { UserDataType } from '../../../../next-env';
+import { auth } from '../../../../firebase';
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
@@ -13,11 +15,6 @@ import { StatusLoginContext } from "providers/StatusLogin";
 import { ShowMenuContext } from "providers/ShowMenuProvider";
 
 import styles from '../NavForm.module.scss';
-
-type LoginType = {
-  email: string;
-  password: string;
-};
 
 const initialValues = {
   email: '',
@@ -34,25 +31,26 @@ export const Login = ({ data }: any) => {
     showMenu();
   };
   
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [valuesFields, setValuesFields] = useState<string>('');
   
   const { push } = useRouter();
-
   
   // @ts-ignore
-  const submitAccountData = async ({ email, password }: LoginType, { resetForm }) => {
-    try {
-      const response =  await signIn(email, password);
-      
-      resetForm(initialValues);
-      // @ts-ignore
-      setValuesFields(`${response.pseudonym}${data?.NavForm?.statusLogin}`);
-      await push('/app');
-      await showUser();
-    } catch (error) {
-      setErrorMessage(data?.NavForm?.setErrorMessageLogin);
-    }
+  const submitAccountData = async ({ email, password }: UserDataType, { resetForm }) => {
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      !user.emailVerified && setValuesFields('Nie zweryfikowałeś e-maila.');
+      if (user.emailVerified) {
+        resetForm(initialValues);
+        push('/app');
+        showUser();
+      }
+    })
+    .catch(() => {
+      setValuesFields(data?.NavForm?.setErrorMessageLogin);
+  
+    });
   };
   
   const forgotten__password = () => {
@@ -104,9 +102,7 @@ export const Login = ({ data }: any) => {
           {data?.NavForm?.loginSubmit}
         </button>
         
-        {!!valuesFields && <p className={styles.success__info}>{valuesFields}</p>}
-        
-        {!!errorMessage && <p className={styles.error}>{errorMessage}</p>}
+        {!!valuesFields && <p className={styles.fields__info}>{valuesFields}</p>}
         
         <button className={`button ${styles.forgotten}`} onClick={forgotten__password}>I forgot my password</button>
         

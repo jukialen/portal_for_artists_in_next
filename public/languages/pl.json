@@ -8,7 +8,7 @@
   },
   "NavForm": {
     "setErrorMessageCreate": "Nie mogliśmy Cię zarejestrować.",
-    "setErrorMessageLogin": "Nie mogliśmy Cię zalogować",
+    "setErrorMessageLogin": "Niepoprawny e-mail lub hasło.",
     "statusLogin": ", zostałaś/eś zalogowana/y",
     "validateRequired": "Wymagane",
     "validateUsernameFl": "Pierwsza litera musi być duża.",

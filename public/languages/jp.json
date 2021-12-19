@@ -8,7 +8,7 @@
   },
   "NavForm": {
     "setErrorMessageCreate": "登録することが出来ません。",
-    "setErrorMessageLogin": "サインインことになりません。",
+    "setErrorMessageLogin": "メールかパスポートが正しくないです。",
     "statusLogin": "はログイン中している。",
     "validateRequired": "所要",
     "validateUsernameFl": "第一字が大きいでなければなりません。",
