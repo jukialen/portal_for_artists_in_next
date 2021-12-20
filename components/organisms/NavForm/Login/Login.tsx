@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { UserDataType } from '../../../../next-env';
+import { UserDataType } from 'next-env';
 import { auth } from '../../../../firebase';
 
 import { FormField } from 'components/molecules/FormField/FormField';
@@ -26,14 +26,14 @@ export const Login = ({ data }: any) => {
   const { showUser } = useContext(StatusLoginContext);
   const { showMenu } = useContext(ShowMenuContext);
   
+  const [valuesFields, setValuesFields] = useState<string>('');
+  
+  const { push } = useRouter();
+  
   const hideMenuLogin = () => {
     showLoginForm();
     showMenu();
   };
-  
-  const [valuesFields, setValuesFields] = useState<string>('');
-  
-  const { push } = useRouter();
   
   // @ts-ignore
   const submitAccountData = async ({ email, password }: UserDataType, { resetForm }) => {

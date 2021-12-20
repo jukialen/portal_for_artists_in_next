@@ -2,7 +2,7 @@ import { useCallback, useContext, useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { UserDataType } from '../../../../next-env';
+import { UserDataType } from 'next-env';
 import { auth } from '../../../../firebase'
 
 import { FormError } from 'components/molecules/FormError/FormError';

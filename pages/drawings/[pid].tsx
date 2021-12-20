@@ -1,54 +1,19 @@
-import { GetServerSideProps } from 'next'
-import { useRouter } from "next/router";
-import Head from "next/head";
+import { useRouter } from 'next/router';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+import { useCurrentUser } from 'hooks/useCurrentUser';
 
-import { Wrapper } from "components/organisms/Wrapper/Wrapper";
-
-type DrawingsType = {
-  context: string,
-  multimedia: string,
-  description: string,
-  username: string,
-  tags: string
-}
+import { Wrapper } from 'components/organisms/Wrapper/Wrapper';
+import { HeadCom } from 'components/atoms/HeadCom';
 
 export default function Drawings() {
-  const { locale, asPath } = useRouter();
+  const { asPath } = useRouter();
+  const loading = useCurrentUser('/');
   
-  return (
+  return !loading ? (
     <div className='workspace'>
-      <Head>
-        <link
-          rel='alternate'
-          hrefLang={locale}
-          href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '' : `/${locale}`}${asPath}`}
-        />
-        <meta charSet='utf-8' />
-        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
-        <meta name='description' content='Main site.' />
-        <title>{useHookSWR()?.title}</title>
-      </Head>
+      <HeadCom path={`/${asPath}`} content='Sites with drawings and photos.' />
       <h1>podstrona z rysunkami</h1>
       <Wrapper idWrapper='drawingsWrapper' />
     </div>
-  )
+  ) : null;
 };
-
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const cookie = req.headers.cookie;
-  
-  if (!cookie) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }
-  
-  return {
-    props: {}
-  }
-}
