@@ -1,7 +1,7 @@
 import { auth } from '../../firebase';
 
-import { useHookSWR } from '../../hooks/useHookSWR';
-import { useCurrentUser } from '../../hooks/useCurrentUser';
+import { useHookSWR } from 'hooks/useHookSWR';
+import { useCurrentUser } from 'hooks/useCurrentUser';
 
 import { HeadCom } from 'components/atoms/HeadCom';
 import { AccountMenu } from 'components/molecules/AccountMenu/AccountMenu';

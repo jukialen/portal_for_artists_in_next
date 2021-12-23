@@ -33,4 +33,4 @@ Site's in full responsive on target devices from small smartphones to TV and SMA
 Strapi (<a href="https://github.com/jukialen/portal_strapi">portal_strapi</a>) 
 
 ### Web site;
-https://portal-for-artists-in-next.vercel.app
+https://pfartists.xyz

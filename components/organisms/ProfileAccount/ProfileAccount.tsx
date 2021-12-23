@@ -1,9 +1,18 @@
+import Image from 'next/image';
+import { auth } from '../../../firebase';
+
+import defaultAvatar from 'public/defaultAvatar.png'
+
 import styles from './ProfileAccount.module.scss';
 
 export const ProfileAccount = ({ data }: any) => {
+  const user = auth.currentUser;
+  
   return (
     <article id='profile' className={styles.profile}>
-      <div className={styles.photo__profile} />
+      <div className={styles.photo__profile}>
+        <Image src={user?.photoURL ? user?.photoURL : defaultAvatar} alt={user?.photoURL ? 'avatar' : 'default avatar'} />
+      </div>
       
       <div className={styles.user__name}>
         <label className={styles.title} htmlFor='user__name'>{data?.Account?.profile?.name}</label>

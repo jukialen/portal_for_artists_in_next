@@ -12,12 +12,12 @@ import styles from './index.module.scss';
 
 export default function Home() {
   const { isUser } = useContext(StatusLoginContext);
-  const { asPath, back } = useRouter();
+  const { asPath,push } = useRouter();
   
-  const data = useHookSWR()
+  const data = useHookSWR();
   
   useEffect(() => {
-    isUser && back();
+    isUser && push('/app');
   }, [isUser]);
   
   const image = 320;

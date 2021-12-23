@@ -8,6 +8,7 @@ type fF = {
   typeField: string;
   placeholderField: string;
   element?: any;
+  accept?: string
 };
 
 export const FormField = ({
@@ -16,6 +17,7 @@ export const FormField = ({
   typeField,
   placeholderField,
   element,
+  accept,
   ...props
 }: fF) => {
   return (

@@ -8,8 +8,10 @@
   },
   "NavForm": {
     "setErrorMessage": "We weren't able to register you.",
+    "theSameEmail": "Account with this e-mail already exist.",
     "setErrorMessageLogin": "Your e-mail or password is incorrect.",
-    "statusLogin": ", you're logged in",
+    "unVerified": "Unverified e-mail.",
+    "statusLogin": "You're logged in",
     "validateRequired": "Required",
     "validateUsernameFl": "First letter must be a big.",
     "validateUsernameHKik": "Name accept only letters. These can be Hiragana, Katakana and kanji characters",
@@ -30,6 +32,7 @@
     "titleOfLogin": "Login!",
     "name": "Name",
     "pseudonym": "Pseudonym",
+    "profilePhoto": "Profile photo",
     "email": "E-mail",
     "password": "Password",
     "login": "Login:",
@@ -38,7 +41,7 @@
     "loadingRegistration": "I'm registering you...",
     "successInfoRegistration": "Congratulation! You are registered. Check your mailbox and confirm your e-mail in order to you'll can log　in.",
     "providerTitleRegistration": "Or register yourself using:",
-    "providerTitleLogin": "Lub zaloguj się za pomocą"
+    "providerTitleLogin": "Or login via:"
   },
   "Aside": {
     "category": "Categories",

@@ -2,7 +2,6 @@ import { useCallback, useContext, useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { UserDataType } from 'next-env';
 import { auth } from '../../../../firebase'
 
 import { FormError } from 'components/molecules/FormError/FormError';
@@ -13,7 +12,10 @@ import { NavFormContext } from 'providers/NavFormProvider';
 
 import styles from '../NavForm.module.scss';
 
-auth.useDeviceLanguage();
+type UserDataType = {
+  email: string,
+  password: string
+}
 
 const initialValues = {
   email: '', password: '',
@@ -25,10 +27,13 @@ export const Create = ({ data }: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [valuesFields, setValuesFields] = useState<string>('');
   
+  const actionCodeSettings = { url: `${process.env.NEXT_PUBLIC_PAGE}` };
+  
   const submitAccountData = useCallback(async ({
     email,
     password
   }: UserDataType, { resetForm }) => {
+    auth.useDeviceLanguage();
     setIsLoading(true);
     console.log('api key', process.env.NEXT_PUBLIC_API_KEY);
     createUserWithEmailAndPassword(auth, email, password)
@@ -37,92 +42,72 @@ export const Create = ({ data }: any) => {
       console.log(user);
       resetForm(initialValues);
       // @ts-ignore
-      sendEmailVerification(auth.currentUser);
+      sendEmailVerification(auth.currentUser, actionCodeSettings);
       setValuesFields(data?.NavForm?.successInfoRegistration);
     })
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode);
-      console.log(errorMessage);
+      error.code === 'auth/email-already-in-use' && setValuesFields(data?.NavForm?.theSameEmail);
       setValuesFields(data?.NavForm?.setErrorMessageCreate);
-      
     });
     setIsLoading(false);
-  }, [data?.NavForm?.setErrorMessageCreate, valuesFields]);
+  }, [data?.NavForm?.setErrorMessageCreate, data?.NavForm?.successInfoRegistration]);
   
   // @ts-ignore
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={Yup.object({
-        email: Yup.string().email(data?.NavForm?.validateEmail).required(data?.NavForm?.validateRequired),
-        
-        password: Yup.string()
-        .min(9, data?.NavForm?.validatePasswordNum)
-        .matches(/[A-Z]+/g, data?.NavForm?.validatePasswordOl)
-        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePasswordHKik)
-        .matches(/[0-9]+/g, data?.NavForm?.validatePasswordOn)
-        .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePasswordSpec)
-        .required(data?.NavForm?.validateRequired),
-      })}
-      onSubmit={submitAccountData}
-    >
-      <Form className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
-        <h2 className={styles.title}>{data?.NavForm?.titleOfRegistration}</h2>
-        
-        {/*<FormField*/}
-        {/*  titleField={`${data?.NavForm?.name}:`}*/}
-        {/*  nameField='username'*/}
-        {/*  typeField='text'*/}
-        {/*  placeholderField={data?.NavForm?.name}*/}
-        {/*/>*/}
-        
-        {/*<FormError className={styles.error} nameError='username' />*/}
-        
-        {/*<FormField*/}
-        {/*  titleField={`${data?.NavForm?.pseudonym}:`}*/}
-        {/*  nameField='pseudonym'*/}
-        {/*  typeField='text'*/}
-        {/*  placeholderField={data?.NavForm?.pseudonym}*/}
-        {/*/>*/}
-        
-        {/*<FormError className={styles.error} nameError='pseudonym' />*/}
-        
-        <FormField
-          titleField={`${data?.NavForm?.email}:`}
-          nameField='email'
-          typeField='email'
-          placeholderField={data?.NavForm?.email}
-        />
-        
-        <FormError className={styles.error} nameError='email' />
-        
-        <FormField
-          titleField={`${data?.NavForm?.password}:`}
-          nameField='password'
-          typeField='password'
-          placeholderField={data?.NavForm?.password}
-        />
-        
-        <FormError className={styles.error} nameError='password' />
-        
-        <button
-          type='submit'
-          className={`button ${styles.submit__button}`}
-          aria-label='login button'
-        >
-          {isLoading ? data?.NavForm?.loadingRegistration : data?.NavForm?.createSubmit}
-        </button>
-        
-        {valuesFields && <p className={styles.fields__info}>{valuesFields}</p>}
-        
-        <p className={styles.separator}>__________________</p>
-        
-        <h4 className={styles.provider__title}>{data?.NavForm?.providerTitleRegistration}</h4>
-        
-        <Providers />
-      </Form>
-    </Formik>
+    <div className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={Yup.object({
+          email: Yup.string().email(data?.NavForm?.validateEmail).required(data?.NavForm?.validateRequired),
+      
+          password: Yup.string()
+          .min(9, data?.NavForm?.validatePasswordNum)
+          .matches(/[A-Z]+/g, data?.NavForm?.validatePasswordOl)
+          .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePasswordHKik)
+          .matches(/[0-9]+/g, data?.NavForm?.validatePasswordOn)
+          .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePasswordSpec)
+          .required(data?.NavForm?.validateRequired),
+        })}
+        onSubmit={submitAccountData}
+      >
+        <Form>
+          <h2 className={styles.title}>{data?.NavForm?.titleOfRegistration}</h2>
+      
+          <FormField
+            titleField={`${data?.NavForm?.email}:`}
+            nameField='email'
+            typeField='email'
+            placeholderField={data?.NavForm?.email}
+          />
+      
+          <FormError className={styles.error} nameError='email' />
+      
+          <FormField
+            titleField={`${data?.NavForm?.password}:`}
+            nameField='password'
+            typeField='password'
+            placeholderField={data?.NavForm?.password}
+          />
+      
+          <FormError className={styles.error} nameError='password' />
+      
+          <button
+            type='submit'
+            className={`button ${styles.submit__button}`}
+            aria-label='login button'
+          >
+            {isLoading ? data?.NavForm?.loadingRegistration : data?.NavForm?.createSubmit}
+          </button>
+      
+          {valuesFields && <p className={styles.fields__info}>{valuesFields}</p>}
+        </Form>
+      </Formik>
+      <p className={styles.separator}>__________________</p>
+  
+      <h4 className={styles.provider__title}>{data?.NavForm?.providerTitleRegistration}</h4>
+  
+      <Providers />
+    </div>
+    
   );
 };

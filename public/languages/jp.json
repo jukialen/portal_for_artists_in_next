@@ -8,8 +8,10 @@
   },
   "NavForm": {
     "setErrorMessageCreate": "登録することが出来ません。",
+    "theSameEmail": "このメールのアカウントはいます。",
     "setErrorMessageLogin": "メールかパスポートが正しくないです。",
-    "statusLogin": "はログイン中している。",
+    "unVerified": "メールがベリファイいませんでした。",
+    "statusLogin": "ログイン中している。",
     "validateRequired": "所要",
     "validateUsernameFl": "第一字が大きいでなければなりません。",
     "validateUsernameHKik": "名前は字だけ受け入れます。今、ひらがなとカタカナと漢字が出来ます。",
@@ -32,12 +34,14 @@
     "titleOfLogin": "ログイン！",
     "name": "名前",
     "pseudonym": "あだ名",
+    "profilePhoto": "プロフィールの写真",
     "email": "メール",
     "password": "パスポート",
     "login": "ログイン",
     "loadingRegistration": "登録してます。。。",
     "successInfoRegistration": "おめでとうございます！登録するのはしてました。 メールの受信箱を確認し、メールを確認してログインします。",
-    "providerTitleRegistration": "それともで、使って登録します："
+    "providerTitleRegistration": "それともで、使って登録します：",
+    "providerTitleLogin": "それともで、 login via:"
   },
   "Aside": {
     "category": "部分け",
