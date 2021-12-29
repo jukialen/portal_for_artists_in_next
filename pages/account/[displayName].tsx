@@ -21,7 +21,7 @@ export default function Account() {
     <section className='workspace'>
       <HeadCom path={`/account/${currentUser?.displayName}`} content='Account portal site.' />
       
-      <h2 className={styles.account__h2}>{data?.Nav?.account} {currentUser?.displayName}</h2>
+      <h2 className={styles.account__h2}>{data?.Nav?.account}</h2>
       
       <AccountMenu data={data} />
       

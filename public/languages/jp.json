@@ -18,7 +18,7 @@
     "validateUsernameNum": "名前がナンバーを含めることが出来ません。",
     "validateUsernameMin": "名前が短すぎまあす。",
     "validatePseudonymNum": "あだ名が少なくとも一ナンバーがでなければなりません。",
-    "validatePseudonymSpec": "あだ名が少なくとも一特殊文字を含めることが出来ます: #?!@$%^&*-",
+    "validatePseudonymSpec": "あだ名が少なくとも一特殊文字を含めることが出来ます: #?!@$%^&*-＃？！＄％＆＊ー",
     "validatePseudonymHKik":"あだ名は字だけ受け入れます。今、ひらがなとカタカナと漢字が出来ます。",
     "validatePseudonymMin": "あだ名が短すぎまあす。",
     "validatePseudonymMax": "あだ名が長すぎる。最大限十五字をなければなりません。",
@@ -33,7 +33,6 @@
     "titleOfRegistration": "無料で登録する！",
     "titleOfLogin": "ログイン！",
     "name": "名前",
-    "pseudonym": "あだ名",
     "profilePhoto": "プロフィールの写真",
     "email": "メール",
     "password": "パスポート",
@@ -92,9 +91,12 @@
       "userLikedFiles": "好きのは写真と素描"
     },
     "profile": {
-      "name": "ユーザー名:",
+      "pseudonym": "あだ名:",
       "aboutMe": "About me:",
-      "save": "セーブ"
+      "ariaLabelButton": "Updating pseudonym and description button",
+      "save": "セーブ",
+      "successSending": "Profile has been updated.",
+      "errorSending": "Profile hasn't been updated."
     }
   },
   "Main": {
@@ -121,5 +123,11 @@
     "containerEighthAnswer": "Choose a group or, better, you'll create it yourself!",
     "containerNinthQuestion": "Do you have artistic friends here?",
     "containerNinthAnswer": "You always have their on hand. Fast, so you know what they showed off recently."
+  },
+  "NewUser": {
+    "ariaLabelButton": "wysyłanie pierwszych danych.",
+    "send": "送る",
+    "successSending": "Profile has been updated.",
+    "errorSending": "Profile hasn't been updated."
   }
 }

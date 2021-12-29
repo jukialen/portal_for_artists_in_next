@@ -10,11 +10,35 @@
 .photo__profile {
   width: 10rem;
   height: 10rem;
+  position: relative;
   background-color: $secondary__background__color;
   margin: 2rem;
 }
 
-.user__name,
+.mar__button {
+  height: 2.25rem;
+  font-size: 1rem;
+  margin: 1rem auto;
+}
+
+  .edit {
+    background: $third__background__color;
+    border-color: $third__background__color;
+  }
+  .cancel {
+    background: $light__background__color;
+    border-color: $light__background__color;
+  }
+
+.form {
+  display: none;
+}
+
+.form__active {
+  display: grid;
+}
+
+.pseudonym__name,
 .about__me {
   margin: 1.5rem;
   display: flex;
@@ -27,15 +51,18 @@
 
   .input,
   .description {
-    width: 14rem;
     margin: 1rem auto;
     font-size: 1rem;
+  }
+  .description {
+    width: 20rem;
   }
 }
 
 .button {
   width: 7rem;
   font-size: 1rem;
+  margin: auto;
 }
 
 @media (min-width: 1440px) {

@@ -18,7 +18,7 @@
     "validateUsernameNum": "Name cannot include numbers.",
     "validateUsernameMin": "Name is too short.",
     "validatePseudonymNum": "Pseudonym must have at least 1 number.",
-    "validatePseudonymSpec": "Pseudonym must include at least 1 special character: #?!@$%^&*-",
+    "validatePseudonymSpec": "Pseudonym must include at least 1 special character: #?!@$%^&*-＃？！＄％＆＊ー",
     "validatePseudonymHKik":"Pseudonym accept only letters. These can be Hiragana, Katakana and kanji characters",
     "validatePseudonymMin": "Pseudonym is too short.",
     "validatePseudonymMax": "Pseudonym is too long. Must have a maximum 15 letters.",
@@ -31,7 +31,6 @@
     "titleOfRegistration": "Registration for free!",
     "titleOfLogin": "Login!",
     "name": "Name",
-    "pseudonym": "Pseudonym",
     "profilePhoto": "Profile photo",
     "email": "E-mail",
     "password": "Password",
@@ -92,9 +91,12 @@
       "userLikedFiles": "Liked photos and draws"
     },
     "profile": {
-      "name": "Your username:",
+      "pseudonym": "Pseudonym:",
       "aboutMe": "About me:",
-      "save": "Save"
+      "ariaLabelButton": "Updating pseudonym and description button",
+      "save": "Save",
+      "successSending": "Profile has been updated.",
+      "errorSending": "Profile hasn't been updated."
     }
   },
   "Main": {
@@ -121,5 +123,11 @@
     "containerEighthAnswer": "Choose a group or, better, you'll create it yourself!",
     "containerNinthQuestion": "Do you have artistic friends here?",
     "containerNinthAnswer": "You always have their on hand. Fast, so you know what they showed off recently."
+  },
+  "NewUser": {
+    "ariaLabelButton": "sending first data",
+    "send": "Send",
+    "successSending": "Profile has been updated.",
+    "errorSending": "Profile hasn't been updated."
   }
 }

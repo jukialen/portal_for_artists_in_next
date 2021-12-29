@@ -18,7 +18,7 @@
     "validateUsernameNum": "Imię nie może zawierać cyfr",
     "validateUsernameMin": "Imię jest za krótkie.",
     "validatePseudonymNum": "Pseudonym musi mieć conajmniej 1 cyfrę.",
-    "validatePseudonymSpec": "Pseudonym musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-",
+    "validatePseudonymSpec": "Pseudonym musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-＃？！＄％＆＊ー",
     "validatePseudonymHKik":"Pseudonym przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji",
     "validatePseudonymMin": "Pseudonym jest za krótkie.",
     "validatePseudonymMax": "Pseudonym jest za długi. Maksymalnie musi mieć 15 znaków.",
@@ -31,7 +31,6 @@
     "titleOfRegistration": "Zarejestruj się za darmo!",
     "titleOfLogin": "Zaloguj!",
     "name": "Imię",
-    "pseudonym": "Pseudonim",
     "profilePhoto": "Zdjęcie profilowe",
     "email": "E-mail",
     "password": "Hasło",
@@ -92,9 +91,12 @@
       "userLikedFiles": "Polubione zdjęcia i rysunki"
     },
     "profile": {
-      "name": "Twoja nazwa użytkownika:",
+      "pseudonym": "Pseudonim:",
       "aboutMe": "O mnie:",
-      "save": "Zapisz"
+      "ariaLabelButton": "Aktualizacja pseudonimu i opisu użytkownika",
+      "save": "Zapisz",
+      "successSending": "Profile zaktualizowany",
+      "errorSending": "Profil nie został zaktualizowany."
     }
   },
   "Main": {
@@ -121,5 +123,11 @@
     "containerEighthAnswer": "Wybierz grupę lub, jeszcze lepiej sam/a ją stwórz!",
     "containerNinthQuestion": "Masz tutaj artystycznych przyjaciół?",
     "containerNinthAnswer": "Zawsze masz ich pod ręką. Szybko, więc wiesz czym się ostatnio pochwalili."
+  },
+  "NewUser": {
+    "ariaLabelButton": "wysyłanie pierwszych danych",
+    "send": "Wyślij",
+    "successSending": "Profil został zaktualizowany",
+    "errorSending": "Profil nie został zaktualizowany."
   }
 }

@@ -2,60 +2,60 @@
 
 .create__account,
 .login {
-  position: absolute;
-  width: 100%;
-  max-width: 23rem;
-  top: 2.8rem;
-  right: 0;
-  background-color: $link__hover;
-  border-bottom: 0.5rem inset $borders__background__color;
-  border-left: 0.5rem inset $borders__background__color;
-  border-right: 0.5rem inset $borders__background__color;
-  z-index: 999;
+	position: absolute;
+	width: 100%;
+	max-width: 23rem;
+	top: 2.8rem;
+	right: 0;
+	background-color: $link__hover;
+	border-bottom: 0.5rem inset $borders__background__color;
+	border-left: 0.5rem inset $borders__background__color;
+	border-right: 0.5rem inset $borders__background__color;
+	z-index: 999;
 
-  .title {
-    margin: 3rem auto 2rem;
-  }
+	.title {
+		margin: 3rem auto 2rem;
+	}
 
-  .fields__info, {
-    margin: .2rem auto;
-    font-size: 1.1rem;
-    line-height: 1.2;
-    width: 16rem;
-  }
+	.submit__button {
+		width: 10rem;
+		margin: 1rem 10%;
+	}
 
-  .submit__button {
-    width: 10rem;
-    margin: 1rem 10%;
-  }
+	.error {
+		margin: .2rem auto;
+		font-size: 1.1rem;
+		line-height: 1.2;
+		width: 16rem;
+	}
 
-  .forgotten {
-    margin: 1rem auto .5rem;
-    background: none;
-  }
+	.forgotten {
+		margin: 1rem auto .5rem;
+		background: none;
+	}
 }
 
 .separator {
-  margin: 0 auto 2rem;
-  font-size: 1.5rem;
-  line-height: 1.2;
+	margin: 0 auto 2rem;
+	font-size: 1.5rem;
+	line-height: 1.2;
 }
 
 .provider__title {
-  display: inline-block;
-  margin: 0.5rem auto;
-  font-size: 1.4rem;
+	display: inline-block;
+	margin: 0.5rem auto;
+	font-size: 1.4rem;
 }
 
 
 .create__account {
-  display: none;
+	display: none;
 }
 
 .login {
-  display: none;
+	display: none;
 }
 
 .form__menu__active {
-  display: grid;
+	display: grid;
 }

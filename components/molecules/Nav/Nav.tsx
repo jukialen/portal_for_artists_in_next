@@ -5,6 +5,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
+import { useUserData } from 'hooks/useUserData';
 
 import { NavFormContext } from 'providers/NavFormProvider';
 import { ShowMenuContext } from 'providers/ShowMenuProvider';
@@ -44,7 +45,8 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
     }
   };
   
-  const currentUser = auth.currentUser;
+  const { pseudonym } = useUserData();
+  // console.log('uD', typeof localStorage ! == 'undefined' && `${localStorage.getItem('uD')}`, `${pseudonym}`)
   
   return (
     <nav className={`${styles.nav} ${isMenu && styles.menu__active}`}>
@@ -60,7 +62,7 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
           </Link>
         </li>
         <li className={styles.menu}>
-          <Link href={titleSecondNav === `${useHookSWR()?.Nav?.account}` ? `/account/${currentUser?.displayName}` : asPath}>
+          <Link href={titleSecondNav === `${useHookSWR()?.Nav?.account}` ? `/account/${pseudonym}` : asPath}>
             <a className={styles.sign__out} onClick={hideMenuCreate}>
               {titleSecondNav}
             </a>

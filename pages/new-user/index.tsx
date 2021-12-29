@@ -1,63 +1,80 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
-import { Form, Formik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import { updateProfile } from 'firebase/auth';
-import { auth } from '../../firebase';
-import { doc, addDoc } from "firebase/firestore";
+import { auth, db, storage } from '../../firebase';
+import { doc, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, updateMetadata, uploadBytes } from "firebase/storage";
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
+import { InfoField } from 'components/atoms/InfoField/InfoField';
 
 import { StatusLoginContext } from "providers/StatusLogin";
 
-import styles from './index.module.css';
+import styles from './index.module.scss';
+
+type FirstDataType = {
+  username: string,
+  pseudonym: string,
+  profilePhoto: File
+}
 
 export default function NewUser() {
   const { push } = useRouter();
-  const { showUser } = useContext(StatusLoginContext);
+  
   const loading = useCurrentUser('/');
-  
-  const [valuesFields, setValuesFields] = useState<string>('');
-  
   const data = useHookSWR();
+  
+  const { showUser } = useContext(StatusLoginContext);
+  const [valuesFields, setValuesFields] = useState<string>('');
+  const [photo, setPhoto] = useState(null);
   
   const initialValues = {
     username: '',
     pseudonym: ''
   };
   
-  type FirstDataType = {
-    username: string,
-    pseudonym: string,
-    profilePhoto: File
-  }
+  const user = auth.currentUser;
+  
+  const handleChange = async (e: any) => {
+    e.target.files[0] && setPhoto(e.target.files[0]);
+  };
   
   const sendingData = async({ username, profilePhoto, pseudonym }: FirstDataType) => {
-    const user = auth.currentUser;
-    console.log(profilePhoto)
-  
     try {
-      // @ts-ignore
-      await updateProfile(auth.currentUser, {
-        displayName: username, photoURL: profilePhoto
+      await setDoc(doc(db, "users", `${user?.uid}`), { pseudonym });
+      const fileRef = ref(storage, `profilePhotos/${user?.uid}`);
+      
+      const photoURL = await getDownloadURL(fileRef);
+  
+      const metadata = {
+        contentType: `${photo?.type}`,
+      };
+      
+      uploadBytes(fileRef, photo).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+        updateMetadata(fileRef, metadata);
       });
+      
       // @ts-ignore
-      await addDoc(doc(db, "users", user?.uid), { pseudonym });
-      await localStorage.setItem('fD', `${process.env.NEXT_APP_LSTORAGE}`);
-      setValuesFields('Profile zaktualizowany');
+      await updateProfile(user, {
+        displayName: username, photoURL: photoURL
+      });
+
+      localStorage.setItem('uD', `${pseudonym}`);
+      setValuesFields(data?.NewUSer?.successSending);
       await showUser();
       return push('/app');
     } catch (error) {
-      // @ts-ignore
-      setValuesFields(`Error: ${error.code}, ${error.message}`)
+      setValuesFields(data?.NewUser?.errorSending)
     }
   };
-
-return !loading ? (
+  return !loading ? (
   <div className='workspace'>
     <Formik // @ts-ignore
       initialValues={initialValues}
@@ -71,7 +88,7 @@ return !loading ? (
   
         pseudonym: Yup.string()
         .matches(/[0-9０-９]+/g, data?.NavForm?.validatePseudonymNum)
-        .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePseudonymSpec)
+        .matches(/[#?!@$%^&*-＃？！＄％＆＊ー]+/g, data?.NavForm?.validatePseudonymSpec)
         .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validatePseudonymHKik)
         .min(5, data?.NavForm?.validatePseudonymMin)
         .max(15, data?.NavForm?.validatePseudonymMax)
@@ -85,41 +102,47 @@ return !loading ? (
         <FormField
           titleField={`${data?.NavForm?.name}:`}
           nameField='username'
-          typeField='username'
+          typeField='text'
           placeholderField={data?.NavForm?.name}
         />
         
-        <FormError className={styles.error} nameError='username' />
+        <FormError nameError='username' />
         
         <FormField
-          titleField={`${data?.NavForm?.pseudonym}:`}
+          titleField={`${data?.Account?.profile?.pseudonym}:`}
           nameField='pseudonym'
-          typeField='pseudonym'
-          placeholderField={data?.NavForm?.pseudonym}
+          typeField='text'
+          placeholderField={data?.Account?.profile?.pseudonym}
         />
         
-        <FormError className={styles.error} nameError='pseudonym' />
+        <FormError nameError='pseudonym' />
+  
+        <div className={styles.form__field}>
+          <label htmlFor={data?.NavForm?.profilePhoto} className={styles.label}>
+            {data?.NavForm?.profilePhoto}:
+          </label>
+          <Field
+            name='profilePhoto'
+            type='file'
+            id='profilePhoto'
+            accept='.jpg, .jpeg, .png, .webp, .avif'
+            onChange={handleChange}
+            placeholder={data?.NavForm?.profilePhoto}
+            className={styles.input}
+          />
+        </div>
         
-        <FormField
-          titleField={`${data?.NavForm?.profilePhoto}:`}
-          nameField='profilePhoto'
-          typeField='file'
-          accept='.jpg, .jpeg, .png'
-          placeholderField={data?.NavForm?.profilePhoto}
-        />
-        
-        <FormError className={styles.error} nameError='profilePhoto' />
+        <FormError nameError='profilePhoto' />
         
         <button
           type='submit'
           className={`button ${styles.submit__button}`}
-          aria-label='sending first data'
+          aria-label={data?.NewUser?.ariaLabelButtom}
         >
-          Wyślij
+          {data?.NewUser?.send}
         </button>
-        
-        {!!valuesFields && <p className={styles.submit__info}>{valuesFields}</p>}
-      
+  
+        {!!valuesFields && <InfoField value={valuesFields} />}
       </Form>
     </Formik>
   </div>

@@ -7,6 +7,7 @@ import { useHookSWR } from 'hooks/useHookSWR';
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
+import { InfoField } from 'components/atoms/InfoField/InfoField';
 
 import styles from './index.module.scss';
 
@@ -57,7 +58,7 @@ export default function Forgotten() {
           placeholderField={useHookSWR()?.NavForm?.email}
         />
         
-        <FormError className={styles.error} nameError='email' />
+        <FormError nameError='email' />
         
         <button
           type='submit'
@@ -66,8 +67,8 @@ export default function Forgotten() {
         >
           Wyślij
         </button>
-        
-        {!!valuesFields && <p className={styles.submit__info}>{valuesFields}</p>}
+  
+        {!!valuesFields && <InfoField value={valuesFields} />}
       
       </Form>
     </Formik>

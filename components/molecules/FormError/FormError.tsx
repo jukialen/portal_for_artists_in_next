@@ -1,13 +1,14 @@
 import { ErrorMessage } from 'formik';
 
+import styles from './FormError.module.scss';
+
 type fE = {
-  className?: string;
   nameError: string;
 };
 
-export const FormError = ({ nameError, className }: fE) => {
+export const FormError = ({ nameError }: fE) => {
   return (
-    <p className={className}>
+    <p className={styles.error}>
       <ErrorMessage name={nameError} />
     </p>
   );

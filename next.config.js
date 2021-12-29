@@ -8,8 +8,9 @@ module.exports = {
     defaultLocale: 'en',
   },
   images: {
-    deviceSizes: [320, 420, 768, 1024, 1200],
-    loader: "default",
-    domains: ["res.cloudinary.com"],
+    deviceSizes: [280, 320, 420, 768, 1024, 1200],
+    loader: 'default',
+    domains: ['firebasestorage.googleapis.com'],
+    formats: ['image/avif', 'image/webp'],
   },
 }

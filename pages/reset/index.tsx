@@ -75,7 +75,7 @@ export default function Reset() {
           placeholderField={useHookSWR()?.Account?.aData?.newPassword}
         />
         
-        <FormError className={styles.error} nameError='nav__password' />
+        <FormError nameError='nav__password' />
         
         <FormField
           titleField='Again new password:'
@@ -84,7 +84,7 @@ export default function Reset() {
           placeholderField={useHookSWR()?.Account?.aData?.againNewPassword}
         />
         
-        <FormError className={styles.error} nameError='again__nav__password' />
+        <FormError nameError='again__nav__password' />
         
         <button
           type='submit'
