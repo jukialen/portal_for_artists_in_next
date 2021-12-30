@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import { updateProfile } from 'firebase/auth';
 import { auth, db, storage } from '../../firebase';
-import { doc, setDoc } from "firebase/firestore";
-import { getDownloadURL, ref, updateMetadata, uploadBytes } from "firebase/storage";
+import { doc, setDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, updateMetadata, uploadBytes } from 'firebase/storage';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
@@ -14,14 +14,13 @@ import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
 import { InfoField } from 'components/atoms/InfoField/InfoField';
 
-import { StatusLoginContext } from "providers/StatusLogin";
+import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from './index.module.scss';
 
 type FirstDataType = {
   username: string,
   pseudonym: string,
-  profilePhoto: File
 }
 
 export default function NewUser() {
@@ -45,13 +44,13 @@ export default function NewUser() {
     e.target.files[0] && setPhoto(e.target.files[0]);
   };
   
-  const sendingData = async({ username, profilePhoto, pseudonym }: FirstDataType) => {
+  const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
-      await setDoc(doc(db, "users", `${user?.uid}`), { pseudonym });
-      const fileRef = ref(storage, `profilePhotos/${user?.uid}`);
+      await setDoc(doc(db, 'users', `${user?.uid}`), { pseudonym });
+      const fileRef = ref(storage, `/profilePhotos/${user?.uid}`);
       
       const photoURL = await getDownloadURL(fileRef);
-  
+      
       const metadata = {
         contentType: `${photo?.type}`,
       };

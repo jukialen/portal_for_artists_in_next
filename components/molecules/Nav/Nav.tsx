@@ -46,7 +46,6 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   };
   
   const { pseudonym } = useUserData();
-  // console.log('uD', typeof localStorage ! == 'undefined' && `${localStorage.getItem('uD')}`, `${pseudonym}`)
   
   return (
     <nav className={`${styles.nav} ${isMenu && styles.menu__active}`}>
