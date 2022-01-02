@@ -23,7 +23,8 @@ Site's in full responsive on target devices from small smartphones to TV and SMA
 - REST API;
 - axios;
 - Typescript;
-- Firebase
+- Firebase;
+- Gsap + ScrollTrigger.
 
 ## Branches:
 - <a href="https://github.com/jukialen/portal_for_artists_in_next">main</a> - Stable version;

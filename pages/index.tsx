@@ -1,6 +1,8 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -15,33 +17,48 @@ export default function Home() {
   const { asPath,push } = useRouter();
   
   const data = useHookSWR();
-  
+
   useEffect(() => {
     isUser && push('/app');
   }, [isUser]);
+  
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+  
+    const sections = document.querySelectorAll('section');
+    sections.forEach((section: HTMLElement) => {
+      gsap.fromTo(section.children, { y: '+=200', x: '-=200', opacity: 0}, { y: 0, x: 0, opacity: 1, stagger: 0.2, duration: 1.2, ease: 'easeInOut', scrollTrigger: {
+          trigger: section,
+          start: 'top 140%',
+          end: 'button 10%',
+          scrub: 3
+        }});
+    });
+  }, [])
   
   const image = 320;
   return (
     <div className='workspace'>
       <HeadCom path={`/${asPath}`} content='Main site.' />
+      <div className={styles.group__element}>
+        <h1 className={styles.title}>{data?.Main?.title}</h1>
+  
+        <h3 className={styles.h3}>
+          {data?.Main?.firstQuestion}
+          <br />
+          <br />
+          {data?.Main?.secondQuestion}
+        </h3>
+  
+        <h2 className={styles.h2}>
+          {data?.Main?.firstAnswer}
+          <br />
+          <br />
+          {data?.Main?.secondAnswer}
+        </h2>
+      </div>
       
-      <h1 className={styles.title}>{data?.Main?.title}</h1>
-      
-      <h3 className={styles.h3}>
-        {data?.Main?.firstQuestion}
-        <br />
-        <br />
-        {data?.Main?.secondQuestion}
-      </h3>
-      
-      <h2 className={styles.h2}>
-        {data?.Main?.firstAnswer}
-        <br />
-        <br />
-        {data?.Main?.secondAnswer}
-      </h2>
-      
-      <div className={styles.main__container}>
+      <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerFirstQuestion}
@@ -52,9 +69,9 @@ export default function Home() {
         </div>
         
         <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
-      </div>
+      </section>
       
-      <div className={styles.main__container}>
+      <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerSecondQuestion}
@@ -66,9 +83,9 @@ export default function Home() {
         </div>
         
         <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
-      </div>
+      </section>
       
-      <div className={styles.main__container}>
+      <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerThirdQuestion}
@@ -80,9 +97,9 @@ export default function Home() {
         </div>
         
         <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
-      </div>
+      </section>
       
-      <div className={styles.main__container}>
+      <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerFourthQuestion}<br />
@@ -94,9 +111,9 @@ export default function Home() {
         </div>
         
         <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
-      </div>
+      </section>
       
-      <div className={styles.main__container}>
+      <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerFifthQuestion}
@@ -108,9 +125,9 @@ export default function Home() {
         </div>
         
         <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
-      </div>
+      </section>
       
-      <div className={styles.main__container}>
+      <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerSixthQuestion}
@@ -122,9 +139,9 @@ export default function Home() {
         </div>
         
         <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
-      </div>
+      </section>
       
-      <div className={styles.main__container}>
+      <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerSeventhQuestion}
@@ -136,9 +153,9 @@ export default function Home() {
         </div>
         
         <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
-      </div>
+      </section>
       
-      <div className={styles.main__container}>
+      <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerEighthQuestion}
@@ -150,9 +167,9 @@ export default function Home() {
         </div>
         
         <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
-      </div>
+      </section>
       
-      <div className={styles.main__container}>
+      <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerNinthQuestion}
@@ -164,7 +181,7 @@ export default function Home() {
         </div>
         
         <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
-      </div>
+      </section>
     </div>
   );
 }

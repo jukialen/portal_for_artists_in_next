@@ -1,31 +1,36 @@
 @use 'styles/variables' as *;
 
-.title {
-  margin: 2rem auto 3rem;
-}
+.group__element {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 
-.h2,
-.h3 {
-  width: 17rem;
-  margin: 2rem auto;
-  font-size: 1rem;
-  line-height: 1.2;
+  .title {
+    margin: 2rem auto;
+  }
 
-  @media (min-width: 400px) {
-    width: 20rem;
+  .h2,
+  .h3 {
+    width: 100vw;
+    max-width: 25rem;
+    margin: 0 auto;
+    font-size: 1.2rem;
+    line-height: 1.6;
   }
 }
 
 .main__container {
   display: flex;
-  margin: 1rem auto;
-  flex-flow: row wrap;
+  margin: 3rem auto;
+  flex-flow: column wrap;
   justify-content: space-evenly;
 
   .container {
     display: flex;
+    width: 100vw;
     max-width: 25rem;
-    margin: 2rem auto;
+    margin: 4rem auto;
     flex-direction: column;
     line-height: 1.6;
     background: $primary__color;
@@ -46,24 +51,6 @@
   .image {
     background-color: $secondary__color;
     color: $dark__background__light__color;
-  }
-
-  @media (min-width: 394px) {
-    .container {
-      margin: 1.5rem;
-      justify-content: center;
-
-      .question {
-        width: 50%;
-      }
-
-      .answer {
-        display: flex;
-        width: 60%;
-        margin: 16px 0 16px 40%;
-        justify-content: flex-end;
-      }
-    }
   }
 }
 
