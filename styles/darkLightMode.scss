@@ -1,8 +1,8 @@
 @use 'styles/variables' as *;
 
 .dark {
-  background-color: $dark__background;
-  color: $dark__color;
+  background-color: $dark__background__light__color;
+  color: $dark__color__light__back;
 }
 
 .left__arrow__dark {

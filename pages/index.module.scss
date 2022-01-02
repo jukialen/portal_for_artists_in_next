@@ -28,7 +28,8 @@
     margin: 2rem auto;
     flex-direction: column;
     line-height: 1.6;
-    background: $main__container;
+    background: $primary__color;
+    color: $dark__color__light__back;
     padding: .5rem;
 
     .question {
@@ -43,7 +44,8 @@
   }
 
   .image {
-    background-color: $image__container;
+    background-color: $secondary__color;
+    color: $dark__background__light__color;
   }
 
   @media (min-width: 394px) {

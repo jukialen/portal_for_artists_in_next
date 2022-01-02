@@ -3,12 +3,13 @@
 .footer {
   display: flex;
   flex-flow: row wrap;
-  background-color: $third__background__color;
+  background-color: $third__color;
 
   .button {
-    width: 9rem;
+    width: 10rem;
     height: 2rem;
     background-color: inherit;
+    color: $secondary__color;
     border: 0;
     cursor: pointer;
     margin: 0.5rem auto;
@@ -33,7 +34,8 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    background-color: $secondary__background__color;
+    background-color: $secondary__color;
+    color: $dark__background__light__color;
     margin: 0 .1rem;
   }
 }

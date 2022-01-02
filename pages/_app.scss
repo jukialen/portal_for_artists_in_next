@@ -9,14 +9,14 @@
 }
 html {
   scrollbar-width: thin;
-  scrollbar-color: $light__color black;
+  scrollbar-color: $dark__background__light__color black;
 
   &:hover {
-    scrollbar-color: $secondary__background__color black;
+    scrollbar-color: $secondary__color black;
   }
 
   &:active {
-    scrollbar-color: $borders__background__color black;
+    scrollbar-color: $secondary__color black;
   }
 }
 html::-webkit-scrollbar {
@@ -28,15 +28,15 @@ html::-webkit-scrollbar-track {
 }
 
 html::-webkit-scrollbar-thumb {
-  background: $light__color;
+  background: $dark__background__light__color;
 }
 html::-webkit-scrollbar-thumb:hover {
-  background: $secondary__background__color;
+  background: $secondary__color;
   border-radius: 20px;
 }
 
 html::-webkit-scrollbar-thumb:active {
-  background: $borders__background__color;
+  background: $secondary__color;
   border-radius: 20px;
 }
 
@@ -58,11 +58,11 @@ h4 {
 
 a {
   text-decoration: none;
-  color: $link__color;
+  color: $dark__color__light__back;
   cursor: pointer;
 
   &:hover {
-    color: $link__hover;
+    color: $secondary__color;
   }
 
   &:active {
@@ -81,7 +81,7 @@ a {
 input:required,
 textarea:required,
 select:required {
-  border: 0.1rem solid $borders__required__color;
+  border: 0.1rem solid $required__color;
 }
 
 .whole__page {
@@ -102,7 +102,7 @@ select:required {
 
 .button {
   padding: 0.25rem 1.5rem;
-  border: .2rem inset $borders__background__color;
+  border: .2rem inset $secondary__color;
   border-radius: 2rem;
   cursor: pointer;
 }

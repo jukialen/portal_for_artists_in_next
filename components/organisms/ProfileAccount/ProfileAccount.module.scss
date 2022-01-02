@@ -11,7 +11,7 @@
   width: 10rem;
   height: 10rem;
   position: relative;
-  background-color: $secondary__background__color;
+  background-color: $secondary__color;
   margin: 2rem;
 }
 
@@ -22,12 +22,12 @@
 }
 
   .edit {
-    background: $third__background__color;
-    border-color: $third__background__color;
+    background: $third__color;
+    border-color: $third__color;
   }
   .cancel {
-    background: $light__background__color;
-    border-color: $light__background__color;
+    background: $dark__color__light__back;
+    border-color: $dark__color__light__back;
   }
 
 .form {

@@ -40,7 +40,11 @@
     "loadingRegistration": "Rejestruję cię...",
     "successInfoRegistration": "Gratulacje! Zostałeś zarejestrowany. Sprawdź skrzynkę mailową i potwierdź e-mail, aby móc się zalogować.",
     "providerTitleRegistration": "Lub zarejestruj się za pomocą:",
-    "providerTitleLogin": "Lub zaloguj się za pomocą"
+    "providerTitleLogin": "Lub zaloguj się za pomocą:",
+    "acceptInfoOne": "Rejestrując się, zgadzasz się z naszymi ",
+    "acceptInfoTwo": "Warunkami Świadczenia Usług",
+    "acceptInfoThree": " i ",
+    "acceptInfoFour": "Polityką Prywatności"
   },
   "Aside": {
     "category": "Kategorie",

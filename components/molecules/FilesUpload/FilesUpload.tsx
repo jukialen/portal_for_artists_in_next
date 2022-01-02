@@ -1,12 +1,12 @@
-import { ChangeEvent } from 'react';
-import axios from "axios";
+import { useState } from 'react';
 
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-
-import { UploadOutlined, } from '@ant-design/icons';
 import styles from './FileUpload.module.scss';
+import { useHookSWR } from '../../../hooks/useHookSWR';
+import { auth, storage } from '../../../firebase';
+import { getDownloadURL, ref, updateMetadata, uploadBytes } from 'firebase/storage';
 
 
 const initialValues = {
@@ -16,43 +16,44 @@ const initialValues = {
 };
 
 type FileDataType = {
-  files: FileList;
   description: string;
-  e: ChangeEvent<HTMLInputElement>;
+  tags: string;
+  resetForm: any;
   accept: string;
 };
 
 export const FilesUpload = () => {
+  const user = auth.currentUser;
+  const data = useHookSWR();
+  const [photo, setPhoto] = useState(null);
+  
   const tagsArray = ['Choose tag', 'realistic', 'manga', 'anime', 'comics', 'photographs', 'animations', 'others'];
   
-  // @ts-ignore
-  const uploadFiles = async ({ files, description, tags }: FileDataType, { resetForm }) => {
-    
-    const formData = new FormData();
-    // @ts-ignore
-    formData.append('files', files[0]);
-    
+  const handleChange = async (e: any) => {
+    e.target.files[0] && setPhoto(e.target.files[0]);
+  };
+  
+  const uploadFiles = async ({ description, tags }: FileDataType, { resetForm }: FileDataType) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/upload`, formData)
-      // @ts-ignore
-      const imageId = response.data[0].id;
+      const fileRef = ref(storage, `${user?.uid}/${photo?.name}`);
       
-      try {
-         await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/files`, {
-            multimedia: imageId,
-            description,
-            tags
-          },
-        )
-        resetForm(initialValues)
-        
-      } catch (error) {
-        console.log(error);
-      }
-    } catch (error) {
-      console.log(error)
+      const metadata = {
+        customMetadata: {
+          'tag': tags,
+          'description': description
+        }
+      };
+      
+      await uploadBytes(fileRef, photo).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+        updateMetadata(fileRef, metadata);
+      });
+      
+      console.log('File has been uploaded');
+      resetForm(initialValues);
+    } catch (e) {
+      console.log(e);
     }
-    
   }
   
   return (
@@ -69,29 +70,6 @@ export const FilesUpload = () => {
       onSubmit={uploadFiles}
     >
       <Form className={styles.adding__files}>
-        <label>
-          <div>
-            <UploadOutlined />
-            Select
-          </div>
-          <Field
-            title='Select'
-            name='files'
-            type='file'
-            className={styles.input}
-            placeholder='Select files' // @ts-ignore
-            accept='.jpg, .jpeg, .png, .svg, .gif, video/*'
-            multiple={true}
-            required='required'
-            aria-required='true'
-          />
-          {/*<div>*/}
-          {/*  <PauseCircleTwoTone className={styles.icons} />*/}
-          {/*  <ReloadOutlined className={styles.icons} />*/}
-          {/*  <LoadingOutlined className={styles.icons} />*/}
-          {/*</div>*/}
-        </label>
-        
         <Field
           title='Description:'
           name='description'
@@ -101,21 +79,43 @@ export const FilesUpload = () => {
           required='required'
           aria-required='true'
         />
-        
+  
         <FormError nameError='description' />
-        
+  
         <Field name='tags' as='select' className={styles.tags} required='required' aria-required='true'>
           {tagsArray.map(tag => <option key={tag} value={tag} className={styles.options}>{tag}</option>)}
         </Field>
-        
+  
         <FormError nameError='tags' />
-        
+        <div className={styles.form__field}>
+          <label htmlFor={data?.NavForm?.profilePhoto} className={styles.label}>
+            {data?.NavForm?.profilePhoto}:
+          </label>
+          <Field
+            name='profilePhoto'
+            type='file'
+            id='profilePhoto'
+            accept='.jpg, .jpeg, .png, .webp, .avif'
+            onChange={handleChange}
+            placeholder={data?.NavForm?.profilePhoto}
+            className={styles.input}
+          />
+        </div>
+    
+        <FormError nameError='profilePhoto' />
+    
         <button
           type='submit'
-          className={`button ${styles.button}`}
+          className={`button ${styles.submit__button}`}
+          aria-label={data?.NewUser?.ariaLabelButtom}
         >
-          Upload
+          {data?.NewUser?.send}
         </button>
+        {/*<div>*/}
+        {/*  <PauseCircleTwoTone className={styles.icons} />*/}
+        {/*  <ReloadOutlined className={styles.icons} />*/}
+        {/*  <LoadingOutlined className={styles.icons} />*/}
+        {/*</div>*/}
       </Form>
     </Formik>
   );

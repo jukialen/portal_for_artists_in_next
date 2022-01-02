@@ -12,6 +12,7 @@ import { InfoField } from 'components/atoms/InfoField/InfoField';
 import { NavFormContext } from 'providers/NavFormProvider';
 
 import styles from '../NavForm.module.scss';
+import { useRouter } from 'next/router';
 
 type UserDataType = {
   email: string,
@@ -23,10 +24,11 @@ const initialValues = {
 };
 
 export const Create = ({ data }: any) => {
-  const { isCreate } = useContext(NavFormContext);
-  
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [valuesFields, setValuesFields] = useState<string>('');
+  const { locale } = useRouter();
+  
+  const { isCreate } = useContext(NavFormContext);
   
   const actionCodeSettings = { url: `${process.env.NEXT_PUBLIC_PAGE}` };
   
@@ -99,15 +101,20 @@ export const Create = ({ data }: any) => {
           >
             {isLoading ? data?.NavForm?.loadingRegistration : data?.NavForm?.createSubmit}
           </button>
-          
+  
           {!!valuesFields && <InfoField value={valuesFields} />}
         </Form>
       </Formik>
       <p className={styles.separator}>__________________</p>
-      
+  
       <h4 className={styles.provider__title}>{data?.NavForm?.providerTitleRegistration}</h4>
-      
+  
       <Providers />
+      <p className={styles.acceptInfo}>{data?.NavForm?.acceptInfoOne}
+        <a href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '/terms' : `/${locale}/terms`}`}>{data?.NavForm?.acceptInfoTwo}</a>
+        {data?.NavForm?.acceptInfoThree}
+        <a href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '/privacy' : `/${locale}/privacy`}`}>{data?.NavForm?.acceptInfoFour}</a>
+      </p>
     </div>
   
   );

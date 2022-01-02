@@ -47,16 +47,15 @@ export default function NewUser() {
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
       await setDoc(doc(db, 'users', `${user?.uid}`), { pseudonym });
-      const fileRef = ref(storage, `/profilePhotos/${user?.uid}`);
+      const fileRef = await ref(storage, `/profilePhotos/${user?.uid}/${photo?.name}`);
       
       const photoURL = await getDownloadURL(fileRef);
       
       const metadata = {
         contentType: `${photo?.type}`,
       };
-      
-      uploadBytes(fileRef, photo).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
+  
+      await uploadBytes(fileRef, photo).then((snapshot) => {
         updateMetadata(fileRef, metadata);
       });
       

@@ -1,3 +1,5 @@
+@use 'styles/variables' as *;
+
 .nav {
   font-size: 1.5rem;
   width: 10rem;
@@ -5,7 +7,7 @@
   top: 3rem;
   right: 0;
   margin-right: -17rem;
-  background-color: #1e90ff;
+  background-color: $primary__color;
 
   .list {
     display: flex;

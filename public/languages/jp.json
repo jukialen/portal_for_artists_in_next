@@ -40,7 +40,11 @@
     "loadingRegistration": "登録してます。。。",
     "successInfoRegistration": "おめでとうございます！登録するのはしてました。 メールの受信箱を確認し、メールを確認してログインします。",
     "providerTitleRegistration": "それともで、使って登録します：",
-    "providerTitleLogin": "それともで、 login via:"
+    "providerTitleLogin": "それともで、 login via:",
+    "acceptInfoOne": "By signing up, you agree to our ",
+    "acceptInfoTwo": "Terms of Service",
+    "acceptInfoThree": " and ",
+    "acceptInfoFour": "Privacy Policy"
   },
   "Aside": {
     "category": "部分け",

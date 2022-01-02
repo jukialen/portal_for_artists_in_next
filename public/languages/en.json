@@ -40,7 +40,11 @@
     "loadingRegistration": "I'm registering you...",
     "successInfoRegistration": "Congratulation! You are registered. Check your mailbox and confirm your e-mail in order to you'll can log　in.",
     "providerTitleRegistration": "Or register yourself using:",
-    "providerTitleLogin": "Or login via:"
+    "providerTitleLogin": "Or login via:",
+    "acceptInfoOne": "By signing up, you agree to our ",
+    "acceptInfoTwo": "Terms of Service",
+    "acceptInfoThree": " and ",
+    "acceptInfoFour": "Privacy Policy"
   },
   "Aside": {
     "category": "Categories",
