@@ -31,7 +31,7 @@ export default function NewUser() {
   
   const { showUser } = useContext(StatusLoginContext);
   const [valuesFields, setValuesFields] = useState<string>('');
-  const [photo, setPhoto] = useState<File | null>(null);
+  const [photo, setPhoto] = useState(null);
   
   const initialValues = {
     username: '',
@@ -64,6 +64,7 @@ export default function NewUser() {
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
       await setDoc(doc(db, 'users', `${user?.uid}`), { pseudonym });
+      // @ts-ignore
       const fileRef = await ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
       
       // @ts-ignore
