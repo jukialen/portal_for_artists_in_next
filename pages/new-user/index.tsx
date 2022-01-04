@@ -66,6 +66,7 @@ export default function NewUser() {
       await setDoc(doc(db, 'users', `${user?.uid}`), { pseudonym });
       const fileRef = await ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
       
+      // @ts-ignore
       await uploadBytes(fileRef, photo);
       
       const photoURL = await getDownloadURL(fileRef);
