@@ -1,16 +1,17 @@
 import { useState } from 'react';
-
-import { FormError } from 'components/molecules/FormError/FormError';
+import { ref, updateMetadata, uploadBytes } from 'firebase/storage';
+import { auth, storage } from '../../../firebase';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import styles from './FileUpload.module.scss';
-import { useHookSWR } from '../../../hooks/useHookSWR';
-import { auth, storage } from '../../../firebase';
-import { getDownloadURL, ref, updateMetadata, uploadBytes } from 'firebase/storage';
 
+import { useHookSWR } from 'hooks/useHookSWR';
+
+import { FormError } from 'components/molecules/FormError/FormError';
+import { InfoField } from 'components/atoms/InfoField/InfoField';
+
+import styles from './FileUpload.module.scss';
 
 const initialValues = {
-  files: '',
   description: '',
   tags: ''
 };
@@ -23,15 +24,26 @@ type FileDataType = {
 };
 
 export const FilesUpload = () => {
-  const user = auth.currentUser;
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [valuesFields, setValuesFields] = useState<string>('');
   const data = useHookSWR();
-  const [photo, setPhoto] = useState(null);
+  
+  const user = auth.currentUser;
   
   const tagsArray = ['Choose tag', 'realistic', 'manga', 'anime', 'comics', 'photographs', 'animations', 'others'];
   
   const handleChange = async (e: any) => {
     e.target.files[0] && setPhoto(e.target.files[0]);
   };
+  
+  const schemaFile = Yup.object({
+    description: Yup.string()
+    .min(3, 'Opis jest zbyt krótki')
+    .max(20, 'Opis nie może być dłuższy niż 20 liter')
+    .matches(/[a-zA-Z0-9]/g, 'Może zawierać tylko litery i cyfry')
+    .required(data?.NavForm?.validateRequired),
+    tags: Yup.string().required(data?.NavForm?.validateRequired)
+  });
   
   const uploadFiles = async ({ description, tags }: FileDataType, { resetForm }: FileDataType) => {
     try {
@@ -43,58 +55,54 @@ export const FilesUpload = () => {
           'description': description
         }
       };
-      
       await uploadBytes(fileRef, photo).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
         updateMetadata(fileRef, metadata);
       });
       
-      console.log('File has been uploaded');
+      setValuesFields('File has been uploaded');
       resetForm(initialValues);
+      setPhoto(null)
     } catch (e) {
-      console.log(e);
+      setValuesFields(`File hasn't been uploaded`)
     }
   }
   
   return (
     <Formik // @ts-ignore
       initialValues={initialValues}
-      validationSchema={Yup.object({
-        description: Yup.string()
-        .min(3, 'Opis jest zbyt krótki')
-        .max(20, 'Opis nie może być dłuższy niż 20 liter')
-        .matches(/[a-zA-Z0-9]/g, 'Może zawierać tylko litery i cyfry'),
-        files: Yup.object().required('Required'),
-        tags: Yup.string().required("Required")
-      })} // @ts-ignore
+      validationSchema={schemaFile} // @ts-ignore
       onSubmit={uploadFiles}
     >
+      
       <Form className={styles.adding__files}>
-        <Field
-          title='Description:'
-          name='description'
-          type='text'
-          className={styles.input}
-          placeholder='Description'
-          required='required'
-          aria-required='true'
-        />
-  
+        <div className={styles.form__field}>
+          <label htmlFor={data?.NavForm?.profilePhoto} className={styles.label}>
+            Description:
+          </label>
+          <Field
+            as='textarea'
+            name='description:'
+            type='text'
+            placeholder='Description'
+            className={styles.input}
+          />
+        </div>
+    
         <FormError nameError='description' />
-  
+        
         <Field name='tags' as='select' className={styles.tags} required='required' aria-required='true'>
           {tagsArray.map(tag => <option key={tag} value={tag} className={styles.options}>{tag}</option>)}
         </Field>
   
         <FormError nameError='tags' />
+    
         <div className={styles.form__field}>
           <label htmlFor={data?.NavForm?.profilePhoto} className={styles.label}>
             {data?.NavForm?.profilePhoto}:
           </label>
           <Field
-            name='profilePhoto'
+            name='File:'
             type='file'
-            id='profilePhoto'
             accept='.jpg, .jpeg, .png, .webp, .avif'
             onChange={handleChange}
             placeholder={data?.NavForm?.profilePhoto}
@@ -102,7 +110,7 @@ export const FilesUpload = () => {
           />
         </div>
     
-        <FormError nameError='profilePhoto' />
+        <FormError nameError='file' />
     
         <button
           type='submit'
@@ -111,11 +119,15 @@ export const FilesUpload = () => {
         >
           {data?.NewUser?.send}
         </button>
+    
         {/*<div>*/}
         {/*  <PauseCircleTwoTone className={styles.icons} />*/}
         {/*  <ReloadOutlined className={styles.icons} />*/}
         {/*  <LoadingOutlined className={styles.icons} />*/}
         {/*</div>*/}
+  
+        {!!valuesFields && <InfoField value={valuesFields} />}
+
       </Form>
     </Formik>
   );

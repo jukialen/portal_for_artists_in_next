@@ -1,11 +1,13 @@
 .adding__files {
+  max-width: 99vw;
     display: flex;
     flex-flow: column wrap;
+  align-items: center;
 
-  .input {
-    width: 14rem;
-    margin: .5rem auto;
-  }
+  //.input {
+  //  width: 14rem;
+  //  margin: .5rem auto;
+  //}
 
   .icons {
     font-size: 1.4rem;
@@ -19,6 +21,28 @@
     .options {
       font-size: 1rem;
       margin: .2rem 0;
+    }
+  }
+
+  .form__field {
+    display: flex;
+    margin: 0.7rem auto;
+    flex-flow: row wrap;
+
+    .label {
+      display: inherit;
+      width: 10rem;
+      margin: 1rem auto;
+      justify-content: center;
+      align-self: center;
+      font-size: 1.3rem;
+    }
+
+    .input {
+      margin: auto;
+      max-width: 11rem;
+      height: 2rem;
+      padding: .4rem 0;
     }
   }
 

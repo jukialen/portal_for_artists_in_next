@@ -5,8 +5,6 @@ import * as Yup from 'yup';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../../firebase';
 
-import { useUserData } from 'hooks/useUserData';
-
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Providers } from 'components/molecules/Providers/Providers';
@@ -46,18 +44,18 @@ export const Login = ({ data }: any) => {
     signInWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user;
-      !user.emailVerified && setValuesFields(data?.NavForm?.unVerified);
       if (user.emailVerified) {
         resetForm(initialValues);
         setValuesFields(data?.NavForm?.statusLogin);
         showLoginForm();
-        if ( localStorage.getItem('uD')) {
-          alert(`${localStorage.getItem('uD')}`);
+        if (localStorage.getItem('uD')) {
           await push('/app');
           await showUser();
         } else {
           await push('/new-user');
         }
+      } else {
+        setValuesFields(data?.NavForm?.unVerified);
       }
     })
     .catch(() => {

@@ -5,7 +5,7 @@ import { Field, Form, Formik } from 'formik';
 import { updateProfile } from 'firebase/auth';
 import { auth, db, storage } from '../../firebase';
 import { doc, setDoc } from 'firebase/firestore';
-import { getDownloadURL, ref, updateMetadata, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
@@ -31,15 +31,32 @@ export default function NewUser() {
   
   const { showUser } = useContext(StatusLoginContext);
   const [valuesFields, setValuesFields] = useState<string>('');
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState<File | null>(null);
   
   const initialValues = {
     username: '',
     pseudonym: ''
   };
   
-  const user = auth.currentUser;
+  const schemaValidation = Yup.object({
+    username: Yup.string()
+    .matches(/^[A-Z]/g, data?.NavForm?.validateUsernameFl)
+    .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validateUsernameHKik)
+    .matches(/\D/g, data?.NavForm?.validateUsernameNum)
+    .min(3, data?.NavForm?.validateUsernameMin)
+    .required(data?.NavForm?.validateRequired),
+    
+    pseudonym: Yup.string()
+    .matches(/[0-9０-９]+/g, data?.NavForm?.validatePseudonymNum)
+    .matches(/[#?!@$%^&*-＃？！＄％＆＊ー]+/g, data?.NavForm?.validatePseudonymSpec)
+    .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validatePseudonymHKik)
+    .min(5, data?.NavForm?.validatePseudonymMin)
+    .max(15, data?.NavForm?.validatePseudonymMax)
+    .required(data?.NavForm?.validateRequired),
+  });
   
+  const user = auth.currentUser;
+
   const handleChange = async (e: any) => {
     e.target.files[0] && setPhoto(e.target.files[0]);
   };
@@ -47,21 +64,14 @@ export default function NewUser() {
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
       await setDoc(doc(db, 'users', `${user?.uid}`), { pseudonym });
-      const fileRef = await ref(storage, `/profilePhotos/${user?.uid}/${photo?.name}`);
+      const fileRef = await ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
+      
+      await uploadBytes(fileRef, photo);
       
       const photoURL = await getDownloadURL(fileRef);
-      
-      const metadata = {
-        contentType: `${photo?.type}`,
-      };
-  
-      await uploadBytes(fileRef, photo).then((snapshot) => {
-        updateMetadata(fileRef, metadata);
-      });
-      
       // @ts-ignore
       await updateProfile(user, {
-        displayName: username, photoURL: photoURL
+         displayName: username, photoURL: photoURL
       });
 
       localStorage.setItem('uD', `${pseudonym}`);
@@ -76,22 +86,7 @@ export default function NewUser() {
   <div className='workspace'>
     <Formik // @ts-ignore
       initialValues={initialValues}
-      validationSchema={Yup.object({
-        username: Yup.string()
-        .matches(/^[A-Z]/g, data?.NavForm?.validateUsernameFl)
-        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validateUsernameHKik)
-        .matches(/\D/g, data?.NavForm?.validateUsernameNum)
-        .min(3, data?.NavForm?.validateUsernameMin)
-        .required(data?.NavForm?.validateRequired),
-  
-        pseudonym: Yup.string()
-        .matches(/[0-9０-９]+/g, data?.NavForm?.validatePseudonymNum)
-        .matches(/[#?!@$%^&*-＃？！＄％＆＊ー]+/g, data?.NavForm?.validatePseudonymSpec)
-        .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validatePseudonymHKik)
-        .min(5, data?.NavForm?.validatePseudonymMin)
-        .max(15, data?.NavForm?.validatePseudonymMax)
-        .required(data?.NavForm?.validateRequired),
-      })}
+      validationSchema={schemaValidation}
       onSubmit={sendingData}
     >
       <Form className={styles.first__data}>
