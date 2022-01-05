@@ -58,7 +58,6 @@ export const ProfileAccount = ({ data }: any) => {
       setValuesFields(data?.Account?.profile?.successSending);
     } catch (e) {
       setValuesFields(data?.Account?.profile?.errorSending);
-      console.log(e);
     }
   };
   
@@ -68,8 +67,8 @@ export const ProfileAccount = ({ data }: any) => {
         <Image
           layout='fill'
           src={photoURL ? photoURL : defaultAvatar}
-          alt={photoURL ? 'avatar' : 'default avatar'}
-          aria-label={photoURL ? 'avatar' : 'default avatar'}
+          alt={photoURL ? data?.userAvatar : data?.defaultAvatar}
+          aria-label={photoURL ? data?.userAvatar : data?.defaultAvatar}
           priority
         />
       </div>
@@ -77,7 +76,7 @@ export const ProfileAccount = ({ data }: any) => {
       {!form && (
         <>
           <div className={styles.pseudonym__name}>
-            <label className={styles.title} htmlFor='pseudonym__name'>{data?.Account?.profile?.pseudonym}</label>
+            <label className={styles.title} htmlFor='pseudonym__name'>{data?.AnotherForm?.pseudonym}</label>
             <div id='pseudonym__name' className={styles.input}>{pseudonym}</div>
           </div>
           <div className={styles.about__me}>
@@ -94,13 +93,13 @@ export const ProfileAccount = ({ data }: any) => {
       >
         <Form>
           <div className={styles.pseudonym__name}>
-            <label className={styles.title} htmlFor='newPseudonym'>{data?.Account?.profile?.pseudonym}</label>
+            <label className={styles.title} htmlFor='newPseudonym'>{data?.AnotherForm?.pseudonym}</label>
             <Field
               id='newPseudonym'
               className={styles.input}
               type='text'
               name='newPseudonym'
-              placeholder={data?.Account?.profile?.pseudonym}
+              placeholder={data?.AnotherForm?.pseudonym}
             />
           </div>
           
@@ -133,7 +132,7 @@ export const ProfileAccount = ({ data }: any) => {
       <button
         className={`button ${form ? styles.cancel : styles.edit} ${styles.mar__button}`}
         onClick={() => setForm(!form)}
-      >{form ? 'Cancel' : 'Edit'}</button>
+      >{form ? `${data?.cancel}` : `${data?.edit}`}</button>
     </article>
   );
 };

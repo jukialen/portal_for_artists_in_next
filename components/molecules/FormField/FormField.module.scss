@@ -1,20 +1,20 @@
 .form__field {
   display: flex;
   margin: 0.7rem 8%;
-  flex-direction: row;
+  flex-flow: row wrap;
 
   .label {
     display: inherit;
     width: 7rem;
-    margin: 0 0.8rem 0 0;
-    justify-content: flex-start;
+    margin: .5rem auto;
+    justify-content: center;
     align-self: center;
     font-size: 1.3rem;
   }
 
   .input {
-    width: 44vw;
-    margin: auto 0;
+    width: 60vw;
+    margin: .5rem auto;
     max-width: 11rem;
   }
 }

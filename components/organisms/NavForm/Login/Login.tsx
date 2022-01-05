@@ -89,7 +89,7 @@ export const Login = ({ data }: any) => {
           <h2 className={styles.title}>{data?.NavForm?.titleOfLogin}</h2>
           
           <FormField
-            titleField={`${data?.NavForm?.email}:`}
+            titleField={data?.NavForm?.email}
             nameField='email'
             typeField='email'
             placeholderField={data?.NavForm?.email}
@@ -98,7 +98,7 @@ export const Login = ({ data }: any) => {
           <FormError nameError='email' />
           
           <FormField
-            titleField={`${data?.NavForm?.password}:`}
+            titleField={data?.NavForm?.password}
             nameField='password'
             typeField='password'
             placeholderField={data?.NavForm?.password}

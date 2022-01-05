@@ -30,8 +30,6 @@
     "validatePasswordSpec": "Password must include at least 1 special character: #?!@$%^&*-",
     "titleOfRegistration": "Registration for free!",
     "titleOfLogin": "Login!",
-    "name": "Name",
-    "profilePhoto": "Profile photo",
     "email": "E-mail",
     "password": "Password",
     "login": "Login:",
@@ -95,12 +93,13 @@
       "userLikedFiles": "Liked photos and draws"
     },
     "profile": {
-      "pseudonym": "Pseudonym:",
       "aboutMe": "About me:",
       "ariaLabelButton": "Updating pseudonym and description button",
       "save": "Save",
       "successSending": "Profile has been updated.",
-      "errorSending": "Profile hasn't been updated."
+      "errorSending": "Profile hasn't been updated.",
+      "defaultAvatar": "default avatar",
+      "userAvatar": "avatar"
     }
   },
   "Main": {
@@ -129,9 +128,24 @@
     "containerNinthAnswer": "You always have their on hand. Fast, so you know what they showed off recently."
   },
   "NewUser": {
+    "title": "Adding your name and pseudonym",
+    "name": "Name",
     "ariaLabelButton": "sending first data",
-    "send": "Send",
     "successSending": "Profile has been updated.",
     "errorSending": "Profile hasn't been updated."
-  }
+  },
+  "AnotherForm": {
+    "pseudonym": "Pseudonym",
+    "profilePhoto": "Profile photo",
+    "description": "Description",
+    "tags": "Tags",
+    "file": "File",
+    "arialSendingFile": "sending file",
+    "send": "Send",
+    "uploadFile": "File has been uploaded.",
+    "notUploadFile": "File hasn't been uploaded."
+  },
+  "edit": "Edit",
+  "cancel": "Cancel",
+  "chooseTag": "Choose tag"
 }

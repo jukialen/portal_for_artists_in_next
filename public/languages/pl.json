@@ -30,8 +30,6 @@
     "validatePasswordSpec": "Hasło musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-",
     "titleOfRegistration": "Zarejestruj się za darmo!",
     "titleOfLogin": "Zaloguj!",
-    "name": "Imię",
-    "profilePhoto": "Zdjęcie profilowe",
     "email": "E-mail",
     "password": "Hasło",
     "login": "Login",
@@ -95,12 +93,13 @@
       "userLikedFiles": "Polubione zdjęcia i rysunki"
     },
     "profile": {
-      "pseudonym": "Pseudonim:",
       "aboutMe": "O mnie:",
       "ariaLabelButton": "Aktualizacja pseudonimu i opisu użytkownika",
       "save": "Zapisz",
       "successSending": "Profile zaktualizowany",
-      "errorSending": "Profil nie został zaktualizowany."
+      "errorSending": "Profil nie został zaktualizowany.",
+      "defaultAvatar": "domyślny avatar",
+      "userAvatar": "avatar"
     }
   },
   "Main": {
@@ -129,9 +128,24 @@
     "containerNinthAnswer": "Zawsze masz ich pod ręką. Szybko, więc wiesz czym się ostatnio pochwalili."
   },
   "NewUser": {
+    "title": "Dodaj swoje imię i pseudonim",
+    "name": "Imię",
     "ariaLabelButton": "wysyłanie pierwszych danych",
-    "send": "Wyślij",
     "successSending": "Profil został zaktualizowany",
     "errorSending": "Profil nie został zaktualizowany."
-  }
+  },
+  "AnotherForm": {
+    "pseudonym": "Pseudonim",
+    "profilePhoto": "Zdjęcie profilowe",
+    "description": "Opis",
+    "tags": "Tagi",
+    "file": "Plik",
+    "arialSendingFile": "wysyłanie pliku",
+    "send": "Wyślij",
+    "uploadFile": "Plik został wysłany.",
+    "notUploadFile": "Plik nie został wysłany."
+  },
+  "edit": "Edytuj",
+  "cancel": "Anuluj",
+  "chooseTag": "Wybierz tag"
 }
