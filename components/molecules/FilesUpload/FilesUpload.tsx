@@ -30,7 +30,15 @@ export const FilesUpload = () => {
   
   const user = auth.currentUser;
   
-  const tagsArray = ['Choose tag', 'realistic', 'manga', 'anime', 'comics', 'photographs', 'animations', 'others'];
+  const tagsArray = [`${data?.chooseTag}`,
+                    `${data?.Aside?.realistic}`,
+                    `${data?.Aside?.manga}`,
+                    `${data?.Aside?.anime}`,
+                    `${data?.Aside?.comics}`,
+                    `${data?.Aside?.photographs}`,
+                    `${data?.Aside?.animations}`,
+                    `${data?.Aside?.others}`
+                    ];
   
   const handleChange = async (e: any) => {
     e.target.files[0] && setPhoto(e.target.files[0]);
@@ -48,22 +56,23 @@ export const FilesUpload = () => {
   const uploadFiles = async ({ description, tags }: FileDataType, { resetForm }: FileDataType) => {
     try {
       const fileRef = ref(storage, `${user?.uid}/${photo?.name}`);
-      
+  
       const metadata = {
         customMetadata: {
           'tag': tags,
           'description': description
         }
       };
+      // @ts-ignore
       await uploadBytes(fileRef, photo).then((snapshot) => {
         updateMetadata(fileRef, metadata);
       });
-      
-      setValuesFields('File has been uploaded');
+  
+      setValuesFields(`${data?.AnotherForm?.uploadFile}`);
       resetForm(initialValues);
-      setPhoto(null)
+      setPhoto(null);
     } catch (e) {
-      setValuesFields(`File hasn't been uploaded`)
+      setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
     }
   }
   
@@ -73,39 +82,42 @@ export const FilesUpload = () => {
       validationSchema={schemaFile} // @ts-ignore
       onSubmit={uploadFiles}
     >
-      
       <Form className={styles.adding__files}>
         <div className={styles.form__field}>
-          <label htmlFor={data?.NavForm?.profilePhoto} className={styles.label}>
-            Description:
+          <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.label}>
+            {data?.AnotherForm?.description}
           </label>
           <Field
             as='textarea'
-            name='description:'
+            name='description'
             type='text'
-            placeholder='Description'
+            placeholder={`${data?.AnotherForm?.description}`}
             className={styles.input}
           />
         </div>
-    
+  
         <FormError nameError='description' />
-        
-        <Field name='tags' as='select' className={styles.tags} required='required' aria-required='true'>
-          {tagsArray.map(tag => <option key={tag} value={tag} className={styles.options}>{tag}</option>)}
+  
+        <Field name='tags' as='select' className={styles.tags} aria-required='true'>
+          {tagsArray.map(tag => <option
+            key={tag}
+            value={tag === data?.chooseTag ? '' : tag}
+            className={styles.options}
+          >{tag}</option>)}
         </Field>
   
         <FormError nameError='tags' />
-    
+  
         <div className={styles.form__field}>
-          <label htmlFor={data?.NavForm?.profilePhoto} className={styles.label}>
-            {data?.NavForm?.profilePhoto}:
+          <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.label}>
+            {data?.AnotherForm?.file}
           </label>
           <Field
-            name='File:'
+            name='file'
             type='file'
             accept='.jpg, .jpeg, .png, .webp, .avif'
             onChange={handleChange}
-            placeholder={data?.NavForm?.profilePhoto}
+            placeholder={data?.AnotherForm?.file}
             className={styles.input}
           />
         </div>
@@ -115,9 +127,9 @@ export const FilesUpload = () => {
         <button
           type='submit'
           className={`button ${styles.submit__button}`}
-          aria-label={data?.NewUser?.ariaLabelButtom}
+          aria-label={data?.AnotherForm?.arialSendingFile}
         >
-          {data?.NewUser?.send}
+          {data?.AnotherForm?.send}
         </button>
     
         {/*<div>*/}

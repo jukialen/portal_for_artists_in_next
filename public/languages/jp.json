@@ -32,8 +32,6 @@
     "loginSubmit": "ログイン",
     "titleOfRegistration": "無料で登録する！",
     "titleOfLogin": "ログイン！",
-    "name": "名前",
-    "profilePhoto": "プロフィールの写真",
     "email": "メール",
     "password": "パスポート",
     "login": "ログイン",
@@ -95,12 +93,13 @@
       "userLikedFiles": "好きのは写真と素描"
     },
     "profile": {
-      "pseudonym": "あだ名:",
-      "aboutMe": "About me:",
+      "aboutMe": "About me",
       "ariaLabelButton": "Updating pseudonym and description button",
       "save": "セーブ",
       "successSending": "Profile has been updated.",
-      "errorSending": "Profile hasn't been updated."
+      "errorSending": "Profile hasn't been updated.",
+      "defaultAvatar": "default avatar",
+      "userAvatar": "avatar"
     }
   },
   "Main": {
@@ -129,9 +128,24 @@
     "containerNinthAnswer": "You always have their on hand. Fast, so you know what they showed off recently."
   },
   "NewUser": {
-    "ariaLabelButton": "wysyłanie pierwszych danych.",
-    "send": "送る",
+    "title": "Adding your name and pseudonym",
+    "name": "名前",
+    "ariaLabelButton": "sending first data.",
     "successSending": "Profile has been updated.",
     "errorSending": "Profile hasn't been updated."
-  }
+  },
+  "AnotherForm": {
+    "pseudonym": "あだ名",
+    "profilePhoto": "プロフィールの写真",
+    "description": "Description",
+    "tags": "Tags",
+    "file": "File",
+    "arialSendingFile": "sending file",
+    "send": "送る",
+    "uploadFile": "File has been uploaded.",
+    "notUploadFile": "File hasn't been uploaded."
+  },
+  "edit": "Edit",
+  "cancel": "Cancel",
+  "chooseTag": "Choose tag"
 }

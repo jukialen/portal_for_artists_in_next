@@ -92,37 +92,36 @@ export default function NewUser() {
       onSubmit={sendingData}
     >
       <Form className={styles.first__data}>
-        <h2 className={styles.title}>Dodaj swoje imię i pseudonym:</h2>
+        <h2 className={styles.title}>{data?.NewUser?.title}</h2>
   
         <FormField
-          titleField={`${data?.NavForm?.name}:`}
+          titleField={data?.NewUser?.name}
           nameField='username'
           typeField='text'
-          placeholderField={data?.NavForm?.name}
+          placeholderField={data?.NewUser?.name}
         />
         
         <FormError nameError='username' />
         
         <FormField
-          titleField={`${data?.Account?.profile?.pseudonym}:`}
+          titleField={data?.AnotherForm?.pseudonym}
           nameField='pseudonym'
           typeField='text'
-          placeholderField={data?.Account?.profile?.pseudonym}
+          placeholderField={data?.AnotherForm?.pseudonym}
         />
         
         <FormError nameError='pseudonym' />
   
         <div className={styles.form__field}>
-          <label htmlFor={data?.NavForm?.profilePhoto} className={styles.label}>
-            {data?.NavForm?.profilePhoto}:
+          <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.label}>
+            {data?.AnotherForm?.profilePhoto}
           </label>
           <Field
             name='profilePhoto'
             type='file'
-            id='profilePhoto'
             accept='.jpg, .jpeg, .png, .webp, .avif'
             onChange={handleChange}
-            placeholder={data?.NavForm?.profilePhoto}
+            placeholder={data?.AnotherForm?.profilePhoto}
             className={styles.input}
           />
         </div>
@@ -134,7 +133,7 @@ export default function NewUser() {
           className={`button ${styles.submit__button}`}
           aria-label={data?.NewUser?.ariaLabelButtom}
         >
-          {data?.NewUser?.send}
+          {data?.AnotherForm?.send}
         </button>
   
         {!!valuesFields && <InfoField value={valuesFields} />}
