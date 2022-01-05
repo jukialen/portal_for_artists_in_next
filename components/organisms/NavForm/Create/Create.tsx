@@ -38,11 +38,8 @@ export const Create = ({ data }: any) => {
   }: UserDataType, { resetForm }) => {
     auth.useDeviceLanguage();
     setIsLoading(true);
-    console.log('api key', process.env.NEXT_PUBLIC_API_KEY);
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      const user = userCredential.user;
-      console.log(user);
       resetForm(initialValues);
       // @ts-ignore
       sendEmailVerification(auth.currentUser, actionCodeSettings);
@@ -50,6 +47,7 @@ export const Create = ({ data }: any) => {
     })
     .catch((error) => {
       error.code === 'auth/email-already-in-use' && setValuesFields(data?.NavForm?.theSameEmail);
+      error.message === 'EMAIL_EXISTS' && setValuesFields(data?.NavForm?.theSameEmail);
       setValuesFields(data?.NavForm?.setErrorMessageCreate);
     });
     setIsLoading(false);

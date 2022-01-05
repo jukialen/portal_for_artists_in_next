@@ -1,74 +1,38 @@
-import { GithubOutlined, GoogleOutlined, YahooFilled } from '@ant-design/icons';
-
-import styles from './Providers.module.scss';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { GithubAuthProvider, GoogleAuthProvider, OAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../../firebase';
+
 import { NavFormContext } from 'providers/NavFormProvider';
+import { StatusLoginContext } from 'providers/StatusLogin';
+
+import { GithubOutlined, GoogleOutlined, YahooFilled } from '@ant-design/icons';
+import styles from './Providers.module.scss';
 
 export const Providers = () => {
   const { push } = useRouter();
+  const { showUser } = useContext(StatusLoginContext);
   const { isLogin, isCreate, showLoginForm, showCreateForm } = useContext(NavFormContext);
   
-  const signInWithGoogle = async () => {
-    const googleProvider = new GoogleAuthProvider();
-    await signInWithPopup(auth, googleProvider)
-    .then(async (result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
-      const user = result.user;
-      await localStorage.getItem('fD') === `${process.env.NEXT_APP_LSTORAGE}` ? await push('/app'): await push('/new-user');
-      if (isCreate) {
-        showCreateForm()
-      } else if (isLogin) {
-        showLoginForm()
-      }
-    }).catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.email;
-      const credential = GoogleAuthProvider.credentialFromError(error);
-    });
-  }
+  const googleProvider = new GoogleAuthProvider();
+  const yahooProvider = new OAuthProvider('yahoo.com');
+  const githubProvider = new GithubAuthProvider();
   
-  const signInWithYahoo = () => {
-    const yahooProvider = new OAuthProvider('yahoo.com');
-    signInWithPopup(auth, yahooProvider)
-    .then(async (result) => {
-      const credential = OAuthProvider.credentialFromResult(result);
-      const accessToken = credential?.accessToken;
-      const idToken = credential?.idToken;
-      await localStorage.getItem('fD') === `${process.env.NEXT_APP_LSTORAGE}` ? await push('/app'): await push('/new-user');
+  const signInWithProvider = async (provider: any) => {
+    try {
+      await signInWithPopup(auth, provider)
+      if (localStorage.getItem('uD')) {
+        await push('/app');
+        await showUser();
+      } else {
+        await push('/new-user');
+      }
       if (isCreate) {
         showCreateForm()
       } else if (isLogin) {
         showLoginForm()
       }
-    })
-    .catch((error) => {
-    });
-  }
-  
-  const signInWithGithub = () => {
-    const githubProvider = new GithubAuthProvider();
-    signInWithPopup(auth, githubProvider)
-    .then(async (result) => {
-      const credential = GithubAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
-      const user = result.user;
-      await localStorage.getItem('fD') === `${process.env.NEXT_APP_LSTORAGE}` ? await push('/app'): await push('/new-user');
-      if (isCreate) {
-        showCreateForm()
-      } else if (isLogin) {
-        showLoginForm()
-      }
-    }).catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.email;
-      const credential = GithubAuthProvider.credentialFromError(error);
-    });
+    } catch (error) {}
   }
   
   return (
@@ -77,7 +41,7 @@ export const Providers = () => {
         className={styles.google}
         type='submit'
         aria-label='google provider'
-        onClick={signInWithGoogle}
+        onClick={() => signInWithProvider(googleProvider)}
       >
         <GoogleOutlined className={styles.svg} />
       </button>
@@ -86,7 +50,7 @@ export const Providers = () => {
         className={styles.github}
         type='submit'
         aria-label='github provider'
-        onClick={signInWithGithub}
+        onClick={() => signInWithProvider(githubProvider)}
       >
         <GithubOutlined className={styles.svg} />
       </button>
@@ -94,7 +58,7 @@ export const Providers = () => {
         className={styles.yahoo}
         type='submit'
         aria-label='yahoo provider'
-        onClick={signInWithYahoo}
+        onClick={() => signInWithProvider(yahooProvider)}
       >
         <YahooFilled className={styles.svg} />
       </button>
