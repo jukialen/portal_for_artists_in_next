@@ -14,7 +14,6 @@ export const useUserData = () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       setPseudonym(docSnap.data()?.pseudonym);
-      localStorage.setItem('uD', docSnap.data()?.pseudonym);
       setDescription(docSnap.data()?.description)
     } else {
       console.log("No such document!");

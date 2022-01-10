@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { HeadCom } from 'components/atoms/HeadCom';
+import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 
 import { StatusLoginContext } from 'providers/StatusLogin';
 

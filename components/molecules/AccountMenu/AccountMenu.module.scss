@@ -10,23 +10,23 @@
     font-size: 1.5rem;
 
     a:first-child {
-      border-bottom: 0.3rem inset $fourth__color;
-    }
-
-    a:hover {
-      border-bottom: 0.3rem inset $secondary__color;
+      border-bottom: 0.3rem inset $primary__color;
     }
 
     &:visited {
       border-bottom: 0.3rem inset $link__visited;
     }
 
-    a:active {
-      border-bottom: 0.3rem inset $link__active;
-    }
-
     a:focus {
       border-bottom: 0.3rem inset $link__focus;
+    }
+
+    a:hover {
+      border-bottom: 0.3rem inset $link__hover;
+    }
+
+    a:active {
+      border-bottom: 0.3rem inset $link__active;
     }
   }
 }

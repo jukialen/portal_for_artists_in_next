@@ -58,11 +58,11 @@ h4 {
 
 a {
   text-decoration: none;
-  color: $dark__color__light__back;
+  color: black;
   cursor: pointer;
 
   &:hover {
-    color: $secondary__color;
+    color: $link__hover;
   }
 
   &:active {
@@ -84,13 +84,13 @@ select:required {
   border: 0.1rem solid $required__color;
 }
 
+.main__container {
+  margin: 0 auto;
+}
+
 .whole__page {
   position: relative;
   display: flex;
-}
-
-.main__container {
-  margin: 0 auto;
 }
 
 .workspace {

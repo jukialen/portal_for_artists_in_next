@@ -3,7 +3,7 @@ import { auth } from '../../firebase';
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 
-import { HeadCom } from 'components/atoms/HeadCom';
+import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { AccountMenu } from 'components/molecules/AccountMenu/AccountMenu';
 import { AccountData } from 'components/organisms/AccountData/AccountData';
 import { GalleryAccount } from 'components/organisms/GalleryAccount/GalleryAccount';
