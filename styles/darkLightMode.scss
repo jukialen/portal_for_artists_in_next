@@ -3,6 +3,26 @@
 .dark {
   background-color: $dark__background__light__color;
   color: $dark__color__light__back;
+
+  a {
+    color: $dark__color__light__back;
+
+    &:visited {
+      color: $link__dark__visited;
+    }
+
+    &:focus {
+      color: $link__dark__focus;
+    }
+
+    &:hover {
+      color: $link__dark__hover;
+    }
+
+    &:active {
+      color: $link__dark__active;
+    }
+  }
 }
 
 .left__arrow__dark {

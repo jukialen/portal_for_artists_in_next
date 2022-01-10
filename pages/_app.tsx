@@ -1,13 +1,13 @@
-import { AppProps } from "next/app";
-import { NextPage } from "next";
+import { AppProps } from 'next/app';
+import { NextPage } from 'next';
 
-import { Layout } from 'layout/Layout'
+import { Layout } from 'layout/Layout';
 
-import { ModeProvider } from "../providers/ModeProvider";
+import { ModeProvider } from 'providers/ModeProvider';
+import { StatusLoginProvider } from 'providers/StatusLogin';
 
 import 'styles/darkLightMode.scss';
 import './_app.scss';
-import { StatusLoginProvider } from "../providers/StatusLogin";
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPage

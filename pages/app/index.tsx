@@ -4,7 +4,7 @@ import { auth } from '../../firebase';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { HeadCom } from 'components/atoms/HeadCom';
+import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Wrapper } from 'components/organisms/Wrapper/Wrapper';
 
 import styles from './index.module.scss';
