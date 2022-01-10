@@ -34,7 +34,7 @@
     flex-direction: column;
     line-height: 1.6;
     background: $primary__color;
-    color: $dark__color__light__back;
+    color: $dark__background__light__color;
     padding: .5rem;
 
     .question {
@@ -49,7 +49,7 @@
   }
 
   .image {
-    background-color: $secondary__color;
+    background-color: $third__color;
     color: $dark__background__light__color;
   }
 }
