@@ -3,16 +3,24 @@
 .photos {
   width: 17rem;
   height: 17rem;
-  margin: 1.5rem auto;
+  position: relative;
+  margin: 1.5rem;
   justify-self: center;
   background-color: $primary__color;
 
-  @media (min-width: 644px) and (max-width: 767px) {
-    margin: 1.5rem;
+  span {
+    object-fit: contain;
+    object-position: 50% 50%;
+    &:hover {}
+    background: black;
   }
 
-  @media (min-width: 874px) {
-    margin: 1.5rem;
+  &:hover {
+    width: 30rem;
+    height: 30rem;
+    max-width: 100vw;
+    max-height: 100vw;
+    margin: auto;
   }
 }
 

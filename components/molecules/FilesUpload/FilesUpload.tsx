@@ -83,6 +83,7 @@ export const FilesUpload = () => {
       onSubmit={uploadFiles}
     >
       <Form className={styles.adding__files}>
+        <h3 className={styles.title}>Adding a file</h3>
         <div className={styles.form__field}>
           <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.label}>
             {data?.AnotherForm?.description}

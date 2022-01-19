@@ -1,3 +1,5 @@
+@use 'styles/variables' as *;
+
 .user__gallery__in__account {
   width: 100%;
 }
@@ -10,25 +12,43 @@
 
 .user__photos,
 .like__photos {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  display: flex;
+  flex-flow: column wrap;
   margin: 1.5rem auto;
+  width: 100vw;
+  max-width: 40rem;
+  max-height: 78vh;
+  scroll-behavior: smooth;
+  overflow-x: auto;
+  scrollbar-width: auto;
+  scrollbar-color: $another__color $fourth__color;
 
-  @media (min-width: 644px) and (max-width: 767px) {
-    grid-template-columns: repeat(2, 1fr);
+  &:active {
+    scrollbar-color: $fourth__color $another__color;
+  }
+  &::-webkit-scrollbar {
+    width: 15px;
   }
 
-  @media (min-width: 874px) {
-    grid-template-columns: repeat(2, 1fr);
+  &::-webkit-scrollbar-track {
+    background-color: $fourth__color;
   }
 
-  @media (min-width: 1184px) {
-    grid-template-columns: repeat(3, 1fr);
+  &::-webkit-scrollbar-thumb {
+    background: $another__color;
   }
 
-  @media (min-width: 1504px) {
-    grid-template-columns: repeat(4, 1fr);
+  &::-webkit-scrollbar-thumb:hover {
+    width: 15px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: $third__color;
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb:active {
+    background: $another__color;
+    border-radius: 20px;
   }
 }
-
-

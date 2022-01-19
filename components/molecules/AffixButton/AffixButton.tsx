@@ -30,6 +30,7 @@ export const AffixButton = () => {
         <UpOutlined
           className={`${styles.up} ${visible && styles.up__active}`}
           aria-label='top of page button'
+          alt='top of page button'
         />
       </Button>
     </Affix>
