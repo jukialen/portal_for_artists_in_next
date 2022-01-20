@@ -119,18 +119,26 @@ select:required {
   margin: 1rem auto;
   color: $dark__background__light__color;
 
-  .ant-pagination-item-link {
+
+  button.ant-pagination-item-link {
     background: transparent;
     border: 0;
     color: $primary__color;
     margin: 0 1.5rem;
 
-    span:hover {
+    &:hover {
       color: $third__color;
     }
 
-    span:active {
+    &:active {
       border-color: $link__active;
+    }
+    &:focus {
+      color: $link-_focus;
+    }
+
+    &:disabled {
+      visibility: hidden;
     }
   }
 
@@ -149,6 +157,10 @@ select:required {
 
       &:hover {
         border-color: $link__hover;
+      }
+
+      &:focus {
+        border-color: $link-_focus;
       }
     }
 

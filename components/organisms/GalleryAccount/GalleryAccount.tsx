@@ -62,8 +62,8 @@ export const GalleryAccount: FC<FileType> = ({ data }: any) => {
   };
   
   const itemRender = (current: number, type: string, originalElement: any) => {
-    type === 'prev' && <a href={asPath}>Previous</a>;
     
+    type === 'prev' && <a href={asPath}>Previous</a>;
     type === 'next' && <a href={asPath} onClick={() => nextFiles()}>Next</a>;
     return originalElement;
   };
@@ -87,7 +87,7 @@ export const GalleryAccount: FC<FileType> = ({ data }: any) => {
         defaultCurrent={1}
         defaultPageSize={maxItems}
         showSizeChanger={false}
-        total={userPhotos.length / maxItems > 1 ? Math.ceil(userPhotos.length / maxItems) : 1}
+        total={userPhotos.length}
         simple
         hideOnSinglePage
         itemRender={itemRender}
