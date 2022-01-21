@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { ref, updateMetadata, uploadBytes } from 'firebase/storage';
 import { auth, storage } from '../../../firebase';
 import { Field, Form, Formik } from 'formik';
@@ -11,16 +11,18 @@ import { InfoField } from 'components/atoms/InfoField/InfoField';
 
 import styles from './FileUpload.module.scss';
 
+type FileDataType = {
+  description: string;
+  tags: string
+};
+
+type FormType = {
+  resetForm: any
+}
+
 const initialValues = {
   description: '',
   tags: ''
-};
-
-type FileDataType = {
-  description: string;
-  tags: string;
-  resetForm: any;
-  accept: string;
 };
 
 export const FilesUpload = () => {
@@ -40,10 +42,6 @@ export const FilesUpload = () => {
                     `${data?.Aside?.others}`
                     ];
   
-  const handleChange = async (e: any) => {
-    e.target.files[0] && setPhoto(e.target.files[0]);
-  };
-  
   const schemaFile = Yup.object({
     description: Yup.string()
     .min(3, 'Opis jest zbyt krótki')
@@ -53,7 +51,11 @@ export const FilesUpload = () => {
     tags: Yup.string().required(data?.NavForm?.validateRequired)
   });
   
-  const uploadFiles = async ({ description, tags }: FileDataType, { resetForm }: FileDataType) => {
+  const handleChange = async (e: ChangeEvent<EventTarget & HTMLInputElement>) => {
+    e.target.files?.[0] && setPhoto(e.target.files[0]);
+  };
+  
+  const uploadFiles = async ({ description, tags }: FileDataType, { resetForm }: FormType) => {
     try {
       const fileRef = ref(storage, `${user?.uid}/${photo?.name}`);
   
@@ -64,7 +66,7 @@ export const FilesUpload = () => {
         }
       };
       // @ts-ignore
-      await uploadBytes(fileRef, photo).then((snapshot) => {
+      await uploadBytes(fileRef, photo).then(() => {
         updateMetadata(fileRef, metadata);
       });
   
@@ -77,9 +79,9 @@ export const FilesUpload = () => {
   }
   
   return (
-    <Formik // @ts-ignore
+    <Formik
       initialValues={initialValues}
-      validationSchema={schemaFile} // @ts-ignore
+      validationSchema={schemaFile}
       onSubmit={uploadFiles}
     >
       <Form className={styles.adding__files}>

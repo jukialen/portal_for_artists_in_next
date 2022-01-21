@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 type PhotosType = {
   link: string;
-  description: string
+  description: string | undefined
 };
 
 export const Photos = ({ link, description }: PhotosType) => {

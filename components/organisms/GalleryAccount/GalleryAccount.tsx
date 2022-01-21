@@ -1,5 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { ReactElement, useContext, useEffect, useState } from 'react';
 import { getDownloadURL, getMetadata, list, ref } from 'firebase/storage';
 import { auth, storage } from '../../../firebase';
 import { Pagination } from 'antd';
@@ -14,21 +13,20 @@ import styles from './GalleryAccount.module.scss';
 
 type FileType = {
   fileUrl: string;
-  description: string;
+  description: string | undefined;
 }
 
-export const GalleryAccount: FC<FileType> = ({ data }: any) => {
+export const GalleryAccount = ({ data }: any) => {
   const user = auth.currentUser;
   const userFilesRef = ref(storage, `${user?.uid}`);
   const maxItems: number = 20;
   
   const { isMode } = useContext(ModeContext);
-  const { asPath } = useRouter();
-  const [userPhotos, setUserPhotos] = useState<[]>([]);
+  const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
   
   const downloadFiles = async () => {
     const firstPage = await list(userFilesRef, { maxResults: maxItems });
-    let images: [] = [];
+    let images: FileType[] = [];
     
     try {
       firstPage.items.map(async (firstPage) => {
@@ -61,10 +59,15 @@ export const GalleryAccount: FC<FileType> = ({ data }: any) => {
     }
   };
   
-  const itemRender = (current: number, type: string, originalElement: any) => {
+  const itemRender = (current: number, type: string, originalElement: ReactElement) => {
+    if (type === 'prev') {
+      return <a>Previous</a>;
+    }
+
+    if (type === 'next') {
+      return <a onClick={() => nextFiles()}>Next</a>;
+    }
     
-    type === 'prev' && <a href={asPath}>Previous</a>;
-    type === 'next' && <a href={asPath} onClick={() => nextFiles()}>Next</a>;
     return originalElement;
   };
   
@@ -76,7 +79,7 @@ export const GalleryAccount: FC<FileType> = ({ data }: any) => {
       
       <div className={styles.user__photos}>
         {!userPhotos && <ZeroFiles text='No your photos, animations and films.' />}
-        {!!userPhotos && userPhotos.map(({ fileUrl, description }: FileType) => <Photos
+        {!!userPhotos && userPhotos.map(({ fileUrl, description }) => <Photos
           link={fileUrl}
           description={description}
           key={description}
