@@ -63,20 +63,20 @@ a {
   color: black;
   cursor: pointer;
 
-  &:hover {
-    color: $link__hover;
-  }
-
-  &:active {
-    color: $link__active;
-  }
-
   &:visited {
     color: $link__visited;
   }
 
   &:focus {
     color: $link__focus;
+  }
+
+  &:hover {
+    color: $link__hover;
+  }
+
+  &:active {
+    color: $link__active;
   }
 }
 
@@ -126,15 +126,16 @@ select:required {
     color: $primary__color;
     margin: 0 1.5rem;
 
+    &:focus {
+      color: $link-_focus;
+    }
+
     &:hover {
       color: $third__color;
     }
 
     &:active {
       border-color: $link__active;
-    }
-    &:focus {
-      color: $link-_focus;
     }
 
     &:disabled {

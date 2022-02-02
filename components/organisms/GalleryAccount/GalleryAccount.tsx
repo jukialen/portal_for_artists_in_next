@@ -3,9 +3,9 @@ import { getDownloadURL, getMetadata, list, ref } from 'firebase/storage';
 import { auth, storage } from '../../../firebase';
 import { Pagination } from 'antd';
 
-import { Photos } from 'components/atoms/Photos/Photos';
 import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
+import { Photos } from 'components/atoms/Photos/Photos';
 
 import { ModeContext } from 'providers/ModeProvider';
 
@@ -14,6 +14,7 @@ import styles from './GalleryAccount.module.scss';
 type FileType = {
   fileUrl: string;
   description: string | undefined;
+  time: string;
 }
 
 export const GalleryAccount = ({ data }: any) => {
@@ -26,25 +27,38 @@ export const GalleryAccount = ({ data }: any) => {
   
   const downloadFiles = async () => {
     const firstPage = await list(userFilesRef, { maxResults: maxItems });
-    let images: FileType[] = [];
     
     try {
       firstPage.items.map(async (firstPage) => {
         const photoUrl = await getDownloadURL(firstPage);
         const metadata = await getMetadata(firstPage);
         
-        images.push({
+        const image: FileType = {
           fileUrl: photoUrl,
-          description: metadata.customMetadata?.description
-        });
+          description: metadata.customMetadata?.description,
+          time: metadata.timeCreated
+        };
         
-        setUserPhotos(images);
+        userPhotos.sort((a, b) => {
+          let nameA = a.time;
+          let nameB = b.time;
+    
+          if (nameA < nameB) {
+            return 1;
+          }
+          if (nameA > nameB) {
+            return -1;
+          }
+          return 0;
+        });
+  
+        setUserPhotos(prev => [...prev, image]);
       });
     } catch (e) {
       console.log(e);
     }
   };
-  
+
   useEffect(() => {
     downloadFiles();
   }, []);
@@ -76,15 +90,15 @@ export const GalleryAccount = ({ data }: any) => {
       <FilesUpload />
       
       <em className={styles.title}>{data?.Account?.gallery?.userFilesTitle}</em>
-      
+  
       <div className={styles.user__photos}>
-        {!userPhotos && <ZeroFiles text='No your photos, animations and films.' />}
-        {!!userPhotos && userPhotos.map(({ fileUrl, description }) => <Photos
+        {!!userPhotos ? userPhotos.map(({ fileUrl, description }) => <Photos
           link={fileUrl}
           description={description}
           key={description}
-        />)}
+        />) : <ZeroFiles text='No your photos, animations and films.' />}
       </div>
+      
       <Pagination
         className={`pagination ${isMode ? 'pagination-dark' : ''}`}
         defaultCurrent={1}
