@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../../../../firebase';
 
+import { DataType, UserDataType } from 'types/global.types';
+
 import { FormError } from 'components/molecules/FormError/FormError';
 import { FormField } from 'components/molecules/FormField/FormField';
 import { Providers } from 'components/molecules/Providers/Providers';
@@ -14,16 +16,11 @@ import { NavFormContext } from 'providers/NavFormProvider';
 import styles from '../NavForm.module.scss';
 import { useRouter } from 'next/router';
 
-type UserDataType = {
-  email: string,
-  password: string
-}
-
 const initialValues = {
   email: '', password: '',
 };
 
-export const Create = ({ data }: any) => {
+export const Create = ({ data }: DataType) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [valuesFields, setValuesFields] = useState<string>('');
   const { locale } = useRouter();
@@ -41,8 +38,7 @@ export const Create = ({ data }: any) => {
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       resetForm(initialValues);
-      // @ts-ignore
-      sendEmailVerification(auth.currentUser, actionCodeSettings);
+      sendEmailVerification(auth.currentUser!, actionCodeSettings);
       setValuesFields(data?.NavForm?.successInfoRegistration);
     })
     .catch((error) => {
@@ -53,7 +49,6 @@ export const Create = ({ data }: any) => {
     setIsLoading(false);
   }, [data?.NavForm?.setErrorMessageCreate, data?.NavForm?.successInfoRegistration]);
   
-  // @ts-ignore
   return (
     <div className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
       <Formik

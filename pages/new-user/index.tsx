@@ -7,6 +7,8 @@ import { auth, db, storage } from '../../firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
+import { EventType } from 'types/global.types';
+
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 
@@ -31,7 +33,7 @@ export default function NewUser() {
   
   const { showUser } = useContext(StatusLoginContext);
   const [valuesFields, setValuesFields] = useState<string>('');
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState<File | null>(null);
   
   const initialValues = {
     username: '',
@@ -55,10 +57,10 @@ export default function NewUser() {
     .required(data?.NavForm?.validateRequired),
   });
   
-  const user = auth.currentUser;
-
-  const handleChange = async (e: any) => {
-    e.target.files[0] && setPhoto(e.target.files[0]);
+  const user = auth.currentUser!;
+  
+  const handleChange = async (e: EventType) => {
+    e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
   
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
@@ -71,7 +73,6 @@ export default function NewUser() {
       await uploadBytes(fileRef, photo);
       
       const photoURL = await getDownloadURL(fileRef);
-      // @ts-ignore
       await updateProfile(user, {
          displayName: username, photoURL: photoURL
       });

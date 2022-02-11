@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { auth } from '../../firebase';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
@@ -12,12 +11,10 @@ import styles from './index.module.scss';
 export default function Application() {
   const { asPath } = useRouter();
   
-  const currentUser = auth.currentUser;
   const data = useHookSWR();
   
   const loading = useCurrentUser('/');
   
-  // @ts-ignore
   return !loading ? (
     <section className='workspace'>
       <HeadCom path={`${asPath}`} content='Main site for logged in users.' />

@@ -3,6 +3,8 @@ import { getDownloadURL, getMetadata, list, ref } from 'firebase/storage';
 import { auth, storage } from '../../../firebase';
 import { Pagination } from 'antd';
 
+import { DataType } from 'types/global.types';
+
 import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Photos } from 'components/atoms/Photos/Photos';
@@ -17,7 +19,7 @@ type FileType = {
   time: string;
 }
 
-export const GalleryAccount = ({ data }: any) => {
+export const GalleryAccount = ({ data }: DataType) => {
   const user = auth.currentUser;
   const userFilesRef = ref(storage, `${user?.uid}`);
   const maxItems: number = 20;
@@ -39,19 +41,6 @@ export const GalleryAccount = ({ data }: any) => {
           time: metadata.timeCreated
         };
         
-        userPhotos.sort((a, b) => {
-          let nameA = a.time;
-          let nameB = b.time;
-    
-          if (nameA < nameB) {
-            return 1;
-          }
-          if (nameA > nameB) {
-            return -1;
-          }
-          return 0;
-        });
-  
         setUserPhotos(prev => [...prev, image]);
       });
     } catch (e) {
@@ -92,11 +81,26 @@ export const GalleryAccount = ({ data }: any) => {
       <em className={styles.title}>{data?.Account?.gallery?.userFilesTitle}</em>
   
       <div className={styles.user__photos}>
-        {!!userPhotos ? userPhotos.map(({ fileUrl, description }) => <Photos
-          link={fileUrl}
-          description={description}
-          key={description}
-        />) : <ZeroFiles text='No your photos, animations and films.' />}
+        {
+          !!userPhotos ? (
+            userPhotos.sort((a, b) => {
+              const nameA = a.time;
+              const nameB = b.time;
+  
+              if (nameA < nameB) {
+                return 1;
+              }
+              if (nameA > nameB) {
+                return -1;
+              }
+              return 0;
+            }).map(({ fileUrl, description }: FileType) => <Photos
+              link={fileUrl}
+              description={description}
+              key={description}
+            />)
+          ) : <ZeroFiles text='No your photos, animations and films.' />
+          }
       </div>
       
       <Pagination

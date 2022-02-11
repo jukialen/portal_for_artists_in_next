@@ -1,8 +1,10 @@
+import { DataType } from 'types/global.types';
+
 import { Links } from 'components/atoms/Links/Links';
 
 import styles from './Groups.module.scss';
 
-export const Groups = ({ data }: any) => {
+export const Groups = ({ data }: DataType) => {
   
   return (
     <div className={styles.groups}>

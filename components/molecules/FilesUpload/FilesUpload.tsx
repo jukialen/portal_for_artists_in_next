@@ -1,8 +1,10 @@
-import { ChangeEvent, useState } from 'react';
-import { ref, updateMetadata, uploadBytes } from 'firebase/storage';
+import { useState } from 'react';
+import { ref, updateMetadata, uploadBytes} from 'firebase/storage';
 import { auth, storage } from '../../../firebase';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
+
+import { EventType, FormType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -16,17 +18,13 @@ type FileDataType = {
   tags: string
 };
 
-type FormType = {
-  resetForm: any
-}
-
 const initialValues = {
   description: '',
   tags: ''
 };
 
 export const FilesUpload = () => {
-  const [photo, setPhoto] = useState<File | null>(null);
+  const [photo, setPhoto] = useState<Blob | Uint8Array | ArrayBuffer | File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
   const data = useHookSWR();
   
@@ -51,32 +49,33 @@ export const FilesUpload = () => {
     tags: Yup.string().required(data?.NavForm?.validateRequired)
   });
   
-  const handleChange = async (e: ChangeEvent<EventTarget & HTMLInputElement>) => {
+  const handleChange = async (e: EventType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
   
+  // @ts-ignore
+  const fileRef = ref(storage, `${user?.uid}/${photo?.name}`);
+  
   const uploadFiles = async ({ description, tags }: FileDataType, { resetForm }: FormType) => {
     try {
-      const fileRef = ref(storage, `${user?.uid}/${photo?.name}`);
-  
       const metadata = {
         customMetadata: {
           'tag': tags,
           'description': description
         }
       };
-      // @ts-ignore
-      await uploadBytes(fileRef, photo).then(() => {
-        updateMetadata(fileRef, metadata);
+      await uploadBytes(fileRef, photo!).then(async () => {
+        await updateMetadata(fileRef, metadata);
+        
       });
-  
       setValuesFields(`${data?.AnotherForm?.uploadFile}`);
       resetForm(initialValues);
       setPhoto(null);
     } catch (e) {
       setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
     }
-  }
+  };
+
   
   return (
     <Formik
@@ -98,9 +97,9 @@ export const FilesUpload = () => {
             className={styles.input}
           />
         </div>
-  
+        
         <FormError nameError='description' />
-  
+        
         <Field name='tags' as='select' className={styles.tags} aria-required='true'>
           {tagsArray.map(tag => <option
             key={tag}
@@ -108,9 +107,9 @@ export const FilesUpload = () => {
             className={styles.options}
           >{tag}</option>)}
         </Field>
-  
+        
         <FormError nameError='tags' />
-  
+        
         <div className={styles.form__field}>
           <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.label}>
             {data?.AnotherForm?.file}
@@ -124,9 +123,9 @@ export const FilesUpload = () => {
             className={styles.input}
           />
         </div>
-    
+        
         <FormError nameError='file' />
-    
+        
         <button
           type='submit'
           className={`button ${styles.submit__button}`}
@@ -134,15 +133,11 @@ export const FilesUpload = () => {
         >
           {data?.AnotherForm?.send}
         </button>
-    
-        {/*<div>*/}
-        {/*  <PauseCircleTwoTone className={styles.icons} />*/}
-        {/*  <ReloadOutlined className={styles.icons} />*/}
-        {/*  <LoadingOutlined className={styles.icons} />*/}
-        {/*</div>*/}
-  
+        
+     
+        
         {!!valuesFields && <InfoField value={valuesFields} />}
-
+      
       </Form>
     </Formik>
   );

@@ -1,6 +1,8 @@
+import { DataType } from 'types/global.types';
+
 import styles from './AccountMenu.module.scss';
 
-export const AccountMenu = ({ data }:any) => {
+export const AccountMenu = ({ data }: DataType) => {
   return (
     <article className={styles.account__menu}>
       <div className={styles.div}>
