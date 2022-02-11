@@ -3,8 +3,8 @@
 .photos {
   width: 17rem;
   height: 17rem;
-  position: relative;
   margin: 1.5rem;
+  position: relative;
   justify-self: center;
   background-color: $primary__color;
 
@@ -13,12 +13,63 @@
     object-position: 50% 50%;
   }
 
+  .comments {
+    visibility: hidden;
+    display: block;
+    position: absolute;
+    width: inherit;
+    padding: .5rem;
+    bottom: -2.3rem;
+    background: $third__color;
+    z-index: 1;
+    border: 1px;
+    cursor: pointer;
+  }
+
   &:hover {
-    width: 30rem;
-    height: 30rem;
-    max-width: 100vw;
-    max-height: 100vw;
-    margin: auto;
+    z-index: 1;
+    margin: 4rem;
+    transform: scale(1.05);
+    transition: transform .5s ease-in-out;
+
+    .comments {
+      visibility: unset;
+    }
+  }
+
+  @media (prefers-reduced-motion) {
+    &:hover {
+      transition: transform .8s .2s ease-in-out;
+    }
+  }
+
+  @media (min-width: 313px) {
+    &:hover {
+      transform: scale(1.15);
+    }
+  }
+
+  @media (min-width: 340px) {
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+
+  @media (min-width: 361px) {
+    &:hover {
+      transform: scale(1.32);
+    }
+  }
+
+  @media (min-width: 381px) {
+    &:hover {
+      transform: scale(1.4);
+    }
+  }
+  @media (min-width: 409px) {
+    &:hover {
+      transform: scale(1.5);
+    }
   }
 }
 
