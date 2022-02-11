@@ -9,5 +9,6 @@ type PhotosType = {
 export const Photos = ({ link, description }: PhotosType) => {
   return <div className={styles.photos}>
     <Image src={link} layout='fill' priority alt={description} />
+    <button className={styles.comments}>Show comments</button>
   </div>;
 };
