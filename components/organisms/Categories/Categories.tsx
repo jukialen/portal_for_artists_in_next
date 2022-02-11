@@ -2,9 +2,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from "next/router";
 
+import { DataType } from 'types/global.types';
+
 import styles from './Categories.module.scss';
 
-export const Categories = ({ data }: any) => {
+export const Categories = ({ data }: DataType) => {
   const { asPath } = useRouter();
   
   const [openSubCategories, setOpenCategories] = useState(false);

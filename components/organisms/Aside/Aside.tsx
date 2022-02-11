@@ -21,7 +21,6 @@ export function Aside() {
       <button
         className={styles.aside__right}
         aria-label='left menu button'
-        // @ts-ignore
         onClick={leftMenuClick}
       >
         {isLeftMenu ? <LeftOutlined /> : <RightOutlined />}

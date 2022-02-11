@@ -1,6 +1,8 @@
+import { DataType } from 'types/global.types';
+
 import styles from './SubscriptionAccountData.module.scss';
 
-export const SubscriptiomAccountData = ({ data }: any) => {
+export const SubscriptiomAccountData = ({ data }: DataType) => {
   return (
     <form className={styles.form}>
       <label className={styles.title} htmlFor='subscription__info'>{data?.Account?.aData?.subscription}</label>

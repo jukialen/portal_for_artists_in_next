@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
-import { doc, setDoc } from 'firebase/firestore';
 import Image from 'next/image';
+import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
+import { getAuth } from 'firebase/auth';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { FormError } from 'components/molecules/FormError/FormError';
+
+import { DataType } from 'types/global.types';
 
 import { useUserData } from 'hooks/useUserData';
 
+import { FormError } from 'components/molecules/FormError/FormError';
 import { InfoField } from 'components/atoms/InfoField/InfoField';
 
-import defaultAvatar from 'public/defaultAvatar.png';
 import styles from './ProfileAccount.module.scss';
-import { getAuth } from 'firebase/auth';
+import defaultAvatar from 'public/defaultAvatar.png';
+
 
 type ProfileType = {
   newPseudonym: string,
@@ -23,16 +26,15 @@ const initialValues = {
   newDescription: ''
 };
 
-export const ProfileAccount = ({ data }: any) => {
+export const ProfileAccount = ({ data }: DataType) => {
   const [valuesFields, setValuesFields] = useState<string>('');
   const { pseudonym, description } = useUserData();
   const [form, setForm] = useState(false);
-  const [photoURL, setPhotoURL] = useState(defaultAvatar);
+  const [photoURL, setPhotoURL] = useState<string>('');
   const auth = getAuth();
   const user = auth.currentUser;
   
   useEffect(() => {
-    // @ts-ignore
     user?.photoURL && setPhotoURL(user?.photoURL);
   }, [user]);
   
@@ -49,7 +51,7 @@ export const ProfileAccount = ({ data }: any) => {
   
   const updatePseuAndDes = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: any) => {
     try {
-      await setDoc(doc(db, 'users', `${user?.uid}`), {
+      await updateDoc(doc(db, 'users', `${user?.uid}`), {
         pseudonym: newPseudonym,
         description: newDescription
       });

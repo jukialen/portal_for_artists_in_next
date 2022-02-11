@@ -1,5 +1,13 @@
 import styles from './Photos.module.scss';
+import Image from 'next/image';
 
-export const Photos = (...props: any[]) => {
-  return <div className={styles.photos} {...props} />;
+type PhotosType = {
+  link: string;
+  description: string | undefined
+};
+
+export const Photos = ({ link, description }: PhotosType) => {
+  return <div className={styles.photos}>
+    <Image src={link} layout='fill' priority alt={description} />
+  </div>;
 };

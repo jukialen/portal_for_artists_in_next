@@ -1,9 +1,11 @@
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Form, Formik } from 'formik';
-import * as Yup from 'yup';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../../firebase';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
+
+import { DataType, UserDataType, FormType } from 'types/global.types';
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
@@ -16,17 +18,12 @@ import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from '../NavForm.module.scss';
 
-type UserDataType = {
-  email: string,
-  password: string
-}
-
 const initialValues = {
   email: '',
   password: '',
 };
 
-export const Login = ({ data }: any) => {
+export const Login = ({ data }: DataType) => {
   const { isLogin, showLoginForm } = useContext(NavFormContext);
   const { showMenu } = useContext(ShowMenuContext);
   const { showUser } = useContext(StatusLoginContext);
@@ -40,7 +37,7 @@ export const Login = ({ data }: any) => {
     showMenu();
   };
   
-  const submitAccountData = async ({ email, password }: UserDataType, { resetForm }: any) => {
+  const submitAccountData = async ({ email, password }: UserDataType, { resetForm }: FormType) => {
     signInWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user;

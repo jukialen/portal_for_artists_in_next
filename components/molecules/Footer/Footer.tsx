@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import useSWR from "swr";
 
 import styles from './Footer.module.scss';
+import { useHookSWR } from '../../../hooks/useHookSWR';
 
 export function Footer() {
-  const { locale, asPath } = useRouter();
-  // @ts-ignore
-  const fetcher = (...args: any[]) => fetch(...args).then(res => res.json());
-  const { data, error } = useSWR(`/languages/${locale}.json`, fetcher);
+  const { asPath } = useRouter();
+  const data = useHookSWR();
   
   const [isLanguage, setLanguage] = useState(false);
   

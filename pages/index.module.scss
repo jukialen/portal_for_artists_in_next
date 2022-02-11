@@ -49,6 +49,8 @@
   }
 
   .image {
+    display: flex;
+    flex-direction: column;
     background-color: $third__color;
     color: $dark__background__light__color;
   }

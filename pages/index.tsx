@@ -1,8 +1,8 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -11,10 +11,16 @@ import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from './index.module.scss';
+import dark_mode from 'public/dark_mode.jpg';
+import light_mode from 'public/light_mode.jpg';
+import friends from 'public/friends.png';
+import categories from 'public/categories.png'
+import groups from 'public/groups.png';
+import sign_in from 'public/signin.jpg';
 
 export default function Home() {
   const { isUser } = useContext(StatusLoginContext);
-  const { asPath,push } = useRouter();
+  const { asPath, push } = useRouter();
   
   const data = useHookSWR();
 
@@ -37,6 +43,7 @@ export default function Home() {
   }, [])
   
   const image = 320;
+  
   return (
     <div className='workspace'>
       <HeadCom path={`/${asPath}`} content='Main site.' />
@@ -57,7 +64,7 @@ export default function Home() {
           {data?.Main?.secondAnswer}
         </h2>
       </div>
-      
+  
       <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
@@ -67,122 +74,192 @@ export default function Home() {
             {data?.Main?.containerFirstAnswer}
           </p>
         </div>
-        
-        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+    
+        <Image
+          src={sign_in}
+          width={image}
+          className={styles.image}
+          alt='picture.jpg'
+          priority
+          quality={100}
+        />
       </section>
-      
+  
       <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerSecondQuestion}
           </h4>
-          
+      
           <p className={styles.answer}>
             {data?.Main?.containerSecondAnswer}
           </p>
         </div>
-        
-        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+    
+        <Image
+          src={sign_in}
+          width={image}
+          className={styles.image}
+          alt='picture.jpg'
+          priority
+          quality={100}
+        />
       </section>
-      
+  
       <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerThirdQuestion}
           </h4>
-          
+      
           <p className={styles.answer}>
             {data?.Main?.containerThirdAnswer}
           </p>
         </div>
-        
-        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+    
+        <Image
+          src={sign_in}
+          width={image}
+          className={styles.image}
+          alt='sign in photo file'
+          priority
+          quality={100}
+        />
       </section>
-      
+  
       <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerFourthQuestion}<br />
           </h4>
-          
+      
           <p className={styles.answer}>
             {data?.Main?.containerFourthAnswer}
           </p>
         </div>
-        
-        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+    
+        <Image
+          src={sign_in}
+          width={image}
+          className={styles.image}
+          alt='picture.jpg'
+          priority
+          quality={100}
+        />
       </section>
-      
+  
       <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerFifthQuestion}
           </h4>
-          
+      
           <p className={styles.answer}>
             {data?.Main?.containerFifthAnswer}
           </p>
         </div>
-        
-        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+    
+        <Image
+          src={sign_in}
+          width={image}
+          className={styles.image}
+          alt='sign in photo file'
+          priority
+          quality={100}
+        />
       </section>
-      
+  
       <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerSixthQuestion}
           </h4>
-          
+      
           <p className={styles.answer}>
             {data?.Main?.containerSixthAnswer}
           </p>
         </div>
-        
-        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+    
+        <div className={styles.image}>
+          <Image
+            src={light_mode}
+            width={image}
+            alt='picture.jpg'
+            priority
+            quality={100}
+          />
+          <Image
+            src={dark_mode}
+            width={image}
+            alt='dark mode photo file'
+            priority
+            quality={100}
+          />
+        </div>
       </section>
-      
+  
       <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerSeventhQuestion}
           </h4>
-          
+      
           <p className={styles.answer}>
             {data?.Main?.containerSeventhAnswer}
           </p>
         </div>
-        
-        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+    
+        <Image
+          src={categories}
+          width={image}
+          className={styles.image}
+          alt='categories photo file'
+          priority
+          quality={100}
+        />
       </section>
-      
+  
       <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerEighthQuestion}
           </h4>
-          
+      
           <p className={styles.answer}>
             {data?.Main?.containerEighthAnswer}
           </p>
         </div>
-        
-        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+    
+        <Image
+          src={groups}
+          width={image}
+          className={styles.image}
+          alt='groups photo file'
+          priority
+          quality={100}
+        />
       </section>
-      
+  
       <section className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerNinthQuestion}
           </h4>
-          
+      
           <p className={styles.answer}>
             {data?.Main?.containerNinthAnswer}
           </p>
         </div>
-        
-        <Image src='/#' width={image} height={image} className={styles.image} alt='picture.jpg' />
+    
+        <Image
+          src={friends}
+          width={image}
+          className={styles.image}
+          alt='friends photo file'
+          priority
+          quality={100}
+        />
       </section>
     </div>
   );
 }
-
