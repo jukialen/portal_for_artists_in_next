@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { ref, updateMetadata, uploadBytes} from 'firebase/storage';
-import { auth, storage } from '../../../firebase';
+import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from 'firebase/storage';
+import { addDoc, collection} from 'firebase/firestore';
+import { auth, db, storage } from '../../../firebase';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { Progress } from '@chakra-ui/react'
 
 import { EventType, FormType } from 'types/global.types';
 
@@ -12,6 +14,7 @@ import { FormError } from 'components/molecules/FormError/FormError';
 import { InfoField } from 'components/atoms/InfoField/InfoField';
 
 import styles from './FileUpload.module.scss';
+import { UploadTaskSnapshot } from '@firebase/storage/dist/storage';
 
 type FileDataType = {
   description: string;
@@ -26,6 +29,7 @@ const initialValues = {
 export const FilesUpload = () => {
   const [photo, setPhoto] = useState<Blob | Uint8Array | ArrayBuffer | File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
+  const [progressUpload, setProgressUpload ] = useState<number>(0)
   const data = useHookSWR();
   
   const user = auth.currentUser;
@@ -54,28 +58,28 @@ export const FilesUpload = () => {
   };
   
   // @ts-ignore
-  const fileRef = ref(storage, `${user?.uid}/${photo?.name}`);
+  const photosRef = ref(storage, `${user?.uid}/${photo?.name}`);
   
   const uploadFiles = async ({ description, tags }: FileDataType, { resetForm }: FormType) => {
     try {
-      const metadata = {
-        customMetadata: {
-          'tag': tags,
-          'description': description
-        }
-      };
-      await uploadBytes(fileRef, photo!).then(async () => {
-        await updateMetadata(fileRef, metadata);
-        
+      await uploadBytes(photosRef, photo!).then(async () => {
+        const photoURL = await getDownloadURL(photosRef);
+        await addDoc(collection(db, `users/${user?.uid}/photos`), {
+            photoURL,
+            description,
+            tag: tags,
+            timeCreated: `${Date.now()}`
+        });
       });
+      
       setValuesFields(`${data?.AnotherForm?.uploadFile}`);
       resetForm(initialValues);
       setPhoto(null);
     } catch (e) {
+      console.log(e)
       setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
     }
   };
-
   
   return (
     <Formik
@@ -125,7 +129,7 @@ export const FilesUpload = () => {
         </div>
         
         <FormError nameError='file' />
-        
+  
         <button
           type='submit'
           className={`button ${styles.submit__button}`}
@@ -133,8 +137,6 @@ export const FilesUpload = () => {
         >
           {data?.AnotherForm?.send}
         </button>
-        
-     
         
         {!!valuesFields && <InfoField value={valuesFields} />}
       
