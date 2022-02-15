@@ -1,13 +1,15 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
-import { getDownloadURL, getMetadata, list, ref } from 'firebase/storage';
-import { auth, storage } from '../../../firebase';
-import { Pagination } from 'antd';
+import { list, ref } from 'firebase/storage';
+import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
+import { auth, db, storage } from '../../../firebase';
+import { Skeleton } from '@chakra-ui/react';
 
 import { DataType } from 'types/global.types';
 
-import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
-import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Photos } from 'components/atoms/Photos/Photos';
+import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
+import { Pagination } from 'antd';
+import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 
 import { ModeContext } from 'providers/ModeProvider';
 
@@ -15,7 +17,7 @@ import styles from './GalleryAccount.module.scss';
 
 type FileType = {
   fileUrl: string;
-  description: string | undefined;
+  description: string;
   time: string;
 }
 
@@ -26,25 +28,27 @@ export const GalleryAccount = ({ data }: DataType) => {
   
   const { isMode } = useContext(ModeContext);
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
+  const [loading, setLoading] = useState(false);
   
   const downloadFiles = async () => {
-    const firstPage = await list(userFilesRef, { maxResults: maxItems });
-    
+    const photosRef = collection(db, `users/${user?.uid}/photos`);
+    const nextPage = query(photosRef, orderBy('timeCreated', 'desc'), limit(maxItems));
+  
     try {
-      firstPage.items.map(async (firstPage) => {
-        const photoUrl = await getDownloadURL(firstPage);
-        const metadata = await getMetadata(firstPage);
-        
-        const image: FileType = {
-          fileUrl: photoUrl,
-          description: metadata.customMetadata?.description,
-          time: metadata.timeCreated
-        };
-        
-        setUserPhotos(prev => [...prev, image]);
+      const filesArray: FileType[] = [];
+      const querySnapshot = await getDocs(nextPage);
+      querySnapshot.forEach((doc) => {
+        filesArray.push({
+          fileUrl: doc.data().photoURL,
+          description: doc.data().description,
+          time: doc.data().timeCreated
+        });
       });
+      console.log(filesArray)
+      setUserPhotos(filesArray);
+      setLoading(true);
     } catch (e) {
-      console.log(e);
+      console.log('No such document!');
     }
   };
 
@@ -66,41 +70,36 @@ export const GalleryAccount = ({ data }: DataType) => {
     if (type === 'prev') {
       return <a>Previous</a>;
     }
-
+  
     if (type === 'next') {
       return <a onClick={() => nextFiles()}>Next</a>;
     }
-    
+  
     return originalElement;
   };
+  
   
   return (
     <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
       <FilesUpload />
       
       <em className={styles.title}>{data?.Account?.gallery?.userFilesTitle}</em>
-  
+      
       <div className={styles.user__photos}>
         {
-          !!userPhotos ? (
-            userPhotos.sort((a, b) => {
-              const nameA = a.time;
-              const nameB = b.time;
-  
-              if (nameA < nameB) {
-                return 1;
-              }
-              if (nameA > nameB) {
-                return -1;
-              }
-              return 0;
-            }).map(({ fileUrl, description }: FileType) => <Photos
-              link={fileUrl}
-              description={description}
-              key={description}
-            />)
-          ) : <ZeroFiles text='No your photos, animations and films.' />
-          }
+          !!userPhotos ? userPhotos.map(({ fileUrl, description, time }: FileType) => <Skeleton
+              isLoaded={loading}
+              key={time}
+              margin='1rem'
+            >
+              <Photos
+                link={fileUrl}
+                description={description}
+              />
+            </Skeleton>) :
+            <ZeroFiles text='No your photos, animations and films.' />
+          
+        }
       </div>
       
       <Pagination

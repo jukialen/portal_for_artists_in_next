@@ -3,7 +3,7 @@
 .photos {
   width: 17rem;
   height: 17rem;
-  margin: 1.5rem;
+  margin: .5rem;
   position: relative;
   justify-self: center;
   background-color: $primary__color;
@@ -19,16 +19,15 @@
     position: absolute;
     width: inherit;
     padding: .5rem;
-    bottom: -2.3rem;
+    bottom: -2.25rem;
     background: $third__color;
-    z-index: 1;
     border: 1px;
     cursor: pointer;
   }
 
   &:hover {
     z-index: 1;
-    margin: 4rem;
+    margin: 3.2rem;
     transform: scale(1.05);
     transition: transform .5s ease-in-out;
 
@@ -66,10 +65,33 @@
       transform: scale(1.4);
     }
   }
+
   @media (min-width: 409px) {
     &:hover {
       transform: scale(1.5);
     }
   }
+
+  @media (orientation: landscape) and (max-height: 600px) {
+    &:hover {
+      transform: scale(1.2);
+      margin: 1.5rem;
+    }
+  }
+
+  @media (orientation: landscape) and (max-height: 500px) {
+    &:hover {
+      transform: scale(1.1);
+      margin: -.5rem;
+    }
+  }
+
+  @media (orientation: landscape) and (max-height: 414px) {
+    &:hover {
+      transform: scale(1);
+      margin: -.5rem;
+    }
+  }
+
 }
 
