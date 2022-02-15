@@ -1,4 +1,5 @@
 import { FC, useContext } from 'react';
+import { ChakraProvider } from '@chakra-ui/react'
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -21,7 +22,7 @@ export const Layout: FC = ({ children }) => {
   const data = useHookSWR();
   
   return (
-    <>
+    <ChakraProvider resetCSS={false}>
       <div className={`whole__page ${isMode ? 'dark' : ''}`}>
         <ShowMenuProvider>
           {isUser ?
@@ -40,6 +41,6 @@ export const Layout: FC = ({ children }) => {
       </div>
       <AffixButton />
       <Footer />
-    </>
+    </ChakraProvider>
   );
 };
