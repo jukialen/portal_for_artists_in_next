@@ -46,7 +46,6 @@ export const FilesUpload = () => {
   
   const schemaFile = Yup.object({
     tags: Yup.string().required(data?.NavForm?.validateRequired),
-    file: Yup.string().required(data?.NavForm?.validateRequired),
   });
   
   const handleChange = async (e: EventType) => {
@@ -79,7 +78,7 @@ export const FilesUpload = () => {
       async () => {
         const photoURL = await getDownloadURL(photosRef);
         
-        await addDoc(photosCollectionRef, {
+        await addDoc(photosCollectionRef(), {
           photoURL,
           description: refName,
           tag: tags,
@@ -87,8 +86,8 @@ export const FilesUpload = () => {
         });
         
         setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-        resetForm(initialValues);
         setPhoto(null);
+        resetForm(initialValues);
       });
   };
   
@@ -126,24 +125,24 @@ export const FilesUpload = () => {
   // const resumeUpload = uploadBytesResumable(photosRef, photo!).resume();
   // const cancelUpload = uploadBytesResumable(photosRef, photo!).cancel();
   
-  const managedUpload = (state: string) => {
-    switch (state) {
-      case 'PAUSE':
-        uploadBytesResumable(photosRef, photo!).pause();
-        console.log(' Blob | Uint8Array | ArrayBuffer');
-        break;
-      case 'RESUME':
-        uploadBytesResumable(photosRef, photo!).resume();
-        console.log('File is resumed.');
-        break;
-      case 'CANCEL':
-        uploadBytesResumable(photosRef, photo!).cancel();
-        console.log('File is canceled.');
-        break;
-      default:
-        console.error(`${state} match nothing`);
-    }
-  };
+  // const managedUpload = (state: string) => {
+  //   switch (state) {
+  //     case 'PAUSE':
+  //       uploadBytesResumable(photosRef, photo!).pause();
+  //       console.log(' Blob | Uint8Array | ArrayBuffer');
+  //       break;
+  //     case 'RESUME':
+  //       uploadBytesResumable(photosRef, photo!).resume();
+  //       console.log('File is resumed.');
+  //       break;
+  //     case 'CANCEL':
+  //       uploadBytesResumable(photosRef, photo!).cancel();
+  //       console.log('File is canceled.');
+  //       break;
+  //     default:
+  //       console.error(`${state} match nothing`);
+  //   }
+  // };
   
   return (
     <Formik
@@ -175,10 +174,9 @@ export const FilesUpload = () => {
             onChange={handleChange}
             placeholder={data?.AnotherForm?.file}
             className={styles.input}
+            required={true}
           />
         </div>
-        
-        <FormError nameError='file' />
         
         <button
           type='submit'
@@ -188,7 +186,7 @@ export const FilesUpload = () => {
           {data?.AnotherForm?.send}
         </button>
         
-        { progressUpload >= 1 &&
+        { progressUpload >= 1 && !(valuesFields ===`${data?.AnotherForm?.uploadFile}`) &&
         <Progress
           value={progressUpload}
           colorScheme='green'
@@ -217,11 +215,11 @@ export const FilesUpload = () => {
           {valuesFields}
         </Alert>}
         
-        <div>
-          <PauseCircleTwoTone className={styles.icons} onClick={() => managedUpload('PAUSE')} />
-          <ReloadOutlined className={styles.icons} onClick={() => managedUpload('RESUME')} />
-          <LoadingOutlined className={styles.icons} onClick={() => managedUpload('CANCEL')} />
-        </div>
+        {/*<div>*/}
+        {/*  <PauseCircleTwoTone className={styles.icons} onClick={() => managedUpload('PAUSE')} />*/}
+        {/*  <ReloadOutlined className={styles.icons} onClick={() => managedUpload('RESUME')} />*/}
+        {/*  <LoadingOutlined className={styles.icons} onClick={() => managedUpload('CANCEL')} />*/}
+        {/*</div>*/}
       </Form>
     </Formik>
   );
