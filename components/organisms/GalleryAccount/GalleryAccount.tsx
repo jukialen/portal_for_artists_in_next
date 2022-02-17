@@ -1,50 +1,48 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
-import { getDownloadURL, getMetadata, list, ref } from 'firebase/storage';
-import { auth, storage } from '../../../firebase';
-import { Pagination } from 'antd';
+import { getDocs, limit, orderBy, query, startAfter } from 'firebase/firestore';
+import { photosCollectionRef } from 'references/referencesFirebase';
 
 import { DataType } from 'types/global.types';
 
-import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
-import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Photos } from 'components/atoms/Photos/Photos';
+import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
+import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 
 import { ModeContext } from 'providers/ModeProvider';
 
 import styles from './GalleryAccount.module.scss';
+import { Skeleton } from '@chakra-ui/react';
+import { Pagination } from 'antd';
 
 type FileType = {
   fileUrl: string;
-  description: string | undefined;
+  description: string;
   time: string;
 }
 
 export const GalleryAccount = ({ data }: DataType) => {
-  const user = auth.currentUser;
-  const userFilesRef = ref(storage, `${user?.uid}`);
   const maxItems: number = 20;
+  const nextPage = query(photosCollectionRef, orderBy('timeCreated', 'desc'), limit(maxItems));
   
   const { isMode } = useContext(ModeContext);
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
+  const [loading, setLoading] = useState(false);
   
   const downloadFiles = async () => {
-    const firstPage = await list(userFilesRef, { maxResults: maxItems });
-    
     try {
-      firstPage.items.map(async (firstPage) => {
-        const photoUrl = await getDownloadURL(firstPage);
-        const metadata = await getMetadata(firstPage);
-        
-        const image: FileType = {
-          fileUrl: photoUrl,
-          description: metadata.customMetadata?.description,
-          time: metadata.timeCreated
-        };
-        
-        setUserPhotos(prev => [...prev, image]);
+      const filesArray: FileType[] = [];
+      const querySnapshot = await getDocs(nextPage);
+      querySnapshot.forEach((doc) => {
+        filesArray.push({
+          fileUrl: doc.data().photoURL,
+          description: doc.data().description,
+          time: doc.data().timeCreated
+        });
       });
+      setUserPhotos(filesArray);
+      setLoading(true);
     } catch (e) {
-      console.log(e);
+      console.log('No such document!');
     }
   };
 
@@ -53,24 +51,21 @@ export const GalleryAccount = ({ data }: DataType) => {
   }, []);
   
   const nextFiles = async () => {
-    const firstPage = await list(userFilesRef, { maxResults: maxItems });
-    if (!!firstPage.nextPageToken) {
-      await list(userFilesRef, {
-        maxResults: maxItems,
-        pageToken: firstPage.nextPageToken,
-      });
-    }
+    const querySnapshot = await getDocs(nextPage);
+    const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+    return query(nextPage, startAfter(lastVisible))
   };
   
   const itemRender = (current: number, type: string, originalElement: ReactElement) => {
     if (type === 'prev') {
       return <a>Previous</a>;
     }
-
+  
     if (type === 'next') {
       return <a onClick={() => nextFiles()}>Next</a>;
     }
-    
+  
     return originalElement;
   };
   
@@ -79,28 +74,21 @@ export const GalleryAccount = ({ data }: DataType) => {
       <FilesUpload />
       
       <em className={styles.title}>{data?.Account?.gallery?.userFilesTitle}</em>
-  
+      
       <div className={styles.user__photos}>
         {
-          !!userPhotos ? (
-            userPhotos.sort((a, b) => {
-              const nameA = a.time;
-              const nameB = b.time;
-  
-              if (nameA < nameB) {
-                return 1;
-              }
-              if (nameA > nameB) {
-                return -1;
-              }
-              return 0;
-            }).map(({ fileUrl, description }: FileType) => <Photos
-              link={fileUrl}
-              description={description}
-              key={description}
-            />)
-          ) : <ZeroFiles text='No your photos, animations and films.' />
-          }
+          !!userPhotos ? userPhotos.map(({ fileUrl, description, time }: FileType) => <Skeleton
+              isLoaded={loading}
+              key={time}
+              margin='1rem'
+            >
+              <Photos
+                link={fileUrl}
+                description={description}
+              />
+            </Skeleton>) :
+            <ZeroFiles text='No your photos, animations and films.' />
+        }
       </div>
       
       <Pagination

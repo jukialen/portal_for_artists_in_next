@@ -20,32 +20,31 @@ type TitleNavType = {
 
 export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   const { asPath, push } = useRouter();
+  const  data = useHookSWR();
+  const { pseudonym } = useUserData();
   
   const { showUser } = useContext(StatusLoginContext);
   const { isMenu, showMenu } = useContext(ShowMenuContext);
   const { showLoginForm, showCreateForm } = useContext(NavFormContext);
   
-  const hideMenuLogin = () => {
-    showLoginForm();
-    showMenu();
-  };
+  const hideMenuLogin = () => showLoginForm();
   
   const hideMenuCreate = () => {
     showCreateForm();
-    showMenu();
+    titleSecondNav === `${data?.Nav?.account}` && showMenu();
   };
   
   const sign__out = async () => {
     try {
       showUser();
       await signOut(auth);
+      titleFirstNav !== `${data?.Nav?.sign__out}` && showMenu();
       return push('/');
     } catch (error) {
       console.log(error);
     }
   };
   
-  const { pseudonym } = useUserData();
   
   return (
     <nav className={`${styles.nav} ${isMenu && styles.menu__active}`}>
@@ -54,14 +53,14 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
           <Link href={asPath}>
             <a
               className={styles.sign__in}
-              onClick={titleFirstNav !== `${useHookSWR()?.Nav?.signOut}` ? hideMenuLogin : sign__out}
+              onClick={titleFirstNav !== `${data?.Nav?.signOut}` ? hideMenuLogin : sign__out}
             >
               {titleFirstNav}
             </a>
           </Link>
         </li>
         <li className={styles.menu}>
-          <Link href={titleSecondNav === `${useHookSWR()?.Nav?.account}` ? `/account/${pseudonym}` : asPath}>
+          <Link href={titleSecondNav === `${data?.Nav?.account}` ? `/account/${pseudonym}` : asPath}>
             <a className={styles.sign__out} onClick={hideMenuCreate}>
               {titleSecondNav}
             </a>
