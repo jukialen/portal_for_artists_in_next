@@ -80,12 +80,6 @@ a {
   }
 }
 
-input:required,
-textarea:required,
-select:required {
-  border: 0.1rem solid $required__color;
-}
-
 .main__container {
   margin: 0 auto;
 }
