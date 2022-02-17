@@ -1,19 +1,18 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
-import { list, ref } from 'firebase/storage';
-import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
-import { auth, db, storage } from '../../../firebase';
-import { Skeleton } from '@chakra-ui/react';
+import { getDocs, limit, orderBy, query, startAfter } from 'firebase/firestore';
+import { photosCollectionRef } from 'references/referencesFirebase';
 
 import { DataType } from 'types/global.types';
 
 import { Photos } from 'components/atoms/Photos/Photos';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { Pagination } from 'antd';
 import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 
 import { ModeContext } from 'providers/ModeProvider';
 
 import styles from './GalleryAccount.module.scss';
+import { Skeleton } from '@chakra-ui/react';
+import { Pagination } from 'antd';
 
 type FileType = {
   fileUrl: string;
@@ -22,18 +21,14 @@ type FileType = {
 }
 
 export const GalleryAccount = ({ data }: DataType) => {
-  const user = auth.currentUser;
-  const userFilesRef = ref(storage, `${user?.uid}`);
   const maxItems: number = 20;
+  const nextPage = query(photosCollectionRef, orderBy('timeCreated', 'desc'), limit(maxItems));
   
   const { isMode } = useContext(ModeContext);
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
   const [loading, setLoading] = useState(false);
   
   const downloadFiles = async () => {
-    const photosRef = collection(db, `users/${user?.uid}/photos`);
-    const nextPage = query(photosRef, orderBy('timeCreated', 'desc'), limit(maxItems));
-  
     try {
       const filesArray: FileType[] = [];
       const querySnapshot = await getDocs(nextPage);
@@ -44,7 +39,6 @@ export const GalleryAccount = ({ data }: DataType) => {
           time: doc.data().timeCreated
         });
       });
-      console.log(filesArray)
       setUserPhotos(filesArray);
       setLoading(true);
     } catch (e) {
@@ -57,13 +51,10 @@ export const GalleryAccount = ({ data }: DataType) => {
   }, []);
   
   const nextFiles = async () => {
-    const firstPage = await list(userFilesRef, { maxResults: maxItems });
-    if (!!firstPage.nextPageToken) {
-      await list(userFilesRef, {
-        maxResults: maxItems,
-        pageToken: firstPage.nextPageToken,
-      });
-    }
+    const querySnapshot = await getDocs(nextPage);
+    const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+    return query(nextPage, startAfter(lastVisible))
   };
   
   const itemRender = (current: number, type: string, originalElement: ReactElement) => {
@@ -77,7 +68,6 @@ export const GalleryAccount = ({ data }: DataType) => {
   
     return originalElement;
   };
-  
   
   return (
     <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
@@ -98,7 +88,6 @@ export const GalleryAccount = ({ data }: DataType) => {
               />
             </Skeleton>) :
             <ZeroFiles text='No your photos, animations and films.' />
-          
         }
       </div>
       

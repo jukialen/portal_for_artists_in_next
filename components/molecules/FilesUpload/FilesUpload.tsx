@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { UploadTaskSnapshot } from '@firebase/storage';
-import { addDoc, collection } from 'firebase/firestore';
-import { auth, db, storage } from '../../../firebase';
+import { addDoc} from 'firebase/firestore';
+import { auth, storage } from '../../../firebase';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { photosCollectionRef } from 'references/referencesFirebase';
 
 import { EventType, FormType } from 'types/global.types';
 
@@ -72,13 +73,13 @@ export const FilesUpload = () => {
           break;
       }
       }, (e: Error) => {
-        console.log(e);
+        console.error(e);
         setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
       },
       async () => {
         const photoURL = await getDownloadURL(photosRef);
         
-        await addDoc(collection(db, `users/${user?.uid}/photos`), {
+        await addDoc(photosCollectionRef, {
           photoURL,
           description: refName,
           tag: tags,
