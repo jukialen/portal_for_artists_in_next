@@ -1,6 +1,9 @@
 import { collection } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
-const user = auth.currentUser;
-
-export const photosCollectionRef = collection(db, `users/${user?.uid}/photos`);
+export const photosCollectionRef = () => {
+  const user = auth?.currentUser;
+  const ref = collection(db, `users/${user?.uid}/photos`);
+  
+  return ref;
+}

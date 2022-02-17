@@ -22,7 +22,7 @@ type FileType = {
 
 export const GalleryAccount = ({ data }: DataType) => {
   const maxItems: number = 20;
-  const nextPage = query(photosCollectionRef, orderBy('timeCreated', 'desc'), limit(maxItems));
+  const nextPage = query(photosCollectionRef(), orderBy('timeCreated', 'desc'), limit(maxItems));
   
   const { isMode } = useContext(ModeContext);
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
