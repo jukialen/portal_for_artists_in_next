@@ -1,5 +1,5 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
-import { getDocs, limit, orderBy, query, startAfter } from 'firebase/firestore';
+import { getDocs, limit, onSnapshot, orderBy, query, startAfter } from 'firebase/firestore';
 import { photosCollectionRef } from 'references/referencesFirebase';
 
 import { DataType } from 'types/global.types';
@@ -31,16 +31,28 @@ export const GalleryAccount = ({ data }: DataType) => {
   const downloadFiles = async () => {
     try {
       const filesArray: FileType[] = [];
-      const querySnapshot = await getDocs(nextPage);
-      querySnapshot.forEach((doc) => {
-        filesArray.push({
-          fileUrl: doc.data().photoURL,
-          description: doc.data().description,
-          time: doc.data().timeCreated
+      onSnapshot(nextPage, (querySnapshot) => {
+          const filesArray: FileType[] = [];
+          querySnapshot.forEach((doc) => {
+          filesArray.push({
+            fileUrl: doc.data().photoURL,
+            description: doc.data().description,
+            time: doc.data().timeCreated
+          });
+          console.log(filesArray)
         });
-      });
-      setUserPhotos(filesArray);
-      setLoading(true);
+    
+          console.log(filesArray)
+          setUserPhotos(filesArray);
+          setLoading(true);
+        },
+        (e) => {
+          console.error('Error', e);
+        });
+      
+      console.log(filesArray)
+  
+      
     } catch (e) {
       console.log('No such document!');
     }
