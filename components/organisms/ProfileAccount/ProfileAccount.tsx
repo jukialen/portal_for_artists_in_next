@@ -22,7 +22,7 @@ type ProfileType = {
   newDescription: string
 }
 const initialValues = {
-  newPseudonym: `${localStorage.getItem('uD')}`,
+  newPseudonym: `${typeof localStorage !== 'undefined' && localStorage.getItem('uD')}`,
   newDescription: ''
 };
 
