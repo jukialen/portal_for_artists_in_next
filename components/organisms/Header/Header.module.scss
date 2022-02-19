@@ -4,23 +4,23 @@
   width: 100%;
   position: fixed;
   display: grid;
-  grid-template-columns: 10rem 1fr auto;
+  grid-template-columns: 5rem 1fr auto;
   background-color: $primary__color;
   z-index: 9999;
   padding: .2rem 0;
 
-  .title {
-    font-size: 2rem;
-    margin: auto .5rem;
-    justify-self: start;
+  .title a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
   }
 
   .dark__mode, .light__mode {
     display: inline-flex;
     align-items: center;
-    justify-self: start;
-    margin: auto 0;
-    padding: 0;
+    justify-self: end;
+    margin: auto 1rem;
     border: none;
     background: none;
     cursor: pointer;
