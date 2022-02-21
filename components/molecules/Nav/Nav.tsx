@@ -22,6 +22,7 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   const { asPath, push } = useRouter();
   const  data = useHookSWR();
   const { pseudonym } = useUserData();
+  const user = auth.currentUser;
   
   const { showUser } = useContext(StatusLoginContext);
   const { isMenu, showMenu } = useContext(ShowMenuContext);
@@ -45,7 +46,6 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
     }
   };
   
-  
   return (
     <nav className={`${styles.nav} ${isMenu && styles.menu__active}`}>
       <ul className={styles.list}>
@@ -60,7 +60,7 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
           </Link>
         </li>
         <li className={styles.menu}>
-          <Link href={titleSecondNav === `${data?.Nav?.account}` ? `/account/${pseudonym}` : asPath}>
+          <Link href={titleSecondNav === `${data?.Nav?.account}` ? `/account/${pseudonym || user?.providerData[0].displayName}` : asPath}>
             <a className={styles.sign__out} onClick={hideMenuCreate}>
               {titleSecondNav}
             </a>

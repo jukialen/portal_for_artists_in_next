@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { auth, storage } from '../../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { UploadTaskSnapshot } from '@firebase/storage';
-import { addDoc} from 'firebase/firestore';
-import { auth, storage } from '../../../firebase';
+import { addDoc } from 'firebase/firestore';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
+
 import { photosCollectionRef } from 'references/referencesFirebase';
 
 import { EventType, FormType } from 'types/global.types';
@@ -12,9 +14,10 @@ import { EventType, FormType } from 'types/global.types';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { FormError } from 'components/molecules/FormError/FormError';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './FileUpload.module.scss';
-import { Alert, AlertIcon, Progress } from '@chakra-ui/react';
+import { Progress } from '@chakra-ui/react';
 import { LoadingOutlined, PauseCircleTwoTone, ReloadOutlined } from '@ant-design/icons';
 
 type FileDataType = {
@@ -45,7 +48,7 @@ export const FilesUpload = () => {
                     ];
   
   const schemaFile = Yup.object({
-    tags: Yup.string().required(data?.NavForm?.validateRequired),
+    tags: SchemaValidation().tags,
   });
   
   const handleChange = async (e: EventType) => {
@@ -90,37 +93,7 @@ export const FilesUpload = () => {
         resetForm(initialValues);
       });
   };
-  
-  const switchAlert = (value:string) => {
-    let status: string;
-    
-    switch (value) {
-      case `${data?.AnotherForm?.uploadFile}`:
-        return status='success';
-      case 'Upload is running':
-        return status='info';
-      case 'Upload is paused':
-        return status='warning'
-      case `${data?.AnotherForm?.notUploadFile}`:
-        return status='error';
-    };
-  };
-  
-  const switchAlertColor = (value:string) => {
-    let color: string;
-    
-    switch (value) {
-      case `${data?.AnotherForm?.uploadFile}`:
-        return color='green';
-      case 'Upload is running':
-        return color='blue';
-      case 'Upload is paused':
-        return color='yellow'
-      case `${data?.AnotherForm?.notUploadFile}`:
-        return color='red';
-    };
-  };
-  
+
   // const pauseUpload = uploadBytesResumable(photosRef, photo!).pause();
   // const resumeUpload = uploadBytesResumable(photosRef, photo!).resume();
   // const cancelUpload = uploadBytesResumable(photosRef, photo!).cancel();
@@ -201,19 +174,7 @@ export const FilesUpload = () => {
         />
         }
   
-        {valuesFields !== '' &&
-        <Alert
-          colorScheme={switchAlertColor(valuesFields)}
-          color='blackAlpha.900'
-          size='sm'
-          margin='1rem auto'
-          width='17.5rem'
-          status={switchAlert(valuesFields)}
-          variant='left-accent'
-        >
-          <AlertIcon />
-          {valuesFields}
-        </Alert>}
+        {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
         
         {/*<div>*/}
         {/*  <PauseCircleTwoTone className={styles.icons} onClick={() => managedUpload('PAUSE')} />*/}

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { DataType } from 'types/global.types';
+import { DataType, FormType } from 'types/global.types';
 
 import { useUserData } from 'hooks/useUserData';
 
@@ -21,10 +22,6 @@ type ProfileType = {
   newPseudonym: string,
   newDescription: string
 }
-const initialValues = {
-  newPseudonym: `${typeof localStorage !== 'undefined' && localStorage.getItem('uD')}`,
-  newDescription: ''
-};
 
 export const ProfileAccount = ({ data }: DataType) => {
   const [valuesFields, setValuesFields] = useState<string>('');
@@ -38,24 +35,23 @@ export const ProfileAccount = ({ data }: DataType) => {
     user?.photoURL && setPhotoURL(user?.photoURL);
   }, [user]);
   
+  const initialValues = {
+    newPseudonym: `${pseudonym}`,
+    newDescription: `${description}` || ''
+  };
+  
   const schemaNew = Yup.object({
-    newPseudonym: Yup.string()
-    .matches(/[0-9０-９]+/g, data?.NavForm?.validatePseudonymNum)
-    .matches(/[#?!@$%^&*-＃？！＄％＆＊ー]+/g, data?.NavForm?.validatePseudonymSpec)
-    .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validatePseudonymHKik)
-    .min(5, data?.NavForm?.validatePseudonymMin)
-    .max(15, data?.NavForm?.validatePseudonymMax),
-    newDescription: Yup.string()
-    .required(data?.NavForm?.validateRequired)
+    newPseudonym: SchemaValidation().pseudonym,
+    newDescription: SchemaValidation().description
   });
   
-  const updatePseuAndDes = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: any) => {
+  const updatePseuAndDes = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: FormType) => {
     try {
       await updateDoc(doc(db, 'users', `${user?.uid}`), {
         pseudonym: newPseudonym,
         description: newDescription
       });
-      localStorage.setItem('uD', newPseudonym);
+      
       resetForm(initialValues);
       setValuesFields(data?.Account?.profile?.successSending);
     } catch (e) {

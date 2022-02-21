@@ -1,11 +1,13 @@
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import * as Yup from 'yup';
-import { Field, Form, Formik } from 'formik';
-import { updateProfile } from 'firebase/auth';
 import { auth, db, storage } from '../../firebase';
+import { updateProfile } from 'firebase/auth';
+import { UploadTaskSnapshot } from '@firebase/storage';
 import { doc, setDoc } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { Field, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { EventType } from 'types/global.types';
 
@@ -14,11 +16,12 @@ import { useCurrentUser } from 'hooks/useCurrentUser';
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
-import { InfoField } from 'components/atoms/InfoField/InfoField';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from './index.module.scss';
+import { Progress } from '@chakra-ui/react';
 
 type FirstDataType = {
   username: string,
@@ -34,6 +37,7 @@ export default function NewUser() {
   const { showUser } = useContext(StatusLoginContext);
   const [valuesFields, setValuesFields] = useState<string>('');
   const [photo, setPhoto] = useState<File | null>(null);
+  const [progressUpload, setProgressUpload] = useState<number>(0);
   
   const initialValues = {
     username: '',
@@ -41,20 +45,8 @@ export default function NewUser() {
   };
   
   const schemaValidation = Yup.object({
-    username: Yup.string()
-    .matches(/^[A-Z]/g, data?.NavForm?.validateUsernameFl)
-    .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validateUsernameHKik)
-    .matches(/\D/g, data?.NavForm?.validateUsernameNum)
-    .min(3, data?.NavForm?.validateUsernameMin)
-    .required(data?.NavForm?.validateRequired),
-    
-    pseudonym: Yup.string()
-    .matches(/[0-9０-９]+/g, data?.NavForm?.validatePseudonymNum)
-    .matches(/[#?!@$%^&*-＃？！＄％＆＊ー]+/g, data?.NavForm?.validatePseudonymSpec)
-    .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validatePseudonymHKik)
-    .min(5, data?.NavForm?.validatePseudonymMin)
-    .max(15, data?.NavForm?.validatePseudonymMax)
-    .required(data?.NavForm?.validateRequired),
+    username: SchemaValidation().username,
+    pseudonym: SchemaValidation().pseudonym,
   });
   
   const user = auth.currentUser!;
@@ -65,29 +57,49 @@ export default function NewUser() {
   
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
-      await setDoc(doc(db, 'users', `${user?.uid}`), { pseudonym });
-      // @ts-ignore
       const fileRef = await ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
       
-      // @ts-ignore
-      await uploadBytes(fileRef, photo);
+      const upload = uploadBytesResumable(fileRef, photo!);
       
-      const photoURL = await getDownloadURL(fileRef);
-      await updateProfile(user, {
-         displayName: username, photoURL: photoURL
-      });
-
-      localStorage.setItem('uD', `${pseudonym}`);
-      setValuesFields(data?.NewUSer?.successSending);
-      await showUser();
-      return push('/app');
+      upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+          const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgressUpload(progress);
+          switch (snapshot.state) {
+            case 'running':
+              setValuesFields('Upload is running');
+              break;
+            case 'paused':
+              setValuesFields('Upload is paused');
+              break;
+          }
+        }, (e: Error) => {
+          console.error(e);
+          setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+        },
+        async () => {
+          const photoURL = await getDownloadURL(fileRef);
+  
+          await setDoc(doc(db, 'users', `${user?.uid}`), { pseudonym });
+      
+          setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+          setPhoto(null);
+  
+          await updateProfile(user, {
+            displayName: username, photoURL: photoURL
+          });
+  
+          setValuesFields(data?.NewUSer?.successSending);
+          await showUser();
+          return push('/app');
+        });
     } catch (error) {
       setValuesFields(data?.NewUser?.errorSending)
     }
   };
+  
   return !loading ? (
   <div className='workspace'>
-    <Formik // @ts-ignore
+    <Formik
       initialValues={initialValues}
       validationSchema={schemaValidation}
       onSubmit={sendingData}
@@ -137,7 +149,22 @@ export default function NewUser() {
           {data?.AnotherForm?.send}
         </button>
   
-        {!!valuesFields && <InfoField value={valuesFields} />}
+        { progressUpload >= 1 && !(valuesFields ===`${data?.AnotherForm?.uploadFile}`) &&
+        <Progress
+          value={progressUpload}
+          colorScheme='green'
+          isAnimated
+          hasStripe
+          min={0}
+          max={100}
+          w={280}
+          bg='blue.400'
+          m='1.5rem auto'
+          size='md'
+        />
+        }
+  
+        {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
       </Form>
     </Formik>
   </div>
