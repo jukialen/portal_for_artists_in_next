@@ -6,7 +6,7 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { DataType, UserDataType, FormType } from 'types/global.types';
+import { DataType, FormType, UserDataType } from 'types/global.types';
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
@@ -106,7 +106,9 @@ export const Login = ({ data }: DataType) => {
   
           {!!valuesFields && <InfoField value={valuesFields} />}
           
-          <button className={`button ${styles.forgotten}`} onClick={forgotten__password}>I forgot my password</button>
+          <button className={`button ${styles.forgotten}`} onClick={forgotten__password}>
+            I forgot my password
+          </button>
         </Form>
       </Formik>
       

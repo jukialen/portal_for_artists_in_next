@@ -10,6 +10,7 @@ import { FormError } from 'components/molecules/FormError/FormError';
 import { InfoField } from 'components/atoms/InfoField/InfoField';
 
 import styles from './index.module.scss';
+import { getAuth, sendPasswordResetEmail, updatePassword } from 'firebase/auth';
 
 type ResetType = {
   email: string;
@@ -22,18 +23,18 @@ const initialValues = {
 export default function Forgotten() {
   const [valuesFields, setValuesFields] = useState<string>('');
   
+  const auth = getAuth();
+  
+  const actionCodeSettings = { url: `${process.env.NEXT_PUBLIC_PAGE}` };
+  
   const reset__password = async ({ email }: ResetType, { resetForm }: any) => {
     try {
-      const res = await axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/auth/forgot-password`, {
-        email,
-      });
-      console.log('Your user received an email:', res);
+      const forgotPass = await sendPasswordResetEmail(auth, email, actionCodeSettings)
+      console.log('Your user received an email:', forgotPass);
       resetForm(initialValues);
       setValuesFields('Sprawdź skrzynkę e-mailową');
-    } catch (error) {
-      // @ts-ignore
-      console.log('An error occurred:', error.response);
+    } catch (e: any) {
+      console.log(`An error occurred: error: ${e.code}, ${e.message}`);
       setValuesFields('Spróbuj ponownie lub lub sprawdź połączenie z internetem');
       
     }
