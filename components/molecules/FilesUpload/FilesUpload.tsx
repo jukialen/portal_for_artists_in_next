@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { auth, storage } from '../../../firebase';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytesResumable, UploadTask } from 'firebase/storage';
 import { UploadTaskSnapshot } from '@firebase/storage';
-import { addDoc } from 'firebase/firestore';
+import { addDoc, CollectionReference } from 'firebase/firestore';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { photosCollectionRef } from 'references/referencesFirebase';
+import { animationsCollectionRef, photosCollectionRef, videosCollectionRef } from 'references/referencesFirebase';
 
 import { EventType, FormType } from 'types/global.types';
 
@@ -18,7 +18,6 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './FileUpload.module.scss';
 import { Progress } from '@chakra-ui/react';
-import { LoadingOutlined, PauseCircleTwoTone, ReloadOutlined } from '@ant-design/icons';
 
 type FileDataType = {
   tags: string
@@ -30,7 +29,7 @@ const initialValues = {
 };
 
 export const FilesUpload = () => {
-  const [photo, setPhoto] = useState<Blob | Uint8Array | ArrayBuffer | File | null>(null);
+  const [file, setFile] = useState<Blob | Uint8Array | ArrayBuffer | File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
   const [progressUpload, setProgressUpload] = useState<number>(0);
   const data = useHookSWR();
@@ -38,78 +37,105 @@ export const FilesUpload = () => {
   const user = auth.currentUser;
   
   const tagsArray = [`${data?.chooseTag}`,
-                    `${data?.Aside?.realistic}`,
-                    `${data?.Aside?.manga}`,
-                    `${data?.Aside?.anime}`,
-                    `${data?.Aside?.comics}`,
-                    `${data?.Aside?.photographs}`,
-                    `${data?.Aside?.animations}`,
-                    `${data?.Aside?.others}`
-                    ];
+    `${data?.Aside?.realistic}`,
+    `${data?.Aside?.manga}`,
+    `${data?.Aside?.anime}`,
+    `${data?.Aside?.comics}`,
+    `${data?.Aside?.photographs}`,
+    `${data?.Aside?.videos}`,
+    `${data?.Aside?.animations}`,
+    `${data?.Aside?.others}`
+  ];
   
   const schemaFile = Yup.object({
     tags: SchemaValidation().tags,
   });
   
   const handleChange = async (e: EventType) => {
-    e.target.files?.[0] && setPhoto(e.target.files[0]);
+    e.target.files?.[0] && setFile(e.target.files[0]);
   };
   
-  // @ts-ignore
-  const photosRef = ref(storage, `${user?.uid}/photos/${photo?.name}`);
-  
   const uploadFiles = async ({ tags }: FileDataType, { resetForm }: FormType) => {
-    const upload = uploadBytesResumable(photosRef, photo!);
-    
+    // @ts-ignore
+    const photosRef = ref(storage, `${user?.uid}/photos/${file?.name}`);
+    // @ts-ignore
+    const videosRef = ref(storage, `${user?.uid}/videos/${file?.name}`);
+    // @ts-ignore
+    const animationsRef = ref(storage, `${user?.uid}/animations/${file?.name}`);
+  
+    let upload: UploadTask;
+  
+    switch (tags) {
+      case `${data?.Aside?.animations}`:
+        upload = uploadBytesResumable(animationsRef, file!);
+        break;
+      case `${data?.Aside?.videos}`:
+        upload = uploadBytesResumable(videosRef, file!);
+        break;
+      default:
+        upload = uploadBytesResumable(photosRef, file!);
+    }
+  
     let refName: string;
-    
+
     upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
-      const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      setProgressUpload(progress);
-      switch (snapshot.state) {
-        case 'running':
-          setValuesFields('Upload is running');
-          return refName = snapshot.ref.name;
-        case 'paused':
-          setValuesFields('Upload is paused');
-          break;
-      }
+        const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgressUpload(progress);
+      
+        switch (snapshot.state) {
+          case 'running':
+            setValuesFields('Upload is running');
+            return refName = snapshot.ref.name;
+          case 'paused':
+            setValuesFields('Upload is paused');
+            break;
+        }
       }, (e: Error) => {
         console.error(e);
         setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
       },
       async () => {
-        const photoURL = await getDownloadURL(photosRef);
+        const sendToFirestore = (colRef: CollectionReference, url: string) => {
+          addDoc(colRef, {
+            fileUrl: url,
+            description: refName,
+            tag: tags,
+            timeCreated: Date.now()
+          });
+    
+          setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+          setFile(null);
+          resetForm(initialValues);
+        };
         
-        await addDoc(photosCollectionRef(), {
-          photoURL,
-          description: refName,
-          tag: tags,
-          timeCreated: Date.now()
-        });
-        
-        setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-        setPhoto(null);
-        resetForm(initialValues);
+        switch (tags) {
+          case `${data?.Aside?.animations}`:
+            const animationURL = await getDownloadURL(animationsRef);
+            sendToFirestore(animationsCollectionRef(), animationURL);
+            break;
+          case `${data?.Aside?.videos}`:
+            const videoURL = await getDownloadURL(videosRef);
+            sendToFirestore(videosCollectionRef(), videoURL);
+            break;
+          default:
+            const photoURL = await getDownloadURL(photosRef);
+            sendToFirestore(photosCollectionRef(), photoURL);
+        }
       });
   };
-
-  // const pauseUpload = uploadBytesResumable(photosRef, photo!).pause();
-  // const resumeUpload = uploadBytesResumable(photosRef, photo!).resume();
-  // const cancelUpload = uploadBytesResumable(photosRef, photo!).cancel();
   
   // const managedUpload = (state: string) => {
   //   switch (state) {
   //     case 'PAUSE':
-  //       uploadBytesResumable(photosRef, photo!).pause();
+  //       uploadBytesResumable(photosRef, file!).pause();
   //       console.log(' Blob | Uint8Array | ArrayBuffer');
   //       break;
   //     case 'RESUME':
-  //       uploadBytesResumable(photosRef, photo!).resume();
+  //       uploadBytesResumable(photosRef, file!).resume();
   //       console.log('File is resumed.');
   //       break;
   //     case 'CANCEL':
-  //       uploadBytesResumable(photosRef, photo!).cancel();
+  //       uploadBytesResumable(photosRef, file!).cancel();
   //       console.log('File is canceled.');
   //       break;
   //     default:
@@ -143,7 +169,7 @@ export const FilesUpload = () => {
           <Field
             name='file'
             type='file'
-            accept='.jpg, .jpeg, .png, .webp, .avif'
+            accept='.jpg, .jpeg, .png, .webp, .avif, .webm, .mp4, .apng'
             onChange={handleChange}
             placeholder={data?.AnotherForm?.file}
             className={styles.input}

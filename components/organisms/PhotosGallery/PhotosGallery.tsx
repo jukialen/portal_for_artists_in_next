@@ -1,35 +1,26 @@
-import { ReactElement, useContext, useEffect, useState } from 'react';
-
+import { useContext, useEffect, useState } from 'react';
 import {
-  getDocs,
   limit,
   onSnapshot,
   orderBy,
   query,
-  startAfter
 } from 'firebase/firestore';
 
 import { photosCollectionRef } from 'references/referencesFirebase';
+import { pagination } from 'helpers/pagination';
 
-import { DataType } from 'types/global.types';
+import { DataType, FileType } from 'types/global.types';
 
 import { Photos } from 'components/atoms/Photos/Photos';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 
 import { ModeContext } from 'providers/ModeProvider';
 
-import styles from './GalleryAccount.module.scss';
+import styles from './PhotosGallery.module.scss';
 import { Skeleton } from '@chakra-ui/react';
 import { Pagination } from 'antd';
 
-type FileType = {
-  fileUrl: string;
-  description: string;
-  time: string;
-}
-
-export const GalleryAccount = ({ data }: DataType) => {
+export const PhotosGallery = ({ data }: DataType) => {
   const maxItems: number = 20;
   const nextPage = query(photosCollectionRef(), orderBy('timeCreated', 'desc'), limit(maxItems));
   
@@ -40,11 +31,10 @@ export const GalleryAccount = ({ data }: DataType) => {
   const downloadFiles = async () => {
     try {
       onSnapshot(nextPage,  (querySnapshot) => {
-          
           const filesArray: FileType[] = [];
           querySnapshot.forEach((doc) => {
             filesArray.push({
-              fileUrl: doc.data().photoURL,
+              fileUrl: doc.data().fileUrl,
               description: doc.data().description,
               time: doc.data().timeCreated
             });
@@ -64,34 +54,14 @@ export const GalleryAccount = ({ data }: DataType) => {
     downloadFiles();
   }, []);
   
-  const nextFiles = async () => {
-    const querySnapshot = await getDocs(nextPage);
-    const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-
-    return query(nextPage, startAfter(lastVisible))
-  };
-  
-  const itemRender = (current: number, type: string, originalElement: ReactElement) => {
-    if (type === 'prev') {
-      return <a>Previous</a>;
-    }
-  
-    if (type === 'next') {
-      return <a onClick={() => nextFiles()}>Next</a>;
-    }
-  
-    return originalElement;
-  };
   
   return (
     <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
-      <FilesUpload />
-      
       <em className={styles.title}>{data?.Account?.gallery?.userFilesTitle}</em>
-      
+
       <div className={styles.user__photos}>
         {
-          !!userPhotos ? userPhotos.map(({ fileUrl, description, time }: FileType) => <Skeleton
+          userPhotos !== [] ? userPhotos.map(({ fileUrl, description, time }: FileType) => <Skeleton
               isLoaded={loading}
               key={time}
               margin='1rem'
@@ -101,8 +71,10 @@ export const GalleryAccount = ({ data }: DataType) => {
                 description={description}
               />
             </Skeleton>) :
-            <ZeroFiles text='No your photos, animations and films.' />
+            <ZeroFiles text={data?.ZeroFiles?.photos} />
         }
+  
+        
       </div>
       
       <Pagination
@@ -113,13 +85,13 @@ export const GalleryAccount = ({ data }: DataType) => {
         total={userPhotos.length}
         simple
         hideOnSinglePage
-        itemRender={itemRender}
+        itemRender={pagination(nextPage)}
       />
       
       <em className={styles.title}>{data?.Account?.gallery?.userLikedFiles}</em>
       
       <div className={styles.like__photos}>
-        <ZeroFiles text='No liked photos, animations and films.' />
+        <ZeroFiles text={data?.ZeroFiles?.likedPhotos} />
       </div>
     </article>
   );

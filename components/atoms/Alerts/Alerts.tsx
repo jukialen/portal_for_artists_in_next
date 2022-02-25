@@ -21,7 +21,6 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case `${data?.AnotherForm?.notUploadFile}`:
         return status = 'error';
     }
-    ;
   };
   
   const switchAlertColor = (valueFields: string) => {
@@ -37,7 +36,6 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case `${data?.AnotherForm?.notUploadFile}`:
         return color = 'red';
     }
-    ;
   };
   
   return <Alert

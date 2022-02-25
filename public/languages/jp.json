@@ -54,7 +54,7 @@
     "comics": "コミック",
     "photographs": "写真",
     "animations": "アニメーション",
-    "movies": "映画",
+    "videos": "映画",
     "others": "他",
     "friends": "友達",
     "groups": "団体",
@@ -146,7 +146,16 @@
     "uploadFile": "File has been uploaded.",
     "notUploadFile": "File hasn't been uploaded."
   },
+  "ZeroFiles": {
+    "photos": "No your photos.",
+    "likedPhotos": "No liked photos",
+    "animations": "No your photos.",
+    "likedAnimations": "No liked animations",
+    "videos": "No your videos.",
+    "likedVideos": "No liked videos"
+  },
   "edit": "Edit",
   "cancel": "Cancel",
-  "chooseTag": "Choose tag"
+  "chooseTag": "Choose tag",
+  "noDocuments": ""
 }

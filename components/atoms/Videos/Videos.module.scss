@@ -1,0 +1,23 @@
+@use 'styles/variables' as *;
+
+.videos {
+	width: 17rem;
+	height: 17rem;
+	margin: .5rem;
+	position: relative;
+	justify-self: center;
+	background-color: $primary__color;
+
+	.comments {
+		visibility: hidden;
+		display: block;
+		position: absolute;
+		width: inherit;
+		padding: .5rem;
+		bottom: -2.25rem;
+		background: $third__color;
+		border: 1px;
+		cursor: pointer;
+	}
+}
+

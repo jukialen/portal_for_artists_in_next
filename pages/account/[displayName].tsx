@@ -6,10 +6,13 @@ import { useCurrentUser } from 'hooks/useCurrentUser';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { AccountMenu } from 'components/molecules/AccountMenu/AccountMenu';
 import { AccountData } from 'components/organisms/AccountData/AccountData';
-import { GalleryAccount } from 'components/organisms/GalleryAccount/GalleryAccount';
+import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
+import { PhotosGallery } from 'components/organisms/PhotosGallery/PhotosGallery';
+import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
 import { ProfileAccount } from 'components/organisms/ProfileAccount/ProfileAccount';
 
 import styles from './index.module.scss';
+import { AnimatedGallery } from '../../components/organisms/AnimatedGallery/AnimatedGallery';
 
 export default function Account() {
   const currentUser = auth.currentUser;
@@ -27,7 +30,13 @@ export default function Account() {
       
       <AccountData data={data} />
       
-      <GalleryAccount data={data} />
+      <FilesUpload />
+      
+      <PhotosGallery data={data} />
+      
+      <AnimatedGallery data={data} />
+      
+      <VideoGallery data={data} />
       
       <ProfileAccount data={data} />
     </section>
