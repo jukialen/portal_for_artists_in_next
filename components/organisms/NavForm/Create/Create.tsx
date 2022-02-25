@@ -1,8 +1,10 @@
 import { useCallback, useContext, useState } from 'react';
-import { Form, Formik } from 'formik';
-import * as Yup from 'yup';
+import { useRouter } from 'next/router';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../../../../firebase';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { DataType, UserDataType } from 'types/global.types';
 
@@ -14,7 +16,6 @@ import { InfoField } from 'components/atoms/InfoField/InfoField';
 import { NavFormContext } from 'providers/NavFormProvider';
 
 import styles from '../NavForm.module.scss';
-import { useRouter } from 'next/router';
 
 const initialValues = {
   email: '', password: '',
@@ -27,7 +28,12 @@ export const Create = ({ data }: DataType) => {
   
   const { isCreate } = useContext(NavFormContext);
   
-  const actionCodeSettings = { url: `${process.env.NEXT_PUBLIC_PAGE}` };
+  const actionCodeSettings = { url: `${process.env.NEXT_PUBLIC_NEW_USER}` };
+  
+  const schemaValidation = Yup.object({
+    email: SchemaValidation().email,
+    password: SchemaValidation().password,
+  });
   
   const submitAccountData = useCallback(async ({
     email,
@@ -53,17 +59,7 @@ export const Create = ({ data }: DataType) => {
     <div className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
       <Formik
         initialValues={initialValues}
-        validationSchema={Yup.object({
-          email: Yup.string().email(data?.NavForm?.validateEmail).required(data?.NavForm?.validateRequired),
-          
-          password: Yup.string()
-          .min(9, data?.NavForm?.validatePasswordNum)
-          .matches(/[A-Z]+/g, data?.NavForm?.validatePasswordOl)
-          .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]/g, data?.NavForm?.validatePasswordHKik)
-          .matches(/[0-9]+/g, data?.NavForm?.validatePasswordOn)
-          .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePasswordSpec)
-          .required(data?.NavForm?.validateRequired),
-        })}
+        validationSchema={schemaValidation}
         onSubmit={submitAccountData}
       >
         <Form>

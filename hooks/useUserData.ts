@@ -7,13 +7,13 @@ export const useUserData = () => {
   const [pseudonym, setPseudonym] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   
-  const currentUser = auth.currentUser;
+  const user = auth.currentUser;
 
-  const docRef = doc(db, 'users', `${currentUser?.uid}`);
+  const docRef = doc(db, 'users', `${user?.uid}`);
   const getUserData = async () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      setPseudonym(docSnap.data()?.pseudonym);
+      setPseudonym(docSnap.data()?.pseudonym || user?.providerData[0].displayName);
       setDescription(docSnap.data()?.description)
     } else {
       console.log("No such document!");
@@ -22,7 +22,7 @@ export const useUserData = () => {
   
   useEffect(() => {
     onAuthStateChanged(auth, (user) => !!user && getUserData())
-  }, [docRef, pseudonym])
+  }, [docRef, pseudonym, description])
   
   return { pseudonym, description }
 }

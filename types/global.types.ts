@@ -12,3 +12,9 @@ export type UserDataType = {
   email: string,
   password: string
 }
+
+export type FileType = {
+  fileUrl: string;
+  description?: string;
+  time: string;
+}

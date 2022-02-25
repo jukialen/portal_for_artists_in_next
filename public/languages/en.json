@@ -55,6 +55,7 @@
     "comics": "Comics",
     "photographs": "Photographs",
     "animations": "Animations",
+    "videos": "Videos",
     "others": "Others",
     "friends": "Friends",
     "groups": "Groups",
@@ -144,6 +145,14 @@
     "send": "Send",
     "uploadFile": "File has been uploaded.",
     "notUploadFile": "File hasn't been uploaded."
+  },
+  "ZeroFiles": {
+    "photos": "No your photos.",
+    "likedPhotos": "No liked photos",
+    "animations": "No your photos.",
+    "likedAnimations": "No liked animations",
+    "videos": "No your videos.",
+    "likedVideos": "No liked videos"
   },
   "edit": "Edit",
   "cancel": "Cancel",

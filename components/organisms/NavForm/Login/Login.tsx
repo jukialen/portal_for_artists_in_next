@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../../firebase';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { DataType, UserDataType, FormType } from 'types/global.types';
 
@@ -23,6 +24,7 @@ const initialValues = {
   password: '',
 };
 
+
 export const Login = ({ data }: DataType) => {
   const { isLogin, showLoginForm } = useContext(NavFormContext);
   const { showMenu } = useContext(ShowMenuContext);
@@ -31,6 +33,11 @@ export const Login = ({ data }: DataType) => {
   const [valuesFields, setValuesFields] = useState<string>('');
   
   const { push } = useRouter();
+  
+  const schemaValidation = Yup.object({
+    email: SchemaValidation().email,
+    password: SchemaValidation().password,
+  });
   
   const hideMenuLogin = () => {
     showLoginForm();
@@ -45,12 +52,8 @@ export const Login = ({ data }: DataType) => {
         resetForm(initialValues);
         setValuesFields(data?.NavForm?.statusLogin);
         showLoginForm();
-        if (localStorage.getItem('uD')) {
-          await push('/app');
-          await showUser();
-        } else {
-          await push('/new-user');
-        }
+        await push('/app');
+        await showUser();
       } else {
         setValuesFields(data?.NavForm?.unVerified);
       }
@@ -69,17 +72,7 @@ export const Login = ({ data }: DataType) => {
     <div className={`${styles.login} ${isLogin ? styles.form__menu__active : ''}`}>
       <Formik
         initialValues={initialValues}
-        validationSchema={Yup.object({
-          email: Yup.string().email(data?.NavForm?.validateEmail).required(data?.NavForm?.validateRequired),
-          
-          password: Yup.string()
-          .min(9, data?.NavForm?.validatePasswordNum)
-          .matches(/[A-Z]+/g, data?.NavForm?.validatePasswordOl)
-          .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, data?.NavForm?.validatePasswordHKik)
-          .matches(/[0-9]+/g, data?.NavForm?.validatePasswordOn)
-          .matches(/[#?!@$%^&*-]+/g, data?.NavForm?.validatePasswordSpec)
-          .required(data?.NavForm?.validateRequired),
-        })}
+        validationSchema={schemaValidation}
         onSubmit={submitAccountData}
       >
         <Form>

@@ -54,6 +54,7 @@
     "comics": "Komiksy",
     "photographs": "Fotografie",
     "animations": "Animacje",
+    "videos": "Filmy",
     "others": "Inne",
     "friends": "Przyjaciele",
     "groups": "Grupy",
@@ -144,6 +145,14 @@
     "send": "Wyślij",
     "uploadFile": "Plik został wysłany.",
     "notUploadFile": "Plik nie został wysłany."
+  },
+  "ZeroFiles": {
+    "photos": "No your photos.",
+    "likedPhotos": "No liked photos",
+    "animations": "No your photos.",
+    "likedAnimations": "No liked animations",
+    "videos": "No your videos.",
+    "likedVideos": "No liked videos"
   },
   "edit": "Edytuj",
   "cancel": "Anuluj",

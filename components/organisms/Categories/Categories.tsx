@@ -1,16 +1,22 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
 import { DataType } from 'types/global.types';
 
 import styles from './Categories.module.scss';
+import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 
 export const Categories = ({ data }: DataType) => {
   const { asPath } = useRouter();
   
-  const [openSubCategories, setOpenCategories] = useState(false);
-  const changeOpenCategories = () => setOpenCategories(!openSubCategories);
+  const [arrowIcon, setArrowIcon] = useState(false);
+  const [openSubCategories, setOpenCategories] = useState(true);
+  
+  const changeOpenCategories = () => {
+    setOpenCategories(!openSubCategories);
+    setArrowIcon(!arrowIcon);
+  };
   
   
   return (
@@ -19,10 +25,16 @@ export const Categories = ({ data }: DataType) => {
         <a className={styles.link}>{data?.Aside?.all}</a>
       </Link>
       
-      <li onClick={changeOpenCategories}>
+      <li className={styles.shadow }>
         <Link href={asPath}>
-          <a className={styles.link}>{data?.Aside?.drawings}</a>
+          <a
+            className={`${styles.link} ${styles.withIcon} `}
+            onClick={changeOpenCategories}
+          ><p className={styles.p}>{data?.Aside?.drawings}</p>
+            {arrowIcon ? <TriangleDownIcon w='1.5rem' h='1.5rem' className={styles.icons} /> :
+              <TriangleUpIcon w='1.5rem' h='1.5rem' className={styles.icons} />}</a>
         </Link>
+        
         <ol className={openSubCategories ? '' : styles.hiddenElement}>
           <Link href='/drawings/realistic'>
             <a className={styles.link}>{data?.Aside?.realistic}</a>
@@ -40,10 +52,13 @@ export const Categories = ({ data }: DataType) => {
       </li>
       
       <Link href='/photographs'>
-        <a className={styles.link}>{data?.Aside?.photographs}</a>
+        <a className={`${styles.link} ${styles.photographs}`}>{data?.Aside?.photographs}</a>
       </Link>
       <Link href='/animations'>
         <a className={styles.link}>{data?.Aside?.animations}</a>
+      </Link>
+      <Link href='/movies'>
+        <a className={styles.link}>{data?.Aside?.movies}</a>
       </Link>
       <Link href='/others'>
         <a className={styles.link}>{data?.Aside?.others}</a>

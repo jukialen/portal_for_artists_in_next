@@ -20,18 +20,11 @@ export const Providers = () => {
   
   const signInWithProvider = async (provider: any) => {
     try {
-      await signInWithPopup(auth, provider)
-      if (localStorage.getItem('uD')) {
-        await push('/app');
-        await showUser();
-      } else {
-        await push('/new-user');
-      }
-      if (isCreate) {
-        showCreateForm()
-      } else if (isLogin) {
-        showLoginForm()
-      }
+      await signInWithPopup(auth, provider);
+      await push('/app');
+      await showUser();
+      isCreate && showCreateForm();
+      isLogin && showLoginForm();
     } catch (error) {}
   }
   
