@@ -46,6 +46,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     width='17.5rem'
     status={switchAlert(valueFields)}
     variant='left-accent'
+    fontSize='md'
   >
     <AlertIcon />
     {valueFields}

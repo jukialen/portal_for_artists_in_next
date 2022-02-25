@@ -39,13 +39,13 @@
 }
 
 .pseudonym__name,
-.about__me {
-  margin: 1.5rem;
+.about__me, .new__profile__photo {
+  margin: 1.5rem auto;
   display: flex;
   flex-flow: column;
 
   .title {
-    margin: .5rem;
+    margin: .5rem auto;
     align-self: center;
   }
 
@@ -54,6 +54,11 @@
     margin: 1rem auto;
     font-size: 1rem;
   }
+
+  .input {
+    width: 14rem;
+  }
+
   .description {
     width: 27rem;
     max-width: 84vw;
