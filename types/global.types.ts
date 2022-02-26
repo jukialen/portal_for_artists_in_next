@@ -9,8 +9,8 @@ export type FormType = {
 }
 
 export type UserDataType = {
-  email: string,
-  password: string
+  email?: string,
+  password?: string
 }
 
 export type FileType = {

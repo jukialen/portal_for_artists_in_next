@@ -59,7 +59,7 @@ export const VideoGallery = ({ data }: DataType) => {
   return (
     <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
       
-      <em className={styles.title}>{data?.Account?.gallery?.userFilesTitle}</em>
+      <em className={styles.title}>{data?.Account?.gallery?.userVideosTitle}</em>
       
       <div className={styles.user__videos}>
         {
@@ -85,7 +85,7 @@ export const VideoGallery = ({ data }: DataType) => {
         itemRender={pagination(nextPage)}
       />
       
-      <em className={styles.title}>{data?.Account?.gallery?.userLikedFiles}</em>
+      <em className={styles.title}>{data?.Account?.gallery?.userLikedVideos}</em>
       
       <div className={styles.like__videos}>
         <ZeroFiles text={data?.ZeroFiles?.likedVideos} />

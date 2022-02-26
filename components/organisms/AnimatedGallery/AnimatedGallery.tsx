@@ -52,7 +52,7 @@ export const AnimatedGallery = ({ data }: DataType) => {
   
   return (
     <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
-      <em className={styles.title}>{data?.Account?.gallery?.userFilesTitle}</em>
+      <em className={styles.title}>{data?.Account?.gallery?.userAnimationsTitle}</em>
       
       <div className={styles.user__animated__photos}>
         {
@@ -82,7 +82,7 @@ export const AnimatedGallery = ({ data }: DataType) => {
         itemRender={pagination(nextPage)}
       />
       
-      <em className={styles.title}>{data?.Account?.gallery?.userLikedFiles}</em>
+      <em className={styles.title}>{data?.Account?.gallery?.userLikedAnimations}</em>
       
       <div className={styles.like__animated__photos}>
         <ZeroFiles text={data?.ZeroFiles?.likedAnimations} />

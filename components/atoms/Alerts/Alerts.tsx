@@ -12,14 +12,19 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let status: string;
     
     switch (valueFields) {
+      case `${data?.PasswordAccount?.success}`:
+      case `${data?.Forgotten?.success}`:
       case `${data?.AnotherForm?.uploadFile}`:
+      case `${data?.Account?.profile?.successSending}`:
         return status = 'success';
       case 'Upload is running':
         return status = 'info';
+      case `${data?.PasswordAccount?.differentPasswords}`:
       case 'Upload is paused':
         return status = 'warning';
       case `${data?.AnotherForm?.notUploadFile}`:
-        return status = 'error';
+      case `${data?.error}`:
+        return status = 'error'
     }
   };
   

@@ -25,17 +25,23 @@ export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
       <h1 className={styles.title}>
         <Link href={logoLink}>
           <a>
-            <Image src='/pfartists.png' width={58} height={58} alt='Pfartists logo' />
+            <Image src='/pfartists.png' width={58} height={58} alt='Pfartists logo' quality={100} />
           </a>
         </Link>
       </h1>
-      
+  
       <button
         className={isMode ? styles.light__mode : styles.dark__mode}
         aria-label='mode button'
         onClick={changeMode}
       >
-        <Image src={isMode ? '/light__mode.svg' : '/dark__mode.svg'} width='40' height='40' aria-label='mode icon' />
+        <Image
+          src={isMode ? '/light__mode.svg' : '/dark__mode.svg'}
+          width='40'
+          height='40'
+          aria-label='mode icon'
+          quality={100}
+        />
       </button>
       
       <Nav titleFirstNav={titleFirstNav} titleSecondNav={titleSecondNav} />
@@ -45,7 +51,7 @@ export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
         aria-label='menu button'
         onClick={showMenu}
       >
-        <Image src={'/menu.svg'} width='40' height='40' aria-label='menu icon' />
+        <Image src={'/menu.svg'} width='40' height='40' aria-label='menu icon' quality={100} />
       </button>
     </header>
   );
