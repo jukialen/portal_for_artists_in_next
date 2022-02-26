@@ -58,7 +58,7 @@ export const Categories = ({ data }: DataType) => {
         <a className={styles.link}>{data?.Aside?.animations}</a>
       </Link>
       <Link href='/movies'>
-        <a className={styles.link}>{data?.Aside?.movies}</a>
+        <a className={styles.link}>{data?.Aside?.videos}</a>
       </Link>
       <Link href='/others'>
         <a className={styles.link}>{data?.Aside?.others}</a>
