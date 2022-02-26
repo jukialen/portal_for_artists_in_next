@@ -90,8 +90,12 @@
       "changePassword": "Zmień hasło"
     },
     "gallery": {
-      "userFilesTitle": "Twoje zdjęcia i rysunki",
-      "userLikedFiles": "Polubione zdjęcia i rysunki"
+      "userPhotosTitle": "Twoje zdjęcia i rysunki",
+      "userLikedPhotos": "Polubione zdjęcia i rysunki",
+      "userVideosTitle": "Twoje filmy",
+      "userLikedVideos": "Polubione filmy",
+      "userAnimationsTitle": "Twoje animacje",
+      "userLikedAnimations": "Polubione animacje"
     },
     "profile": {
       "aboutMe": "O mnie:",
@@ -154,6 +158,18 @@
     "videos": "No your videos.",
     "likedVideos": "No liked videos"
   },
+  "Forgotten": {
+    "title": "Zapomniałeś/aś hasła?",
+    "subtitle": "Wpisz adres e-mail.",
+    "buttonAria": "przycisk do resetowania hasła",
+    "success": "Sprawdź swoją skrzynkę mailową."
+  },
+  "PasswordAccount": {
+    "differentPasswords": "Hasła nie są takie same",
+    "buttonAria": "przycisk do aktualizacji hasła",
+    "success": "Hasło zostało zaktualizowane"
+  },
+  "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",
   "cancel": "Anuluj",
   "chooseTag": "Wybierz tag"

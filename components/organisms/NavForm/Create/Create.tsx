@@ -6,7 +6,7 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { DataType, UserDataType } from 'types/global.types';
+import { DataType, FormType, UserDataType } from 'types/global.types';
 
 import { FormError } from 'components/molecules/FormError/FormError';
 import { FormField } from 'components/molecules/FormField/FormField';
@@ -38,10 +38,10 @@ export const Create = ({ data }: DataType) => {
   const submitAccountData = useCallback(async ({
     email,
     password
-  }: UserDataType, { resetForm }) => {
+  }: UserDataType, { resetForm }: FormType) => {
     auth.useDeviceLanguage();
     setIsLoading(true);
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, email!, password!)
     .then((userCredential) => {
       resetForm(initialValues);
       sendEmailVerification(auth.currentUser!, actionCodeSettings);

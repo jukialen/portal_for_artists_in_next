@@ -1,5 +1,5 @@
 import { getDocs, Query, query, startAfter } from 'firebase/firestore';
-import { ReactElement } from 'react';
+import { ReactNode } from 'react';
 
 export const pagination = (nextPage: Query) => {
   const nextFiles = async () => {
@@ -9,7 +9,7 @@ export const pagination = (nextPage: Query) => {
     return query(nextPage, startAfter(lastVisible))
   };
   
-  const itemRender = (current: number, type: string, originalElement: ReactElement) => {
+  const itemRender = (current: number, type: string, originalElement: ReactNode) => {
     if (type === 'prev') {
       return <a>Previous</a>;
     }

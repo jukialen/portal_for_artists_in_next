@@ -12,7 +12,6 @@ import { DataType, EventType, FormType } from 'types/global.types';
 import { useUserData } from 'hooks/useUserData';
 
 import { FormError } from 'components/molecules/FormError/FormError';
-import { InfoField } from 'components/atoms/InfoField/InfoField';
 
 import styles from './ProfileAccount.module.scss';
 import defaultAvatar from 'public/defaultAvatar.png';
@@ -57,43 +56,47 @@ export const ProfileAccount = ({ data }: DataType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
   
-  const updatePseuAndDes = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: FormType) => {
+  const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: FormType) => {
     try {
-  
-      const fileRef = await ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
-  
-      const upload = uploadBytesResumable(fileRef, photo!);
-  
-      upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
-          const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setProgressUpload(progress);
-          switch (snapshot.state) {
-            case 'running':
-              setValuesFields('Upload is running');
-              break;
-            case 'paused':
-              setValuesFields('Upload is paused');
-              break;
-          }
-        }, (e: Error) => {
-          console.error(e);
-          setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
-        },
-        async () => {
-          const photoURL = await getDownloadURL(fileRef);
-          
-          setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-          setPhoto(null);
-  
-          await updateDoc(doc(db, 'users', `${user?.uid}`), {
-            pseudonym: newPseudonym,
-            description: newDescription
-          });
-  
-          await updateProfile(user, { photoURL: photoURL });
-  
-          setValuesFields(data?.NewUSer?.successSending);
+      photo === null && await updateDoc(doc(db, 'users', `${user?.uid}`), {
+          pseudonym: newPseudonym,
+          description: newDescription
         });
+      
+      if (photo !== null) {
+        const fileRef = ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
+  
+        const upload = uploadBytesResumable(fileRef, photo!);
+  
+        upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+            const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setProgressUpload(progress);
+            switch (snapshot.state) {
+              case 'running':
+                setValuesFields('Upload is running');
+                break;
+              case 'paused':
+                setValuesFields('Upload is paused');
+                break;
+            }
+          }, (e: Error) => {
+            console.error(e);
+            setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+          },
+          async () => {
+            const photoURL = await getDownloadURL(fileRef);
+      
+            setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+            setPhoto(null);
+      
+            await updateDoc(doc(db, 'users', `${user?.uid}`), {
+              pseudonym: newPseudonym,
+              description: newDescription
+            });
+      
+            await updateProfile(user, { photoURL: photoURL });
+          });
+      };
       
       resetForm(initialValues);
       setValuesFields(data?.Account?.profile?.successSending);
@@ -129,7 +132,7 @@ export const ProfileAccount = ({ data }: DataType) => {
       {form && (<Formik
         initialValues={initialValues}
         validationSchema={schemaNew}
-        onSubmit={updatePseuAndDes}
+        onSubmit={updateProfileData}
       >
         <Form>
           <div className={styles.new__profile__photo}>
@@ -174,8 +177,6 @@ export const ProfileAccount = ({ data }: DataType) => {
           </div>
           
           <FormError nameError='newDescription' />
-          
-          {!!valuesFields && <InfoField value={valuesFields} />}
           
           <button
             className={`${styles.button} button`}

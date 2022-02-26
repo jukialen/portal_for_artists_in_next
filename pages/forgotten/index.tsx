@@ -1,20 +1,18 @@
 import { useState } from 'react';
-import axios from 'axios';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
+
+import { FormType, UserDataType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
-import { InfoField } from 'components/atoms/InfoField/InfoField';
 
 import styles from './index.module.scss';
-import { getAuth, sendPasswordResetEmail, updatePassword } from 'firebase/auth';
-
-type ResetType = {
-  email: string;
-};
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 const initialValues = {
   email: '',
@@ -22,35 +20,36 @@ const initialValues = {
 
 export default function Forgotten() {
   const [valuesFields, setValuesFields] = useState<string>('');
+  const data = useHookSWR();
+  
+  const schemaValidation = Yup.object({
+    email: SchemaValidation().email,
+  });
   
   const auth = getAuth();
+  auth.useDeviceLanguage();
   
   const actionCodeSettings = { url: `${process.env.NEXT_PUBLIC_PAGE}` };
   
-  const reset__password = async ({ email }: ResetType, { resetForm }: any) => {
+  const reset__password = async ({ email }: UserDataType, { resetForm }: FormType) => {
     try {
-      const forgotPass = await sendPasswordResetEmail(auth, email, actionCodeSettings)
-      console.log('Your user received an email:', forgotPass);
+      await sendPasswordResetEmail(auth, email!, actionCodeSettings)
       resetForm(initialValues);
-      setValuesFields('Sprawdź skrzynkę e-mailową');
-    } catch (e: any) {
-      console.log(`An error occurred: error: ${e.code}, ${e.message}`);
-      setValuesFields('Spróbuj ponownie lub lub sprawdź połączenie z internetem');
-      
+      setValuesFields(data?.Forgotten?.success);
+    } catch (e) {
+      setValuesFields(data?.error);
     }
   };
   
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={Yup.object({
-        email: Yup.string().email(useHookSWR()?.NavForm.validateEmail).required(useHookSWR()?.NavForm.validateRequired),
-      })}
+      validationSchema={schemaValidation}
       onSubmit={reset__password}
     >
       <Form className={styles.forgotten}>
-        <h2 className={styles.title}>Did you forget your password?</h2>
-        <h3 className={styles.subtitle}>Please enter your e-mail.</h3>
+        <h2 className={styles.title}>{data?.Forgotten?.title}</h2>
+        <h3 className={styles.subtitle}>{data?.Forgotten?.subtitle}</h3>
         
         <FormField
           titleField={`${useHookSWR()?.NavForm?.email}:`}
@@ -64,12 +63,12 @@ export default function Forgotten() {
         <button
           type='submit'
           className={`button ${styles.submit__button}`}
-          aria-label='button for forgotten password'
+          aria-label={data?.Forgotten?.buttonAria}
         >
-          Wyślij
+          {data?.AnotherForm?.send}
         </button>
   
-        {!!valuesFields && <InfoField value={valuesFields} />}
+        {!!valuesFields && <Alerts valueFields={valuesFields} />}
       
       </Form>
     </Formik>

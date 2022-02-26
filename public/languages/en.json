@@ -90,8 +90,12 @@
       "changePassword": "Change password"
     },
     "gallery": {
-      "userFilesTitle": "Your photos and draws",
-      "userLikedFiles": "Liked photos and draws"
+      "userPhotosTitle": "Your photos and draws",
+      "userLikedPhotos": "Liked photos and draws",
+      "userVideosTitle": "Your videos",
+      "userLikedVideos": "Liked by others",
+      "userAnimationsTitle": "Your　animations",
+      "userLikedAnimations": "Liked　animations"
     },
     "profile": {
       "aboutMe": "About me:",
@@ -154,6 +158,18 @@
     "videos": "No your videos.",
     "likedVideos": "No liked videos"
   },
+  "Forgotten": {
+    "title": "Did you forget your password?",
+    "subtitle": "Please enter your e-mail.",
+    "buttonAria": "button to reset the button",
+    "success": "Check your mailbox."
+  },
+  "PasswordAccount": {
+    "differentPasswords": "Passwords aren't the same.",
+    "buttonAria": "button to update the password",
+    "success": "The password has been updated."
+  },
+  "error": "Try again or check your internet connection.",
   "edit": "Edit",
   "cancel": "Cancel",
   "chooseTag": "Choose tag"

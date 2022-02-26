@@ -90,11 +90,15 @@
       "changePassword": "パスポートが 変わります"
     },
     "gallery": {
-      "userFilesTitle": "your写真と素描",
-      "userLikedFiles": "好きのは写真と素描"
+      "userPhotosTitle": "貴職の写真と素描",
+      "userLikedPhotos": "好きの写真と素描",
+      "userVideosTitle": "貴職の映画",
+      "userLikedVideos": "好きの映画",
+      "userAnimationsTitle": "貴職のアニメーション",
+      "userLikedAnimations": "好きのアニメーション"
     },
     "profile": {
-      "aboutMe": "About me",
+      "aboutMe": "貴職は；",
       "ariaLabelButton": "Updating pseudonym and description button",
       "save": "セーブ",
       "successSending": "Profile has been updated.",
@@ -138,9 +142,9 @@
   "AnotherForm": {
     "pseudonym": "あだ名",
     "profilePhoto": "プロフィールの写真",
-    "description": "Description",
-    "tags": "Tags",
-    "file": "File",
+    "description": "叙述",
+    "tags": "タグ",
+    "file": "ファイル",
     "arialSendingFile": "sending file",
     "send": "送る",
     "uploadFile": "File has been uploaded.",
@@ -154,6 +158,13 @@
     "videos": "No your videos.",
     "likedVideos": "No liked videos"
   },
+  "Forgotten": {
+    "title": "Did you forget your password?",
+    "subtitle": "Please enter your e-mail.",
+    "buttonAria": "button to reset the button",
+    "success": "Check your mailbox."
+  },
+  "error": "Try again or check your internet connection.",
   "edit": "Edit",
   "cancel": "Cancel",
   "chooseTag": "Choose tag",

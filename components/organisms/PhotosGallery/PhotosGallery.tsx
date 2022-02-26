@@ -57,7 +57,7 @@ export const PhotosGallery = ({ data }: DataType) => {
   
   return (
     <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
-      <em className={styles.title}>{data?.Account?.gallery?.userFilesTitle}</em>
+      <em className={styles.title}>{data?.Account?.gallery?.userPhotosTitle}</em>
 
       <div className={styles.user__photos}>
         {
@@ -73,8 +73,6 @@ export const PhotosGallery = ({ data }: DataType) => {
             </Skeleton>) :
             <ZeroFiles text={data?.ZeroFiles?.photos} />
         }
-  
-        
       </div>
       
       <Pagination
@@ -88,7 +86,7 @@ export const PhotosGallery = ({ data }: DataType) => {
         itemRender={pagination(nextPage)}
       />
       
-      <em className={styles.title}>{data?.Account?.gallery?.userLikedFiles}</em>
+      <em className={styles.title}>{data?.Account?.gallery?.userLikedPhotos}</em>
       
       <div className={styles.like__photos}>
         <ZeroFiles text={data?.ZeroFiles?.likedPhotos} />

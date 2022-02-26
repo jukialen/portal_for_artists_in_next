@@ -45,7 +45,7 @@ export const Login = ({ data }: DataType) => {
   };
   
   const submitAccountData = async ({ email, password }: UserDataType, { resetForm }: FormType) => {
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, email!, password!)
     .then(async (userCredential) => {
       const user = userCredential.user;
       if (user.emailVerified) {
