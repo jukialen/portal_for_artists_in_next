@@ -24,14 +24,13 @@ Site's in full responsive on target devices from small smartphones to TV and SMA
 - axios;
 - Typescript;
 - Firebase;
-- Gsap + ScrollTrigger.
+- Gsap + ScrollTrigger;
+- Next-pwa.
 
 ## Branches:
 - <a href="https://github.com/jukialen/portal_for_artists_in_next">main</a> - Stable version;
 - <a href="https://github.com/jukialen/portal_for_artists_in_next/tree/Beta">Beta</a> - Beta version,
 - others.
-## Backend:
-Strapi (<a href="https://github.com/jukialen/portal_strapi">portal_strapi</a>) 
 
 ### Web site;
 https://pfartists.xyz

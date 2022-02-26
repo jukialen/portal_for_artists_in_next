@@ -98,7 +98,7 @@
       "userLikedAnimations": "好きのアニメーション"
     },
     "profile": {
-      "aboutMe": "貴職は；",
+      "aboutMe": "貴職は：",
       "ariaLabelButton": "Updating pseudonym and description button",
       "save": "セーブ",
       "successSending": "Profile has been updated.",
