@@ -5,6 +5,7 @@ import { Collapse } from 'antd';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import styles from './index.module.scss';
+import { HeadCom } from '../../components/atoms/HeadCom/HeadCom';
 
 export default function Faq() {
   const { Panel } = Collapse;
@@ -13,17 +14,7 @@ export default function Faq() {
   
   return (
     <section className='workspace'>
-      <Head>
-        <link
-          rel='alternate'
-          hrefLang={locale}
-          href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '' : `/${locale}`}${asPath}`}
-        />
-        <meta charSet='utf-8' />
-        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
-        <meta name='description' content='Main site for logged in users.' />
-        <title>{useHookSWR()?.title}</title>
-      </Head>
+      <HeadCom path={asPath} content='Faq site' />
       
       <h2 className={styles.h2}>Częste pytania</h2>
       

@@ -17,7 +17,7 @@ export default function Application() {
   
   return !loading ? (
     <section className='workspace'>
-      <HeadCom path={`${asPath}`} content='Main site for logged in users.' />
+      <HeadCom path={asPath} content='Main site for logged in users.' />
   
       <h2 className={styles.top__among__users}>{data?.App?.topAmongUsers}</h2>
       <Wrapper idWrapper='carouselTop' />

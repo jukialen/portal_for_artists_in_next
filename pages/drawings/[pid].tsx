@@ -11,7 +11,7 @@ export default function Drawings() {
   
   return !loading ? (
     <div className='workspace'>
-      <HeadCom path={`/${asPath}`} content='Sites with drawings and photos.' />
+      <HeadCom path={asPath} content='Sites with drawings and photos.' />
       <h1>podstrona z rysunkami</h1>
       <Wrapper idWrapper='drawingsWrapper' />
     </div>

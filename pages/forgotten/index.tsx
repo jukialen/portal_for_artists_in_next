@@ -13,6 +13,8 @@ import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './index.module.scss';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { HeadCom } from '../../components/atoms/HeadCom/HeadCom';
+import { useRouter } from 'next/router';
 
 const initialValues = {
   email: '',
@@ -26,6 +28,7 @@ export default function Forgotten() {
     email: SchemaValidation().email,
   });
   
+  const { asPath } = useRouter();
   const auth = getAuth();
   auth.useDeviceLanguage();
   
@@ -48,6 +51,7 @@ export default function Forgotten() {
       onSubmit={reset__password}
     >
       <Form className={styles.forgotten}>
+        <HeadCom path={asPath} content='The site for resetting password.' />
         <h2 className={styles.title}>{data?.Forgotten?.title}</h2>
         <h3 className={styles.subtitle}>{data?.Forgotten?.subtitle}</h3>
         

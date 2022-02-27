@@ -46,7 +46,7 @@ export default function Home() {
   
   return (
     <div className='workspace'>
-      <HeadCom path={`/${asPath}`} content='Main site.' />
+      <HeadCom path={asPath} content='Main site.' />
       <div className={styles.group__element}>
         <h1 className={styles.title}>{data?.Main?.title}</h1>
   
