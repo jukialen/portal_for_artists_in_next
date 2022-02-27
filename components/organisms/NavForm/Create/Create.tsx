@@ -11,7 +11,7 @@ import { DataType, FormType, UserDataType } from 'types/global.types';
 import { FormError } from 'components/molecules/FormError/FormError';
 import { FormField } from 'components/molecules/FormField/FormField';
 import { Providers } from 'components/molecules/Providers/Providers';
-import { InfoField } from 'components/atoms/InfoField/InfoField';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import { NavFormContext } from 'providers/NavFormProvider';
 
@@ -47,13 +47,12 @@ export const Create = ({ data }: DataType) => {
       sendEmailVerification(auth.currentUser!, actionCodeSettings);
       setValuesFields(data?.NavForm?.successInfoRegistration);
     })
-    .catch((error) => {
-      error.code === 'auth/email-already-in-use' && setValuesFields(data?.NavForm?.theSameEmail);
-      error.message === 'EMAIL_EXISTS' && setValuesFields(data?.NavForm?.theSameEmail);
-      setValuesFields(data?.NavForm?.setErrorMessageCreate);
+    .catch((e) => {
+      e.code === 'auth/email-already-in-use' ? setValuesFields(data?.NavForm?.theSameEmail) :
+      setValuesFields(data?.error);
     });
     setIsLoading(false);
-  }, [data?.NavForm?.setErrorMessageCreate, data?.NavForm?.successInfoRegistration]);
+  }, [data?.NavForm?.theSameEmail, data?.NavForm?.successInfoRegistration]);
   
   return (
     <div className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
@@ -91,7 +90,7 @@ export const Create = ({ data }: DataType) => {
             {isLoading ? data?.NavForm?.loadingRegistration : data?.NavForm?.createSubmit}
           </button>
   
-          {!!valuesFields && <InfoField value={valuesFields} />}
+          {!!valuesFields && <Alerts valueFields={valuesFields} />}
         </Form>
       </Formik>
       <p className={styles.separator}>__________________</p>

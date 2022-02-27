@@ -12,18 +12,23 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let status: string;
     
     switch (valueFields) {
-      case `${data?.PasswordAccount?.success}`:
-      case `${data?.Forgotten?.success}`:
-      case `${data?.AnotherForm?.uploadFile}`:
-      case `${data?.Account?.profile?.successSending}`:
+      case data?.NavForm?.statusLogin:
+      case data?.NavForm?.successInfoRegistration:
+      case data?.PasswordAccount?.success:
+      case data?.Forgotten?.success:
+      case data?.AnotherForm?.uploadFile:
+      case data?.Account?.profile?.successSending:
         return status = 'success';
       case 'Upload is running':
         return status = 'info';
-      case `${data?.PasswordAccount?.differentPasswords}`:
+      case data?.NavForm?.unVerified:
+      case data?.PasswordAccount?.differentPasswords:
       case 'Upload is paused':
         return status = 'warning';
-      case `${data?.AnotherForm?.notUploadFile}`:
-      case `${data?.error}`:
+      case data?.NavForm?.setErrorMessageLogin:
+      case data?.NavForm?.theSameEmail:
+      case data?.AnotherForm?.notUploadFile:
+      case data?.error:
         return status = 'error'
     }
   };
@@ -32,13 +37,23 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let color: string;
     
     switch (valueFields) {
-      case `${data?.AnotherForm?.uploadFile}`:
+      case data?.NavForm?.statusLogin:
+      case data?.NavForm?.successInfoRegistration:
+      case data?.PasswordAccount?.success:
+      case data?.Forgotten?.success:
+      case data?.AnotherForm?.uploadFile:
+      case data?.Account?.profile?.successSending:
         return color = 'green';
       case 'Upload is running':
         return color = 'blue';
+      case data?.NavForm?.unVerified:
+      case data?.PasswordAccount?.differentPasswords:
       case 'Upload is paused':
         return color = 'yellow';
-      case `${data?.AnotherForm?.notUploadFile}`:
+      case data?.NavForm?.setErrorMessageLogin:
+      case data?.NavForm?.theSameEmail:
+      case data?.AnotherForm?.notUploadFile:
+      case data?.error:
         return color = 'red';
     }
   };

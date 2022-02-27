@@ -11,7 +11,7 @@ import { DataType, FormType, UserDataType } from 'types/global.types';
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Providers } from 'components/molecules/Providers/Providers';
-import { InfoField } from 'components/atoms/InfoField/InfoField';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import { NavFormContext } from 'providers/NavFormProvider';
 import { ShowMenuContext } from 'providers/ShowMenuProvider';
@@ -104,7 +104,7 @@ export const Login = ({ data }: DataType) => {
             {data?.NavForm?.loginSubmit}
           </button>
   
-          {!!valuesFields && <InfoField value={valuesFields} />}
+          {!!valuesFields && <Alerts valueFields={valuesFields} />}
           
           <button className={`button ${styles.forgotten}`} onClick={forgotten__password}>
             I forgot my password
