@@ -58,8 +58,9 @@ export const Login = ({ data }: DataType) => {
         setValuesFields(data?.NavForm?.unVerified);
       }
     })
-    .catch(() => {
+    .catch((e) => {
       setValuesFields(data?.NavForm?.setErrorMessageLogin);
+      e.code === 'auth/user-not-found' && setValuesFields(data?.NavForm?.notExist)
     });
   };
   

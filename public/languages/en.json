@@ -12,6 +12,7 @@
     "setErrorMessageLogin": "Your e-mail or password is incorrect.",
     "unVerified": "Unverified e-mail.",
     "statusLogin": "You're logged in",
+    "notExist": "User doesn't exist.",
     "validateRequired": "Required",
     "validateUsernameFl": "First letter must be a big.",
     "validateUsernameHKik": "Name accept only letters. These can be Hiragana, Katakana and kanji characters",

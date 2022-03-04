@@ -25,6 +25,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case data?.PasswordAccount?.differentPasswords:
       case 'Upload is paused':
         return status = 'warning';
+      case data?.NavForm?.notExist:
       case data?.NavForm?.setErrorMessageLogin:
       case data?.NavForm?.theSameEmail:
       case data?.AnotherForm?.notUploadFile:
@@ -50,6 +51,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case data?.PasswordAccount?.differentPasswords:
       case 'Upload is paused':
         return color = 'yellow';
+      case data?.NavForm?.notExist:
       case data?.NavForm?.setErrorMessageLogin:
       case data?.NavForm?.theSameEmail:
       case data?.AnotherForm?.notUploadFile:

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { db, storage } from '../../../firebase';
-import { doc, updateDoc } from 'firebase/firestore';
 import { getAuth, updateProfile } from 'firebase/auth';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { UploadTaskSnapshot } from '@firebase/storage';
+import { doc, updateDoc } from 'firebase/firestore';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -12,13 +14,11 @@ import { DataType, EventType, FormType } from 'types/global.types';
 import { useUserData } from 'hooks/useUserData';
 
 import { FormError } from 'components/molecules/FormError/FormError';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './ProfileAccount.module.scss';
 import defaultAvatar from 'public/defaultAvatar.png';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { UploadTaskSnapshot } from '@firebase/storage';
 import { Progress } from '@chakra-ui/react';
-import { Alerts } from '../../atoms/Alerts/Alerts';
 
 
 type ProfileType = {
@@ -56,16 +56,18 @@ export const ProfileAccount = ({ data }: DataType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
   
+  const fileRef = ref(storage, `profilePhotos/${user?.uid}/${user?.uid}`);
+  
   const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: FormType) => {
+    const updateUsers = updateDoc(doc(db, 'users', `${user?.uid}`), {
+      pseudonym: newPseudonym,
+      description: newDescription
+    });
+    
     try {
-      photo === null && await updateDoc(doc(db, 'users', `${user?.uid}`), {
-          pseudonym: newPseudonym,
-          description: newDescription
-        });
+      photo === null && await updateUsers;
       
       if (photo !== null) {
-        const fileRef = ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
-  
         const upload = uploadBytesResumable(fileRef, photo!);
   
         upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
@@ -89,14 +91,11 @@ export const ProfileAccount = ({ data }: DataType) => {
             setValuesFields(`${data?.AnotherForm?.uploadFile}`);
             setPhoto(null);
       
-            await updateDoc(doc(db, 'users', `${user?.uid}`), {
-              pseudonym: newPseudonym,
-              description: newDescription
-            });
+            await updateUsers;
       
             await updateProfile(user, { photoURL: photoURL });
           });
-      };
+      }
       
       resetForm(initialValues);
       setValuesFields(data?.Account?.profile?.successSending);

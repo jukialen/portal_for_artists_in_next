@@ -12,6 +12,7 @@
     "setErrorMessageLogin": "メールかパスポートが正しくないです。",
     "unVerified": "メールがベリファイいませんでした。",
     "statusLogin": "ログイン中している。",
+    "notExist": "ユーザーは生きませｎ。",
     "validateRequired": "所要",
     "validateUsernameFl": "第一字が大きいでなければなりません。",
     "validateUsernameHKik": "名前は字だけ受け入れます。今、ひらがなとカタカナと漢字が出来ます。",

@@ -9,7 +9,7 @@ export type FormType = {
 }
 
 export type UserDataType = {
-  email?: string,
+  email?: string;
   password?: string
 }
 

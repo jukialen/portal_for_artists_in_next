@@ -8,6 +8,7 @@ type HeadComType = {
 }
 export const HeadCom = ({ path, content }: HeadComType) => {
   const { locale } = useRouter();
+  
   return (
     <Head>
       <link

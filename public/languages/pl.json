@@ -12,6 +12,7 @@
     "setErrorMessageLogin": "Niepoprawny e-mail lub hasło.",
     "unVerified": "Niezweryfikowany e-mail.",
     "statusLogin": "Zostałaś/eś zalogowana/y",
+    "notExist": "Użytkownik nie istnieje.",
     "validateRequired": "Wymagane",
     "validateUsernameFl": "Pierwsza litera musi być duża.",
     "validateUsernameHKik": "Imię przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji",
