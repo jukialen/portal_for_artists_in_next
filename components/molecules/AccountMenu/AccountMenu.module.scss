@@ -14,19 +14,19 @@
     }
 
     &:visited {
-      border-bottom: 0.3rem inset $link__visited;
+      border-bottom: 0.3rem inset $dark__background__light__color;
     }
 
     a:focus {
-      border-bottom: 0.3rem inset $link__focus;
+      border-bottom: 0.3rem inset;
     }
 
     a:hover {
-      border-bottom: 0.3rem inset $link__hover;
+      border-bottom: 0.3rem inset;
     }
 
     a:active {
-      border-bottom: 0.3rem inset $link__active;
+      border-bottom: 0.3rem inset;
     }
   }
 }

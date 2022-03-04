@@ -37,7 +37,7 @@ export const Layout: FC = ({ children }) => {
           }
         </ShowMenuProvider>
         <Aside />
-        <main className='main__container'>{children}</main>
+        <main className={`main__container ${isMode ? 'main__container--dark' : ''}`}>{children}</main>
       </div>
       <AffixButton />
       <Footer />
