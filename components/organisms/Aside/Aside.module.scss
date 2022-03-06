@@ -43,23 +43,24 @@
   }
 }
 
-@media (min-width: 320px) and (max-width: 767px) {
-  .aside {
-    width: 17rem;
-    margin: 3rem 0 0 -17rem;
-  }
-}
-
-@media (min-width: 674px) and (max-width: 981px){
-  .aside {
-    width: 18rem;
-    margin: 3rem 0 0 -18rem;
-
-  }
-}
+//@media (min-width: 320px) and (max-width: 767px) {
+//  .aside {
+//    width: 17rem;
+//    margin: 3rem 0 0 -17rem;
+//  }
+//}
+//
+//@media (min-width: 674px) and (max-width: 981px){
+//  .aside {
+//    width: 18rem;
+//    margin: 3rem 0 0 -18rem;
+//
+//  }
+//}
 
 @media (min-width: 982px) {
   .aside {
+    width: 17rem;
     position: sticky;
     margin: 0;
     padding: 5rem 0 0;
