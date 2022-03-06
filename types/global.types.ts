@@ -17,4 +17,11 @@ export type FileType = {
   fileUrl: string;
   description?: string;
   time: string;
+  tags?: string;
 }
+
+export type ArticleImgType = {
+  imgLink: string;
+  imgDescription?: string;
+  authorName?: string;
+};

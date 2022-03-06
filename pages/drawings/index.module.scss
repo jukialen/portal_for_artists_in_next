@@ -1,0 +1,58 @@
+@use 'styles/variables' as *;
+
+.user__gallery__in__account {
+	width: 100%;
+}
+
+.title {
+	font-size: 2rem;
+	display: inline-block;
+	margin: 3rem auto;
+}
+
+.user__drawings {
+	display: flex;
+	flex-flow: column wrap;
+	width: 100vw;
+	max-width: 40rem;
+	max-height: 94vh;
+	margin: 1.5rem auto;
+	scroll-behavior: smooth;
+	overflow-x: auto;
+	scrollbar-width: auto;
+	scrollbar-color: $another__color $fourth__color;
+
+	@media (min-width: 2000px) and (min-height: 1366px) {
+		max-height: 75vh;
+		max-width: 50vw;
+	}
+
+	&:active {
+		scrollbar-color: $fourth__color $another__color;
+	}
+	&::-webkit-scrollbar {
+		width: 15px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: $fourth__color;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: $another__color;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		width: 15px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: $third__color;
+		border-radius: 20px;
+	}
+
+	&::-webkit-scrollbar-thumb:active {
+		background: $another__color;
+		border-radius: 20px;
+	}
+}

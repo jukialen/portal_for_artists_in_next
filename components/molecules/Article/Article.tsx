@@ -1,16 +1,12 @@
 import Image from 'next/image';
 
-import styles from './Article.module.scss';
+import { ArticleImgType } from 'types/global.types';
 
-type articleImg = {
-  imgLink: string;
-  imgDescription: string;
-  authorName: string;
-};
+import styles from './Article.module.scss';
 
 const icon = 30;
 
-export const Article = ({ imgLink, imgDescription, authorName }: articleImg) => {
+export const Article = ({ imgLink, imgDescription, authorName }: ArticleImgType) => {
   return (
     <article className={styles.article}>
       <Image className={styles.item} src={imgLink} alt={imgDescription} width='280' height='280' />

@@ -4,6 +4,19 @@
   width: 18rem;
   background-color: $third__color;
   position: relative;
+  justify-self: center;
+  margin: .5rem;
+
+  &:hover {
+    z-index: 1;
+    margin: 3.2rem;
+    transform: scale(1.05);
+    transition: transform .5s ease-in-out;
+
+    .comments {
+      visibility: unset;
+    }
+  }
 }
 
 .item {
