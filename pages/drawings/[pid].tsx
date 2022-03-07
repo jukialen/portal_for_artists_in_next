@@ -14,7 +14,7 @@ import { FileType } from 'types/global.types';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
-import { photosCollectionRef } from 'references/referencesFirebase';
+import { allPhotosCollectionRef } from 'references/referencesFirebase';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
@@ -38,30 +38,30 @@ export default function Drawings() {
   useEffect(() => {
     switch (pid) {
       case 'realistic':
-        setNextPage(query(photosCollectionRef(),
-          orderBy('timeCreated', 'desc'),
+        setNextPage(query(allPhotosCollectionRef(),
           where('tag', 'in', ['Realistyczne', 'Realistic', '写実的']),
+          orderBy('timeCreated', 'desc'),
           limit(maxItems)
         ));
         break;
       case 'manga':
-        setNextPage(query(photosCollectionRef(),
-          orderBy('timeCreated', 'desc'),
+        setNextPage(query(allPhotosCollectionRef(),
           where('tag', 'in', ['Manga', 'マンガ']),
+          orderBy('timeCreated', 'desc'),
           limit(maxItems)
         ));
         break;
       case 'anime':
-        setNextPage(query(photosCollectionRef(),
-          orderBy('timeCreated', 'desc'),
+        setNextPage(query(allPhotosCollectionRef(),
           where('tag', 'in', ['Anime', 'アニメ']),
+          orderBy('timeCreated', 'desc'),
           limit(maxItems)
         ));
         break;
       case 'comics':
-        setNextPage(query(photosCollectionRef(),
-          orderBy('timeCreated', 'desc'),
+        setNextPage(query(allPhotosCollectionRef(),
           where('tag', 'in', ['Komiksy', 'Comics', 'コミック']),
+          orderBy('timeCreated', 'desc'),
           limit(maxItems)
         ));
         break;
@@ -74,8 +74,7 @@ export default function Drawings() {
   
   const downloadDrawings = async () => {
     try {
-      // @ts-ignore
-      onSnapshot(nextPage, (querySnapshot: QuerySnapshot) => {
+      onSnapshot(nextPage!, (querySnapshot: QuerySnapshot) => {
           
           const filesArray: FileType[] = [];
           

@@ -1,25 +1,21 @@
-import { addDoc, collection, CollectionReference } from 'firebase/firestore';
-import { auth, db, storage } from '../firebase';
-import { UploadTaskSnapshot } from '@firebase/storage';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { collection, collectionGroup } from 'firebase/firestore';
+import { auth, db } from '../firebase';
 
 export const photosCollectionRef = () => {
   const user = auth?.currentUser;
-  const ref = collection(db, `users/${user?.uid}/photos`);
-  
-  return ref;
+  return collection(db, `users/${user?.uid}/photos`);
 }
 
 export const videosCollectionRef = () => {
   const user = auth?.currentUser;
-  const ref = collection(db, `users/${user?.uid}/videos`);
-  
-  return ref;
+  return collection(db, `users/${user?.uid}/videos`);
 }
 
 export const animationsCollectionRef = () => {
   const user = auth?.currentUser;
-  const ref = collection(db, `users/${user?.uid}/animations`);
-  
-  return ref;
+  return collection(db, `users/${user?.uid}/animations`);
 }
+
+export const allPhotosCollectionRef = () => collectionGroup(db, 'photos');
+export const allAnimatedCollectionRef = () => collectionGroup(db, 'animations');
+export const allVideosCollectionRef = () => collectionGroup(db, 'videos');
