@@ -6,7 +6,7 @@
   position: absolute;
   top: 3rem;
   right: 0;
-  margin-right: -17rem;
+  transform: translate(17rem);
   background-color: $primary__color;
 
   .list {
@@ -25,6 +25,7 @@
     width: auto;
     position: static;
     margin: auto 0;
+    transform: translate(0);
     justify-self: end;
     align-self: center;
     background: none;
@@ -43,6 +44,6 @@
 /*MENU*/
 
 .menu__active {
-  margin-right: 0;
-  transition: margin-right 0.8s ease-in-out;
+  transform: translate(0);
+  transition: transform 1.2s .05s ease-in-out;
 }
