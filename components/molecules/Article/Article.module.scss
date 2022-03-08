@@ -1,46 +1,68 @@
 @use 'styles/variables' as *;
 
 .article {
-  width: 18rem;
+  width: 100%;
+  min-width: 17.5rem;
   background-color: $third__color;
-  position: relative;
   justify-self: center;
-  margin: .5rem;
+  margin: 1rem auto;
+  position: relative;
 
-  &:hover {
-    z-index: 1;
-    margin: 3.2rem;
-    transform: scale(1.05);
-    transition: transform .5s ease-in-out;
+  .item {
+    object-fit: contain;
+  }
 
+  .options {
+    background: $third__color;
+
+    .bottomPanel {
+      display: grid;
+      grid-template-columns: 1fr 4rem;
+      margin-top: 1rem;
+
+      .author__name {
+        margin: .5rem 2rem;
+        text-align: left;
+      }
+
+      .share {
+        border: 1px solid $third__color;
+        background: $third__color;
+        position: relative;
+        justify-self: flex-start;
+
+        .share__options {
+          display: none;
+          visibility: hidden;
+          position: absolute;
+          align-items: center;
+          background: $third__color;
+          right: 3rem;
+          bottom: -.25rem;
+          padding-right: 1rem;
+
+          .icon {
+            width: 2rem;
+            height: 2rem;
+            margin: .5rem;
+          }
+        }
+
+        .share__options__active {
+          display: flex;
+          visibility: unset;
+        }
+      }
+    }
     .comments {
-      visibility: unset;
+      width: 15rem;
+      max-width: 70%;
+      height: 2rem;
+      border: 1px;
+      margin: 1rem auto 0;
+      cursor: pointer;
     }
   }
 }
 
-.item {
-  display: block;
-  position: absolute;
-  object-fit: contain;
-}
 
-.bottomPanel {
-  display: grid;
-  grid-template-columns: 1fr 1fr
-}
-
-.author__name {
-  margin: 0.5rem 0 0.5rem 0.5rem;
-  text-align: left;
-}
-
-.share__options {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.icon {
-  margin: 0.4rem;
-}

@@ -117,7 +117,6 @@ export default function Drawings() {
           userDrawings !== [] ? userDrawings.map(({ fileUrl, time, description }: FileType) => <Skeleton
               isLoaded={loadingFiles}
               key={time}
-              margin='1rem'
             >
             <Article imgLink={fileUrl} imgDescription={description} />
             </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />
