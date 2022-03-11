@@ -9,23 +9,22 @@ import { useState } from 'react';
 
 const icon = 30;
 
-export const Article = ({ imgLink, imgDescription, authorName = 'test1234W' }: ArticleImgType) => {
+export const Article = ({ imgLink, imgDescription, authorName, unopt }: ArticleImgType) => {
   const [share, setShare] = useState(false);
 
   const showShare = () => setShare(!share);
-  
   let img = 600;
-  
+ 
   return (
     <div className={styles.article}>
-      <Image className={styles.item} src={imgLink} alt={imgDescription} width={img} height={img} />
+      <Image className={styles.item} src={imgLink} alt={imgDescription} width={img} height={img} unoptimized={unopt} priority />
       <div className={styles.options}>
         <div className={styles.bottomPanel}>
           <div className={styles.author__name}>
             <a href='#'>{authorName}</a>
           </div>
           
-          <button className={styles.share}>
+          <div className={styles.share}>
               <IconButton
                 icon={<AiOutlineShareAlt />}
                 variant='solid'
@@ -68,7 +67,7 @@ export const Article = ({ imgLink, imgDescription, authorName = 'test1234W' }: A
               </a>
             </div>
           
-          </button>
+          </div>
         </div>
         <button className={styles.comments}>Show comments</button>
       </div>

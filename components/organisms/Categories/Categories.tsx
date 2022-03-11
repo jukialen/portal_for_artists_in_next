@@ -21,10 +21,6 @@ export const Categories = ({ data }: DataType) => {
   
   return (
     <ol className={styles.categories}>
-      <Link href='/all'>
-        <a className={styles.link}>{data?.Aside?.all}</a>
-      </Link>
-      
       <li className={styles.shadow }>
         <Link href={asPath}>
           <a
