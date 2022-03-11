@@ -100,9 +100,9 @@ export const FilesUpload = () => {
             fileUrl: url,
             description: refName,
             tag: tags,
-            timeCreated: Date.now()
+            timeCreated: Date.now(),
+            uid: user?.uid
           });
-    
           setValuesFields(`${data?.AnotherForm?.uploadFile}`);
           setFile(null);
           resetForm(initialValues);
