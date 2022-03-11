@@ -18,10 +18,12 @@ export type FileType = {
   description?: string;
   time: string;
   tags?: string;
+  pseudonym?: string;
 }
 
 export type ArticleImgType = {
   imgLink: string;
   imgDescription?: string;
   authorName?: string;
+  unopt?: boolean;
 };
