@@ -59,17 +59,17 @@ export const ProfileAccount = ({ data }: DataType) => {
   const fileRef = ref(storage, `profilePhotos/${user?.uid}/${user?.uid}`);
   
   const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: FormType) => {
-    const updateUsers = updateDoc(doc(db, 'users', `${user?.uid}`), {
+    const updateUsers = updateDoc(doc(db, `users/${user.uid}`), {
       pseudonym: newPseudonym,
       description: newDescription
     });
-    
+  
     try {
       photo === null && await updateUsers;
-      
+    
       if (photo !== null) {
         const upload = uploadBytesResumable(fileRef, photo!);
-  
+      
         upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
             const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             setProgressUpload(progress);
@@ -82,7 +82,6 @@ export const ProfileAccount = ({ data }: DataType) => {
                 break;
             }
           }, (e: Error) => {
-            console.error(e);
             setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
           },
           async () => {
