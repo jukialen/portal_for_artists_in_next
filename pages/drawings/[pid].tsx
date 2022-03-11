@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import {
-  limit,
-  onSnapshot,
-  orderBy,
-  Query,
-  query,
-  QueryDocumentSnapshot,
-  QuerySnapshot,
-  where
-} from 'firebase/firestore';
+import { limit, onSnapshot, orderBy, Query, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
 import { FileType } from 'types/global.types';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
@@ -29,68 +20,56 @@ export default function Drawings() {
   const loading = useCurrentUser('/');
   
   const maxItems: number = 10;
-
+  
   const data = useHookSWR();
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
-  const [nextPage, setNextPage] =useState<Query>();
+  const [nextPageArray, setNextPageArray] = useState<string[]>([]);
+  
+  let nextPage: Query;
   
   useEffect(() => {
     switch (pid) {
       case 'realistic':
-        setNextPage(query(allPhotosCollectionRef(),
-          where('tag', 'in', ['Realistyczne', 'Realistic', '写実的']),
-          orderBy('timeCreated', 'desc'),
-          limit(maxItems)
-        ));
+        setNextPageArray(['Realistyczne', 'Realistic', '写実的']);
         break;
       case 'manga':
-        setNextPage(query(allPhotosCollectionRef(),
-          where('tag', 'in', ['Manga', 'マンガ']),
-          orderBy('timeCreated', 'desc'),
-          limit(maxItems)
-        ));
+        setNextPageArray(['Manga', 'マンガ']);
         break;
       case 'anime':
-        setNextPage(query(allPhotosCollectionRef(),
-          where('tag', 'in', ['Anime', 'アニメ']),
-          orderBy('timeCreated', 'desc'),
-          limit(maxItems)
-        ));
+        setNextPageArray(['Anime', 'アニメ']);
         break;
       case 'comics':
-        setNextPage(query(allPhotosCollectionRef(),
-          where('tag', 'in', ['Komiksy', 'Comics', 'コミック']),
-          orderBy('timeCreated', 'desc'),
-          limit(maxItems)
-        ));
+        setNextPageArray(['Komiksy', 'Comics', 'コミック']);
         break;
     }
     
-    console.log('as', pid);
-    
-  }, [pid, data?.Aside?.anime, data?.Aside?.comics, data?.Aside?.manga, data?.Aside?.realistic]);
-  
+  }, [pid]);
   
   const downloadDrawings = async () => {
     try {
-      onSnapshot(nextPage!, (querySnapshot: QuerySnapshot) => {
-          
-          const filesArray: FileType[] = [];
-          
+      nextPage = query(allPhotosCollectionRef(),
+        where('tag', 'in', nextPageArray),
+        orderBy('timeCreated', 'desc'),
+        limit(maxItems)
+      );
+  
+      onSnapshot(nextPage, (querySnapshot) => {
+          const drawingsArray: FileType[] = [];
+      
           console.log(pid);
           console.log('f2', nextPage);
-    
+      
           querySnapshot.forEach((doc: QueryDocumentSnapshot) => {
-            filesArray.push({
+            drawingsArray.push({
               fileUrl: doc.data().fileUrl,
               time: doc.data().timeCreated,
-              tags: doc.data().tags,
+              tags: doc.data().tag,
               description: doc.data().description
             });
           });
-          console.log('array', filesArray);
-          setUserDrawings(filesArray);
+          console.log('array', drawingsArray);
+          setUserDrawings(drawingsArray);
           setLoadingFiles(true);
         },
         (e: Error) => {
@@ -103,7 +82,7 @@ export default function Drawings() {
   
   useEffect(() => {
     downloadDrawings();
-  }, [nextPage]);
+  }, [nextPageArray]);
   
   return !loading ? (
     <div className='workspace'>
@@ -121,8 +100,6 @@ export default function Drawings() {
             <Article imgLink={fileUrl} imgDescription={description} />
             </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />
         }</div>
-  
-        {/*{!userDrawings && <ZeroFiles text={data?.ZeroFiles?.videos} />}*/}
       </article>
     </div>
   ) : null;
