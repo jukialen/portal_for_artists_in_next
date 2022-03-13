@@ -121,7 +121,7 @@ export default function Drawings() {
         <em className={styles.title}>{data?.Aside?.category}: {index}</em>
         
         <div className={styles.user__drawings}>{
-          userDrawings !== [] ? userDrawings.map(({ fileUrl, time, description, pseudonym }: FileType) => <Skeleton
+          userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym }: FileType) => <Skeleton
             isLoaded={loadingFiles}
             key={time}
           >

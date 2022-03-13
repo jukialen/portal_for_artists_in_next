@@ -14,6 +14,7 @@ import { ProfileAccount } from 'components/organisms/ProfileAccount/ProfileAccou
 import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
 
 import styles from './index.module.scss';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { DeleteAccount } from '../../components/atoms/DeleteAccount/DeleteAccount';
 
 export default function Account() {
@@ -21,6 +22,10 @@ export default function Account() {
   const data = useHookSWR();
   const loading = useCurrentUser('/');
   const { pseudonym } = useUserData();
+  
+  const marginTabs = '2rem';
+  const backColor = '#FFD068';
+  const borRadius = '0 1rem/3rem';
   
   return !loading ? (
     <section className='workspace'>
@@ -33,12 +38,59 @@ export default function Account() {
       <AccountData data={data} />
       
       <FilesUpload />
-      
-      <PhotosGallery data={data} />
-      
-      <AnimatedGallery data={data} />
-      
-      <VideoGallery data={data} />
+      <Tabs
+        size='sm'
+        align='center'
+        justifySelf='center'
+        maxW='100vw'
+        m='4rem auto'
+        gap='2rem'
+        isLazy
+        isFitted
+        variant='enclosed-colored'
+      >
+        <TabList
+          width='51%'
+          flexWrap='wrap'
+          gap='2rem'
+          m='auto'
+          border='none'
+          role='tablist'
+        >
+          <Tab
+            h='2rem'
+            borderRadius={borRadius}
+            role='tab'
+          >
+            Photos
+          </Tab>
+          <Tab
+            h='2rem'
+            borderRadius={borRadius}
+            role='tab'
+          >
+            Animations
+          </Tab>
+          <Tab
+            h='2rem'
+            borderRadius={borRadius}
+            role='tab'
+          >
+            Videos
+          </Tab>
+        </TabList>
+        <TabPanels padding={0}>
+          <TabPanel role='tabpanel'>
+            <PhotosGallery data={data} />
+          </TabPanel>
+          <TabPanel role='tabpanel'>
+            <AnimatedGallery data={data} />
+          </TabPanel>
+          <TabPanel role='tabpanel'>
+            <VideoGallery data={data} />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
       
       <ProfileAccount data={data} />
       

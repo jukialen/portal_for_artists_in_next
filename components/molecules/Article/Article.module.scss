@@ -8,6 +8,10 @@
   margin: 1rem auto;
   position: relative;
 
+  @media (min-width: 320px) {
+    min-width: 20rem;
+  }
+
   .item {
     object-fit: contain;
   }

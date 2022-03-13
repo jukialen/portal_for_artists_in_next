@@ -156,7 +156,8 @@
     "animations": "No your photos.",
     "likedAnimations": "No liked animations",
     "videos": "No your videos.",
-    "likedVideos": "No liked videos"
+    "likedVideos": "No liked videos",
+    "files": "No found files."
   },
   "Forgotten": {
     "title": "Did you forget your password?",

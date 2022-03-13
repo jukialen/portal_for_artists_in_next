@@ -1,0 +1,15 @@
+@use 'styles/variables' as *;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  max-width: 40rem;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto;
+
+  @media (min-width: 2000px) and (min-height: 1366px) {
+    max-width: 50vw;
+  }
+}

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Image from 'next/image';
 
 import { ArticleImgType } from 'types/global.types';
@@ -5,7 +6,6 @@ import { ArticleImgType } from 'types/global.types';
 import styles from './Article.module.scss';
 import { IconButton } from '@chakra-ui/react';
 import { AiOutlineShareAlt } from 'react-icons/ai';
-import { useState } from 'react';
 
 const icon = 30;
 

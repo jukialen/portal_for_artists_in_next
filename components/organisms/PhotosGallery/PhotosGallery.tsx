@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   limit,
   onSnapshot,
@@ -7,24 +7,19 @@ import {
 } from 'firebase/firestore';
 
 import { photosCollectionRef } from 'references/referencesFirebase';
-import { pagination } from 'helpers/pagination';
 
 import { DataType, FileType } from 'types/global.types';
 
-import { Photos } from 'components/atoms/Photos/Photos';
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+import { Article } from 'components/molecules/Article/Article';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-
-import { ModeContext } from 'providers/ModeProvider';
 
 import styles from './PhotosGallery.module.scss';
 import { Skeleton } from '@chakra-ui/react';
-import { Pagination } from 'antd';
 
 export const PhotosGallery = ({ data }: DataType) => {
   const maxItems: number = 20;
   const nextPage = query(photosCollectionRef(), orderBy('timeCreated', 'desc'), limit(maxItems));
-  
-  const { isMode } = useContext(ModeContext);
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -54,37 +49,22 @@ export const PhotosGallery = ({ data }: DataType) => {
     downloadFiles();
   }, []);
   
-  
   return (
     <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
       <em className={styles.title}>{data?.Account?.gallery?.userPhotosTitle}</em>
 
-      <div className={styles.user__photos}>
+      <Wrapper>
         {
-          userPhotos !== [] ? userPhotos.map(({ fileUrl, description, time }: FileType) => <Skeleton
+          userPhotos.length > 0 ?
+            userPhotos.map(({ fileUrl, description, time }: FileType) => <Skeleton
               isLoaded={loading}
               key={time}
-              margin='1rem'
             >
-              <Photos
-                link={fileUrl}
-                description={description}
-              />
+            <Article imgLink={fileUrl} imgDescription={description} />
             </Skeleton>) :
             <ZeroFiles text={data?.ZeroFiles?.photos} />
         }
-      </div>
-      
-      <Pagination
-        className={`pagination ${isMode ? 'pagination-dark' : ''}`}
-        defaultCurrent={1}
-        defaultPageSize={maxItems}
-        showSizeChanger={false}
-        total={userPhotos.length}
-        simple
-        hideOnSinglePage
-        itemRender={pagination(nextPage)}
-      />
+      </Wrapper>
       
       <em className={styles.title}>{data?.Account?.gallery?.userLikedPhotos}</em>
       

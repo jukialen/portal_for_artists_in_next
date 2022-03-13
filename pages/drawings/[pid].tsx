@@ -93,12 +93,13 @@ export default function Drawings() {
       <em className={styles.title}>{data?.Aside?.category}: {pid}</em>
       
         <div className={styles.user__drawings}>{
-          userDrawings !== [] ? userDrawings.map(({ fileUrl, time, description }: FileType) => <Skeleton
+          userDrawings.length > 0 ?
+            userDrawings.map(({ fileUrl, time, description }: FileType) => <Skeleton
               isLoaded={loadingFiles}
               key={time}
             >
             <Article imgLink={fileUrl} imgDescription={description} />
-            </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />
+            </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.files} />
         }</div>
       </article>
     </div>
