@@ -92,6 +92,7 @@ a {
 .workspace {
   display: flex;
   flex-direction: column;
+  min-height: 95vh;
   margin: 4rem auto;
   padding-top: 3rem;
 }

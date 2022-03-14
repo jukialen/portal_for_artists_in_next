@@ -13,6 +13,7 @@ import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import styles from './index.module.scss';
 import { Skeleton } from '@chakra-ui/react';
 import { Article } from 'components/molecules/Article/Article';
+import { Wrapper } from '../../components/atoms/Wrapper/Wrapper';
 
 export default function Drawings() {
   const router = useRouter();
@@ -92,7 +93,7 @@ export default function Drawings() {
       
       <em className={styles.title}>{data?.Aside?.category}: {pid}</em>
       
-        <div className={styles.user__drawings}>{
+       <Wrapper>{
           userDrawings.length > 0 ?
             userDrawings.map(({ fileUrl, time, description }: FileType) => <Skeleton
               isLoaded={loadingFiles}
@@ -100,7 +101,7 @@ export default function Drawings() {
             >
             <Article imgLink={fileUrl} imgDescription={description} />
             </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.files} />
-        }</div>
+       }</Wrapper>
       </article>
     </div>
   ) : null;

@@ -66,12 +66,6 @@ export const VideoGallery = ({ data }: DataType) => {
             <ZeroFiles text={data?.ZeroFiles?.videos} />
         }
       </Wrapper>
-      
-      <em className={styles.title}>{data?.Account?.gallery?.userLikedVideos}</em>
-      
-      <div className={styles.like__videos}>
-        <ZeroFiles text={data?.ZeroFiles?.likedVideos} />
-      </div>
     </article>
   );
 };

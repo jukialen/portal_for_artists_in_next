@@ -19,7 +19,9 @@ export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
   const { isMode, changeMode } = useContext(ModeContext);
   
   const { showMenu } = useContext(ShowMenuContext);
-
+  
+  const image = 40;
+  
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>
@@ -29,7 +31,7 @@ export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
           </a>
         </Link>
       </h1>
-  
+      
       <button
         className={isMode ? styles.light__mode : styles.dark__mode}
         aria-label='mode button'
@@ -37,8 +39,8 @@ export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
       >
         <Image
           src={isMode ? '/light__mode.svg' : '/dark__mode.svg'}
-          width='40'
-          height='40'
+          width={image}
+          height={image}
           aria-label='mode icon'
           quality={100}
         />
@@ -51,7 +53,7 @@ export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
         aria-label='menu button'
         onClick={showMenu}
       >
-        <Image src={'/menu.svg'} width='40' height='40' aria-label='menu icon' quality={100} />
+        <Image src={'/menu.svg'} width={image} height={image} aria-label='menu icon' quality={100} />
       </button>
     </header>
   );

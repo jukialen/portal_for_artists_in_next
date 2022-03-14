@@ -60,12 +60,6 @@ export const AnimatedGallery = ({ data }: DataType) => {
             <ZeroFiles text={data?.ZeroFiles?.animations} />
         }
       </div>
-      
-      <em className={styles.title}>{data?.Account?.gallery?.userLikedAnimations}</em>
-      
-      <div className={styles.like__animated__photos}>
-        <ZeroFiles text={data?.ZeroFiles?.likedAnimations} />
-      </div>
     </article>
   );
 };
