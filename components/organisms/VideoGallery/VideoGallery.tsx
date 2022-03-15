@@ -12,7 +12,7 @@ import { videosCollectionRef } from 'references/referencesFirebase';
 import { DataType, FileType } from 'types/global.types';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
-import { Videos } from 'components/atoms/Videos/Videos';
+import { Videos } from 'components/molecules/Videos/Videos';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 
 import styles from './VideoGallery.module.scss';

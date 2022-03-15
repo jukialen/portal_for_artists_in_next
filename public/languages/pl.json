@@ -69,8 +69,9 @@
     "changeLanguage": "Zmiana języka"
   },
   "App": {
-    "topAmongUsers": "TOP10 według użytkowników",
-    "liked": "Ostatnie 10 polubionych"
+    "lastPhotos": "Ostatnie zdjęcia",
+    "lastAnimations": "Ostatnie animacje",
+    "lastVideos": "Ostatnie filmy"
   },
   "Account": {
     "aMenu": {

@@ -7,19 +7,24 @@ import {
   onSnapshot,
   orderBy,
   Query,
-  query, QueryDocumentSnapshot,
+  query,
+  QueryDocumentSnapshot,
   where
 } from 'firebase/firestore';
 import { FileType } from 'types/global.types';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
-import { allVideosCollectionRef, allPhotosCollectionRef, allAnimatedCollectionRef } from 'references/referencesFirebase';
+import {
+  allAnimatedCollectionRef,
+  allPhotosCollectionRef,
+  allVideosCollectionRef
+} from 'references/referencesFirebase';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Article } from 'components/molecules/Article/Article';
-import { Videos } from 'components/atoms/Videos/Videos';
+import { Videos } from 'components/molecules/Videos/Videos';
 
 import styles from './categories_index.module.scss';
 import { Skeleton } from '@chakra-ui/react';
@@ -127,13 +132,16 @@ export default function Drawings() {
           >
             {
               index === 'videos' ?
-              <Videos link={fileUrl} /> :
-              <Article
-                imgLink={fileUrl}
-                imgDescription={description}
-                authorName={pseudonym}
-                unopt={index === 'animations'}
-              />
+                <Videos
+                  link={fileUrl}
+                  authorName={pseudonym}
+                /> :
+                <Article
+                  imgLink={fileUrl}
+                  imgDescription={description}
+                  authorName={pseudonym}
+                  unopt={index === 'animations'}
+                />
             }
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />
         }</div>

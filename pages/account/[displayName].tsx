@@ -42,6 +42,7 @@ export default function Account() {
         m='0 auto'
         gap='2rem'
         isLazy
+        lazyBehavior='keepMounted'
         isFitted
         variant='unstyled'
       >
@@ -119,6 +120,7 @@ export default function Account() {
               m='5rem auto'
               gap='2rem'
               isLazy
+              lazyBehavior='keepMounted'
               isFitted
               variant='unstyled'
             >
