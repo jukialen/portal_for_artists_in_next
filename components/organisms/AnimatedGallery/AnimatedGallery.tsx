@@ -10,6 +10,8 @@ import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 
 import styles from './AnimatedGallery.module.scss';
 import { Skeleton } from '@chakra-ui/react';
+import { ref } from 'firebase/storage';
+import { auth, storage } from '../../../firebase';
 
 export const AnimatedGallery = ({ data }: DataType) => {
   const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
@@ -17,6 +19,7 @@ export const AnimatedGallery = ({ data }: DataType) => {
   
   const maxItems: number = 15;
   const nextPage = query(animationsCollectionRef(), orderBy('timeCreated', 'desc'), limit(maxItems));
+  const user = auth?.currentUser;
   
   const downloadAnimations = async () => {
     try {
@@ -55,7 +58,14 @@ export const AnimatedGallery = ({ data }: DataType) => {
               isLoaded={loading}
               key={time}
             >
-              <Article imgLink={fileUrl} imgDescription={description} unopt />
+              <Article
+                imgLink={fileUrl}
+                refFile={animationsCollectionRef()}
+                subCollection='animations'
+                refStorage={ref(storage, `${user?.uid}/animations/${description}`)}
+                imgDescription={description}
+                unopt
+              />
             </Skeleton>) :
             <ZeroFiles text={data?.ZeroFiles?.animations} />
         }

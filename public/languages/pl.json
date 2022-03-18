@@ -168,6 +168,16 @@
     "buttonAria": "przycisk do aktualizacji hasła",
     "success": "Hasło zostało zaktualizowane"
   },
+  "DeletionFile": {
+    "loadingText": "Usuwanie",
+    "deletionButton": "Usuń",
+    "title": "Usunięcie pliku",
+    "question": "Jesteś pewien? Po wykonaniu tej czynności nie można jej cofnąć.",
+    "cancelButton": "Cofnij",
+    "deleteButton": "Usuń",
+    "deleting": "Usuwanie pliku.",
+    "deleted": "Usunięto plik"
+  },
   "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",
   "cancel": "Anuluj",

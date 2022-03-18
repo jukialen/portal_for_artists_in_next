@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
 
+import { photosCollectionRef, animationsCollectionRef, videosCollectionRef } from 'references/referencesFirebase';
+
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 
 import styles from './index.module.scss';
@@ -23,42 +25,160 @@ export default function Application() {
   
       <h2 className={styles.top__among__users}>{data?.App?.lastPhotos}</h2>
       <AppWrapper>
-        <Article imgLink='/#' />
-        <Article imgLink='/#' />
-        <Article imgLink='/#' />
-        <Article imgLink='/#' />
-        <Article imgLink='/#' />
-        <Article imgLink='/#' />
-        <Article imgLink='/#' />
-        <Article imgLink='/#' />
-        <Article imgLink='/#' />
-        <Article imgLink='/#' />
+        <Article
+          imgLink='/#'
+          subCollection='photos'
+          refFile={photosCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='photos'
+          refFile={photosCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='photos'
+          refFile={photosCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='photos'
+          refFile={photosCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='photos'
+          refFile={photosCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='photos'
+          refFile={photosCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='photos'
+          refFile={photosCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='photos'
+          refFile={photosCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='photos'
+          refFile={photosCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='photos'
+          refFile={photosCollectionRef()}
+        />
+        
       </AppWrapper>
       <h2 className={styles.top__among__users}>{data?.App?.lastAnimations}</h2>
       <AppWrapper>
-        <Article imgLink='/#' unopt />
-        <Article imgLink='/#' unopt />
-        <Article imgLink='/#' unopt />
-        <Article imgLink='/#' unopt />
-        <Article imgLink='/#' unopt />
-        <Article imgLink='/#' unopt />
-        <Article imgLink='/#' unopt />
-        <Article imgLink='/#' unopt />
-        <Article imgLink='/#' unopt />
-        <Article imgLink='/#' unopt />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        <Article
+          imgLink='/#'
+          subCollection='animations'
+          refFile={animationsCollectionRef()}
+        />
+        
       </AppWrapper>
       <h2 className={styles.liked}>{data?.App?.lastVideos}</h2>
       <AppWrapper>
-        <Videos link='/#' />
-        <Videos link='/#' />
-        <Videos link='/#' />
-        <Videos link='/#' />
-        <Videos link='/#' />
-        <Videos link='/#' />
-        <Videos link='/#' />
-        <Videos link='/#' />
-        <Videos link='/#' />
-        <Videos link='/#' />
+        <Videos
+          link='/#'
+          refFile={videosCollectionRef()}
+        />
+        <Videos
+          link='/#'
+          refFile={videosCollectionRef()}
+        />
+        <Videos
+          link='/#'
+          refFile={videosCollectionRef()}
+        />
+        <Videos
+          link='/#'
+          refFile={videosCollectionRef()}
+        />
+        <Videos
+          link='/#'
+          refFile={videosCollectionRef()}
+        />
+        <Videos
+          link='/#'
+          refFile={videosCollectionRef()}
+        />
+        <Videos
+          link='/#'
+          refFile={videosCollectionRef()}
+        />
+        <Videos
+          link='/#'
+          refFile={videosCollectionRef()}
+        />
+        <Videos
+          link='/#'
+          refFile={videosCollectionRef()}
+        />
+        <Videos
+          link='/#'
+          refFile={videosCollectionRef()}
+        />
+
       </AppWrapper>
     </section>
   ) : null;

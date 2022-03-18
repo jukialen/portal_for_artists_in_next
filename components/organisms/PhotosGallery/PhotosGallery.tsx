@@ -16,13 +16,17 @@ import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 
 import styles from './PhotosGallery.module.scss';
 import { Skeleton } from '@chakra-ui/react';
+import { ref } from 'firebase/storage';
+import { auth, storage } from '../../../firebase';
 
 export const PhotosGallery = ({ data }: DataType) => {
   const maxItems: number = 20;
   const nextPage = query(photosCollectionRef(), orderBy('timeCreated', 'desc'), limit(maxItems));
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
   const [loading, setLoading] = useState(false);
+  const user = auth?.currentUser;
 
+  
   const downloadFiles = async () => {
     try {
       onSnapshot(nextPage,  (querySnapshot) => {
@@ -60,7 +64,12 @@ export const PhotosGallery = ({ data }: DataType) => {
               isLoaded={loading}
               key={time}
             >
-            <Article imgLink={fileUrl} imgDescription={description} />
+            <Article
+              imgLink={fileUrl}
+              refFile={photosCollectionRef()}
+              subCollection='photos'
+              refStorage={ref(storage, `${user?.uid}/photos/${description}`)}
+              imgDescription={description} />
             </Skeleton>) :
             <ZeroFiles text={data?.ZeroFiles?.photos} />
         }

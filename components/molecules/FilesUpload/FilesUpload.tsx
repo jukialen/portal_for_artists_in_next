@@ -90,9 +90,15 @@ export const FilesUpload = () => {
             setValuesFields('Upload is paused');
             break;
         }
-      }, (e: Error) => {
-        console.error(e);
+      }, (e) => {
+      console.log(user)
+        console.error('error', e);
         setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+        console.log(e.code)
+        console.log(e.customData)
+        console.log(e.serverResponse)
+        console.log(e.message)
+        console.log(e.stack)
       },
       async () => {
         const sendToFirestore = (colRef: CollectionReference, url: string) => {

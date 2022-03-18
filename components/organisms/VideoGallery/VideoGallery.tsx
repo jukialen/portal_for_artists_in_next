@@ -17,12 +17,16 @@ import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 
 import styles from './VideoGallery.module.scss';
 import { Skeleton } from '@chakra-ui/react';
+import { ref } from 'firebase/storage';
+import { auth, storage } from '../../../firebase';
 
 export const VideoGallery = ({ data }: DataType) => {
   const maxItems: number = 10;
   const nextPage = query(videosCollectionRef(), orderBy('timeCreated', 'desc'), limit(maxItems));
   const [userVideos, setUserVideos] = useState<FileType[]>([]);
   const [loading, setLoading] = useState(false);
+  
+  const user = auth?.currentUser;
   
   const downloadVideos = async () => {
     try {
@@ -31,7 +35,8 @@ export const VideoGallery = ({ data }: DataType) => {
           querySnapshot.forEach((doc) => {
             filesArray.push({
               fileUrl: doc.data().fileUrl,
-              time: doc.data().timeCreated
+              time: doc.data().timeCreated,
+              description: doc.data().description
             });
           });
           setUserVideos(filesArray);
@@ -57,11 +62,16 @@ export const VideoGallery = ({ data }: DataType) => {
       <Wrapper>
         {
           userVideos.length > 0 ?
-            userVideos.map(({ fileUrl, time }: FileType) => <Skeleton
+            userVideos.map(({ fileUrl, description, time }: FileType) => <Skeleton
               isLoaded={loading}
               key={time}
             >
-              <Videos link={fileUrl} />
+              <Videos
+                link={fileUrl}
+                refFile={videosCollectionRef()}
+                refStorage={ref(storage, `${user?.uid}/videos/${description}`)}
+                description={description}
+              />
             </Skeleton>) :
             <ZeroFiles text={data?.ZeroFiles?.videos} />
         }

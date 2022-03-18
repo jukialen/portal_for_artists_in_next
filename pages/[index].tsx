@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
+  CollectionReference,
   doc,
   getDoc,
   limit,
@@ -18,7 +19,7 @@ import { useHookSWR } from 'hooks/useHookSWR';
 import {
   allAnimatedCollectionRef,
   allPhotosCollectionRef,
-  allVideosCollectionRef
+  allVideosCollectionRef, animationsCollectionRef, photosCollectionRef, videosCollectionRef
 } from 'references/referencesFirebase';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
@@ -28,7 +29,8 @@ import { Videos } from 'components/molecules/Videos/Videos';
 
 import styles from './categories_index.module.scss';
 import { Skeleton } from '@chakra-ui/react';
-import { db } from '../firebase';
+import { auth, db, storage } from '../firebase';
+import { ref, StorageReference } from 'firebase/storage';
 
 export default function Drawings() {
   const router = useRouter();
@@ -36,13 +38,17 @@ export default function Drawings() {
   const loading = useCurrentUser('/');
   
   const maxItems: number = 10;
+  const user = auth?.currentUser;
   
   const data = useHookSWR();
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [nextPage, setNextPage] = useState<Query>();
+  const [refFile, setRefFile] = useState<CollectionReference>();
+  const [refStorage, setRefStorage] = useState<StorageReference>();
+  const [subCollection, setSubCollection] = useState('');
   
-  console.log(index)
+  
   useEffect(() => {
     switch (index) {
       case 'photographs':
@@ -80,7 +86,6 @@ export default function Drawings() {
   
   const downloadDrawings = async () => {
     try {
-      console.log(nextPage)
       onSnapshot(nextPage!, (querySnapshot) => {
           const filesArray: FileType[] = [];
     
@@ -99,6 +104,27 @@ export default function Drawings() {
               console.log('array', filesArray);
               setUserDrawings(filesArray);
               setLoadingFiles(true);
+              switch (index) {
+                case 'photographs':
+                  setRefFile(photosCollectionRef());
+                  setSubCollection('photos');
+                  setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
+                  break;
+                case 'animations':
+                  setRefFile(animationsCollectionRef);
+                  setSubCollection('animations');
+                  setRefStorage(ref(storage, `${user?.uid}/animations/${document.data().description}`));
+                  break;
+                case 'videos':
+                  setRefFile(videosCollectionRef);
+                  setRefStorage(ref(storage, `${user?.uid}/videos/${document.data().description}`));
+                  break;
+                case 'others':
+                  setRefFile(photosCollectionRef);
+                  setSubCollection('photos');
+                  setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
+                  break;
+              }
             } else {
               console.error('No such doc', docSnap.data(), document.data().uid)
             }
@@ -135,12 +161,17 @@ export default function Drawings() {
                 <Videos
                   link={fileUrl}
                   authorName={pseudonym}
+                  refFile={videosCollectionRef()}
+                  refStorage={ref(storage, `${user?.uid}/videos/${description}`)}
                 /> :
                 <Article
                   imgLink={fileUrl}
                   imgDescription={description}
                   authorName={pseudonym}
                   unopt={index === 'animations'}
+                  refFile={refFile!}
+                  subCollection={subCollection}
+                  refStorage={refStorage!}
                 />
             }
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />

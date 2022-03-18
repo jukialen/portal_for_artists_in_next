@@ -1,11 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { limit, onSnapshot, orderBy, Query, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
+import {
+  CollectionReference,
+  limit,
+  onSnapshot,
+  orderBy,
+  Query,
+  query,
+  QueryDocumentSnapshot,
+  where
+} from 'firebase/firestore';
 import { FileType } from 'types/global.types';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
-import { allPhotosCollectionRef } from 'references/referencesFirebase';
+import {
+  allPhotosCollectionRef,
+  animationsCollectionRef, photosCollectionRef, videosCollectionRef
+} from 'references/referencesFirebase';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
@@ -14,6 +26,8 @@ import styles from './index.module.scss';
 import { Skeleton } from '@chakra-ui/react';
 import { Article } from 'components/molecules/Article/Article';
 import { Wrapper } from '../../components/atoms/Wrapper/Wrapper';
+import { ref, StorageReference } from 'firebase/storage';
+import { auth, storage } from '../../firebase';
 
 export default function Drawings() {
   const router = useRouter();
@@ -26,8 +40,12 @@ export default function Drawings() {
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [nextPageArray, setNextPageArray] = useState<string[]>([]);
+  const [refFile, setRefFile] = useState<CollectionReference>();
+  const [refStorage, setRefStorage] = useState<StorageReference>();
+  const [subCollection, setSubCollection] = useState('');
   
   let nextPage: Query;
+  const user = auth?.currentUser;
   
   useEffect(() => {
     switch (pid) {
@@ -61,14 +79,36 @@ export default function Drawings() {
           console.log(pid);
           console.log('f2', nextPage);
       
-          querySnapshot.forEach((doc: QueryDocumentSnapshot) => {
+          querySnapshot.forEach((document: QueryDocumentSnapshot) => {
             drawingsArray.push({
-              fileUrl: doc.data().fileUrl,
-              time: doc.data().timeCreated,
-              tags: doc.data().tag,
-              description: doc.data().description
+              fileUrl: document.data().fileUrl,
+              time: document.data().timeCreated,
+              tags: document.data().tag,
+              description: document.data().description
             });
+            switch (pid) {
+              case 'photographs':
+                setRefFile(photosCollectionRef());
+                setSubCollection('photos');
+                setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
+                break;
+              case 'animations':
+                setRefFile(animationsCollectionRef);
+                setSubCollection('animations');
+                setRefStorage(ref(storage, `${user?.uid}/animations/${document.data().description}`));
+                break;
+              case 'videos':
+                setRefFile(videosCollectionRef);
+                setRefStorage(ref(storage, `${user?.uid}/videos/${document.data().description}`));
+                break;
+              case 'others':
+                setRefFile(photosCollectionRef);
+                setSubCollection('photos');
+                setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
+                break;
+            }
           });
+          
           console.log('array', drawingsArray);
           setUserDrawings(drawingsArray);
           setLoadingFiles(true);
@@ -99,7 +139,13 @@ export default function Drawings() {
               isLoaded={loadingFiles}
               key={time}
             >
-            <Article imgLink={fileUrl} imgDescription={description} />
+            <Article
+              imgLink={fileUrl}
+              imgDescription={description}
+              refFile={refFile!}
+              subCollection={subCollection}
+              refStorage={refStorage!}
+            />
             </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.files} />
        }</Wrapper>
       </article>

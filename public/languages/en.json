@@ -168,6 +168,16 @@
     "buttonAria": "button to update the password",
     "success": "The password has been updated."
   },
+  "DeletionFile": {
+    "loadingText": "Deleting",
+    "deletionButton": "Deletion",
+    "title": "Delete File",
+    "question": "Are you sure? You can't undo this action afterwards.",
+    "cancelButton": "Cancel",
+    "deleteButton": "Delete",
+    "deleting": "Deleting the file.",
+    "deleted": "The file has deleted."
+  },
   "error": "Try again or check your internet connection.",
   "edit": "Edit",
   "cancel": "Cancel",

@@ -1,3 +1,5 @@
+import { CollectionReference } from 'firebase/firestore';
+import { StorageReference } from 'firebase/storage';
 import { ChangeEvent } from 'react';
 
 export type DataType = any;
@@ -23,6 +25,9 @@ export type FileType = {
 
 export type ArticleImgType = {
   imgLink: string;
+  refFile:  CollectionReference;
+  subCollection: string;
+  refStorage?:  StorageReference;
   imgDescription?: string;
   authorName?: string;
   unopt?: boolean;

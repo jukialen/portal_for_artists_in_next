@@ -163,6 +163,16 @@
     "buttonAria": "button to reset the button",
     "success": "Check your mailbox."
   },
+  "DeletionFile": {
+    "loadingText": "消してます",
+    "deletionButton": "消します",
+    "title": "ファイルが消します",
+    "question": "Are you sure? You can't undo this action afterwards.",
+    "cancelButton": "取り消します",
+    "deleteButton": "消します",
+    "deleting": "ファイルが消してます",
+    "deleted": "ファイルが消しました"
+  },
   "error": "Try again or check your internet connection.",
   "edit": "Edit",
   "cancel": "Cancel",
