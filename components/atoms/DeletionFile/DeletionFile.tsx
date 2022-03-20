@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { auth, db } from '../../../firebase';
-import { CollectionReference, doc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
+import { CollectionReference, doc, getDocs, query, where, deleteDoc, Query } from 'firebase/firestore';
 import { deleteObject, StorageReference } from 'firebase/storage';
 
 import { useHookSWR } from 'hooks/useHookSWR';
@@ -22,7 +22,7 @@ import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
 
 type DeletionFileType = {
   subCollection: string;
-  refFile: CollectionReference;
+  refFile: CollectionReference | Query;
   refStorage: StorageReference;
   description?: string
 }
@@ -48,7 +48,6 @@ export const DeletionFile = ({ subCollection, refFile, refStorage, description }
       await deleteObject(refStorage!);
       const querySnapshot = await getDocs(queryFile);
       await querySnapshot.forEach((document) => {
-        console.log(document.id, ' => ', document.data());
         deleteDoc(doc(db, `users/${user?.uid}/${subCollection}/${document.id}`))
       });
       await setDeleting(!deleting);
@@ -69,6 +68,7 @@ export const DeletionFile = ({ subCollection, refFile, refStorage, description }
         height='3rem'
         backgroundColor='transparent'
         borderColor='transparent'
+        color='#333'
         onClick={() => setDel(!del)}
         className={styles.icon}
         cursor='pointer'

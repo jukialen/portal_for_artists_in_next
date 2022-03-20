@@ -31,6 +31,7 @@ import styles from './categories_index.module.scss';
 import { Skeleton } from '@chakra-ui/react';
 import { auth, db, storage } from '../firebase';
 import { ref, StorageReference } from 'firebase/storage';
+import { Wrapper } from '../components/atoms/Wrapper/Wrapper';
 
 export default function Drawings() {
   const router = useRouter();
@@ -91,7 +92,6 @@ export default function Drawings() {
     
           querySnapshot.forEach(async (document: QueryDocumentSnapshot) => {
             const docRef = doc(db, `users/${document.data().uid}`);
-            console.log('uid', document.data().uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
               filesArray.push({
@@ -101,7 +101,6 @@ export default function Drawings() {
                 pseudonym: docSnap.data().pseudonym,
                 description: document.data().description
               });
-              console.log('array', filesArray);
               setUserDrawings(filesArray);
               setLoadingFiles(true);
               switch (index) {
@@ -139,9 +138,7 @@ export default function Drawings() {
     }
   };
   
-  useEffect(() => {
-    downloadDrawings();
-  }, [nextPage]);
+  useEffect(() => { downloadDrawings()  }, [nextPage]);
   
   return !loading ? (
     <div className='workspace'>
@@ -151,7 +148,7 @@ export default function Drawings() {
         
         <em className={styles.title}>{data?.Aside?.category}: {index}</em>
         
-        <div className={styles.user__drawings}>{
+        <Wrapper>{
           userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym }: FileType) => <Skeleton
             isLoaded={loadingFiles}
             key={time}
@@ -175,7 +172,7 @@ export default function Drawings() {
                 />
             }
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />
-        }</div>
+        }</Wrapper>
       </article>
     </div>
   ) : null;

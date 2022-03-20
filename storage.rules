@@ -10,7 +10,7 @@ service firebase.storage {
             || request.resource.contentType.matches('image/webp')
             || request.resource.contentType.matches('image/apng')
             || request.resource.contentType.matches('image/png')
-            )
+            );
         }
 
         function sizeVideos() {
@@ -20,7 +20,7 @@ service firebase.storage {
             || request.resource.contentType.matches('video/avif')
             || request.resource.contentType.matches('video/webm')
             || request.resource.contentType.matches('video/mp4')
-            )
+            );
         }
 
         function sizeFiles() {

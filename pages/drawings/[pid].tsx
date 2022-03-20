@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { auth, storage } from '../../firebase';
 import {
   CollectionReference,
   limit,
@@ -10,24 +11,25 @@ import {
   QueryDocumentSnapshot,
   where
 } from 'firebase/firestore';
+import { ref, StorageReference } from 'firebase/storage';
+
 import { FileType } from 'types/global.types';
 
-import { useCurrentUser } from 'hooks/useCurrentUser';
-import { useHookSWR } from 'hooks/useHookSWR';
 import {
   allPhotosCollectionRef,
   animationsCollectionRef, photosCollectionRef, videosCollectionRef
 } from 'references/referencesFirebase';
 
+import { useCurrentUser } from 'hooks/useCurrentUser';
+import { useHookSWR } from 'hooks/useHookSWR';
+
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+import { Article } from 'components/molecules/Article/Article';
 
 import styles from './index.module.scss';
 import { Skeleton } from '@chakra-ui/react';
-import { Article } from 'components/molecules/Article/Article';
-import { Wrapper } from '../../components/atoms/Wrapper/Wrapper';
-import { ref, StorageReference } from 'firebase/storage';
-import { auth, storage } from '../../firebase';
 
 export default function Drawings() {
   const router = useRouter();
@@ -62,7 +64,6 @@ export default function Drawings() {
         setNextPageArray(['Komiksy', 'Comics', 'コミック']);
         break;
     }
-    
   }, [pid]);
   
   const downloadDrawings = async () => {
@@ -75,9 +76,6 @@ export default function Drawings() {
   
       onSnapshot(nextPage, (querySnapshot) => {
           const drawingsArray: FileType[] = [];
-      
-          console.log(pid);
-          console.log('f2', nextPage);
       
           querySnapshot.forEach((document: QueryDocumentSnapshot) => {
             drawingsArray.push({

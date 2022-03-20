@@ -4,6 +4,9 @@ const withPWA = require("next-pwa");
 import('firebase/firestore').then(() => {
   const firestore = app.firestore();
   // Use Cloud Firestore ...
+  firestore().settings({
+    cacheSizeBytes: 400
+  });
   firestore.enableIndexedDbPersistence()
   .catch((e) => {
     if (e.code === 'failed-precondition') {

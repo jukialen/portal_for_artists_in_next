@@ -69,7 +69,9 @@
     "changeLanguage": "Change language"
   },
   "App": {
+    "lastDrawings": "Last drawings",
     "lastPhotos": "Last photos",
+    "lastOthers": "Last others",
     "lastAnimations": "Last animations",
     "lastVideos": "Last videos"
   },
@@ -152,8 +154,10 @@
     "notUploadFile": "File hasn't been uploaded."
   },
   "ZeroFiles": {
+    "drawings": "No your drawings.",
     "photos": "No your photos.",
-    "animations": "No your photos.",
+    "others": "No your others.",
+    "animations": "No your animations.",
     "videos": "No your videos.",
     "files": "No found files."
   },

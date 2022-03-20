@@ -1,7 +1,7 @@
 import styles from './Videos.module.scss';
 
 import { FileOptions } from 'components/atoms/FileOptions/FileOptions';
-import { CollectionReference} from 'firebase/firestore';
+import { CollectionReference, Query } from 'firebase/firestore';
 import { StorageReference } from 'firebase/storage';
 
 import { useUserData } from 'hooks/useUserData';
@@ -10,7 +10,7 @@ import { DeletionFile } from 'components/atoms/DeletionFile/DeletionFile';
 type VideoType = {
   link: string;
   authorName?: string;
-  refFile: CollectionReference;
+  refFile: CollectionReference | Query;
   refStorage?:  StorageReference;
   description?: string;
 };

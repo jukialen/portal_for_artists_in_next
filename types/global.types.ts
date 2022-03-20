@@ -1,4 +1,4 @@
-import { CollectionReference } from 'firebase/firestore';
+import { CollectionReference, Query } from 'firebase/firestore';
 import { StorageReference } from 'firebase/storage';
 import { ChangeEvent } from 'react';
 
@@ -25,7 +25,7 @@ export type FileType = {
 
 export type ArticleImgType = {
   imgLink: string;
-  refFile:  CollectionReference;
+  refFile:  CollectionReference | Query;
   subCollection: string;
   refStorage?:  StorageReference;
   imgDescription?: string;

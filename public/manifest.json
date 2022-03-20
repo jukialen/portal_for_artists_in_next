@@ -3,6 +3,7 @@
   "background_color": "#FF5CAE",
   "display": "standalone",
   "scope": "/",
+  "id": "/",
   "start_url": "/",
   "name": "Pfartists",
   "short_name": "Pfartists",

@@ -69,7 +69,9 @@
     "changeLanguage": "Zmiana języka"
   },
   "App": {
+    "lastDrawings": "Ostatnie rysunki",
     "lastPhotos": "Ostatnie zdjęcia",
+    "lastOthers": "Ostatnie inne",
     "lastAnimations": "Ostatnie animacje",
     "lastVideos": "Ostatnie filmy"
   },
@@ -152,10 +154,12 @@
     "notUploadFile": "Plik nie został wysłany."
   },
   "ZeroFiles": {
-    "photos": "No your photos.",
-    "animations": "No your photos.",
-    "videos": "No your videos.",
-    "files": "Nie znaleziono plików."
+    "drawings": "Brak rysunków.",
+    "photos": "Brak zdjęć.",
+    "others": "Brak Inne.",
+    "animations": "Brak animacji.",
+    "videos": "Brak filmów.",
+    "files": "Brak plików."
   },
   "Forgotten": {
     "title": "Zapomniałeś/aś hasła?",
