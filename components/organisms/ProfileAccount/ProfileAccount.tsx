@@ -42,8 +42,8 @@ export const ProfileAccount = ({ data }: DataType) => {
   }, [user]);
   
   const initialValues = {
-    newPseudonym: `${pseudonym}`,
-    newDescription: `${description}` || '',
+    newPseudonym: pseudonym,
+    newDescription: description,
     photo: null
   };
   

@@ -1,13 +1,14 @@
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { GithubAuthProvider, GoogleAuthProvider, OAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '../../../firebase';
+import { auth, db } from '../../../firebase';
 
 import { NavFormContext } from 'providers/NavFormProvider';
 import { StatusLoginContext } from 'providers/StatusLogin';
 
 import { GithubOutlined, GoogleOutlined, YahooFilled } from '@ant-design/icons';
 import styles from './Providers.module.scss';
+import { doc, setDoc } from 'firebase/firestore';
 
 export const Providers = () => {
   const { push } = useRouter();
@@ -23,9 +24,14 @@ export const Providers = () => {
       await signInWithPopup(auth, provider);
       await push('/app');
       await showUser();
-      isCreate && showCreateForm();
+      if (isCreate) {
+        await setDoc(doc(db, 'users', `${auth.currentUser?.uid}`), { pseudonym: auth.currentUser?.displayName });
+        showCreateForm();
+      };
       isLogin && showLoginForm();
-    } catch (error) {}
+    } catch (e) {
+      console.log(e);
+    }
   }
   
   return (

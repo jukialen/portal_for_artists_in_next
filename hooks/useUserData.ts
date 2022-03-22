@@ -9,12 +9,12 @@ export const useUserData = () => {
   
   const user = auth.currentUser;
 
-  const docRef = doc(db, 'users', `${user?.uid}`);
+  const docRef = doc(db, `users/${user?.uid}`);
   const getUserData = async () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      setPseudonym(docSnap.data()?.pseudonym || user?.providerData[0].displayName);
-      setDescription(docSnap.data()?.description)
+      setPseudonym(docSnap.data().pseudonym);
+      setDescription(docSnap.data().description === 'undefined ' ? docSnap.data().description : '')
     } else {
       console.log("No such document!");
     }
