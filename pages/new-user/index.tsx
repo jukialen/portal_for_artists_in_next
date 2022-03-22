@@ -72,7 +72,7 @@ export default function NewUser() {
               setValuesFields('Upload is paused');
               break;
           }
-        }, (e: Error) => {
+        }, (e) => {
           console.error(e);
           setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
         },
