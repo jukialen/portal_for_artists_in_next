@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   CollectionReference,
@@ -83,8 +83,6 @@ export default function Drawings() {
     }
   }, [index]);
   
-  console.log('as', index);
-  
   const downloadDrawings = async () => {
     try {
       onSnapshot(nextPage!, (querySnapshot) => {
@@ -103,6 +101,7 @@ export default function Drawings() {
               });
               setUserDrawings(filesArray);
               setLoadingFiles(true);
+              
               switch (index) {
                 case 'photographs':
                   setRefFile(photosCollectionRef());
@@ -138,8 +137,7 @@ export default function Drawings() {
     }
   };
   
-  useEffect(() => { downloadDrawings()  }, [nextPage]);
-  
+  useMemo(() => { downloadDrawings()  }, [nextPage]);
   return !loading ? (
     <div className='workspace'>
       <article className={styles.categories__index__in__account}>
