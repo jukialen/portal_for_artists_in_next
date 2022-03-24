@@ -14,6 +14,8 @@ import {
 } from 'firebase/firestore';
 import { FileType } from 'types/global.types';
 
+import { filesElements } from 'helpers/fileElements';
+
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
 import {
@@ -83,7 +85,7 @@ export default function Drawings() {
     }
   }, [index]);
   
-  const downloadDrawings = async () => {
+  const downloadDrawings = () => {
     try {
       onSnapshot(nextPage!, (querySnapshot) => {
           const filesArray: FileType[] = [];
@@ -92,13 +94,7 @@ export default function Drawings() {
             const docRef = doc(db, `users/${document.data().uid}`);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-              filesArray.push({
-                fileUrl: document.data().fileUrl,
-                time: document.data().timeCreated,
-                tags: document.data().tag,
-                pseudonym: docSnap.data().pseudonym,
-                description: document.data().description
-              });
+              filesElements(filesArray, document, docSnap);
               setUserDrawings(filesArray);
               setLoadingFiles(true);
               
@@ -124,7 +120,7 @@ export default function Drawings() {
                   break;
               }
             } else {
-              console.error('No such doc', docSnap.data(), document.data().uid)
+              console.error('No such doc')
             }
           });
         },
@@ -142,7 +138,7 @@ export default function Drawings() {
     <div className='workspace'>
       <article className={styles.categories__index__in__account}>
         
-        <HeadCom path={router.asPath} content={`Sites with ${index}`} />
+        <HeadCom path={router.asPath} content={`Subpage with ${index}`} />
         
         <em className={styles.title}>{data?.Aside?.category}: {index}</em>
         
