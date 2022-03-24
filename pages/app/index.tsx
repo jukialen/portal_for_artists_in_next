@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { auth, db, storage } from '../../firebase';
 import {
   doc, getDoc,
@@ -50,7 +50,7 @@ export default function Application() {
   
   const user = auth?.currentUser;
   
-  const downloadDrawings = async () => {
+  const downloadDrawings = () => {
     try {
       onSnapshot(nextDrawings, (querySnapshot) => {
         const filesArray: FileType[] = [];
@@ -59,7 +59,7 @@ export default function Application() {
           const docRef = doc(db, `users/${document.data().uid}`);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            await filesElements(filesArray, document, docSnap);
+            filesElements(filesArray, document, docSnap);
           } else {
             console.error('No such doc')
           }
@@ -77,7 +77,7 @@ export default function Application() {
     }
   };
   
-  const downloadPhotos = async () => {
+  const downloadPhotos = () => {
     try {
       onSnapshot(nextPhotos, (querySnapshot) => {
           const filesArray: FileType[] = [];
@@ -86,7 +86,7 @@ export default function Application() {
           const docRef = doc(db, `users/${document.data().uid}`);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            await filesElements(filesArray, document, docSnap);
+            filesElements(filesArray, document, docSnap);
           } else {
             console.error('No such doc')
           }
@@ -104,7 +104,7 @@ export default function Application() {
     }
   };
   
-  const downloadAnimations = async () => {
+  const downloadAnimations = () => {
     try {
       onSnapshot(nextAnimations, (querySnapshot) => {
           const filesArray: FileType[] = [];
@@ -112,7 +112,7 @@ export default function Application() {
             const docRef = doc(db, `users/${document.data().uid}`);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-              await filesElements(filesArray, document, docSnap);
+              filesElements(filesArray, document, docSnap);
             } else {
               console.error('No such doc')
             }
@@ -130,7 +130,7 @@ export default function Application() {
     }
   };
   
-  const downloadVideos = async () => {
+  const downloadVideos = () => {
     try {
       onSnapshot(nextVideos, (querySnapshot) => {
           const filesArray: FileType[] = [];
@@ -139,7 +139,7 @@ export default function Application() {
             const docRef = doc(db, `users/${document.data().uid}`);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-              await filesElements(filesArray, document, docSnap);
+              filesElements(filesArray, document, docSnap);
             } else {
               console.error('No such doc')
             }
@@ -157,7 +157,7 @@ export default function Application() {
     }
   };
   
-  const downloadOthers = async () => {
+  const downloadOthers = () => {
     try {
       onSnapshot(nextOthers, (querySnapshot) => {
           const filesArray: FileType[] = [];
@@ -166,9 +166,9 @@ export default function Application() {
           const docRef = doc(db, `users/${document.data().uid}`);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            await filesElements(filesArray, document, docSnap);
+            filesElements(filesArray, document, docSnap);
           } else {
-            console.error('No such doc', docSnap.data(), document.data().uid)
+            console.error('No such doc')
           }
           });
           
@@ -184,14 +184,11 @@ export default function Application() {
     }
   };
   
-  useEffect(() => { downloadDrawings() }, []);
-  useEffect(() => { downloadPhotos() }, []);
-  useEffect(() => { downloadOthers() }, []);
-  console.log('ph', userDrawings)
-  useEffect(() => { downloadAnimations() }, []);
-  console.log('ani', userAnimations)
-  useEffect(() => {downloadVideos() }, []);
-  console.log('vi', userVideos)
+  useMemo(() => { downloadDrawings() }, []);
+  useMemo(() => { downloadPhotos() }, []);
+  useMemo(() => { downloadOthers() }, []);
+  useMemo(() => { downloadAnimations() }, []);
+  useMemo(() => {downloadVideos() }, []);
   
   return !loading ? (
     <section className='workspace'>
