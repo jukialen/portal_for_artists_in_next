@@ -146,6 +146,7 @@
     "pseudonym": "あだ名",
     "profilePhoto": "プロフィールの写真",
     "description": "叙述",
+    "fileTitle": "Adding a file",
     "tags": "タグ",
     "file": "ファイル",
     "arialSendingFile": "sending file",
@@ -180,6 +181,5 @@
   "error": "Try again or check your internet connection.",
   "edit": "Edit",
   "cancel": "Cancel",
-  "chooseTag": "Choose tag",
-  "noDocuments": ""
+  "chooseTag": "Choose tag"
 }

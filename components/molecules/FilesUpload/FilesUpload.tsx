@@ -151,7 +151,7 @@ export const FilesUpload = () => {
       onSubmit={uploadFiles}
     >
       <Form className={styles.adding__files}>
-        <h3 className={styles.title}>Adding a file</h3>
+        <h3 className={styles.title}>{data?.AnotherForm?.fileTitle}</h3>
         
         <Field name='tags' as='select' className={styles.tags} aria-required='true'>
           {tagsArray.map(tag => <option

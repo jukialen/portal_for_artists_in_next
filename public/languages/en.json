@@ -146,6 +146,7 @@
     "pseudonym": "Pseudonym",
     "profilePhoto": "Profile photo",
     "description": "Description",
+    "fileTitle": "Adding a file",
     "tags": "Tags",
     "file": "File",
     "arialSendingFile": "sending file",
