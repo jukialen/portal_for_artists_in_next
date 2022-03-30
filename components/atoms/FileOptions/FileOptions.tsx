@@ -3,14 +3,17 @@ import { IconButton } from '@chakra-ui/react';
 import { AiOutlineShareAlt } from 'react-icons/ai';
 import Image from 'next/image';
 import { useState } from 'react';
+import { Comments } from '../Comments/Comments';
 
 type AuthorType = {
   authorName?: string
 }
 export const FileOptions = ({ authorName }: AuthorType) => {
   const [share, setShare] = useState(false);
+  const [open, setOpen] =useState(false);
   
   const showShare = () => setShare(!share);
+  const showOpenComments = () => setOpen(!open);
   
   const icon = 30;
   return (
@@ -64,7 +67,8 @@ export const FileOptions = ({ authorName }: AuthorType) => {
       
         </div>
       </div>
-      <button className={styles.comments}>Show comments</button>
+      <button className={styles.comments} onClick={showOpenComments}>Show comments</button>
+      { open && <Comments /> }
     </div>
 
   )
