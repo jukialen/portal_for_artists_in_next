@@ -21,7 +21,7 @@ export const AnimatedGallery = ({ data }: DataType) => {
   const nextPage = query(animationsCollectionRef(), orderBy('timeCreated', 'desc'), limit(maxItems));
   const user = auth?.currentUser;
   
-  const downloadAnimations = async () => {
+  const downloadAnimations = () => {
     try {
       onSnapshot(nextPage, (querySnapshot) => {
           const filesArray: FileType[] = [];
@@ -39,7 +39,7 @@ export const AnimatedGallery = ({ data }: DataType) => {
           console.error('Error', e);
         });
     } catch (e) {
-      console.log('No such document!');
+      console.log('No such document!', e);
     }
   };
   

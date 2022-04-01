@@ -99,6 +99,7 @@ export const ProfileAccount = ({ data }: DataType) => {
       resetForm(initialValues);
       setValuesFields(data?.Account?.profile?.successSending);
     } catch (e) {
+      console.log(e);
       setValuesFields(data?.Account?.profile?.errorSending);
     }
   };

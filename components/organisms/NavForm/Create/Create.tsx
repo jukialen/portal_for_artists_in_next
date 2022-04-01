@@ -48,6 +48,7 @@ export const Create = ({ data }: DataType) => {
       setValuesFields(data?.NavForm?.successInfoRegistration);
     })
     .catch((e) => {
+      console.log(e);
       e.code === 'auth/email-already-in-use' ? setValuesFields(data?.NavForm?.theSameEmail) :
       setValuesFields(data?.error);
     });

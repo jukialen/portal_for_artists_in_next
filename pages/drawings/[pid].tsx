@@ -115,6 +115,7 @@ export default function Drawings() {
           console.error('Error', e);
         });
     } catch (e) {
+      console.log(e);
       console.log('No such document!');
     }
   };

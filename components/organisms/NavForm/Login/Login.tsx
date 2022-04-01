@@ -59,6 +59,7 @@ export const Login = ({ data }: DataType) => {
       }
     })
     .catch((e) => {
+      console.log(e);
       setValuesFields(data?.NavForm?.setErrorMessageLogin);
       e.code === 'auth/user-not-found' && setValuesFields(data?.NavForm?.notExist)
     });

@@ -29,6 +29,7 @@ export const MailAccountData = ({ data }: DataType) => {
       resetForm(initialValues);
       setValuesFields(data?.Forgotten?.success);
     } catch (e) {
+      console.log(e);
       setValuesFields(data?.error);
     }
   };

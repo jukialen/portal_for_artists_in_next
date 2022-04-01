@@ -20,7 +20,7 @@ export const SchemaValidation = () => {
   .required(data?.NavForm?.validateRequired);
   
   const email = Yup.string()
-  .email('Invalid email')
+  .email(data?.NacForm?.validateEmail)
   .required(data?.NavForm?.validateRequired);
   
   const password = Yup.string()

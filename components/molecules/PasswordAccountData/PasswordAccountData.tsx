@@ -46,6 +46,7 @@ export const PasswordAccountData = ({ data }: DataType) => {
       resetForm(initialValues);
       setValuesFields(data?.PasswordAccount?.success);
     } catch (e) {
+      console.log(e);
       setValuesFields(data?.error);
     }
   };

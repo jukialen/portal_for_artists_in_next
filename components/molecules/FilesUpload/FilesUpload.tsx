@@ -56,73 +56,76 @@ export const FilesUpload = () => {
   };
   
   const uploadFiles = async ({ tags }: FileDataType, { resetForm }: FormType) => {
-    // @ts-ignore
-    const photosRef = ref(storage, `${user?.uid}/photos/${file?.name}`);
-    // @ts-ignore
-    const videosRef = ref(storage, `${user?.uid}/videos/${file?.name}`);
-    // @ts-ignore
-    const animationsRef = ref(storage, `${user?.uid}/animations/${file?.name}`);
-  
-    let upload: UploadTask;
-  
-    switch (tags) {
-      case `${data?.Aside?.animations}`:
-        upload = uploadBytesResumable(animationsRef, file!);
-        break;
-      case `${data?.Aside?.videos}`:
-        upload = uploadBytesResumable(videosRef, file!);
-        break;
-      default:
-        upload = uploadBytesResumable(photosRef, file!);
-    }
-  
-    let refName: string;
-
-    upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
-        const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgressUpload(progress);
-      
-        switch (snapshot.state) {
-          case 'running':
-            setValuesFields('Upload is running');
-            return refName = snapshot.ref.name;
-          case 'paused':
-            setValuesFields('Upload is paused');
-            break;
-        }
-      }, (e) => {
-      console.log(user)
-        console.error('error', e);
-        setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
-      },
-      async () => {
-        const sendToFirestore = (colRef: CollectionReference, url: string) => {
-          addDoc(colRef, {
-            fileUrl: url,
-            description: refName,
-            tag: tags,
-            timeCreated: Date.now(),
-            uid: user?.uid
-          });
-          setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-          setFile(null);
-          resetForm(initialValues);
-        };
+    try {
+      // @ts-ignore
+      const photosRef = ref(storage, `${user?.uid}/photos/${file?.name}`);
+      // @ts-ignore
+      const videosRef = ref(storage, `${user?.uid}/videos/${file?.name}`);
+      // @ts-ignore
+      const animationsRef = ref(storage, `${user?.uid}/animations/${file?.name}`);
+    
+      let upload: UploadTask;
+    
+      switch (tags) {
+        case `${data?.Aside?.animations}`:
+          upload = uploadBytesResumable(animationsRef, file!);
+          break;
+        case `${data?.Aside?.videos}`:
+          upload = uploadBytesResumable(videosRef, file!);
+          break;
+        default:
+          upload = uploadBytesResumable(photosRef, file!);
+      }
+    
+      let refName: string;
+    
+      upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+          const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgressUpload(progress);
         
-        switch (tags) {
-          case `${data?.Aside?.animations}`:
-            const animationURL = await getDownloadURL(animationsRef);
-            sendToFirestore(animationsCollectionRef(), animationURL);
-            break;
-          case `${data?.Aside?.videos}`:
-            const videoURL = await getDownloadURL(videosRef);
-            sendToFirestore(videosCollectionRef(), videoURL);
-            break;
-          default:
-            const photoURL = await getDownloadURL(photosRef);
-            sendToFirestore(photosCollectionRef(), photoURL);
-        }
-      });
+          switch (snapshot.state) {
+            case 'running':
+              setValuesFields('Upload is running');
+              return refName = snapshot.ref.name;
+            case 'paused':
+              setValuesFields('Upload is paused');
+              break;
+          }
+        }, (e) => {
+          console.error('error', e);
+          setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+        },
+        async () => {
+          const sendToFirestore = (colRef: CollectionReference, url: string) => {
+            addDoc(colRef, {
+              fileUrl: url,
+              description: refName,
+              tag: tags,
+              timeCreated: Date.now(),
+              uid: user?.uid
+            });
+            setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+            setFile(null);
+            resetForm(initialValues);
+          };
+        
+          switch (tags) {
+            case `${data?.Aside?.animations}`:
+              const animationURL = await getDownloadURL(animationsRef);
+              sendToFirestore(animationsCollectionRef(), animationURL);
+              break;
+            case `${data?.Aside?.videos}`:
+              const videoURL = await getDownloadURL(videosRef);
+              sendToFirestore(videosCollectionRef(), videoURL);
+              break;
+            default:
+              const photoURL = await getDownloadURL(photosRef);
+              sendToFirestore(photosCollectionRef(), photoURL);
+          }
+        });
+    } catch (e) {
+      console.log(e);
+    }
   };
   
   // const managedUpload = (state: string) => {

@@ -29,17 +29,22 @@ export default function Home() {
   }, [isUser]);
   
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+    try {
+      gsap.registerPlugin(ScrollTrigger);
   
-    const sections = document.querySelectorAll('section');
-    sections.forEach((section: HTMLElement) => {
-      gsap.fromTo(section.children, { y: '+=200', x: '-=200', opacity: 0}, { y: 0, x: 0, opacity: 1, stagger: 0.2, duration: 1.2, ease: 'easeInOut', scrollTrigger: {
-          trigger: section,
-          start: 'top 140%',
-          end: 'button 10%',
-          scrub: 3
-        }});
-    });
+      const sections = document.querySelectorAll('section');
+      sections.forEach((section: HTMLElement) => {
+        gsap.fromTo(section.children, { y: '+=200', x: '-=200', opacity: 0}, { y: 0, x: 0, opacity: 1, stagger: 0.2, duration: 1.2, ease: 'easeInOut', scrollTrigger: {
+            trigger: section,
+            start: 'top 140%',
+            end: 'button 10%',
+            scrub: 3
+          }});
+      });
+    }
+    catch (e) {
+      console.log(e);
+    }
   }, [])
   
   const image = 320;

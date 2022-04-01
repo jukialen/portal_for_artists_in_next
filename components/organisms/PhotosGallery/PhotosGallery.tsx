@@ -27,7 +27,7 @@ export const PhotosGallery = ({ data }: DataType) => {
   const user = auth?.currentUser;
 
   
-  const downloadFiles = async () => {
+  const downloadFiles = () => {
     try {
       onSnapshot(nextPage,  (querySnapshot) => {
           const filesArray: FileType[] = [];
@@ -45,7 +45,7 @@ export const PhotosGallery = ({ data }: DataType) => {
           console.error('Error', e);
         });
     } catch (e) {
-      console.log('No such document!');
+      console.log('No such document!', e);
     }
   };
 

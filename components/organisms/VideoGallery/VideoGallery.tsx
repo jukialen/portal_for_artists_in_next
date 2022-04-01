@@ -28,7 +28,7 @@ export const VideoGallery = ({ data }: DataType) => {
   
   const user = auth?.currentUser;
   
-  const downloadVideos = async () => {
+  const downloadVideos = () => {
     try {
       onSnapshot(nextPage,  (querySnapshot) => {
           const filesArray: FileType[] = [];
@@ -46,7 +46,7 @@ export const VideoGallery = ({ data }: DataType) => {
           console.error('Error', e);
         });
     } catch (e) {
-      console.log('No such document!');
+      console.log('No such document!', e);
     }
   };
   

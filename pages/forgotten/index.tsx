@@ -40,6 +40,7 @@ export default function Forgotten() {
       resetForm(initialValues);
       setValuesFields(data?.Forgotten?.success);
     } catch (e) {
+      console.log(e);
       setValuesFields(data?.error);
     }
   };

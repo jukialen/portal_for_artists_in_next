@@ -18,7 +18,6 @@ export const Categories = ({ data }: DataType) => {
     setArrowIcon(!arrowIcon);
   };
   
-  
   return (
     <ol className={styles.categories}>
       <li className={styles.shadow }>
@@ -26,7 +25,10 @@ export const Categories = ({ data }: DataType) => {
           <a
             className={`${styles.link} ${styles.withIcon} `}
             onClick={changeOpenCategories}
-          ><p className={styles.p}>{data?.Aside?.drawings}</p>
+          >
+            <p className={styles.p}>
+              {data?.Aside?.drawings}
+            </p>
             {arrowIcon ? <TriangleDownIcon w='1.5rem' h='1.5rem' className={styles.icons} /> :
               <TriangleUpIcon w='1.5rem' h='1.5rem' className={styles.icons} />}</a>
         </Link>

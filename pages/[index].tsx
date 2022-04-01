@@ -134,6 +134,7 @@ export default function Drawings() {
   };
   
   useMemo(() => { downloadDrawings()  }, [nextPage]);
+  
   return !loading ? (
     <div className='workspace'>
       <article className={styles.categories__index__in__account}>
