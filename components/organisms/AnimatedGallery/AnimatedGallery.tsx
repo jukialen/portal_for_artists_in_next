@@ -1,25 +1,28 @@
 import { useEffect, useState } from 'react';
+import { storage } from '../../../firebase';
+import { ref } from 'firebase/storage';
 import { limit, onSnapshot, orderBy, query } from 'firebase/firestore';
 
-import { animationsCollectionRef } from 'references/referencesFirebase';
+import { animationsCollectionRef, userAnimationsRef} from 'references/referencesFirebase';
 
-import { DataType, FileType } from 'types/global.types';
+import { FileType, UserType } from 'types/global.types';
 
-import { Article } from 'components/molecules/Article/Article';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+import { Article } from 'components/molecules/Article/Article';
 
-import styles from './AnimatedGallery.module.scss';
 import { Skeleton } from '@chakra-ui/react';
-import { ref } from 'firebase/storage';
-import { auth, storage } from '../../../firebase';
 
-export const AnimatedGallery = ({ data }: DataType) => {
+export const AnimatedGallery = ({ user, data }: UserType) => {
   const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
   const [loading, setLoading] = useState(false);
   
   const maxItems: number = 15;
-  const nextPage = query(animationsCollectionRef(), orderBy('timeCreated', 'desc'), limit(maxItems));
-  const user = auth?.currentUser;
+  const nextPage = query(
+    !!user ? userAnimationsRef(user) : animationsCollectionRef(),
+    orderBy('timeCreated', 'desc'),
+    limit(maxItems)
+  );
   
   const downloadAnimations = () => {
     try {
@@ -29,7 +32,8 @@ export const AnimatedGallery = ({ data }: DataType) => {
             filesArray.push({
               fileUrl: doc.data().fileUrl,
               description: doc.data().description,
-              time: doc.data().timeCreated
+              time: doc.data().timeCreated,
+              tags: doc.data().tag
             });
           });
           setUserAnimatedPhotos(filesArray);
@@ -44,32 +48,33 @@ export const AnimatedGallery = ({ data }: DataType) => {
   };
   
   useEffect(() => {
-    downloadAnimations();
+    return downloadAnimations();
   }, []);
   
   return (
-    <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
-      <em className={styles.title}>{data?.Account?.gallery?.userAnimationsTitle}</em>
+    <article id='user__gallery__in__account' className='user__gallery__in__account'>
+      <em className='title'>{data?.Account?.gallery?.userAnimationsTitle}</em>
       
-      <div className={styles.user__animated__photos}>
+      <Wrapper>
         {
           userAnimatedPhotos.length > 0 ?
-            userAnimatedPhotos.map(({ fileUrl, description, time }: FileType) => <Skeleton
+            userAnimatedPhotos.map(({ fileUrl, description, time, tags }: FileType) => <Skeleton
               isLoaded={loading}
               key={time}
             >
               <Article
-                imgLink={fileUrl}
+                link={fileUrl}
                 refFile={animationsCollectionRef()}
                 subCollection='animations'
-                refStorage={ref(storage, `${user?.uid}/animations/${description}`)}
-                imgDescription={description}
+                refStorage={ref(storage, `${user}/animations/${description}`)}
+                description={description}
+                tag={tags}
                 unopt
               />
             </Skeleton>) :
             <ZeroFiles text={data?.ZeroFiles?.animations} />
         }
-      </div>
+      </Wrapper>
     </article>
   );
 };

@@ -97,6 +97,16 @@ a {
   padding-top: 3rem;
 }
 
+.user__gallery__in__account {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.8rem;
+  display: inline-block;
+  margin: 3rem auto;
+}
+
 .button {
   display: flex;
   border: .2rem inset $secondary__color;
@@ -180,5 +190,4 @@ a {
 
     }
   }
-
 }

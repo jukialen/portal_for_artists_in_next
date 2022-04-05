@@ -101,7 +101,7 @@
       "userLikedAnimations": "Liked　animations"
     },
     "profile": {
-      "aboutMe": "About me:",
+      "aboutMe": "About me",
       "ariaLabelButton": "Updating pseudonym and description button",
       "save": "Save",
       "successSending": "Profile has been updated.",

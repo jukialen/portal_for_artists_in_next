@@ -52,3 +52,16 @@ export const nextOthers = query(allPhotosCollectionRef(),
   orderBy('timeCreated', 'desc'),
   limit(maxItems)
 );
+
+
+export const userPhotosRef = (user?: string) => {
+  return collection(db, `users/${user}/photos`)
+}
+
+export const userAnimationsRef = (user?: string) => {
+  return collection(db, `users/${user}/animations`)
+}
+
+export const userVideosRef = (user?: string) => {
+  return collection(db, `users/${user}/videos`)
+}

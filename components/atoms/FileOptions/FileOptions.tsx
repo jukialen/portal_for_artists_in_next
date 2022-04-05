@@ -2,25 +2,42 @@ import styles from './FileOptions.module.scss';
 import { IconButton } from '@chakra-ui/react';
 import { AiOutlineShareAlt } from 'react-icons/ai';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { Comments } from '../Comments/Comments';
+import {
+  LineShareButton,
+  LineIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+  WeiboShareButton,
+  WeiboIcon,
+} from 'next-share';
 
-type AuthorType = {
-  authorName?: string
-}
-export const FileOptions = ({ authorName }: AuthorType) => {
+import { FileContainerType } from 'types/global.types';
+import { useRouter } from 'next/router';
+import { RWebShare } from 'react-web-share';
+
+export const FileOptions = ({ authorName, link, tag }: FileContainerType) => {
   const [share, setShare] = useState(false);
-  const [open, setOpen] =useState(false);
+  const [open, setOpen] = useState(false);
+  
+  const { locale } = useRouter();
   
   const showShare = () => setShare(!share);
   const showOpenComments = () => setOpen(!open);
   
   const icon = 30;
+  const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/post/${authorName}/${link}/${tag}`
   return (
     <div className={styles.options}>
       <div className={styles.bottomPanel}>
         <div className={styles.author__name}>
-          <a href='#'>{authorName}</a>
+          <Link href={`${locale === 'en' ? '/' : `/${locale}/`}user/${authorName}`}>
+            <a>
+              {authorName}
+            </a>
+          </Link>
         </div>
       
         <div className={styles.share}>
@@ -36,33 +53,29 @@ export const FileOptions = ({ authorName }: AuthorType) => {
           />
         
           <div className={`${styles.share__options} ${share ? styles.share__options__active : ''}`}>
-            <a
-              href='https://www.facebook.com'
-              className={styles.icon}
-              target='_blank'
-              rel='noreferrer'
-            >
-              <Image src='/facebook.svg' width={icon} height={icon} aria-label='facebook icon' />
-            </a>
-            <a
-              href='https://www.twitter.com'
-              className={styles.icon}
-              target='_blank'
-              rel='noreferrer'
-            >
-              <Image src='/twitter.svg' width={icon} height={icon} aria-label='twitter icon' />
-            </a>
-            <a
-              href='https://www.discord.com'
-              className={styles.icon}
-              target='_blank'
-              rel='noreferrer'
-            >
-              <Image src='/discord.svg' width={icon} height={icon} aria-label='discord icon' />
-            </a>
-            <a href='#' className={styles.icon}>
-              <Image src='/copy.svg' width={icon} height={icon} aria-label='copy icon' />
-            </a>
+            <div className={styles.icon}>
+              <LineShareButton url={linkShare}>
+                <LineIcon size={icon} />
+              </LineShareButton>
+            </div>
+            <div className={styles.icon}>
+              <WhatsappShareButton url={linkShare} windowHeight={500}>
+                <WhatsappIcon size={icon}  />
+              </WhatsappShareButton>
+            </div>
+            <div className={styles.icon}>
+              <WeiboShareButton url={linkShare}>
+                <WeiboIcon size={icon} round />
+              </WeiboShareButton>
+            </div>
+            <div className={styles.icon}>
+              <RWebShare
+                data={{ url: linkShare }}
+                onClick={() => console.log('shared successfully!')}
+              >
+                <Image src='/copy.svg' width={icon} height={icon} aria-label='copy icon' />
+              </RWebShare>
+            </div>
           </div>
       
         </div>

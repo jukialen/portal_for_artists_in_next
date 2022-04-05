@@ -4,6 +4,11 @@ import { ChangeEvent } from 'react';
 
 export type DataType = any;
 
+export type UserType = {
+  user: string | undefined;
+  data: DataType
+};
+
 export type EventType =  ChangeEvent<EventTarget & HTMLInputElement>;
 
 export type FormType = {
@@ -17,18 +22,19 @@ export type UserDataType = {
 
 export type FileType = {
   fileUrl: string;
-  description?: string;
-  time: string;
-  tags?: string;
-  pseudonym?: string;
+  description: string;
+  time?: string;
+  tags: string;
+  pseudonym?: string
 }
 
-export type ArticleImgType = {
-  imgLink: string;
-  refFile:  CollectionReference | Query;
-  subCollection: string;
+export type FileContainerType = {
+  link: string;
+  refFile?:  CollectionReference | Query;
+  subCollection?: string;
   refStorage?:  StorageReference;
-  imgDescription?: string;
+  description?: string;
   authorName?: string;
-  unopt?: boolean;
+  tag: string;
+  unopt?: boolean
 };

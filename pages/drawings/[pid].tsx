@@ -1,23 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { auth, storage } from '../../firebase';
-import {
-  CollectionReference,
-  limit,
-  onSnapshot,
-  orderBy,
-  Query,
-  query,
-  QueryDocumentSnapshot,
-  where
-} from 'firebase/firestore';
+import { CollectionReference, limit, onSnapshot, orderBy, Query, query, where } from 'firebase/firestore';
 import { ref, StorageReference } from 'firebase/storage';
 
 import { FileType } from 'types/global.types';
 
 import {
   allPhotosCollectionRef,
-  animationsCollectionRef, photosCollectionRef, videosCollectionRef
+  animationsCollectionRef,
+  photosCollectionRef,
+  videosCollectionRef
 } from 'references/referencesFirebase';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
@@ -66,7 +59,7 @@ export default function Drawings() {
     }
   }, [pid]);
   
-  const downloadDrawings = async () => {
+  const downloadDrawings = () => {
     try {
       nextPage = query(allPhotosCollectionRef(),
         where('tag', 'in', nextPageArray),
@@ -76,8 +69,8 @@ export default function Drawings() {
   
       onSnapshot(nextPage, (querySnapshot) => {
           const drawingsArray: FileType[] = [];
-      
-          querySnapshot.forEach((document: QueryDocumentSnapshot) => {
+    
+          querySnapshot.forEach((document) => {
             drawingsArray.push({
               fileUrl: document.data().fileUrl,
               time: document.data().timeCreated,
@@ -107,7 +100,6 @@ export default function Drawings() {
             }
           });
           
-          console.log('array', drawingsArray);
           setUserDrawings(drawingsArray);
           setLoadingFiles(true);
         },
@@ -121,30 +113,31 @@ export default function Drawings() {
   };
   
   useEffect(() => {
-    downloadDrawings();
+    return downloadDrawings();
   }, [nextPageArray]);
   
   return !loading ? (
     <div className='workspace'>
-      <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
-  
       <HeadCom path={router.asPath} content='Sites with drawings and photos.' />
+    
+      <article id='user__gallery__in__account' className='user__gallery__in__account'>
       
-      <em className={styles.title}>{data?.Aside?.category}: {pid}</em>
+        <em className={styles.title}>{data?.Aside?.category}: {pid}</em>
       
-       <Wrapper>{
+        <Wrapper>{
           userDrawings.length > 0 ?
-            userDrawings.map(({ fileUrl, time, description }: FileType) => <Skeleton
+            userDrawings.map(({ fileUrl, time, description, tags }: FileType) => <Skeleton
               isLoaded={loadingFiles}
               key={time}
             >
-            <Article
-              imgLink={fileUrl}
-              imgDescription={description}
-              refFile={refFile!}
-              subCollection={subCollection}
-              refStorage={refStorage!}
-            />
+              <Article
+                link={fileUrl}
+                description={description}
+                refFile={refFile!}
+                subCollection={subCollection}
+                refStorage={refStorage!}
+                tag={tags}
+              />
             </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.files} />
        }</Wrapper>
       </article>

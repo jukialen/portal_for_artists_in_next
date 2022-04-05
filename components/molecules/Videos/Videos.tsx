@@ -1,21 +1,13 @@
 import styles from './Videos.module.scss';
 
-import { FileOptions } from 'components/atoms/FileOptions/FileOptions';
-import { CollectionReference, Query } from 'firebase/firestore';
-import { StorageReference } from 'firebase/storage';
-
 import { useUserData } from 'hooks/useUserData';
+
+import { FileContainerType } from 'types/global.types';
+
 import { DeletionFile } from 'components/atoms/DeletionFile/DeletionFile';
+import { FileOptions } from 'components/atoms/FileOptions/FileOptions';
 
-type VideoType = {
-  link: string;
-  authorName?: string;
-  refFile: CollectionReference | Query;
-  refStorage?:  StorageReference;
-  description?: string;
-};
-
-export const Videos = ({ link, description, refFile, refStorage, authorName }: VideoType) => {
+export const Videos = ({ link, description, refFile, refStorage, authorName, tag }: FileContainerType) => {
   const { pseudonym } = useUserData();
   
   return (
@@ -24,7 +16,7 @@ export const Videos = ({ link, description, refFile, refStorage, authorName }: V
         pseudonym === authorName && <DeletionFile
           description={description}
           subCollection='videos'
-          refFile={refFile}
+          refFile={refFile!}
           refStorage={refStorage!}
         />
       }
@@ -38,7 +30,13 @@ export const Videos = ({ link, description, refFile, refStorage, authorName }: V
         and watch it with your favorite video player!
       </video>
       
-      <FileOptions authorName={authorName} />
+      <FileOptions
+        authorName={authorName}
+        refFile={refFile}
+        link={link}
+        subCollection='videos'
+        tag={tag}
+      />
     </div>
   )
 }

@@ -3,7 +3,7 @@
 .profile {
   justify-items: center;
   display: grid;
-  margin: 2rem auto;
+  margin: 0 auto;
   font-size: 1.8rem;
 }
 
@@ -63,6 +63,7 @@
     width: 27rem;
     max-width: 84vw;
     line-height: 1.6;
+    text-align: left;
   }
 }
 

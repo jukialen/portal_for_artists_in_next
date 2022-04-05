@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-
+import { storage } from '../../../firebase';
+import { ref } from 'firebase/storage';
 import {
   limit,
   onSnapshot,
@@ -7,26 +8,27 @@ import {
   query
 } from 'firebase/firestore';
 
-import { videosCollectionRef } from 'references/referencesFirebase';
+import { videosCollectionRef, userVideosRef } from 'references/referencesFirebase';
 
-import { DataType, FileType } from 'types/global.types';
+import { UserType, FileType } from 'types/global.types';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
-import { Videos } from 'components/molecules/Videos/Videos';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
+import { Videos } from 'components/molecules/Videos/Videos';
 
-import styles from './VideoGallery.module.scss';
 import { Skeleton } from '@chakra-ui/react';
-import { ref } from 'firebase/storage';
-import { auth, storage } from '../../../firebase';
 
-export const VideoGallery = ({ data }: DataType) => {
+export const VideoGallery = ({ user, data }: UserType) => {
   const maxItems: number = 10;
-  const nextPage = query(videosCollectionRef(), orderBy('timeCreated', 'desc'), limit(maxItems));
+  
+  const nextPage = query(
+    !!user ? userVideosRef(user) : videosCollectionRef(),
+    orderBy('timeCreated', 'desc'),
+    limit(maxItems)
+  );
+  
   const [userVideos, setUserVideos] = useState<FileType[]>([]);
   const [loading, setLoading] = useState(false);
-  
-  const user = auth?.currentUser;
   
   const downloadVideos = () => {
     try {
@@ -36,7 +38,8 @@ export const VideoGallery = ({ data }: DataType) => {
             filesArray.push({
               fileUrl: doc.data().fileUrl,
               time: doc.data().timeCreated,
-              description: doc.data().description
+              description: doc.data().description,
+              tags: doc.data().tag
             });
           });
           setUserVideos(filesArray);
@@ -51,26 +54,27 @@ export const VideoGallery = ({ data }: DataType) => {
   };
   
   useEffect(() => {
-    downloadVideos();
+    return downloadVideos();
   }, []);
   
   return (
-    <article id='user__gallery__in__account' className={styles.user__gallery__in__account}>
+    <article id='user__gallery__in__account' className='user__gallery__in__account'>
       
-      <em className={styles.title}>{data?.Account?.gallery?.userVideosTitle}</em>
+      <em className='title'>{data?.Account?.gallery?.userVideosTitle}</em>
       
       <Wrapper>
         {
           userVideos.length > 0 ?
-            userVideos.map(({ fileUrl, description, time }: FileType) => <Skeleton
+            userVideos.map(({ fileUrl, description, time, tags }: FileType) => <Skeleton
               isLoaded={loading}
               key={time}
             >
               <Videos
                 link={fileUrl}
                 refFile={videosCollectionRef()}
-                refStorage={ref(storage, `${user?.uid}/videos/${description}`)}
+                refStorage={ref(storage, `${user}/videos/${description}`)}
                 description={description}
+                tag={tags}
               />
             </Skeleton>) :
             <ZeroFiles text={data?.ZeroFiles?.videos} />

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ArticleImgType } from 'types/global.types';
+import { FileContainerType } from 'types/global.types';
 
 import { useUserData } from 'hooks/useUserData';
 
@@ -8,7 +8,7 @@ import { DeletionFile } from 'components/atoms/DeletionFile/DeletionFile';
 
 import styles from './Article.module.scss';
 
-export const Article = ({ imgLink, refFile, refStorage, subCollection, imgDescription, authorName, unopt }: ArticleImgType) => {
+export const Article = ({ link, refFile, refStorage, subCollection, description, authorName, unopt, tag }: FileContainerType) => {
   const { pseudonym } = useUserData();
   let img = 600;
 
@@ -17,24 +17,30 @@ return (
     {
       pseudonym === authorName &&
       <DeletionFile
-      description={imgDescription}
-      subCollection={subCollection}
-      refFile={refFile}
+      description={description}
+      subCollection={subCollection!}
+      refFile={refFile!}
       refStorage={refStorage!}
     />
     }
+      <Image
+        className={styles.item}
+        src={link}
+        alt={description}
+        width={img}
+        height={img}
+        unoptimized={unopt}
+        priority
+      />
     
-    <Image
-      className={styles.item}
-      src={imgLink}
-      alt={imgDescription}
-      width={img}
-      height={img}
-      unoptimized={unopt}
-      priority
+    
+    <FileOptions
+      authorName={authorName}
+      link={link}
+      refFile={refFile}
+      subCollection={subCollection}
+      tag={tag}
     />
-    
-    <FileOptions authorName={authorName} />
   </div>
   );
 };

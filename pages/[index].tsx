@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
+import { auth, db, storage } from '../firebase';
+import { ref, StorageReference } from 'firebase/storage';
 import {
   CollectionReference,
   doc,
@@ -9,21 +11,23 @@ import {
   orderBy,
   Query,
   query,
-  QueryDocumentSnapshot,
   where
 } from 'firebase/firestore';
+
 import { FileType } from 'types/global.types';
 
 import { filesElements } from 'helpers/fileElements';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
+
 import {
   allAnimatedCollectionRef,
   allPhotosCollectionRef,
   allVideosCollectionRef, animationsCollectionRef, photosCollectionRef, videosCollectionRef
 } from 'references/referencesFirebase';
 
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Article } from 'components/molecules/Article/Article';
@@ -31,9 +35,6 @@ import { Videos } from 'components/molecules/Videos/Videos';
 
 import styles from './categories_index.module.scss';
 import { Skeleton } from '@chakra-ui/react';
-import { auth, db, storage } from '../firebase';
-import { ref, StorageReference } from 'firebase/storage';
-import { Wrapper } from '../components/atoms/Wrapper/Wrapper';
 
 export default function Drawings() {
   const router = useRouter();
@@ -90,7 +91,7 @@ export default function Drawings() {
       onSnapshot(nextPage!, (querySnapshot) => {
           const filesArray: FileType[] = [];
     
-          querySnapshot.forEach(async (document: QueryDocumentSnapshot) => {
+          querySnapshot.forEach(async (document) => {
             const docRef = doc(db, `users/${document.data().uid}`);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
@@ -133,7 +134,7 @@ export default function Drawings() {
     }
   };
   
-  useMemo(() => { downloadDrawings()  }, [nextPage]);
+  useMemo(() => { return downloadDrawings()  }, [nextPage]);
   
   return !loading ? (
     <div className='workspace'>
@@ -144,7 +145,7 @@ export default function Drawings() {
         <em className={styles.title}>{data?.Aside?.category}: {index}</em>
         
         <Wrapper>{
-          userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym }: FileType) => <Skeleton
+          userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
             isLoaded={loadingFiles}
             key={time}
           >
@@ -155,15 +156,17 @@ export default function Drawings() {
                   authorName={pseudonym}
                   refFile={videosCollectionRef()}
                   refStorage={ref(storage, `${user?.uid}/videos/${description}`)}
+                  tag={tags}
                 /> :
                 <Article
-                  imgLink={fileUrl}
-                  imgDescription={description}
+                  link={fileUrl}
+                  description={description}
                   authorName={pseudonym}
                   unopt={index === 'animations'}
                   refFile={refFile!}
                   subCollection={subCollection}
                   refStorage={refStorage!}
+                  tag={tags}
                 />
             }
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />

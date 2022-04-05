@@ -1,0 +1,44 @@
+@use 'styles/variables' as *;
+
+.profile {
+	justify-items: center;
+	display: grid;
+	margin: 0 auto;
+	font-size: 1.8rem;
+}
+.photo__profile {
+	width: 15rem;
+	height: 15rem;
+	position: relative;
+	background-color: $secondary__color;
+	margin: 2rem auto;
+}
+
+.pseudonym__name,
+.about__me {
+	margin: 1.5rem auto;
+	display: flex;
+	flex-flow: column;
+
+	.title {
+		margin: .5rem auto;
+		align-self: center;
+	}
+
+	.input,
+	.description {
+		margin: 1rem;
+		font-size: 1rem;
+	}
+
+	.input {
+		width: 14rem;
+	}
+
+	.description {
+		width: 27rem;
+		max-width: 84vw;
+		line-height: 1.6;
+		text-align: left;
+	}
+}

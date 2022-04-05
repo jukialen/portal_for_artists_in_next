@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export const useCurrentUser = (adress: string) => {
   const { push } = useRouter();
@@ -9,6 +9,6 @@ export const useCurrentUser = (adress: string) => {
   
   const currentUser = onAuthStateChanged(auth, (user) => !!user ? setLoading(false) : push(adress))
   
-  useEffect(() => { currentUser() }, [currentUser])
+  useEffect(() => { return currentUser() }, [currentUser])
   return loading
 };

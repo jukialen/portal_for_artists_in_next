@@ -4,7 +4,6 @@ import { auth, db, storage } from '../../firebase';
 import {
   doc, getDoc,
   onSnapshot,
-  QueryDocumentSnapshot,
 } from 'firebase/firestore';
 import { ref } from 'firebase/storage';
 
@@ -55,7 +54,7 @@ export default function Application() {
       onSnapshot(nextDrawings, (querySnapshot) => {
         const filesArray: FileType[] = [];
   
-        querySnapshot.forEach(async (document: QueryDocumentSnapshot) => {
+        querySnapshot.forEach(async (document) => {
           const docRef = doc(db, `users/${document.data().uid}`);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
@@ -82,7 +81,7 @@ export default function Application() {
       onSnapshot(nextPhotos, (querySnapshot) => {
           const filesArray: FileType[] = [];
     
-          querySnapshot.forEach(async (document: QueryDocumentSnapshot) => {
+          querySnapshot.forEach(async (document) => {
           const docRef = doc(db, `users/${document.data().uid}`);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
@@ -108,7 +107,7 @@ export default function Application() {
     try {
       onSnapshot(nextAnimations, (querySnapshot) => {
           const filesArray: FileType[] = [];
-          querySnapshot.forEach(async (document: QueryDocumentSnapshot) => {
+          querySnapshot.forEach(async (document) => {
             const docRef = doc(db, `users/${document.data().uid}`);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
@@ -135,7 +134,7 @@ export default function Application() {
       onSnapshot(nextVideos, (querySnapshot) => {
           const filesArray: FileType[] = [];
     
-          querySnapshot.forEach(async (document: QueryDocumentSnapshot) => {
+          querySnapshot.forEach(async (document) => {
             const docRef = doc(db, `users/${document.data().uid}`);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
@@ -162,7 +161,7 @@ export default function Application() {
       onSnapshot(nextOthers, (querySnapshot) => {
           const filesArray: FileType[] = [];
           
-          querySnapshot.forEach(async (document: QueryDocumentSnapshot) => {
+          querySnapshot.forEach(async (document) => {
           const docRef = doc(db, `users/${document.data().uid}`);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
@@ -197,17 +196,18 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastDrawings}</h2>
       <AppWrapper>
         {
-          userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym }: FileType) => <Skeleton
+          userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
             isLoaded={loadingFiles}
             key={time}
           >
             <Article
-              imgLink={fileUrl}
-              imgDescription={description}
+              link={fileUrl}
+              description={description}
               authorName={pseudonym}
               refFile={allPhotosCollectionRef()}
               subCollection='photos'
               refStorage={ref(storage, `${user?.uid}/photos/${description}`)}
+              tag={tags}
             />
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.drawings} />
         }
@@ -216,17 +216,18 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastPhotos}</h2>
       <AppWrapper>
         {
-          userPhotos.length > 0 ? userPhotos.map(({ fileUrl, time, description, pseudonym }: FileType) => <Skeleton
+          userPhotos.length > 0 ? userPhotos.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
             isLoaded={loadingFiles}
             key={time}
           >
             <Article
-              imgLink={fileUrl}
-              imgDescription={description}
+              link={fileUrl}
+              description={description}
               authorName={pseudonym}
               refFile={allPhotosCollectionRef()}
               subCollection='photos'
               refStorage={ref(storage, `${user?.uid}/photos/${description}`)}
+              tag={tags}
             />
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.photos} />
         }
@@ -235,17 +236,18 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastOthers}</h2>
       <AppWrapper>
         {
-          userOthers.length > 0 ? userOthers.map(({ fileUrl, time, description, pseudonym }: FileType) => <Skeleton
+          userOthers.length > 0 ? userOthers.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
             isLoaded={loadingFiles}
             key={time}
           >
             <Article
-              imgLink={fileUrl}
-              imgDescription={description}
+              link={fileUrl}
+              description={description}
               authorName={pseudonym}
               refFile={allPhotosCollectionRef()}
               subCollection='photos'
               refStorage={ref(storage, `${user?.uid}/photos/${description}`)}
+              tag={tags}
             />
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.others} />
         }
@@ -254,27 +256,27 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastAnimations}</h2>
       <AppWrapper>
         {
-          userAnimations.length > 0 ? userAnimations.map(({ fileUrl, time, description, pseudonym }: FileType) => <Skeleton
+          userAnimations.length > 0 ? userAnimations.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
             isLoaded={loadingFiles}
             key={time}
           >
             <Article
-              imgLink={fileUrl}
-              imgDescription={description}
+              link={fileUrl}
+              description={description}
               authorName={pseudonym}
               refFile={allAnimatedCollectionRef()}
               unopt
               subCollection='animations'
               refStorage={ref(storage, `${user?.uid}/animations/${description}`)}
+              tag={tags}
             />
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.animations} />
         }
-        
       </AppWrapper>
       <h2 className={styles.liked}>{data?.App?.lastVideos}</h2>
       <AppWrapper>
         {
-          userVideos.length > 0 ? userVideos.map(({ fileUrl, time, description, pseudonym }: FileType) => <Skeleton
+          userVideos.length > 0 ? userVideos.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
             isLoaded={loadingFiles}
             key={time}
           >
@@ -284,10 +286,10 @@ export default function Application() {
               authorName={pseudonym}
               refFile={allVideosCollectionRef()}
               refStorage={ref(storage, `${user?.uid}/videos/${description}`)}
+              tag={tags}
             />
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />
         }
-
       </AppWrapper>
     </section>
   ) : null;

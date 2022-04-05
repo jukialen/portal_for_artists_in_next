@@ -81,7 +81,7 @@ export const ProfileAccount = ({ data }: DataType) => {
                 setValuesFields('Upload is paused');
                 break;
             }
-          }, (e: Error) => {
+          }, (e) => {
             setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
           },
           async () => {
