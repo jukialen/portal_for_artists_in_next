@@ -58,7 +58,7 @@ export default function Application() {
           const docRef = doc(db, `users/${document.data().uid}`);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            filesElements(filesArray, document, docSnap);
+            filesElements(filesArray, document, docSnap.data().pseudonym);
           } else {
             console.error('No such doc')
           }
@@ -85,7 +85,7 @@ export default function Application() {
           const docRef = doc(db, `users/${document.data().uid}`);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            filesElements(filesArray, document, docSnap);
+            filesElements(filesArray, document, docSnap.data().pseudonym);
           } else {
             console.error('No such doc')
           }
@@ -111,7 +111,7 @@ export default function Application() {
             const docRef = doc(db, `users/${document.data().uid}`);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-              filesElements(filesArray, document, docSnap);
+              filesElements(filesArray, document, docSnap.data().pseudonym);
             } else {
               console.error('No such doc')
             }
@@ -138,7 +138,7 @@ export default function Application() {
             const docRef = doc(db, `users/${document.data().uid}`);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-              filesElements(filesArray, document, docSnap);
+              filesElements(filesArray, document, docSnap.data().pseudonym);
             } else {
               console.error('No such doc')
             }
@@ -165,7 +165,7 @@ export default function Application() {
           const docRef = doc(db, `users/${document.data().uid}`);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            filesElements(filesArray, document, docSnap);
+            filesElements(filesArray, document, docSnap.data().pseudonym);
           } else {
             console.error('No such doc')
           }

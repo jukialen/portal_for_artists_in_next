@@ -7,7 +7,7 @@ import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { animationsCollectionRef, photosCollectionRef, videosCollectionRef } from 'references/referencesFirebase';
+import { userAnimationsRef, userPhotosRef, userVideosRef } from 'references/referencesFirebase';
 
 import { EventType, FormType } from 'types/global.types';
 
@@ -112,15 +112,15 @@ export const FilesUpload = () => {
           switch (tags) {
             case `${data?.Aside?.animations}`:
               const animationURL = await getDownloadURL(animationsRef);
-              sendToFirestore(animationsCollectionRef(), animationURL);
+              sendToFirestore(userAnimationsRef(), animationURL);
               break;
             case `${data?.Aside?.videos}`:
               const videoURL = await getDownloadURL(videosRef);
-              sendToFirestore(videosCollectionRef(), videoURL);
+              sendToFirestore(userVideosRef(), videoURL);
               break;
             default:
               const photoURL = await getDownloadURL(photosRef);
-              sendToFirestore(photosCollectionRef(), photoURL);
+              sendToFirestore(userPhotosRef(), photoURL);
           }
         });
     } catch (e) {

@@ -6,6 +6,7 @@ export type DataType = any;
 
 export type UserType = {
   user: string | undefined;
+  pseudonym?: string;
   data: DataType
 };
 
@@ -25,7 +26,7 @@ export type FileType = {
   description: string;
   time?: string;
   tags: string;
-  pseudonym?: string
+  pseudonym: string
 }
 
 export type FileContainerType = {

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { storage } from '../../../firebase';
+import { auth, db, storage } from '../../../firebase';
 import { ref } from 'firebase/storage';
-import { limit, onSnapshot, orderBy, query, } from 'firebase/firestore';
+import { doc, getDoc, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
 
-import { photosCollectionRef, userPhotosRef } from 'references/referencesFirebase';
+import { userPhotosRef } from 'references/referencesFirebase';
+
+import { filesElements } from 'helpers/fileElements';
 
 import { FileType, UserType } from 'types/global.types';
 
@@ -12,27 +14,39 @@ import { Article } from 'components/molecules/Article/Article';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 
 import { Skeleton } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 
-export const PhotosGallery = ({ user, data }: UserType) => {
-  const maxItems: number = 20;
-  const nextPage = query(!!user ? userPhotosRef(user) : photosCollectionRef(), orderBy('timeCreated', 'desc'), limit(maxItems));
+export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
   const [loading, setLoading] = useState(false);
+  
+  const currenUser = auth.currentUser;
+  const maxItems: number = 20;
+  const { asPath } = useRouter();
+  const nextPage = query(
+      userPhotosRef(user),
+      orderBy('timeCreated', 'desc'),
+      limit(maxItems)
+    )
+  
+  console.log(user)
+  console.log(nextPage)
   
   const downloadFiles = () => {
     try {
       onSnapshot(nextPage,  (querySnapshot) => {
           const filesArray: FileType[] = [];
-          querySnapshot.forEach((doc) => {
-            filesArray.push({
-              fileUrl: doc.data().fileUrl,
-              description: doc.data().description,
-              time: doc.data().timeCreated,
-              tags: doc.data().tag
-            });
+          querySnapshot.forEach(async (document) => {
+            const docRef = doc(db, `users/${document.data().uid}`);
+              const docSnap = await getDoc(docRef);
+              if (docSnap.exists()) {
+                filesElements(filesArray, document, !!pseudonym ? pseudonym : docSnap.data().pseudonym);
+              } else {
+                console.error('No such doc')
+              }
           });
           setUserPhotos(filesArray);
-          setLoading(true);
+    
         },
         (e) => {
           console.error('Error', e);
@@ -44,26 +58,29 @@ export const PhotosGallery = ({ user, data }: UserType) => {
 
   useEffect(() => {
     return downloadFiles();
-  }, []);
+  }, [user]);
+  
+  console.log(userPhotos)
   
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
-      <em className='title'>{data?.Account?.gallery?.userPhotosTitle}</em>
-
+      {asPath === `/account/${pseudonym}` && <em className='title'>{data?.Account?.gallery?.userPhotosTitle}</em>}
+      
       <Wrapper>
         {
-          userPhotos.length > 0 ?
-            userPhotos.map(({ fileUrl, description, time, tags }: FileType) => <Skeleton
+          (!!user && userPhotos.length > 0) ?
+            userPhotos.map(({ fileUrl, description, time, tags, pseudonym }: FileType) => <Skeleton
               isLoaded={loading}
               key={time}
             >
             <Article
               link={fileUrl}
-              refFile={photosCollectionRef()}
+              refFile={userPhotosRef()}
               subCollection='photos'
               refStorage={ref(storage, `${user}/photos/${description}`)}
               description={description}
               tag={tags}
+              authorName={pseudonym}
             />
             </Skeleton>) :
             <ZeroFiles text={data?.ZeroFiles?.photos} />

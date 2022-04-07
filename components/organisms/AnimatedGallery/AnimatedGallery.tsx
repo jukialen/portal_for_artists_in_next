@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { storage } from '../../../firebase';
+import { db, storage } from '../../../firebase';
 import { ref } from 'firebase/storage';
-import { limit, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { doc, getDoc, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
 
-import { animationsCollectionRef, userAnimationsRef} from 'references/referencesFirebase';
+import { userAnimationsRef } from 'references/referencesFirebase';
 
 import { FileType, UserType } from 'types/global.types';
 
@@ -19,7 +19,7 @@ export const AnimatedGallery = ({ user, data }: UserType) => {
   
   const maxItems: number = 15;
   const nextPage = query(
-    !!user ? userAnimationsRef(user) : animationsCollectionRef(),
+    userAnimationsRef(user),
     orderBy('timeCreated', 'desc'),
     limit(maxItems)
   );
@@ -28,12 +28,15 @@ export const AnimatedGallery = ({ user, data }: UserType) => {
     try {
       onSnapshot(nextPage, (querySnapshot) => {
           const filesArray: FileType[] = [];
-          querySnapshot.forEach((doc) => {
+          querySnapshot.forEach(async (document) => {
+            const docRef = doc(db, `users/${document.data().uid}`);
+            const docSnap = await getDoc(docRef);
             filesArray.push({
-              fileUrl: doc.data().fileUrl,
-              description: doc.data().description,
-              time: doc.data().timeCreated,
-              tags: doc.data().tag
+              fileUrl: document.data().fileUrl,
+              description: document.data().description,
+              time: document.data().timeCreated,
+              pseudonym: docSnap.data()!.pseudonym,
+              tags: document.data().tag
             });
           });
           setUserAnimatedPhotos(filesArray);
@@ -64,7 +67,7 @@ export const AnimatedGallery = ({ user, data }: UserType) => {
             >
               <Article
                 link={fileUrl}
-                refFile={animationsCollectionRef()}
+                refFile={userAnimationsRef()}
                 subCollection='animations'
                 refStorage={ref(storage, `${user}/animations/${description}`)}
                 description={description}

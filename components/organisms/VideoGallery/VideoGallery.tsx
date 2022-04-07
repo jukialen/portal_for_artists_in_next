@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { storage } from '../../../firebase';
+import { db, storage } from '../../../firebase';
 import { ref } from 'firebase/storage';
 import {
+  doc,
+  getDoc,
   limit,
   onSnapshot,
   orderBy,
   query
 } from 'firebase/firestore';
 
-import { videosCollectionRef, userVideosRef } from 'references/referencesFirebase';
+import { userVideosRef } from 'references/referencesFirebase';
 
 import { UserType, FileType } from 'types/global.types';
 
@@ -22,7 +24,7 @@ export const VideoGallery = ({ user, data }: UserType) => {
   const maxItems: number = 10;
   
   const nextPage = query(
-    !!user ? userVideosRef(user) : videosCollectionRef(),
+    userVideosRef(user),
     orderBy('timeCreated', 'desc'),
     limit(maxItems)
   );
@@ -34,12 +36,15 @@ export const VideoGallery = ({ user, data }: UserType) => {
     try {
       onSnapshot(nextPage,  (querySnapshot) => {
           const filesArray: FileType[] = [];
-          querySnapshot.forEach((doc) => {
+          querySnapshot.forEach(async (document) => {
+            const docRef = doc(db, `users/${document.data().uid}`);
+            const docSnap = await getDoc(docRef);
             filesArray.push({
-              fileUrl: doc.data().fileUrl,
-              time: doc.data().timeCreated,
-              description: doc.data().description,
-              tags: doc.data().tag
+              fileUrl: document.data().fileUrl,
+              time: document.data().timeCreated,
+              description: document.data().description,
+              pseudonym: docSnap.data()!.pseudonym,
+              tags: document.data().tag
             });
           });
           setUserVideos(filesArray);
@@ -71,7 +76,7 @@ export const VideoGallery = ({ user, data }: UserType) => {
             >
               <Videos
                 link={fileUrl}
-                refFile={videosCollectionRef()}
+                refFile={userVideosRef()}
                 refStorage={ref(storage, `${user}/videos/${description}`)}
                 description={description}
                 tag={tags}

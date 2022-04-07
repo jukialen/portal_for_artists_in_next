@@ -172,13 +172,13 @@ export default function User() {
               </TabList>
               <TabPanels padding={0}>
                 <TabPanel padding={0} role='tabpanel'>
-                  <PhotosGallery user={uid} data={data} />
+                  <PhotosGallery user={uid} data={data} pseudonym={author} />
                 </TabPanel>
                 <TabPanel padding={0} role='tabpanel'>
-                  <AnimatedGallery user={uid} data={data} />
+                  <AnimatedGallery user={uid} data={data} pseudonym={author} />
                 </TabPanel>
                 <TabPanel padding={0} role='tabpanel'>
-                  <VideoGallery user={uid} data={data} />
+                  <VideoGallery user={uid} data={data} pseudonym={author} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

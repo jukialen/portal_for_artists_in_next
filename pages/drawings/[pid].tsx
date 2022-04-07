@@ -1,17 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth, storage } from '../../firebase';
-import { CollectionReference, limit, onSnapshot, orderBy, Query, query, where } from 'firebase/firestore';
+import { auth, db, storage } from '../../firebase';
+import { CollectionReference, doc, getDoc, limit, onSnapshot, orderBy, Query, query, where } from 'firebase/firestore';
 import { ref, StorageReference } from 'firebase/storage';
 
 import { FileType } from 'types/global.types';
 
-import {
-  allPhotosCollectionRef,
-  animationsCollectionRef,
-  photosCollectionRef,
-  videosCollectionRef
-} from 'references/referencesFirebase';
+import { allPhotosCollectionRef, userAnimationsRef, userPhotosRef, userVideosRef } from 'references/referencesFirebase';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
@@ -70,40 +65,47 @@ export default function Drawings() {
       onSnapshot(nextPage, (querySnapshot) => {
           const drawingsArray: FileType[] = [];
     
-          querySnapshot.forEach((document) => {
-            drawingsArray.push({
-              fileUrl: document.data().fileUrl,
-              time: document.data().timeCreated,
-              tags: document.data().tag,
-              description: document.data().description
-            });
-            switch (pid) {
-              case 'photographs':
-                setRefFile(photosCollectionRef());
-                setSubCollection('photos');
+          querySnapshot.forEach(async (document) => {
+            const docRef = doc(db, `users/${document.data().uid}`);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              drawingsArray.push({
+                fileUrl: document.data().fileUrl,
+                time: document.data().timeCreated,
+                tags: document.data().tag,
+                pseudonym: docSnap.data()!.pseudonym,
+                description: document.data().description
+              });
+              switch (pid) {
+                case 'photographs':
+                  setRefFile(userPhotosRef(user?.uid));
+                  setSubCollection('photos');
                 setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
                 break;
               case 'animations':
-                setRefFile(animationsCollectionRef);
+                setRefFile(userAnimationsRef(user?.uid));
                 setSubCollection('animations');
                 setRefStorage(ref(storage, `${user?.uid}/animations/${document.data().description}`));
                 break;
-              case 'videos':
-                setRefFile(videosCollectionRef);
-                setRefStorage(ref(storage, `${user?.uid}/videos/${document.data().description}`));
-                break;
-              case 'others':
-                setRefFile(photosCollectionRef);
-                setSubCollection('photos');
-                setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
-                break;
+                case 'videos':
+                  setRefFile(userVideosRef(user?.uid));
+                  setRefStorage(ref(storage, `${user?.uid}/videos/${document.data().description}`));
+                  break;
+                case 'others':
+                  setRefFile(userPhotosRef(user?.uid));
+                  setSubCollection('photos');
+                  setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
+                  break;
+              }
+            } else {
+              console.error('No such doc');
             }
           });
           
           setUserDrawings(drawingsArray);
           setLoadingFiles(true);
         },
-        (e: Error) => {
+        (e) => {
           console.error('Error', e);
         });
     } catch (e) {
@@ -112,10 +114,11 @@ export default function Drawings() {
     }
   };
   
-  useEffect(() => {
+  useMemo(() => {
     return downloadDrawings();
   }, [nextPageArray]);
   
+  console.log(userDrawings);
   return !loading ? (
     <div className='workspace'>
       <HeadCom path={router.asPath} content='Sites with drawings and photos.' />
@@ -123,16 +126,18 @@ export default function Drawings() {
       <article id='user__gallery__in__account' className='user__gallery__in__account'>
       
         <em className={styles.title}>{data?.Aside?.category}: {pid}</em>
-      
+  
+        {  console.log(userDrawings)        }
         <Wrapper>{
           userDrawings.length > 0 ?
-            userDrawings.map(({ fileUrl, time, description, tags }: FileType) => <Skeleton
+            userDrawings.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
               isLoaded={loadingFiles}
               key={time}
             >
               <Article
                 link={fileUrl}
                 description={description}
+                authorName={pseudonym}
                 refFile={refFile!}
                 subCollection={subCollection}
                 refStorage={refStorage!}

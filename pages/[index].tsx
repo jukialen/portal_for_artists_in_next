@@ -24,7 +24,7 @@ import { useHookSWR } from 'hooks/useHookSWR';
 import {
   allAnimatedCollectionRef,
   allPhotosCollectionRef,
-  allVideosCollectionRef, animationsCollectionRef, photosCollectionRef, videosCollectionRef
+  allVideosCollectionRef, userAnimationsRef, userPhotosRef, userVideosRef
 } from 'references/referencesFirebase';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
@@ -95,27 +95,27 @@ export default function Drawings() {
             const docRef = doc(db, `users/${document.data().uid}`);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-              filesElements(filesArray, document, docSnap);
+              filesElements(filesArray, document, docSnap.data().pseudonym);
               setUserDrawings(filesArray);
               setLoadingFiles(true);
               
               switch (index) {
                 case 'photographs':
-                  setRefFile(photosCollectionRef());
+                  setRefFile(userPhotosRef(user?.uid));
                   setSubCollection('photos');
                   setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
                   break;
                 case 'animations':
-                  setRefFile(animationsCollectionRef);
+                  setRefFile(userAnimationsRef(user?.uid));
                   setSubCollection('animations');
                   setRefStorage(ref(storage, `${user?.uid}/animations/${document.data().description}`));
                   break;
                 case 'videos':
-                  setRefFile(videosCollectionRef);
+                  setRefFile(userVideosRef(user?.uid));
                   setRefStorage(ref(storage, `${user?.uid}/videos/${document.data().description}`));
                   break;
                 case 'others':
-                  setRefFile(photosCollectionRef);
+                  setRefFile(userPhotosRef(user?.uid));
                   setSubCollection('photos');
                   setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
                   break;
@@ -154,7 +154,7 @@ export default function Drawings() {
                 <Videos
                   link={fileUrl}
                   authorName={pseudonym}
-                  refFile={videosCollectionRef()}
+                  refFile={userVideosRef()}
                   refStorage={ref(storage, `${user?.uid}/videos/${description}`)}
                   tag={tags}
                 /> :
