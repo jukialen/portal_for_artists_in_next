@@ -27,7 +27,10 @@ export const FileOptions = ({ authorName, link, tag }: FileContainerType) => {
   const showShare = () => setShare(!share);
   const showOpenComments = () => setOpen(!open);
   
-  const icon = 30;
+  const icon = 40;
+  
+  const titleShare = `Share ${authorName} user post from category ${tag}`;
+  
   const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/post/${authorName}/${link}/${tag}`
   return (
     <div className={styles.options}>
@@ -54,26 +57,28 @@ export const FileOptions = ({ authorName, link, tag }: FileContainerType) => {
         
           <div className={`${styles.share__options} ${share ? styles.share__options__active : ''}`}>
             <div className={styles.icon}>
-              <LineShareButton url={linkShare}>
-                <LineIcon size={icon} />
+              <LineShareButton url={linkShare} title={titleShare}>
+                <LineIcon size={icon} borderRadius={20} />
               </LineShareButton>
             </div>
             <div className={styles.icon}>
-              <WhatsappShareButton url={linkShare} windowHeight={500}>
-                <WhatsappIcon size={icon}  />
+              <WhatsappShareButton url={linkShare} title={titleShare}>
+                <WhatsappIcon size={icon} borderRadius={20} />
               </WhatsappShareButton>
             </div>
             <div className={styles.icon}>
-              <WeiboShareButton url={linkShare}>
-                <WeiboIcon size={icon} round />
+              <WeiboShareButton url={linkShare} title={titleShare}>
+                <WeiboIcon size={icon} borderRadius={20} />
               </WeiboShareButton>
             </div>
             <div className={styles.icon}>
               <RWebShare
-                data={{ url: linkShare }}
+                data={{ url: linkShare, title: titleShare }}
                 onClick={() => console.log('shared successfully!')}
               >
-                <Image src='/copy.svg' width={icon} height={icon} aria-label='copy icon' />
+                <button className={styles.more}>
+                  <Image src='/more.svg' layout='fill' alt='button for another options for sharing' />
+                </button>
               </RWebShare>
             </div>
           </div>
