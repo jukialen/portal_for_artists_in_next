@@ -11,6 +11,9 @@ import { useHookSWR } from 'hooks/useHookSWR';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { deleteCollection } from 'pages/api/deletions/storage';
 
+import { deleterUser as delete__user } from 'pages/api/sendgrid/deleteUser';
+
+
 import styles from './DeleteAccount.module.scss';
 import {
   AlertDialog,
@@ -28,44 +31,27 @@ export const DeleteAccount = () => {
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState<string>('');
   const cancelRef = useRef(null);
+  
   const { push } = useRouter();
-  
   const data = useHookSWR();
-  const user = auth.currentUser;
   
-  const profileUserRef = ref(storage, `profilePhotos/${user?.uid}/${user?.uid}`);
-  const storageAnimatedRef = ref(storage, `${user?.uid}/animations`);
-  const storageVideosRef = ref(storage, `${user?.uid}/videos`);
-  const storagePhotosRef = ref(storage, `${user?.uid}/photos`);
-  const userRef = `users/${user?.uid}`;
+  const user = auth.currentUser!;
   
-  const batchSize: number = 10;
-  const photosRef = `${userRef}/photos`;
-  const animationsRef = `${userRef}/animations`;
-  const videosRef = `${userRef}/videos`;
+  const profileUserRef = ref(storage, `profilePhotos/${user.uid}/${user?.uid}`);
+  const userRef = `users/${user.uid}`;
+  
   const onClose = () => setIsOpen(false);
   
   const deletionUser = async () => {
     try {
       await onClose();
       await setDeleting(!deleting);
-      await deleteCollection(photosRef, batchSize);
-      setValues('Usuwanie zdjęć z bazy danych.');
-      await deleteObject(storagePhotosRef);
-      setValues('Usuwanie plików animowanych z dysku');
-      await deleteCollection(animationsRef, batchSize);
-      setValues('Usuwanie plików animowanych z bazy danych.');
-      await deleteObject(storageAnimatedRef);
-      setValues('Usuwanie plików animowanych z dysku');
-      await deleteCollection(videosRef, batchSize);
-      setValues('Usuwanie filmów z bazy danych.');
-      await deleteObject(storageVideosRef);
-      setValues('Usuwanie plików animowanych z dysku');
-      await deleteDoc(doc(db, `users/${user?.uid}`));
-      setValues('Usuwanie danych usera');
       await deleteObject(profileUserRef);
       setValues('Usuwanie zdjęcia profilowego');
-      await deleteUser(user!);
+      await deleteDoc(doc(db, userRef));
+      setValues('Usuwanie twoich danych');
+      await deleteUser(user);
+      await delete__user(user);
       await setDeleting(!deleting);
       setValues('Usunięto konto');
       await push('/');
