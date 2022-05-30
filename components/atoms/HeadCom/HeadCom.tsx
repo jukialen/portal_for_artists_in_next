@@ -22,7 +22,7 @@ export const HeadCom = ({ path, content }: HeadComType) => {
       <meta charSet='utf-8' />
       <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       <meta name='description' content={content} />
-      <title>{useHookSWR()?.title}</title>
+      <title>{content}</title>
     </Head>
   )
 }

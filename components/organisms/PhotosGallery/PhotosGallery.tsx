@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [gallery, setGallery] = useState<JSX.Element | JSX.Element[]>(<ZeroFiles text={data?.ZeroFiles?.photos} />);
   
   const currenUser = auth.currentUser;
   const maxItems: number = 20;
@@ -60,31 +61,35 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
     return downloadFiles();
   }, [user]);
   
+  useEffect(() => {
+    return setGallery(
+      userPhotos.map(({ fileUrl, description, time, tags, pseudonym }: FileType) => <Skeleton
+        isLoaded={loading}
+        key={time}
+        margin={loading ? 0 : '1rem 0'}
+      >
+        <Article
+          link={fileUrl}
+          refFile={userPhotosRef()}
+          subCollection='photos'
+          refStorage={ref(storage, `${user}/photos/${description}`)}
+          description={description}
+          tag={tags}
+          authorName={pseudonym}
+        />
+      </Skeleton>)
+    );
+    }, [user, userPhotos]);
+  
   console.log(userPhotos)
+  console.log(gallery)
   
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
       {asPath === `/account/${pseudonym}` && <em className='title'>{data?.Account?.gallery?.userPhotosTitle}</em>}
       
       <Wrapper>
-        {
-          (!!user && userPhotos.length > 0) ?
-            userPhotos.map(({ fileUrl, description, time, tags, pseudonym }: FileType) => <Skeleton
-              isLoaded={loading}
-              key={time}
-            >
-            <Article
-              link={fileUrl}
-              refFile={userPhotosRef()}
-              subCollection='photos'
-              refStorage={ref(storage, `${user}/photos/${description}`)}
-              description={description}
-              tag={tags}
-              authorName={pseudonym}
-            />
-            </Skeleton>) :
-            <ZeroFiles text={data?.ZeroFiles?.photos} />
-        }
+        { gallery }
       </Wrapper>
     </article>
   );

@@ -9,6 +9,7 @@ import { doc } from 'firebase/firestore';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
+
 import { deleteCollection } from 'pages/api/deletions/storage';
 
 import { deleterUser as delete__user } from 'pages/api/sendgrid/deleteUser';
@@ -25,6 +26,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
+import axios from 'axios';
 
 export const DeleteAccount = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,9 +39,10 @@ export const DeleteAccount = () => {
   
   const user = auth.currentUser!;
   
-  const profileUserRef = ref(storage, `profilePhotos/${user.uid}/${user?.uid}`);
+  const profileUserRef = ref(storage, `profilePhotos/${user?.uid}/${user?.uid}`);
   const userRef = `users/${user.uid}`;
   
+
   const onClose = () => setIsOpen(false);
   
   const deletionUser = async () => {
@@ -49,11 +52,12 @@ export const DeleteAccount = () => {
       await deleteObject(profileUserRef);
       setValues('Usuwanie zdjęcia profilowego');
       await deleteDoc(doc(db, userRef));
-      setValues('Usuwanie twoich danych');
+      setValues(data?.progressDeletionUser);
+       const res = await axios.post(`${process.env.NEXT_PUBLIC_PAGE}/api/sendgrid/deleteUser`, { email: user!.email, uid: user!.uid });
+       console.log(res);
       await deleteUser(user);
-      await delete__user(user);
       await setDeleting(!deleting);
-      setValues('Usunięto konto');
+      setValues(data?.deletionUser);
       await push('/');
     } catch (e) {
       setValues(data?.error);
