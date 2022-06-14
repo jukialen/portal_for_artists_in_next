@@ -1,0 +1,188 @@
+import { useState } from 'react';
+import { auth, db, storage } from '../../firebase';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { UploadTaskSnapshot } from '@firebase/storage';
+import { doc, setDoc } from 'firebase/firestore';
+import { useRouter } from 'next/router';
+import { Field, Form, Formik } from 'formik';
+import { Progress } from '@chakra-ui/react';
+import * as Yup from 'yup';
+
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
+
+import { useHookSWR } from 'hooks/useHookSWR';
+
+import { EventType, FormType } from 'types/global.types';
+import { useCurrentUser } from 'hooks/useCurrentUser';
+
+import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { FormField } from 'components/molecules/FormField/FormField';
+import { FormError } from 'components/molecules/FormError/FormError';
+
+import styles from './adding_group.module.scss';
+
+type AddingGroupType = {
+  groupName: string;
+  description: string
+};
+
+export default function AddingGroup() {
+  const { asPath, back } = useRouter();
+  
+  const loading = useCurrentUser('/');
+  const data = useHookSWR();
+  
+  const [valuesFields, setValuesFields] = useState<string>('');
+  const [logoGroup, setLogoGroup] = useState<File | null>(null);
+  const [progressUpload, setProgressUpload] = useState<number>(0);
+  
+  const initialValues = {
+    groupName: '',
+    description: ''
+  };
+  
+  const schemaValidation = Yup.object({
+    groupName: SchemaValidation().groupName,
+    description: SchemaValidation().description,
+  });
+  
+  const user = auth.currentUser!;
+  
+  const handleChange = async (e: EventType) => {
+    e.target.files?.[0] && setLogoGroup(e.target.files[0]);
+  };
+  
+  const createGroup = async ({ groupName, description }: AddingGroupType, { resetForm }: FormType) => {
+    try {
+      const fileRef = await ref(storage, `groups/${groupName}/${logoGroup?.name}`);
+      
+      const newGroup = await setDoc(doc(db, `groups/${groupName}`), {
+        name: groupName,
+        description,
+        logo: null,
+        admin: user.uid
+      });
+      
+      const newGroupWithLogo = () => {
+        const upload = uploadBytesResumable(fileRef, logoGroup!);
+  
+        upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+            const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setProgressUpload(progress);
+            switch (snapshot.state) {
+              case 'running':
+                setValuesFields('Upload is running');
+                break;
+              case 'paused':
+                setValuesFields('Upload is paused');
+                break;
+            }
+          }, (e) => {
+            console.error(e);
+            setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+          },
+          async () => {
+            const groupLogoURL = await getDownloadURL(fileRef);
+      
+            await setDoc(doc(db, `groups/${groupName}`), {
+              name: groupName,
+              description,
+              logo: groupLogoURL,
+              admin: user.uid
+            });
+      
+            setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+            setLogoGroup(null);
+      
+            return null;
+          });
+      }
+      
+      logoGroup === null ? await newGroup : newGroupWithLogo();
+  
+      resetForm(initialValues);
+      
+    } catch (e) {
+      console.log(e);
+      setValuesFields(data?.NewUser?.errorSending);
+    }
+  };
+  
+  
+  return !loading ? (
+    <section className='workspace'>
+      <HeadCom path={asPath} content="User's adding some group " />
+      
+      <Formik
+        initialValues={initialValues}
+        validationSchema={schemaValidation}
+        onSubmit={createGroup}
+      >
+        <Form className={styles.container__form}>
+          <h2 className={styles.title}>Create a group</h2>
+          
+          <FormField
+            titleField='Group name'
+            nameField='groupName'
+            typeField='text'
+            placeholderField='Group name'
+          />
+          
+          <FormError nameError='groupName' />
+          
+          <FormField
+            titleField='Description'
+            nameField='description'
+            typeField='text'
+            as='textarea'
+            placeholderField='Description'
+          />
+          
+          <FormError nameError='description' />
+          
+          <div className={styles.form__field}>
+            <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.label}>
+              Logo for group
+            </label>
+            <Field
+              name='logo'
+              type='file'
+              accept='.jpg, .jpeg, .png, .webp, .avif'
+              onChange={handleChange}
+              placeholder={data?.AnotherForm?.profilePhoto}
+              className={styles.input}
+            />
+          </div>
+          
+          <FormError nameError='logo' />
+          
+          <button
+            type='submit'
+            className={`button ${styles.submit__button}`}
+            aria-label={data?.NewUser?.ariaLabelButtom}
+          >
+            {data?.AnotherForm?.send}
+          </button>
+          
+          {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) &&
+          <Progress
+            value={progressUpload}
+            colorScheme='green'
+            isAnimated
+            hasStripe
+            min={0}
+            max={100}
+            w={280}
+            bg='blue.400'
+            m='1.5rem auto'
+            size='md'
+          />
+          }
+          
+          {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+        </Form>
+      </Formik>
+    
+    </section>) : null;
+}

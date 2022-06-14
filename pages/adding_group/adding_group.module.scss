@@ -1,0 +1,38 @@
+.container__form {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	.title {
+		margin-bottom: 2rem;
+	}
+
+	.form__field {
+		display: flex;
+		margin: 0.7rem auto;
+		flex-flow: row wrap;
+
+		.label {
+			display: inherit;
+			width: 10rem;
+			margin: .5rem auto;
+			justify-content: center;
+			align-self: center;
+			font-size: 1.3rem;
+		}
+
+		.input {
+			margin: .5rem auto;
+			max-width: 11rem;
+			padding: 1rem;
+		}
+	}
+
+	.submit__button {
+		width: 11rem;
+		font-size: 1rem;
+		margin: .8rem auto;
+	}
+}

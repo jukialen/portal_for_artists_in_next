@@ -8,17 +8,21 @@
   }
 
   &__button {
+    width: 80%;
     font-size: 1rem;
     background-color: $secondary__color;
     margin: 1rem auto;
   }
+  .groups__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: .5rem auto;
+  }
 
   &__item {
     width: 70%;
-    height: 2.4rem;
     display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: .5rem;
+    padding-left: 0.6rem;
   }
 }
