@@ -36,12 +36,19 @@ export const SchemaValidation = () => {
   
   const tags = Yup.string().required(data?.NavForm?.validateRequired);
   
+  const groupName = Yup.string()
+    .required(data?.NavForm?.validateRequired)
+    .min(5, 'Group name is too short.')
+    .max(20, 'Group name is too long.')
+    // .matches(/![#?!@$%^&*-]/g, 'Group name haven\'t to include special characters.');
+  
   return {
     username,
     pseudonym,
     email,
     password,
     description,
-    tags
+    tags,
+    groupName
   };
 };

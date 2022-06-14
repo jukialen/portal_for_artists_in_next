@@ -4,6 +4,8 @@ import { animationsTags, drawingsTags, othersTags, photosTags, videosTags } from
 
 const maxItems: number = 10;
 
+const user = auth.currentUser;
+
 export const allPhotosCollectionRef = () => collectionGroup(db, 'photos');
 export const allAnimatedCollectionRef = () => collectionGroup(db, 'animations');
 export const allVideosCollectionRef = () => collectionGroup(db, 'videos');
@@ -49,4 +51,15 @@ export const userAnimationsRef = (user?: string) => {
 
 export const userVideosRef = (user?: string) => {
   return collection(db, `users/${user}/videos`)
+}
+
+export const groupRef = collection(db, 'groups');
+export const groupsQuery = query(groupRef, where('admin', '==', `${user?.uid}`));
+
+export const groupSection = (name: string | string[]) => {
+  return query(groupRef, where('name', '==', name));
+}
+
+export const posts = (name: string  | string[]) => {
+  return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name))
 }

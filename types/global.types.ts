@@ -39,3 +39,9 @@ export type FileContainerType = {
   tag: string;
   unopt?: boolean
 };
+
+export type GroupType = {
+  nameGroup: string;
+  logoUrl: string;
+  description: string;
+}
