@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { auth } from '../../../firebase';
 import { getDocs } from 'firebase/firestore';
 
 import { groupRef } from 'references/referencesFirebase';
@@ -13,6 +14,8 @@ import group from 'public/group.svg';
 
 export const Groups = ({ data }: DataType) => {
   const [groupsArray, setGroupsArray] = useState<GroupType[]>([]);
+  
+  const user = auth.currentUser;
   
   const groupList = async () => {
     try {
@@ -33,8 +36,8 @@ export const Groups = ({ data }: DataType) => {
   };
   
   useEffect(() => {
-    groupList();
-  }, []);
+    !!user && groupList();
+  }, [user]);
   
   return (
     <div className={styles.groups}>
