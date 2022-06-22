@@ -36,12 +36,19 @@ export type FileContainerType = {
   refStorage?:  StorageReference;
   description?: string;
   authorName?: string;
-  tag: string;
-  unopt?: boolean
+  tag?: string;
+  unopt?: boolean;
+  titleShare?: string
 };
 
 export type GroupType = {
   nameGroup: string;
   logoUrl: string;
   description: string;
+}
+
+export type AuthorType = {
+  name: string | string[];
+  post?: string | string[];
+  
 }
