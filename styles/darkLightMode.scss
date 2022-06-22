@@ -2,6 +2,10 @@
 
 .dark {
   background-color: $dark__background__light__color;
+
+  button {
+    color: $dark__color__light__back;
+  }
 }
 
 .main__container--dark {

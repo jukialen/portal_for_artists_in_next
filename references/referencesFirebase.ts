@@ -1,6 +1,8 @@
-import { collection, collectionGroup, limit, orderBy, query, where } from 'firebase/firestore';
+import { collection, collectionGroup, doc, limit, orderBy, query, where } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { animationsTags, drawingsTags, othersTags, photosTags, videosTags } from 'helpers/arrayTags';
+
+import { AuthorType } from 'types/global.types';
 
 const maxItems: number = 10;
 
@@ -56,10 +58,19 @@ export const userVideosRef = (user?: string) => {
 export const groupRef = collection(db, 'groups');
 export const groupsQuery = query(groupRef, where('admin', '==', `${user?.uid}`));
 
+export const usersInGroup =  (name: AuthorType) => collection(db, `groups/${name}/users`);
+export const deleteUserFromGroup = (name: AuthorType, username: string) => query(usersInGroup(name!), where('username', '==', username));
+
 export const groupSection = (name: string | string[]) => {
   return query(groupRef, where('name', '==', name));
 }
 
-export const posts = (name: string  | string[]) => {
+export const addingPost = ((name: AuthorType) => collection(db, `groups/${name}/posts`));
+
+export const posts = (name: AuthorType) => {
+  return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name))
+}
+
+export const addingComment = (name: AuthorType) => {
   return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name))
 }

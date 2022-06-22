@@ -80,9 +80,9 @@ export default function Drawings() {
                 case 'photographs':
                   setRefFile(userPhotosRef(user?.uid));
                   setSubCollection('photos');
-                setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
-                break;
-              case 'animations':
+                  setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
+                  break;
+                case 'animations':
                 setRefFile(userAnimationsRef(user?.uid));
                 setSubCollection('animations');
                 setRefStorage(ref(storage, `${user?.uid}/animations/${document.data().description}`));
@@ -127,7 +127,6 @@ export default function Drawings() {
       
         <em className={styles.title}>{data?.Aside?.category}: {pid}</em>
   
-        {  console.log(userDrawings)        }
         <Wrapper>{
           userDrawings.length > 0 ?
             userDrawings.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton

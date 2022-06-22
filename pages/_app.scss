@@ -80,6 +80,10 @@ a {
   }
 }
 
+button {
+  background-color: transparent;
+}
+
 .main__container {
   margin: 0 auto;
 }
@@ -92,7 +96,6 @@ a {
 .workspace {
   display: flex;
   flex-direction: column;
-  min-height: 95vh;
   margin: 4rem auto;
   padding-top: 3rem;
 }
@@ -111,10 +114,11 @@ a {
   display: flex;
   border: .2rem inset $secondary__color;
   border-radius: 2rem;
-  cursor: pointer;
   align-items: center;
   justify-content: center;
   padding: 0.25rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .pagination {

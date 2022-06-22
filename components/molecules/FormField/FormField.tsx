@@ -10,6 +10,7 @@ type fF = {
   element?: any;
   accept?: string;
   props?: string
+  as?: string;
 };
 
 export const FormField = ({
@@ -19,6 +20,7 @@ export const FormField = ({
   placeholderField,
   element,
   accept,
+  as,
   ...props
 }: fF) => {
   return (
@@ -30,6 +32,7 @@ export const FormField = ({
       <Field
         name={nameField}
         type={typeField}
+        as={as}
         id={nameField}
         placeholder={placeholderField}
         {...props}
