@@ -7,7 +7,7 @@ import { Button, Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakr
 
 import { deleteUserFromGroup, groupSection, usersInGroup } from 'references/referencesFirebase';
 
-import { MainSection } from 'components/atoms/MainSection/MainSection';
+import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { AddingPost } from 'components/atoms/AddingPost/AddingPost';
 import { Posts } from 'components/organisms/Posts/Posts';
 
@@ -20,7 +20,7 @@ export default function Groups() {
   const [description, setDescription] = useState('');
   const [join, setJoin] = useState(false);
   
-  const { query } = useRouter();
+  const { query, asPath } = useRouter();
   const { name } = query;
   
   const user = auth.currentUser;
@@ -82,7 +82,9 @@ export default function Groups() {
     color: activeColor,
   };
   
-  return <MainSection>
+  return <>
+    <HeadCom path={asPath} content={`"${name}" group website`} />
+    
     <article className={styles.mainContainer}>
       <div className={styles.logo}>
         <Image
@@ -162,5 +164,5 @@ export default function Groups() {
         </TabPanel>
       </TabPanels>
     </Tabs>
-  </MainSection>;
+  </>;
 }

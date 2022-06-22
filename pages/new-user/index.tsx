@@ -14,9 +14,10 @@ import { EventType } from 'types/global.types';
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 
+import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
-import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import { StatusLoginContext } from 'providers/StatusLogin';
 
@@ -29,15 +30,16 @@ type FirstDataType = {
 }
 
 export default function NewUser() {
-  const { push } = useRouter();
-  
-  const loading = useCurrentUser('/');
-  const data = useHookSWR();
-  
-  const { showUser } = useContext(StatusLoginContext);
   const [valuesFields, setValuesFields] = useState<string>('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [progressUpload, setProgressUpload] = useState<number>(0);
+  
+  const { push, asPath } = useRouter();
+  const loading = useCurrentUser('/');
+  const data = useHookSWR();
+  const { showUser } = useContext(StatusLoginContext);
+  
+  const user = auth.currentUser!;
   
   const initialValues = {
     username: '',
@@ -48,8 +50,6 @@ export default function NewUser() {
     username: SchemaValidation().username,
     pseudonym: SchemaValidation().pseudonym,
   });
-  
-  const user = auth.currentUser!;
   
   const handleChange = async (e: EventType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
@@ -98,7 +98,9 @@ export default function NewUser() {
   };
   
   return !loading ? (
-  <div className='workspace'>
+  <>
+    <HeadCom path={asPath} content='The first addition of data by a new user.' />
+    
     <Formik
       initialValues={initialValues}
       validationSchema={schemaValidation}
@@ -167,7 +169,7 @@ export default function NewUser() {
         {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
       </Form>
     </Formik>
-  </div>
+  </>
 ) : null;
 }
 

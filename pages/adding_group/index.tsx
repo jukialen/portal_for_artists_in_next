@@ -109,7 +109,7 @@ export default function AddingGroup() {
   };
   
   return !loading ? (
-    <section className='workspace'>
+    <>
       <HeadCom path={asPath} content="User's adding some group " />
   
       <Formik
@@ -183,5 +183,5 @@ export default function AddingGroup() {
         )}
       </Formik>
     
-    </section>) : null;
+    </>) : null;
 }

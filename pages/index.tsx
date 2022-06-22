@@ -50,8 +50,9 @@ export default function Home() {
   const image = 320;
   
   return (
-    <div className='workspace'>
+    <>
       <HeadCom path={asPath} content='Main site.' />
+      
       <div className={styles.group__element}>
         <h1 className={styles.title}>{data?.Main?.title}</h1>
   
@@ -265,6 +266,6 @@ export default function Home() {
           quality={100}
         />
       </section>
-    </div>
+    </>
   );
 }

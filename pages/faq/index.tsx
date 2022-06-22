@@ -1,21 +1,20 @@
 import { useRouter } from 'next/router';
+import { Accordion, Link } from '@chakra-ui/react';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { FaqItems } from 'components/atoms/FaqItems/FaqItems';
 
 import styles from './index.module.scss';
-import { Accordion, Link } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export default function Faq() {
-  
   const { asPath } = useRouter();
   const backgroundColor = '#FFD068';
   const color = '#333';
   const m = '2rem 0';
   
   return (
-    <section className='workspace'>
+    <>
       <HeadCom path={asPath} content='Faq site' />
       
       <h2 className={styles.h2}>Częste pytania</h2>
@@ -58,7 +57,7 @@ export default function Faq() {
           m={m}
         />
       </Accordion>
-    </section>
+    </>
   );
 };
 

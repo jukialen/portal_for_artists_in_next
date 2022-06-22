@@ -44,12 +44,12 @@ export default function Post() {
   }, [asPath]);
   
   return (
-    <section className='workspace'>
+    <>
       <HeadCom path={asPath} content={`${pseudonym} user post page`} />
       
       <article id='user__gallery__in__account' className='user__gallery__in__account'>
         <Wrapper>{container}</Wrapper>
       </article>
-    </section>
+    </>
   );
 }

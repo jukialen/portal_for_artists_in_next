@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { db } from '../../firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
@@ -13,7 +14,6 @@ import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGa
 import { ProfileUser } from 'components/atoms/ProfileUser/ProfileUser';
 
 import styles from './index.module.scss';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 export default function User() {
   const [uid, setUid] = useState<string | undefined>(undefined);
@@ -51,7 +51,7 @@ export default function User() {
   }, [uidRef])
   
   return !loading ? (
-    <section className='workspace'>
+    <>
       <HeadCom path={`/user/${author}`} content={`${author} site`} />
       
       <h2 className={styles.profile__user__title}>{author}</h2>
@@ -193,6 +193,6 @@ export default function User() {
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </section>
+    </>
   ) : null;
 };

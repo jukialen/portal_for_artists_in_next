@@ -10,7 +10,7 @@ export default function Terms() {
   const { asPath } = useRouter();
   
   return (
-    <section className='workspace'>
+    <>
       <HeadCom path={asPath} content='Site with informations about terms' />
       
       <h2 className={styles.title}>{useHookSWR()?.Footer?.termsOfUse}</h2>
@@ -367,6 +367,6 @@ export default function Terms() {
         congue turpis et lacus euismod vehicula. Pellentesque tincidunt sit amet libero eget vehicula. In hac habitasse
         platea dictumst.
       </p>
-    </section>
+    </>
   );
 };

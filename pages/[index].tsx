@@ -13,6 +13,7 @@ import {
   query,
   where
 } from 'firebase/firestore';
+import { Skeleton } from '@chakra-ui/react';
 
 import { FileType } from 'types/global.types';
 
@@ -34,7 +35,6 @@ import { Article } from 'components/molecules/Article/Article';
 import { Videos } from 'components/molecules/Videos/Videos';
 
 import styles from './categories_index.module.scss';
-import { Skeleton } from '@chakra-ui/react';
 
 export default function Drawings() {
   const router = useRouter();
@@ -51,7 +51,6 @@ export default function Drawings() {
   const [refFile, setRefFile] = useState<CollectionReference>();
   const [refStorage, setRefStorage] = useState<StorageReference>();
   const [subCollection, setSubCollection] = useState('');
-  
   
   useEffect(() => {
     switch (index) {
@@ -137,7 +136,7 @@ export default function Drawings() {
   useMemo(() => { return downloadDrawings()  }, [nextPage]);
   
   return !loading ? (
-    <div className='workspace'>
+    <>
       <article className={styles.categories__index__in__account}>
         
         <HeadCom path={router.asPath} content={`Subpage with ${index}`} />
@@ -172,6 +171,6 @@ export default function Drawings() {
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />
         }</Wrapper>
       </article>
-    </div>
+    </>
   ) : null;
 };

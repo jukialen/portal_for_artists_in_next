@@ -120,7 +120,7 @@ export default function Drawings() {
   
   console.log(userDrawings);
   return !loading ? (
-    <div className='workspace'>
+    <>
       <HeadCom path={router.asPath} content='Sites with drawings and photos.' />
     
       <article id='user__gallery__in__account' className='user__gallery__in__account'>
@@ -145,6 +145,6 @@ export default function Drawings() {
             </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.files} />
        }</Wrapper>
       </article>
-    </div>
+    </>
   ) : null;
 };

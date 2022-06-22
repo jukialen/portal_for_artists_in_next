@@ -190,7 +190,7 @@ export default function Application() {
   useMemo(() => {downloadVideos() }, []);
   
   return !loading ? (
-    <section className='workspace'>
+    <>
       <HeadCom path={asPath} content='Main site for logged in users.' />
   
       <h2 className={styles.top__among__users}>{data?.App?.lastDrawings}</h2>
@@ -291,6 +291,6 @@ export default function Application() {
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />
         }
       </AppWrapper>
-    </section>
+    </>
   ) : null;
 };

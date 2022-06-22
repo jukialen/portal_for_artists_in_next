@@ -16,6 +16,8 @@ import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGa
 import styles from './index.module.scss';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
+import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
+
 export default function Account() {
   const user = auth.currentUser;
   const data = useHookSWR();
@@ -29,7 +31,7 @@ export default function Account() {
   const fontMenu = '1rem';
   
   return !loading ? (
-    <section className='workspace'>
+    <>
       <HeadCom path={`/account/${pseudonym || user?.displayName}`} content='Account portal site.' />
       
       <h2 className={styles.account__h2}>{data?.Nav?.account}</h2>
@@ -182,8 +184,14 @@ export default function Account() {
           <TabPanel padding={0}>
             <ProfileAccount data={data} />
           </TabPanel>
+          <TabPanel padding={0}>
+            <h2>Friends</h2>
+          </TabPanel>
+          <TabPanel padding={0}>
+              <GroupUsers />
+          </TabPanel>
         </TabPanels>
       </Tabs>
-    </section>
+    </>
   ) : null
 };

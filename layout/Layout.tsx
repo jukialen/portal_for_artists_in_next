@@ -3,6 +3,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
+import { MainSection } from 'components/atoms/MainSection/MainSection';
 import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
 import { Footer } from 'components/molecules/Footer/Footer';
 import { Header } from 'components/organisms/Header/Header';
@@ -37,7 +38,11 @@ export const Layout: FC = ({ children }) => {
           }
         </ShowMenuProvider>
         <Aside />
-        <main className={`main__container ${isMode ? 'main__container--dark' : ''}`}>{children}</main>
+        <main className={`main__container ${isMode ? 'main__container--dark' : ''}`}>
+          <section className='workspace'>
+            { children }
+          </section>
+        </main>
       </div>
       <Footer />
       <AffixButton />
