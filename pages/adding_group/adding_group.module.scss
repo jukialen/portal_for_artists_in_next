@@ -1,5 +1,7 @@
+@use 'styles/variables' as *;
+
 .container__form {
-	height: 100vh;
+	height: 85vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -9,30 +11,28 @@
 		margin-bottom: 2rem;
 	}
 
-	.form__field {
-		display: flex;
-		margin: 0.7rem auto;
-		flex-flow: row wrap;
+	.field {
+		width: 20rem;
+		margin: .5rem auto;
+		text-align: left;
+		color: $third__color;
+	}
 
-		.label {
-			display: inherit;
-			width: 10rem;
-			margin: .5rem auto;
-			justify-content: center;
-			align-self: center;
-			font-size: 1.3rem;
-		}
-
-		.input {
-			margin: .5rem auto;
-			max-width: 11rem;
-			padding: 1rem;
-		}
+	.input {
+		width: 20rem;
+		padding: .3rem;
+		border-color: transparent;
 	}
 
 	.submit__button {
 		width: 11rem;
 		font-size: 1rem;
 		margin: .8rem auto;
+		background-color: transparent;
+		border-radius: 2rem;
+
+		&:hover{
+			opacity: .8;
+	}
 	}
 }

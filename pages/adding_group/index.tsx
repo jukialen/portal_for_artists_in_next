@@ -4,8 +4,8 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { UploadTaskSnapshot } from '@firebase/storage';
 import { doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { Field, Form, Formik } from 'formik';
-import { Progress } from '@chakra-ui/react';
+import { Form, Formik } from 'formik';
+import { Button, Input, Progress, Textarea } from '@chakra-ui/react';
 import * as Yup from 'yup';
 
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -17,7 +17,6 @@ import { useCurrentUser } from 'hooks/useCurrentUser';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
-import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './adding_group.module.scss';
@@ -28,7 +27,7 @@ type AddingGroupType = {
 };
 
 export default function AddingGroup() {
-  const { asPath, back } = useRouter();
+  const { asPath } = useRouter();
   
   const loading = useCurrentUser('/');
   const data = useHookSWR();
@@ -49,21 +48,21 @@ export default function AddingGroup() {
   
   const user = auth.currentUser!;
   
-  const handleChange = async (e: EventType) => {
+  const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] && setLogoGroup(e.target.files[0]);
   };
   
   const createGroup = async ({ groupName, description }: AddingGroupType, { resetForm }: FormType) => {
     try {
       const fileRef = await ref(storage, `groups/${groupName}/${logoGroup?.name}`);
-      
+  
       const newGroup = await setDoc(doc(db, `groups/${groupName}`), {
         name: groupName,
         description,
         logo: null,
         admin: user.uid
       });
-      
+  
       const newGroupWithLogo = () => {
         const upload = uploadBytesResumable(fileRef, logoGroup!);
   
@@ -109,79 +108,79 @@ export default function AddingGroup() {
     }
   };
   
-  
   return !loading ? (
     <section className='workspace'>
       <HeadCom path={asPath} content="User's adding some group " />
-      
+  
       <Formik
         initialValues={initialValues}
         validationSchema={schemaValidation}
         onSubmit={createGroup}
       >
-        <Form className={styles.container__form}>
-          <h2 className={styles.title}>Create a group</h2>
-          
-          <FormField
-            titleField='Group name'
-            nameField='groupName'
-            typeField='text'
-            placeholderField='Group name'
-          />
-          
-          <FormError nameError='groupName' />
-          
-          <FormField
-            titleField='Description'
-            nameField='description'
-            typeField='text'
-            as='textarea'
-            placeholderField='Description'
-          />
-          
-          <FormError nameError='description' />
-          
-          <div className={styles.form__field}>
-            <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.label}>
-              Logo for group
-            </label>
-            <Field
+        {({ values, handleChange }) => (
+          <Form className={styles.container__form}>
+            <h2 className={styles.title}>Create a group</h2>
+        
+            <Input
+              id='groupName'
+              name='groupName'
+              value={values.groupName}
+              onChange={handleChange}
+              placeholder='Group name'
+              className={styles.field}
+            />
+        
+            <FormError nameError='groupName' />
+        
+            <Textarea
+              id='description'
+              name='description'
+              value={values.description}
+              onChange={handleChange}
+              placeholder='Description'
+              className={styles.field}
+            />
+        
+            <FormError nameError='description' />
+        
+            <Input
               name='logo'
               type='file'
               accept='.jpg, .jpeg, .png, .webp, .avif'
-              onChange={handleChange}
+              onChange={handleChangeFile}
               placeholder={data?.AnotherForm?.profilePhoto}
+              focusBorderColor='transparent'
               className={styles.input}
             />
-          </div>
-          
-          <FormError nameError='logo' />
-          
-          <button
-            type='submit'
-            className={`button ${styles.submit__button}`}
-            aria-label={data?.NewUser?.ariaLabelButtom}
-          >
-            {data?.AnotherForm?.send}
-          </button>
-          
-          {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) &&
-          <Progress
-            value={progressUpload}
-            colorScheme='green'
-            isAnimated
-            hasStripe
-            min={0}
-            max={100}
-            w={280}
-            bg='blue.400'
-            m='1.5rem auto'
-            size='md'
-          />
-          }
-          
-          {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-        </Form>
+            
+            <Button
+              colorScheme='transparent'
+              color='black.800'
+              type='submit'
+              className={`button ${styles.submit__button}`}
+              aria-label={data?.NewUser?.ariaLabelButtom}
+            >
+              {data?.AnotherForm?.send}
+            </Button>
+        
+            {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) &&
+            <Progress
+              value={progressUpload}
+              colorScheme='green'
+              isAnimated
+              hasStripe
+              min={0}
+              max={100}
+              w={280}
+              bg='blue.400'
+              m='1.5rem auto'
+              size='md'
+            />
+            }
+        
+            {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+          </Form>
+        )}
       </Formik>
     
     </section>) : null;
