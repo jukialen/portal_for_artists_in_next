@@ -1,0 +1,21 @@
+@use 'styles/_variables' as *;
+
+.comments {
+	display: grid;
+	grid-template-columns: 3rem 1fr;
+
+	.text {
+		//padding-top: .5rem;
+		text-align: inherit;
+		color: $third__color;
+	}
+}
+
+.addingButton {
+	display: flex;
+	justify-content: start;
+	background-color: $third__color;
+	border-color: $third__color;
+	margin: 1rem 0 1rem 3rem;
+	cursor: pointer;
+}

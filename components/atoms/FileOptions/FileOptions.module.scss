@@ -7,53 +7,11 @@
 		display: grid;
 		grid-template-columns: 1fr 4rem;
 		margin-top: 1rem;
+		align-items: center;
 
 		.author__name {
 			margin: .5rem 2rem;
 			text-align: left;
-		}
-
-		.share {
-			border: 1px solid $third__color;
-			background: $third__color;
-			position: relative;
-			justify-self: flex-start;
-
-			.share__options {
-				display: none;
-				visibility: hidden;
-				position: absolute;
-				align-items: center;
-				background: $third__color;
-				right: 3rem;
-				bottom: 0;
-
-				.icon {
-					width: 2.5rem;
-					height: 2.5rem;
-					margin: 0 .5rem;
-					cursor: pointer;
-
-					> button {
-						height: 2.5rem;
-					}
-
-					.more {
-						width: 2.5rem;
-						height: 2.5rem;
-						border: 2px solid #000;
-						border-radius: .7rem;
-						position: relative;
-						background: none;
-						cursor: pointer;
-					}
-				}
-			}
-
-			.share__options__active {
-				display: flex;
-				visibility: unset;
-			}
 		}
 	}
 

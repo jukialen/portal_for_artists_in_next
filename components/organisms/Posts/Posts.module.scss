@@ -1,0 +1,101 @@
+@use 'styles/_variables' as *;
+
+.posts {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	margin: 2rem auto;
+
+	.title {
+		width: 95vw;
+		max-width: 42.5rem;
+		margin: auto;
+		padding: 1.5rem;
+		border: .3rem solid transparent;
+		border-radius: 2rem;
+		box-shadow: 0 0 1rem .1rem $third__color;
+		text-align: left;
+
+		div {
+			text-align: left;
+		}
+
+		.avatarWithUsername {
+			display: flex;
+			align-items: flex-end;
+			margin-bottom: .5rem;
+
+			.username {
+				font-size: 1.05rem;
+				margin-left: .7rem;
+			}
+		}
+
+		.titlePost {
+			font-size: 1.5rem;
+			padding-left: .5rem;
+		}
+
+		.time {
+			font-size: .9rem;
+			margin-bottom: 0.5rem;
+		}
+
+		.description {
+			font-size: 1.2rem;
+		}
+
+		.options {
+			display: grid;
+			grid-template-columns: 2.5rem 1fr 2.5rem;
+			margin-top: 1rem;
+
+			.likes {
+				width: 2rem;
+				height: 2rem;
+				margin: auto;
+				background-color: transparent;
+				color: $third__color;
+				border-color: transparent;
+				cursor: pointer;
+			}
+
+			.commentsButton {
+				margin: auto 3%;
+				font-size: 1.2rem;
+				border-color: transparent;
+				cursor: pointer;
+				opacity: .8;
+
+				&:hover {
+					background-color: $third__color;
+					color: #000;
+				}
+			}
+
+		}
+
+		.likesCount {
+			display: grid;
+			grid-template-columns: 30% 1fr;
+			justify-content: center;
+			color: $third__color;
+			text-align: left;
+			margin-left: .5rem;
+
+			p:first-child {
+				margin: auto;
+			}
+		}
+	}
+}
+
+.commentsSection {
+	display: none;
+}
+
+.showComments {
+	display: flex;
+	flex-direction: column;
+	margin: 1rem auto;
+}

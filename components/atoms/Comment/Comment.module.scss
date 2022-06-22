@@ -1,0 +1,35 @@
+@use 'styles/_variables' as *;
+
+.comment {
+	display: flex;
+	align-items: center;
+	margin-top: 1rem;
+	border: 0.1rem solid $third__color;
+	border-radius: 0.5rem;
+
+
+	.avatar {
+		width: 2rem;
+		height: 2rem;
+		margin: .5rem;
+		align-self: flex-start;
+	}
+
+	.rightSideComment {
+		display: flex;
+		flex-direction: column;
+		margin: 0.5rem 0.5rem 0.5rem 0;
+
+		.pseudonym {
+			font-size: 1.2rem;
+			text-align: inherit;
+			padding-bottom: .5rem;
+			font-style: oblique;
+		}
+
+		.text {
+			font-size: 1rem;
+			text-align: inherit;
+		}
+	}
+}
