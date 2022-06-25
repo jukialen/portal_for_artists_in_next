@@ -22,7 +22,6 @@ export default function Groups() {
   
   const { query, asPath } = useRouter();
   const { name } = query;
-  
   const user = auth.currentUser;
   
   const userId = user?.uid;
@@ -31,46 +30,47 @@ export default function Groups() {
     try {
       console.log(join)
       if (join) {
-        const querySnapshot = await getDocs(deleteUserFromGroup(name!, userId));
-        querySnapshot.forEach( (document) => {
+        // @ts-ignore
+        const querySnapshot = await getDocs(deleteUserFromGroup(name!, userId!));
+        querySnapshot.forEach((document) => {
           console.log(document.id, ' => ', document.data());
           deleteDoc(doc(db, `groups/${name}/users/${document.id}`));
           setJoin(false);
-          console.log('after', join)
+          console.log('after', join);
         });
       } else {
+        // @ts-ignore
         await addDoc(usersInGroup(name!), { username: userId });
         await setJoin(true);
         console.log('after', join)
-      };
+      }
       
     } catch (e) {
-      console.error(e);
+      console.error('e', e);
     }
   };
   
   const groupInfo = async () => {
     try {
+      // @ts-ignore
       const querySnapshot = await getDocs(groupSection(name!));
       querySnapshot.forEach((doc) => {
-        
         setDescription(doc.data().description);
         setLogo(doc.data().logo);
       });
     } catch (e) {
-      console.error(e);
+      console.error('e2', e);
     }
   };
   
   useEffect(() => {
-    groupInfo();
+    !!name && groupInfo();
   }, [name]);
   
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
   const activeColor = '#4F8DFF';
   const image = '180';
-  
   
   const addingToGroup = {
     background: activeColor,
@@ -152,8 +152,10 @@ export default function Groups() {
       <TabPanels padding={0}>
         <TabPanel padding={0}>
           <>
-            <AddingPost name={name!} />
-            <Posts />
+            {/*@ts-ignore*/}
+            { join && <AddingPost name={name} /> }
+            {/*@ts-ignore*/}
+            <Posts name={name} />
           </>
         </TabPanel>
         <TabPanel padding={0}>

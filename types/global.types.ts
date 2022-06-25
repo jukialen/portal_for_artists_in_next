@@ -49,6 +49,13 @@ export type GroupType = {
 
 export type AuthorType = {
   name: string | string[];
-  post?: string | string[];
-  
+}
+
+export type PostType = {
+  author: string;
+  title: string;
+  date: string;
+  description: string;
+  idPost?: string;
+  name: string;
 }

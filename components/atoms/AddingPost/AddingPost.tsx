@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { auth } from '../../../firebase';
 import { addDoc, serverTimestamp } from 'firebase/firestore';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -16,9 +17,10 @@ type PostType = {
   post: string;
 }
 
-export const AddingPost = (name: AuthorType) => {
-  
+export const AddingPost = ({ name }: AuthorType) => {
   const [showForm, setShowForm] = useState(false);
+  
+  const user = auth.currentUser;
   
   const initialValues = {
     title: '',
@@ -32,11 +34,13 @@ export const AddingPost = (name: AuthorType) => {
   
   const createNewPost = async ({ title, post }: PostType, { resetForm }: FormType) => {
     try {
+      // @ts-ignore
       await addDoc(addingPost(name!), {
-        nameGroup: name!,
+        nameGroup: name,
         title,
         message: post,
-        date: serverTimestamp()
+        date: serverTimestamp(),
+        author: user?.uid
       });
       resetForm(initialValues);
     } catch (e) {

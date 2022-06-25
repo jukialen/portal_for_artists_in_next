@@ -58,10 +58,12 @@ export const userVideosRef = (user?: string) => {
 export const groupRef = collection(db, 'groups');
 export const groupsQuery = query(groupRef, where('admin', '==', `${user?.uid}`));
 
-export const usersInGroup =  (name: AuthorType) => collection(db, `groups/${name}/users`);
-export const deleteUserFromGroup = (name: AuthorType, username: string) => query(usersInGroup(name!), where('username', '==', username));
+export const usersInGroup = (name: AuthorType) => collection(db, `groups/${name}/users`);
+export const deleteUserFromGroup = (name: AuthorType, username: string) => {
+  return query(usersInGroup(name!), where('username', '==', username));
+}
 
-export const groupSection = (name: string | string[]) => {
+export const groupSection = (name: AuthorType) => {
   return query(groupRef, where('name', '==', name));
 }
 
@@ -71,6 +73,8 @@ export const posts = (name: AuthorType) => {
   return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name))
 }
 
-export const addingComment = (name: AuthorType) => {
-  return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name))
+export const addingComment = (name: string, idPost: string) => collection(db, `groups/${name}/posts/${idPost}/comments`)
+
+export const comments = (name: AuthorType) => {
+  return query(collectionGroup(db, 'comments'), where('nameGroup', '==', name))
 }

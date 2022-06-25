@@ -1,26 +1,29 @@
-import { addDoc } from 'firebase/firestore';
-import { Avatar, Button, Input, Textarea } from '@chakra-ui/react';
+import { auth } from '../../../firebase';
+import { addDoc, serverTimestamp } from 'firebase/firestore';
+import { Avatar, Button, Textarea } from '@chakra-ui/react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { addingComment } from 'references/referencesFirebase';
 
-import { FormType, AuthorType } from 'types/global.types';
+import { FormType } from 'types/global.types';
 
 import styles from './NewComments.module.scss';
-
 import group from 'public/group.svg';
 
 type NewCommentsType = {
-  author?: AuthorType;
+  name?: string;
   comment?: string;
+  idPost?: string
 }
 
-export const NewComments = (author: NewCommentsType) => {
+export const NewComments = ({ name, idPost }: NewCommentsType ) => {
   const initialValues = {
     comment: '',
   };
+  
+  const user = auth.currentUser;
   
   const schemaNew = Yup.object({
     comment: SchemaValidation().description,
@@ -28,10 +31,12 @@ export const NewComments = (author: NewCommentsType) => {
   
   const createNewComment = async ({ comment }: NewCommentsType, { resetForm }: FormType) => {
     try {
-      // await addDoc(addingComment(author), {
-      //   nameGroup: author,
-      //   message: comment
-      // });
+      await addDoc(addingComment(name!, idPost!), {
+        nameGroup: name,
+        message: comment,
+        date: serverTimestamp(),
+        user: user?.uid
+      });
       resetForm(initialValues);
     }
     catch (e) {

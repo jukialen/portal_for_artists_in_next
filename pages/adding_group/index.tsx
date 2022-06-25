@@ -10,9 +10,9 @@ import * as Yup from 'yup';
 
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { useHookSWR } from 'hooks/useHookSWR';
-
 import { EventType, FormType } from 'types/global.types';
+
+import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';

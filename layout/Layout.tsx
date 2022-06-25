@@ -3,7 +3,6 @@ import { ChakraProvider } from '@chakra-ui/react'
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { MainSection } from 'components/atoms/MainSection/MainSection';
 import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
 import { Footer } from 'components/molecules/Footer/Footer';
 import { Header } from 'components/organisms/Header/Header';
