@@ -56,7 +56,7 @@ export const AnimatedGallery = ({ user, data }: UserType) => {
   
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
-      <em className='container'>{data?.Account?.gallery?.userAnimationsTitle}</em>
+      <em className='title'>{data?.Account?.gallery?.userAnimationsTitle}</em>
       
       <Wrapper>
         {

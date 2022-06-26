@@ -28,21 +28,17 @@ export default function Groups() {
   
   const joinToGroup = async () => {
     try {
-      console.log(join)
       if (join) {
-        // @ts-ignore
-        const querySnapshot = await getDocs(deleteUserFromGroup(name!, userId!));
-        querySnapshot.forEach((document) => {
-          console.log(document.id, ' => ', document.data());
-          deleteDoc(doc(db, `groups/${name}/users/${document.id}`));
-          setJoin(false);
-          console.log('after', join);
-        });
-      } else {
         // @ts-ignore
         await addDoc(usersInGroup(name!), { username: userId });
         await setJoin(true);
-        console.log('after', join)
+      } else {
+        // @ts-ignore
+        const querySnapshot = await getDocs(deleteUserFromGroup(name!, userId!));
+        querySnapshot.forEach((document) => {
+          deleteDoc(doc(db, `groups/${name}/users/${document.id}`));
+          setJoin(false);
+        });
       }
       
     } catch (e) {
@@ -98,16 +94,16 @@ export default function Groups() {
     </article>
     
     <Button
-      leftIcon={join ? <SmallAddIcon boxSize='1.5rem' /> : <CheckIcon boxSize='1rem' />}
-      style={join ? addingToGroup : addingToGroupOutline}
+      leftIcon={join ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
+      style={join ? addingToGroupOutline : addingToGroup}
       colorScheme='blue'
       onClick={joinToGroup}
-      variant={join ? 'solid' : 'outline'}
+      variant={join ? 'outline' : 'solid'}
       width='min-content'
       margin='0 2rem 1rem'
       className={styles.button}
     >
-      {join ? 'Dołącz' : 'Dołączyłeś/aś'}
+      {join ? 'Dołączyłeś/aś' : 'Dołącz'}
     </Button>
     
     <Divider orientation='horizontal' />

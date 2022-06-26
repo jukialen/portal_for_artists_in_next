@@ -6,6 +6,7 @@
 	margin: 0 auto;
 	font-size: 1.8rem;
 }
+
 .photo__profile {
 	width: 15rem;
 	height: 15rem;
@@ -20,7 +21,7 @@
 	display: flex;
 	flex-flow: column;
 
-	.container {
+	.title {
 		margin: .5rem auto;
 		align-self: center;
 	}

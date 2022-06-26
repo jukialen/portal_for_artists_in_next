@@ -61,7 +61,7 @@ export const AddingPost = ({ name }: AuthorType) => {
       onSubmit={createNewPost}
     >
       {({ values, handleChange }) => (
-        <Form className={showForm ? '' : styles.hiding}>
+        <Form className={showForm ? styles.hiding : ''}>
           <Input
             id='title'
             name='title'

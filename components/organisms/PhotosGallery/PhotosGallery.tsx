@@ -86,7 +86,7 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
   
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
-      {asPath === `/account/${pseudonym}` && <em className='container'>{data?.Account?.gallery?.userPhotosTitle}</em>}
+      {asPath === `/account/${pseudonym}` && <em className='title'>{data?.Account?.gallery?.userPhotosTitle}</em>}
       
       <Wrapper>
         { gallery }

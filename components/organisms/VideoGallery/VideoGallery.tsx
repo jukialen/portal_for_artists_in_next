@@ -65,7 +65,7 @@ export const VideoGallery = ({ user, data }: UserType) => {
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
       
-      <em className='container'>{data?.Account?.gallery?.userVideosTitle}</em>
+      <em className='title'>{data?.Account?.gallery?.userVideosTitle}</em>
       
       <Wrapper>
         {
