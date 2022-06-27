@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { auth, db } from '../../firebase';
@@ -18,7 +18,8 @@ import { CheckIcon, SmallAddIcon } from '@chakra-ui/icons';
 export default function Groups() {
   const [logo, setLogo] = useState('');
   const [description, setDescription] = useState('');
-  const [join, setJoin] = useState(false);
+  const [join, setJoin] = useState(true);
+  const [addUser, setAddUser] = useState<string | null>(null);
   
   const { query, asPath } = useRouter();
   const { name } = query;
@@ -28,19 +29,17 @@ export default function Groups() {
   
   const joinToGroup = async () => {
     try {
-      if (join) {
-        // @ts-ignore
-        await addDoc(usersInGroup(name!), { username: userId });
-        await setJoin(true);
+      // @ts-ignore
+      const querySnapshot = await getDocs(deleteUserFromGroup(name!, userId!));
+      
+      // @ts-ignore
+      if (join && addUser !== '') {
+        querySnapshot.forEach((document) => deleteDoc(doc(db, `groups/${name}/users/${document.id}`)));
       } else {
         // @ts-ignore
-        const querySnapshot = await getDocs(deleteUserFromGroup(name!, userId!));
-        querySnapshot.forEach((document) => {
-          deleteDoc(doc(db, `groups/${name}/users/${document.id}`));
-          setJoin(false);
-        });
+        await addDoc(usersInGroup(name!), { username: userId });
       }
-      
+      setJoin(!join);
     } catch (e) {
       console.error('e', e);
     }
@@ -58,6 +57,32 @@ export default function Groups() {
       console.error('e2', e);
     }
   };
+  
+  const users = async () => {
+    try {
+      // @ts-ignore
+      const querySnapshot = await getDocs(deleteUserFromGroup(name!, userId!));
+      
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+  
+        console.log(doc.data().username);
+        
+        !!doc.data().username ? setAddUser(doc.data().username) : setAddUser(null);
+        !!doc.data().username ? setJoin(true) : setJoin(false);
+      });
+    }
+    catch (e) {
+      setJoin(false)
+      console.error(e);
+    }
+  };
+  
+  
+  useEffect(() => {
+    // @ts-ignore
+    !!name && users(name);
+  }, [name, userId]);
   
   useEffect(() => {
     !!name && groupInfo();
@@ -78,6 +103,7 @@ export default function Groups() {
     color: activeColor,
   };
   
+  console.log(join, addUser)
   return <>
     <HeadCom path={asPath} content={`"${name}" group website`} />
     
@@ -94,16 +120,16 @@ export default function Groups() {
     </article>
     
     <Button
-      leftIcon={join ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
-      style={join ? addingToGroupOutline : addingToGroup}
+      leftIcon={join && !!addUser ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
+      style={join && !!addUser ? addingToGroupOutline : addingToGroup}
       colorScheme='blue'
       onClick={joinToGroup}
-      variant={join ? 'outline' : 'solid'}
+      variant={join && !!addUser ? 'outline' : 'solid'}
       width='min-content'
       margin='0 2rem 1rem'
       className={styles.button}
     >
-      {join ? 'Dołączyłeś/aś' : 'Dołącz'}
+      {join && !!addUser ? 'Dołączyłeś/aś' : 'Dołącz'}
     </Button>
     
     <Divider orientation='horizontal' />
@@ -148,8 +174,10 @@ export default function Groups() {
       <TabPanels padding={0}>
         <TabPanel padding={0}>
           <>
+            { console.log(addUser) }
+            { console.log(addUser === userId) }
             {/*@ts-ignore*/}
-            { join && <AddingPost name={name} /> }
+            { (join && userId === addUser) && <AddingPost name={name} /> }
             {/*@ts-ignore*/}
             <Posts name={name} />
           </>

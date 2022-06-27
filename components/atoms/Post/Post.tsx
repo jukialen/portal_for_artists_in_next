@@ -11,7 +11,6 @@ import styles from './Post.module.scss';
 import group from 'public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
-
 export const Post = ({author, title, date, description, idPost, name}: PostType) => {
   const [showComments, setShowComments] = useState(false);
   const [like, setLiked] = useState(false);
@@ -56,7 +55,6 @@ export const Post = ({author, title, date, description, idPost, name}: PostType)
       {likeCount}
     </p>
     <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-      {console.log(idPost)}
       <NewComments name={name} idPost={idPost!} />
       <Comment />
       <Comment />
