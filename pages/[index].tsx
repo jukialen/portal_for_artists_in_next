@@ -1,18 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { auth, db, storage } from '../firebase';
-import { ref, StorageReference } from 'firebase/storage';
-import {
-  CollectionReference,
-  doc,
-  getDoc,
-  limit,
-  onSnapshot,
-  orderBy,
-  Query,
-  query,
-  where
-} from 'firebase/firestore';
+import { ref } from 'firebase/storage';
+import { doc, getDoc, limit, onSnapshot, orderBy, Query, query, where } from 'firebase/firestore';
 import { Skeleton } from '@chakra-ui/react';
 
 import { FileType } from 'types/global.types';
@@ -25,7 +15,10 @@ import { useHookSWR } from 'hooks/useHookSWR';
 import {
   allAnimatedCollectionRef,
   allPhotosCollectionRef,
-  allVideosCollectionRef, userAnimationsRef, userPhotosRef, userVideosRef
+  allVideosCollectionRef,
+  userAnimationsRef,
+  userPhotosRef,
+  userVideosRef
 } from 'references/referencesFirebase';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
@@ -48,9 +41,6 @@ export default function Drawings() {
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [nextPage, setNextPage] = useState<Query>();
-  const [refFile, setRefFile] = useState<CollectionReference>();
-  const [refStorage, setRefStorage] = useState<StorageReference>();
-  const [subCollection, setSubCollection] = useState('');
   
   useEffect(() => {
     switch (index) {
@@ -97,28 +87,6 @@ export default function Drawings() {
               filesElements(filesArray, document, docSnap.data().pseudonym);
               setUserDrawings(filesArray);
               setLoadingFiles(true);
-              
-              switch (index) {
-                case 'photographs':
-                  setRefFile(userPhotosRef(user?.uid));
-                  setSubCollection('photos');
-                  setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
-                  break;
-                case 'animations':
-                  setRefFile(userAnimationsRef(user?.uid));
-                  setSubCollection('animations');
-                  setRefStorage(ref(storage, `${user?.uid}/animations/${document.data().description}`));
-                  break;
-                case 'videos':
-                  setRefFile(userVideosRef(user?.uid));
-                  setRefStorage(ref(storage, `${user?.uid}/videos/${document.data().description}`));
-                  break;
-                case 'others':
-                  setRefFile(userPhotosRef(user?.uid));
-                  setSubCollection('photos');
-                  setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
-                  break;
-              }
             } else {
               console.error('No such doc')
             }
@@ -152,19 +120,22 @@ export default function Drawings() {
               index === 'videos' ?
                 <Videos
                   link={fileUrl}
+                  description={description}
                   authorName={pseudonym}
-                  refFile={userVideosRef()}
+                  refFile={userVideosRef(user?.uid)}
                   refStorage={ref(storage, `${user?.uid}/videos/${description}`)}
                   tag={tags}
+                  uid={uid}
+                  idPost={idPost}
                 /> :
                 <Article
                   link={fileUrl}
                   description={description}
                   authorName={pseudonym}
                   unopt={index === 'animations'}
-                  refFile={refFile!}
-                  subCollection={subCollection}
-                  refStorage={refStorage!}
+                  refFile={index === 'animations' ? userAnimationsRef(user?.uid) : userPhotosRef(user?.uid)}
+                  subCollection={index === 'animations' ? 'animations' : 'photos'}
+                  refStorage={ref(storage, `${user?.uid}/${index === 'animations' ? 'animations' : 'photos'}/${description}`)}
                   tag={tags}
                   uid={uid}
                   idPost={idPost}
