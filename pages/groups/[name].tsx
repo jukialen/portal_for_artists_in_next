@@ -9,6 +9,7 @@ import { deleteUserFromGroup, groupSection, usersInGroup } from 'references/refe
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { AddingPost } from 'components/atoms/AddingPost/AddingPost';
+import { Members } from 'components/atoms/Members/Members';
 import { Posts } from 'components/organisms/Posts/Posts';
 
 import styles from './index.module.scss';
@@ -176,7 +177,7 @@ export default function Groups() {
           </>
         </TabPanel>
         <TabPanel padding={0}>
-          bbbbddddddddd
+          <Members />
         </TabPanel>
         <TabPanel padding={0}>
           <h2>Description: {description}</h2>
