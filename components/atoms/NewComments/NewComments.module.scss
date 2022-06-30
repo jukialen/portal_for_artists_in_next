@@ -3,10 +3,10 @@
 .comments {
 	display: grid;
 	grid-template-columns: 3rem 1fr;
+	padding: 0 0.25rem;
 
 	.text {
-		//padding-top: .5rem;
-		text-align: inherit;
+		text-align: left;
 		color: $third__color;
 	}
 }

@@ -76,7 +76,6 @@ export const DeleteAccount = () => {
         borderColor='red.500'
         w={145}
         m={4}
-        variant='ghost'
         onClick={() => setIsOpen(true)}
       >
         Deletion

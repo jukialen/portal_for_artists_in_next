@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { db } from '../../../firebase';
-import { collection } from 'firebase/firestore';
 
 import { FileContainerType } from 'types/global.types';
 
@@ -37,7 +35,7 @@ export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, descr
   
         <SharingButton link={linkShare} tag={tag} authorName={authorName} titleShare={titleShare} />
       </div>
-      <button className={styles.comments} onClick={showOpenComments}>Show comments</button>
+      <button className={styles.comments} onClick={showOpenComments}>Comments</button>
       {open && <>
         <NewComments
           name={subCollection}

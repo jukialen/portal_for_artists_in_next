@@ -3,7 +3,9 @@
 .videos {
 	width: 100%;
 	min-width: 17.5rem;
-	background-color: $third__color;
+	border: .1rem solid $third__color;
+	border-radius: .5rem;
+	padding: .5rem 0;
 	justify-self: center;
 	margin: 1rem auto;
 	position: relative;

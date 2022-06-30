@@ -3,10 +3,12 @@
 .article {
   width: 100%;
   min-width: 17.5rem;
-  background-color: $third__color;
+  border: .1rem solid $third__color;
   justify-self: center;
   margin: 1rem auto;
   position: relative;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0;
 
   @media (min-width: 320px) {
     min-width: 20rem;
@@ -14,5 +16,11 @@
 
   .item {
     object-fit: contain;
+    background-color: #313b4c;
+  }
+
+  .item__dark {
+    object-fit: contain;
+    background-color: $dark__color__light__back;
   }
 }

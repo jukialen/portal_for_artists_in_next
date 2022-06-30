@@ -30,9 +30,6 @@ export default function Drawings() {
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [nextPageArray, setNextPageArray] = useState<string[]>([]);
-  const [refFile, setRefFile] = useState<CollectionReference>();
-  const [refStorage, setRefStorage] = useState<StorageReference>();
-  const [subCollection, setSubCollection] = useState('');
   
   let nextPage: Query;
   const user = auth?.currentUser;
@@ -78,27 +75,6 @@ export default function Drawings() {
                 uid: document.data().uid,
                 idPost: document.id
               });
-              switch (pid) {
-                case 'photographs':
-                  setRefFile(userPhotosRef(user?.uid));
-                  setSubCollection('photos');
-                  setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
-                  break;
-                case 'animations':
-                setRefFile(userAnimationsRef(user?.uid));
-                setSubCollection('animations');
-                setRefStorage(ref(storage, `${user?.uid}/animations/${document.data().description}`));
-                break;
-                case 'videos':
-                  setRefFile(userVideosRef(user?.uid));
-                  setRefStorage(ref(storage, `${user?.uid}/videos/${document.data().description}`));
-                  break;
-                case 'others':
-                  setRefFile(userPhotosRef(user?.uid));
-                  setSubCollection('photos');
-                  setRefStorage(ref(storage, `${user?.uid}/photos/${document.data().description}`));
-                  break;
-              }
             } else {
               console.error('No such doc');
             }
@@ -120,12 +96,9 @@ export default function Drawings() {
     return downloadDrawings();
   }, [nextPageArray]);
   
-  console.log(userDrawings);
   return !loading ? (
     <>
       <HeadCom path={router.asPath} content='Sites with drawings and photos.' />
-    
-      <article id='user__gallery__in__account' className='user__gallery__in__account'>
       
         <em className={styles.title}>{data?.Aside?.category}: {pid}</em>
   
@@ -139,16 +112,15 @@ export default function Drawings() {
                 link={fileUrl}
                 description={description}
                 authorName={pseudonym}
-                refFile={refFile!}
-                subCollection={subCollection}
-                refStorage={refStorage!}
+                refFile={userPhotosRef(user?.uid)}
+                subCollection='photos'
+                refStorage={ref(storage, `${user?.uid}/photos/${description}`)}
                 tag={tags}
                 uid={uid}
                 idPost={idPost}
               />
             </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.files} />
        }</Wrapper>
-      </article>
     </>
   ) : null;
 };

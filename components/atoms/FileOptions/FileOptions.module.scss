@@ -1,8 +1,6 @@
 @use 'styles/variables' as *;
 
 .options {
-	background: $third__color;
-
 	.bottomPanel {
 		display: grid;
 		grid-template-columns: 1fr 4rem;
@@ -18,9 +16,12 @@
 	.comments {
 		width: 15rem;
 		max-width: 70%;
-		height: 2rem;
-		border: 1px;
-		margin: 1rem auto 0;
+		border: .1rem;
+		border-radius: .5rem;
+		margin: 1rem auto;
+		padding: .3rem;
+		font-size: 1rem;
+		background-color: $third__color;
 		cursor: pointer;
 	}
 }
