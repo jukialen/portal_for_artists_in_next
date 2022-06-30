@@ -1,35 +1,49 @@
-import lazy from 'next/dynamic'
-import { Discuzz, loadService } from '@discuzz/discuzz'
+import { useEffect, useState } from 'react';
+import { db } from '../../../firebase';
+import { doc, getDoc, getDocs } from 'firebase/firestore';
 
-const LocaleProviderEn = lazy(() => import('@discuzz/locale-en'), { ssr: false })
-// const ComposerMarkdown = lazy(() => import('@discuzz/composer-markdown'))
-// const ViewerMarkdown = lazy(() => import('@discuzz/viewer-markdown'))
+import { comments } from 'references/referencesFirebase';
 
-const AuthFirebase = loadService(() => import('@discuzz/auth-firebase'))
-const DataFirestore = loadService(() => import('@discuzz/data-firestore'))
+import { AuthorType, CommentType } from 'types/global.types';
 
-export const Comments = () => {
-  return (
-    <Discuzz
-      url={global.location && global.location.href}
-      service={{
-        auth: AuthFirebase,
-        data: DataFirestore,
-        config: {
-          apiKey: `${process.env.NEXT_PUBLIC_API_KEY}`,
-          authDomain: `${process.env.NEXT_PUBLIC_AUTH_DOMAIN}`,
-          projectId: `${process.env.NEXT_PUBLIC_PROJ_ID}`,
-          storageBucket: `${process.env.NEXT_PUBLIC_STORAGE_BUCKET}`,
-          messagingSenderId: `${process.env.NEXT_PUBLIC_SENDER_ID}`,
-          appId: `${process.env.NEXT_PUBLIC_APP_ID}`
+import { Comment } from 'components/atoms/Comment/Comment';
+
+export const Comments = ({ name, refCom }: AuthorType) => {
+  const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
+  
+  const showingComments = async () => {
+    try {
+      const commentArray: CommentType[] = [];
+      // @ts-ignore
+      const querySnapshot = await getDocs(refCom);
+      querySnapshot.forEach(async (document) => {
+        const docRef = doc(db, `users/${document.data().author}`);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          commentArray.push({
+            author: docSnap.data().pseudonym,
+            date: `${new Date(document.data().date.nanoseconds).getDay()}.${new Date(document.data().date.nanoseconds).getMonth() + 1}.${new Date(document.data().date.nanoseconds).getFullYear()}`,
+            description: document.data().message,
+            idPost: document.id,
+            name: document.data().nameGroup
+          });
         }
-      }}
-      auths={['google', 'github', 'yahoo']}
-      // config={{
-      //   composer: ComposerMarkdown,
-      //   viewer: ViewerMarkdown
-      // }}
-      locale={LocaleProviderEn}
-    />
-  );
-}
+      });
+      console.log(commentArray);
+      setCommentsArray(commentArray);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  
+  useEffect(() => {
+    !!name && showingComments();
+  }, [name, comments]);
+  
+  return <>
+    {console.log(commentsArray)}
+    {commentsArray.length > 0 ? commentsArray.map(({ author, date, description, idPost, name }: CommentType) =>
+      <Comment key={idPost} date={date} description={description} name={name} author={author} idPost={idPost} />
+    ) : <p>No comments</p>}
+  </>;
+};

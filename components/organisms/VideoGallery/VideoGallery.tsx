@@ -44,7 +44,9 @@ export const VideoGallery = ({ user, data }: UserType) => {
               time: document.data().timeCreated,
               description: document.data().description,
               pseudonym: docSnap.data()!.pseudonym,
-              tags: document.data().tag
+              tags: document.data().tag,
+              uid: document.data().uid,
+              idPost: document.id
             });
           });
           setUserVideos(filesArray);
@@ -70,7 +72,7 @@ export const VideoGallery = ({ user, data }: UserType) => {
       <Wrapper>
         {
           userVideos.length > 0 ?
-            userVideos.map(({ fileUrl, description, time, tags }: FileType) => <Skeleton
+            userVideos.map(({ fileUrl, description, time, tags, uid, idPost }: FileType) => <Skeleton
               isLoaded={loading}
               key={time}
             >
@@ -80,6 +82,8 @@ export const VideoGallery = ({ user, data }: UserType) => {
                 refStorage={ref(storage, `${user}/videos/${description}`)}
                 description={description}
                 tag={tags}
+                uid={uid}
+                idPost={idPost}
               />
             </Skeleton>) :
             <ZeroFiles text={data?.ZeroFiles?.videos} />

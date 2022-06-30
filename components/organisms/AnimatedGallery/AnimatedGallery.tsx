@@ -36,7 +36,9 @@ export const AnimatedGallery = ({ user, data }: UserType) => {
               description: document.data().description,
               time: document.data().timeCreated,
               pseudonym: docSnap.data()!.pseudonym,
-              tags: document.data().tag
+              tags: document.data().tag,
+              uid: document.data().uid,
+              idPost: document.id
             });
           });
           setUserAnimatedPhotos(filesArray);
@@ -61,7 +63,7 @@ export const AnimatedGallery = ({ user, data }: UserType) => {
       <Wrapper>
         {
           userAnimatedPhotos.length > 0 ?
-            userAnimatedPhotos.map(({ fileUrl, description, time, tags }: FileType) => <Skeleton
+            userAnimatedPhotos.map(({ fileUrl, description, time, tags, uid, idPost }: FileType) => <Skeleton
               isLoaded={loading}
               key={time}
             >
@@ -73,6 +75,8 @@ export const AnimatedGallery = ({ user, data }: UserType) => {
                 description={description}
                 tag={tags}
                 unopt
+                uid={uid}
+                idPost={idPost}
               />
             </Skeleton>) :
             <ZeroFiles text={data?.ZeroFiles?.animations} />

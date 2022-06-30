@@ -8,6 +8,8 @@ export const filesElements = (filesArray: FileType[], document: QueryDocumentSna
     time: document.data().timeCreated,
     tags: document.data().tag,
     pseudonym: pseudonym,
-    description: document.data().description
+    description: document.data().description,
+    uid: document.data().uid,
+    idPost: document.id
   });
 }

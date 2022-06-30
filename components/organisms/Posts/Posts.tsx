@@ -10,7 +10,7 @@ import { Post } from 'components/atoms/Post/Post';
 
 import styles from './Posts.module.scss';
 
-export const Posts = ({ name }: AuthorType) => {
+export const Posts = ({ name, join, userId, addUser }: AuthorType) => {
   const [postsArray, setPostsArray] = useState<PostType[]>([]);
   
   const downloadPosts = async () => {
@@ -43,8 +43,20 @@ export const Posts = ({ name }: AuthorType) => {
   }, [name, posts]);
   
   return <section className={styles.posts}>
+    {/* // @ts-ignore */}
     {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, name }: PostType) =>
-      <Post key={idPost} author={author} title={title} date={date} description={description} name={name} idPost={idPost} />
+      <Post
+        key={idPost}
+        author={author}
+        title={title}
+        date={date}
+        description={description}
+        name={name}
+        idPost={idPost}
+        join={join}
+        userId={userId}
+        addUser={addUser}
+      />
     ) : <p>Brak postów</p>}
   </section>;
 };

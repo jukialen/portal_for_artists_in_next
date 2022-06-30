@@ -74,7 +74,9 @@ export default function Drawings() {
                 time: document.data().timeCreated,
                 tags: document.data().tag,
                 pseudonym: docSnap.data()!.pseudonym,
-                description: document.data().description
+                description: document.data().description,
+                uid: document.data().uid,
+                idPost: document.id
               });
               switch (pid) {
                 case 'photographs':
@@ -129,7 +131,7 @@ export default function Drawings() {
   
         <Wrapper>{
           userDrawings.length > 0 ?
-            userDrawings.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
+            userDrawings.map(({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType) => <Skeleton
               isLoaded={loadingFiles}
               key={time}
             >
@@ -141,6 +143,8 @@ export default function Drawings() {
                 subCollection={subCollection}
                 refStorage={refStorage!}
                 tag={tags}
+                uid={uid}
+                idPost={idPost}
               />
             </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.files} />
        }</Wrapper>

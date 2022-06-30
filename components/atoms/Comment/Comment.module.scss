@@ -1,7 +1,8 @@
 @use 'styles/_variables' as *;
 
 .comment {
-	display: flex;
+	display: grid;
+	grid-template-columns: 3rem 1fr;
 	align-items: center;
 	margin-top: 1rem;
 	border: 0.1rem solid $third__color;
@@ -20,11 +21,23 @@
 		flex-direction: column;
 		margin: 0.5rem 0.5rem 0.5rem 0;
 
-		.pseudonym {
-			font-size: 1.2rem;
-			text-align: inherit;
-			padding-bottom: .5rem;
-			font-style: oblique;
+		.topPartComment {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			justify-content: space-between;
+			align-items: center;
+			padding: 0 0.5rem 0.5rem 0;
+
+			.pseudonym {
+				font-size: 1.2rem;
+				text-align: inherit;
+				font-style: oblique;
+			}
+
+			.date {
+				text-align: right;
+				font-size: .9rem;
+			}
 		}
 
 		.text {

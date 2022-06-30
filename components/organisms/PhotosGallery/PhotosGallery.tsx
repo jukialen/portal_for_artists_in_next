@@ -63,7 +63,7 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
   
   useEffect(() => {
     return setGallery(
-      userPhotos.map(({ fileUrl, description, time, tags, pseudonym }: FileType) => <Skeleton
+      userPhotos.map(({ fileUrl, description, time, tags, pseudonym, uid, idPost }: FileType) => <Skeleton
         isLoaded={loading}
         key={time}
         margin={loading ? 0 : '1rem 0'}
@@ -76,6 +76,8 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
           description={description}
           tag={tags}
           authorName={pseudonym}
+          uid={uid}
+          idPost={idPost}
         />
       </Skeleton>)
     );

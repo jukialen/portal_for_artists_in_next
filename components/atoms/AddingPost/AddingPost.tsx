@@ -12,7 +12,7 @@ import { addingPost } from 'references/referencesFirebase';
 
 import styles from './AddingPost.module.scss';
 
-type PostType = {
+type AddingPostType = {
   title: string;
   post: string;
 }
@@ -32,7 +32,7 @@ export const AddingPost = ({ name }: AuthorType) => {
     title: SchemaValidation().description
   });
   
-  const createNewPost = async ({ title, post }: PostType, { resetForm }: FormType) => {
+  const createNewPost = async ({ title, post }: AddingPostType, { resetForm }: FormType) => {
     try {
       // @ts-ignore
       await addDoc(addingPost(name!), {

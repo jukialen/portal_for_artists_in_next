@@ -1,10 +1,7 @@
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { auth, db, storage } from '../../firebase';
-import {
-  doc, getDoc,
-  onSnapshot,
-} from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, } from 'firebase/firestore';
 import { ref } from 'firebase/storage';
 
 import { FileType } from 'types/global.types';
@@ -15,14 +12,14 @@ import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import {
-  allPhotosCollectionRef,
   allAnimatedCollectionRef,
+  allPhotosCollectionRef,
   allVideosCollectionRef,
-  nextDrawings,
-  nextPhotos,
   nextAnimations,
-  nextVideos,
-  nextOthers
+  nextDrawings,
+  nextOthers,
+  nextPhotos,
+  nextVideos
 } from 'references/referencesFirebase';
 
 import { Article } from 'components/molecules/Article/Article';
@@ -196,7 +193,7 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastDrawings}</h2>
       <AppWrapper>
         {
-          userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
+          userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType) => <Skeleton
             isLoaded={loadingFiles}
             key={time}
           >
@@ -208,6 +205,8 @@ export default function Application() {
               subCollection='photos'
               refStorage={ref(storage, `${user?.uid}/photos/${description}`)}
               tag={tags}
+              uid={uid}
+              idPost={idPost}
             />
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.drawings} />
         }
@@ -216,18 +215,20 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastPhotos}</h2>
       <AppWrapper>
         {
-          userPhotos.length > 0 ? userPhotos.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
-            isLoaded={loadingFiles}
-            key={time}
-          >
-            <Article
-              link={fileUrl}
-              description={description}
-              authorName={pseudonym}
-              refFile={allPhotosCollectionRef()}
-              subCollection='photos'
-              refStorage={ref(storage, `${user?.uid}/photos/${description}`)}
-              tag={tags}
+          userPhotos.length > 0 ? userPhotos.map(({ fileUrl, time, description, pseudonym, tags, uid }: FileType) =>
+            <Skeleton
+              isLoaded={loadingFiles}
+              key={time}
+            >
+              <Article
+                link={fileUrl}
+                description={description}
+                authorName={pseudonym}
+                refFile={allPhotosCollectionRef()}
+                subCollection='photos'
+                refStorage={ref(storage, `${user?.uid}/photos/${description}`)}
+                tag={tags}
+                uid={uid}
             />
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.photos} />
         }

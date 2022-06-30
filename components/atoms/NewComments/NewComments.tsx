@@ -1,11 +1,9 @@
 import { auth } from '../../../firebase';
-import { addDoc, serverTimestamp } from 'firebase/firestore';
+import { addDoc, CollectionReference, serverTimestamp } from 'firebase/firestore';
 import { Avatar, Button, Textarea } from '@chakra-ui/react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-
-import { addingComment } from 'references/referencesFirebase';
 
 import { FormType } from 'types/global.types';
 
@@ -14,11 +12,11 @@ import group from 'public/group.svg';
 
 type NewCommentsType = {
   name?: string;
+  refCom?: CollectionReference;
   comment?: string;
-  idPost?: string
 }
 
-export const NewComments = ({ name, idPost }: NewCommentsType ) => {
+export const NewComments = ({ name, refCom }: NewCommentsType ) => {
   const initialValues = {
     comment: '',
   };
@@ -31,7 +29,7 @@ export const NewComments = ({ name, idPost }: NewCommentsType ) => {
   
   const createNewComment = async ({ comment }: NewCommentsType, { resetForm }: FormType) => {
     try {
-      await addDoc(addingComment(name!, idPost!), {
+      await addDoc(refCom!, {
         nameGroup: name,
         message: comment,
         date: serverTimestamp(),

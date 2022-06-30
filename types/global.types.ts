@@ -26,11 +26,13 @@ export type FileType = {
   description: string;
   time?: string;
   tags: string;
-  pseudonym: string
+  pseudonym: string;
+  uid: string;
+  idPost: string;
 }
 
 export type FileContainerType = {
-  link: string;
+  link?: string;
   refFile?:  CollectionReference | Query;
   subCollection?: string;
   refStorage?:  StorageReference;
@@ -38,7 +40,9 @@ export type FileContainerType = {
   authorName?: string;
   tag?: string;
   unopt?: boolean;
-  titleShare?: string
+  titleShare?: string;
+  uid?: string;
+  idPost?: string;
 };
 
 export type GroupType = {
@@ -49,6 +53,10 @@ export type GroupType = {
 
 export type AuthorType = {
   name: string | string[];
+  refCom?: Query;
+  join?: boolean;
+  userId?: string;
+  addUser?: string | null;
 }
 
 export type PostType = {
@@ -56,6 +64,18 @@ export type PostType = {
   title: string;
   date: string;
   description: string;
-  idPost?: string;
   name: string;
+  idPost?: string;
+  join?: boolean;
+  userId?: string;
+  addUser?: string | null;
+}
+
+export type CommentType = {
+  author?: string;
+  date: string;
+  description: string;
+  name: string;
+  post?: string;
+  idPost?: string;
 }

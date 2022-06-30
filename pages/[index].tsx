@@ -144,7 +144,7 @@ export default function Drawings() {
         <em className={styles.title}>{data?.Aside?.category}: {index}</em>
         
         <Wrapper>{
-          userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym, tags }: FileType) => <Skeleton
+          userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType) => <Skeleton
             isLoaded={loadingFiles}
             key={time}
           >
@@ -166,6 +166,8 @@ export default function Drawings() {
                   subCollection={subCollection}
                   refStorage={refStorage!}
                   tag={tags}
+                  uid={uid}
+                  idPost={idPost}
                 />
             }
           </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />

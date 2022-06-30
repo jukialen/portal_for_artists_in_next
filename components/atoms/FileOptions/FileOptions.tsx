@@ -1,21 +1,28 @@
-import styles from './FileOptions.module.scss';
-import Link from 'next/link';
 import { useState } from 'react';
-import { Comments } from '../Comments/Comments';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { db } from '../../../firebase';
+import { collection } from 'firebase/firestore';
 
 import { FileContainerType } from 'types/global.types';
-import { useRouter } from 'next/router';
-import { SharingButton } from '../SharingButton/SharingButton';
 
-export const FileOptions = ({ authorName, link, tag }: FileContainerType) => {
+import { addingCommentFiles, commentsFiles } from 'references/referencesFirebase';
+
+import { Comments } from 'components/atoms/Comments/Comments';
+import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
+import { NewComments } from 'components/atoms/NewComments/NewComments';
+
+import styles from './FileOptions.module.scss';
+
+export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, description }: FileContainerType) => {
   const [open, setOpen] = useState(false);
   
-  const { locale } = useRouter();
+  const { locale, asPath } = useRouter();
   
   const showOpenComments = () => setOpen(!open);
   
   const titleShare = `Share ${authorName} user post from category ${tag}`;
-  const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/post/${authorName}/${link}/${tag}`;
+  const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/post/${authorName}/${description}/${uid}/${subCollection}/${idPost}/${tag}`;
   
   return (
     <div className={styles.options}>
@@ -27,12 +34,20 @@ export const FileOptions = ({ authorName, link, tag }: FileContainerType) => {
             </a>
           </Link>
         </div>
-      
+  
         <SharingButton link={linkShare} tag={tag} authorName={authorName} titleShare={titleShare} />
       </div>
       <button className={styles.comments} onClick={showOpenComments}>Show comments</button>
-      { open && <Comments /> }
+      {open && <>
+        <NewComments
+          name={subCollection}
+          refCom={addingCommentFiles(uid!, subCollection!, idPost!)}
+        />
+        <Comments
+          name={asPath}
+          refCom={commentsFiles(`${subCollection}`, description!)}
+        />
+      </>}
     </div>
-
   )
 }

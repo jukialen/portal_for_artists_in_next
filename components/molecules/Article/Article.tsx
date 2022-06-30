@@ -8,10 +8,10 @@ import { DeletionFile } from 'components/atoms/DeletionFile/DeletionFile';
 
 import styles from './Article.module.scss';
 
-export const Article = ({ link, refFile, refStorage, subCollection, description, authorName, unopt, tag }: FileContainerType) => {
+export const Article = ({ link, refFile, refStorage, subCollection, description, authorName, unopt, tag, uid, idPost }: FileContainerType) => {
   const { pseudonym } = useUserData();
   let img = 600;
-
+  
 return (
   <div className={styles.article}>
     {
@@ -25,7 +25,7 @@ return (
     }
       <Image
         className={styles.item}
-        src={link}
+        src={link!}
         alt={description}
         width={img}
         height={img}
@@ -33,13 +33,14 @@ return (
         priority
       />
     
-    
     <FileOptions
       authorName={authorName}
-      link={link}
       refFile={refFile}
       subCollection={subCollection}
       tag={tag}
+      description={description}
+      uid={uid}
+      idPost={idPost}
     />
   </div>
   );

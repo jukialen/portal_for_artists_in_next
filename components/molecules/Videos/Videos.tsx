@@ -7,7 +7,7 @@ import { FileContainerType } from 'types/global.types';
 import { DeletionFile } from 'components/atoms/DeletionFile/DeletionFile';
 import { FileOptions } from 'components/atoms/FileOptions/FileOptions';
 
-export const Videos = ({ link, description, refFile, refStorage, authorName, tag }: FileContainerType) => {
+export const Videos = ({ link, description, refFile, refStorage, authorName, tag, uid, idPost }: FileContainerType) => {
   const { pseudonym } = useUserData();
   
   return (
@@ -36,6 +36,9 @@ export const Videos = ({ link, description, refFile, refStorage, authorName, tag
         link={link}
         subCollection='videos'
         tag={tag}
+        description={description}
+        uid={uid}
+        idPost={idPost}
       />
     </div>
   )

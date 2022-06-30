@@ -31,17 +31,17 @@ export const SharingButton = ({ link, titleShare }: FileContainerType) => {
   
     <div className={`${styles.share__options} ${share ? styles.share__options__active : ''}`}>
       <div className={styles.icon}>
-        <LineShareButton url={link} title={titleShare}>
+        <LineShareButton url={link!} title={titleShare}>
           <LineIcon size={icon} borderRadius={border} />
         </LineShareButton>
       </div>
       <div className={styles.icon}>
-        <WhatsappShareButton url={link} title={titleShare}>
+        <WhatsappShareButton url={link!} title={titleShare}>
           <WhatsappIcon size={icon} borderRadius={border} />
         </WhatsappShareButton>
       </div>
       <div className={styles.icon}>
-        <WeiboShareButton url={link} title={titleShare}>
+        <WeiboShareButton url={link!} title={titleShare}>
           <WeiboIcon size={icon} borderRadius={border} />
         </WeiboShareButton>
       </div>
@@ -56,7 +56,5 @@ export const SharingButton = ({ link, titleShare }: FileContainerType) => {
         </RWebShare>
       </div>
     </div>
-
   </div>
-  
 }

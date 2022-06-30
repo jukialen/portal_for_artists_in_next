@@ -1,4 +1,4 @@
-import { collection, collectionGroup, doc, limit, orderBy, query, where } from 'firebase/firestore';
+import { collection, collectionGroup, CollectionReference, limit, orderBy, query, where } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { animationsTags, drawingsTags, othersTags, photosTags, videosTags } from 'helpers/arrayTags';
 
@@ -63,18 +63,24 @@ export const deleteUserFromGroup = (name: AuthorType, username: string) => {
   return query(usersInGroup(name!), where('username', '==', username));
 }
 
-export const groupSection = (name: AuthorType) => {
-  return query(groupRef, where('name', '==', name));
-}
+export const groupSection = (name: AuthorType) => query(groupRef, where('name', '==', name));
 
 export const addingPost = ((name: AuthorType) => collection(db, `groups/${name}/posts`));
 
 export const posts = (name: AuthorType) => {
-  return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name))
-}
+  return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name), orderBy('date', 'desc'));
+};
 
-export const addingComment = (name: string, idPost: string) => collection(db, `groups/${name}/posts/${idPost}/comments`)
+export const addingComment = (name: string, idPost: string) => collection(db, `groups/${name}/posts/${idPost}/comments`);
 
 export const comments = (name: AuthorType) => {
-  return query(collectionGroup(db, 'comments'), where('nameGroup', '==', name))
+  return query(collectionGroup(db, 'comments'), where('nameGroup', '==', name), orderBy('date', 'desc'));
+};
+
+export const addingCommentFiles = (uid: string, subCollection: string, idPost: string) => {
+  return collection(db, `users/${uid}/${subCollection}/${idPost}/comments`);
+}
+
+export const commentsFiles = (subCollection: string, description: string) => {
+  return query(collectionGroup(db, `${subCollection}`), where('description', '==', description), orderBy('timeCreated', 'desc'));
 }

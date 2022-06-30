@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { auth, db } from '../../firebase';
@@ -64,10 +64,6 @@ export default function Groups() {
       const querySnapshot = await getDocs(deleteUserFromGroup(name!, userId!));
       
       querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-  
-        console.log(doc.data().username);
-        
         !!doc.data().username ? setAddUser(doc.data().username) : setAddUser(null);
         !!doc.data().username ? setJoin(true) : setJoin(false);
       });
@@ -103,7 +99,6 @@ export default function Groups() {
     color: activeColor,
   };
   
-  console.log(join, addUser)
   return <>
     <HeadCom path={asPath} content={`"${name}" group website`} />
     
@@ -174,12 +169,10 @@ export default function Groups() {
       <TabPanels padding={0}>
         <TabPanel padding={0}>
           <>
-            { console.log(addUser) }
-            { console.log(addUser === userId) }
             {/*@ts-ignore*/}
             { (join && userId === addUser) && <AddingPost name={name} /> }
             {/*@ts-ignore*/}
-            <Posts name={name} />
+            <Posts name={name} join={join} userId={userId} addUser={addUser} />
           </>
         </TabPanel>
         <TabPanel padding={0}>
