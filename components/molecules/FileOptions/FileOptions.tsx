@@ -6,7 +6,7 @@ import { FileContainerType } from 'types/global.types';
 
 import { addingCommentFiles, commentsFiles } from 'references/referencesFirebase';
 
-import { Comments } from 'components/atoms/Comments/Comments';
+import { Comments } from 'components/molecules/Comments/Comments';
 import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
 import { NewComments } from 'components/atoms/NewComments/NewComments';
 

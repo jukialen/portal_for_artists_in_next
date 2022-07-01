@@ -183,6 +183,11 @@
     "deleting": "Deleting the file.",
     "deleted": "The file has deleted."
   },
+  "DeletionPost": {
+    "title": "Delete the post",
+    "deleting": "Deleting the post.",
+    "deleted": "The post has deleted."
+  },
   "error": "Try again or check your internet connection.",
   "edit": "Edit",
   "cancel": "Cancel",

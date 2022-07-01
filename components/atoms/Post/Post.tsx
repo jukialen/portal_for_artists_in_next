@@ -6,12 +6,13 @@ import { PostType } from 'types/global.types';
 import { addingComment, comments } from 'references/referencesFirebase';
 
 import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
-import { Comments } from 'components/atoms/Comments/Comments';
+import { Comments } from 'components/molecules/Comments/Comments';
 import { NewComments } from 'components/atoms/NewComments/NewComments';
 
 import styles from './Post.module.scss';
 import group from 'public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
+import { DeletePost } from '../DeletionPost/DeletionPost';
 
 export const Post = ({ author, title, date, description, idPost, name, join, userId, addUser }: PostType) => {
   const [showComments, setShowComments] = useState(false);
@@ -33,6 +34,8 @@ export const Post = ({ author, title, date, description, idPost, name, join, use
       <div className={styles.username}>
         <a href={`/user/${author}`}>{author}</a>
       </div>
+      
+      {userId === addUser && <DeletePost name={name} idPost={idPost!} />}
     </div>
     <div className={styles.titlePost}>{title}</div>
     <div className={styles.time}>{date}</div>

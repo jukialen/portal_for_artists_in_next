@@ -1,4 +1,4 @@
-import { collection, collectionGroup, CollectionReference, limit, orderBy, query, where } from 'firebase/firestore';
+import { collection, collectionGroup, doc, limit, orderBy, query, where } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { animationsTags, drawingsTags, othersTags, photosTags, videosTags } from 'helpers/arrayTags';
 
@@ -65,11 +65,13 @@ export const deleteUserFromGroup = (name: AuthorType, username: string) => {
 
 export const groupSection = (name: AuthorType) => query(groupRef, where('name', '==', name));
 
-export const addingPost = ((name: AuthorType) => collection(db, `groups/${name}/posts`));
+export const addingPost = (name: AuthorType) => collection(db, `groups/${name}/posts`);
 
 export const posts = (name: AuthorType) => {
   return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name), orderBy('date', 'desc'));
 };
+
+export const deletingPost = (name: string, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
 
 export const addingComment = (name: string, idPost: string) => collection(db, `groups/${name}/posts/${idPost}/comments`);
 

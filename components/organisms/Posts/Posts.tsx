@@ -10,7 +10,7 @@ import { Post } from 'components/atoms/Post/Post';
 
 import styles from './Posts.module.scss';
 
-export const Posts = ({ name, join, userId, addUser }: AuthorType) => {
+export const Posts = ({ name, join, currentUser }: AuthorType) => {
   const [postsArray, setPostsArray] = useState<PostType[]>([]);
   
   const downloadPosts = async () => {
@@ -28,7 +28,8 @@ export const Posts = ({ name, join, userId, addUser }: AuthorType) => {
             date: `${new Date(document.data().date.nanoseconds).getDay()}.${new Date(document.data().date.nanoseconds).getMonth() + 1}.${new Date(document.data().date.nanoseconds).getFullYear()}`,
             description: document.data().message,
             idPost: document.id,
-            name: document.data().nameGroup
+            name: document.data().nameGroup,
+            addUser: document.data().author
           });
         }
       });
@@ -44,7 +45,7 @@ export const Posts = ({ name, join, userId, addUser }: AuthorType) => {
   
   return <section className={styles.posts}>
     {/* // @ts-ignore */}
-    {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, name }: PostType) =>
+    {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, name, addUser }: PostType) =>
       <Post
         key={idPost}
         author={author}
@@ -54,7 +55,7 @@ export const Posts = ({ name, join, userId, addUser }: AuthorType) => {
         name={name}
         idPost={idPost}
         join={join}
-        userId={userId}
+        userId={currentUser}
         addUser={addUser}
       />
     ) : <p>Brak postów</p>}

@@ -55,7 +55,7 @@ export type AuthorType = {
   name: string | string[];
   refCom?: Query;
   join?: boolean;
-  userId?: string;
+  currentUser?: string;
   addUser?: string | null;
 }
 

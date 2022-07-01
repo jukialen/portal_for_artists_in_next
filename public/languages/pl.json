@@ -183,6 +183,11 @@
     "deleting": "Usuwanie pliku.",
     "deleted": "Usunięto plik"
   },
+  "DeletionPost": {
+    "title": "Usunięcie pliku",
+    "deleting": "Usuwanie postu.",
+    "deleted": "Usunięto post."
+  },
   "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",
   "cancel": "Anuluj",

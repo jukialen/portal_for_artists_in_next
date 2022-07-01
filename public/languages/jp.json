@@ -176,7 +176,12 @@
     "cancelButton": "取り消します",
     "deleteButton": "消します",
     "deleting": "ファイルが消してます",
-    "deleted": "ファイルが消しました"
+    "deleted": "ファイルが消しました。"
+  },
+  "DeletionPost": {
+    "title": "掲示が消します",
+    "deleting": "掲示が消してます。",
+    "deleted": "掲示が消しました。"
   },
   "error": "Try again or check your internet connection.",
   "edit": "Edit",

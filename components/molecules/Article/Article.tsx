@@ -3,8 +3,8 @@ import { FileContainerType } from 'types/global.types';
 
 import { useUserData } from 'hooks/useUserData';
 
-import { FileOptions } from 'components/atoms/FileOptions/FileOptions';
-import { DeletionFile } from 'components/atoms/DeletionFile/DeletionFile';
+import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
+import { DeletionFile } from 'components/molecules/DeletionFile/DeletionFile';
 
 import styles from './Article.module.scss';
 import { useContext } from 'react';

@@ -4,8 +4,8 @@ import { useUserData } from 'hooks/useUserData';
 
 import { FileContainerType } from 'types/global.types';
 
-import { DeletionFile } from 'components/atoms/DeletionFile/DeletionFile';
-import { FileOptions } from 'components/atoms/FileOptions/FileOptions';
+import { DeletionFile } from 'components/molecules/DeletionFile/DeletionFile';
+import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
 
 export const Videos = ({ link, description, refFile, refStorage, authorName, tag, uid, idPost }: FileContainerType) => {
   const { pseudonym } = useUserData();

@@ -26,23 +26,23 @@ export default function Groups() {
   const { name } = query;
   const user = auth.currentUser;
   
-  const userId = user?.uid;
+  const currentUser = user?.uid;
   
   const joinToGroup = async () => {
     try {
       // @ts-ignore
-      const querySnapshot = await getDocs(deleteUserFromGroup(name!, userId!));
+      const querySnapshot = await getDocs(deleteUserFromGroup(name!, currentUser!));
       
       // @ts-ignore
       if (join && addUser !== '') {
         querySnapshot.forEach((document) => deleteDoc(doc(db, `groups/${name}/users/${document.id}`)));
       } else {
         // @ts-ignore
-        await addDoc(usersInGroup(name!), { username: userId });
+        await addDoc(usersInGroup(name!), { username: currentUser });
       }
       setJoin(!join);
     } catch (e) {
-      console.error('e', e);
+      console.error(e);
     }
   };
   
@@ -55,14 +55,14 @@ export default function Groups() {
         setLogo(doc.data().logo);
       });
     } catch (e) {
-      console.error('e2', e);
+      console.error(e);
     }
   };
   
   const users = async () => {
     try {
       // @ts-ignore
-      const querySnapshot = await getDocs(deleteUserFromGroup(name!, userId!));
+      const querySnapshot = await getDocs(deleteUserFromGroup(name!, currentUser!));
       
       querySnapshot.forEach((doc) => {
         !!doc.data().username ? setAddUser(doc.data().username) : setAddUser(null);
@@ -79,7 +79,7 @@ export default function Groups() {
   useEffect(() => {
     // @ts-ignore
     !!name && users(name);
-  }, [name, userId]);
+  }, [name, currentUser]);
   
   useEffect(() => {
     !!name && groupInfo();
@@ -171,9 +171,9 @@ export default function Groups() {
         <TabPanel padding={0}>
           <>
             {/*@ts-ignore*/}
-            { (join && userId === addUser) && <AddingPost name={name} /> }
+            { (join && currentUser === addUser) && <AddingPost name={name} /> }
             {/*@ts-ignore*/}
-            <Posts name={name} join={join} userId={userId} addUser={addUser} />
+            <Posts name={name} join={join} currentUser={currentUser} addUser={addUser} />
           </>
         </TabPanel>
         <TabPanel padding={0}>

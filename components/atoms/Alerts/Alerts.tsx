@@ -13,6 +13,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let status: string;
     
     switch (valueFields) {
+      case data?.DeletionPost?.deleted:
       case data?.DeletionFile?.deleted:
       case data?.NavForm?.statusLogin:
       case data?.NavForm?.successInfoRegistration:
@@ -21,6 +22,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case data?.AnotherForm?.uploadFile:
       case data?.Account?.profile?.successSending:
         return status = 'success';
+      case data?.DeletionPost?.deleting:
       case data?.DeletionFile?.deleting:
       case 'Upload is running':
         return status = 'info';
@@ -42,6 +44,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let color: string;
     
     switch (valueFields) {
+      case data?.DeletionPost?.deleted:
       case data?.DeletionFile?.deleted:
       case data?.NavForm?.statusLogin:
       case data?.NavForm?.successInfoRegistration:
@@ -50,6 +53,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case data?.AnotherForm?.uploadFile:
       case data?.Account?.profile?.successSending:
         return color = 'green';
+      case data?.DeletionPost?.deleting:
       case data?.DeletionFile?.deleting:
       case 'Upload is running':
         return color = 'blue';

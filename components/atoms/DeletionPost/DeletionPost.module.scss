@@ -1,0 +1,36 @@
+@use 'styles/_variables' as *;
+
+.icon {
+	top: 0;
+	right: 0;
+	z-index: 2;
+	border: 1rem solid transparent;
+	background-color: transparent;
+	color: $dark__background__light__color;
+	cursor: pointer;
+}
+
+.container {
+	height: 3rem;
+	display: none;
+	position: absolute;
+	justify-self: flex-end;
+	z-index: 1;
+
+	> button {
+		width: 9rem;
+		top: 3rem;
+		margin: 1rem 0;
+		cursor: pointer;
+	}
+
+	.alert {
+		position: absolute;
+		top: 6.5rem;
+		right: 0;
+	}
+}
+
+.container__active {
+	display: flex;
+}
