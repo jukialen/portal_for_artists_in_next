@@ -20,12 +20,11 @@ export default function Groups() {
   const [logo, setLogo] = useState('');
   const [description, setDescription] = useState('');
   const [join, setJoin] = useState(true);
-  const [addUser, setAddUser] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   
   const { query, asPath } = useRouter();
   const { name } = query;
   const user = auth.currentUser;
-  
   const currentUser = user?.uid;
   
   const joinToGroup = async () => {
@@ -34,7 +33,7 @@ export default function Groups() {
       const querySnapshot = await getDocs(deleteUserFromGroup(name!, currentUser!));
       
       // @ts-ignore
-      if (join && addUser !== '') {
+      if (join && userId !== '') {
         querySnapshot.forEach((document) => deleteDoc(doc(db, `groups/${name}/users/${document.id}`)));
       } else {
         // @ts-ignore
@@ -65,7 +64,7 @@ export default function Groups() {
       const querySnapshot = await getDocs(deleteUserFromGroup(name!, currentUser!));
       
       querySnapshot.forEach((doc) => {
-        !!doc.data().username ? setAddUser(doc.data().username) : setAddUser(null);
+        !!doc.data().username ? setUserId(doc.data().username) : setUserId(null);
         !!doc.data().username ? setJoin(true) : setJoin(false);
       });
     }
@@ -75,11 +74,10 @@ export default function Groups() {
     }
   };
   
-  
   useEffect(() => {
     // @ts-ignore
     !!name && users(name);
-  }, [name, currentUser]);
+  }, [name]);
   
   useEffect(() => {
     !!name && groupInfo();
@@ -116,16 +114,16 @@ export default function Groups() {
     </article>
     
     <Button
-      leftIcon={join && !!addUser ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
-      style={join && !!addUser ? addingToGroupOutline : addingToGroup}
+      leftIcon={join && !!userId ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
+      style={join && !!userId ? addingToGroupOutline : addingToGroup}
       colorScheme='blue'
       onClick={joinToGroup}
-      variant={join && !!addUser ? 'outline' : 'solid'}
+      variant={join && !!userId ? 'outline' : 'solid'}
       width='min-content'
       margin='0 2rem 1rem'
       className={styles.button}
     >
-      {join && !!addUser ? 'Dołączyłeś/aś' : 'Dołącz'}
+      {join && !!userId ? 'Dołączyłeś/aś' : 'Dołącz'}
     </Button>
     
     <Divider orientation='horizontal' />
@@ -171,9 +169,9 @@ export default function Groups() {
         <TabPanel padding={0}>
           <>
             {/*@ts-ignore*/}
-            { (join && currentUser === addUser) && <AddingPost name={name} /> }
+            { (join && currentUser === userId) && <AddingPost name={name} /> }
             {/*@ts-ignore*/}
-            <Posts name={name} join={join} currentUser={currentUser} addUser={addUser} />
+            <Posts name={name} join={join} currentUser={currentUser} />
           </>
         </TabPanel>
         <TabPanel padding={0}>

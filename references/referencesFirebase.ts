@@ -6,7 +6,7 @@ import { AuthorType } from 'types/global.types';
 
 const maxItems: number = 10;
 
-const user = auth.currentUser;
+const user = auth.currentUser?.uid;
 
 export const allPhotosCollectionRef = () => collectionGroup(db, 'photos');
 export const allAnimatedCollectionRef = () => collectionGroup(db, 'animations');
@@ -56,11 +56,11 @@ export const userVideosRef = (user?: string) => {
 }
 
 export const groupRef = collection(db, 'groups');
-export const groupsQuery = query(groupRef, where('admin', '==', `${user?.uid}`));
+export const groupsQuery = query(groupRef, where('admin', '==', `${user}`));
 
 export const usersInGroup = (name: AuthorType) => collection(db, `groups/${name}/users`);
-export const deleteUserFromGroup = (name: AuthorType, username: string) => {
-  return query(usersInGroup(name!), where('username', '==', username));
+export const deleteUserFromGroup = (name: AuthorType, currentUser: string) => {
+  return query(usersInGroup(name!), where('username', '==', currentUser));
 }
 
 export const groupSection = (name: AuthorType) => query(groupRef, where('name', '==', name));
@@ -71,9 +71,11 @@ export const posts = (name: AuthorType) => {
   return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name), orderBy('date', 'desc'));
 };
 
-export const deletingPost = (name: string, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
+export const likePost = (name: AuthorType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`)
 
-export const addingComment = (name: string, idPost: string) => collection(db, `groups/${name}/posts/${idPost}/comments`);
+export const deletingPost = (name: AuthorType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
+
+export const addingComment = (name: AuthorType, idPost: string) => collection(db, `groups/${name}/posts/${idPost}/comments`);
 
 export const comments = (name: AuthorType) => {
   return query(collectionGroup(db, 'comments'), where('nameGroup', '==', name), orderBy('date', 'desc'));

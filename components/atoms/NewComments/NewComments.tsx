@@ -5,13 +5,13 @@ import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { FormType } from 'types/global.types';
+import { AuthorType, FormType } from 'types/global.types';
 
 import styles from './NewComments.module.scss';
 import group from 'public/group.svg';
 
 type NewCommentsType = {
-  name?: string;
+  name?: AuthorType | string;
   refCom?: CollectionReference;
   comment?: string;
 }

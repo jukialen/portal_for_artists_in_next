@@ -29,7 +29,9 @@ export const Posts = ({ name, join, currentUser }: AuthorType) => {
             description: document.data().message,
             idPost: document.id,
             name: document.data().nameGroup,
-            addUser: document.data().author
+            userId: document.data().author,
+            likes: document.data().likes,
+            liked: document.data().liked
           });
         }
       });
@@ -41,11 +43,10 @@ export const Posts = ({ name, join, currentUser }: AuthorType) => {
   
   useEffect(() => {
     !!name && downloadPosts();
-  }, [name, posts]);
+  }, [name]);
   
   return <section className={styles.posts}>
-    {/* // @ts-ignore */}
-    {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, name, addUser }: PostType) =>
+    {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, name, userId, likes, liked }: PostType) =>
       <Post
         key={idPost}
         author={author}
@@ -55,8 +56,10 @@ export const Posts = ({ name, join, currentUser }: AuthorType) => {
         name={name}
         idPost={idPost}
         join={join}
-        userId={currentUser}
-        addUser={addUser}
+        currentUser={currentUser}
+        userId={userId}
+        likes={likes}
+        liked={liked}
       />
     ) : <p>Brak postów</p>}
   </section>;

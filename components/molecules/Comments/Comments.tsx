@@ -29,7 +29,6 @@ export const Comments = ({ name, refCom }: AuthorType) => {
           });
         }
       });
-      console.log(commentArray);
       setCommentsArray(commentArray);
     } catch (e) {
       console.error(e);
@@ -41,7 +40,6 @@ export const Comments = ({ name, refCom }: AuthorType) => {
   }, [name, comments]);
   
   return <>
-    {console.log(commentsArray)}
     {commentsArray.length > 0 ? commentsArray.map(({ author, date, description, idPost, name }: CommentType) =>
       <Comment key={idPost} date={date} description={description} name={name} author={author} idPost={idPost} />
     ) : <p>No comments</p>}

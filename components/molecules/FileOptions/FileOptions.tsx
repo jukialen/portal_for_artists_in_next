@@ -38,7 +38,7 @@ export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, descr
       <button className={styles.comments} onClick={showOpenComments}>Comments</button>
       {open && <>
         <NewComments
-          name={subCollection}
+          name={subCollection!}
           refCom={addingCommentFiles(uid!, subCollection!, idPost!)}
         />
         <Comments

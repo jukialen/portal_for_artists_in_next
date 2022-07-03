@@ -19,9 +19,10 @@ import {
   IconButton
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
+import { AuthorType } from '../../../types/global.types';
 
 type DeletionPostType = {
-  name: string;
+  name: AuthorType;
   idPost: string;
 }
 

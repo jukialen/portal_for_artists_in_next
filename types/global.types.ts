@@ -1,6 +1,6 @@
+import { ChangeEvent } from 'react';
 import { CollectionReference, Query } from 'firebase/firestore';
 import { StorageReference } from 'firebase/storage';
-import { ChangeEvent } from 'react';
 
 export type DataType = any;
 
@@ -56,7 +56,7 @@ export type AuthorType = {
   refCom?: Query;
   join?: boolean;
   currentUser?: string;
-  addUser?: string | null;
+  userId?: string | null;
 }
 
 export type PostType = {
@@ -64,11 +64,13 @@ export type PostType = {
   title: string;
   date: string;
   description: string;
-  name: string;
+  name: AuthorType;
   idPost?: string;
   join?: boolean;
-  userId?: string;
-  addUser?: string | null;
+  currentUser?: string;
+  userId?: string | null;
+  likes: number,
+  liked?: string[]
 }
 
 export type CommentType = {
