@@ -59,7 +59,8 @@
     "others": "Others",
     "friends": "Friends",
     "groups": "Groups",
-    "contact": "Contact"
+    "contact": "Contact",
+    "photos": "Photos"
   },
   "Footer": {
     "authors": "Authors",
@@ -79,7 +80,9 @@
     "aMenu": {
       "general": "General",
       "gallery": "Gallery",
-      "profile": "Profile"
+      "profile": "Profile",
+      "friends": "Friends",
+      "groups": "My groups"
     },
     "aData": {
       "subscription": "Subscription",
@@ -97,7 +100,7 @@
       "userLikedPhotos": "Liked photos and draws",
       "userVideosTitle": "Your videos",
       "userLikedVideos": "Liked by others",
-      "userAnimationsTitle": "Your　animations",
+      "userAnimationsTitle": "Your animations",
       "userLikedAnimations": "Liked　animations"
     },
     "profile": {

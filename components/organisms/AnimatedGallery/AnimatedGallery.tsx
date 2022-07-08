@@ -12,14 +12,17 @@ import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { Article } from 'components/molecules/Article/Article';
 
 import { Skeleton } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 
-export const AnimatedGallery = ({ user, data }: UserType) => {
+export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
   const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
   const [loading, setLoading] = useState(false);
   
+  const { asPath } = useRouter();
+  
   const maxItems: number = 15;
   const nextPage = query(
-    userAnimationsRef(user),
+    userAnimationsRef(user!),
     orderBy('timeCreated', 'desc'),
     limit(maxItems)
   );
@@ -56,9 +59,13 @@ export const AnimatedGallery = ({ user, data }: UserType) => {
     return downloadAnimations();
   }, []);
   
+  console.log('asPath', decodeURIComponent(asPath))
+  console.log('asPath2', decodeURIComponent(asPath) === `/account/${pseudonym}`)
+  console.log(`/account/${pseudonym}`)
+  
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
-      <em className='title'>{data?.Account?.gallery?.userAnimationsTitle}</em>
+      {decodeURIComponent(asPath) === `/account/${pseudonym}` && <em className='title'>{data?.Account?.gallery?.userAnimationsTitle}</em>}
       
       <Wrapper>
         {
@@ -69,7 +76,7 @@ export const AnimatedGallery = ({ user, data }: UserType) => {
             >
               <Article
                 link={fileUrl}
-                refFile={userAnimationsRef()}
+                refFile={userAnimationsRef(user!)}
                 subCollection='animations'
                 refStorage={ref(storage, `${user}/animations/${description}`)}
                 description={description}

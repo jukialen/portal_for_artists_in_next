@@ -24,11 +24,10 @@ export default function Account() {
   const loading = useCurrentUser('/');
   const { pseudonym } = useUserData();
   
-  const borRadius = '0 1rem/3rem';
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
-  const activeColor = '#4F8DFF';
-  const fontMenu = '1rem';
+  const activeColor = '#82FF82';
+  const borderColor = '#4F8DFF';
   
   return !loading ? (
     <>
@@ -37,158 +36,156 @@ export default function Account() {
       <h2 className={styles.account__h2}>{data?.Nav?.account}</h2>
       
       <Tabs
+        className={styles.tabsMenu}
         size='sm'
-        align='center'
-        justifySelf='center'
-        maxW='100vw'
-        m='0 auto'
-        gap='2rem'
         isLazy
         lazyBehavior='keepMounted'
         isFitted
         variant='unstyled'
       >
-        <TabList padding='1rem 0 5rem'>
+        <TabList
+          className={styles.topTabList}
+          role='tablist'
+        >
           <div className={styles.account__menu}>
             <div className={styles.content}>
               <Tab
-                fontSize={fontMenu}
                 _selected={{ borderColor: selectedColor }}
                 _hover={{ borderColor: hoverColor }}
-                _active={{  borderColor: activeColor }}
-                borderColor={activeColor}
-                borderRadius={borRadius}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
               >
                 {data?.Account?.aMenu?.general}
               </Tab>
               <Tab
-                fontSize={fontMenu}
                 _selected={{ borderColor: selectedColor }}
                 _hover={{ borderColor: hoverColor }}
-                _active={{  borderColor: activeColor }}
-                borderColor={activeColor}
-                borderRadius={borRadius}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
               >
                 {data?.Account?.aMenu?.gallery}
               </Tab>
               <Tab
-                fontSize={fontMenu}
                 _selected={{ borderColor: selectedColor }}
                 _hover={{ borderColor: hoverColor }}
-                _active={{  borderColor: activeColor }}
-                borderColor={activeColor}
-                borderRadius={borRadius}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
               >
                 {data?.Account?.aMenu?.profile}
               </Tab>
               <Tab
-                fontSize={fontMenu}
                 _selected={{ borderColor: selectedColor }}
                 _hover={{ borderColor: hoverColor }}
-                _active={{  borderColor: activeColor }}
-                borderColor={activeColor}
-                borderRadius={borRadius}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
               >
-                Friends
+                {data?.Account?.aMenu?.friends}
               </Tab>
               <Tab
-                fontSize={fontMenu}
                 _selected={{ borderColor: selectedColor }}
                 _hover={{ borderColor: hoverColor }}
-                _active={{  borderColor: activeColor }}
-                borderColor={activeColor}
-                borderRadius={borRadius}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
               >
-                Groups
+                {data?.Account?.aMenu?.groups}
               </Tab>
             </div>
           </div>
         </TabList>
     
-        <TabPanels padding={0}>
-          <TabPanel padding={0}>
+        <TabPanels className={styles.tabPanels}>
+          <TabPanel
+            className={styles.tabPanel}
+            role='tabpanel'
+          >
             <>
               <AccountData data={data} />
               <DeleteAccount />
             </>
           </TabPanel>
-          <TabPanel padding={0}>
+          <TabPanel
+            className={styles.tabPanel}
+            role='tabpanel'
+          >
             <FilesUpload />
             <Tabs
               size='sm'
-              align='center'
-              justifySelf='center'
-              maxW='100vw'
-              m='5rem auto'
-              gap='2rem'
               isLazy
               lazyBehavior='keepMounted'
               isFitted
               variant='unstyled'
+              className={styles.tabsForPanels}
             >
               <TabList
-                width='61%'
-                flexWrap='wrap'
-                gap='2rem'
-                m='auto'
-                border='none'
+                className={styles.tabList}
                 role='tablist'
               >
                 <Tab
-                  h='2rem'
+                  className={styles.tabForPanels}
                   _selected={{ borderColor: selectedColor }}
                   _hover={{ borderColor: hoverColor }}
                   _active={{  borderColor: activeColor }}
-                  borderColor={activeColor}
-                  borderRadius={borRadius}
+                  borderColor={borderColor}
                   role='tab'
                 >
-                  Photos
+                  {data?.Aside?.photos}
                 </Tab>
                 <Tab
-                  h='2rem'
+                  className={styles.tabForPanels}
                   _selected={{  borderColor: selectedColor }}
                   _hover={{  borderColor: hoverColor }}
                   _active={{ borderColor: activeColor }}
-                  borderColor={activeColor}
-                  borderRadius={borRadius}
+                  borderColor={borderColor}
                   role='tab'
                 >
-                  Animations
+                  {data?.Aside?.animations}
                 </Tab>
                 <Tab
-                  h='2rem'
+                  className={styles.tabForPanels}
                   _selected={{ borderColor: selectedColor }}
                   _hover={{  borderColor: hoverColor }}
                   _active={{ borderColor: activeColor }}
-                  borderRadius={borRadius}
-                  borderColor={activeColor}
+                  borderColor={borderColor}
                   role='tab'
                 >
-                  Videos
+                  {data?.Aside?.videos}
                 </Tab>
               </TabList>
               <TabPanels padding={0}>
                 <TabPanel padding={0} role='tabpanel'>
-                  <PhotosGallery user={user?.uid} data={data} />
+                  <PhotosGallery user={user?.uid} data={data} pseudonym={pseudonym} />
                 </TabPanel>
                 <TabPanel padding={0} role='tabpanel'>
-                  <AnimatedGallery user={user?.uid} data={data} />
+                  <AnimatedGallery user={user?.uid} data={data} pseudonym={pseudonym} />
                 </TabPanel>
                 <TabPanel padding={0} role='tabpanel'>
-                  <VideoGallery user={user?.uid} data={data} />
+                  <VideoGallery user={user?.uid} data={data} pseudonym={pseudonym} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
           </TabPanel>
-          <TabPanel padding={0}>
+          <TabPanel
+            className={styles.tabPanel}
+            role='tabpanel'
+          >
             <ProfileAccount data={data} />
           </TabPanel>
-          <TabPanel padding={0}>
-            <h2>Friends</h2>
+          <TabPanel
+            className={styles.tabPanel}
+            role='tabpanel'
+          >
+            <h2>{data?.Account?.aMenu?.friends}</h2>
           </TabPanel>
-          <TabPanel padding={0}>
-              <GroupUsers />
+          <TabPanel
+            className={styles.tabPanel}
+            role='tabpanel'
+          >
+            <GroupUsers />
           </TabPanel>
         </TabPanels>
       </Tabs>

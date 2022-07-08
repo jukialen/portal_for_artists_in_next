@@ -25,7 +25,7 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
   const maxItems: number = 20;
   const { asPath } = useRouter();
   const nextPage = query(
-      userPhotosRef(user),
+      userPhotosRef(user!),
       orderBy('timeCreated', 'desc'),
       limit(maxItems)
     )
@@ -63,14 +63,14 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
   
   useEffect(() => {
     return setGallery(
-      userPhotos.map(({ fileUrl, description, time, tags, pseudonym, uid, idPost }: FileType) => <Skeleton
+      userPhotos.length > 0 ? userPhotos.map(({ fileUrl, description, time, tags, pseudonym, uid, idPost }: FileType) => <Skeleton
         isLoaded={loading}
         key={time}
         margin={loading ? 0 : '1rem 0'}
       >
         <Article
           link={fileUrl}
-          refFile={userPhotosRef()}
+          refFile={userPhotosRef(user!)}
           subCollection='photos'
           refStorage={ref(storage, `${user}/photos/${description}`)}
           description={description}
@@ -79,7 +79,7 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
           uid={uid}
           idPost={idPost}
         />
-      </Skeleton>)
+      </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.photos} />
     );
     }, [user, userPhotos]);
   
@@ -88,7 +88,7 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
   
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
-      {asPath === `/account/${pseudonym}` && <em className='title'>{data?.Account?.gallery?.userPhotosTitle}</em>}
+      {decodeURIComponent(asPath) === `/account/${pseudonym}` && <em className='title'>{data?.Account?.gallery?.userPhotosTitle}</em>}
       
       <Wrapper>
         { gallery }

@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { auth, storage } from '../../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable, UploadTask } from 'firebase/storage';
 import { UploadTaskSnapshot } from '@firebase/storage';
 import { addDoc, CollectionReference } from 'firebase/firestore';
-import { Field, Form, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { Input, Progress, Select } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { userAnimationsRef, userPhotosRef, userVideosRef } from 'references/referencesFirebase';
@@ -17,7 +18,7 @@ import { FormError } from 'components/molecules/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './FileUpload.module.scss';
-import { Progress } from '@chakra-ui/react';
+import { ModeContext } from '../../../providers/ModeProvider';
 
 type FileDataType = {
   tags: string
@@ -32,26 +33,28 @@ export const FilesUpload = () => {
   const [file, setFile] = useState<Blob | Uint8Array | ArrayBuffer | File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
   const [progressUpload, setProgressUpload] = useState<number>(0);
+  
+  const { isMode } = useContext(ModeContext);
   const data = useHookSWR();
   
   const user = auth.currentUser;
   
-  const tagsArray = [`${data?.chooseTag}`,
-    `${data?.Aside?.realistic}`,
-    `${data?.Aside?.manga}`,
-    `${data?.Aside?.anime}`,
-    `${data?.Aside?.comics}`,
-    `${data?.Aside?.photographs}`,
-    `${data?.Aside?.videos}`,
-    `${data?.Aside?.animations}`,
-    `${data?.Aside?.others}`
+  const tagsArray = [
+    data?.Aside?.realistic,
+    data?.Aside?.manga,
+    data?.Aside?.anime,
+    data?.Aside?.comics,
+    data?.Aside?.photographs,
+    data?.Aside?.videos,
+    data?.Aside?.animations,
+    data?.Aside?.others
   ];
   
   const schemaFile = Yup.object({
     tags: SchemaValidation().tags,
   });
   
-  const handleChange = async (e: EventType) => {
+  const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] && setFile(e.target.files[0]);
   };
   
@@ -112,15 +115,15 @@ export const FilesUpload = () => {
           switch (tags) {
             case `${data?.Aside?.animations}`:
               const animationURL = await getDownloadURL(animationsRef);
-              sendToFirestore(userAnimationsRef(), animationURL);
+              sendToFirestore(userAnimationsRef(user?.uid!), animationURL);
               break;
             case `${data?.Aside?.videos}`:
               const videoURL = await getDownloadURL(videosRef);
-              sendToFirestore(userVideosRef(), videoURL);
+              sendToFirestore(userVideosRef(user?.uid!), videoURL);
               break;
             default:
               const photoURL = await getDownloadURL(photosRef);
-              sendToFirestore(userPhotosRef(), photoURL);
+              sendToFirestore(userPhotosRef(user?.uid!), photoURL);
           }
         });
     } catch (e) {
@@ -128,90 +131,71 @@ export const FilesUpload = () => {
     }
   };
   
-  // const managedUpload = (state: string) => {
-  //   switch (state) {
-  //     case 'PAUSE':
-  //       uploadBytesResumable(photosRef, file!).pause();
-  //       console.log(' Blob | Uint8Array | ArrayBuffer');
-  //       break;
-  //     case 'RESUME':
-  //       uploadBytesResumable(photosRef, file!).resume();
-  //       console.log('File is resumed.');
-  //       break;
-  //     case 'CANCEL':
-  //       uploadBytesResumable(photosRef, file!).cancel();
-  //       console.log('File is canceled.');
-  //       break;
-  //     default:
-  //       console.error(`${state} match nothing`);
-  //   }
-  // };
-  
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={schemaFile}
       onSubmit={uploadFiles}
     >
-      <Form className={styles.adding__files}>
-        <h3 className={styles.title}>{data?.AnotherForm?.fileTitle}</h3>
+      {({ values, handleChange }) => (
+        <Form className={styles.adding__files}>
+          <h3 className={styles.title}>{data?.AnotherForm?.fileTitle}</h3>
         
-        <Field name='tags' as='select' className={styles.tags} aria-required='true'>
-          {tagsArray.map(tag => <option
-            key={tag}
-            value={tag === data?.chooseTag ? '' : tag}
-            className={styles.options}
-          >{tag}</option>)}
-        </Field>
+          <div className={styles.select}>
+            <Select
+              name='tags'
+              value={values.tags}
+              onChange={handleChange}
+              placeholder={data?.chooseTag}
+              className={isMode ? styles.tags__dark : styles.tags}
+              aria-required
+            >
+              {tagsArray.map((tag: string) => <option
+                role='option'
+                key={tag}
+                value={tag === data?.chooseTag ? '' : tag}
+              >{tag}</option>)}
+            </Select>
+          </div>
         
-        <FormError nameError='tags' />
+          <FormError nameError='tags' />
         
-        <div className={styles.form__field}>
-          <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.label}>
-            {data?.AnotherForm?.file}
-          </label>
-          <Field
+          <Input
             name='file'
             type='file'
-            accept='.jpg, .jpeg, .png, .webp, .avif, .webm, .mp4, .apng'
-            onChange={handleChange}
+            accept='.jpg, .jpeg, .png, .webp, .avif'
+            onChange={handleChangeFile}
             placeholder={data?.AnotherForm?.file}
+            focusBorderColor='transparent'
             className={styles.input}
-            required={true}
+            required
           />
-        </div>
+          
+          <button
+            type='submit'
+            className={`button ${styles.button}`}
+            aria-label={data?.AnotherForm?.arialSendingFile}
+          >
+            {data?.AnotherForm?.send}
+          </button>
         
-        <button
-          type='submit'
-          className={`button ${styles.button}`}
-          aria-label={data?.AnotherForm?.arialSendingFile}
-        >
-          {data?.AnotherForm?.send}
-        </button>
+          {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) &&
+          <Progress
+            value={progressUpload}
+            colorScheme='green'
+            isAnimated
+            hasStripe
+            min={0}
+            max={100}
+            bg='blue.400'
+            size='md'
+            className={styles.progressbar}
+          />
+          }
         
-        { progressUpload >= 1 && !(valuesFields ===`${data?.AnotherForm?.uploadFile}`) &&
-        <Progress
-          value={progressUpload}
-          colorScheme='green'
-          isAnimated
-          hasStripe
-          min={0}
-          max={100}
-          w={280}
-          bg='blue.400'
-          m='1.5rem auto'
-          size='md'
-        />
-        }
-  
-        {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-        
-        {/*<div>*/}
-        {/*  <PauseCircleTwoTone className={styles.icons} onClick={() => managedUpload('PAUSE')} />*/}
-        {/*  <ReloadOutlined className={styles.icons} onClick={() => managedUpload('RESUME')} />*/}
-        {/*  <LoadingOutlined className={styles.icons} onClick={() => managedUpload('CANCEL')} />*/}
-        {/*</div>*/}
-      </Form>
+          {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+        </Form>
+      )}
     </Formik>
   );
 };

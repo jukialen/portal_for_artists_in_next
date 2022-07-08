@@ -59,7 +59,8 @@
     "friends": "Przyjaciele",
     "groups": "Grupy",
     "addingGroup": "Dodaj grupę",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "photos": "Zdjęcia"
   },
   "Footer": {
     "authors": "Autorzy",
@@ -79,7 +80,9 @@
     "aMenu": {
       "general": "Ogólne",
       "gallery": "Galeria",
-      "profile": "Profil"
+      "profile": "Profil",
+      "friends": "Przyjaciele",
+      "groups": "Moje grupy"
     },
     "aData": {
       "subscription": "Subskrypcja:",

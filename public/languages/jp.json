@@ -59,7 +59,8 @@
     "friends": "友達",
     "groups": "団体",
     "addingGroup": "団体が増設",
-    "contact": "連絡"
+    "contact": "連絡",
+    "photos": "フォト"
   },
   "Footer": {
     "authors": "原著者",
@@ -79,7 +80,9 @@
     "aMenu": {
       "general": "一般",
       "gallery": "ギャラリー",
-      "profile": "プロフィール"
+      "profile": "プロフィール",
+      "friends": "友達",
+      "groups": "私の団体"
     },
     "aData": {
       "subscription": "サブスクリプション",

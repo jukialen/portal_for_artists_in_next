@@ -21,11 +21,10 @@ export default function User() {
   const data = useHookSWR();
   const loading = useCurrentUser('/');
   
-  const borRadius = '0 1rem/3rem';
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
-  const activeColor = '#4F8DFF';
-  const fontMenu = '1rem';
+  const activeColor = '#82FF82';
+  const borderColor = '#4F8DFF';
   
   const { asPath } = useRouter();
   const split = asPath.split('/');
@@ -47,8 +46,8 @@ export default function User() {
   }
   
   useEffect(() => {
-     downLoadUid();
-  }, [uidRef])
+     !!author && downLoadUid();
+  }, [author])
   
   return !loading ? (
     <>
@@ -57,133 +56,133 @@ export default function User() {
       <h2 className={styles.profile__user__title}>{author}</h2>
       
       <Tabs
+        className={styles.tabs}
         size='sm'
-        align='center'
-        justifySelf='center'
-        maxW='100vw'
-        m='0 auto'
         isLazy
         lazyBehavior='keepMounted'
         isFitted
         variant='unstyled'
       >
-        <TabList padding='0 0 5rem'>
+        <TabList
+          className={styles.topTabList}
+          role='tablist'
+        >
           <div className={styles.profile__user__menu}>
             <div className={styles.content}>
               <Tab
-                fontSize={fontMenu}
                 _selected={{ borderColor: selectedColor }}
                 _hover={{ borderColor: hoverColor }}
                 _active={{ borderColor: activeColor }}
-                borderColor={activeColor}
-                borderRadius={borRadius}
+                borderColor={borderColor}
+                role='tab'
               >
                 {data?.Account?.aMenu?.gallery}
               </Tab>
               <Tab
-                fontSize={fontMenu}
                 _selected={{ borderColor: selectedColor }}
                 _hover={{ borderColor: hoverColor }}
                 _active={{ borderColor: activeColor }}
-                borderColor={activeColor}
-                borderRadius={borRadius}
+                borderColor={borderColor}
+                role='tab'
               >
                 {data?.Account?.aMenu?.profile}
               </Tab>
               <Tab
-                fontSize={fontMenu}
                 _selected={{ borderColor: selectedColor }}
                 _hover={{ borderColor: hoverColor }}
                 _active={{ borderColor: activeColor }}
-                borderColor={activeColor}
-                borderRadius={borRadius}
+                borderColor={borderColor}
+                role='tab'
               >
-                Friends
+                {data?.Account?.aMenu?.friends}
               </Tab>
               <Tab
-                fontSize={fontMenu}
                 _selected={{ borderColor: selectedColor }}
                 _hover={{ borderColor: hoverColor }}
                 _active={{ borderColor: activeColor }}
-                borderColor={activeColor}
-                borderRadius={borRadius}
+                borderColor={borderColor}
+                role='tab'
               >
-                Groups
+                {data?.Account?.aMenu?.groups}
               </Tab>
             </div>
           </div>
         </TabList>
         
-        <TabPanels padding={0}>
-          <TabPanel padding={0}>
+        <TabPanels className={styles.tabPanels}>
+          <TabPanel
+            className={styles.tabPanel}
+            role='tabpanel'
+          >
             <Tabs
               size='sm'
-              align='center'
-              justifySelf='center'
-              maxW='100vw'
-              m='0 auto'
-              gap='2rem'
               isLazy
               lazyBehavior='keepMounted'
               isFitted
               variant='unstyled'
+              className={styles.tabsForPanels}
             >
               <TabList
-                width='61%'
-                flexWrap='wrap'
-                gap='2rem'
-                m='auto'
-                border='none'
+                className={styles.tabList}
                 role='tablist'
               >
                 <Tab
-                  h='2rem'
+                  className={styles.tabForPanels}
                   _selected={{ borderColor: selectedColor }}
                   _hover={{ borderColor: hoverColor }}
                   _active={{ borderColor: activeColor }}
-                  borderColor={activeColor}
-                  borderRadius={borRadius}
+                  borderColor={borderColor}
                   role='tab'
                 >
-                  Photos
+                  {data?.Aside?.photos}
                 </Tab>
                 <Tab
-                  h='2rem'
+                  className={styles.tabForPanels}
                   _selected={{ borderColor: selectedColor }}
                   _hover={{ borderColor: hoverColor }}
                   _active={{ borderColor: activeColor }}
-                  borderColor={activeColor}
-                  borderRadius={borRadius}
+                  borderColor={borderColor}
                   role='tab'
                 >
-                  Animations
+                  {data?.Aside?.animations}
                 </Tab>
                 <Tab
-                  h='2rem'
+                  className={styles.tabForPanels}
                   _selected={{ borderColor: selectedColor }}
                   _hover={{ borderColor: hoverColor }}
                   _active={{ borderColor: activeColor }}
-                  borderRadius={borRadius}
-                  borderColor={activeColor}
+                  borderColor={borderColor}
                   role='tab'
                 >
-                  Videos
+                  {data?.Aside?.videos}
                 </Tab>
               </TabList>
-              <TabPanels padding={0}>
-                <TabPanel padding={0} role='tabpanel'>
+              <TabPanels className={styles.tabPanels}>
+                <TabPanel
+                  className={styles.tabPanel}
+                  role='tabpanel'
+                >
                   <PhotosGallery user={uid} data={data} pseudonym={author} />
                 </TabPanel>
-                <TabPanel padding={0} role='tabpanel'>
+                <TabPanel
+                  className={styles.tabPanel}
+                  role='tabpanel'
+                >
                   <AnimatedGallery user={uid} data={data} pseudonym={author} />
                 </TabPanel>
-                <TabPanel padding={0} role='tabpanel'>
+                <TabPanel
+                  className={styles.tabPanel}
+                  role='tabpanel'
+                >
                   <VideoGallery user={uid} data={data} pseudonym={author} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
           </TabPanel>
-          <TabPanel padding={0}>
+          <TabPanel
+            className={styles.tabPanel}
+            role='tabpanel'
+          >
             <ProfileUser
               data={data}
               pseudonym={author}

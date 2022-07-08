@@ -19,12 +19,15 @@ import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Videos } from 'components/molecules/Videos/Videos';
 
 import { Skeleton } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 
-export const VideoGallery = ({ user, data }: UserType) => {
+export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
+  const { asPath } = useRouter();
+  
   const maxItems: number = 10;
   
   const nextPage = query(
-    userVideosRef(user),
+    userVideosRef(user!),
     orderBy('timeCreated', 'desc'),
     limit(maxItems)
   );
@@ -64,10 +67,14 @@ export const VideoGallery = ({ user, data }: UserType) => {
     return downloadVideos();
   }, []);
   
+  console.log('asPath', decodeURIComponent(asPath))
+  console.log('asPath2', decodeURIComponent(asPath) === `/account/${pseudonym}`)
+  console.log(`/account/${pseudonym}`)
+  
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
-      
-      <em className='title'>{data?.Account?.gallery?.userVideosTitle}</em>
+  
+      { decodeURIComponent(asPath) === `/account/${pseudonym}` && <em className='title'>{data?.Account?.gallery?.userVideosTitle}</em>}
       
       <Wrapper>
         {
@@ -78,7 +85,7 @@ export const VideoGallery = ({ user, data }: UserType) => {
             >
               <Videos
                 link={fileUrl}
-                refFile={userVideosRef()}
+                refFile={userVideosRef(user!)}
                 refStorage={ref(storage, `${user}/videos/${description}`)}
                 description={description}
                 tag={tags}
