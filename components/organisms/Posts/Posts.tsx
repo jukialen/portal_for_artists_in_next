@@ -45,6 +45,8 @@ export const Posts = ({ name, join, currentUser }: AuthorType) => {
     !!name && downloadPosts();
   }, [name]);
   
+  // console.log(postsArray);
+  
   return <section className={styles.posts}>
     {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, name, userId, likes, liked }: PostType) =>
       <Post

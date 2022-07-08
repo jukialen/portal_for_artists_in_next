@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { auth } from '../../../firebase';
 import { getDocs } from 'firebase/firestore';
 
-import { groupRef } from 'references/referencesFirebase';
+import { groupsInAside } from 'references/referencesFirebase';
 
 import { DataType, GroupType } from 'types/global.types';
 
@@ -11,16 +11,19 @@ import { Links } from 'components/atoms/Links/Links';
 
 import styles from './Groups.module.scss';
 import group from 'public/group.svg';
+import { useRouter } from 'next/router';
 
 export const Groups = ({ data }: DataType) => {
   const [groupsArray, setGroupsArray] = useState<GroupType[]>([]);
   
   const user = auth.currentUser;
   
+  const { asPath } = useRouter();
+  
   const groupList = async () => {
     try {
       const groupList: GroupType[] = [];
-      const querySnapshot = await getDocs(groupRef);
+      const querySnapshot = await getDocs(groupsInAside);
       
       querySnapshot.forEach((doc) => {
         groupList.push({
@@ -37,7 +40,7 @@ export const Groups = ({ data }: DataType) => {
   
   useEffect(() => {
     !!user && groupList();
-  }, [user]);
+  }, [user, asPath]);
   
   return (
     <div className={styles.groups}>

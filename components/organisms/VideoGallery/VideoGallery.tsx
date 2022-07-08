@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { db, storage } from '../../../firebase';
 import { ref } from 'firebase/storage';
 import {
@@ -9,6 +10,7 @@ import {
   orderBy,
   query
 } from 'firebase/firestore';
+import { Skeleton } from '@chakra-ui/react';
 
 import { userVideosRef } from 'references/referencesFirebase';
 
@@ -17,9 +19,6 @@ import { UserType, FileType } from 'types/global.types';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Videos } from 'components/molecules/Videos/Videos';
-
-import { Skeleton } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
 
 export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
   const { asPath } = useRouter();
@@ -66,10 +65,6 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
   useEffect(() => {
     return downloadVideos();
   }, []);
-  
-  console.log('asPath', decodeURIComponent(asPath))
-  console.log('asPath2', decodeURIComponent(asPath) === `/account/${pseudonym}`)
-  console.log(`/account/${pseudonym}`)
   
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
