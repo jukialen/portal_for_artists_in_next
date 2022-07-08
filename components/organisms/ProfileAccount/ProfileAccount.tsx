@@ -59,14 +59,12 @@ export const ProfileAccount = ({ data }: DataType) => {
   const fileRef = ref(storage, `profilePhotos/${user?.uid}/${user?.uid}`);
   
   const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: FormType) => {
-    const updateUsers = updateDoc(doc(db, `users/${user.uid}`), {
-      pseudonym: newPseudonym,
-      description: newDescription
-    });
-  
     try {
-      photo === null && await updateUsers;
-    
+      photo === null && await updateDoc(doc(db, `users/${user.uid}`), {
+        pseudonym: newPseudonym,
+        description: newDescription
+      });
+      
       if (photo !== null) {
         const upload = uploadBytesResumable(fileRef, photo!);
       
@@ -82,6 +80,7 @@ export const ProfileAccount = ({ data }: DataType) => {
                 break;
             }
           }, (e) => {
+            console.log(e);
             setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
           },
           async () => {
@@ -90,7 +89,11 @@ export const ProfileAccount = ({ data }: DataType) => {
             setValuesFields(`${data?.AnotherForm?.uploadFile}`);
             setPhoto(null);
       
-            await updateUsers;
+            await updateDoc(doc(db, `users/${user.uid}`), {
+              pseudonym: newPseudonym,
+              description: newDescription,
+              profilePhoto: photoURL
+            });;
       
             await updateProfile(user, { photoURL: photoURL });
           });

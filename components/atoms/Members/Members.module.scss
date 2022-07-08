@@ -1,0 +1,28 @@
+@use 'styles/variables' as *;
+
+.roles {
+	margin: 1rem auto 0;
+	text-align: left;
+}
+
+.usersButton {
+	display: grid;
+	grid-template-columns: 3rem 1fr 3rem;
+	margin: 1rem 0;
+	align-items: center;
+
+	a {
+		align-self: center;
+		text-align: left;
+		font-size: 1.1rem;
+		margin-left: .5rem;
+		color: $third__color;
+	}
+
+
+	button {
+		background-color: $third__color;
+		border: .1rem solid transparent;
+		cursor: pointer;
+	}
+}

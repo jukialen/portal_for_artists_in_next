@@ -79,7 +79,9 @@ export default function NewUser() {
         async () => {
           const photoURL = await getDownloadURL(fileRef);
   
-          await setDoc(doc(db, 'users', `${user?.uid}`), { pseudonym });
+          await setDoc(doc(db, 'users', `${user?.uid}`), {
+            pseudonym, profilePhoto: photoURL
+          });
       
           setValuesFields(`${data?.AnotherForm?.uploadFile}`);
           setPhoto(null);

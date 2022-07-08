@@ -40,7 +40,9 @@ export const AddingPost = ({ name }: AuthorType) => {
         title,
         message: post,
         date: serverTimestamp(),
-        author: user?.uid
+        author: user?.uid,
+        likes: 0,
+        liked: []
       });
       resetForm(initialValues);
     } catch (e) {
