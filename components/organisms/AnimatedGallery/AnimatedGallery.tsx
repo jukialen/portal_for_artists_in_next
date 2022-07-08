@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { db, storage } from '../../../firebase';
 import { ref } from 'firebase/storage';
 import { doc, getDoc, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { Skeleton } from '@chakra-ui/react';
 
 import { userAnimationsRef } from 'references/referencesFirebase';
 
@@ -10,9 +12,6 @@ import { FileType, UserType } from 'types/global.types';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { Article } from 'components/molecules/Article/Article';
-
-import { Skeleton } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
 
 export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
   const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
@@ -58,10 +57,6 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
   useEffect(() => {
     return downloadAnimations();
   }, []);
-  
-  console.log('asPath', decodeURIComponent(asPath))
-  console.log('asPath2', decodeURIComponent(asPath) === `/account/${pseudonym}`)
-  console.log(`/account/${pseudonym}`)
   
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>

@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { auth, db, storage } from '../../firebase';
-import { CollectionReference, doc, getDoc, limit, onSnapshot, orderBy, Query, query, where } from 'firebase/firestore';
-import { ref, StorageReference } from 'firebase/storage';
+import { doc, getDoc, limit, onSnapshot, orderBy, Query, query, where } from 'firebase/firestore';
+import { ref } from 'firebase/storage';
+import { Skeleton } from '@chakra-ui/react';
 
 import { FileType } from 'types/global.types';
 
-import { allPhotosCollectionRef, userAnimationsRef, userPhotosRef, userVideosRef } from 'references/referencesFirebase';
+import { allPhotosCollectionRef, userPhotosRef } from 'references/referencesFirebase';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
@@ -17,7 +18,6 @@ import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { Article } from 'components/molecules/Article/Article';
 
 import styles from './index.module.scss';
-import { Skeleton } from '@chakra-ui/react';
 
 export default function Drawings() {
   const router = useRouter();
@@ -112,7 +112,7 @@ export default function Drawings() {
                 link={fileUrl}
                 description={description}
                 authorName={pseudonym}
-                refFile={userPhotosRef(user?.uid)}
+                refFile={userPhotosRef(user?.uid!)}
                 subCollection='photos'
                 refStorage={ref(storage, `${user?.uid}/photos/${description}`)}
                 tag={tags}

@@ -3,7 +3,7 @@ import { Avatar, Button, IconButton } from '@chakra-ui/react';
 
 import { PostType } from 'types/global.types';
 
-import { addingComment, comments, likePost, posts } from 'references/referencesFirebase';
+import { addingComment, comments, likePost} from 'references/referencesFirebase';
 
 import { DeletePost } from 'components/atoms/DeletionPost/DeletionPost';
 import { NewComments } from 'components/atoms/NewComments/NewComments';

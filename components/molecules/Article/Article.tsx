@@ -1,14 +1,15 @@
+import { useContext } from 'react';
 import Image from 'next/image';
+
+import { ModeContext } from 'providers/ModeProvider';
+
 import { FileContainerType } from 'types/global.types';
 
 import { useUserData } from 'hooks/useUserData';
-
 import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
 import { DeletionFile } from 'components/molecules/DeletionFile/DeletionFile';
 
 import styles from './Article.module.scss';
-import { useContext } from 'react';
-import { ModeContext } from '../../../providers/ModeProvider';
 
 export const Article = ({ link, refFile, refStorage, subCollection, description, authorName, unopt, tag, uid, idPost }: FileContainerType) => {
   const { isMode } = useContext(ModeContext);

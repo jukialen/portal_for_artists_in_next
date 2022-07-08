@@ -8,6 +8,8 @@ import * as Yup from 'yup';
 import { Input, Progress, Select } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
+import { ModeContext } from 'providers/ModeProvider';
+
 import { userAnimationsRef, userPhotosRef, userVideosRef } from 'references/referencesFirebase';
 
 import { EventType, FormType } from 'types/global.types';
@@ -18,7 +20,6 @@ import { FormError } from 'components/molecules/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './FileUpload.module.scss';
-import { ModeContext } from '../../../providers/ModeProvider';
 
 type FileDataType = {
   tags: string

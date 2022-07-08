@@ -122,7 +122,7 @@ export default function Drawings() {
                   link={fileUrl}
                   description={description}
                   authorName={pseudonym}
-                  refFile={userVideosRef(user?.uid)}
+                  refFile={userVideosRef(user?.uid!)}
                   refStorage={ref(storage, `${user?.uid}/videos/${description}`)}
                   tag={tags}
                   uid={uid}
@@ -133,7 +133,7 @@ export default function Drawings() {
                   description={description}
                   authorName={pseudonym}
                   unopt={index === 'animations'}
-                  refFile={index === 'animations' ? userAnimationsRef(user?.uid) : userPhotosRef(user?.uid)}
+                  refFile={index === 'animations' ? userAnimationsRef(user?.uid!) : userPhotosRef(user?.uid!)}
                   subCollection={index === 'animations' ? 'animations' : 'photos'}
                   refStorage={ref(storage, `${user?.uid}/${index === 'animations' ? 'animations' : 'photos'}/${description}`)}
                   tag={tags}

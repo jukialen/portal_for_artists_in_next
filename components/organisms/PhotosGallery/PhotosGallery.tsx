@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { auth, db, storage } from '../../../firebase';
 import { ref } from 'firebase/storage';
 import { doc, getDoc, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { Skeleton } from '@chakra-ui/react';
 
 import { userPhotosRef } from 'references/referencesFirebase';
 
@@ -12,9 +14,6 @@ import { FileType, UserType } from 'types/global.types';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { Article } from 'components/molecules/Article/Article';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-
-import { Skeleton } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
 
 export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
@@ -29,9 +28,6 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
       orderBy('timeCreated', 'desc'),
       limit(maxItems)
     )
-  
-  console.log(user)
-  console.log(nextPage)
   
   const downloadFiles = () => {
     try {
