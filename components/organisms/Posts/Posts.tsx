@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { db } from '../../../firebase';
-import { doc, getDoc, getDocs } from 'firebase/firestore';
+import { doc, getDoc, getDocs, Timestamp } from 'firebase/firestore';
 
 import { posts } from 'references/referencesFirebase';
 
@@ -13,10 +14,29 @@ import styles from './Posts.module.scss';
 export const Posts = ({ name, join, currentUser }: AuthorType) => {
   const [postsArray, setPostsArray] = useState<PostType[]>([]);
   
+  const { locale } = useRouter();
+  
+  const getDate = (dateField: Timestamp) => {
+    const today = new Date();
+  
+    const hour = new Timestamp(dateField.seconds, dateField.nanoseconds).toDate().getUTCHours();
+    const minutes = new Timestamp(dateField.seconds, dateField.nanoseconds).toDate().getUTCMinutes();
+    const day = new Timestamp(dateField.seconds, dateField.nanoseconds).toDate().getUTCDay()
+    const month = new Timestamp(dateField.seconds, dateField.nanoseconds).toDate().getUTCMonth() + 1;
+    const year = new Timestamp(dateField.seconds, dateField.nanoseconds).toDate().getUTCFullYear();
+    
+    const jpHours = `${hour >= 12 ? '午後' : '午前'}${hour < 10 ? '0' : ''}${hour}:${minutes < 10 ? '0' : ''}${minutes}`
+    const jpDate = `${year !== today.getUTCFullYear() ? year : ''}${year !== today.getUTCFullYear() ? '年' : ''}${month < 10 ? '0' : ''}${month}月${day}日`
+    
+    const hours = `${hour < 10 ? '0' : ''}${hour}:${minutes < 10 ? '0' : ''}${minutes}`;
+    const date = `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}${year !== today.getUTCFullYear() ? '/' : ''}${year !== today.getUTCFullYear() ? year : ''}`;
+   
+    return locale === 'jp' ? `${jpHours} ${jpDate}` : `${date} ${hours}`;
+  };
+  
   const downloadPosts = async () => {
     try {
       const postArray: PostType[] = [];
-      // @ts-ignore
       const querySnapshot = await getDocs(posts(name!));
       querySnapshot.forEach(async (document) => {
         const docRef = doc(db, `users/${document.data().author}`);
@@ -25,7 +45,7 @@ export const Posts = ({ name, join, currentUser }: AuthorType) => {
           postArray.push({
             author: docSnap.data().pseudonym,
             title: document.data().title,
-            date: `${new Date(document.data().date.nanoseconds).getDay()}.${new Date(document.data().date.nanoseconds).getMonth() + 1}.${new Date(document.data().date.nanoseconds).getFullYear()}`,
+            date: getDate(document.data().date),
             description: document.data().message,
             idPost: document.id,
             name: document.data().nameGroup,
@@ -43,9 +63,7 @@ export const Posts = ({ name, join, currentUser }: AuthorType) => {
   
   useEffect(() => {
     !!name && downloadPosts();
-  }, [name]);
-  
-  // console.log(postsArray);
+  }, [name, locale]);
   
   return <section className={styles.posts}>
     {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, name, userId, likes, liked }: PostType) =>
