@@ -1,31 +1,28 @@
 import { useEffect, useState } from 'react';
-import { db } from '../../../firebase';
-import { doc, getDoc, getDocs } from 'firebase/firestore';
-
-import { comments } from 'references/referencesFirebase';
+import { getDoc, getDocs } from 'firebase/firestore';
 
 import { AuthorType, CommentType } from 'types/global.types';
 
 import { Comment } from 'components/atoms/Comment/Comment';
+import { user } from '../../../references/referencesFirebase';
 
-export const Comments = ({ name, refCom }: AuthorType) => {
+export const Comments = ({ refCom }: AuthorType) => {
   const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
   
   const showingComments = async () => {
     try {
       const commentArray: CommentType[] = [];
-      // @ts-ignore
-      const querySnapshot = await getDocs(refCom);
+
+      const querySnapshot = await getDocs(refCom!);
       querySnapshot.forEach(async (document) => {
-        const docRef = doc(db, `users/${document.data().author}`);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await getDoc(user(document.data().author));
         if (docSnap.exists()) {
           commentArray.push({
             author: docSnap.data().pseudonym,
             date: `${new Date(document.data().date.nanoseconds).getDay()}.${new Date(document.data().date.nanoseconds).getMonth() + 1}.${new Date(document.data().date.nanoseconds).getFullYear()}`,
             description: document.data().message,
             idPost: document.id,
-            name: document.data().nameGroup
+            nameGroup: document.data().nameGroup
           });
         }
       });
@@ -36,12 +33,12 @@ export const Comments = ({ name, refCom }: AuthorType) => {
   };
   
   useEffect(() => {
-    !!name && showingComments();
-  }, [name, comments]);
+    !!refCom && showingComments();
+  }, [refCom]);
   
   return <>
-    {commentsArray.length > 0 ? commentsArray.map(({ author, date, description, idPost, name }: CommentType) =>
-      <Comment key={idPost} date={date} description={description} name={name} author={author} idPost={idPost} />
+    {commentsArray.length > 0 ? commentsArray.map(({ author, date, description, idPost, nameGroup }: CommentType) =>
+      <Comment key={idPost} date={date} description={description} nameGroup={nameGroup} author={author} idPost={idPost} />
     ) : <p>No comments</p>}
   </>;
 };

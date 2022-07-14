@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { arrayRemove, arrayUnion, setDoc } from 'firebase/firestore';
 import { Avatar, Button, IconButton } from '@chakra-ui/react';
 
 import { PostType } from 'types/global.types';
@@ -13,30 +14,13 @@ import { Comments } from 'components/molecules/Comments/Comments';
 import styles from './Post.module.scss';
 import group from 'public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
-import { arrayRemove, arrayUnion, setDoc } from 'firebase/firestore';
 
-export const Post = ({ author, title, date, description, idPost, name, join, userId, currentUser, likes, liked }: PostType) => {
+export const Post = ({ author, title, date, description, idPost, name, userId, currentUser, likes, liked, logoUser }: PostType) => {
   const [showComments, setShowComments] = useState(false);
   const [like, setLike] = useState(false);
-  let [likeCount, setLikeCount] = useState(likes || 0);
+  let [likeCount, setLikeCount] = useState(likes);
   
-  const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${author}/${title}/${date}`;
-  
-  const showingComments = () => setShowComments(!showComments);
-  
-  const addLike = async () => {
-    if (like) {
-      await setDoc(likePost(name, idPost!),
-        { likes: likeCount -= 1, liked: arrayRemove(userId) },
-        { merge: true });
-    } else {
-      await setDoc(likePost(name, idPost!),
-        { likes: likeCount += 1, liked: arrayUnion(userId) },
-        { merge: true });
-    };
-    setLikeCount(like ? likeCount -= 1 : likeCount += 1);
-    setLike(!like);
-  };
+  const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${author}/${idPost}`;
   
   const likedCount = () => {
     try {
@@ -45,15 +29,28 @@ export const Post = ({ author, title, date, description, idPost, name, join, use
       console.error(e);
     }
   };
-
-  useEffect(() => {
-    likedCount();
-  }, []);
   
+  useEffect(() => { likedCount()  }, []);
+  
+  const showingComments = () => setShowComments(!showComments);
+  
+  const addLike = async () => {
+    if (like) {
+      await setDoc(likePost(name, idPost!),
+        { likes: likeCount -= 1, liked: arrayRemove(currentUser) },
+        { merge: true });
+    } else {
+      await setDoc(likePost(name, idPost!),
+        { likes: likeCount += 1, liked: arrayUnion(currentUser) },
+        { merge: true });
+    };
+    setLikeCount(like ? likeCount -= 1 : likeCount += 1);
+    setLike(!like);
+  };
   
   return <article className={styles.container}>
     <div className={styles.avatarWithUsername}>
-      <Avatar src={group} />
+      <Avatar src={logoUser || group} />
       <div className={styles.username}>
         <a href={`/user/${author}`}>{author}</a>
       </div>
@@ -82,9 +79,8 @@ export const Post = ({ author, title, date, description, idPost, name, join, use
       {likeCount}
     </p>
     <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-      {join && currentUser === userId && <NewComments name={name} refCom={addingComment(name, idPost!)} />}
-      {/*// @ts-ignore*/}
-      <Comments name={name} refCom={comments(name!)} />
+      {currentUser === userId && <NewComments name={name} refCom={addingComment(name, idPost!)} />}
+      <Comments refCom={comments(name)} />
     </article>
   </article>
 }

@@ -1,13 +1,5 @@
 import { useRef, useState } from 'react';
 import { deleteDoc } from 'firebase/firestore';
-
-import { deletingPost } from 'references/referencesFirebase';
-
-import { useHookSWR } from 'hooks/useHookSWR';
-
-import { Alerts } from 'components/atoms/Alerts/Alerts';
-
-import styles from './DeletionPost.module.scss';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -18,11 +10,20 @@ import {
   Button,
   IconButton
 } from '@chakra-ui/react';
+
+import { deletingPost } from 'references/referencesFirebase';
+
+import { GroupNameType } from 'types/global.types';
+
+import { useHookSWR } from 'hooks/useHookSWR';
+
+import { Alerts } from 'components/atoms/Alerts/Alerts';
+
+import styles from './DeletionPost.module.scss';
 import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
-import { AuthorType } from '../../../types/global.types';
 
 type DeletionPostType = {
-  name: AuthorType;
+  name: GroupNameType;
   idPost: string;
 }
 
@@ -91,7 +92,6 @@ export const DeletePost = ({ name, idPost }: DeletionPostType) => {
             </AlertDialogHeader>
             
             <AlertDialogBody>
-              {/* eslint-disable-next-line react/no-unescaped-entities */}
               {data?.DeletionFile?.question}
             </AlertDialogBody>
             

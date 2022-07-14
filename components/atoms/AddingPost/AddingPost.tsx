@@ -34,7 +34,6 @@ export const AddingPost = ({ name }: AuthorType) => {
   
   const createNewPost = async ({ title, post }: AddingPostType, { resetForm }: FormType) => {
     try {
-      // @ts-ignore
       await addDoc(addingPost(name!), {
         nameGroup: name,
         title,

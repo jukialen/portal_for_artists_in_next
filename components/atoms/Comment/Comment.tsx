@@ -3,16 +3,15 @@ import { Avatar } from '@chakra-ui/react';
 import { CommentType } from 'types/global.types';
 
 import styles from './Comment.module.scss';
-import group from 'public/group.svg';
 
-export const Comment = ({ idPost, author, date, description  }: CommentType) => {
+export const Comment = ({ author, date, description, profilePhoto  }: CommentType) => {
   
-  return <div className={styles.comment} key={idPost}>
-    <Avatar src={group} className={styles.avatar} />
+  return <div className={styles.comment}>
+    <Avatar src={profilePhoto} className={styles.avatar} />
     <div className={styles.rightSideComment}>
       <div className={styles.topPartComment}>
         <p className={styles.pseudonym}>
-          <a href={`/user/${author}`}>{author || 'user'}</a>
+          <a href={`/user/${author}`}>{author}</a>
         </p>
         <p className={styles.date}>{date}</p>
       </div>

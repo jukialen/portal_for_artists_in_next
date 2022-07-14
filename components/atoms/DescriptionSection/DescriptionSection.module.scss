@@ -1,0 +1,19 @@
+.container__description {
+	width: 90%;
+	margin: 1rem auto;
+
+	.description__title, .description {
+		width: 90%;
+		margin: 1rem;
+		text-align: left;
+	}
+
+	.description {
+		margin: 1rem 1rem 2rem;
+	}
+
+	.regulations__item {
+		margin: 2rem 1rem;
+		text-align: left;
+	}
+}

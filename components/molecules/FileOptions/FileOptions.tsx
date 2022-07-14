@@ -15,7 +15,7 @@ import styles from './FileOptions.module.scss';
 export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, description }: FileContainerType) => {
   const [open, setOpen] = useState(false);
   
-  const { locale, asPath } = useRouter();
+  const { locale } = useRouter();
   
   const showOpenComments = () => setOpen(!open);
   
@@ -27,9 +27,7 @@ export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, descr
       <div className={styles.bottomPanel}>
         <div className={styles.author__name}>
           <Link href={`${locale === 'en' ? '/' : `/${locale}/`}user/${authorName}`}>
-            <a>
-              {authorName}
-            </a>
+            <a>{authorName}</a>
           </Link>
         </div>
   
@@ -37,14 +35,8 @@ export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, descr
       </div>
       <button className={styles.comments} onClick={showOpenComments}>Comments</button>
       {open && <>
-        <NewComments
-          name={subCollection!}
-          refCom={addingCommentFiles(uid!, subCollection!, idPost!)}
-        />
-        <Comments
-          name={asPath}
-          refCom={commentsFiles(`${subCollection}`, description!)}
-        />
+        <NewComments name={subCollection!} refCom={addingCommentFiles(uid!, subCollection!, idPost!)} />
+        <Comments refCom={commentsFiles(subCollection!, description!)} />
       </>}
     </div>
   )

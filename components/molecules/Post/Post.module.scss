@@ -1,4 +1,4 @@
-@use 'styles/_variables' as *;
+@use '../../../styles/variables' as *;
 
 .container {
 	width: 95vw;
@@ -43,7 +43,7 @@
 	.options {
 		display: grid;
 		grid-template-columns: 2.5rem 1fr 2.5rem;
-		margin-top: 1rem;
+		margin-top: 1.5rem;
 
 		.likes {
 			width: 2rem;
