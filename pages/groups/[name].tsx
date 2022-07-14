@@ -5,11 +5,12 @@ import { auth } from '../../firebase';
 import { arrayRemove, arrayUnion, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { Button, Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
-import { groupSection, usersInGroup } from 'references/referencesFirebase';
+import { groupSection, user, usersInGroup } from 'references/referencesFirebase';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { AddingPost } from 'components/atoms/AddingPost/AddingPost';
 import { Members } from 'components/atoms/Members/Members';
+import { DescriptionSection } from 'components/atoms/DescriptionSection/DescriptionSection';
 import { Posts } from 'components/organisms/Posts/Posts';
 
 import styles from './index.module.scss';
@@ -23,16 +24,35 @@ export default function Groups() {
   const [moderators, setModerators] = useState<string[]>([]);
   const [users, setUsers] = useState<string[]>([]);
   const [join, setJoin] = useState(false);
+  const [favorite, setFavorite] = useState(false);
+  const [favoriteLength, setFavoriteLength] = useState(0);
   const [userId, setUserId] = useState<string | null>(null);
   
   const { query, asPath } = useRouter();
   const { name } = query;
-  const user = auth.currentUser;
-  const currentUser = user?.uid;
+  const currentUser = auth.currentUser?.uid;
+  
+  const favoriteGroup = async () => {
+    try {
+      const docSnap = await getDoc(user(currentUser!));
+      
+      if (docSnap.exists()) {
+        docSnap.data().favoriteGroups.forEach((favoriteGroup: string) => {
+          favoriteGroup === name ? setFavorite(true) : setFavorite(false);
+        });
+        setFavoriteLength(docSnap.data().favoriteGroups.length);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  
+  useEffect(() => {
+    !!name && favoriteGroup();
+  }, [name, join]);
   
   const joinedUsers = async () => {
     try {
-      // @ts-ignore
       const docSnap = await getDoc(usersInGroup(name!));
       
       if (docSnap.exists()) {
@@ -41,7 +61,7 @@ export default function Groups() {
           !!user ? setJoin(true) : setJoin(false);
         });
       } else {
-        console.log('No such document!');
+        console.log('No join to group!');
       }
     } catch (e) {
       console.error(e);
@@ -49,21 +69,24 @@ export default function Groups() {
   };
   
   useEffect(() => {
-    // @ts-ignore
-    !!name && joinedUsers(name);
-  }, [name, join]);
+    !!name && joinedUsers();
+  }, [name]);
   
   const joinToGroup = async () => {
     try {
       if (join && !!userId) {
-        // @ts-ignore
         await setDoc(usersInGroup(name!),
           { users: arrayRemove(currentUser) },
           { merge: true });
+        await setDoc(user(currentUser!),
+          { groups: arrayRemove(name) },
+          { merge: true });
       } else {
-        // @ts-ignore
         await setDoc(usersInGroup(name!),
           { users: arrayUnion(currentUser) },
+          { merge: true });
+        await setDoc(user(currentUser!),
+          { groups: arrayUnion(name) },
           { merge: true });
       }
       setJoin(!join);
@@ -72,9 +95,26 @@ export default function Groups() {
     }
   };
   
+  const addToFavorites = async () => {
+    try {
+      if (favorite) {
+        await setDoc(user(currentUser!), {
+          favoriteGroups: arrayRemove(name)
+        }, { merge: true });
+      } else {
+        await setDoc(user(currentUser!), {
+          favoriteGroups: arrayUnion(name)
+        }, { merge: true });
+      }
+      setFavorite(!favorite);
+      
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  
   const groupInfo = async () => {
     try {
-      // @ts-ignore
       const querySnapshot = await getDocs(groupSection(name!));
       querySnapshot.forEach((doc) => {
         setAdmin(doc.data().admin);
@@ -122,18 +162,34 @@ export default function Groups() {
       <h2 className={styles.nameGroup}>{name}</h2>
     </article>
     
-    <Button
-      leftIcon={join && !!userId ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
-      style={join && !!userId ? addingToGroupOutline : addingToGroup}
-      colorScheme='blue'
-      onClick={joinToGroup}
-      variant={join && !!userId ? 'outline' : 'solid'}
-      width='min-content'
-      margin='0 2rem 1rem'
-      className={styles.button}
-    >
-      {join && !!userId ? 'Dołączyłeś/aś' : 'Dołącz'}
-    </Button>
+    <div className={styles.buttons}>
+      <Button
+        leftIcon={join && currentUser === userId ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
+        style={join && currentUser === userId ? addingToGroupOutline : addingToGroup}
+        colorScheme='blue'
+        onClick={joinToGroup}
+        variant={join && !!userId ? 'outline' : 'solid'}
+        className={styles.button}
+      >
+        {join && currentUser === userId ? 'Dołączyłeś/aś' : 'Dołącz'}
+      </Button>
+      
+      {(join && currentUser === userId) && <div>
+        <Button
+        leftIcon={favorite ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
+        style={favorite ? addingToGroupOutline : addingToGroup}
+        colorScheme='blue'
+        disabled={!favorite && favoriteLength > 5}
+        onClick={addToFavorites}
+        variant={favorite ? 'solid' : 'outline'}
+        className={`${styles.button} ${styles.favoriteButton}`}
+      >
+        {favorite && currentUser === userId ? 'Ulubiona' : 'Dodaj do ulubionych'}
+        </Button>
+        <p>{favoriteLength > 5 ? 'Masz już 5 ulubionych grup' : 'Możesz dodać do 5 grup'}</p>
+      </div>}
+    </div>
+    
     
     <Divider orientation='horizontal' />
     
@@ -177,66 +233,15 @@ export default function Groups() {
       <TabPanels padding={0}>
         <TabPanel padding={0}>
           <>
-            {/*@ts-ignore*/}
             { (join && currentUser === userId) && <AddingPost name={name} /> }
-            {/*@ts-ignore*/}
-            <Posts name={name} join={join} currentUser={currentUser} />
+            <Posts name={name} currentUser={currentUser} />
           </>
         </TabPanel>
         <TabPanel padding={0}>
-          <Members
-            admin={admin}
-            moderators={!!moderators ? moderators.sort() : moderators}
-            users={!!users ? users.sort() : users}
-          />
+          <Members admin={admin} moderators={moderators} users={users} />
         </TabPanel>
         <TabPanel padding={0}>
-          <section className={styles.container__description}>
-            <h2 className={styles.description__title}>Description</h2>
-            <Divider />
-            <p className={styles.description}>{description}</p>
-            <h2 className={styles.description}>Regulamin</h2>
-            <Divider />
-            <p className={styles.regulations__item}>
-              1) Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p>
-            <p className={styles.regulations__item}>
-              2) Pellentesque scelerisque tortor nec ex mattis, non consectetur sapien imperdiet. Cras sed sem
-              volutpat arcu gravida mattis non commodo ligula. Curabitur sed magna in nisi rutrum iaculis. Morbi sed
-              nulla et odio finibus viverra a ac leo. Quisque a enim pharetra, cursus est ut, ullamcorper nibh.
-            </p>
-            <p className={styles.regulations__item}>
-              3) Nam auctor sem eu ipsum consequat rutrum. Phasellus vel nulla sodales, finibus felis nec, ullamcorper
-              metus.
-            </p>
-            <p className={styles.regulations__item}>
-              4) Donec ac magna ac risus egestas semper eget vel purus. Curabitur luctus sem sed maximus tincidunt.
-              Nullam efficitur leo quis pretium efficitur. Ut id ex eu odio tristique elementum.
-            </p>
-            <p className={styles.regulations__item}>
-              5) Aliquam non nisi ac nulla commodo porta. Morbi id metus eget arcu dictum sodales eu at sapien.
-            </p>
-            <p className={styles.regulations__item}>
-              6) Praesent quis justo non dolor tincidunt convallis pellentesque sit amet libero. Sed sit amet tortor
-              tempus, viverra ex et, vestibulum justo. Pellentesque quis leo sed purus accumsan commodo. Duis varius
-              lorem at justo rhoncus finibus. Phasellus in tellus a lacus accumsan blandit condimentum sed dolor.
-            </p>
-            <p className={styles.regulations__item}>
-              7) Etiam id nulla a mi molestie ultrices et et neque. Quisque id ligula nec felis facilisis imperdiet.
-            </p>
-            <p className={styles.regulations__item}>
-              8) Curabitur mattis dolor at pellentesque lobortis. Morbi vestibulum ante tincidunt, commodo metus non,
-              placerat tortor. Duis mattis urna ut felis ultrices rhoncus.
-            </p>
-            <p className={styles.regulations__item}>
-              9) Integer vel orci rutrum, malesuada risus non, lobortis est. Duis eleifend dui in quam commodo egestas.
-            </p>
-            <p className={styles.regulations__item}>
-              10) Praesent vehicula nisl id mauris lobortis imperdiet. In facilisis neque a libero molestie, sed
-              lacinia urna aliquam. Aenean sed dolor porta, venenatis dolor et, sollicitudin ante. Etiam at nisl eget
-              libero lobortis faucibus.
-            </p>
-          </section>
+          <DescriptionSection description={description} />
         </TabPanel>
       </TabPanels>
     </Tabs>

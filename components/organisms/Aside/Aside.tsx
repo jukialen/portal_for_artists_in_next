@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { Categories } from 'components/organisms/Categories/Categories';
-import { Groups } from 'components/organisms/Groups/Groups';
+import { Groups } from 'components/atoms/Groups/Groups';
 import { Friends } from 'components/molecules/Friends/Friends';
 import { Links } from 'components/atoms/Links/Links';
 
@@ -39,7 +39,7 @@ export function Aside() {
       <Friends />
       
       <div>
-        <Links hrefLink='#' elementLink={<h3 className={styles.contact}>{useHookSWR()?.Aside?.contact}</h3>} />
+        <Links hrefLink='#'><h3 className={styles.contact}>{useHookSWR()?.Aside?.contact}</h3></Links>
       </div>
     </aside>
   );

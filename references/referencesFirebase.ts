@@ -1,12 +1,15 @@
 import { collection, collectionGroup, doc, limit, orderBy, query, where } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { db } from '../firebase';
+
 import { animationsTags, drawingsTags, othersTags, photosTags, videosTags } from 'helpers/arrayTags';
 
-import { AuthorType } from 'types/global.types';
+import { GroupNameType } from 'types/global.types';
 
+// USERS
+export const user = (username: string) => doc(db, `users/${username}`);
+
+// FILES
 const maxItems: number = 10;
-
-const user = auth.currentUser?.uid;
 
 export const allPhotosCollectionRef = () => collectionGroup(db, 'photos');
 export const allAnimatedCollectionRef = () => collectionGroup(db, 'animations');
@@ -55,36 +58,39 @@ export const userVideosRef = (user: string) => {
   return collection(db, `users/${user}/videos`);
 };
 
+// GROUPS
 const groupRef = collection(db, 'groups');
 export const groupsQuery = (currentUser: string) => query(groupRef, where('admin', '==', currentUser),
   orderBy('nameGroup'));
 
 export const groupsInAside = query(groupRef, limit(5), orderBy('name'));
 
-export const usersInGroup = (name: AuthorType) => doc(db, `groups/${name}`);
+export const usersInGroup = (name: GroupNameType) => doc(db, `groups/${name}`);
 
-export const groupSection = (name: AuthorType) => query(groupRef, where('name', '==', name));
+export const groupSection = (name: GroupNameType) => query(groupRef, where('name', '==', name));
 
-export const addingPost = (name: AuthorType) => collection(db, `groups/${name}/posts`);
+// POSTS
+export const addingPost = (name: GroupNameType) => collection(db, `groups/${name}/posts`);
 
-export const posts = (name: AuthorType) => {
+export const posts = (name: GroupNameType) => {
   return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name),
     orderBy('date', 'desc'));
 };
 
-export const postShared = (name: AuthorType, title: string) => {
+export const postShared = (name: GroupNameType, title: string) => {
   return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name),
     where('title', '==', title), orderBy('date', 'desc'));
 };
 
-export const likePost = (name: AuthorType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
+export const likePost = (name: GroupNameType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
 
-export const deletingPost = (name: AuthorType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
+export const deletingPost = (name: GroupNameType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
 
-export const addingComment = (name: AuthorType, idPost: string) => collection(db,
+// COMMENTS
+export const addingComment = (name: GroupNameType, idPost: string) => collection(db,
   `groups/${name}/posts/${idPost}/comments`);
 
-export const comments = (name: AuthorType) => {
+export const comments = (name: GroupNameType) => {
   return query(collectionGroup(db, 'comments'), where('nameGroup', '==', name),
     orderBy('date', 'desc'));
 };

@@ -2,6 +2,8 @@ import { ChangeEvent } from 'react';
 import { CollectionReference, Query } from 'firebase/firestore';
 import { StorageReference } from 'firebase/storage';
 
+export type GroupNameType = string | string[]
+
 export type DataType = any;
 
 export type UserType = {
@@ -48,13 +50,12 @@ export type FileContainerType = {
 export type GroupType = {
   nameGroup: string;
   logoUrl: string;
-  description: string;
+  description?: string;
 }
 
 export type AuthorType = {
-  name: string | string[];
+  name?: GroupNameType;
   refCom?: Query;
-  join?: boolean;
   currentUser?: string;
   userId?: string | null;
 }
@@ -64,20 +65,21 @@ export type PostType = {
   title: string;
   date: string;
   description: string;
-  name: AuthorType;
+  name: GroupNameType;
   idPost?: string;
-  join?: boolean;
   currentUser?: string;
   userId?: string | null;
-  likes: number,
-  liked?: string[]
+  likes: number;
+  liked?: string[];
+  logoUser?: string;
 }
 
 export type CommentType = {
   author?: string;
   date: string;
   description: string;
-  name: string;
+  nameGroup: GroupNameType;
   post?: string;
   idPost?: string;
+  profilePhoto?: string;
 }

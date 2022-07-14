@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { auth } from '../../../firebase';
-import { getDocs } from 'firebase/firestore';
+import { getDoc } from 'firebase/firestore';
 
-import { groupsInAside } from 'references/referencesFirebase';
+import { user, usersInGroup } from 'references/referencesFirebase';
 
 import { DataType, GroupType } from 'types/global.types';
 
@@ -16,40 +16,48 @@ import { useRouter } from 'next/router';
 export const Groups = ({ data }: DataType) => {
   const [groupsArray, setGroupsArray] = useState<GroupType[]>([]);
   
-  const user = auth.currentUser;
+  const currentUser = auth.currentUser?.uid;
   
   const { asPath } = useRouter();
   
   const groupList = async () => {
     try {
       const groupList: GroupType[] = [];
-      const querySnapshot = await getDocs(groupsInAside);
+      const docSnap = await getDoc(user(currentUser!));
+  
+      if (docSnap.exists()) {
+        const favorites = docSnap.data().favoriteGroups;
+        favorites.sort();
+    
+        for (const favorite of favorites) {
+          const favoriteList = await getDoc(usersInGroup(favorite));
       
-      querySnapshot.forEach((doc) => {
-        groupList.push({
-          description: doc.data().description,
-          logoUrl: doc.data().logo,
-          nameGroup: doc.data().name
-        });
+          if (favoriteList.exists()) {
+            const logoUrl: string = favoriteList.data().logo || '/#';
+        
+            groupList.push({ nameGroup: favorite, logoUrl });
+          }
+        }
         setGroupsArray(groupList);
-      });
+      }
     } catch (e) {
       console.log(e);
     }
   };
   
   useEffect(() => {
-    !!user && groupList();
-  }, [user, asPath]);
+    !!currentUser && groupList();
+  }, [currentUser, asPath]);
   
   return (
     <div className={styles.groups}>
       <Links
         hrefLink='/adding_group'
-        title={data?.Aside?.addingGroup}
         classLink={`${styles.groups__button} button`}
         aria-label={data?.Aside?.addingGroup}
-      />
+      >
+        {data?.Aside?.addingGroup}
+      </Links>
       
       {
         groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl, description }) =>
@@ -58,9 +66,10 @@ export const Groups = ({ data }: DataType) => {
             <Links
               hrefLink={`/groups/${nameGroup}`}
               classLink={styles.groups__item}
-              elementLink={<h4>{nameGroup}</h4>}
               arial-label={description}
-            />
+            >
+              <h4>{nameGroup}</h4>
+            </Links>
           </div>) : <p className={styles.no__groups}>Brak grup</p>
       }
     </div>
