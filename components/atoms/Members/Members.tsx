@@ -7,7 +7,7 @@ import { Avatar, Divider, IconButton, Link } from '@chakra-ui/react';
 
 import { usersInGroup } from 'references/referencesFirebase';
 
-import { AuthorType } from 'types/global.types';
+import { GroupNameType } from 'types/global.types';
 
 import { UsersButton } from 'components/atoms/UsersButton/UsersButton';
 
@@ -43,8 +43,7 @@ export const Members = ({ admin, moderators, users }: MembersType) => {
   
   const user = auth.currentUser;
   const currentUser = user?.uid;
-  // @ts-ignore
-  const name: AuthorType = decodeURIComponent(asPath.split('/')[2]);
+  const name = decodeURIComponent(asPath.split('/')[2]);
   
   const downloadAdmin = async (admin: string) => {
     const docRef = doc(db, `users/${admin}`);
@@ -65,6 +64,7 @@ export const Members = ({ admin, moderators, users }: MembersType) => {
   const moderatorsList = async () => {
     try {
       const moderatorArray: ModeratorsType[] = [];
+      moderators.sort();
       
       for (const moderator of (moderators)) {
         const docRef = doc(db, `users/${moderator}`);
@@ -84,12 +84,13 @@ export const Members = ({ admin, moderators, users }: MembersType) => {
   };
   
   useEffect(() => {
-    !!name && moderatorsList();
-  }, [moderators, name]);
+    !!moderators && moderatorsList();
+  }, [moderators]);
   
   const usersList = async () => {
     try {
       const userArray: UsersType[] = [];
+      users.sort();
       
       for (const user of (users)) {
         const docRef = doc(db, `users/${user}`);
@@ -100,8 +101,6 @@ export const Members = ({ admin, moderators, users }: MembersType) => {
             pseudonymUsers: docSnap.data().pseudonym,
             profilePhoto: docSnap.data().profilePhoto,
           });
-          userArray.sort(docSnap.data().id);
-          
         }
       }
       setUsersArray(userArray);
@@ -111,11 +110,10 @@ export const Members = ({ admin, moderators, users }: MembersType) => {
   };
   
   useEffect(() => {
-    !!name && usersList();
-  }, [name]);
+    !!users && usersList();
+  }, [users]);
   
-  
-  const removingModerators = async (name: AuthorType, pseudonym: string) => {
+  const removingModerators = async (name: GroupNameType, pseudonym: string) => {
     try {
       await setDoc(usersInGroup(name!),
         { moderators: arrayRemove(pseudonym) },
