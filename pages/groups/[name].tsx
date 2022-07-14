@@ -76,19 +76,20 @@ export default function Groups() {
     try {
       if (join && !!userId) {
         await setDoc(usersInGroup(name!),
-          { users: arrayRemove(currentUser) },
+          { users: arrayRemove(currentUser), favoriteGroups: arrayRemove(name) },
           { merge: true });
         await setDoc(user(currentUser!),
           { groups: arrayRemove(name) },
           { merge: true });
       } else {
         await setDoc(usersInGroup(name!),
-          { users: arrayUnion(currentUser) },
+          { users: arrayUnion(currentUser), favoriteGroups: arrayUnion(name) },
           { merge: true });
         await setDoc(user(currentUser!),
           { groups: arrayUnion(name) },
           { merge: true });
       }
+      setFavorite(!favorite);
       setJoin(!join);
     } catch (e) {
       console.error(e);
