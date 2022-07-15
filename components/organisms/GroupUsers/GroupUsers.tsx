@@ -1,62 +1,139 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { getDocs } from 'firebase/firestore';
+import { getDoc, getDocs } from 'firebase/firestore';
 import { auth } from '../../../firebase';
 
-import { groupsQuery } from 'references/referencesFirebase';
+import { user, usersInGroup, groupsQuery} from 'references/referencesFirebase';
+
+import { GroupType } from 'types/global.types';
 
 import { Links } from 'components/atoms/Links/Links';
 
 import styles from './GroupUsers.module.scss';
-
-import { GroupType } from 'types/global.types';
+import { Divider } from '@chakra-ui/react';
 
 export const GroupUsers = () => {
+  const [adminsArray, setAdminsArray] = useState<GroupType[]>([]);
+  const [moderatorsArray, setModeratorsArray] = useState<GroupType[]>([]);
   const [groupsArray, setGroupsArray] = useState<GroupType[]>([]);
   
-  const user = auth.currentUser;
-  const currentUser = user?.uid;
+  const currentUser = auth.currentUser?.uid;
+  
+  const sizes = 288;
   
   const downloadGroupsList = async () => {
     try {
+      const docSnap = await getDoc(user(currentUser!));
       const querySnapshot = await getDocs(groupsQuery(currentUser!));
-
+      
+      const adminArray: GroupType[] = [];
+      const moderatorArray: GroupType[] = [];
       const groupArray: GroupType[] = [];
-      querySnapshot.forEach((doc) => {
-        groupArray.push({
-          logoUrl: doc.data().logo,
-          nameGroup: doc.data().name,
-          description: doc.data().description
-        });
-        console.log(groupArray)
+      
+      await querySnapshot.forEach((doc) =>  {
+        adminArray.push({ nameGroup: doc.data().name, logoUrl: doc.data().logo })
       });
-      setGroupsArray(groupArray);
+      
+      setAdminsArray(adminArray);
+  
+      if (docSnap.exists()) {
+        const groups = docSnap.data().groups;
+        groups.sort();
+        
+        for (const group of groups) {
+          const groupData = await getDoc(usersInGroup(group));
+          
+          if (groupData.exists()) {
+            const logoUrl: string = groupData.data().logo || '/#';
+            
+            groupArray.push({ nameGroup: group, logoUrl });
+            
+            for (const moderator of groupData.data().moderators) {
+              currentUser === moderator && moderatorArray.push({ nameGroup: group, logoUrl });
+            }
+          }
+        }
+        setModeratorsArray(moderatorArray);
+        setGroupsArray(groupArray);
+      } else {
+        console.log('No your groups!');
+      }
     } catch (e) {
       console.error(e);
     }
   };
   
   useEffect(() => {
-     !!currentUser && downloadGroupsList()
-  }, [currentUser]);
-  
-  console.log(groupsArray);
+    !!currentUser && downloadGroupsList();
+  }, []);
   
   return <div className={styles.tilesSection}>
-      {groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl, description }) => <article className={styles.tile} key={nameGroup}>
+    <h2 className={styles.title}>Groups which you've created</h2>
+    <Divider className={styles.divider} />
+    {adminsArray.length > 0 ? adminsArray.map(({ nameGroup, logoUrl }) => <article
+      className={styles.tile}
+      key={nameGroup}
+    >
+      <Links
+        hrefLink={`/groups/${nameGroup}`}
+        classLink={styles.link}
+      >
         <Image
-        src={logoUrl}
-        width={288}
-        height={288}
-        className={styles.thumbnail}
-        alt={description}
-      />
-        
-        <Links
-          hrefLink={`/my-groups/${logoUrl}`}
-          title={nameGroup}
-          classLink={styles.link}
+          src={logoUrl}
+          width={sizes}
+          height={sizes}
+          className={styles.thumbnail}
+          alt={nameGroup}
         />
-      </article>) : <p>No groups</p>}
+        <p className={styles.nameGroup}>{nameGroup}</p>
+      </Links>
+    </article>) : <p className={styles.noGroups}>
+      You're not admin in any group.
+    </p>}
+    <h2 className={styles.title}>Groups which you manage</h2>
+    <Divider className={styles.divider} />
+    {moderatorsArray.length > 0 ? moderatorsArray.map(({ nameGroup, logoUrl }) => <article
+      className={styles.tile}
+      key={nameGroup}
+    >
+      <Links
+        hrefLink={`/groups/${nameGroup}`}
+        classLink={styles.link}
+      >
+        <Image
+          src={logoUrl}
+          width={sizes}
+          height={sizes}
+          className={styles.thumbnail}
+          alt={nameGroup}
+        />
+        <p className={styles.nameGroup}>{nameGroup}</p>
+      </Links>
+    </article>) : <p className={styles.noGroups}>
+      You're not moderators in any group.
+    </p>}
+    {/* eslint-disable-next-line react/no-unescaped-entities */}
+    <h2 className={styles.title}>Groups you've joined</h2>
+    <Divider className={styles.divider} />
+    {groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl }) => <article
+      className={styles.tile}
+      key={nameGroup}
+    >
+      <Links
+        hrefLink={`/groups/${nameGroup}`}
+        classLink={styles.link}
+      >
+        <Image
+          src={logoUrl}
+          width={sizes}
+          height={sizes}
+          className={styles.thumbnail}
+          alt={nameGroup}
+        />
+        <p className={styles.nameGroup}>{nameGroup}</p>
+      </Links>
+    </article>) : <p className={styles.noGroups}>
+      You didn't join to any group.
+    </p>}
   </div>;
 };

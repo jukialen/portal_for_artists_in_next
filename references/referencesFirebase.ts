@@ -59,9 +59,9 @@ export const userVideosRef = (user: string) => {
 };
 
 // GROUPS
-const groupRef = collection(db, 'groups');
+export const groupRef = collection(db, 'groups');
 export const groupsQuery = (currentUser: string) => query(groupRef, where('admin', '==', currentUser),
-  orderBy('nameGroup'));
+  orderBy('name'));
 
 export const groupsInAside = query(groupRef, limit(5), orderBy('name'));
 
