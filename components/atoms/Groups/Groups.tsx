@@ -70,7 +70,7 @@ export const Groups = ({ data }: DataType) => {
             >
               <h4>{nameGroup}</h4>
             </Links>
-          </div>) : <p className={styles.no__groups}>Brak grup</p>
+          </div>) : <p className={styles.no__groups}>{data?.Groups?.noGroups}</p>
       }
     </div>
   );

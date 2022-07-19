@@ -7,6 +7,8 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { FormType, GroupNameType } from 'types/global.types';
 
+import { useHookSWR } from 'hooks/useHookSWR';
+
 import styles from './NewComments.module.scss';
 import group from 'public/group.svg';
 
@@ -20,6 +22,8 @@ export const NewComments = ({ name, refCom }: NewCommentsType ) => {
   const initialValues = {
     comment: '',
   };
+  
+  const data = useHookSWR();
   
   const user = auth.currentUser;
   
@@ -62,8 +66,8 @@ export const NewComments = ({ name, refCom }: NewCommentsType ) => {
             id='comment'
             value={values.comment}
             onChange={handleChange}
-            placeholder='Write new comment'
-            aria-label='Adding description for new comment'
+            placeholder={data?.Comments?.newComPlaceholder}
+            aria-label={data?.Comments?.newComAria}
             isRequired
             className={styles.text}
           />
@@ -75,7 +79,7 @@ export const NewComments = ({ name, refCom }: NewCommentsType ) => {
           display='flex'
           className={styles.addingButton}
         >
-          Dodaj komentarz
+          {data?.Comments?.newComButton}
         </Button>
         
         <ErrorMessage name='comment' />

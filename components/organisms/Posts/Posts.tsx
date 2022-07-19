@@ -11,11 +11,13 @@ import { getDate } from 'helpers/getDate';
 import { Post } from 'components/molecules/Post/Post';
 
 import styles from './Posts.module.scss';
+import { useHookSWR } from '../../../hooks/useHookSWR';
 
 export const Posts = ({ name, currentUser }: AuthorType) => {
   const [postsArray, setPostsArray] = useState<PostType[]>([]);
   
   const { locale } = useRouter();
+  const data = useHookSWR();
   
   const downloadPosts = async () => {
     try {
@@ -65,6 +67,6 @@ export const Posts = ({ name, currentUser }: AuthorType) => {
         liked={liked}
         logoUser={logoUser}
       />
-    ) : <p>Brak postów</p>}
+    ) : <p>{data?.Posts.noPosts}</p>}
   </section>;
 };

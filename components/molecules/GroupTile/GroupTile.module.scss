@@ -1,0 +1,26 @@
+@use 'styles/variables' as *;
+
+.tile {
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	max-width: 14rem;
+	margin: 2rem 3% 1rem;
+	border-radius: 1rem;
+	box-shadow: 0 0 .5rem .1rem $third__color;
+
+	.link {
+		display: flex;
+		flex-direction: column;
+
+		.thumbnail {
+			background: $third__color;
+			border-radius: 1rem 1rem 0 0;
+		}
+
+		.nameGroup {
+			display: block;
+			padding: 0.5rem 1rem 0.5rem;
+		}
+	}
+}

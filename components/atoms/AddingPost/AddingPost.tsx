@@ -10,6 +10,8 @@ import { AuthorType, FormType } from 'types/global.types';
 
 import { addingPost } from 'references/referencesFirebase';
 
+import { useHookSWR } from 'hooks/useHookSWR';
+
 import styles from './AddingPost.module.scss';
 
 type AddingPostType = {
@@ -21,6 +23,7 @@ export const AddingPost = ({ name }: AuthorType) => {
   const [showForm, setShowForm] = useState(false);
   
   const user = auth.currentUser;
+  const data = useHookSWR();
   
   const initialValues = {
     title: '',
@@ -54,7 +57,7 @@ export const AddingPost = ({ name }: AuthorType) => {
       className={styles.showForm}
       onClick={() => setShowForm(!showForm)}
     >
-      Dodaj post
+      {data?.Groups?.addingPost?.add}
     </button>
     <Formik
       initialValues={initialValues}
@@ -68,8 +71,8 @@ export const AddingPost = ({ name }: AuthorType) => {
             name='title'
             value={values.title}
             onChange={handleChange}
-            placeholder='Dodaj tytuł'
-            aria-label='Adding title for new post'
+            placeholder={data?.Groups?.addingPost?.addTitPlaceholder}
+            aria-label={data?.Groups?.addingPost?.addTitAria}
             isRequired
             className={styles.title}
           />
@@ -82,8 +85,8 @@ export const AddingPost = ({ name }: AuthorType) => {
             value={values.post}
             onChange={handleChange}
             resize='vertical'
-            placeholder='Dodaj opis'
-            aria-label='Adding description for new post'
+            placeholder={data?.Groups?.addingPost?.addDescription}
+            aria-label={data?.Groups?.addingPost?.addDesAria}
             isRequired
             className={styles.description}
           />
@@ -95,7 +98,7 @@ export const AddingPost = ({ name }: AuthorType) => {
             colorScheme='blue.800'
             className={styles.addingButton}
           >
-            Dodaj post
+            {data?.Groups?.addingPost?.add}
           </Button>
         </Form>
       )}

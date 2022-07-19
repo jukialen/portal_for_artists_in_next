@@ -5,7 +5,9 @@ import { auth } from '../../firebase';
 import { arrayRemove, arrayUnion, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { Button, Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
-import { groupSection, user, usersInGroup } from 'references/referencesFirebase';
+import { favorite__groups, groupSection, user, usersInGroup } from 'references/referencesFirebase';
+
+import { useHookSWR } from 'hooks/useHookSWR';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { AddingPost } from 'components/atoms/AddingPost/AddingPost';
@@ -31,6 +33,7 @@ export default function Groups() {
   const { query, asPath } = useRouter();
   const { name } = query;
   const currentUser = auth.currentUser?.uid;
+  const data = useHookSWR();
   
   const favoriteGroup = async () => {
     try {
@@ -76,14 +79,14 @@ export default function Groups() {
     try {
       if (join && !!userId) {
         await setDoc(usersInGroup(name!),
-          { users: arrayRemove(currentUser), favoriteGroups: arrayRemove(name) },
+          { users: arrayRemove(currentUser) },
           { merge: true });
         await setDoc(user(currentUser!),
-          { groups: arrayRemove(name) },
+          { groups: arrayRemove(name), favoriteGroups: arrayRemove(name) },
           { merge: true });
       } else {
         await setDoc(usersInGroup(name!),
-          { users: arrayUnion(currentUser), favoriteGroups: arrayUnion(name) },
+          { users: arrayUnion(currentUser) },
           { merge: true });
         await setDoc(user(currentUser!),
           { groups: arrayUnion(name) },
@@ -172,7 +175,7 @@ export default function Groups() {
         variant={join && !!userId ? 'outline' : 'solid'}
         className={styles.button}
       >
-        {join && currentUser === userId ? 'Dołączyłeś/aś' : 'Dołącz'}
+        {join && currentUser === userId ? data?.Groups?.joined : data?.Groups?.join}
       </Button>
       
       {(join && currentUser === userId) && <div>
@@ -185,9 +188,9 @@ export default function Groups() {
         variant={favorite ? 'solid' : 'outline'}
         className={`${styles.button} ${styles.favoriteButton}`}
       >
-        {favorite && currentUser === userId ? 'Ulubiona' : 'Dodaj do ulubionych'}
+        {favorite && currentUser === userId ? data?.Groups?.favorite?.addedToFav : data?.Groups?.favorite?.addToFavorite}
         </Button>
-        <p>{favoriteLength > 5 ? 'Masz już 5 ulubionych grup' : 'Możesz dodać do 5 grup'}</p>
+        <p>{favoriteLength < 5 ? data?.Groups?.favorite?.maxFav : data?.Groups?.favorite?.maximumAchieved}</p>
       </div>}
     </div>
     
@@ -209,7 +212,7 @@ export default function Groups() {
           borderColor={activeColor}
           className={styles.tab}
         >
-          Ogólne
+          {data?.Account?.aMenu?.general}
         </Tab>
         <Tab
           _selected={{ borderColor: selectedColor }}
@@ -218,7 +221,7 @@ export default function Groups() {
           borderColor={activeColor}
           className={styles.tab}
         >
-          Członkowie
+          {data?.Groups?.menu?.members}
         </Tab>
         <Tab
           _selected={{ borderColor: selectedColor }}
@@ -227,7 +230,7 @@ export default function Groups() {
           borderColor={activeColor}
           className={styles.tab}
         >
-          Opis
+          {data?.AnotherForm?.description}
         </Tab>
       </TabList>
       
@@ -242,7 +245,7 @@ export default function Groups() {
           <Members admin={admin} moderators={moderators} users={users} />
         </TabPanel>
         <TabPanel padding={0}>
-          <DescriptionSection description={description} />
+          <DescriptionSection description={description} admin={admin} name={name} />
         </TabPanel>
       </TabPanels>
     </Tabs>

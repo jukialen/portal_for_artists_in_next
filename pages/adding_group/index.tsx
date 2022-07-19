@@ -119,14 +119,14 @@ export default function AddingGroup() {
       >
         {({ values, handleChange }) => (
           <Form className={styles.container__form}>
-            <h2 className={styles.title}>Create a group</h2>
+            <h2 className={styles.title}>{data?.AddingGroup.title}</h2>
         
             <Input
               id='groupName'
               name='groupName'
               value={values.groupName}
               onChange={handleChange}
-              placeholder='Group name'
+              placeholder={data?.AddingGroup?.name}
               className={styles.field}
             />
         
@@ -137,7 +137,7 @@ export default function AddingGroup() {
               name='description'
               value={values.description}
               onChange={handleChange}
-              placeholder='Description'
+              placeholder={data?.AnotherForm?.description}
               className={styles.field}
             />
         

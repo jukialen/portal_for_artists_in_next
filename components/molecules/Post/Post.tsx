@@ -6,6 +6,8 @@ import { PostType } from 'types/global.types';
 
 import { addingComment, comments, likePost} from 'references/referencesFirebase';
 
+import { useHookSWR } from 'hooks/useHookSWR';
+
 import { DeletePost } from 'components/atoms/DeletionPost/DeletionPost';
 import { NewComments } from 'components/atoms/NewComments/NewComments';
 import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
@@ -19,6 +21,8 @@ export const Post = ({ author, title, date, description, idPost, name, userId, c
   const [showComments, setShowComments] = useState(false);
   const [like, setLike] = useState(false);
   let [likeCount, setLikeCount] = useState(likes);
+  
+  const data = useHookSWR();
   
   const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${author}/${idPost}`;
   
@@ -61,7 +65,7 @@ export const Post = ({ author, title, date, description, idPost, name, userId, c
     <div className={styles.description}>{description}</div>
     <div className={styles.options}>
       <IconButton
-        aria-label={like ? 'liked' : 'to like'}
+        aria-label={like ? data?.Posts?.likedAria : data?.Posts?.likeAria}
         colorScheme='teal'
         icon={like ? <AiFillLike size='sm' /> : <AiOutlineLike size='sm' />}
         className={styles.likes}
@@ -72,7 +76,7 @@ export const Post = ({ author, title, date, description, idPost, name, userId, c
         onClick={showingComments}
         className={styles.commentsButton}
         variant='ghost'
-      >Comments</Button>
+      >{data?.Comments?.comments}</Button>
       <SharingButton link={link} />
     </div>
     <p className={styles.likesCount} style={{ marginLeft: likeCount < 10 ? '.8rem' : '.5rem' }}>

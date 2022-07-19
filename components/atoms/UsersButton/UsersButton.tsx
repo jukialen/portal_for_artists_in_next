@@ -8,6 +8,8 @@ import { GroupNameType } from 'types/global.types';
 
 import { usersInGroup } from 'references/referencesFirebase';
 
+import { useHookSWR } from 'hooks/useHookSWR';
+
 import styles from './UsersButton.module.scss';
 import group from 'public/group.svg';
 import { AddIcon, CheckIcon } from '@chakra-ui/icons';
@@ -30,6 +32,7 @@ type UsersButtonType = {
 export const UsersButton = ({ id, name, pseudonym, logo, admin, moderatorsArray }: UsersButtonType) => {
   const [toggleModRole, setToggleModRole] = useState(false);
   
+  const data = useHookSWR()
   
   useEffect(() => {
     moderatorsArray.length > 0 && moderatorsArray.map(({ modId }: ModeratorsType) => {
@@ -58,7 +61,7 @@ export const UsersButton = ({ id, name, pseudonym, logo, admin, moderatorsArray 
     </NextLink>
     {admin === currentUser && <IconButton
       type='submit'
-      aria-label={toggleModRole ? 'Added a moderator' : 'Add a moderator'}
+      aria-label={toggleModRole ? data?.Members?.button?.addedModAria : data?.Members?.button?.addModAria}
       icon={toggleModRole ? <CheckIcon /> : <AddIcon />}
       onClick={() => addingModerators(name, id)}
     />}
