@@ -1,17 +1,96 @@
-import { Divider } from '@chakra-ui/react';
+import { useState } from 'react';
+import { auth } from '../../../firebase';
+import { updateDoc } from 'firebase/firestore';
+import { ErrorMessage, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { Button, Divider, Textarea, IconButton } from '@chakra-ui/react';
+
+import { FormType} from 'types/global.types';
+
+import { usersInGroup } from 'references/referencesFirebase';
+
+import { useHookSWR } from 'hooks/useHookSWR';
+
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import styles from './DescriptionSection.module.scss';
+import { EditIcon } from '@chakra-ui/icons';
 
 type DescriptionSectionType = {
-  description: string
+  description: string;
+  admin: string;
+  name?: string | string[];
 }
+type NewDescType = {
+  newDescription: string;
+};
 
-export const DescriptionSection = ({ description }: DescriptionSectionType) => {
+export const DescriptionSection = ({ description, admin, name }: DescriptionSectionType) => {
+  const data = useHookSWR();
+  const [openForm, setOpenForm] = useState(false);
+  
+  const currentUser = auth.currentUser?.uid;
+  
+  const initialValues = {
+    newDescription: description
+  };
+  
+  const schemaNew = Yup.object({
+    newDescription: SchemaValidation().description,
+  });
+  
+  const updateDescription = async ({ newDescription }: NewDescType, { resetForm }: FormType) => {
+    try {
+      await updateDoc(usersInGroup(name!), { description: newDescription });
+      resetForm(initialValues);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  
   return <section className={styles.container__description}>
-    <h2 className={styles.description__title}>Description</h2>
+    <h2 className={styles.description__title}>{data?.AnotherForm?.description}</h2>
     <Divider />
-    <p className={styles.description}>{description}</p>
-    <h2 className={styles.description}>Regulamin</h2>
+    <div className={styles.desField}>
+      {!openForm ? <p className={styles.description}>{description}</p> : <Formik
+        initialValues={initialValues}
+        validationSchema={schemaNew}
+        onSubmit={updateDescription}
+      >
+        {({ values, handleChange }) => (
+          <Form className={styles.form}>
+            <Textarea
+              id='newDescription'
+              name='newDescription'
+              value={values.newDescription}
+              onChange={handleChange}
+              resize='vertical'
+              placeholder={data?.Description?.textPlaceholder}
+              aria-label={data?.Description?.textAria}
+              className={styles.formDescription}
+            />
+      
+            <p><ErrorMessage name='newDescription' /></p>
+            
+            <Button
+              type='submit'
+              colorScheme='blue'
+              className={styles.addingButton}
+            >
+              {data?.Description?.submit}
+            </Button>
+          </Form>
+        )}
+      </Formik>}
+      {admin === currentUser &&
+        <IconButton
+          aria-label={data?.Description?.iconButton}
+          onClick={() => setOpenForm(!openForm)}
+          icon={<EditIcon fontSize='1.2rem' />} />
+      }
+    </div>
+   
+    <h2 className={styles.description}>{data?.Regulations}</h2>
     <Divider />
     <p className={styles.regulations__item}>
       1) Lorem ipsum dolor sit amet, consectetur adipiscing elit.

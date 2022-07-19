@@ -1,3 +1,5 @@
+@use 'styles/variables' as *;
+
 .container__description {
 	width: 90%;
 	margin: 1rem auto;
@@ -8,9 +10,53 @@
 		text-align: left;
 	}
 
-	.description {
-		margin: 1rem 1rem 2rem;
+	.desField {
+		display: grid;
+		grid-template-columns: 1fr 3rem;
+		margin: 1rem auto;
+
+		.description {
+			margin: 1rem 1rem 2rem;
+			width: inherit;
+		}
+		.form {
+			display: flex;
+			flex-direction: column;
+			width: 85%;
+			margin: 1rem;
+			justify-self: center;
+			align-items: center;
+
+			.formDescription {
+				border: .1rem solid $third__color;
+				color: $third__color;
+				text-align: left;
+			}
+
+			p {
+				margin: .5rem;
+			}
+
+			.addingButton {
+				background-color: $third__color;
+				border: .1rem solid $third__color;
+				margin-bottom: 2rem;
+			}
+		}
+
+
+
+		button {
+			width: fit-content;
+			margin-top: 1rem;
+			background: $primary__color;
+			border: .1rem solid $primary__color;
+			color: black;
+			cursor: pointer;
+		}
 	}
+
+
 
 	.regulations__item {
 		margin: 2rem 1rem;

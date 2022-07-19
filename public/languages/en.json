@@ -48,7 +48,6 @@
   "Aside": {
     "category": "Categories",
     "drawings": "Drawings",
-    "addingGroup": "Adding a group",
     "realistic": "Realistic",
     "manga": "Manga",
     "anime": "Anime",
@@ -59,6 +58,7 @@
     "others": "Others",
     "friends": "Friends",
     "groups": "Favorite groups",
+    "addingGroup": "Adding a group",
     "contact": "Contact",
     "photos": "Photos"
   },
@@ -111,6 +111,14 @@
       "errorSending": "Profile hasn't been updated.",
       "defaultAvatar": "default avatar",
       "userAvatar": "avatar"
+    },
+    "groups": {
+      "adminTitle": "Groups which you've created",
+      "noAdmin": "You've created any group yet.",
+      "modsTitle": "Groups which you manage",
+      "noMods": "You're not moderators in any group yet.",
+      "usersTitle": "Groups you've joined",
+      "noUsers": "You didn't join to any group yet."
     }
   },
   "Main": {
@@ -157,6 +165,62 @@
     "uploadFile": "File has been uploaded.",
     "notUploadFile": "File hasn't been uploaded."
   },
+  "AddingGroup": {
+    "title": "Create a group",
+    "name": "Group name"
+  },
+  "Groups": {
+    "join": "Join",
+    "joined": "Joined",
+    "favorite": {
+      "addedToFav": "Favorite",
+      "addToFavorite": "Add to favourites",
+      "maxFav": "You can add up to 5 groups.",
+      "maximumAchieved": "You already have 5 favorite groups."
+    },
+    "menu": {
+      "members": "Members"
+    },
+    "addingPost": {
+      "add": "Add a post",
+      "addTitPlaceholder": "Add a title",
+      "addTitAria": "Adding title for new post",
+      "addDescription": "Add a description",
+      "addDesAria": "Adding description for new post"
+    },
+    "noGroups": "No group"
+  },
+  "Posts": {
+    "likeAria": "to like",
+    "likedAria": "liked",
+    "noPosts": "Brak postów"
+  },
+  "Members": {
+    "admin": "Admin",
+    "moderators": "Moderators",
+    "modsAria": "Removing a moderator",
+    "noMods": "No moderators",
+    "anotherMembers": "Members",
+    "noMembers": "No members",
+    "button": {
+      "addModAria": "Add a moderator",
+      "addedModAria": "Added a moderator"
+    }
+  },
+  "Description" : {
+    "textPlaceholder": "new description of group",
+    "textAria": "field for new description",
+    "submit": "Update",
+    "iconButton": "menu admin for the description"
+  },
+  "Comments": {
+    "comments": "Comments",
+    "newComPlaceholder": "Write new comment",
+    "newComAria": "Adding description for new comment",
+    "newComButton": "Adding a comment",
+    "noComments": "No comments"
+  },
+  "Regulations": "Regulations",
   "ZeroFiles": {
     "drawings": "No your drawings.",
     "photos": "No your photos.",

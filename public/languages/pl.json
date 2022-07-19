@@ -111,6 +111,14 @@
       "errorSending": "Profil nie został zaktualizowany.",
       "defaultAvatar": "domyślny avatar",
       "userAvatar": "avatar"
+    },
+    "groups": {
+      "adminTitle": "Grupy, które stworzyłeś/aś",
+      "noAdmin": "Nie stworzyłeś jeszcze żadnej grupy",
+      "modsTitle": "Grupy którymi zarządzasz",
+      "noMods": "Obecnie nie jesteś moderatorem żadnej grupy.",
+      "usersTitle": "Grupy do których dołączyłeś",
+      "noUsers": "Nie dołączyłeś jeszcze do żadnej grupy."
     }
   },
   "Main": {
@@ -157,6 +165,62 @@
     "uploadFile": "Plik został wysłany.",
     "notUploadFile": "Plik nie został wysłany."
   },
+  "AddingGroup": {
+    "title": "Stwórz grupę",
+    "name": "Nazwa grupy"
+  },
+  "Groups": {
+    "join": "Dołącz",
+    "joined": "Dołączyłeś/aś",
+    "favorite": {
+      "addedToFav": "Ulubiona",
+      "addToFavorite": "Dodaj do ulubionych",
+      "maxFav": "Możesz dodać do 5 grup",
+      "maximumAchieved": "Już masz 5 ulubionych grup."
+    },
+    "menu": {
+      "members": "Członkowie"
+    },
+    "addingPost": {
+      "add": "Dodaj post",
+      "addTitPlaceholder": "Dodaj tytuł",
+      "addTitAria": "Dodanie tytułu dla nowego postu",
+      "addDescription": "Dodaj opis",
+      "addDesAria": "Dodanie opisu dla nowego postu"
+    },
+    "noGroups": "Brak grup"
+  },
+  "Posts": {
+    "likeAria": "lubić",
+    "likedAria": "polubione",
+    "noPosts": "Brak postów"
+  },
+  "Members": {
+    "admin": "Admin",
+    "moderators": "Moderatorzy",
+    "modsAria": "Removing a moderator",
+    "noMods": "Brak moderatorów",
+    "anotherMembers": "Członkowie",
+    "noMembers": "Brak członków",
+    "button": {
+      "addModAria": "Dodaj moderatora",
+      "addedModAria": "Dodany moderator"
+    }
+  },
+  "Description" : {
+    "textPlaceholder": "nowy opis grupy",
+    "textAria": "pole dla nowego opisu grupy",
+    "submit": "Zaktualizuj",
+    "iconButton": "menu admina dla opisu"
+  },
+  "Comments": {
+    "comments": "Komentarze",
+    "newComPlaceholder": "Napisz nowy komentarz",
+    "newComAria": "Dodanie oipsu dla nowego commentarza",
+    "newComButton": "Dodaj komentarz",
+    "noComments": "Brak komentarzy"
+  },
+  "Regulations": "Regulamin",
   "ZeroFiles": {
     "drawings": "Brak rysunków.",
     "photos": "Brak zdjęć.",

@@ -111,6 +111,14 @@
       "errorSending": "Profile hasn't been updated.",
       "defaultAvatar": "default avatar",
       "userAvatar": "avatar"
+    },
+    "groups": {
+      "adminTitle": "生み出しました団体",
+      "noAdmin": "まだ団体が生み出しませんでした。",
+      "modsTitle": "取り締ました団体",
+      "noMods": "まだモデレータがいません。",
+      "usersTitle": "付けました団体",
+      "noUsers": "まだ団体まで付けませんでした。"
     }
   },
   "Main": {
@@ -149,7 +157,7 @@
     "pseudonym": "あだ名",
     "profilePhoto": "プロフィールの写真",
     "description": "叙述",
-    "fileTitle": "Adding a file",
+    "fileTitle": "ファイルが追加",
     "tags": "タグ",
     "file": "ファイル",
     "arialSendingFile": "sending file",
@@ -157,6 +165,62 @@
     "uploadFile": "File has been uploaded.",
     "notUploadFile": "File hasn't been uploaded."
   },
+  "AddingGroup": {
+    "title": "Create a group",
+    "name": "Group name"
+  },
+  "Groups": {
+    "join": "付ける",
+    "joined": "付けました",
+    "favorite": {
+      "addedToFav": "愛用",
+      "addToFavorite": "愛用まで付け加える",
+      "maxFav": "九団体まで付け加える出来る。",
+      "maximumAchieved": "　もう九愛用の団体います。"
+    },
+    "menu": {
+      "members": "隊員"
+    },
+    "addingPost": {
+      "add": "追加が追加する",
+      "addTitPlaceholder": "名称が付け加える",
+      "addTitAria": "新しい追加に名称立項",
+      "addDescription": "叙述が付け加える",
+      "addDesAria": "新しい追加に叙述立項"
+    },
+    "noGroups": "団体がありません"
+  },
+  "Posts": {
+    "likeAria": "好き",
+    "likedAria": "好きだ",
+    "noPosts": "追加がありません"
+  },
+  "Members": {
+    "admin": "Admin",
+    "moderators": "モデレータ",
+    "modsAria": "モデレータがリムーブ",
+    "noMods": "モデレータがいません",
+    "anotherMembers": "他人の隊員",
+    "noMembers": "隊員がいません",
+    "button": {
+      "addModAria": "モデレータが付け加える",
+      "addedModAria": "モデレータが付け加えました"
+    }
+  },
+  "Description" : {
+    "textPlaceholder": "新しい叙述の団体",
+    "textAria": "新しい叙述の団体の場",
+    "submit": "アップデート",
+    "iconButton": "叙述のメニューのアドミン"
+  },
+  "Comments": {
+    "comments": "コメント",
+    "newComPlaceholder": "新しいコメントが書きます",
+    "newComAria": "新しいファイルに叙述立項",
+    "newComButton": "コメントが付け加えます",
+    "noComments": "コメントがありません"
+  },
+  "Regulations": "レギュレーション",
   "ZeroFiles": {
     "drawings": "描画が見つけあせん。",
     "photos": "写真が見つけあせん。",
@@ -187,7 +251,7 @@
     "deleted": "掲示が消しました。"
   },
   "error": "Try again or check your internet connection.",
-  "edit": "Edit",
-  "cancel": "Cancel",
-  "chooseTag": "Choose tag"
+  "edit": "エディト",
+  "cancel": "取り止める",
+  "chooseTag": "タグが選ぶ"
 }
