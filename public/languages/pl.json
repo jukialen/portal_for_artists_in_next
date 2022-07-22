@@ -188,6 +188,11 @@
       "addDescription": "Dodaj opis",
       "addDesAria": "Dodanie opisu dla nowego postu"
     },
+    "list": {
+      "title": "Lista grup",
+      "more": "Więcej",
+      "all": "To już wszystkie grupy."
+    },
     "noGroups": "Brak grup"
   },
   "Posts": {

@@ -188,6 +188,11 @@
       "addDescription": "叙述が付け加える",
       "addDesAria": "新しい追加に叙述立項"
     },
+    "list": {
+      "title": "リストの団体",
+      "more": "もっと",
+      "all": "これがもう皆あります。"
+    },
     "noGroups": "団体がありません"
   },
   "Posts": {

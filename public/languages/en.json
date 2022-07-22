@@ -188,6 +188,11 @@
       "addDescription": "Add a description",
       "addDesAria": "Adding description for new post"
     },
+    "list": {
+      "title": "Groups list",
+      "more": "More",
+      "all": "This is already all groups."
+    },
     "noGroups": "No group"
   },
   "Posts": {
