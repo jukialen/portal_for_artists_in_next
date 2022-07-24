@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import { auth, db } from '../../../firebase';
-import { arrayRemove, doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth } from '../../../firebase';
+import { arrayRemove, getDoc, setDoc } from 'firebase/firestore';
 import { Avatar, Divider, IconButton, Link } from '@chakra-ui/react';
 
-import { usersInGroup } from 'references/referencesFirebase';
+import { user as user_ref, usersInGroup } from 'references/referencesFirebase';
 
 import { GroupNameType } from 'types/global.types';
+
+import { useHookSWR } from 'hooks/useHookSWR';
 
 import { UsersButton } from 'components/atoms/UsersButton/UsersButton';
 
@@ -27,27 +29,27 @@ type ModeratorsType = {
   profilePhoto: string;
 }
 
-type UsersType = {
+type AnotherMembersType = {
   id: string;
-  pseudonymUsers: string;
+  pseudonymMembers: string;
   profilePhoto: string;
 }
 
 export const Members = ({ admin, moderators, users }: MembersType) => {
   const [pseudonymAdmin, setPseudonymAdmin] = useState('');
   const [profilePhotoAdmin, setProfilePhotoAdmin] = useState('');
-  const [usersArray, setUsersArray] = useState<UsersType[]>([]);
+  const [membersArray, setMembersArray] = useState<AnotherMembersType[]>([]);
   const [moderatorsArray, setModeratorsArray] = useState<ModeratorsType[]>([]);
   
   const { asPath } = useRouter();
+  const data = useHookSWR();
   
-  const user = auth.currentUser;
-  const currentUser = user?.uid;
+  const currentUser = auth.currentUser?.uid;
+  
   const name = decodeURIComponent(asPath.split('/')[2]);
   
   const downloadAdmin = async (admin: string) => {
-    const docRef = doc(db, `users/${admin}`);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDoc(user_ref(admin));
     
     if (docSnap.exists()) {
       setPseudonymAdmin(docSnap.data().pseudonym);
@@ -67,8 +69,7 @@ export const Members = ({ admin, moderators, users }: MembersType) => {
       moderators.sort();
       
       for (const moderator of (moderators)) {
-        const docRef = doc(db, `users/${moderator}`);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await getDoc(user_ref(moderator));
         if (docSnap.exists()) {
           moderatorArray.push({
             modId: moderator,
@@ -87,30 +88,29 @@ export const Members = ({ admin, moderators, users }: MembersType) => {
     !!moderators && moderatorsList();
   }, [moderators]);
   
-  const usersList = async () => {
+  const membersList = async () => {
     try {
-      const userArray: UsersType[] = [];
+      const memberArray: AnotherMembersType[] = [];
       users.sort();
       
       for (const user of (users)) {
-        const docRef = doc(db, `users/${user}`);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await getDoc(user_ref(user));
         if (docSnap.exists()) {
-          userArray.push({
+          memberArray.push({
             id: user,
-            pseudonymUsers: docSnap.data().pseudonym,
+            pseudonymMembers: docSnap.data().pseudonym,
             profilePhoto: docSnap.data().profilePhoto,
           });
         }
       }
-      setUsersArray(userArray);
+      setMembersArray(memberArray);
     } catch (e) {
       console.error(e);
     }
   };
   
   useEffect(() => {
-    !!users && usersList();
+    !!users && membersList();
   }, [users]);
   
   const removingModerators = async (name: GroupNameType, pseudonym: string) => {
@@ -126,7 +126,7 @@ export const Members = ({ admin, moderators, users }: MembersType) => {
   
   return <>
     <h2>Members list</h2>
-    <p className={styles.roles}>Admin</p>
+    <p className={styles.roles}>{data?.Members?.admin}</p>
     <Divider orientation='horizontal' />
     
     <div className={styles.usersButton}>
@@ -135,7 +135,7 @@ export const Members = ({ admin, moderators, users }: MembersType) => {
         <Link>{pseudonymAdmin}</Link>
       </NextLink>
     </div>
-    <p className={styles.roles}>Moderators</p>
+    <p className={styles.roles}>{data?.Members?.moderators}</p>
     <Divider orientation='horizontal' />
     
     {moderatorsArray.length > 0 ? moderatorsArray.map(({ modId, pseudonymModerators, profilePhoto }: ModeratorsType) =>
@@ -146,25 +146,25 @@ export const Members = ({ admin, moderators, users }: MembersType) => {
           </NextLink>
         {admin === currentUser && <IconButton
           type='submit'
-          aria-label='Removing a moderator'
+          aria-label={data?.Members?.modsAria}
           icon={<MinusIcon />}
           onClick={() => removingModerators(name, modId)}
         />}
-      </div>) : <p>No moderators</p>}
+      </div>) : <p>{data?.Members?.noMods}</p>}
     
-    <p className={styles.roles}>Users</p>
+    <p className={styles.roles}>{data?.Members?.anotherMembers}</p>
     <Divider orientation='horizontal' />
     
-    {usersArray.length > 0 ? usersArray.map(({ id, pseudonymUsers, profilePhoto }: UsersType) =>
+    {membersArray.length > 0 ? membersArray.map(({ id, pseudonymMembers, profilePhoto }: AnotherMembersType) =>
       <UsersButton
         key={id}
         id={id}
         name={name}
-        pseudonym={pseudonymUsers}
+        pseudonym={pseudonymMembers}
         logo={profilePhoto}
         admin={admin}
         moderatorsArray={moderatorsArray}
       />
-    ) : <p>No users</p>}
+    ) : <p>{data?.Members?.noMembers}</p>}
   </>;
 };
