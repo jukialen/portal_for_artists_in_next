@@ -1,14 +1,37 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
-import { auth } from '../../firebase';
-import { arrayRemove, arrayUnion, getDoc, getDocs, setDoc } from 'firebase/firestore';
-import { Button, Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { auth, storage } from '../../firebase';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { UploadTaskSnapshot } from '@firebase/storage';
+import { arrayRemove, arrayUnion, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import {
+  Button,
+  Divider,
+  IconButton,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Progress,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useDisclosure
+} from '@chakra-ui/react';
 
-import { favorite__groups, groupSection, user, usersInGroup } from 'references/referencesFirebase';
+import { groupSection, user, usersInGroup } from 'references/referencesFirebase';
+
+import { EventType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { AddingPost } from 'components/atoms/AddingPost/AddingPost';
 import { Members } from 'components/atoms/Members/Members';
@@ -16,8 +39,8 @@ import { DescriptionSection } from 'components/atoms/DescriptionSection/Descript
 import { Posts } from 'components/organisms/Posts/Posts';
 
 import styles from './index.module.scss';
-import group from 'public/group.svg';
 import { CheckIcon, SmallAddIcon } from '@chakra-ui/icons';
+import { MdCameraEnhance } from 'react-icons/md';
 
 export default function Groups() {
   const [admin, setAdmin] = useState('');
@@ -29,6 +52,14 @@ export default function Groups() {
   const [favorite, setFavorite] = useState(false);
   const [favoriteLength, setFavoriteLength] = useState(0);
   const [userId, setUserId] = useState<string | null>(null);
+  
+  const [required, setRequired] = useState(false);
+  const [logoUrl, setLogoUrl] = useState('');
+  const [newLogo, setNewLogo] = useState<File | null>(null);
+  const [valuesFields, setValuesFields] = useState<string>('');
+  const [progressUpload, setProgressUpload] = useState<number>(0);
+  
+  const { isOpen, onOpen, onClose } = useDisclosure();
   
   const { query, asPath } = useRouter();
   const { name } = query;
@@ -123,7 +154,7 @@ export default function Groups() {
       querySnapshot.forEach((doc) => {
         setAdmin(doc.data().admin);
         setDescription(doc.data().description);
-        setLogo(doc.data().logo);
+        setLogo(!!doc.data().logo ? doc.data().logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`);
         setModerators(doc.data().moderators);
         setUsers(doc.data().users);
       });
@@ -139,7 +170,6 @@ export default function Groups() {
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
   const activeColor = '#4F8DFF';
-  const image = '180';
   
   const addingToGroup = {
     background: activeColor,
@@ -151,18 +181,112 @@ export default function Groups() {
     color: activeColor,
   };
   
+  const changeFile = (e: EventType) => {
+    e.target.files?.[0] && setNewLogo(e.target.files[0]);
+  };
+  
+  const updateLogo = async () => {
+    try {
+      const fileRef = await ref(storage, `groups/${name}/${newLogo?.name}`);
+      !newLogo && setRequired(true);
+      const upload = uploadBytesResumable(fileRef, newLogo!);
+      
+      required && upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+          const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgressUpload(progress);
+          switch (snapshot.state) {
+            case 'running':
+              setValuesFields('Upload is running');
+              break;
+            case 'paused':
+              setValuesFields('Upload is paused');
+              break;
+          }
+        }, (e) => {
+          console.error(e);
+          setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+        },
+        async () => {
+          const groupLogoURL = await getDownloadURL(fileRef);
+          
+          setLogoUrl(groupLogoURL);
+          await updateDoc(usersInGroup(name!), { logo: groupLogoURL });
+          
+          setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+          setNewLogo(null);
+          
+          return null;
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  
   return <>
     <HeadCom path={asPath} content={`"${name}" group website`} />
     
     <article className={styles.mainContainer}>
       <div className={styles.logo}>
-        <Image
-          src={logo ? logo : group}
-          width={image}
-          height={image}
-          alt={description}
-        />
+        <img src={logo} alt={`${name} logo`} />
+        {currentUser === admin &&
+        <IconButton
+          aria-label='update group logo'
+          icon={<MdCameraEnhance />}
+          colorScheme='yellow'
+          className={styles.updateLogo}
+          onClick={onOpen}
+        />}
       </div>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent backgroundColor='#2D3748' color={selectedColor} className={styles.modal}>
+          <ModalHeader className={styles.header}>Update logo</ModalHeader>
+          <ModalCloseButton color={selectedColor} borderColor='transparent' fontSize='md' />
+          <ModalBody className={styles.modal}>
+            <Input
+              type='file'
+              name='logo'
+              id='logo'
+              padding='.35rem 1rem'
+              margin='.5rem auto 1.5rem'
+              onChange={changeFile}
+              className={styles.appropriateForm}
+            />
+            {!newLogo && required && <p>Required</p>}
+            {logoUrl &&
+            <img src={logoUrl} alt='preview new logo' width={160} height={160} style={{ margin: 16 }} />}
+            
+            {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) &&
+            <Progress
+              value={progressUpload}
+              colorScheme='green'
+              isAnimated
+              hasStripe
+              min={0}
+              max={100}
+              w={280}
+              bg='blue.400'
+              m='1.5rem auto'
+              size='md'
+            />
+            }
+            
+            {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='blue' borderColor='transparent' mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button
+              onClick={updateLogo}
+              colorScheme='yellow'
+              borderColor='transparent'
+            >
+              Update
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <h2 className={styles.nameGroup}>{name}</h2>
     </article>
     

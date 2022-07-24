@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { auth } from '../../../firebase';
 import { getDoc } from 'firebase/firestore';
 
@@ -10,8 +10,6 @@ import { DataType, GroupType } from 'types/global.types';
 import { Links } from 'components/atoms/Links/Links';
 
 import styles from './Groups.module.scss';
-import group from 'public/group.svg';
-import { useRouter } from 'next/router';
 
 export const Groups = ({ data }: DataType) => {
   const [groupsArray, setGroupsArray] = useState<GroupType[]>([]);
@@ -33,9 +31,7 @@ export const Groups = ({ data }: DataType) => {
           const favoriteList = await getDoc(usersInGroup(favorite));
       
           if (favoriteList.exists()) {
-            const logoUrl: string = favoriteList.data().logo || '/#';
-        
-            groupList.push({ nameGroup: favorite, logoUrl });
+            groupList.push({ nameGroup: favorite, logoUrl: favoriteList.data().logo === null ? favoriteList.data().logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`})
           }
         }
         setGroupsArray(groupList);
@@ -62,7 +58,7 @@ export const Groups = ({ data }: DataType) => {
       {
         groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl, description }) =>
           <div className={styles.groups__container} key={nameGroup}>
-            <Image src={!!logoUrl ? logoUrl : group} alt={description} width={38} height={38} />
+            <img src={logoUrl} alt={`${nameGroup} logo`} />
             <Links
               hrefLink={`/groups/${nameGroup}`}
               classLink={styles.groups__item}

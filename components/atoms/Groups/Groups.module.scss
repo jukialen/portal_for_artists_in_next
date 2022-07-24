@@ -1,4 +1,4 @@
-@use '../../../styles/variables' as *;
+@use 'styles/variables' as *;
 
 .groups {
   margin-bottom: 3rem;
@@ -20,6 +20,8 @@
     margin: .5rem auto;
 
     img {
+      width: 2.375rem;
+      height: 2.375rem;
       border-radius: .5rem;
     }
   }

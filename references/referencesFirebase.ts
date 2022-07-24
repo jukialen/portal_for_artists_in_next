@@ -62,8 +62,7 @@ export const userVideosRef = (user: string) => {
 export const groupRef = collection(db, 'groups');
 export const groupsQuery = (currentUser: string) => query(groupRef, where('admin', '==', currentUser),
   orderBy('name'));
-
-export const groupsInAside = query(groupRef, limit(5), orderBy('name'));
+query(groupRef, limit(5), orderBy('name'));
 
 export const usersInGroup = (name: GroupNameType) => doc(db, `groups/${name}`);
 
@@ -76,12 +75,6 @@ export const posts = (name: GroupNameType) => {
   return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name),
     orderBy('date', 'desc'));
 };
-
-export const postShared = (name: GroupNameType, title: string) => {
-  return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name),
-    where('title', '==', title), orderBy('date', 'desc'));
-};
-
 export const likePost = (name: GroupNameType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
 
 export const deletingPost = (name: GroupNameType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
