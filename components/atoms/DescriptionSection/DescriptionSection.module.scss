@@ -1,28 +1,31 @@
 @use 'styles/variables' as *;
 
-.container__description {
+.container {
 	width: 90%;
 	margin: 1rem auto;
 
-	.description__title, .description {
+	.title {
 		width: 90%;
 		margin: 1rem;
 		text-align: left;
 	}
 
-	.desField {
+	.field {
 		display: grid;
-		grid-template-columns: 1fr 3rem;
+		grid-template-columns: 1fr 4rem;
 		margin: 1rem auto;
 
-		.description {
+		.items {
 			margin: 1rem 1rem 2rem;
 			width: inherit;
+			text-align: left;
 		}
+
 		.form {
 			display: flex;
 			flex-direction: column;
-			width: 85%;
+			width: 95%;
+			max-width: 30rem;
 			margin: 1rem;
 			justify-self: center;
 			align-items: center;
@@ -41,25 +44,41 @@
 				background-color: $third__color;
 				border: .1rem solid $third__color;
 				margin-bottom: 2rem;
+				border-radius: 0.5rem;
 			}
 		}
 
-
-
-		button {
-			width: fit-content;
-			margin-top: 1rem;
+		.changeButton {
+			width: 2.8rem;
+			height: 2.8rem;
+			margin: 1rem auto;
 			background: $primary__color;
 			border: .1rem solid $primary__color;
+			border-radius: .75rem;
 			color: black;
 			cursor: pointer;
+
+			svg {
+				font-size: 1.3rem;
+			}
 		}
 	}
 
-
-
 	.regulations__item {
 		margin: 2rem 1rem;
+		text-align: left;
+
+		&:first-child {
+			margin: .5rem 1rem;
+		}
+
+		&:last-child {
+			margin: 2rem 1rem 0;
+		}
+	}
+
+	.regulations__no__item {
+		margin: .5rem 1rem;
 		text-align: left;
 	}
 }

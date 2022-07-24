@@ -201,7 +201,7 @@
     "noPosts": "追加がありません"
   },
   "Members": {
-    "admin": "Admin",
+    "admin": "アドミン",
     "moderators": "モデレータ",
     "modsAria": "モデレータがリムーブ",
     "noMods": "モデレータがいません",
@@ -225,7 +225,10 @@
     "newComButton": "コメントが付け加えます",
     "noComments": "コメントがありません"
   },
-  "Regulations": "レギュレーション",
+  "Regulations": {
+    "regulation": "レギュレーション",
+    "noRegulation": "レギュレーションがありません。"
+  },
   "ZeroFiles": {
     "drawings": "描画が見つけあせん。",
     "photos": "写真が見つけあせん。",

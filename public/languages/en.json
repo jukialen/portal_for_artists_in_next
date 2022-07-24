@@ -225,7 +225,10 @@
     "newComButton": "Adding a comment",
     "noComments": "No comments"
   },
-  "Regulations": "Regulations",
+  "Regulations": {
+   "regulation": "regulation",
+    "noRegulation": "No regulation"
+  },
   "ZeroFiles": {
     "drawings": "No your drawings.",
     "photos": "No your photos.",
