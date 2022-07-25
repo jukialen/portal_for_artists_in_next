@@ -3,32 +3,88 @@
 .profile {
   justify-items: center;
   display: grid;
-  margin: 0 auto;
-  font-size: 1.8rem;
-}
+  margin: 2rem auto 0;
+  font-size: 1.33rem;
 
-.photo__profile {
-  width: 10rem;
-  height: 10rem;
-  position: relative;
-  background-color: $secondary__color;
-  margin: 2rem;
+  .photo__profile {
+    width: 10rem;
+    height: 10rem;
+    position: relative;
+    background-color: $secondary__color;
+    margin: 2rem;
+    border: 0.05rem solid transparent;
+    border-radius: 2rem;
+
+    img {
+      border: 0.05rem solid transparent;
+      border-radius: 2rem;
+    }
+  }
+
+  .title {
+    margin: .5rem auto;
+    align-self: flex-start;
+  }
+
+  .input,
+  .description {
+    width: 90vw;
+    max-width: 23rem;
+    margin: 1rem auto;
+    padding: .3rem .7rem;
+    border-color: $secondary__color;
+    color: $third__color;
+  }
+
+  .publicContainer {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 1rem auto 0;
+
+    .input {
+      margin: 0 auto .5rem;
+      text-align: center;
+    }
+
+    .description {
+      line-height: 1.6;
+      font-size: 1rem;
+      text-align: left;
+    }
+  }
+
+  @media (min-width: 600px) {
+    .publicContainer {
+      grid-template-columns: 8rem 1fr;
+
+      .input {
+        margin: .3rem .5rem;
+        text-align: left;
+      }
+
+      .description {
+        margin: .3rem 1rem;
+      }
+    }
+  }
 }
 
 .mar__button {
+  width: 8.5rem;
   height: 2.25rem;
   font-size: 1rem;
   margin: 1rem auto;
 }
 
-  .edit {
-    background: $third__color;
-    border-color: $third__color;
-  }
-  .cancel {
-    background: $dark__color__light__back;
-    border-color: $dark__color__light__back;
-  }
+.edit {
+  background: $third__color;
+  border-color: $third__color;
+}
+
+.cancel {
+  background: $primary__color;
+  border-color: $another__color;
+}
 
 .form {
   display: none;
@@ -38,43 +94,40 @@
   display: grid;
 }
 
-.pseudonym__name,
-.about__me, .new__profile__photo {
-  margin: 1.5rem auto;
-  display: flex;
-  flex-flow: column;
-
-  .title {
-    margin: .5rem auto;
-    align-self: center;
-  }
-
-  .input,
-  .description {
-    margin: 1rem auto;
-    font-size: 1rem;
-  }
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin: 1rem auto 0;
+  justify-items: flex-start;
 
   .input {
-    width: 14rem;
+    text-align: left;
   }
 
   .description {
-    width: 27rem;
-    max-width: 84vw;
-    line-height: 1.6;
     text-align: left;
+    line-height: 1.6;
+  }
+}
+
+@media (min-width: 600px) {
+  .container {
+    grid-template-columns: 12rem 1fr;
+
+    .input {
+      margin: auto 1rem;
+    }
   }
 }
 
 .button {
-  width: 7rem;
+  width: 8.5rem;
   font-size: 1rem;
-  margin: auto;
+  margin: 1rem auto;
 }
 
 @media (min-width: 1440px) {
   .profile {
-    margin: 8rem auto;
+    margin: 2rem auto;
   }
 }

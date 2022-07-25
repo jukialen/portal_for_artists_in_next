@@ -5,8 +5,9 @@ import { getAuth, updateProfile } from 'firebase/auth';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { UploadTaskSnapshot } from '@firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
-import { Field, Form, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { Input, Progress, Textarea } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { DataType, EventType, FormType } from 'types/global.types';
@@ -18,8 +19,6 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './ProfileAccount.module.scss';
 import defaultAvatar from 'public/defaultAvatar.png';
-import { Progress } from '@chakra-ui/react';
-
 
 type ProfileType = {
   newPseudonym: string,
@@ -52,7 +51,7 @@ export const ProfileAccount = ({ data }: DataType) => {
     newDescription: SchemaValidation().description,
   });
   
-  const handleChange = async (e: EventType) => {
+  const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
   
@@ -120,11 +119,11 @@ export const ProfileAccount = ({ data }: DataType) => {
               priority
             />
           </div>
-          <div className={styles.pseudonym__name}>
+          <div className={styles.publicContainer}>
             <label className={styles.title} htmlFor='pseudonym__name'>{data?.AnotherForm?.pseudonym}</label>
             <div id='pseudonym__name' className={styles.input}>{pseudonym}</div>
           </div>
-          <div className={styles.about__me}>
+          <div className={styles.publicContainer}>
             <label className={styles.title} htmlFor='about__me'>{data?.Account?.profile?.aboutMe}</label>
             <div id='about__me' className={styles.description}>{description}</div>
           </div>
@@ -136,16 +135,17 @@ export const ProfileAccount = ({ data }: DataType) => {
         validationSchema={schemaNew}
         onSubmit={updateProfileData}
       >
-        <Form>
-          <div className={styles.new__profile__photo}>
+          {({ values, handleChange }) => (
+            <Form>
+          <div className={styles.container}>
             <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.title}>
               {data?.AnotherForm?.profilePhoto}
             </label>
-            <Field
+            <Input
               name='profilePhoto'
               type='file'
               accept='.jpg, .jpeg, .png, .webp, .avif'
-              onChange={handleChange}
+              onChange={handleChangeFile}
               placeholder={data?.AnotherForm?.profilePhoto}
               className={styles.input}
             />
@@ -153,28 +153,30 @@ export const ProfileAccount = ({ data }: DataType) => {
   
           <FormError nameError='profilePhoto' />
           
-          <div className={styles.pseudonym__name}>
+          <div className={styles.container}>
             <label className={styles.title} htmlFor='newPseudonym'>{data?.AnotherForm?.pseudonym}</label>
-            <Field
+            <Input
               id='newPseudonym'
-              className={styles.input}
               type='text'
               name='newPseudonym'
+              value={values.newPseudonym}
+              onChange={handleChange}
               placeholder={data?.AnotherForm?.pseudonym}
+              className={styles.input}
             />
           </div>
           
           <FormError nameError='newPseudonym' />
           
-          <div className={styles.about__me}>
+          <div className={styles.container}>
             <label className={styles.title} htmlFor='newDescription'>{data?.Account?.profile?.aboutMe}</label>
-            <Field
-              as='textarea'
+            <Textarea
               id='newDescription'
-              className={styles.description}
-              type='text'
               name='newDescription'
+              value={values.newDescription}
+              onChange={handleChange}
               placeholder={data?.Account?.profile?.aboutMe}
+              className={styles.description}
             />
           </div>
           
@@ -203,6 +205,7 @@ export const ProfileAccount = ({ data }: DataType) => {
   
           {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
         </Form>
+            )}
       </Formik>)}
       <button
         className={`button ${form ? styles.cancel : styles.edit} ${styles.mar__button}`}

@@ -1,4 +1,5 @@
 import { auth } from '../../firebase';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
@@ -12,11 +13,9 @@ import { PhotosGallery } from 'components/organisms/PhotosGallery/PhotosGallery'
 import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
 import { ProfileAccount } from 'components/organisms/ProfileAccount/ProfileAccount';
 import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
+import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
 
 import styles from './index.module.scss';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-
-import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
 
 export default function Account() {
   const user = auth.currentUser;
