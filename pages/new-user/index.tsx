@@ -5,8 +5,9 @@ import { updateProfile } from 'firebase/auth';
 import { UploadTaskSnapshot } from '@firebase/storage';
 import { doc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { Field, Form, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { Input, Progress } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { EventType } from 'types/global.types';
@@ -22,7 +23,6 @@ import { FormError } from 'components/molecules/FormError/FormError';
 import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from './index.module.scss';
-import { Progress } from '@chakra-ui/react';
 
 type FirstDataType = {
   username: string,
@@ -51,7 +51,7 @@ export default function NewUser() {
     pseudonym: SchemaValidation().pseudonym,
   });
   
-  const handleChange = async (e: EventType) => {
+  const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
   
@@ -108,40 +108,38 @@ export default function NewUser() {
       validationSchema={schemaValidation}
       onSubmit={sendingData}
     >
-      <Form className={styles.first__data}>
+      {({ values, handleChange }) => (
+        <Form className={styles.first__data}>
         <h2 className={styles.title}>{data?.NewUser?.title}</h2>
   
-        <FormField
-          titleField={data?.NewUser?.name}
-          nameField='username'
-          typeField='text'
-          placeholderField={data?.NewUser?.name}
+        <Input
+          name='username'
+          type='text'
+          value={values.username}
+          onChange={handleChange}
+          placeholder={data?.NewUser?.name}
         />
         
         <FormError nameError='username' />
         
-        <FormField
-          titleField={data?.AnotherForm?.pseudonym}
-          nameField='pseudonym'
-          typeField='text'
-          placeholderField={data?.AnotherForm?.pseudonym}
+        <Input
+          name='pseudonym'
+          type='text'
+          value={values.pseudonym}
+          onChange={handleChange}
+          placeholder={data?.AnotherForm?.pseudonym}
         />
         
         <FormError nameError='pseudonym' />
   
-        <div className={styles.form__field}>
-          <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.label}>
-            {data?.AnotherForm?.profilePhoto}
-          </label>
-          <Field
+          <Input
             name='profilePhoto'
             type='file'
             accept='.jpg, .jpeg, .png, .webp, .avif'
-            onChange={handleChange}
+            onChange={handleChangeFile}
             placeholder={data?.AnotherForm?.profilePhoto}
             className={styles.input}
           />
-        </div>
         
         <FormError nameError='profilePhoto' />
         
@@ -170,6 +168,7 @@ export default function NewUser() {
   
         {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
       </Form>
+        )}
     </Formik>
   </>
 ) : null;
