@@ -1,21 +1,42 @@
+@use 'styles/variables' as *;
+
 .forgotten {
-  height: 100vh;
+  height: 75vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  .title {
-    margin-top: 3rem;
+  .borderContainer {
+    margin: auto;
+    padding: 4rem 9% 3rem;
+    box-shadow: 0 0 1.4rem $third__color;
+    border-radius: 2rem;
+    width: 30rem;
+    max-width: 98vw;
+
+    .title {
+      font-size: 1.6rem;
+    }
+
+    .subtitle {
+      margin: 2rem auto;
+      font-size: 1.3rem;
+    }
+
+    .inputForm {
+      display: block;
+      width: 17rem;
+      max-width: 90%;
+      margin: 1rem auto 1.5rem;
+      border-color: $third__color;
+      color: $dark__background__light__color;
+    }
+
+    .submit__button {
+      width: 11rem;
+      margin: 1rem auto;
+    }
   }
 
-  .subtitle {
-    margin: 2rem auto;
-    font-size: 1.3rem;
-  }
-
-  .submit__button {
-    width: 11rem;
-    margin: 1rem auto;
-  }
 }

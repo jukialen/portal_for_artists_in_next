@@ -9,13 +9,13 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { DataType, FormType, UserDataType } from 'types/global.types';
 
 import { FormError } from 'components/molecules/FormError/FormError';
-import { FormField } from 'components/molecules/FormField/FormField';
 import { Providers } from 'components/molecules/Providers/Providers';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import { NavFormContext } from 'providers/NavFormProvider';
 
 import styles from '../NavForm.module.scss';
+import { Divider, Input } from '@chakra-ui/react';
 
 const initialValues = {
   email: '', password: '',
@@ -62,24 +62,30 @@ export const Create = ({ data }: DataType) => {
         validationSchema={schemaValidation}
         onSubmit={submitAccountData}
       >
-        <Form>
+        {({ values, handleChange }) => (
+          <Form>
           <h2 className={styles.title}>{data?.NavForm?.titleOfRegistration}</h2>
-          
-          <FormField
-            titleField={data?.NavForm?.email}
-            nameField='email'
-            typeField='email'
-            placeholderField={data?.NavForm?.email}
-          />
-          
-          <FormError nameError='email' />
-          
-          <FormField
-            titleField={data?.NavForm?.password}
-            nameField='password'
-            typeField='password'
-            placeholderField={data?.NavForm?.password}
-          />
+  
+            <Input
+              name='email'
+              type='email'
+              value={values.email}
+              onChange={handleChange}
+              placeholder={data?.NavForm?.email}
+              className={styles.inputForm}
+              // colorScheme='blue'
+            />
+  
+            <FormError nameError='email' />
+  
+            <Input
+              name='password'
+              type='password'
+              value={values.password}
+              onChange={handleChange}
+              placeholder={data?.NavForm?.password}
+              className={styles.inputForm}
+            />
           
           <FormError nameError='password' />
           
@@ -93,8 +99,9 @@ export const Create = ({ data }: DataType) => {
   
           {!!valuesFields && <Alerts valueFields={valuesFields} />}
         </Form>
+          )}
       </Formik>
-      <p className={styles.separator}>__________________</p>
+      <Divider width='90%' />
   
       <h4 className={styles.provider__title}>{data?.NavForm?.providerTitleRegistration}</h4>
   

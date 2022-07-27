@@ -17,6 +17,9 @@ import friends from 'public/friends.png';
 import categories from 'public/categories.png'
 import groups from 'public/groups.png';
 import sign_in from 'public/signin.jpg';
+import diary from 'public/diary.jpg';
+import artist from 'public/artist.jpg';
+import searchingService from 'public/searching.jpg';
 
 export default function Home() {
   const { isUser } = useContext(StatusLoginContext);
@@ -34,10 +37,10 @@ export default function Home() {
   
       const sections = document.querySelectorAll('section');
       sections.forEach((section: HTMLElement) => {
-        gsap.fromTo(section.children, { y: '+=200', x: '-=200', opacity: 0}, { y: 0, x: 0, opacity: 1, stagger: 0.2, duration: 1.2, ease: 'easeInOut', scrollTrigger: {
+        gsap.fromTo(section.children, { y: '+=200', opacity: 0}, { y: 0, opacity: 1, stagger: 0.2, duration: 1.2, ease: 'easeInOut', scrollTrigger: {
             trigger: section,
             start: 'top 140%',
-            end: 'button 10%',
+            end: 'button 40%',
             scrub: 3
           }});
       });
@@ -54,21 +57,22 @@ export default function Home() {
       <HeadCom path={asPath} content='Main site.' />
       
       <div className={styles.group__element}>
-        <h1 className={styles.title}>{data?.Main?.title}</h1>
+        <h2 className={styles.title}>{data?.Main?.title}</h2>
   
-        <h3 className={styles.h3}>
-          {data?.Main?.firstQuestion}
-          <br />
-          <br />
-          {data?.Main?.secondQuestion}
-        </h3>
+        <div className={styles.question}>
+          <h2>{data?.Main?.firstQuestion}</h2>
+          <Image src={searchingService} width={450} height={image} />
+        </div>
+        
+        <div className={styles.question}>
+          <h2>{data?.Main?.secondQuestion}</h2>
+          <Image src={diary} width={450} height={image}  />
+        </div>
   
-        <h2 className={styles.h2}>
-          {data?.Main?.firstAnswer}
-          <br />
-          <br />
-          {data?.Main?.secondAnswer}
-        </h2>
+        <div className={styles.question}>
+          <h3>{data?.Main?.firstAnswer} {data?.Main?.secondAnswer}</h3>
+          <Image src={artist} width={450} height={image} />
+        </div>
       </div>
   
       <section className={styles.main__container}>
@@ -83,7 +87,8 @@ export default function Home() {
     
         <Image
           src={sign_in}
-          width={image}
+          width={450}
+          height={image}
           className={styles.image}
           alt='picture.jpg'
           priority
@@ -104,7 +109,8 @@ export default function Home() {
     
         <Image
           src={sign_in}
-          width={image}
+          width={450}
+          height={image}
           className={styles.image}
           alt='picture.jpg'
           priority
@@ -125,7 +131,8 @@ export default function Home() {
     
         <Image
           src={sign_in}
-          width={image}
+          width={450}
+          height={image}
           className={styles.image}
           alt='sign in photo file'
           priority
@@ -146,7 +153,8 @@ export default function Home() {
     
         <Image
           src={sign_in}
-          width={image}
+          width={450}
+          height={image}
           className={styles.image}
           alt='picture.jpg'
           priority
@@ -167,7 +175,8 @@ export default function Home() {
     
         <Image
           src={sign_in}
-          width={image}
+          width={450}
+          height={image}
           className={styles.image}
           alt='sign in photo file'
           priority
@@ -187,20 +196,24 @@ export default function Home() {
         </div>
     
         <div className={styles.image}>
-          <Image
-            src={light_mode}
-            width={image}
-            alt='picture.jpg'
-            priority
-            quality={100}
-          />
-          <Image
-            src={dark_mode}
-            width={image}
-            alt='dark mode photo file'
-            priority
-            quality={100}
-          />
+          <div className={styles.modeImage}>
+            <Image
+              src={light_mode}
+              width={image / 1.5}
+              height={image}
+              alt='picture.jpg'
+              priority
+              quality={100}
+            />
+            <Image
+              src={dark_mode}
+              width={image / 1.5}
+              height={image}
+              alt='dark mode photo file'
+              priority
+              quality={100}
+            />
+          </div>
         </div>
       </section>
   
@@ -217,7 +230,8 @@ export default function Home() {
     
         <Image
           src={categories}
-          width={image}
+          width={450}
+          height={image}
           className={styles.image}
           alt='categories photo file'
           priority
@@ -238,7 +252,8 @@ export default function Home() {
     
         <Image
           src={groups}
-          width={image}
+          width={450}
+          height={image}
           className={styles.image}
           alt='groups photo file'
           priority
@@ -259,7 +274,8 @@ export default function Home() {
     
         <Image
           src={friends}
-          width={image}
+          width={450}
+          height={image}
           className={styles.image}
           alt='friends photo file'
           priority

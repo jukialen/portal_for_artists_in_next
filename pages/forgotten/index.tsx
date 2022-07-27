@@ -11,10 +11,10 @@ import { useHookSWR } from 'hooks/useHookSWR';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
-import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './index.module.scss';
+import { Divider, Input } from '@chakra-ui/react';
 
 const initialValues = {
   email: '',
@@ -50,31 +50,39 @@ export default function Forgotten() {
       validationSchema={schemaValidation}
       onSubmit={reset__password}
     >
+    {({ values, handleChange }) => (
       <Form className={styles.forgotten}>
         <HeadCom path={asPath} content='The site for resetting password.' />
         
-        <h2 className={styles.title}>{data?.Forgotten?.title}</h2>
-        <h3 className={styles.subtitle}>{data?.Forgotten?.subtitle}</h3>
-        
-        <FormField
-          titleField={`${useHookSWR()?.NavForm?.email}:`}
-          nameField='email'
-          typeField='email'
-          placeholderField={useHookSWR()?.NavForm?.email}
-        />
-        
-        <FormError nameError='email' />
-        
-        <button
-          type='submit'
-          className={`button ${styles.submit__button}`}
-          aria-label={data?.Forgotten?.buttonAria}
-        >
-          {data?.AnotherForm?.send}
-        </button>
+        <div className={styles.borderContainer}>
+          <h2 className={styles.title}>{data?.Forgotten?.title}</h2>
+          <Divider />
+          <h3 className={styles.subtitle}>{data?.Forgotten?.subtitle}</h3>
   
-        {!!valuesFields && <Alerts valueFields={valuesFields} />}
-      
+  
+          <Input
+            name='email'
+            type='email'
+            value={values.email}
+            onChange={handleChange}
+            className={styles.inputForm}
+            placeholder={data?.NavForm?.email}
+          />
+  
+          <FormError nameError='email' />
+  
+          <button
+            type='submit'
+            className={`button ${styles.submit__button}`}
+            aria-label={data?.Forgotten?.buttonAria}
+          >
+            {data?.AnotherForm?.send}
+          </button>
+  
+          {!!valuesFields && <Alerts valueFields={valuesFields} />}
+
+        </div>
       </Form>
+      )}
     </Formik>
 }

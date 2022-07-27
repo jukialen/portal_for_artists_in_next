@@ -7,7 +7,7 @@
 	max-width: 23rem;
 	top: 2.8rem;
 	right: 0;
-	color: #000;
+	color: $dark__background__light__color;
 	background-color: $primary__color;
 	border-bottom: 0.5rem inset $secondary__color;
 	border-left: 0.5rem inset $secondary__color;
@@ -15,31 +15,44 @@
 	z-index: 999;
 
 	.title {
-		margin: 3rem auto 2rem;
+		margin: 4rem auto 3rem;
+		text-align: center;
+	}
+
+	.inputForm {
+		display: block;
+		width: 17rem;
+		max-width: 90%;
+		margin: 1.5rem auto;
+		border-color: $third__color;
+		color: $dark__background__light__color;
+
+		&:hover {
+			border-color: $third__color;
+			opacity: .7;
+		}
+
+		&::placeholder {
+			color: $dark__background__light__color;
+		}
 	}
 
 	.submit__button {
 		width: 10rem;
-		margin: 1rem auto;
-	}
-
-	.error {
-		margin: .2rem auto;
-		font-size: 1.1rem;
-		line-height: 1.2;
-		width: 16rem;
+		margin: 2rem auto 1rem;
+		color: $dark__background__light__color;
 	}
 
 	.forgotten {
-		margin: 3rem auto 0;
+		margin: 1.5rem auto 0;
 		background: none;
-	}
-}
+		border-color: transparent;
+		color: $dark__background__light__color;
 
-.separator {
-	margin: 0 auto 2rem;
-	font-size: 1.5rem;
-	line-height: 1.2;
+		&:hover {
+		text-decoration: underline;
+		}
+	}
 }
 
 .provider__title {
@@ -47,7 +60,6 @@
 	margin: 0.5rem auto;
 	font-size: 1.4rem;
 }
-
 
 .create__account {
 	display: none;
@@ -58,7 +70,7 @@
 }
 
 .acceptInfo {
-	margin: 1rem 2rem 2rem;
+	margin: 0 2rem 2rem;
 }
 
 .form__menu__active {

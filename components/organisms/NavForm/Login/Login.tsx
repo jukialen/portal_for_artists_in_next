@@ -8,7 +8,6 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { DataType, FormType, UserDataType } from 'types/global.types';
 
-import { FormField } from 'components/molecules/FormField/FormField';
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Providers } from 'components/molecules/Providers/Providers';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -18,6 +17,7 @@ import { ShowMenuContext } from 'providers/ShowMenuProvider';
 import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from '../NavForm.module.scss';
+import { Divider, Input } from '@chakra-ui/react';
 
 const initialValues = {
   email: '',
@@ -77,23 +77,28 @@ export const Login = ({ data }: DataType) => {
         validationSchema={schemaValidation}
         onSubmit={submitAccountData}
       >
-        <Form>
+        {({ values, handleChange }) => (
+          <Form>
           <h2 className={styles.title}>{data?.NavForm?.titleOfLogin}</h2>
           
-          <FormField
-            titleField={data?.NavForm?.email}
-            nameField='email'
-            typeField='email'
-            placeholderField={data?.NavForm?.email}
+          <Input
+            name='email'
+            type='email'
+            value={values.email}
+            onChange={handleChange}
+            placeholder={data?.NavForm?.email}
+            className={styles.inputForm}
           />
           
           <FormError nameError='email' />
           
-          <FormField
-            titleField={data?.NavForm?.password}
-            nameField='password'
-            typeField='password'
-            placeholderField={data?.NavForm?.password}
+          <Input
+            name='password'
+            type='password'
+            value={values.password}
+            onChange={handleChange}
+            placeholder={data?.NavForm?.password}
+            className={styles.inputForm}
           />
           
           <FormError nameError='password' />
@@ -112,9 +117,10 @@ export const Login = ({ data }: DataType) => {
             I forgot my password
           </button>
         </Form>
+          )}
       </Formik>
       
-      <p className={styles.separator}>__________________</p>
+      <Divider width='90%' />
       
       <h4 className={styles.provider__title}>{data?.NavForm?.providerTitleLogin}</h4>
       

@@ -1,6 +1,9 @@
+@use 'styles/variables' as *;
+
 .error {
-	margin: .2rem auto;
+	margin: 0 auto;
 	font-size: 1.1rem;
 	line-height: 1.2;
 	width: 16rem;
+	color: $required__color;
 }

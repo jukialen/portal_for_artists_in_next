@@ -26,7 +26,10 @@ export const Layout: FC = ({ children }) => {
       <div className={`whole__page ${isMode ? 'dark' : ''}`}>
         <ShowMenuProvider>
           {isUser ?
-            <Header titleFirstNav={data?.Nav?.signOut} titleSecondNav={data?.Nav?.account} logoLink='/app' />
+            <>
+              <Header titleFirstNav={data?.Nav?.signOut} titleSecondNav={data?.Nav?.account} logoLink='/app' />
+              <Aside />
+            </>
             : (
               <NavFormProvider>
                 <Header titleFirstNav={data?.Nav?.signIn} titleSecondNav={data?.Nav?.signUp} logoLink='/' />
@@ -36,7 +39,6 @@ export const Layout: FC = ({ children }) => {
             )
           }
         </ShowMenuProvider>
-        <Aside />
         <main className={`main__container ${isMode ? 'main__container--dark' : ''}`}>
           <section className='workspace'>
             { children }

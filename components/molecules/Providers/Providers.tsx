@@ -2,13 +2,13 @@ import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { GithubAuthProvider, GoogleAuthProvider, OAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, db } from '../../../firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 import { NavFormContext } from 'providers/NavFormProvider';
 import { StatusLoginContext } from 'providers/StatusLogin';
 
 import { GithubOutlined, GoogleOutlined, YahooFilled } from '@ant-design/icons';
 import styles from './Providers.module.scss';
-import { doc, setDoc } from 'firebase/firestore';
 
 export const Providers = () => {
   const { push } = useRouter();
