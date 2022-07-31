@@ -50,22 +50,20 @@ export default function Forgotten() {
       validationSchema={schemaValidation}
       onSubmit={reset__password}
     >
-    {({ values, handleChange }) => (
+    {({ values, handleChange, errors, touched }) => (
       <Form className={styles.forgotten}>
         <HeadCom path={asPath} content='The site for resetting password.' />
-        
+    
         <div className={styles.borderContainer}>
           <h2 className={styles.title}>{data?.Forgotten?.title}</h2>
           <Divider />
           <h3 className={styles.subtitle}>{data?.Forgotten?.subtitle}</h3>
-  
-  
           <Input
             name='email'
             type='email'
             value={values.email}
             onChange={handleChange}
-            className={styles.inputForm}
+            className={touched.email && !!errors.email ? styles.inputForm__error : styles.inputForm}
             placeholder={data?.NavForm?.email}
           />
   

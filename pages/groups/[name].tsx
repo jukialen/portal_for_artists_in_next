@@ -33,9 +33,9 @@ import { useHookSWR } from 'hooks/useHookSWR';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
-import { AddingPost } from 'components/atoms/AddingPost/AddingPost';
+import { AddingPost } from 'components/molecules/AddingPost/AddingPost';
 import { Members } from 'components/atoms/Members/Members';
-import { DescriptionSection } from 'components/atoms/DescriptionSection/DescriptionSection';
+import { DescriptionSection } from 'components/molecules/DescriptionSection/DescriptionSection';
 import { Posts } from 'components/organisms/Posts/Posts';
 
 import styles from './index.module.scss';
@@ -189,8 +189,9 @@ export default function Groups() {
     try {
       const fileRef = await ref(storage, `groups/${name}/${newLogo?.name}`);
       !newLogo && setRequired(true);
+  
       const upload = uploadBytesResumable(fileRef, newLogo!);
-      
+  
       required && upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
           const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setProgressUpload(progress);
@@ -214,7 +215,7 @@ export default function Groups() {
           
           setValuesFields(`${data?.AnotherForm?.uploadFile}`);
           setNewLogo(null);
-          
+          setRequired(false);
           return null;
         });
     } catch (e) {
@@ -251,11 +252,21 @@ export default function Groups() {
               margin='.5rem auto 1.5rem'
               onChange={changeFile}
               className={styles.appropriateForm}
+              required={required}
             />
-            {!newLogo && required && <p>Required</p>}
+  
+            <p className={styles.error}>
+              {!newLogo && required && data?.NavForm?.validateRequired}
+            </p>
             {logoUrl &&
-            <img src={logoUrl} alt='preview new logo' width={160} height={160} style={{ margin: 16 }} />}
-            
+            <img
+              src={logoUrl}
+              alt='preview new logo'
+              width='14rem'
+              height='14rem'
+              style={{ margin: '1rem auto', display: 'flex', justifyContent: 'center' }}
+            />}
+  
             {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) &&
             <Progress
               value={progressUpload}

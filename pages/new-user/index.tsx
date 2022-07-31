@@ -24,8 +24,8 @@ import { StatusLoginContext } from 'providers/StatusLogin';
 import styles from './index.module.scss';
 
 type FirstDataType = {
-  username: string,
-  pseudonym: string,
+  username: string;
+  pseudonym: string;
 }
 
 export default function NewUser() {
@@ -42,7 +42,7 @@ export default function NewUser() {
   
   const initialValues = {
     username: '',
-    pseudonym: ''
+    pseudonym: '',
   };
   
   const schemaValidation = Yup.object({
@@ -56,43 +56,58 @@ export default function NewUser() {
   
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
-      const fileRef = await ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
       
-      const upload = uploadBytesResumable(fileRef, photo!);
-      
-      upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
-          const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setProgressUpload(progress);
-          switch (snapshot.state) {
-            case 'running':
-              setValuesFields('Upload is running');
-              break;
-            case 'paused':
-              setValuesFields('Upload is paused');
-              break;
-          }
-        }, (e) => {
-          console.error(e);
-          setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
-        },
-        async () => {
-          const photoURL = await getDownloadURL(fileRef);
+      if(!!photo) {
+        const fileRef = await ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
   
-          await setDoc(doc(db, 'users', `${user?.uid}`), {
-            pseudonym, profilePhoto: photoURL
+        const upload = uploadBytesResumable(fileRef, photo!);
+  
+        upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+            const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setProgressUpload(progress);
+            switch (snapshot.state) {
+              case 'running':
+                setValuesFields('Upload is running');
+                break;
+              case 'paused':
+                setValuesFields('Upload is paused');
+                break;
+            }
+          }, (e) => {
+            console.error(e);
+            setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+          },
+          async () => {
+            const photoURL = await getDownloadURL(fileRef);
+      
+            await setDoc(doc(db, `users/${user?.uid}`), {
+              pseudonym, profilePhoto: photoURL
+            });
+      
+            setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+            setPhoto(null);
+      
+            await updateProfile(user, {
+              displayName: username, photoURL: photoURL
+            });
+      
+            setValuesFields(data?.NewUser?.successSending);
+            await showUser();
+            return push('/app');
           });
-      
-          setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-          setPhoto(null);
-  
-          await updateProfile(user, {
-            displayName: username, photoURL: photoURL
-          });
-  
-          setValuesFields(data?.NewUSer?.successSending);
-          await showUser();
-          return push('/app');
+      } else {
+        await setDoc(doc(db, `users/${user?.uid}`), {
+          pseudonym, profilePhoto: null
         });
+  
+        await updateProfile(user, {
+          displayName: username, photoURL: null
+        });
+  
+        setValuesFields(data?.NewUser?.successSending);
+        await showUser();
+        return push('/app');
+      }
     } catch (error) {
       setValuesFields(data?.NewUser?.errorSending)
     }
@@ -107,27 +122,29 @@ export default function NewUser() {
       validationSchema={schemaValidation}
       onSubmit={sendingData}
     >
-      {({ values, handleChange }) => (
+      {({ values, handleChange, errors, touched }) => (
         <Form className={styles.first__data}>
-        <h2 className={styles.title}>{data?.NewUser?.title}</h2>
-  
-        <Input
-          name='username'
-          type='text'
-          value={values.username}
-          onChange={handleChange}
-          placeholder={data?.NewUser?.name}
-        />
-        
-        <FormError nameError='username' />
-        
-        <Input
-          name='pseudonym'
-          type='text'
-          value={values.pseudonym}
-          onChange={handleChange}
-          placeholder={data?.AnotherForm?.pseudonym}
-        />
+          <h2 className={styles.title}>{data?.NewUser?.title}</h2>
+    
+          <Input
+            name='username'
+            type='text'
+            value={values.username}
+            onChange={handleChange}
+            placeholder={data?.NewUser?.name}
+            className={touched.username && !!errors.username ? styles.inputForm__error : styles.inputForm}
+          />
+    
+          <FormError nameError='username' />
+    
+          <Input
+            name='pseudonym'
+            type='text'
+            value={values.pseudonym}
+            onChange={handleChange}
+            placeholder={data?.AnotherForm?.pseudonym}
+            className={touched.pseudonym && !!errors.pseudonym ? styles.inputForm__error : styles.inputForm}
+          />
         
         <FormError nameError='pseudonym' />
   
@@ -137,7 +154,7 @@ export default function NewUser() {
             accept='.jpg, .jpeg, .png, .webp, .avif'
             onChange={handleChangeFile}
             placeholder={data?.AnotherForm?.profilePhoto}
-            className={styles.input}
+            className={styles.inputForm}
           />
         
         <FormError nameError='profilePhoto' />

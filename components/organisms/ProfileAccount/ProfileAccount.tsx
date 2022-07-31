@@ -92,7 +92,7 @@ export const ProfileAccount = ({ data }: DataType) => {
               pseudonym: newPseudonym,
               description: newDescription,
               profilePhoto: photoURL
-            });;
+            });
       
             await updateProfile(user, { photoURL: photoURL });
           });
@@ -135,17 +135,17 @@ export const ProfileAccount = ({ data }: DataType) => {
         validationSchema={schemaNew}
         onSubmit={updateProfileData}
       >
-          {({ values, handleChange }) => (
-            <Form>
-          <div className={styles.container}>
-            <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.title}>
-              {data?.AnotherForm?.profilePhoto}
-            </label>
-            <Input
-              name='profilePhoto'
-              type='file'
-              accept='.jpg, .jpeg, .png, .webp, .avif'
-              onChange={handleChangeFile}
+        {({ values, handleChange, errors, touched }) => (
+          <Form>
+            <div className={styles.container}>
+              <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.title}>
+                {data?.AnotherForm?.profilePhoto}
+              </label>
+              <Input
+                name='profilePhoto'
+                type='file'
+                accept='.jpg, .jpeg, .png, .webp, .avif'
+                onChange={handleChangeFile}
               placeholder={data?.AnotherForm?.profilePhoto}
               className={styles.input}
             />
@@ -157,12 +157,11 @@ export const ProfileAccount = ({ data }: DataType) => {
             <label className={styles.title} htmlFor='newPseudonym'>{data?.AnotherForm?.pseudonym}</label>
             <Input
               id='newPseudonym'
-              type='text'
               name='newPseudonym'
               value={values.newPseudonym}
               onChange={handleChange}
               placeholder={data?.AnotherForm?.pseudonym}
-              className={styles.input}
+              className={!!errors.newPseudonym && touched.newPseudonym ? styles.input__error : styles.input}
             />
           </div>
           
@@ -176,7 +175,7 @@ export const ProfileAccount = ({ data }: DataType) => {
               value={values.newDescription}
               onChange={handleChange}
               placeholder={data?.Account?.profile?.aboutMe}
-              className={styles.description}
+              className={!!errors.newDescription && touched.newDescription ? styles.description__error : styles.description}
             />
           </div>
           

@@ -26,14 +26,17 @@
     align-self: flex-start;
   }
 
-  .input,
-  .description {
+  .input, .description, .description__error, .input__error {
     width: 90vw;
     max-width: 23rem;
-    margin: 1rem auto;
-    padding: .3rem .7rem;
+    margin: auto;
+    padding: .4rem .7rem;
     border-color: $secondary__color;
     color: $third__color;
+
+    &__error {
+      border-color: $required__color;
+    }
   }
 
   .publicContainer {
@@ -43,13 +46,11 @@
 
     .input {
       margin: 0 auto .5rem;
-      text-align: center;
     }
 
     .description {
       line-height: 1.6;
       font-size: 1rem;
-      text-align: left;
     }
   }
 
@@ -59,7 +60,6 @@
 
       .input {
         margin: .3rem .5rem;
-        text-align: left;
       }
 
       .description {
@@ -100,14 +100,11 @@
   margin: 1rem auto 0;
   justify-items: flex-start;
 
-  .input {
-    text-align: left;
+
+  .description__error {
+    border-color: $required__color;
   }
 
-  .description {
-    text-align: left;
-    line-height: 1.6;
-  }
 }
 
 @media (min-width: 600px) {

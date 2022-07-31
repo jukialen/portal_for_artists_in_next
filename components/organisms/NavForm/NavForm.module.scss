@@ -19,7 +19,7 @@
 		text-align: center;
 	}
 
-	.inputForm {
+	.inputForm, .inputForm__error {
 		display: block;
 		width: 17rem;
 		max-width: 90%;
@@ -27,13 +27,20 @@
 		border-color: $third__color;
 		color: $dark__background__light__color;
 
+		&::placeholder {
+			color: rgba(45, 55, 72, .81);
+		}
+	}
+
+	.inputForm {
+		border-color: $third__color;
+
 		&:hover {
-			border-color: $third__color;
-			opacity: .7;
+			border-color: rgba(79, 141, 255, .7);
 		}
 
-		&::placeholder {
-			color: $dark__background__light__color;
+		&__error {
+			border-color: $required__color;
 		}
 	}
 

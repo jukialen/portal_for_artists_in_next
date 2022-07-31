@@ -62,18 +62,17 @@ export const Create = ({ data }: DataType) => {
         validationSchema={schemaValidation}
         onSubmit={submitAccountData}
       >
-        {({ values, handleChange }) => (
+        {({ values, handleChange, errors, touched }) => (
           <Form>
-          <h2 className={styles.title}>{data?.NavForm?.titleOfRegistration}</h2>
-  
+            <h2 className={styles.title}>{data?.NavForm?.titleOfRegistration}</h2>
+    
             <Input
               name='email'
               type='email'
               value={values.email}
               onChange={handleChange}
               placeholder={data?.NavForm?.email}
-              className={styles.inputForm}
-              // colorScheme='blue'
+              className={touched.email && !!errors.email ? styles.inputForm__error : styles.inputForm}
             />
   
             <FormError nameError='email' />
@@ -84,7 +83,7 @@ export const Create = ({ data }: DataType) => {
               value={values.password}
               onChange={handleChange}
               placeholder={data?.NavForm?.password}
-              className={styles.inputForm}
+              className={touched.password && !!errors.password ? styles.inputForm__error : styles.inputForm}
             />
           
           <FormError nameError='password' />

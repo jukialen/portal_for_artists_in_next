@@ -11,13 +11,20 @@
     margin-bottom: 2rem;
   }
 
-  input {
+  .inputForm, .inputForm__error {
     width: 17rem;
     margin: .5rem auto;
     padding: .4rem;
     text-align: left;
-    border-color: $third__color;
     color: $third__color;
+  }
+
+  .inputForm {
+    border-color: $third__color;
+  }
+
+  .inputForm__error {
+    border-color: $required__color;
   }
 
   .submit__button {

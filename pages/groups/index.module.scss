@@ -38,6 +38,11 @@
 	.modal {
 		background-color: $dark__background__light__color !important;
 		color: $primary__color !important;
+		margin: auto;
+
+		.appropriateForm {
+			border-color: $required__color !important;
+		}
 	}
 
 	.nameGroup {

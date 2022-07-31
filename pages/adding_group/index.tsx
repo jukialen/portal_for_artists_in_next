@@ -117,7 +117,7 @@ export default function AddingGroup() {
         validationSchema={schemaValidation}
         onSubmit={createGroup}
       >
-        {({ values, handleChange }) => (
+        {({ values, handleChange, errors, touched }) => (
           <Form className={styles.container__form}>
             <h2 className={styles.title}>{data?.AddingGroup.title}</h2>
         
@@ -127,7 +127,7 @@ export default function AddingGroup() {
               value={values.groupName}
               onChange={handleChange}
               placeholder={data?.AddingGroup?.name}
-              className={styles.field}
+              className={touched.groupName && !!errors.groupName ? styles.field__error : styles.field}
             />
         
             <FormError nameError='groupName' />
@@ -138,7 +138,7 @@ export default function AddingGroup() {
               value={values.description}
               onChange={handleChange}
               placeholder={data?.AnotherForm?.description}
-              className={styles.field}
+              className={touched.description && !!errors.description ? styles.field__error : styles.field}
             />
         
             <FormError nameError='description' />

@@ -12,6 +12,8 @@ import { addingPost } from 'references/referencesFirebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
+import { FormError } from 'components/molecules/FormError/FormError';
+
 import styles from './AddingPost.module.scss';
 
 type AddingPostType = {
@@ -64,7 +66,7 @@ export const AddingPost = ({ name }: AuthorType) => {
       validationSchema={schemaNew}
       onSubmit={createNewPost}
     >
-      {({ values, handleChange }) => (
+      {({ values, handleChange, errors, touched }) => (
         <Form className={showForm ? '' : styles.hiding}>
           <Input
             id='title'
@@ -73,11 +75,10 @@ export const AddingPost = ({ name }: AuthorType) => {
             onChange={handleChange}
             placeholder={data?.Groups?.addingPost?.addTitPlaceholder}
             aria-label={data?.Groups?.addingPost?.addTitAria}
-            isRequired
-            className={styles.title}
+            className={styles.title__error}
           />
   
-          <ErrorMessage name='title' />
+          <FormError nameError='title' />
           
           <Textarea
             id='post'
@@ -87,11 +88,10 @@ export const AddingPost = ({ name }: AuthorType) => {
             resize='vertical'
             placeholder={data?.Groups?.addingPost?.addDescription}
             aria-label={data?.Groups?.addingPost?.addDesAria}
-            isRequired
-            className={styles.description}
+            className={!!errors.post && touched.post ? styles.description__error : styles.description}
           />
           
-          <ErrorMessage name='post' />
+          <FormError nameError='post' />
           
           <Button
             type='submit'

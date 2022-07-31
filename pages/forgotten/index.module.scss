@@ -24,13 +24,20 @@
       font-size: 1.3rem;
     }
 
-    .inputForm {
+    .inputForm, .inputForm__error {
       display: block;
       width: 17rem;
       max-width: 90%;
       margin: 1rem auto 1.5rem;
+      color: $third__color;
+    }
+
+    .inputForm {
       border-color: $third__color;
-      color: $dark__background__light__color;
+    }
+
+    .inputForm__error {
+      border-color: $required__color;
     }
 
     .submit__button {

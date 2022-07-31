@@ -11,11 +11,14 @@
 		margin-bottom: 2rem;
 	}
 
-	.field {
+	.field, .field__error {
 		width: 20rem;
 		margin: .5rem auto;
-		text-align: left;
 		color: $third__color;
+	}
+
+	.field__error {
+		border-color: $required__color;
 	}
 
 	.input {
@@ -33,6 +36,6 @@
 
 		&:hover{
 			opacity: .8;
-	}
+		}
 	}
 }

@@ -77,29 +77,29 @@ export const Login = ({ data }: DataType) => {
         validationSchema={schemaValidation}
         onSubmit={submitAccountData}
       >
-        {({ values, handleChange }) => (
+        {({ values, handleChange, errors, touched }) => (
           <Form>
-          <h2 className={styles.title}>{data?.NavForm?.titleOfLogin}</h2>
-          
-          <Input
-            name='email'
-            type='email'
-            value={values.email}
-            onChange={handleChange}
-            placeholder={data?.NavForm?.email}
-            className={styles.inputForm}
+            <h2 className={styles.title}>{data?.NavForm?.titleOfLogin}</h2>
+    
+            <Input
+              name='email'
+              type='email'
+              value={values.email}
+              onChange={handleChange}
+              placeholder={data?.NavForm?.email}
+              className={touched.email && !!errors.email ? styles.inputForm__error : styles.inputForm}
           />
           
           <FormError nameError='email' />
-          
-          <Input
-            name='password'
-            type='password'
-            value={values.password}
-            onChange={handleChange}
-            placeholder={data?.NavForm?.password}
-            className={styles.inputForm}
-          />
+    
+            <Input
+              name='password'
+              type='password'
+              value={values.password}
+              onChange={handleChange}
+              placeholder={data?.NavForm?.password}
+              className={touched.password && !!errors.password ? styles.inputForm__error : styles.inputForm}
+            />
           
           <FormError nameError='password' />
           
