@@ -22,18 +22,19 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 import styles from './FileUpload.module.scss';
 
 type FileDataType = {
-  tags: string
+  tags: string;
 };
 
 const initialValues = {
   description: '',
-  tags: ''
+  tags: '',
 };
 
 export const FilesUpload = () => {
   const [file, setFile] = useState<Blob | Uint8Array | ArrayBuffer | File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
   const [progressUpload, setProgressUpload] = useState<number>(0);
+  const [required, setRequired] = useState(false);
   
   const { isMode } = useContext(ModeContext);
   const data = useHookSWR();
@@ -56,7 +57,13 @@ export const FilesUpload = () => {
   });
   
   const handleChangeFile = async (e: EventType) => {
-    e.target.files?.[0] && setFile(e.target.files[0]);
+    if (e.target.files?.[0]) {
+      setFile(e.target.files[0]);
+      setRequired(false);
+    } else {
+      setFile(null);
+      setRequired(true);
+    }
   };
   
   const uploadFiles = async ({ tags }: FileDataType, { resetForm }: FormType) => {
@@ -67,7 +74,9 @@ export const FilesUpload = () => {
       const videosRef = ref(storage, `${user?.uid}/videos/${file?.name}`);
       // @ts-ignore
       const animationsRef = ref(storage, `${user?.uid}/animations/${file?.name}`);
-    
+  
+      !file ? setRequired(true) : setRequired(false);
+      
       let upload: UploadTask;
     
       switch (tags) {
@@ -80,10 +89,10 @@ export const FilesUpload = () => {
         default:
           upload = uploadBytesResumable(photosRef, file!);
       }
-    
+      
       let refName: string;
-    
-      upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+  
+      !!file && !required && upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
           const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setProgressUpload(progress);
         
@@ -110,6 +119,7 @@ export const FilesUpload = () => {
             });
             setValuesFields(`${data?.AnotherForm?.uploadFile}`);
             setFile(null);
+            setRequired(false);
             resetForm(initialValues);
           };
         
@@ -138,17 +148,17 @@ export const FilesUpload = () => {
       validationSchema={schemaFile}
       onSubmit={uploadFiles}
     >
-      {({ values, handleChange }) => (
+      {({ values, handleChange, errors, touched }) => (
         <Form className={styles.adding__files}>
           <h3 className={styles.title}>{data?.AnotherForm?.fileTitle}</h3>
-        
-          <div className={styles.select}>
+      
+          <div className={isMode ? styles.select__dark : styles.select}>
             <Select
               name='tags'
               value={values.tags}
               onChange={handleChange}
               placeholder={data?.chooseTag}
-              className={isMode ? styles.tags__dark : styles.tags}
+              className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}
               aria-required
             >
               {tagsArray.map((tag: string) => <option
@@ -168,9 +178,12 @@ export const FilesUpload = () => {
             onChange={handleChangeFile}
             placeholder={data?.AnotherForm?.file}
             focusBorderColor='transparent'
-            className={styles.input}
-            required
+            className={!file && required ? styles.input__error : styles.input}
           />
+  
+          <p className={styles.error}>
+            {!file && required && data?.NavForm?.validateRequired}
+          </p>
           
           <button
             type='submit'

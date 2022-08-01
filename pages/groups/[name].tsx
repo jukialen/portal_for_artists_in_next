@@ -66,6 +66,20 @@ export default function Groups() {
   const currentUser = auth.currentUser?.uid;
   const data = useHookSWR();
   
+  const selectedColor = '#FFD068';
+  const hoverColor = '#FF5CAE';
+  const activeColor = '#4F8DFF';
+  
+  const addingToGroup = {
+    background: activeColor,
+    color: '#000',
+  };
+  
+  const addingToGroupOutline = {
+    background: 'transparent',
+    color: activeColor,
+  };
+  
   const favoriteGroup = async () => {
     try {
       const docSnap = await getDoc(user(currentUser!));
@@ -167,32 +181,25 @@ export default function Groups() {
     !!name && groupInfo();
   }, [name]);
   
-  const selectedColor = '#FFD068';
-  const hoverColor = '#FF5CAE';
-  const activeColor = '#4F8DFF';
-  
-  const addingToGroup = {
-    background: activeColor,
-    color: '#000',
-  };
-  
-  const addingToGroupOutline = {
-    background: 'transparent',
-    color: activeColor,
-  };
+ 
   
   const changeFile = (e: EventType) => {
-    e.target.files?.[0] && setNewLogo(e.target.files[0]);
+    if (e.target.files?.[0]) {
+      setNewLogo(e.target.files[0]);
+      setRequired(false);
+    } else {
+      setNewLogo(null);
+      setRequired(true)
+    }
   };
   
   const updateLogo = async () => {
     try {
       const fileRef = await ref(storage, `groups/${name}/${newLogo?.name}`);
-      !newLogo && setRequired(true);
   
       const upload = uploadBytesResumable(fileRef, newLogo!);
   
-      required && upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+      !!newLogo && !required && upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
           const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setProgressUpload(progress);
           switch (snapshot.state) {
@@ -209,10 +216,10 @@ export default function Groups() {
         },
         async () => {
           const groupLogoURL = await getDownloadURL(fileRef);
-          
+
           setLogoUrl(groupLogoURL);
           await updateDoc(usersInGroup(name!), { logo: groupLogoURL });
-          
+
           setValuesFields(`${data?.AnotherForm?.uploadFile}`);
           setNewLogo(null);
           setRequired(false);
@@ -251,22 +258,21 @@ export default function Groups() {
               padding='.35rem 1rem'
               margin='.5rem auto 1.5rem'
               onChange={changeFile}
-              className={styles.appropriateForm}
-              required={required}
+              borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
             />
-  
-            <p className={styles.error}>
+    
+            <p style={{ color: '#bd0000' }}>
               {!newLogo && required && data?.NavForm?.validateRequired}
             </p>
             {logoUrl &&
             <img
               src={logoUrl}
               alt='preview new logo'
-              width='14rem'
-              height='14rem'
-              style={{ margin: '1rem auto', display: 'flex', justifyContent: 'center' }}
+              width={192}
+              height={192}
+              style={{ margin: '1rem auto', display: 'flex', justifyContent: 'center', borderRadius: '1rem' }}
             />}
-  
+    
             {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) &&
             <Progress
               value={progressUpload}
@@ -281,7 +287,7 @@ export default function Groups() {
               size='md'
             />
             }
-            
+    
             {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
           </ModalBody>
           <ModalFooter>
