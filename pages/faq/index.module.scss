@@ -1,3 +1,5 @@
+@use 'styles/variables' as *;
+
 .h2 {
   margin: 5rem auto 2rem;
 }
@@ -12,13 +14,15 @@
   font-size: 1.6rem;
   padding: 0.5rem;
   cursor: pointer;
+  color: $dark__background__light__color;
 }
 
 .ant-collapse-header {
   display: inline-flex;
   flex-wrap: nowrap;
   margin: 2rem 5% 1rem;
-  border: 0.2rem inset #f7f7f7;
+  color: $dark__background__light__color;
+  border: 0.2rem inset $dark__color__light__back;
   border-radius: 2rem;
   padding: 1rem 1.5rem;
 }

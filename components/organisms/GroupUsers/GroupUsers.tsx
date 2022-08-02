@@ -20,6 +20,7 @@ export const GroupUsers = () => {
   
   const currentUser = auth.currentUser?.uid;
   const data = useHookSWR();
+  
   const downloadGroupsList = async () => {
     try {
       const docSnap = await getDoc(user(currentUser!));

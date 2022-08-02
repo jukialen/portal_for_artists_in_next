@@ -12,6 +12,7 @@ import { PhotosGallery } from 'components/organisms/PhotosGallery/PhotosGallery'
 import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
 import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
 import { ProfileUser } from 'components/atoms/ProfileUser/ProfileUser';
+import { GroupUser } from 'components/organisms/GroupUser/GroupUser';
 
 import styles from './index.module.scss';
 
@@ -189,6 +190,18 @@ export default function User() {
               fileUrl={uid!}
               description={description}
             />
+          </TabPanel>
+          <TabPanel
+            className={styles.tabPanel}
+            role='tabpanel'
+          >
+            <h2>{data?.Aside?.friends}</h2>
+          </TabPanel>
+          <TabPanel
+            className={styles.tabPanel}
+            role='tabpanel'
+          >
+            <GroupUser uidUser={uid!} />
           </TabPanel>
         </TabPanels>
       </Tabs>

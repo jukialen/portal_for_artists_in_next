@@ -3,9 +3,10 @@
 }
 
 .title {
-	font-size: 2rem;
-	display: inline-block;
+	display: flex;
+	justify-content: center;
 	margin: 3rem auto;
+	font-size: 2rem;
 }
 
 .user__drawings {

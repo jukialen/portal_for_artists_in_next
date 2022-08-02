@@ -12,6 +12,8 @@ import { useHookSWR } from 'hooks/useHookSWR';
 
 import { Comment } from 'components/atoms/Comment/Comment';
 
+import styles from './Comments.module.scss';
+
 export const Comments = ({ refCom }: AuthorType) => {
   const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
   
@@ -48,6 +50,6 @@ export const Comments = ({ refCom }: AuthorType) => {
   return <>
     {commentsArray.length > 0 ? commentsArray.map(({ author, date, description, idPost, nameGroup }: CommentType) =>
       <Comment key={idPost} date={date} description={description} nameGroup={nameGroup} author={author} idPost={idPost} />
-    ) : <p>{data?.Comments?.noComments}</p>}
+    ) : <p className={styles.noComments}>{data?.Comments?.noComments}</p>}
   </>;
 };

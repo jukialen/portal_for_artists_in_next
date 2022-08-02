@@ -120,7 +120,7 @@ export const ProfileAccount = ({ data }: DataType) => {
             />
           </div>
           <div className={styles.publicContainer}>
-            <label className={styles.title} htmlFor='pseudonym__name'>{data?.AnotherForm?.pseudonym}</label>
+            <label className={`${styles.title} ${styles.firstTitle}`} htmlFor='pseudonym__name'>{data?.AnotherForm?.pseudonym}</label>
             <div id='pseudonym__name' className={styles.input}>{pseudonym}</div>
           </div>
           <div className={styles.publicContainer}>

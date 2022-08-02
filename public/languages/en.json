@@ -195,6 +195,14 @@
     },
     "noGroups": "No group"
   },
+  "groupsUser": {
+    "adminTitle": "Groups which the user've created",
+    "noAdmin": "User've created any group yet.",
+    "modsTitle": "Groups which the user manage",
+    "noMods": "User're not moderators in any group yet.",
+    "usersTitle": "Groups user've joined",
+    "noUsers": "User didn't join to any group yet."
+  },
   "Posts": {
     "likeAria": "to like",
     "likedAria": "liked",

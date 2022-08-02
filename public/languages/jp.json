@@ -195,6 +195,14 @@
     },
     "noGroups": "団体がありません"
   },
+  "groupsUser": {
+    "adminTitle": "ユーザが生み出しました団体",
+    "noAdmin": "ユーザがまだ団体が生み出しませんでした。",
+    "modsTitle": "ユーザが取り締ました団体",
+    "noMods": "ユーザがまだモデレータがいません。",
+    "usersTitle": "ユーザが付けました団体",
+    "noUsers": "ユーザがまだ団体まで付けませんでした。"
+  },
   "Posts": {
     "likeAria": "好き",
     "likedAria": "好きだ",

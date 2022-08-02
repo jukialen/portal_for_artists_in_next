@@ -67,6 +67,6 @@ export const Posts = ({ name, currentUser }: AuthorType) => {
         liked={liked}
         logoUser={logoUser}
       />
-    ) : <p>{data?.Posts.noPosts}</p>}
+    ) : <p className={styles.noPosts}>{data?.Posts.noPosts}</p>}
   </section>;
 };

@@ -7,7 +7,7 @@
   padding: 1rem 0;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 
   > li {
     width: 100%;
@@ -21,22 +21,47 @@
     }
   }
 
+  .containerImgLink {
+    width: 92%;
+    display: flex;
+    gap: 0 .8rem;
+    justify-content: center;
+    align-items: center;
+    margin: .25rem auto;
+
+    img {
+      border-radius: 25%;
+    }
+  }
+
   .link {
     width: 100%;
-    height: 42px;
+    height: 2.8rem;
     display: flex;
     flex-direction: column;
-    line-height: 2;
+    justify-content: center;
     cursor: pointer;
   }
 
+  .source {
+    display: none;
+  }
+
   .withIcon {
-    flex-direction: row;
+    width: 98%;
+    display: grid;
+    grid-template-columns: 1fr 2rem;
     justify-content: center;
     align-items: center;
+    margin: auto;
 
     .p {
-      padding: 0 20% 0 30%;
+      padding-left: 1.5rem;
+      text-align: center;
+    }
+
+    svg {
+      justify-self: center;
     }
   }
 

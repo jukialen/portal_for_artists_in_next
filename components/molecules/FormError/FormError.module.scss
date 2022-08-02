@@ -1,9 +1,10 @@
 @use 'styles/variables' as *;
 
 .error {
+	width: 100%;
+	max-width: 16rem;
 	margin: 0 auto;
 	font-size: 1.1rem;
 	line-height: 1.2;
-	width: 16rem;
 	color: $required__color;
 }

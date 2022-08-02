@@ -1,0 +1,80 @@
+@use '../../../styles/variables' as *;
+
+.container {
+	width: 90%;
+	margin: 1rem auto;
+
+	.title {
+		width: 90%;
+		margin: 1rem;
+	}
+
+	.field {
+		display: grid;
+		grid-template-columns: 1fr 4rem;
+		margin: 1rem auto;
+
+		.items {
+			margin: 1rem 1rem 2rem;
+			width: inherit;
+		}
+
+		.form {
+			display: flex;
+			flex-direction: column;
+			width: 95%;
+			max-width: 30rem;
+			margin: 1rem;
+			justify-self: center;
+			align-items: center;
+
+			.updateField, .updateField__error {
+				border: .1rem solid $third__color;
+				color: $third__color;
+				margin-bottom: .5rem;
+
+				&__error {
+					border-color: $required__color;
+				}
+			}
+
+			.addingButton {
+				background-color: $third__color;
+				border: .1rem solid $third__color;
+				margin: 1rem 0 2rem;
+				border-radius: 0.5rem;
+			}
+		}
+
+		.changeButton {
+			width: 2.8rem;
+			height: 2.8rem;
+			margin: 1rem auto;
+			background: $primary__color;
+			border: .1rem solid $primary__color;
+			border-radius: .75rem;
+			color: black;
+			cursor: pointer;
+
+			svg {
+				font-size: 1.3rem;
+			}
+		}
+	}
+
+	.regulations__item {
+		margin: 2rem 1rem;
+
+		&:first-child {
+			margin: .5rem 1rem;
+		}
+
+		&:last-child {
+			margin: 2rem 1rem 0;
+		}
+	}
+
+	.regulations__no__item {
+		margin: .5rem 1rem;
+	}
+}

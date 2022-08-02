@@ -36,11 +36,11 @@ export const ProfileUser = ({ data, pseudonym, description, fileUrl }: FileType 
           priority
         />
       </div>
-      <div className={styles.pseudonym__name}>
-        <label className={styles.title} htmlFor='pseudonym__user'>{data?.AnotherForm?.pseudonym}</label>
+      <div className={styles.publicContainer}>
+        <label className={`${styles.title} ${styles.firstTitle}`} htmlFor='pseudonym__user'>{data?.AnotherForm?.pseudonym}</label>
         <div id='pseudonym__user' className={styles.input}>{pseudonym}</div>
       </div>
-      <div className={styles.about__me}>
+      <div className={styles.publicContainer}>
         <label className={styles.title} htmlFor='about__user'>{data?.Account?.profile?.aboutMe}</label>
         <div id='about__user' className={styles.description}>{description}</div>
       </div>

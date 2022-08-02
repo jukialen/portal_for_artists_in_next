@@ -92,7 +92,7 @@ export default function Drawings() {
             }
           });
         },
-        (e: Error) => {
+        (e) => {
           console.error('Error', e);
         });
     } catch (e) {

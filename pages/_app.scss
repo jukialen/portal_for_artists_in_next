@@ -101,8 +101,9 @@ button {
 
 .title {
   font-size: 1.8rem;
-  display: inline-block;
+  display: flex;
   margin: 3rem auto;
+  justify-content: center;
 }
 
 .button {

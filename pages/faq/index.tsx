@@ -9,8 +9,8 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export default function Faq() {
   const { asPath } = useRouter();
-  const backgroundColor = '#FFD068';
-  const color = '#333';
+  const backgroundColor = '#2D3748';
+  const color = '#FFD068';
   const m = '2rem 0';
   
   return (
@@ -33,7 +33,7 @@ export default function Faq() {
         <FaqItems
           textHead='Jakie korzyści daje plan Premium?'
           textBody={<div>Plan Premium m. in. zapewnia priorytetowe wsparcie naszego wsparcia klienta oraz brak
-            reklam. Jeśli chcesz się więcej dowiedzieć, możesz dowiedzieć się <Link href='#' color='#4F8DFF' isExternal>
+            reklam. Jeśli chcesz się więcej dowiedzieć, możesz dowiedzieć się <Link href='#' color='#4F8DFF !important' isExternal>
               tutaj <ExternalLinkIcon mx='2px' color='#4F8DFF' /></Link>.</div>}
           bcc={backgroundColor}
           c={color}

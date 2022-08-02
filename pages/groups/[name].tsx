@@ -181,8 +181,6 @@ export default function Groups() {
     !!name && groupInfo();
   }, [name]);
   
- 
-  
   const changeFile = (e: EventType) => {
     if (e.target.files?.[0]) {
       setNewLogo(e.target.files[0]);
@@ -292,14 +290,14 @@ export default function Groups() {
           </ModalBody>
           <ModalFooter>
             <Button colorScheme='blue' borderColor='transparent' mr={3} onClick={onClose}>
-              Close
+              {data?.DeletionFile?.cancelButton}
             </Button>
             <Button
               onClick={updateLogo}
               colorScheme='yellow'
               borderColor='transparent'
             >
-              Update
+              {data?.Description?.submit}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -353,7 +351,7 @@ export default function Groups() {
           borderColor={activeColor}
           className={styles.tab}
         >
-          {data?.Account?.aMenu?.general}
+          {decodeURIComponent(data?.Account?.aMenu?.general)}
         </Tab>
         <Tab
           _selected={{ borderColor: selectedColor }}
@@ -362,7 +360,7 @@ export default function Groups() {
           borderColor={activeColor}
           className={styles.tab}
         >
-          {data?.Groups?.menu?.members}
+          {decodeURIComponent(data?.Groups?.menu?.members)}
         </Tab>
         <Tab
           _selected={{ borderColor: selectedColor }}
@@ -371,7 +369,7 @@ export default function Groups() {
           borderColor={activeColor}
           className={styles.tab}
         >
-          {data?.AnotherForm?.description}
+          {decodeURIComponent(data?.AnotherForm?.description)}
         </Tab>
       </TabList>
       

@@ -1,4 +1,4 @@
-@use '../../../styles/variables' as *;
+@use 'styles/variables' as *;
 
 .options {
 	.bottomPanel {
@@ -9,11 +9,12 @@
 
 		.author__name {
 			margin: .5rem 2rem;
-			text-align: left;
 		}
 	}
 
 	.comments {
+		display: flex;
+		justify-content: center;
 		width: 15rem;
 		max-width: 70%;
 		border: .1rem;

@@ -195,6 +195,14 @@
     },
     "noGroups": "Brak grup"
   },
+  "groupsUser": {
+    "adminTitle": "Grupy, które użytkownik stworzył",
+    "noAdmin": "Nie stworzył/a jeszcze żadnej grupy",
+    "modsTitle": "Grupy którymi zarządza",
+    "noMods": "Obecnie nie jest moderatorem żadnej grupy.",
+    "usersTitle": "Grupy do których dołączył/a",
+    "noUsers": "Nie dołączył/a jeszcze do żadnej grupy."
+  },
   "Posts": {
     "likeAria": "lubić",
     "likedAria": "polubione",

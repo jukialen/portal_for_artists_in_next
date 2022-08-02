@@ -30,9 +30,11 @@
 
   .h3 {
     margin-top: -6rem;
+    text-align: center;
   }
 
   .group__title, .friend__title {
+    text-align: center;
     margin: 1rem auto;
   }
 
@@ -40,23 +42,9 @@
     margin: 0 auto;
     padding: 1rem;
     background: $another__color;
+    text-align: center;
   }
 }
-
-//@media (min-width: 320px) and (max-width: 767px) {
-//  .aside {
-//    width: 17rem;
-//    margin: 3rem 0 0 -17rem;
-//  }
-//}
-//
-//@media (min-width: 674px) and (max-width: 981px){
-//  .aside {
-//    width: 18rem;
-//    margin: 3rem 0 0 -18rem;
-//
-//  }
-//}
 
 @media (min-width: 982px) {
   .aside {

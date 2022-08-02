@@ -1,0 +1,23 @@
+.tilesSection {
+	display: flex;
+	flex-wrap: wrap;
+	margin: auto;
+	justify-content: center;
+	align-items: center;
+
+	.title {
+		width: 90%;
+		font-size: 1.4rem;
+		margin-left: 1rem;
+		margin-top: 2rem;
+	}
+
+	.divider {
+		width: 90%;
+		margin-bottom: 1rem;
+	}
+
+	.noGroups {
+		margin: 2rem;
+	}
+}
