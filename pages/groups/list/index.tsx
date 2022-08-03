@@ -7,6 +7,7 @@ import { groupRef } from 'references/referencesFirebase';
 import { GroupType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
+import { useCurrentUser } from 'hooks/useCurrentUser';
 
 import { GroupTile } from 'components/molecules/GroupTile/GroupTile';
 
@@ -17,6 +18,7 @@ export default function List() {
   let [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
   
   const data = useHookSWR();
+  const loading = useCurrentUser('/');
   
   const downloadGroupsList = async () => {
     const queryFirst = query(groupRef, orderBy('name'), limit(30));
@@ -28,7 +30,6 @@ export default function List() {
     
     grLArray.length === 30 && setLastVisible(groupList.docs[groupList.docs.length - 1]);
     setListArray(grLArray);
-    
   };
   
   const downloadNextGroupsList = async () => {
@@ -44,14 +45,14 @@ export default function List() {
   };
   
   useEffect(() => {
-    downloadGroupsList().then(() => console.log('groups list'));
-  }, []);
+    !loading && downloadGroupsList();
+  }, [loading]);
   
   
-  return <>
+  return !loading ? <div className={styles.container}>
     <h2 className={styles.title}>{data?.Groups?.list?.title}</h2>
     {
-      listArray.length > 0
+      listArray.length >= 0
         ? listArray.forEach(({ nameGroup, logoUrl }) => <GroupTile
           key={nameGroup}
           nameGroup={nameGroup}
@@ -74,5 +75,5 @@ export default function List() {
         </Button>
         : <p>{data?.Groups?.list?.all}</p>
     }
-  </>;
+  </div> : null;
 }

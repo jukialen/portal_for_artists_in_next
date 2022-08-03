@@ -193,7 +193,7 @@
       "more": "More",
       "all": "This is already all groups."
     },
-    "noGroups": "No group"
+    "noGroups": "No favorite group"
   },
   "groupsUser": {
     "adminTitle": "Groups which the user've created",

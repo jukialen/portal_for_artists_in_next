@@ -1,11 +1,16 @@
 @use 'styles/variables' as *;
 
-.title {
-	margin-bottom: 2rem;
+.container {
+	min-height: 80vh;
+
+	.title {
+		margin-bottom: 2rem;
+	}
+
+	.more {
+		margin: 1rem;
+		border: .1rem solid $third__color;
+		cursor: pointer;
+	}
 }
 
-.more {
-	margin: 1rem;
-	border: .1rem solid $third__color;
-	cursor: pointer;
-}

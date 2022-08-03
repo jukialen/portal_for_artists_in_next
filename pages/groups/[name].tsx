@@ -30,6 +30,7 @@ import { groupSection, user, usersInGroup } from 'references/referencesFirebase'
 import { EventType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
+import { useCurrentUser } from 'hooks/useCurrentUser';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
@@ -65,6 +66,7 @@ export default function Groups() {
   const { name } = query;
   const currentUser = auth.currentUser?.uid;
   const data = useHookSWR();
+  const loading = useCurrentUser('/');
   
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
@@ -96,8 +98,8 @@ export default function Groups() {
   };
   
   useEffect(() => {
-    !!name && favoriteGroup();
-  }, [name, join]);
+    !loading && !!name && favoriteGroup();
+  }, [name, join, loading]);
   
   const joinedUsers = async () => {
     try {
@@ -117,8 +119,8 @@ export default function Groups() {
   };
   
   useEffect(() => {
-    !!name && joinedUsers();
-  }, [name]);
+    !loading && !!name && joinedUsers();
+  }, [name, loading]);
   
   const joinToGroup = async () => {
     try {
@@ -178,8 +180,8 @@ export default function Groups() {
   };
   
   useEffect(() => {
-    !!name && groupInfo();
-  }, [name]);
+    !loading && !!name && groupInfo();
+  }, [name, loading]);
   
   const changeFile = (e: EventType) => {
     if (e.target.files?.[0]) {
@@ -228,7 +230,7 @@ export default function Groups() {
     }
   };
   
-  return <>
+  return !loading ? <>
     <HeadCom path={asPath} content={`"${name}" group website`} />
     
     <article className={styles.mainContainer}>
@@ -333,7 +335,6 @@ export default function Groups() {
       </div>}
     </div>
     
-    
     <Divider orientation='horizontal' />
     
     <Tabs
@@ -388,5 +389,5 @@ export default function Groups() {
         </TabPanel>
       </TabPanels>
     </Tabs>
-  </>;
+  </> : null
 }

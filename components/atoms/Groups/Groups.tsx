@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { auth } from '../../../firebase';
 import { getDoc } from 'firebase/firestore';
 
@@ -10,6 +11,7 @@ import { DataType, GroupType } from 'types/global.types';
 import { Links } from 'components/atoms/Links/Links';
 
 import styles from './Groups.module.scss';
+import { Button } from '@chakra-ui/react';
 
 export const Groups = ({ data }: DataType) => {
   const [groupsArray, setGroupsArray] = useState<GroupType[]>([]);
@@ -31,7 +33,7 @@ export const Groups = ({ data }: DataType) => {
           const favoriteList = await getDoc(usersInGroup(favorite));
       
           if (favoriteList.exists()) {
-            groupList.push({ nameGroup: favorite, logoUrl: favoriteList.data().logo === null ? favoriteList.data().logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`})
+            groupList.push({ nameGroup: favorite, logoUrl: !!favoriteList.data().logo  ? favoriteList.data().logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`})
           }
         }
         setGroupsArray(groupList);
@@ -43,7 +45,7 @@ export const Groups = ({ data }: DataType) => {
   
   useEffect(() => {
     !!currentUser && groupList();
-  }, [currentUser, asPath]);
+  }, [currentUser]);
   
   return (
     <div className={styles.groups}>
@@ -68,6 +70,11 @@ export const Groups = ({ data }: DataType) => {
             </Links>
           </div>) : <p className={styles.no__groups}>{data?.Groups?.noGroups}</p>
       }
+      <Button colorScheme='orange' borderColor='transparent' className={styles.listButton} variant='ghost'>
+        <Link href='/groups/list' aria-label='all group link'>
+          <a>All groups</a>
+        </Link>
+      </Button>
     </div>
   );
 };
