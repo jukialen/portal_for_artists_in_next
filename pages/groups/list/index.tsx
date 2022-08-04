@@ -15,7 +15,7 @@ import styles from './index.module.scss';
 
 export default function List() {
   const [listArray, setListArray] = useState<GroupType[]>([]);
-  let [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
+  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
   
   const data = useHookSWR();
   const loading = useCurrentUser('/');
@@ -23,14 +23,20 @@ export default function List() {
   const downloadGroupsList = async () => {
     const queryFirst = query(groupRef, orderBy('name'), limit(30));
     const groupList = await getDocs(queryFirst);
-    
+  
     const grLArray: GroupType[] = [];
-    
-    groupList.forEach(doc => grLArray.push({ nameGroup: doc.data().name, logoUrl: doc.data().logo }));
-    
+  
+    groupList.forEach(doc => grLArray.push({
+      nameGroup: doc.data().name,
+      logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`
+    }));
     grLArray.length === 30 && setLastVisible(groupList.docs[groupList.docs.length - 1]);
     setListArray(grLArray);
   };
+  
+  useEffect(() => {
+    !loading && downloadGroupsList();
+  }, [loading]);
   
   const downloadNextGroupsList = async () => {
     const queryNext = query(groupRef, orderBy('name'), startAfter(lastVisible), limit(30));
@@ -38,29 +44,33 @@ export default function List() {
     
     const grLArray: GroupType[] = [];
     
-    groupList.forEach(doc => grLArray.push({ nameGroup: doc.data().name, logoUrl: doc.data().logo }));
+    groupList.forEach(doc => grLArray.push({
+      nameGroup: doc.data().name,
+      logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/groups.png`
+    }));
     
     setLastVisible(groupList.docs[groupList.docs.length - 1]);
     setListArray(listArray.concat(...grLArray));
   };
   
-  useEffect(() => {
-    !loading && downloadGroupsList();
-  }, [loading]);
+  if (loading) {
+    return null;
+  }
   
-  
-  return !loading ? <div className={styles.container}>
+  return <section className={styles.container}>
     <h2 className={styles.title}>{data?.Groups?.list?.title}</h2>
-    {
-      listArray.length >= 0
-        ? listArray.forEach(({ nameGroup, logoUrl }) => <GroupTile
-          key={nameGroup}
-          nameGroup={nameGroup}
-          logoUrl={logoUrl}
-        />)
-        : <p>{data?.Groups?.noGroups}</p>
-    }
-    
+    {console.log(listArray)}
+    <div className={styles.list}>
+      {
+        listArray.length > 0
+          ? listArray.map(({ nameGroup, logoUrl }) => <GroupTile
+            key={nameGroup}
+            nameGroup={nameGroup}
+            logoUrl={logoUrl}
+          />)
+          : <p>{data?.Groups?.noGroups}</p>
+      }
+    </div>
     {
       !!lastVisible
         ? <Button
@@ -73,7 +83,7 @@ export default function List() {
         >
           {data?.Groups?.list?.more}
         </Button>
-        : <p>{data?.Groups?.list?.all}</p>
+        : <p className={styles.noALl}>{data?.Groups?.list?.all}</p>
     }
-  </div> : null;
+  </section>;
 }

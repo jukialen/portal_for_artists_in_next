@@ -1,16 +1,42 @@
 @use 'styles/variables' as *;
 
 .container {
+	width: 44rem;
+	max-width: 100vw;
 	min-height: 80vh;
 
-	.title {
-		margin-bottom: 2rem;
+	.title, .noALl {
+		margin: 2rem 0;
+		text-align: center;
+	}
+
+	.noALl {
+		font-size: 1.2rem;
+	}
+
+	.list {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
 	}
 
 	.more {
-		margin: 1rem;
+		display: flex;
+		width: 6rem;
+		margin: 2rem auto;
 		border: .1rem solid $third__color;
 		cursor: pointer;
 	}
 }
 
+@media (min-width: 1108px) {
+	.container {
+		width: 52rem;
+	}
+}
+
+@media (min-width: 1552px) {
+	.container {
+		width: 80rem;
+	}
+}
