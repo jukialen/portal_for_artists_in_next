@@ -49,19 +49,22 @@ export default function AddingGroup() {
   const user = auth.currentUser!;
   
   const handleChangeFile = async (e: EventType) => {
-    e.target.files?.[0] && setLogoGroup(e.target.files[0]);
+    e.target.files?.[0] ? setLogoGroup(e.target.files[0]) : setLogoGroup(null);
   };
   
   const createGroup = async ({ groupName, description }: AddingGroupType, { resetForm }: FormType) => {
     try {
       const fileRef = await ref(storage, `groups/${groupName}/${logoGroup?.name}`);
   
-      const newGroup = await setDoc(doc(db, `groups/${groupName}`), {
-        name: groupName,
-        description,
-        logo: null,
-        admin: user.uid
-      });
+      const newGroup = async () => {
+        await setDoc(doc(db, `groups/${groupName}`), {
+          name: groupName,
+          description,
+          logo: null,
+          admin: user.uid
+        });
+        await resetForm(initialValues);
+      }
   
       const newGroupWithLogo = () => {
         const upload = uploadBytesResumable(fileRef, logoGroup!);
@@ -91,17 +94,14 @@ export default function AddingGroup() {
               admin: user.uid
             });
       
-            setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-            setLogoGroup(null);
-      
+            await setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+            await setLogoGroup(null);
+            await resetForm(initialValues);
             return null;
           });
       }
       
-      logoGroup === null ? await newGroup : newGroupWithLogo();
-  
-      resetForm(initialValues);
-      
+      logoGroup === null ? newGroup() : newGroupWithLogo();
     } catch (e) {
       console.log(e);
       setValuesFields(data?.NewUser?.errorSending);
