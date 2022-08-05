@@ -16,6 +16,7 @@ import styles from './index.module.scss';
 export default function List() {
   const [listArray, setListArray] = useState<GroupType[]>([]);
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
+  let [i, setI] = useState(1);
   
   const data = useHookSWR();
   const loading = useCurrentUser('/');
@@ -48,9 +49,10 @@ export default function List() {
       nameGroup: doc.data().name,
       logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/groups.png`
     }));
-    
-    setLastVisible(groupList.docs[groupList.docs.length - 1]);
+  
     setListArray(listArray.concat(...grLArray));
+    setLastVisible( groupList.docs[groupList.docs.length - 1]);
+    setI(++i);
   };
   
   if (loading) {
@@ -59,7 +61,6 @@ export default function List() {
   
   return <section className={styles.container}>
     <h2 className={styles.title}>{data?.Groups?.list?.title}</h2>
-    {console.log(listArray)}
     <div className={styles.list}>
       {
         listArray.length > 0
@@ -72,7 +73,7 @@ export default function List() {
       }
     </div>
     {
-      !!lastVisible
+      !!lastVisible && listArray.length === 30 * i
         ? <Button
           colorScheme='blue'
           backgroundColor='#4F8DFF'

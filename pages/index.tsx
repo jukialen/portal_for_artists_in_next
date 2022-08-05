@@ -11,15 +11,19 @@ import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from './index.module.scss';
-import dark_mode from 'public/dark_mode.jpg';
-import light_mode from 'public/light_mode.jpg';
+import dark_mode from 'public/dark_mode.png';
+import light_mode from 'public/light_mode.png';
 import friends from 'public/friends.png';
 import categories from 'public/categories.png'
 import groups from 'public/groups.png';
-import sign_in from 'public/signin.jpg';
 import diary from 'public/diary.jpg';
 import artist from 'public/artist.jpg';
 import searchingService from 'public/searching.jpg';
+import upload from 'public/upload.png';
+import authorButton from 'public/authorButton.png';
+import top from 'public/top.png';
+import minimalism from 'public/minimalism.png';
+import likes from 'public/likes.png';
 
 export default function Home() {
   const { isUser } = useContext(StatusLoginContext);
@@ -50,8 +54,9 @@ export default function Home() {
     }
   }, [])
   
-  const image = 320;
-  
+  const width = 450;
+  const height = 320;
+  const quality = 100;
   return (
     <>
       <HeadCom path={asPath} content='Main site.' />
@@ -61,17 +66,17 @@ export default function Home() {
   
         <div className={styles.question}>
           <h2>{data?.Main?.firstQuestion}</h2>
-          <Image src={searchingService} width={450} height={image} />
+          <Image src={searchingService} width={width} height={height} />
         </div>
         
         <div className={styles.question}>
           <h2>{data?.Main?.secondQuestion}</h2>
-          <Image src={diary} width={450} height={image}  />
+          <Image src={diary} width={width} height={height}  />
         </div>
   
         <div className={styles.question}>
           <h3>{data?.Main?.firstAnswer} {data?.Main?.secondAnswer}</h3>
-          <Image src={artist} width={450} height={image} />
+          <Image src={artist} width={width} height={height} />
         </div>
       </div>
   
@@ -86,13 +91,13 @@ export default function Home() {
         </div>
     
         <Image
-          src={sign_in}
-          width={450}
-          height={image}
+          src={upload}
+          width={width}
+          height={height}
           className={styles.image}
           alt='picture.jpg'
           priority
-          quality={100}
+          quality={quality}
         />
       </section>
   
@@ -108,13 +113,13 @@ export default function Home() {
         </div>
     
         <Image
-          src={sign_in}
-          width={450}
-          height={image}
+          src={authorButton}
+          width={width}
+          height={height}
           className={styles.image}
           alt='picture.jpg'
           priority
-          quality={100}
+          quality={quality}
         />
       </section>
   
@@ -130,13 +135,13 @@ export default function Home() {
         </div>
     
         <Image
-          src={sign_in}
-          width={450}
-          height={image}
+          src={top}
+          width={width}
+          height={height}
           className={styles.image}
           alt='sign in photo file'
           priority
-          quality={100}
+          quality={quality}
         />
       </section>
   
@@ -152,13 +157,13 @@ export default function Home() {
         </div>
     
         <Image
-          src={sign_in}
-          width={450}
-          height={image}
+          src={likes}
+          width={width}
+          height={height}
           className={styles.image}
           alt='picture.jpg'
           priority
-          quality={100}
+          quality={quality}
         />
       </section>
   
@@ -174,17 +179,17 @@ export default function Home() {
         </div>
     
         <Image
-          src={sign_in}
-          width={450}
-          height={image}
+          src={minimalism}
+          width={width}
+          height={height}
           className={styles.image}
           alt='sign in photo file'
           priority
-          quality={100}
+          quality={quality}
         />
       </section>
   
-      <section className={styles.main__container}>
+      <section className={`${styles.main__container} ${styles.main__container__mode}`}>
         <div className={styles.container}>
           <h4 className={styles.question}>
             {data?.Main?.containerSixthQuestion}
@@ -199,19 +204,19 @@ export default function Home() {
           <div className={styles.modeImage}>
             <Image
               src={light_mode}
-              width={image / 1.5}
-              height={image}
+              width={width}
+              height={height}
               alt='picture.jpg'
               priority
-              quality={100}
+              quality={quality}
             />
             <Image
               src={dark_mode}
-              width={image / 1.5}
-              height={image}
+              width={width}
+              height={height}
               alt='dark mode photo file'
               priority
-              quality={100}
+              quality={quality}
             />
           </div>
         </div>
@@ -230,12 +235,12 @@ export default function Home() {
     
         <Image
           src={categories}
-          width={450}
-          height={image}
+          width={width}
+          height={height}
           className={styles.image}
           alt='categories photo file'
           priority
-          quality={100}
+          quality={quality}
         />
       </section>
   
@@ -252,12 +257,12 @@ export default function Home() {
     
         <Image
           src={groups}
-          width={450}
-          height={image}
+          width={width}
+          height={height}
           className={styles.image}
           alt='groups photo file'
           priority
-          quality={100}
+          quality={quality}
         />
       </section>
   
@@ -274,12 +279,12 @@ export default function Home() {
     
         <Image
           src={friends}
-          width={450}
-          height={image}
+          width={width}
+          height={height}
           className={styles.image}
           alt='friends photo file'
           priority
-          quality={100}
+          quality={quality}
         />
       </section>
     </>

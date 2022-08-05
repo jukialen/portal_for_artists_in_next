@@ -56,10 +56,9 @@ export const Groups = ({ data }: DataType) => {
       >
         {data?.Aside?.addingGroup}
       </Links>
-      
       {
-        groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl, description }) =>
-          <div className={styles.groups__container} key={nameGroup}>
+        groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl, description }, index) =>
+          <div className={styles.groups__container} key={index}>
             <img src={logoUrl} alt={`${nameGroup} logo`} />
             <Links
               hrefLink={`/groups/${nameGroup}`}

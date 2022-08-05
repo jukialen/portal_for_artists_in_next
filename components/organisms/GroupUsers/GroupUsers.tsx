@@ -31,7 +31,10 @@ export const GroupUsers = () => {
       const groupArray: GroupType[] = [];
       
       await querySnapshot.forEach((doc) =>  {
-        adminArray.push({ nameGroup: doc.data().name, logoUrl: doc.data().logo })
+        adminArray.push({
+          nameGroup: doc.data().name,
+          logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`
+        });
       });
       
       setAdminsArray(adminArray);

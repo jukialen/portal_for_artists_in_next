@@ -55,19 +55,19 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
   };
   
   useEffect(() => {
-    return downloadAnimations();
+     downloadAnimations();
   }, []);
   
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
       {decodeURIComponent(asPath) === `/account/${pseudonym}` && <em className='title'>{data?.Account?.gallery?.userAnimationsTitle}</em>}
-      
+      {console.log(userAnimatedPhotos)}
       <Wrapper>
         {
           userAnimatedPhotos.length > 0 ?
-            userAnimatedPhotos.map(({ fileUrl, description, time, tags, uid, idPost }: FileType) => <Skeleton
+            userAnimatedPhotos.map(({ fileUrl, description, time, tags, uid, idPost }: FileType, index) => <Skeleton
               isLoaded={loading}
-              key={time}
+              key={index}
             >
               <Article
                 link={fileUrl}

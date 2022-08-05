@@ -33,21 +33,20 @@
   }
 }
 
-.main__container {
+.main__container, .main__container__mode {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
-  width: 98vw;
-  margin: 3rem auto 2.5rem;
+  margin: 3rem auto;
   font-size: 1.2rem;
 
   .container {
     display: flex;
     flex-direction: column;
     width: 100%;
+    max-width: 28.125rem;
     height: 20rem;
-    max-width: 26rem;
     justify-content: space-evenly;
     margin: 0 auto;
     line-height: 1.8;
@@ -69,20 +68,40 @@
   }
 
   .image {
-    object-fit: contain;
+    object-fit: fill;
 
     .modeImage {
       display: flex;
       flex-direction: column;
-      width: 100vw;
-      max-width: 28.125rem;
     }
   }
 
   @media (min-width: 824px) {
-    .container {
+    .main__container {
+      font-size: 1.4rem;
+
+      .container {
+      }
       margin: 0;
       }
+  }
+
+  @media (min-width: 919px) {
+    &__mode {
+      .container {
+        max-width: 56.25rem;
+        padding: 3rem 7rem;
+        font-size: 1.4rem;
+
+        .question {
+          font-size: inherit;
+        }
+      }
+
+      .image .modeImage {
+        flex-direction: row;
+      }
+    }
   }
 
 }

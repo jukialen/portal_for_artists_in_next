@@ -55,7 +55,7 @@ export const NewComments = ({ name, refCom }: NewCommentsType ) => {
       <Form>
         <div className={styles.comments}>
           <Avatar
-            src={group}
+            src={user?.photoURL!}
             width={10}
             height={10}
             marginTop='.4rem'
