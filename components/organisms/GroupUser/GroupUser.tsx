@@ -9,7 +9,7 @@ import { GroupType } from 'types/global.types';
 
 import { groupsQuery, user, usersInGroup } from 'references/referencesFirebase';
 
-import { GroupTile } from 'components/molecules/GroupTile/GroupTile';
+import { Tile } from 'components/molecules/GroupTile/Tile';
 
 type GroupUserType = {
   uidUser: string;
@@ -32,7 +32,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
       const groupArray: GroupType[] = [];
       
       await querySnapshot.forEach((doc) =>  {
-        adminArray.push({ nameGroup: doc.data().name, logoUrl: doc.data().logo })
+        adminArray.push({ nameGroup: doc.data().name, logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg}` })
       });
       
       setAdminsArray(adminArray);
@@ -45,7 +45,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
           const groupData = await getDoc(usersInGroup(group));
           
           if (groupData.exists()) {
-            const logoUrl: string = groupData.data().logo || '/#';
+            const logoUrl: string = groupData.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg}`;
             
             groupArray.push({ nameGroup: group, logoUrl });
             
@@ -71,27 +71,30 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
   return <div className={styles.tilesSection}>
     <h2 className={styles.title}>{data?.groupsUser?.adminTitle}</h2>
     <Divider className={styles.divider} />
-    {adminsArray.length > 0 ? adminsArray.map(({ nameGroup, logoUrl }) => <GroupTile
-      key={nameGroup}
-      nameGroup={nameGroup}
+    {adminsArray.length > 0 ? adminsArray.map(({ nameGroup, logoUrl }, index) => <Tile
+      key={index}
+      name={nameGroup}
+      link={`/groups/${nameGroup}`}
       logoUrl={logoUrl}
     />) : <p className={styles.noGroups}>
       {data?.Account?.groups?.adminTitle}
     </p>}
     <h2 className={styles.title}>{data?.groupsUser?.modsTitle}</h2>
     <Divider className={styles.divider} />
-    {moderatorsArray.length > 0 ? moderatorsArray.map(({ nameGroup, logoUrl }) => <GroupTile
-      key={nameGroup}
-      nameGroup={nameGroup}
+    {moderatorsArray.length > 0 ? moderatorsArray.map(({ nameGroup, logoUrl }, index) => <Tile
+      key={index}
+      name={nameGroup}
+      link={`/groups/${nameGroup}`}
       logoUrl={logoUrl}
     />) : <p className={styles.noGroups}>
       {data?.Account?.groups?.noMods}
     </p>}
     <h2 className={styles.title}>{data?.groupsUser?.usersTitle}</h2>
     <Divider className={styles.divider} />
-    {groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl }) => <GroupTile
-      key={nameGroup}
-      nameGroup={nameGroup}
+    {groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl }, index) => <Tile
+      key={index}
+      name={nameGroup}
+      link={`/groups/${nameGroup}`}
       logoUrl={logoUrl}
     />) : <p className={styles.noGroups}>
       {data?.Account?.groups?.noUsers}

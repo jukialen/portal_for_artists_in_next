@@ -1,15 +1,14 @@
 @use 'styles/variables' as *;
 
-.aside,
-.aside__right {
+.aside, .aside__right {
   transition: transform 0.3s 0.1s ease-in-out;
 }
 
 .aside {
-  width: 15rem;
+  width: 17rem;
   font-size: 1.5rem;
   position: absolute;
-  margin: 3rem 0 0 -15rem;
+  margin: 3rem 0 0 -17rem;
   background-color: $secondary__color;
   z-index: 2;
 
@@ -29,13 +28,26 @@
   }
 
   .h3 {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 3rem;
+    justify-items: center;
+    align-items: center;
     margin-top: -6rem;
-    text-align: center;
+    cursor: pointer;
+
+    p {
+      width: 100%;
+      padding-left: 1rem;
+    }
   }
 
-  .group__title, .friend__title {
-    text-align: center;
-    margin: 1rem auto;
+  .container {
+    display: flex;
+  }
+
+  .hidden__categories {
+    display: none;
   }
 
   .contact {
@@ -48,7 +60,6 @@
 
 @media (min-width: 982px) {
   .aside {
-    width: 17rem;
     position: sticky;
     margin: 0;
     padding: 5rem 0 0;
@@ -62,6 +73,7 @@
     &:active {
       scrollbar-color: $fourth__color $another__color;
     }
+
     &::-webkit-scrollbar {
       width: 10px;
     }
@@ -95,6 +107,10 @@
     .h3 {
       margin: 1rem 0;
     }
+
+    .afterHidden {
+      margin-bottom: 2rem;
+    }
   }
 }
 
@@ -102,7 +118,6 @@
   margin-top: -3rem;
   margin-bottom: 0;
 }
-
 .aside__active {
   margin: 3rem 0 0 0;
   transition: margin-left 0.8s ease-in-out;

@@ -56,7 +56,7 @@
     "animations": "Animacje",
     "videos": "Filmy",
     "others": "Inne",
-    "friends": "Przyjaciele",
+    "friends": "Ulubieni znajomi",
     "groups": "Ulubione grupy",
     "addingGroup": "Dodaj grupę",
     "contact": "Kontakt",
@@ -175,7 +175,7 @@
     "favorite": {
       "addedToFav": "Ulubiona",
       "addToFavorite": "Dodaj do ulubionych",
-      "maxFav": "Możesz dodać do 5 grup",
+      "maxFav": "Możesz dodać do 5 grup.",
       "maximumAchieved": "Już masz 5 ulubionych grup."
     },
     "menu": {
@@ -194,6 +194,16 @@
       "all": "To już wszystkie grupy."
     },
     "noGroups": "Brak ulubionych grup"
+  },
+  "Friends": {
+    "add": "Dodaj do znajomych",
+    "added": "Znajomy",
+    "addFav": "Dodaj do ulubionych",
+    "addedFav": "Ulubiony",
+    "max": "Możesz dodać do 5 znajomych.",
+    "addedMax": "Dodałeś/aś już 5 znajomych.",
+    "noFriends": "Brak znajomych",
+    "noFavFriends": "Brak ulubionych"
   },
   "groupsUser": {
     "adminTitle": "Grupy, które użytkownik stworzył",

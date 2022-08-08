@@ -4,7 +4,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 1rem 0;
+  padding: .5rem 0 2rem;
   justify-content: center;
   align-items: center;
   font-size: 1.4rem;
@@ -15,10 +15,6 @@
 
   .shadow {
     box-shadow: 0 0 3px $link__active;
-
-    @media (min-width: 982px) {
-      padding: 0 10px;
-    }
   }
 
   .containerImgLink {
@@ -48,17 +44,12 @@
   }
 
   .withIcon {
-    width: 98%;
     display: grid;
-    grid-template-columns: 1fr 2rem;
-    justify-content: center;
+    grid-template-columns: 1fr 3rem;
     align-items: center;
-    margin: auto;
-
-    .p {
-      padding-left: 1.5rem;
-      text-align: center;
-    }
+    width: 100%;
+    justify-items: center;
+    cursor: pointer;
 
     svg {
       justify-self: center;

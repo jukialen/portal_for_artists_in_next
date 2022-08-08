@@ -9,7 +9,7 @@ import { GroupType } from 'types/global.types';
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 
-import { GroupTile } from 'components/molecules/GroupTile/GroupTile';
+import { Tile } from 'components/molecules/GroupTile/Tile';
 
 import styles from './index.module.scss';
 
@@ -64,9 +64,10 @@ export default function List() {
     <div className={styles.list}>
       {
         listArray.length > 0
-          ? listArray.map(({ nameGroup, logoUrl }) => <GroupTile
-            key={nameGroup}
-            nameGroup={nameGroup}
+          ? listArray.map(({ nameGroup, logoUrl }, index) => <Tile
+            key={index}
+            name={nameGroup}
+            link={`/groups/${nameGroup}`}
             logoUrl={logoUrl}
           />)
           : <p>{data?.Groups?.noGroups}</p>

@@ -1,26 +1,35 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { db } from '../../firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { auth } from '../../firebase';
+import { arrayRemove, arrayUnion, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 
+import { user, usersRef } from 'references/referencesFirebase';
+
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
+import { ProfileUser } from 'components/atoms/ProfileUser/ProfileUser';
+import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
+import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
 import { PhotosGallery } from 'components/organisms/PhotosGallery/PhotosGallery';
 import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
-import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
-import { ProfileUser } from 'components/atoms/ProfileUser/ProfileUser';
 import { GroupUser } from 'components/organisms/GroupUser/GroupUser';
 
 import styles from './index.module.scss';
+import { CheckIcon, SmallAddIcon } from '@chakra-ui/icons';
 
 export default function User() {
   const [uid, setUid] = useState<string | undefined>(undefined);
   const [description, setDescription] = useState<string>('');
+  const [addF, setAddF] = useState(false);
+  const [favorite, setFavorite] = useState(false);
+  const [favoriteLength, setFavoriteLength] = useState(0);
+  
   const data = useHookSWR();
   const loading = useCurrentUser('/');
+  const currentUser = auth.currentUser?.uid;
   
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
@@ -31,7 +40,6 @@ export default function User() {
   const split = asPath.split('/');
   const author = decodeURIComponent(split[split.length - 1]);
   
-  const usersRef = collection(db, 'users');
   const uidRef = query(usersRef, where('pseudonym', '==', author));
   
   const downLoadUid = async () => {
@@ -39,133 +47,220 @@ export default function User() {
       const querySnapshot = await getDocs(uidRef);
       querySnapshot.forEach((doc) => {
         setUid(doc.id);
-        setDescription(doc.data().description)
+        setDescription(doc.data().description);
       });
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
   }
   
-  useEffect(() => {
-     !!author && downLoadUid();
-  }, [author])
+  const downloadFriends = async () => {
+    const docRef = user(currentUser!);
+    const docSnap = await getDoc(docRef);
+    
+    docSnap.exists() ? docSnap.data().friends.forEach((friend: string) => {
+      friend === uid && setAddF(!addF);
+    }) : console.error('No such friends!');
+    
+    if (docSnap.exists()) {
+      docSnap.data().favoriteFriends.forEach((favoriteFriend: string) => {
+        favoriteFriend === uid && setFavorite(!favorite);
+        favoriteFriend === uid && setFavoriteLength(favoriteFriend.length);
+      });
+      setFavoriteLength(docSnap.data().favoriteFriends.length);
+    } else {
+      console.error('No such friends!');
+    }
+  };
   
-  return !loading ? (
-    <>
-      <HeadCom path={`/user/${author}`} content={`${author} site`} />
+  useEffect(() => {
+    !!author && downLoadUid();
+  }, [author]);
+  
+  useEffect(() => {
+    !!uid && downloadFriends();
+  }, [uid]);
+  
+  const addToFriend = async () => {
+    try {
+      if (addF) {
+        await setDoc(user(currentUser!), { friends: arrayRemove(uid) }, { merge: true });
+        setAddF(false);
+      } else {
+        await setDoc(user(currentUser!), { friends: arrayUnion(uid) }, { merge: true });
+        setAddF(true);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  
+  
+  const addToFavorites = async () => {
+    try {
+      if (favorite) {
+        await setDoc(user(currentUser!), {
+          favoriteFriends: arrayRemove(uid)
+        }, { merge: true });
+      } else {
+        await setDoc(user(currentUser!), {
+          favoriteFriends: arrayUnion(uid)
+        }, { merge: true });
+      }
+      setFavorite(!favorite);
       
-      <h2 className={styles.profile__user__title}>{author}</h2>
-      
-      <Tabs
-        className={styles.tabs}
-        size='sm'
-        isLazy
-        lazyBehavior='keepMounted'
-        isFitted
-        variant='unstyled'
-      >
-        <TabList
-          className={styles.topTabList}
-          role='tablist'
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  
+  if (loading) {
+    return null;
+  }
+  
+  return <>
+    <HeadCom path={`/user/${author}`} content={`${author} site`} />
+    
+    <h2 className={styles.profile__user__title}>{author}</h2>
+    
+    <div className={styles.friendsButtons}>
+      {currentUser === uid ? null :
+        <button
+          className={addF ? styles.addedButton : styles.addButton}
+          onClick={addToFriend}
         >
-          <div className={styles.profile__user__menu}>
-            <div className={styles.content}>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role='tab'
-              >
-                {data?.Account?.aMenu?.gallery}
-              </Tab>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role='tab'
-              >
-                {data?.Account?.aMenu?.profile}
-              </Tab>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role='tab'
-              >
-                {data?.Account?.aMenu?.friends}
-              </Tab>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role='tab'
-              >
-                {data?.Account?.aMenu?.groups}
-              </Tab>
-            </div>
-          </div>
-        </TabList>
-        
-        <TabPanels className={styles.tabPanels}>
-          <TabPanel
-            className={styles.tabPanel}
-            role='tabpanel'
+          {addF ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
+          <p>{addF ? data?.Friends?.added : data?.Friends?.add}</p>
+        </button>}
+      
+      {currentUser === uid ? null : !addF ? null :
+        <div>
+          <button
+            className={addF && favorite ? styles.addedButton : styles.addButton}
+            onClick={addToFavorites}
+            disabled={favoriteLength === 5}
           >
-            <Tabs
-              size='sm'
-              isLazy
-              lazyBehavior='keepMounted'
-              isFitted
-              variant='unstyled'
-              className={styles.tabsForPanels}
+            {favorite && favoriteLength !== 5 ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
+            <p>{addF && favorite ? data?.Friends?.addedFav : data?.Friends?.addFav}</p>
+          </button>
+          {!favorite && <p>
+            {!addF ? '' : !favorite && favoriteLength < 5 ? data?.Friends?.max : data?.Friends?.addedMax}
+          </p>}
+        </div>}
+    </div>
+  
+    {currentUser === uid ? null : <Divider orientation='horizontal' width='95%' />}
+    
+    <Tabs
+      className={styles.tabs}
+      size='sm'
+      isLazy
+      lazyBehavior='keepMounted'
+      isFitted
+      variant='unstyled'
+    >
+      <TabList
+        className={styles.topTabList}
+        role='tablist'
+      >
+        <div className={styles.profile__user__menu}>
+          <div className={styles.content}>
+            <Tab
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={borderColor}
+              role='tab'
             >
-              <TabList
-                className={styles.tabList}
-                role='tablist'
+              {data?.Account?.aMenu?.gallery}
+            </Tab>
+            <Tab
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={borderColor}
+              role='tab'
+            >
+              {data?.Account?.aMenu?.profile}
+            </Tab>
+            <Tab
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={borderColor}
+              role='tab'
+            >
+              {data?.Account?.aMenu?.friends}
+            </Tab>
+            <Tab
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={borderColor}
+              role='tab'
+            >
+              {data?.Account?.aMenu?.groups}
+            </Tab>
+          </div>
+        </div>
+      </TabList>
+      
+      <TabPanels className={styles.tabPanels}>
+        <TabPanel
+          className={styles.tabPanel}
+          role='tabpanel'
+        >
+          <Tabs
+            size='sm'
+            isLazy
+            lazyBehavior='keepMounted'
+            isFitted
+            variant='unstyled'
+            className={styles.tabsForPanels}
+          >
+            <TabList
+              className={styles.tabList}
+              role='tablist'
+            >
+              <Tab
+                className={styles.tabForPanels}
+                _selected={{ borderColor: selectedColor }}
+                _hover={{ borderColor: hoverColor }}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
               >
-                <Tab
-                  className={styles.tabForPanels}
-                  _selected={{ borderColor: selectedColor }}
-                  _hover={{ borderColor: hoverColor }}
-                  _active={{ borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role='tab'
-                >
-                  {data?.Aside?.photos}
-                </Tab>
-                <Tab
-                  className={styles.tabForPanels}
-                  _selected={{ borderColor: selectedColor }}
-                  _hover={{ borderColor: hoverColor }}
-                  _active={{ borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role='tab'
-                >
-                  {data?.Aside?.animations}
-                </Tab>
-                <Tab
-                  className={styles.tabForPanels}
-                  _selected={{ borderColor: selectedColor }}
-                  _hover={{ borderColor: hoverColor }}
-                  _active={{ borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role='tab'
-                >
-                  {data?.Aside?.videos}
-                </Tab>
-              </TabList>
-              <TabPanels className={styles.tabPanels}>
-                <TabPanel
-                  className={styles.tabPanel}
-                  role='tabpanel'
-                >
-                  <PhotosGallery user={uid} data={data} pseudonym={author} />
-                </TabPanel>
-                <TabPanel
+                {data?.Aside?.photos}
+              </Tab>
+              <Tab
+                className={styles.tabForPanels}
+                _selected={{ borderColor: selectedColor }}
+                _hover={{ borderColor: hoverColor }}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
+              >
+                {data?.Aside?.animations}
+              </Tab>
+              <Tab
+                className={styles.tabForPanels}
+                _selected={{ borderColor: selectedColor }}
+                _hover={{ borderColor: hoverColor }}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
+              >
+                {data?.Aside?.videos}
+              </Tab>
+            </TabList>
+            <TabPanels className={styles.tabPanels}>
+              <TabPanel
+                className={styles.tabPanel}
+                role='tabpanel'
+              >
+                <PhotosGallery user={uid} data={data} pseudonym={author} />
+              </TabPanel>
+              <TabPanel
                   className={styles.tabPanel}
                   role='tabpanel'
                 >
@@ -195,7 +290,7 @@ export default function User() {
             className={styles.tabPanel}
             role='tabpanel'
           >
-            <h2>{data?.Aside?.friends}</h2>
+            <FriendsList uid={uid!} />
           </TabPanel>
           <TabPanel
             className={styles.tabPanel}
@@ -206,5 +301,4 @@ export default function User() {
         </TabPanels>
       </Tabs>
     </>
-  ) : null;
 };

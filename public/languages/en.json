@@ -56,7 +56,7 @@
     "animations": "Animations",
     "videos": "Videos",
     "others": "Others",
-    "friends": "Friends",
+    "friends": "Favorite friends",
     "groups": "Favorite groups",
     "addingGroup": "Adding a group",
     "contact": "Contact",
@@ -174,7 +174,7 @@
     "joined": "Joined",
     "favorite": {
       "addedToFav": "Favorite",
-      "addToFavorite": "Add to favourites",
+      "addToFavorite": "Add to favourite",
       "maxFav": "You can add up to 5 groups.",
       "maximumAchieved": "You already have 5 favorite groups."
     },
@@ -194,6 +194,16 @@
       "all": "These are already all groups."
     },
     "noGroups": "No favorite group"
+  },
+  "Friends": {
+    "add": "Add to friends",
+    "added": "Friend",
+    "addFav": "Add to favorite",
+    "addedFav": "Favorite",
+    "max": "You can add up to 5 friends.",
+    "addedMax": "You already have 5 favorite friends.",
+    "noFriends": "No friends",
+    "noFavFriends": "No favorites"
   },
   "groupsUser": {
     "adminTitle": "Groups which the user've created",

@@ -20,14 +20,11 @@ export const Categories = ({ data }: DataType) => {
   const { asPath } = useRouter();
   
   const [arrowIcon, setArrowIcon] = useState(false);
-  const [openSubCategories, setOpenCategories] = useState(true);
   
-  const changeOpenCategories = () => {
-    setOpenCategories(!openSubCategories);
-    setArrowIcon(!arrowIcon);
-  };
+  const changeOpenCategories = () => setArrowIcon(!arrowIcon);
   
   const icons = 55;
+  const arrowIcons = '1.5rem';
   
   return (
     <ol className={styles.categories}>
@@ -37,14 +34,12 @@ export const Categories = ({ data }: DataType) => {
             className={`${styles.link} ${styles.withIcon}`}
             onClick={changeOpenCategories}
           >
-            <p className={styles.p}>
-              {data?.Aside?.drawings}
-            </p>
-            {arrowIcon ? <TriangleDownIcon w='1.5rem' h='1.5rem' className={styles.icons} /> :
-              <TriangleUpIcon w='1.5rem' h='1.5rem' className={styles.icons} />}</a>
+            <p>{data?.Aside?.drawings}</p>
+            {arrowIcon ? <TriangleUpIcon w={arrowIcons} h={arrowIcons} /> :
+              <TriangleDownIcon w={arrowIcons} h={arrowIcons} />}</a>
         </Link>
-        
-        <ol className={openSubCategories ? '' : styles.hiddenElement}>
+  
+        <ol className={arrowIcon ? '' : styles.hiddenElement}>
           <div className={styles.containerImgLink}>
             <Image src={realistic} height={icons} width={icons} alt={data?.Aside?.realistic} />
             <Link href='/drawings/realistic'>

@@ -7,6 +7,7 @@ import { GroupNameType } from 'types/global.types';
 
 // USERS
 export const user = (username: string) => doc(db, `users/${username}`);
+export const usersRef = collection(db, 'users');
 
 // FILES
 const maxItems: number = 10;

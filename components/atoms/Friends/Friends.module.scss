@@ -1,0 +1,61 @@
+.title {
+  display: grid;
+  grid-template-columns: 1fr 3rem;
+  align-items: center;
+  width: 100%;
+  justify-items: center;
+  cursor: pointer;
+
+  &__jp {
+    padding-left: 0;
+    font-size: 1.3rem;
+  }
+
+  p, .title__others {
+    width: 100%;
+    padding-left: 1rem;
+  }
+}
+
+.friends {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+
+  .container {
+    display: flex;
+
+    .link {
+      display: flex;
+      align-items: center;
+      margin: .75rem .5rem;
+      font-size: 1.2rem;
+
+      .item {
+        width: 2.5rem;
+        height: 2.5rem;
+        position: relative;
+        border-radius: .6rem;
+        font-size: 1rem;
+
+        img {
+          border-radius: .5rem;
+        }
+      }
+
+      .pseudonym {
+        margin-left: .5rem;
+      }
+    }
+  }
+
+  .noFavFriends {
+    margin: .75rem auto;
+    font-size: 1.2rem;
+  }
+}
+
+.hiddenFriends {
+  display: none;
+}

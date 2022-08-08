@@ -6,12 +6,17 @@ import { Links } from 'components/atoms/Links/Links';
 
 import styles from './GroupTile.module.scss';
 
-export const GroupTile = ({ nameGroup, logoUrl }: GroupType) => {
+type TileType = {
+  name: string;
+  link: string;
+  logoUrl: string;
+}
+export const Tile = ({name, link, logoUrl }: TileType) => {
   const sizes = 288;
   
   return <article className={styles.tile}>
     <Links
-      hrefLink={`/groups/${nameGroup}`}
+      hrefLink={link}
       classLink={styles.link}
     >
       <Image
@@ -19,9 +24,9 @@ export const GroupTile = ({ nameGroup, logoUrl }: GroupType) => {
         width={sizes}
         height={sizes}
         className={styles.thumbnail}
-        alt={nameGroup}
+        alt={name}
       />
-      <p className={styles.nameGroup}>{nameGroup}</p>
+      <p className={styles.nameGroup}>{name}</p>
     </Links>
   </article>
 }

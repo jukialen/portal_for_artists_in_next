@@ -9,7 +9,7 @@ import { GroupType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { GroupTile } from 'components/molecules/GroupTile/GroupTile';
+import { Tile } from 'components/molecules/GroupTile/Tile';
 
 import styles from './GroupUsers.module.scss';
 
@@ -73,27 +73,30 @@ export const GroupUsers = () => {
   return <div className={styles.tilesSection}>
     <h2 className={styles.title}>{data?.Account?.groups?.adminTitle}</h2>
     <Divider className={styles.divider} />
-    {adminsArray.length > 0 ? adminsArray.map(({ nameGroup, logoUrl }) => <GroupTile
-      key={nameGroup}
-      nameGroup={nameGroup}
+    {adminsArray.length > 0 ? adminsArray.map(({ nameGroup, logoUrl }, index) => <Tile
+      key={index}
+      name={nameGroup}
+      link={`/groups/${nameGroup}`}
       logoUrl={logoUrl}
     />) : <p className={styles.noGroups}>
       {data?.Account?.groups?.adminTitle}
     </p>}
     <h2 className={styles.title}>{data?.Account?.groups?.modsTitle}</h2>
     <Divider className={styles.divider} />
-    {moderatorsArray.length > 0 ? moderatorsArray.map(({ nameGroup, logoUrl }) => <GroupTile
-      key={nameGroup}
-      nameGroup={nameGroup}
+    {moderatorsArray.length > 0 ? moderatorsArray.map(({ nameGroup, logoUrl }, index) => <Tile
+      key={index}
+      name={nameGroup}
+      link={`/groups/${nameGroup}`}
       logoUrl={logoUrl}
     />) : <p className={styles.noGroups}>
       {data?.Account?.groups?.noMods}
     </p>}
     <h2 className={styles.title}>{data?.Account?.groups?.usersTitle}</h2>
     <Divider className={styles.divider} />
-    {groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl }) => <GroupTile
-      key={nameGroup}
-      nameGroup={nameGroup}
+    {groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl }, index) => <Tile
+      key={index}
+      name={nameGroup}
+      link={`/groups/${nameGroup}`}
       logoUrl={logoUrl}
     />) : <p className={styles.noGroups}>
       {data?.Account?.groups?.noUsers}

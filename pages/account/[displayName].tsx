@@ -8,6 +8,7 @@ import { useUserData } from 'hooks/useUserData';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { DeleteAccount } from 'components/atoms/DeleteAccount/DeleteAccount';
 import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
+import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
 import { AccountData } from 'components/organisms/AccountData/AccountData';
 import { PhotosGallery } from 'components/organisms/PhotosGallery/PhotosGallery';
 import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
@@ -178,7 +179,7 @@ export default function Account() {
             className={styles.tabPanel}
             role='tabpanel'
           >
-            <h2>{data?.Account?.aMenu?.friends}</h2>
+            <FriendsList uid={user?.uid!} />
           </TabPanel>
           <TabPanel
             className={styles.tabPanel}

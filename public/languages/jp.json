@@ -56,7 +56,7 @@
     "animations": "アニメーション",
     "videos": "映画",
     "others": "他",
-    "friends": "友達",
+    "friends": "フェイバリットの友達",
     "groups": "フェイバリットの団体",
     "addingGroup": "団体が増設",
     "contact": "連絡",
@@ -175,8 +175,8 @@
     "favorite": {
       "addedToFav": "愛用",
       "addToFavorite": "愛用まで付け加える",
-      "maxFav": "九団体まで付け加える出来る。",
-      "maximumAchieved": "　もう九愛用の団体います。"
+      "maxFav": "五団体まで付け加える出来る。",
+      "maximumAchieved": "もう五愛用の団体います。"
     },
     "menu": {
       "members": "隊員"
@@ -194,6 +194,16 @@
       "all": "これがもう皆あります。"
     },
     "noGroups": "愛用の団体がありません"
+  },
+  "Friends": {
+    "add": "友達まで付け加える",
+    "added": "友達",
+    "addFav": "愛用まで付け加える",
+    "addedFav": "愛用",
+    "max": "五団体まで付け加える出来る。",
+    "addedMax": "もう五愛用の団体います。",
+    "noFriends": "友達がいません",
+    "noFavFriends": "愛用がいません"
   },
   "groupsUser": {
     "adminTitle": "ユーザが生み出しました団体",
