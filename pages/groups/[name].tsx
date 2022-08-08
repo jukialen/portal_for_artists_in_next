@@ -71,6 +71,8 @@ export default function Groups() {
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
   const activeColor = '#4F8DFF';
+  const checkIcon = '1rem';
+  const smallIcon = '1.5rem';
   
   const addingToGroup = {
     background: activeColor,
@@ -85,7 +87,7 @@ export default function Groups() {
   const favoriteGroup = async () => {
     try {
       const docSnap = await getDoc(user(currentUser!));
-      
+    
       if (docSnap.exists()) {
         docSnap.data().favoriteGroups.forEach((favoriteGroup: string) => {
           favoriteGroup === name ? setFavorite(true) : setFavorite(false);
@@ -94,12 +96,12 @@ export default function Groups() {
       }
     } catch (e) {
       console.error(e);
-    }
+    };
   };
   
   useEffect(() => {
     !loading && !!name && favoriteGroup();
-  }, [name, join, loading]);
+  }, [name, loading]);
   
   const joinedUsers = async () => {
     try {
@@ -139,7 +141,6 @@ export default function Groups() {
           { groups: arrayUnion(name) },
           { merge: true });
       }
-      setFavorite(!favorite);
       setJoin(!join);
     } catch (e) {
       console.error(e);
@@ -158,7 +159,6 @@ export default function Groups() {
         }, { merge: true });
       }
       setFavorite(!favorite);
-      
     } catch (e) {
       console.log(e);
     }
@@ -309,7 +309,7 @@ export default function Groups() {
     
     <div className={styles.buttons}>
       <Button
-        leftIcon={join && currentUser === userId ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
+        leftIcon={join && currentUser === userId ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
         style={join && currentUser === userId ? addingToGroupOutline : addingToGroup}
         colorScheme='blue'
         onClick={joinToGroup}
@@ -321,17 +321,17 @@ export default function Groups() {
       
       {(join && currentUser === userId) && <div>
         <Button
-        leftIcon={favorite ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
+        leftIcon={favorite ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
         style={favorite ? addingToGroupOutline : addingToGroup}
         colorScheme='blue'
-        disabled={!favorite && favoriteLength > 5}
+        disabled={!favorite && favoriteLength === 5}
         onClick={addToFavorites}
         variant={favorite ? 'solid' : 'outline'}
         className={`${styles.button} ${styles.favoriteButton}`}
       >
-        {favorite && currentUser === userId ? data?.Groups?.favorite?.addedToFav : data?.Groups?.favorite?.addToFavorite}
+        {favorite ? data?.Groups?.favorite?.addedToFav : data?.Groups?.favorite?.addToFavorite}
         </Button>
-        <p>{favoriteLength < 5 ? data?.Groups?.favorite?.maxFav : data?.Groups?.favorite?.maximumAchieved}</p>
+        {!favorite && <p>{favoriteLength !== 5 ? data?.Groups?.favorite?.maxFav : data?.Groups?.favorite?.maximumAchieved}</p>}
       </div>}
     </div>
     

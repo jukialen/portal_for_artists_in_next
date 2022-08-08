@@ -40,7 +40,7 @@ export const DeleteAccount = () => {
   const user = auth.currentUser!;
   
   const profileUserRef = ref(storage, `profilePhotos/${user?.uid}/${user?.uid}`);
-  const userRef = `users/${user.uid}`;
+  const userRef = `users/${user?.uid}`;
   
 
   const onClose = () => setIsOpen(false);
