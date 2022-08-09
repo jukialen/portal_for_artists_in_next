@@ -56,7 +56,6 @@ export default function NewUser() {
   
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
-      
       if(!!photo) {
         const fileRef = await ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
   
@@ -81,7 +80,7 @@ export default function NewUser() {
             const photoURL = await getDownloadURL(fileRef);
       
             await setDoc(doc(db, `users/${user?.uid}`), {
-              pseudonym, profilePhoto: photoURL
+              pseudonym, profilePhoto: photoURL, groups: [], favoriteGroups: [], friends: [], favoriteFriends: []
             });
       
             setValuesFields(`${data?.AnotherForm?.uploadFile}`);
@@ -97,7 +96,7 @@ export default function NewUser() {
           });
       } else {
         await setDoc(doc(db, `users/${user?.uid}`), {
-          pseudonym, profilePhoto: null
+          pseudonym, profilePhoto: null, groups: [], favoriteGroups: [], friends: [], favoriteFriends: []
         });
   
         await updateProfile(user, {
