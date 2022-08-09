@@ -66,14 +66,6 @@ export const Groups = ({ data }: DataType) => {
       </h3>
     
       <div className={open ? styles.groups__container : styles.hiddenGroups}>
-        <Links
-          hrefLink='/adding_group'
-          classLink={`${styles.groups__container__button} button`}
-          aria-label={data?.Aside?.addingGroup}
-        >
-          {data?.Aside?.addingGroup}
-        </Links>
-      
         {
           groupsArray.length > 0 ? groupsArray.map(({ nameGroup, logoUrl, description }, index) =>
             <div className={styles.container} key={index}>

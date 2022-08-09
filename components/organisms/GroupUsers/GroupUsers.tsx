@@ -9,6 +9,7 @@ import { GroupType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
+import { Links } from 'components/atoms/Links/Links';
 import { Tile } from 'components/molecules/GroupTile/Tile';
 
 import styles from './GroupUsers.module.scss';
@@ -71,6 +72,15 @@ export const GroupUsers = () => {
   }, []);
   
   return <div className={styles.tilesSection}>
+    <div className={styles.container}>
+      <Links
+        hrefLink='/adding_group'
+        classLink={`${styles.container__button} button`}
+        aria-label={data?.Aside?.addingGroup}
+      >
+        {data?.Aside?.addingGroup}
+      </Links>
+    </div>
     <h2 className={styles.title}>{data?.Account?.groups?.adminTitle}</h2>
     <Divider className={styles.divider} />
     {adminsArray.length > 0 ? adminsArray.map(({ nameGroup, logoUrl }, index) => <Tile
