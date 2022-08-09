@@ -19,7 +19,7 @@ type TitleNavType = {
 };
 
 export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
-  const { asPath, push } = useRouter();
+  const { asPath, push, locale } = useRouter();
   const  data = useHookSWR();
   const { pseudonym } = useUserData();
   const user = auth.currentUser;
@@ -47,21 +47,18 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   };
   
   return (
-    <nav className={`${styles.nav} ${isMenu && styles.menu__active}`}>
+    <nav className={`${styles.nav} ${isMenu && styles.menu__active} ${locale === 'jp' ? styles.nav__jp : ''}`}>
       <ul className={styles.list}>
         <li className={styles.menu}>
           <Link href={asPath}>
-            <a
-              className={styles.sign__in}
-              onClick={titleFirstNav !== `${data?.Nav?.signOut}` ? hideMenuLogin : sign__out}
-            >
+            <a onClick={titleFirstNav !== `${data?.Nav?.signOut}` ? hideMenuLogin : sign__out}>
               {titleFirstNav}
             </a>
           </Link>
         </li>
         <li className={styles.menu}>
           <Link href={titleSecondNav === `${data?.Nav?.account}` ? `/account/${pseudonym || user?.providerData[0].displayName}` : asPath}>
-            <a className={styles.sign__out} onClick={hideMenuCreate}>
+            <a onClick={hideMenuCreate}>
               {titleSecondNav}
             </a>
           </Link>
