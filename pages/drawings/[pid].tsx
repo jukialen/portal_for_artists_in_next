@@ -53,14 +53,11 @@ export default function Drawings() {
         orderBy('timeCreated', 'desc'),
         limit(maxItems)
       );
-      console.log(pid);
-      
       
       const drawingsArray: FileType[] = [];
       
       const documentSnapshots = await getDocs(firstPage);
-      console.log('last', lastVisible);
-      console.log('firstData', documentSnapshots.docs);
+     
       for (const document of documentSnapshots.docs) {
         const docSnap = await getDoc(user(document.data().uid));
         
@@ -81,7 +78,6 @@ export default function Drawings() {
   };
   
   useEffect(() => {
-    console.log(pid);
     !!pid && downloadDrawings();
   }, [pid]);
   
@@ -103,7 +99,6 @@ export default function Drawings() {
       for (const document of documentSnapshots.docs) {
         const docSnap = await getDoc(user(document.data().uid));
         
-        console.log('doc2', docSnap.data());
         if (docSnap.exists()) {
           filesElements(nextArray, document, docSnap.data().pseudonym);
         } else {
