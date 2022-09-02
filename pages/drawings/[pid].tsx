@@ -1,16 +1,28 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth, db, storage } from '../../firebase';
-import { doc, getDoc, limit, onSnapshot, orderBy, Query, query, where } from 'firebase/firestore';
+import { auth, storage } from '../../firebase';
+import {
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  Query,
+  query,
+  QueryDocumentSnapshot,
+  startAfter,
+  where
+} from 'firebase/firestore';
 import { ref } from 'firebase/storage';
-import { Skeleton } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 
 import { FileType } from 'types/global.types';
 
-import { allPhotosCollectionRef, userPhotosRef } from 'references/referencesFirebase';
+import { allPhotosCollectionRef, user, userPhotosRef } from 'references/referencesFirebase';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
+
+import { filesElements } from 'helpers/fileElements';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
@@ -23,104 +35,131 @@ export default function Drawings() {
   const router = useRouter();
   const { pid } = router.query;
   const loading = useCurrentUser('/');
-  
-  const maxItems: number = 10;
-  
   const data = useHookSWR();
+  
+  const maxItems: number = 30;
+  
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
-  const [loadingFiles, setLoadingFiles] = useState(false);
-  const [nextPageArray, setNextPageArray] = useState<string[]>([]);
+  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
+  let [i, setI] = useState(1);
   
-  let nextPage: Query;
-  const user = auth?.currentUser;
+  let firstPage: Query;
+  const currentUser = auth?.currentUser;
   
-  useEffect(() => {
-    switch (pid) {
-      case 'realistic':
-        setNextPageArray(['Realistyczne', 'Realistic', '写実的']);
-        break;
-      case 'manga':
-        setNextPageArray(['Manga', 'マンガ']);
-        break;
-      case 'anime':
-        setNextPageArray(['Anime', 'アニメ']);
-        break;
-      case 'comics':
-        setNextPageArray(['Komiksy', 'Comics', 'コミック']);
-        break;
-    }
-  }, [pid]);
-  
-  const downloadDrawings = () => {
+  const downloadDrawings = async () => {
     try {
-      nextPage = query(allPhotosCollectionRef(),
-        where('tag', 'in', nextPageArray),
+      firstPage = query(allPhotosCollectionRef(),
+        where('tag', '==', pid),
         orderBy('timeCreated', 'desc'),
         limit(maxItems)
       );
-  
-      onSnapshot(nextPage, (querySnapshot) => {
-          const drawingsArray: FileType[] = [];
-    
-          querySnapshot.forEach(async (document) => {
-            const docRef = doc(db, `users/${document.data().uid}`);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-              drawingsArray.push({
-                fileUrl: document.data().fileUrl,
-                time: document.data().timeCreated,
-                tags: document.data().tag,
-                pseudonym: docSnap.data()!.pseudonym,
-                description: document.data().description,
-                uid: document.data().uid,
-                idPost: document.id
-              });
-            } else {
-              console.error('No such doc');
-            }
-          });
-          
-          setUserDrawings(drawingsArray);
-          setLoadingFiles(true);
-        },
-        (e) => {
-          console.error('Error', e);
-        });
+      console.log(pid);
+      
+      
+      const drawingsArray: FileType[] = [];
+      
+      const documentSnapshots = await getDocs(firstPage);
+      console.log('last', lastVisible);
+      console.log('firstData', documentSnapshots.docs);
+      for (const document of documentSnapshots.docs) {
+        const docSnap = await getDoc(user(document.data().uid));
+        
+        if (docSnap.exists()) {
+          filesElements(drawingsArray, document, docSnap.data().pseudonym);
+        } else {
+          console.error('No such drawings');
+        }
+        setUserDrawings(drawingsArray);
+      }
+      console.log(drawingsArray);
+      drawingsArray.length === 30 && setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      
     } catch (e) {
-      console.log(e);
-      console.log('No such document!');
+      console.error(e);
+      console.log('No such drawings!');
     }
   };
   
-  useMemo(() => {
-    return downloadDrawings();
-  }, [nextPageArray]);
+  useEffect(() => {
+    console.log(pid);
+    !!pid && downloadDrawings();
+  }, [pid]);
   
-  return !loading ? (
-    <>
-      <HeadCom path={router.asPath} content='Sites with drawings and photos.' />
+  const nextElements = async () => {
+    try {
+      const nextPage: Query = query(allPhotosCollectionRef(),
+        where('tag', 'in', pid),
+        orderBy('timeCreated', 'desc'),
+        limit(maxItems),
+        startAfter(lastVisible),
+      );
       
-        <em className={styles.title}>{data?.Aside?.category}: {pid}</em>
+      const documentSnapshots = await getDocs(nextPage);
+      
+      setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      
+      const nextArray: FileType[] = [];
+      
+      for (const document of documentSnapshots.docs) {
+        const docSnap = await getDoc(user(document.data().uid));
+        
+        console.log('doc2', docSnap.data());
+        if (docSnap.exists()) {
+          filesElements(nextArray, document, docSnap.data().pseudonym);
+        } else {
+          console.error('No more drawings');
+        }
+        
+        setUserDrawings(nextArray.concat(...nextArray));
+        setI(++i);
+      }
+      console.log(userDrawings);
+    } catch (e) {
+      console.error(e);
+    }
+  };
   
-        <Wrapper>{
-          userDrawings.length > 0 ?
-            userDrawings.map(({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType) => <Skeleton
-              isLoaded={loadingFiles}
-              key={time}
-            >
-              <Article
-                link={fileUrl}
-                description={description}
-                authorName={pseudonym}
-                refFile={userPhotosRef(user?.uid!)}
-                subCollection='photos'
-                refStorage={ref(storage, `${user?.uid}/photos/${description}`)}
-                tag={tags}
-                uid={uid}
-                idPost={idPost}
-              />
-            </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.files} />
-       }</Wrapper>
-    </>
-  ) : null;
+  if (loading) {
+    return null;
+  }
+  
+  return <>
+    <HeadCom path={router.asPath} content='Sites with drawings and photos.' />
+    
+    <em className={styles.title}>{data?.Aside?.category}: {pid}</em>
+    
+    <Wrapper>
+      {
+        userDrawings.length > 0 ?
+          userDrawings.map(({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) =>
+            <Article
+              key={index}
+              link={fileUrl}
+              description={description}
+              authorName={pseudonym}
+              refFile={userPhotosRef(currentUser?.uid!)}
+              subCollection='photos'
+              refStorage={ref(storage, `${currentUser?.uid}/photos/${description}`)}
+              tag={tags}
+              uid={uid}
+              idPost={idPost}
+            />) : <ZeroFiles text={data?.ZeroFiles?.files} />
+      }
+      
+      {
+        !!lastVisible && userDrawings.length === 30 * i &&
+        <Button
+          className={styles.nextButton}
+          variant='outline'
+          colorScheme='blue'
+          width='8rem'
+          borderColor='#4F8DFF'
+          _hover={{ backgroundColor: '#4F8DFF' }}
+          onClick={nextElements}
+        >
+          {data?.Groups?.list?.more}
+        </Button>
+      }
+    </Wrapper>
+  </>;
 };

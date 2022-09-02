@@ -46,28 +46,28 @@ export default function Drawings() {
     switch (index) {
       case 'photographs':
         setNextPage(query(allPhotosCollectionRef(),
-          where('tag', 'in', ['Fotografie', 'Photographs', '写真']),
+          where('tag', '==', 'photographs'),
           orderBy('timeCreated', 'desc'),
           limit(maxItems)
         ));
         break;
       case 'animations':
         setNextPage(query(allAnimatedCollectionRef(),
-          where('tag', 'in', ['Animacje', 'Animations', 'アニメーション']),
+          where('tag', '==', 'animations'),
           orderBy('timeCreated', 'desc'),
           limit(maxItems)
         ));
         break;
       case 'videos':
         setNextPage(query(allVideosCollectionRef(),
-          where('tag', 'in', ['Filmy', 'Videos', '映画']),
+          where('tag', '==', 'videos'),
           orderBy('timeCreated', 'desc'),
           limit(maxItems)
         ));
         break;
       case 'others':
         setNextPage(query(allPhotosCollectionRef(),
-          where('tag', 'in', ['Inne', 'Others', '他']),
+          where('tag', '==', 'others'),
           orderBy('timeCreated', 'desc'),
           limit(maxItems)
         ));

@@ -75,14 +75,10 @@ export default function Post() {
   
   useEffect(() => {
     switch (tag) {
-      case 'アニメーション':
-      case 'Animations':
-      case 'Animacje':
+      case 'animations':
         setContainer(animationPost!);
         break;
-      case 'Filmy':
-      case 'Videos':
-      case '映画':
+      case 'videos':
         setContainer(videoPost!);
         break;
       default:

@@ -45,7 +45,7 @@ export const AccountData = ({ data }: DataType) => {
       resetForm(initialValues);
       setValuesFields(data?.Forgotten?.success);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       setValuesFields(data?.error);
     }
   };
@@ -61,7 +61,7 @@ export const AccountData = ({ data }: DataType) => {
       resetForm(initialValues);
       setValuesFieldsPass(data?.PasswordAccount?.success);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       setValuesFieldsPass(data?.error);
     }
   };

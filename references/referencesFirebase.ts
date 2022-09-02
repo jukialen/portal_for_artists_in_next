@@ -1,8 +1,6 @@
 import { collection, collectionGroup, doc, limit, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 
-import { animationsTags, drawingsTags, othersTags, photosTags, videosTags } from 'helpers/arrayTags';
-
 import { GroupNameType } from 'types/global.types';
 
 // USERS
@@ -17,35 +15,34 @@ export const allAnimatedCollectionRef = () => collectionGroup(db, 'animations');
 export const allVideosCollectionRef = () => collectionGroup(db, 'videos');
 
 export const nextDrawings = query(allPhotosCollectionRef(),
-  where('tag', 'in', drawingsTags),
+  where('tag', 'in', ['realistic', 'anime', 'manga', 'comics']),
   orderBy('timeCreated', 'desc'),
   limit(maxItems)
 );
 
 export const nextPhotos = query(allPhotosCollectionRef(),
-  where('tag', 'in', photosTags),
+  where('tag', '==', 'photographs'),
   orderBy('timeCreated', 'desc'),
   limit(maxItems)
 );
 
 export const nextAnimations = query(allAnimatedCollectionRef(),
-  where('tag', 'in', animationsTags),
+  where('tag', '==', 'animations'),
   orderBy('timeCreated', 'desc'),
   limit(maxItems)
 );
 
 export const nextVideos = query(allVideosCollectionRef(),
-  where('tag', 'in', videosTags),
+  where('tag', '==', 'videos'),
   orderBy('timeCreated', 'desc'),
   limit(maxItems)
 );
 
 export const nextOthers = query(allPhotosCollectionRef(),
-  where('tag', 'in', othersTags),
+  where('tag', '==', 'others'),
   orderBy('timeCreated', 'desc'),
   limit(maxItems)
 );
-
 
 export const userPhotosRef = (user: string) => {
   return collection(db, `users/${user}/photos`);

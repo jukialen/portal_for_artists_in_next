@@ -41,17 +41,6 @@ export const FilesUpload = () => {
   
   const user = auth.currentUser;
   
-  const tagsArray = [
-    data?.Aside?.realistic,
-    data?.Aside?.manga,
-    data?.Aside?.anime,
-    data?.Aside?.comics,
-    data?.Aside?.photographs,
-    data?.Aside?.videos,
-    data?.Aside?.animations,
-    data?.Aside?.others
-  ];
-  
   const schemaFile = Yup.object({
     tags: SchemaValidation().tags,
   });
@@ -80,10 +69,10 @@ export const FilesUpload = () => {
       let upload: UploadTask;
     
       switch (tags) {
-        case `${data?.Aside?.animations}`:
+        case 'animations':
           upload = uploadBytesResumable(animationsRef, file!);
           break;
-        case `${data?.Aside?.videos}`:
+        case 'videos':
           upload = uploadBytesResumable(videosRef, file!);
           break;
         default:
@@ -124,11 +113,11 @@ export const FilesUpload = () => {
           };
         
           switch (tags) {
-            case `${data?.Aside?.animations}`:
+            case 'animations':
               const animationURL = await getDownloadURL(animationsRef);
               sendToFirestore(userAnimationsRef(user?.uid!), animationURL);
               break;
-            case `${data?.Aside?.videos}`:
+            case 'videos':
               const videoURL = await getDownloadURL(videosRef);
               sendToFirestore(userVideosRef(user?.uid!), videoURL);
               break;
@@ -161,11 +150,15 @@ export const FilesUpload = () => {
               className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}
               aria-required
             >
-              {tagsArray.map((tag: string) => <option
-                role='option'
-                key={tag}
-                value={tag === data?.chooseTag ? '' : tag}
-              >{tag}</option>)}
+              <option role='option' value=''>{data?.chooseTag}</option>
+              <option role='option' value='realistic'>{data?.Aside?.realistic}</option>
+              <option role='option' value='manga'>{data?.Aside?.manga}</option>
+              <option role='option' value='anime'>{data?.Aside?.anime}</option>
+              <option role='option' value='comics'>{data?.Aside?.comics}</option>
+              <option role='option' value='photographs'>{data?.Aside?.photographs}</option>
+              <option role='option' value='videos'>{data?.Aside?.videos}</option>
+              <option role='option' value='animations'>{data?.Aside?.animations}</option>
+              <option role='option' value='others'>{data?.Aside?.others}</option>
             </Select>
           </div>
         
