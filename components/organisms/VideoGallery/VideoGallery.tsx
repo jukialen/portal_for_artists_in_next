@@ -1,70 +1,95 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { db, storage } from '../../../firebase';
+import { storage } from '../../../firebase';
 import { ref } from 'firebase/storage';
-import {
-  doc,
-  getDoc,
-  limit,
-  onSnapshot,
-  orderBy,
-  query
-} from 'firebase/firestore';
-import { Skeleton } from '@chakra-ui/react';
+import { getDoc, getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter } from 'firebase/firestore';
+import { Button } from '@chakra-ui/react';
 
-import { userVideosRef } from 'references/referencesFirebase';
+import { user as currentUser, userVideosRef } from 'references/referencesFirebase';
 
-import { UserType, FileType } from 'types/global.types';
+import { FileType, UserType } from 'types/global.types';
+
+import { filesElements } from 'helpers/fileElements';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Videos } from 'components/molecules/Videos/Videos';
 
+import styles from './VideoGallery.module.scss';
+
 export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
+  const [userVideos, setUserVideos] = useState<FileType[]>([]);
+  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
+  let [i, setI] = useState(1);
+  
   const { asPath } = useRouter();
   
-  const maxItems: number = 10;
+  const maxItems = 30;
   
-  const nextPage = query(
-    userVideosRef(user!),
-    orderBy('timeCreated', 'desc'),
-    limit(maxItems)
-  );
-  
-  const [userVideos, setUserVideos] = useState<FileType[]>([]);
-  const [loading, setLoading] = useState(false);
-  
-  const downloadVideos = () => {
+  const downloadVideos = async () => {
     try {
-      onSnapshot(nextPage,  (querySnapshot) => {
-          const filesArray: FileType[] = [];
-          querySnapshot.forEach(async (document) => {
-            const docRef = doc(db, `users/${document.data().uid}`);
-            const docSnap = await getDoc(docRef);
-            filesArray.push({
-              fileUrl: document.data().fileUrl,
-              time: document.data().timeCreated,
-              description: document.data().description,
-              pseudonym: docSnap.data()!.pseudonym,
-              tags: document.data().tag,
-              uid: document.data().uid,
-              idPost: document.id
-            });
-          });
-          setUserVideos(filesArray);
-          setLoading(true);
-        },
-        (e) => {
-          console.error('Error', e);
-        });
+      const firstPage = query(
+        userVideosRef(user!),
+        orderBy('timeCreated', 'desc'),
+        limit(maxItems)
+      );
+      
+      const filesArray: FileType[] = [];
+      
+      const documentSnapshots = await getDocs(firstPage);
+      
+      for (const document of documentSnapshots.docs) {
+        const docSnap = await getDoc(currentUser(document.data().uid));
+        
+        if (docSnap.exists()) {
+          filesElements(filesArray, document, !!pseudonym ? pseudonym : docSnap.data().pseudonym);
+        } else {
+          console.error('No such doc');
+        }
+      }
+      setUserVideos(filesArray);
+      filesArray.length === maxItems && setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
     } catch (e) {
       console.log('No such document!', e);
     }
   };
   
   useEffect(() => {
-    return downloadVideos();
-  }, []);
+    !!user && downloadVideos();
+  }, [user]);
+  
+  
+  const nextElements = async () => {
+    try {
+      const nextPage = query(
+        userVideosRef(user!),
+        orderBy('timeCreated', 'desc'),
+        limit(maxItems),
+        startAfter(lastVisible),
+      );
+      
+      const documentSnapshots = await getDocs(nextPage);
+      
+      setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      
+      const nextArray: FileType[] = [];
+      
+      for (const document of documentSnapshots.docs) {
+        const docSnap = await getDoc(currentUser(document.data().uid));
+        
+        if (docSnap.exists()) {
+          filesElements(nextArray, document, docSnap.data().pseudonym);
+        } else {
+          console.log('No more drawings');
+        }
+      }
+      const newArray = userVideos.concat(...nextArray);
+      setUserVideos(newArray);
+      setI(++i);
+    } catch (e) {
+      console.error(e);
+    }
+  };
   
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
@@ -74,11 +99,9 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
       <Wrapper>
         {
           userVideos.length > 0 ?
-            userVideos.map(({ fileUrl, description, time, tags, uid, idPost }: FileType) => <Skeleton
-              isLoaded={loading}
-              key={time}
-            >
+            userVideos.map(({ fileUrl, description, time, tags, uid, idPost }: FileType, index) =>
               <Videos
+                key={index}
                 link={fileUrl}
                 refFile={userVideosRef(user!)}
                 refStorage={ref(storage, `${user}/videos/${description}`)}
@@ -86,9 +109,23 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
                 tag={tags}
                 uid={uid}
                 idPost={idPost}
-              />
-            </Skeleton>) :
+              />) :
             <ZeroFiles text={data?.ZeroFiles?.videos} />
+        }
+  
+        {
+          !!lastVisible && userVideos.length === maxItems * i &&
+          <Button
+            className={styles.nextButton}
+            variant='outline'
+            colorScheme='blue'
+            width='8rem'
+            borderColor='#4F8DFF'
+            _hover={{ backgroundColor: '#4F8DFF' }}
+            onClick={nextElements}
+          >
+            {data?.Groups?.list?.more}
+          </Button>
         }
       </Wrapper>
     </article>

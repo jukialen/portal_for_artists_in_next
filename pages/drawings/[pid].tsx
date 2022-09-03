@@ -37,7 +37,7 @@ export default function Drawings() {
   const loading = useCurrentUser('/');
   const data = useHookSWR();
   
-  const maxItems: number = 30;
+  const maxItems = 30;
   
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
@@ -68,7 +68,7 @@ export default function Drawings() {
         }
       }
       setUserDrawings(drawingsArray);
-      drawingsArray.length === 30 && setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      drawingsArray.length === maxItems && setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
     } catch (e) {
       console.error(e);
       console.log('No such drawings!');
@@ -103,7 +103,7 @@ export default function Drawings() {
           console.error('No more drawings');
         }
       }
-      const newArray = (userDrawings.concat(...nextArray));
+      const newArray = userDrawings.concat(...nextArray);
       setUserDrawings(newArray);
       setI(++i);
     } catch (e) {
@@ -139,7 +139,7 @@ export default function Drawings() {
       }
       
       {
-        !!lastVisible && userDrawings.length === 30 * i &&
+        !!lastVisible && userDrawings.length === maxItems * i &&
         <Button
           className={styles.nextButton}
           variant='outline'

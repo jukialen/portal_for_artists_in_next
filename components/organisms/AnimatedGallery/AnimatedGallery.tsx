@@ -1,75 +1,112 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { db, storage } from '../../../firebase';
+import { storage } from '../../../firebase';
 import { ref } from 'firebase/storage';
-import { doc, getDoc, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
-import { Skeleton } from '@chakra-ui/react';
+import {
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  QueryDocumentSnapshot,
+  startAfter
+} from 'firebase/firestore';
+import { Button } from '@chakra-ui/react';
 
-import { userAnimationsRef } from 'references/referencesFirebase';
+import { user as currentUser, userAnimationsRef } from 'references/referencesFirebase';
 
 import { FileType, UserType } from 'types/global.types';
+
+import { filesElements } from 'helpers/fileElements';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { Article } from 'components/molecules/Article/Article';
 
+import styles from './AnimatedGallery.module.scss';
+
 export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
   const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
+  let [i, setI] = useState(1);
   
   const { asPath } = useRouter();
   
-  const maxItems: number = 15;
-  const nextPage = query(
-    userAnimationsRef(user!),
-    orderBy('timeCreated', 'desc'),
-    limit(maxItems)
-  );
+  const maxItems = 30;
   
-  const downloadAnimations = () => {
+  const downloadAnimations = async () => {
     try {
-      onSnapshot(nextPage, (querySnapshot) => {
-          const filesArray: FileType[] = [];
-          querySnapshot.forEach(async (document) => {
-            const docRef = doc(db, `users/${document.data().uid}`);
-            const docSnap = await getDoc(docRef);
-            filesArray.push({
-              fileUrl: document.data().fileUrl,
-              description: document.data().description,
-              time: document.data().timeCreated,
-              pseudonym: docSnap.data()!.pseudonym,
-              tags: document.data().tag,
-              uid: document.data().uid,
-              idPost: document.id
-            });
-          });
-          setUserAnimatedPhotos(filesArray);
-          setLoading(true)
-        },
-        (e) => {
-          console.error('Error', e);
-        });
+      const firstPage = query(
+        userAnimationsRef(user!),
+        orderBy('timeCreated', 'desc'),
+        limit(maxItems)
+      );
+      
+      const filesArray: FileType[] = [];
+      
+      const documentSnapshots = await getDocs(firstPage);
+      
+      for (const document of documentSnapshots.docs) {
+        const docSnap = await getDoc(currentUser(document.data().uid));
+        if (docSnap.exists()) {
+          filesElements(filesArray, document, !!pseudonym ? pseudonym : docSnap.data().pseudonym);
+        } else {
+          console.error('No such doc');
+        }
+      }
+      setUserAnimatedPhotos(filesArray);
+      filesArray.length === maxItems && setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
     } catch (e) {
       console.log('No such document!', e);
     }
   };
   
   useEffect(() => {
-     downloadAnimations();
-  }, []);
+     !!user && downloadAnimations();
+  }, [user]);
+  
+  const nextElements = async () => {
+    try {
+      const nextPage = query(
+        userAnimationsRef(user!),
+        orderBy('timeCreated', 'desc'),
+        limit(maxItems),
+        startAfter(lastVisible),
+      );
+      
+      const documentSnapshots = await getDocs(nextPage);
+      
+      setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      
+      const nextArray: FileType[] = [];
+      
+      for (const document of documentSnapshots.docs) {
+        const docSnap = await getDoc(currentUser(document.data().uid));
+        
+        if (docSnap.exists()) {
+          filesElements(nextArray, document, docSnap.data().pseudonym);
+        } else {
+          console.log('No more drawings');
+        }
+        const newArray = userAnimatedPhotos.concat(...nextArray);
+        setUserAnimatedPhotos(newArray);
+        setI(++i);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
   
   return (
     <article id='user__gallery__in__account' className='user__gallery__in__account'>
       {decodeURIComponent(asPath) === `/account/${pseudonym}` && <em className='title'>{data?.Account?.gallery?.userAnimationsTitle}</em>}
-      {console.log(userAnimatedPhotos)}
+
       <Wrapper>
         {
           userAnimatedPhotos.length > 0 ?
-            userAnimatedPhotos.map(({ fileUrl, description, time, tags, uid, idPost }: FileType, index) => <Skeleton
-              isLoaded={loading}
-              key={index}
-            >
+            userAnimatedPhotos.map(({ fileUrl, description, time, tags, uid, idPost }: FileType, index) =>
               <Article
+                key={index}
                 link={fileUrl}
                 refFile={userAnimationsRef(user!)}
                 subCollection='animations'
@@ -79,9 +116,23 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
                 unopt
                 uid={uid}
                 idPost={idPost}
-              />
-            </Skeleton>) :
+              />) :
             <ZeroFiles text={data?.ZeroFiles?.animations} />
+        }
+  
+        {
+          !!lastVisible && userAnimatedPhotos.length === maxItems * i &&
+          <Button
+            className={styles.nextButton}
+            variant='outline'
+            colorScheme='blue'
+            width='8rem'
+            borderColor='#4F8DFF'
+            _hover={{ backgroundColor: '#4F8DFF' }}
+            onClick={nextElements}
+          >
+            {data?.Groups?.list?.more}
+          </Button>
         }
       </Wrapper>
     </article>
