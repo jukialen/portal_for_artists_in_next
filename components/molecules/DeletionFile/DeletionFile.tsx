@@ -66,7 +66,7 @@ export const DeletionFile = ({ subCollection, refFile, refStorage, description }
         icon={del ? <ChevronUpIcon /> : <ChevronDownIcon />}
         width='3rem'
         height='3rem'
-        backgroundColor='transparent'
+        colorScheme='transparent'
         borderColor='transparent'
         color='#333'
         onClick={() => setDel(!del)}

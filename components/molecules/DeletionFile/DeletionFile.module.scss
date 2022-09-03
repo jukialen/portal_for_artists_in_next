@@ -1,8 +1,15 @@
+@use 'styles/variables' as *;
+
 .icon {
 	position: absolute;
 	top: 0;
 	right: 0;
 	z-index: 2;
+
+	&:active {
+		color: $third__color;
+	}
+
 }
 
 .container {
@@ -15,6 +22,7 @@
 
 	> button {
 		top: 3rem;
+		margin: .5rem .1rem 1rem .5rem;
 	}
 	.alert {
 		position: absolute;
