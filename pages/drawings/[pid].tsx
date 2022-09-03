@@ -66,11 +66,9 @@ export default function Drawings() {
         } else {
           console.error('No such drawings');
         }
-        setUserDrawings(drawingsArray);
       }
-      console.log(drawingsArray);
+      setUserDrawings(drawingsArray);
       drawingsArray.length === 30 && setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
-      
     } catch (e) {
       console.error(e);
       console.log('No such drawings!');
@@ -83,7 +81,7 @@ export default function Drawings() {
   
   const nextElements = async () => {
     try {
-      const nextPage: Query = query(allPhotosCollectionRef(),
+      const nextPage = query(allPhotosCollectionRef(),
         where('tag', 'in', pid),
         orderBy('timeCreated', 'desc'),
         limit(maxItems),
@@ -104,11 +102,10 @@ export default function Drawings() {
         } else {
           console.error('No more drawings');
         }
-        
-        setUserDrawings(nextArray.concat(...nextArray));
-        setI(++i);
       }
-      console.log(userDrawings);
+      const newArray = (userDrawings.concat(...nextArray));
+      setUserDrawings(newArray);
+      setI(++i);
     } catch (e) {
       console.error(e);
     }
