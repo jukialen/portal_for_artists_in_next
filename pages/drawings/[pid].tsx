@@ -13,7 +13,6 @@ import {
   where
 } from 'firebase/firestore';
 import { ref } from 'firebase/storage';
-import { Button } from '@chakra-ui/react';
 
 import { FileType } from 'types/global.types';
 
@@ -27,6 +26,7 @@ import { filesElements } from 'helpers/fileElements';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
 
 import styles from './index.module.scss';
@@ -140,17 +140,7 @@ export default function Drawings() {
       
       {
         !!lastVisible && userDrawings.length === maxItems * i &&
-        <Button
-          className={styles.nextButton}
-          variant='outline'
-          colorScheme='blue'
-          width='8rem'
-          borderColor='#4F8DFF'
-          _hover={{ backgroundColor: '#4F8DFF' }}
-          onClick={nextElements}
-        >
-          {data?.Groups?.list?.more}
-        </Button>
+        <MoreButton nextElements={nextElements} />
       }
     </Wrapper>
   </>;

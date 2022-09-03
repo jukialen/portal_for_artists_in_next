@@ -11,7 +11,6 @@ import {
   QueryDocumentSnapshot,
   startAfter
 } from 'firebase/firestore';
-import { Button } from '@chakra-ui/react';
 
 import { user as currentUser, allPhotosCollectionRef, userPhotosRef } from 'references/referencesFirebase';
 
@@ -20,10 +19,9 @@ import { filesElements } from 'helpers/fileElements';
 import { FileType, UserType } from 'types/global.types';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
-import { Article } from 'components/molecules/Article/Article';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-
-import styles from './PhotosGallery.module.scss';
+import { Article } from 'components/molecules/Article/Article';
 
 export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
@@ -128,17 +126,7 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
         
         {
           !!lastVisible && userPhotos.length === maxItems * i &&
-          <Button
-            className={styles.nextButton}
-            variant='outline'
-            colorScheme='blue'
-            width='8rem'
-            borderColor='#4F8DFF'
-            _hover={{ backgroundColor: '#4F8DFF' }}
-            onClick={nextElements}
-          >
-            {data?.Groups?.list?.more}
-          </Button>
+          <MoreButton nextElements={nextElements} />
         }
       </Wrapper>
     </article>

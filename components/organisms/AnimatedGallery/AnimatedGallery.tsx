@@ -11,7 +11,6 @@ import {
   QueryDocumentSnapshot,
   startAfter
 } from 'firebase/firestore';
-import { Button } from '@chakra-ui/react';
 
 import { user as currentUser, userAnimationsRef } from 'references/referencesFirebase';
 
@@ -21,9 +20,8 @@ import { filesElements } from 'helpers/fileElements';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
-
-import styles from './AnimatedGallery.module.scss';
 
 export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
   const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
@@ -122,17 +120,7 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
   
         {
           !!lastVisible && userAnimatedPhotos.length === maxItems * i &&
-          <Button
-            className={styles.nextButton}
-            variant='outline'
-            colorScheme='blue'
-            width='8rem'
-            borderColor='#4F8DFF'
-            _hover={{ backgroundColor: '#4F8DFF' }}
-            onClick={nextElements}
-          >
-            {data?.Groups?.list?.more}
-          </Button>
+          <MoreButton nextElements={nextElements} />
         }
       </Wrapper>
     </article>
