@@ -8,7 +8,7 @@ export const user = (username: string) => doc(db, `users/${username}`);
 export const usersRef = collection(db, 'users');
 
 // FILES
-const maxItems: number = 10;
+const maxItems = 10;
 
 export const allPhotosCollectionRef = () => collectionGroup(db, 'photos');
 export const allAnimatedCollectionRef = () => collectionGroup(db, 'animations');
