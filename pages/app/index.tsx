@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { auth, storage } from '../../firebase';
-import { getDoc, onSnapshot, } from 'firebase/firestore';
+import { getDoc, getDocs } from 'firebase/firestore';
 import { ref } from 'firebase/storage';
 
 import { FileType } from 'types/global.types';
@@ -30,7 +30,6 @@ import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { AppWrapper } from 'components/atoms/AppWrapper/AppWrapper';
 
 import styles from './index.module.scss';
-import { Skeleton } from '@chakra-ui/react';
 
 export default function Application() {
   const { asPath } = useRouter();
@@ -43,177 +42,166 @@ export default function Application() {
   const [userAnimations, setUserAnimations] = useState<FileType[]>([]);
   const [userVideos, setUserVideos] = useState<FileType[]>([]);
   const [userOthers, setUserOthers] = useState<FileType[]>([]);
-  const [loadingFiles, setLoadingFiles] = useState(false);
   
   const currentUser = auth?.currentUser?.uid;
   
-  const downloadDrawings = () => {
+  const downloadDrawings = async () => {
     try {
-      onSnapshot(nextDrawings,(querySnapshot) => {
-        const filesArray: FileType[] = [];
+      const querySnapshot = await getDocs(nextDrawings);
+      const filesArray: FileType[] = [];
+      
+      for (const document of querySnapshot.docs) {
+        const docSnap = await getDoc(user(document.data().uid));
         
-        querySnapshot.forEach(async (document) => {
-          const docSnap = await getDoc(user(document.data().uid));
-          
-          if (docSnap.exists()) {
-            filesElements(filesArray, document, docSnap.data().pseudonym);
-          } else {
-            console.error('No such drawings')
-          }
-        });
-        
-        setUserDrawings(filesArray);
-        setLoadingFiles(true);
-        },
-        (e) => {
-          console.error('Error', e);
-        });
+        if (docSnap.exists()) {
+          filesElements(filesArray, document, docSnap.data().pseudonym);
+        } else {
+          console.error('No such drawings');
+        }
+      }
+      
+      setUserDrawings(filesArray);
     } catch (e) {
       console.error('Error', e)
       console.error('No such drawings!');
     }
   };
   
-  const downloadPhotos = () => {
+  const downloadPhotos = async () => {
     try {
-      onSnapshot(nextPhotos, (querySnapshot) => {
-        const filesArray: FileType[] = [];
-    
-        querySnapshot.forEach(async (document) => {
-          const docSnap = await getDoc(user(document.data().uid));
-
+      const querySnapshot = await getDocs(nextPhotos);
+      const filesArray: FileType[] = [];
+      
+      for (const document of querySnapshot.docs) {
+        const docSnap = await getDoc(user(document.data().uid));
+        
         if (docSnap.exists()) {
           filesElements(filesArray, document, docSnap.data().pseudonym);
         } else {
-          console.error('No such photos')
+          console.error('No such photos');
         }
-      });
-        
+      }
+      
       setUserPhotos(filesArray);
-      setLoadingFiles(true);
-      },
-      (e) => {
-        console.error('Error', e);
-      });
     } catch (e) {
       console.error('Error', e)
       console.error('No such photos!');
     }
   };
   
-  const downloadAnimations = () => {
+  const downloadAnimations = async () => {
     try {
-      onSnapshot(nextAnimations, (querySnapshot) => {
-        const filesArray: FileType[] = [];
+      const querySnapshot = await getDocs(nextAnimations);
+      const filesArray: FileType[] = [];
+      
+      for (const document of querySnapshot.docs) {
+        const docSnap = await getDoc(user(document.data().uid));
         
-        querySnapshot.forEach(async (document) => {
-          const docSnap = await getDoc(user(document.data().uid));
-
-          if (docSnap.exists()) {
-            filesElements(filesArray, document, docSnap.data().pseudonym);
-          } else {
-            console.error('No such animations')
-          }
-        });
-        
-        setUserAnimations(filesArray);
-        setLoadingFiles(true);
-      },
-      (e) => {
-        console.error('Error', e);
-      });
+        if (docSnap.exists()) {
+          filesElements(filesArray, document, docSnap.data().pseudonym);
+        } else {
+          console.error('No such animations');
+        }
+      }
+      
+      setUserAnimations(filesArray);
     } catch (e) {
       console.error('Error', e)
       console.error('No such animations!');
     }
   };
   
-  const downloadVideos = () => {
+  const downloadVideos = async () => {
     try {
-      onSnapshot(nextVideos, (querySnapshot) => {
-        const filesArray: FileType[] = [];
-  
-        querySnapshot.forEach(async (document) => {
-          const docSnap = await getDoc(user(document.data().uid));
-
-          if (docSnap.exists()) {
-            filesElements(filesArray, document, docSnap.data().pseudonym);
-          } else {
-            console.error('No such videos')
-          }
-        });
+      const querySnapshot = await getDocs(nextVideos);
+      const filesArray: FileType[] = [];
+      
+      for (const document of querySnapshot.docs) {
+        const docSnap = await getDoc(user(document.data().uid));
         
-        setUserVideos(filesArray);
-        setLoadingFiles(true);
-        },
-      (e) => {
-        console.error('Error', e);
-      });
+        if (docSnap.exists()) {
+          filesElements(filesArray, document, docSnap.data().pseudonym);
+        } else {
+          console.error('No such videos');
+        }
+      }
+      
+      setUserVideos(filesArray);
     } catch (e) {
       console.error('Error', e)
       console.error('No such videos!');
     }
   };
   
-  const downloadOthers = () => {
+  const downloadOthers = async () => {
     try {
-      onSnapshot(nextOthers, (querySnapshot) => {
-        const filesArray: FileType[] = [];
-        
-        querySnapshot.forEach(async (document) => {
-          const docSnap = await getDoc(user(document.data().uid));
-
+      const querySnapshot = await getDocs(nextOthers);
+      const filesArray: FileType[] = [];
+  
+      for (const document of querySnapshot.docs) {
+        const docSnap = await getDoc(user(document.data().uid));
+    
         if (docSnap.exists()) {
           filesElements(filesArray, document, docSnap.data().pseudonym);
         } else {
-          console.error('No such others')
+          console.error('No such others');
         }
-        });
-        
-        setUserOthers(filesArray);
-        setLoadingFiles(true);
-      },
-      (e: Error) => {
-        console.error('Error', e);
-      });
+      }
+  
+      setUserOthers(filesArray);
     } catch (e) {
-      console.error('Error', e)
+      console.error('Error', e);
       console.error('No such others!');
     }
   };
   
-  useEffect(() => { downloadDrawings() }, []);
-  useMemo(() => { downloadPhotos() }, []);
-  useMemo(() => { downloadOthers() }, []);
-  useMemo(() => { downloadAnimations() }, []);
-  useMemo(() => {downloadVideos() }, []);
+  useEffect(() => {
+    !!nextDrawings && downloadDrawings();
+  }, [nextDrawings]);
+  useEffect(() => {
+    !!nextPhotos && downloadPhotos();
+  }, [nextPhotos]);
+  useEffect(() => {
+    !!nextAnimations && downloadAnimations();
+  }, [nextAnimations]);
+  useEffect(() => {
+    !!nextVideos && downloadVideos();
+  }, [nextVideos]);
+  useEffect(() => {
+    !!nextOthers && downloadOthers();
+  }, [nextOthers]);
   
   if (loading) {
     return null;
-  };
+  }
   
   return <>
-      <HeadCom path={asPath} content='Main site for logged in users.' />
-  
-      <h2 className={styles.top__among__users}>{data?.App?.lastDrawings}</h2>
-      <AppWrapper>
-        {
-          !!nextDrawings && userDrawings.length > 0 ? userDrawings.map(({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) => <Skeleton
-            isLoaded={loadingFiles}
+    <HeadCom path={asPath} content='Main site for logged in users.' />
+    
+    <h2 className={styles.top__among__users}>{data?.App?.lastDrawings}</h2>
+    <AppWrapper>
+      {
+        !!nextDrawings && userDrawings.length > 0 ? userDrawings.map(({
+          fileUrl,
+          time,
+          description,
+          pseudonym,
+          tags,
+          uid,
+          idPost
+        }: FileType, index) =>
+          <Article
             key={index}
-          >
-            <Article
-              link={fileUrl}
-              description={description}
-              authorName={pseudonym}
-              refFile={allPhotosCollectionRef()}
-              subCollection='photos'
-              refStorage={ref(storage, `${currentUser}/photos/${description}`)}
-              tag={tags}
-              uid={uid}
-              idPost={idPost}
-            />
-          </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.drawings} />
+            link={fileUrl}
+            description={description}
+            authorName={pseudonym}
+            refFile={allPhotosCollectionRef()}
+            subCollection='photos'
+            refStorage={ref(storage, `${currentUser}/photos/${description}`)}
+            tag={tags}
+            uid={uid}
+            idPost={idPost}
+          />) : <ZeroFiles text={data?.ZeroFiles?.drawings} />
         }
       </AppWrapper>
   
@@ -221,11 +209,8 @@ export default function Application() {
       <AppWrapper>
         {
           userPhotos.length > 0 ? userPhotos.map(({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) =>
-            <Skeleton
-              isLoaded={loadingFiles}
-              key={index}
-            >
               <Article
+                key={index}
                 link={fileUrl}
                 description={description}
                 authorName={pseudonym}
@@ -235,19 +220,24 @@ export default function Application() {
                 tag={tags}
                 uid={uid}
                 idPost={idPost}
-            />
-          </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.photos} />
+              />) : <ZeroFiles text={data?.ZeroFiles?.photos} />
         }
       </AppWrapper>
   
       <h2 className={styles.top__among__users}>{data?.App?.lastOthers}</h2>
       <AppWrapper>
         {
-          userOthers.length > 0 ? userOthers.map(({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) => <Skeleton
-            isLoaded={loadingFiles}
-            key={index}
-          >
+          userOthers.length > 0 ? userOthers.map(({
+            fileUrl,
+            time,
+            description,
+            pseudonym,
+            tags,
+            uid,
+            idPost
+          }: FileType, index) =>
             <Article
+              key={index}
               link={fileUrl}
               description={description}
               authorName={pseudonym}
@@ -257,19 +247,24 @@ export default function Application() {
               tag={tags}
               uid={uid}
               idPost={idPost}
-            />
-          </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.others} />
+            />) : <ZeroFiles text={data?.ZeroFiles?.others} />
         }
       </AppWrapper>
       
       <h2 className={styles.top__among__users}>{data?.App?.lastAnimations}</h2>
       <AppWrapper>
         {
-          userAnimations.length > 0 ? userAnimations.map(({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) => <Skeleton
-            isLoaded={loadingFiles}
-            key={index}
-          >
+          userAnimations.length > 0 ? userAnimations.map(({
+            fileUrl,
+            time,
+            description,
+            pseudonym,
+            tags,
+            uid,
+            idPost
+          }: FileType, index) =>
             <Article
+              key={index}
               link={fileUrl}
               description={description}
               authorName={pseudonym}
@@ -280,18 +275,23 @@ export default function Application() {
               tag={tags}
               uid={uid}
               idPost={idPost}
-            />
-          </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.animations} />
+            />) : <ZeroFiles text={data?.ZeroFiles?.animations} />
         }
       </AppWrapper>
       <h2 className={styles.liked}>{data?.App?.lastVideos}</h2>
       <AppWrapper>
         {
-          userVideos.length > 0 ? userVideos.map(({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) => <Skeleton
-            isLoaded={loadingFiles}
-            key={index}
-          >
+          userVideos.length > 0 ? userVideos.map(({
+            fileUrl,
+            time,
+            description,
+            pseudonym,
+            tags,
+            uid,
+            idPost
+          }: FileType, index) =>
             <Videos
+              key={index}
               link={fileUrl}
               description={description}
               authorName={pseudonym}
@@ -300,8 +300,7 @@ export default function Application() {
               tag={tags}
               uid={uid}
               idPost={idPost}
-            />
-          </Skeleton>) : <ZeroFiles text={data?.ZeroFiles?.videos} />
+            />) : <ZeroFiles text={data?.ZeroFiles?.videos} />
         }
       </AppWrapper>
     </>
