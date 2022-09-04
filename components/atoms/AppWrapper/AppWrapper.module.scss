@@ -1,7 +1,8 @@
 @use 'styles/variables' as *;
 
 .wrapper {
-	width: 100vw;
+	width: 37rem;
+	max-width: 100vw;
 	margin: 4rem auto;
 	position: relative;
 }
@@ -27,6 +28,11 @@
 	overflow-x: auto;
 	scrollbar-width: auto;
 	scrollbar-color: $another__color $fourth__color;
+
+	> div {
+		width: 27rem;
+		max-width: 95vw;
+	}
 
 	&::-webkit-scrollbar {
 		width: 15px;
