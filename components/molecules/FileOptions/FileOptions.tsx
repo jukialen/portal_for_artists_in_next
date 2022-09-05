@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 import { FileContainerType } from 'types/global.types';
 
-import { addingCommentFiles, commentsFiles } from 'references/referencesFirebase';
+import { addingCommentFiles, allComments, commentsFiles } from 'references/referencesFirebase';
 
 import { Comments } from 'components/molecules/Comments/Comments';
 import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
@@ -36,7 +36,7 @@ export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, descr
       <button className={styles.comments} onClick={showOpenComments}>Comments</button>
       {open && <>
         <NewComments name={subCollection!} refCom={addingCommentFiles(uid!, subCollection!, idPost!)} />
-        <Comments refCom={commentsFiles(subCollection!, description!)} />
+        <Comments refCom={allComments(uid!, subCollection!, idPost!)} />
       </>}
     </div>
   )

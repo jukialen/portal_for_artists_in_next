@@ -33,7 +33,7 @@ export const Posts = ({ name, currentUser }: AuthorType) => {
             date: getDate(locale!, document.data().date),
             description: document.data().message,
             idPost: document.id,
-            name: document.data().nameGroup,
+            nameGroup: document.data().nameGroup,
             userId: document.data().author,
             likes: document.data().likes,
             liked: document.data().liked,
@@ -52,14 +52,14 @@ export const Posts = ({ name, currentUser }: AuthorType) => {
   }, [name, locale]);
   
   return <section className={styles.posts}>
-    {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, name, userId, likes, liked, logoUser }: PostType) =>
+    {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, nameGroup, userId, likes, liked, logoUser }: PostType) =>
       <Post
         key={idPost}
         author={author}
         title={title}
         date={date}
         description={description}
-        name={name}
+        nameGroup={nameGroup}
         idPost={idPost}
         currentUser={currentUser}
         userId={userId}

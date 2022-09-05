@@ -65,7 +65,7 @@ export type PostType = {
   title: string;
   date: string;
   description: string;
-  name: GroupNameType;
+  nameGroup: GroupNameType;
   idPost?: string;
   currentUser?: string;
   userId?: string | null;

@@ -4,7 +4,7 @@ import { Avatar, Button, IconButton } from '@chakra-ui/react';
 
 import { PostType } from 'types/global.types';
 
-import { addingComment, comments, likePost} from 'references/referencesFirebase';
+import { addingComment, groupsComments, likePost} from 'references/referencesFirebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -17,14 +17,14 @@ import styles from './Post.module.scss';
 import group from 'public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
-export const Post = ({ author, title, date, description, idPost, name, userId, currentUser, likes, liked, logoUser }: PostType) => {
+export const Post = ({ author, title, date, description, idPost, nameGroup, userId, currentUser, likes, liked, logoUser }: PostType) => {
   const [showComments, setShowComments] = useState(false);
   const [like, setLike] = useState(false);
   let [likeCount, setLikeCount] = useState(likes);
   
   const data = useHookSWR();
   
-  const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${author}/${idPost}`;
+  const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${nameGroup}/${author}/${idPost}`;
   
   const likedCount = () => {
     try {
@@ -40,11 +40,11 @@ export const Post = ({ author, title, date, description, idPost, name, userId, c
   
   const addLike = async () => {
     if (like) {
-      await setDoc(likePost(name, idPost!),
+      await setDoc(likePost(nameGroup, idPost!),
         { likes: likeCount -= 1, liked: arrayRemove(currentUser) },
         { merge: true });
     } else {
-      await setDoc(likePost(name, idPost!),
+      await setDoc(likePost(nameGroup, idPost!),
         { likes: likeCount += 1, liked: arrayUnion(currentUser) },
         { merge: true });
     };
@@ -58,7 +58,7 @@ export const Post = ({ author, title, date, description, idPost, name, userId, c
       <div className={styles.username}>
         <a href={`/user/${author}`}>{author}</a>
       </div>
-      {currentUser === userId && <DeletePost name={name} idPost={idPost!} />}
+      {currentUser === userId && <DeletePost name={nameGroup} idPost={idPost!} />}
     </div>
     <div className={styles.titlePost}>{title}</div>
     <div className={styles.time}>{date}</div>
@@ -83,8 +83,8 @@ export const Post = ({ author, title, date, description, idPost, name, userId, c
       {likeCount}
     </p>
     <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-      {currentUser === userId && <NewComments name={name} refCom={addingComment(name, idPost!)} />}
-      <Comments refCom={comments(name)} />
+      {currentUser === userId && <NewComments name={nameGroup} refCom={addingComment(nameGroup, idPost!)} />}
+      <Comments refCom={groupsComments(nameGroup, idPost!)} />
     </article>
   </article>
 }

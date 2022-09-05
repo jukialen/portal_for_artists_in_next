@@ -81,8 +81,9 @@ export const deletingPost = (name: GroupNameType, idPost: string) => doc(db, `gr
 export const addingComment = (name: GroupNameType, idPost: string) => collection(db,
   `groups/${name}/posts/${idPost}/comments`);
 
-export const comments = (name: GroupNameType) => {
-  return query(collectionGroup(db, 'comments'), where('nameGroup', '==', name),
+export const groupsComments = (name: GroupNameType, idPost: string) => {
+  return query(collection(db,
+    `groups/${name}/posts/${idPost}/comments`),
     orderBy('date', 'desc'));
 };
 
@@ -90,7 +91,11 @@ export const addingCommentFiles = (uid: string, subCollection: string, idPost: s
   return collection(db, `users/${uid}/${subCollection}/${idPost}/comments`);
 }
 
+export const allComments = (uid: string, subCollection: string, idPost: string) => {
+  return collection(db, `users/${uid}/${subCollection}/${idPost}/comments`)
+}
+
 export const commentsFiles = (subCollection: string, description: string) => {
-  return query(collectionGroup(db, `${subCollection}`),
+  return query(collectionGroup(db, subCollection),
     where('description', '==', description), orderBy('timeCreated', 'desc'));
 }

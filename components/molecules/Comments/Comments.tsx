@@ -20,23 +20,31 @@ export const Comments = ({ refCom }: AuthorType) => {
   const { locale } = useRouter();
   const data = useHookSWR();
   
+  console.log('l', locale);
+  
   const showingComments = async () => {
     try {
       const commentArray: CommentType[] = [];
+      
+      const documentSnapshots = await getDocs(refCom!);
 
-      const querySnapshot = await getDocs(refCom!);
-      querySnapshot.forEach(async (document) => {
-        const docSnap = await getDoc(user(document.data().author));
+      for (const document of documentSnapshots.docs) {
+        console.log(document.id, ' => ', document.data());
+        
+        const docSnap = await getDoc(user(document.data().user));
         if (docSnap.exists()) {
+          console.log('doc', docSnap.data());
           commentArray.push({
             author: docSnap.data().pseudonym,
             date: getDate(locale!, document.data().date),
             description: document.data().message,
             idPost: document.id,
-            nameGroup: document.data().nameGroup
+            nameGroup: document.data().nameGroup,
+            profilePhoto: docSnap.data().profilePhoto
           });
         }
-      });
+      };
+      console.log(commentArray)
       setCommentsArray(commentArray);
     } catch (e) {
       console.error(e);
@@ -48,8 +56,8 @@ export const Comments = ({ refCom }: AuthorType) => {
   }, [refCom]);
   
   return <>
-    {commentsArray.length > 0 ? commentsArray.map(({ author, date, description, idPost, nameGroup }: CommentType) =>
-      <Comment key={idPost} date={date} description={description} nameGroup={nameGroup} author={author} idPost={idPost} />
+    {commentsArray.length > 0 ? commentsArray.map(({ author, date, description, idPost, nameGroup, profilePhoto }: CommentType) =>
+      <Comment key={idPost} date={date} description={description} nameGroup={nameGroup} author={author} idPost={idPost} profilePhoto={profilePhoto} />
     ) : <p className={styles.noComments}>{data?.Comments?.noComments}</p>}
   </>;
 };

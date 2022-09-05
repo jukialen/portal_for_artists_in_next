@@ -63,7 +63,7 @@ export default function PostFromGroup() {
     title={title}
     date={date}
     description={description}
-    name={name}
+    nameGroup={name}
     idPost={idPost}
     currentUser={currentUser}
     userId={userId}

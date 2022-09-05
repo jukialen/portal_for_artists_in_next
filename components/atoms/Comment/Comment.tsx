@@ -5,7 +5,6 @@ import { CommentType } from 'types/global.types';
 import styles from './Comment.module.scss';
 
 export const Comment = ({ author, date, description, profilePhoto  }: CommentType) => {
-  
   return <div className={styles.comment}>
     <Avatar src={profilePhoto} className={styles.avatar} />
     <div className={styles.rightSideComment}>
