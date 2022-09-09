@@ -238,6 +238,7 @@
   },
   "Comments": {
     "comments": "Comments",
+    "reply": "Reply",
     "newComPlaceholder": "Write new comment",
     "newComAria": "Adding description for new comment",
     "newComButton": "Adding a comment",

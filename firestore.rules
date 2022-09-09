@@ -17,10 +17,22 @@ service cloud.firestore {
             allow read: if request.auth!=null;
             allow write: if request.auth!=null;
         }
-        match /users/{userId}/{document=**} {
-            allow read: if request.auth!=null;
-            allow write: if request.auth.uid == userId;
+
+        match /users/{userId} {
+            	allow read: if request.auth!=null;
+            	allow write: if request.auth.uid == userId;
+
+            match /{category}/{categoryId} {
+            	allow read: if request.auth!=null;
+            	allow write: if request.auth.uid == userId;
+
+              match /comments/{comments=**} {
+              	allow read: if request.auth!=null;
+            		allow write: if request.auth!=null;
+              }
+            }
         }
+
         match /groups/{document=**} {
             allow read: if request.auth!=null;
             allow write: if request.auth!=null;

@@ -377,8 +377,8 @@ export default function Groups() {
       <TabPanels padding={0}>
         <TabPanel padding={0}>
           <>
-            { (join && currentUser === userId) && <AddingPost name={name} /> }
-            <Posts name={name} currentUser={currentUser} />
+            { (join && currentUser === userId) && <AddingPost nameGroup={name} /> }
+            <Posts nameGroup={name} currentUser={currentUser} />
           </>
         </TabPanel>
         <TabPanel padding={0}>

@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react';
-import { CollectionReference, Query } from 'firebase/firestore';
+import { CollectionReference, DocumentReference, Query } from 'firebase/firestore';
 import { StorageReference } from 'firebase/storage';
 
 export type GroupNameType = string | string[]
@@ -54,10 +54,22 @@ export type GroupType = {
 }
 
 export type AuthorType = {
-  name?: GroupNameType;
-  refCom?: Query;
+  nameGroup?: GroupNameType;
   currentUser?: string;
+  profilePhoto?: string;
+  subCollection?: string;
+  authorId?: string;
   userId?: string | null;
+  refCom?: CollectionReference | Query;
+  refSubCom?: CollectionReference | Query;
+  refLastCom?: CollectionReference | Query;
+  refDocCom?: DocumentReference;
+  refDocSubCom?: DocumentReference;
+  refDocLastCom?: DocumentReference;
+  idPost?: string;
+  idComment?: string;
+  idSubComment?: string;
+  idLastComment?: string;
 }
 
 export type PostType = {
@@ -76,10 +88,25 @@ export type PostType = {
 
 export type CommentType = {
   author?: string;
-  date: string;
-  description: string;
-  nameGroup: GroupNameType;
+  date?: string;
+  description?: string;
+  nameGroup?: GroupNameType;
   post?: string;
-  idPost?: string;
   profilePhoto?: string;
+  authorId?: string;
+  userId?: string;
+  subCollection?: string;
+  likes: number;
+  liked?: string[];
+  idPost?: string;
+  idComment?: string;
+  idSubComment?: string;
+  idLastComment?: string;
+  refDelCom?: DocumentReference;
+  refCom?: CollectionReference | Query;
+  refSubCom?: CollectionReference | Query;
+  refLastCom?: CollectionReference | Query;
+  refDocCom?: DocumentReference;
+  refDocSubCom?: DocumentReference;
+  refDocLastCom?: DocumentReference;
 }

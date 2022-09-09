@@ -4,31 +4,26 @@ import { getDoc, getDocs } from 'firebase/firestore';
 
 import { AuthorType, CommentType } from 'types/global.types';
 
-import { docFilesComments, subFilesComments, user } from 'references/referencesFirebase';
+import { docSubFilesComment, subLastFilesComments, user } from 'references/referencesFirebase';
 
 import { getDate } from 'helpers/getDate';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+import { SubComment } from 'components/atoms/SubComment/SubComment';
 
-import { Comment } from 'components/atoms/Comment/Comment';
-
-import styles from './Comments.module.scss';
-
-export const Comments = ({ userId, subCollection, refCom, idPost }: AuthorType) => {
-  const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
+export const SubComments = ({ refSubCom, userId, subCollection, idPost, idComment }: AuthorType) => {
+  const [subCommentsArray, setSubCommentsArray] = useState<CommentType[]>([]);
   
   const { locale } = useRouter();
-  const data = useHookSWR();
   
   const showingComments = async () => {
     try {
       const commentArray: CommentType[] = [];
       
-      const documentSnapshots = await getDocs(refCom!);
-
+      const documentSnapshots = await getDocs(refSubCom!);
+      
       for (const document of documentSnapshots.docs) {
         const docSnap = await getDoc(user(document.data().user));
-  
+        
         if (docSnap.exists()) {
           commentArray.push({
             author: docSnap.data().pseudonym,
@@ -36,37 +31,38 @@ export const Comments = ({ userId, subCollection, refCom, idPost }: AuthorType) 
             description: document.data().message,
             nameGroup: document.data().nameGroup,
             profilePhoto: docSnap.data().profilePhoto,
-            idComment: document.id,
+            idSubComment: document.id,
             likes: document.data().likes | 0,
             liked: document.data().liked || [],
             authorId: document.data().user
           });
-        };
+        }
       };
       
-      setCommentsArray(commentArray);
+      setSubCommentsArray(commentArray);
     } catch (e) {
       console.error(e);
     }
   };
   
   useEffect(() => {
-    !!refCom && showingComments();
-  }, [refCom]);
-  
+    !!refSubCom && showingComments();
+  }, [refSubCom]);
+
   return <>
-    {commentsArray.length > 0 ? commentsArray.map(({
+    {
+      subCommentsArray.length > 0 && subCommentsArray.map(({
         author,
         date,
         description,
         nameGroup,
         profilePhoto,
-        idComment,
+        idSubComment,
         likes,
         liked,
         authorId
       }: CommentType, index) =>
-        <Comment
+        <SubComment
           key={index}
           author={author}
           date={date}
@@ -77,13 +73,13 @@ export const Comments = ({ userId, subCollection, refCom, idPost }: AuthorType) 
           subCollection={subCollection}
           idPost={idPost}
           idComment={idComment}
+          idSubComment={idSubComment}
           likes={likes}
           liked={liked}
           authorId={authorId}
-          refCom={refCom!}
-          refDocCom={docFilesComments(userId!, subCollection!, idPost!, idComment!)}
-          refSubCom={subFilesComments(userId!, subCollection!, idPost!, idComment!)}
-        />
-    ) : <p className={styles.noComments}>{data?.Comments?.noComments}</p>}
-  </>;
+          refDocSubCom={docSubFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!)}
+          refLastCom={subLastFilesComments(userId!, subCollection!, idPost!, idComment!, idSubComment!)}
+        />)
+    }
+  </>
 };

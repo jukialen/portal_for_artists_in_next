@@ -4,22 +4,21 @@ import { CommentType } from 'types/global.types';
 
 import { OptionsComments } from 'components/molecules/OptionsComments/OptionsComments';
 
-import styles from './Comment.module.scss';
+import styles from './LastComment.module.scss';
 
-export const Comment = ({
+export const LastComment = ({
   author,
   date,
   description,
   profilePhoto,
-  idPost,
-  idComment,
   userId,
   subCollection,
+  idPost,
+  idComment,
+  authorId,
   likes,
   liked,
-  authorId,
-  refDocCom,
-  refSubCom
+  refDocLastCom
 }: CommentType) => {
   return <div className={styles.container}>
     <div className={styles.comment}>
@@ -34,6 +33,7 @@ export const Comment = ({
         <h2 className={styles.text}>{description}</h2>
       </div>
     </div>
+
     <OptionsComments
       userId={userId}
       subCollection={subCollection}
@@ -42,9 +42,8 @@ export const Comment = ({
       authorId={authorId}
       likes={likes}
       liked={liked}
-      refDelCom={refDocCom}
-      refDocCom={refDocCom}
-      refSubCom={refSubCom}
+      refDelCom={refDocLastCom!}
+      refDocLastCom={refDocLastCom!}
     />
-  </div>;
+  </div>
 };

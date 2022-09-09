@@ -13,7 +13,7 @@ import { Post } from 'components/molecules/Post/Post';
 import styles from './Posts.module.scss';
 import { useHookSWR } from '../../../hooks/useHookSWR';
 
-export const Posts = ({ name, currentUser }: AuthorType) => {
+export const Posts = ({ nameGroup, currentUser }: AuthorType) => {
   const [postsArray, setPostsArray] = useState<PostType[]>([]);
   
   const { locale } = useRouter();
@@ -22,7 +22,7 @@ export const Posts = ({ name, currentUser }: AuthorType) => {
   const downloadPosts = async () => {
     try {
       const postArray: PostType[] = [];
-      const querySnapshot = await getDocs(posts(name!));
+      const querySnapshot = await getDocs(posts(nameGroup!));
       
       querySnapshot.forEach(async (document) => {
         const docSnap = await getDoc(user(document.data().author));
@@ -48,8 +48,8 @@ export const Posts = ({ name, currentUser }: AuthorType) => {
   };
   
   useEffect(() => {
-    !!name && downloadPosts();
-  }, [name, locale]);
+    !!nameGroup && downloadPosts();
+  }, [nameGroup, locale]);
   
   return <section className={styles.posts}>
     {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, nameGroup, userId, likes, liked, logoUser }: PostType) =>

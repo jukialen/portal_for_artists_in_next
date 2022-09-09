@@ -2,33 +2,28 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getDoc, getDocs } from 'firebase/firestore';
 
-import { AuthorType, CommentType } from 'types/global.types';
+import { docLastFilesComment, user } from 'references/referencesFirebase';
 
-import { docFilesComments, subFilesComments, user } from 'references/referencesFirebase';
+import { AuthorType, CommentType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+import { LastComment } from 'components/atoms/LastComment/LastComment';
 
-import { Comment } from 'components/atoms/Comment/Comment';
-
-import styles from './Comments.module.scss';
-
-export const Comments = ({ userId, subCollection, refCom, idPost }: AuthorType) => {
-  const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
+export const LastComments = ({ userId, subCollection, idPost, idComment, idSubComment, refLastCom }: AuthorType) => {
+  const [lastCommentsArray, setLastCommentsArray] = useState<CommentType[]>([]);
   
   const { locale } = useRouter();
-  const data = useHookSWR();
   
   const showingComments = async () => {
     try {
       const commentArray: CommentType[] = [];
       
-      const documentSnapshots = await getDocs(refCom!);
-
+      const documentSnapshots = await getDocs(refLastCom!);
+      
       for (const document of documentSnapshots.docs) {
         const docSnap = await getDoc(user(document.data().user));
-  
+        
         if (docSnap.exists()) {
           commentArray.push({
             author: docSnap.data().pseudonym,
@@ -36,54 +31,56 @@ export const Comments = ({ userId, subCollection, refCom, idPost }: AuthorType) 
             description: document.data().message,
             nameGroup: document.data().nameGroup,
             profilePhoto: docSnap.data().profilePhoto,
-            idComment: document.id,
+            idLastComment: document.id,
             likes: document.data().likes | 0,
             liked: document.data().liked || [],
             authorId: document.data().user
           });
-        };
+        }
       };
       
-      setCommentsArray(commentArray);
+      setLastCommentsArray(commentArray);
     } catch (e) {
       console.error(e);
     }
   };
   
   useEffect(() => {
-    !!refCom && showingComments();
-  }, [refCom]);
+    !!refLastCom && showingComments();
+  }, [refLastCom]);
   
   return <>
-    {commentsArray.length > 0 ? commentsArray.map(({
+    {
+      lastCommentsArray.length > 0 && lastCommentsArray.map(({
         author,
         date,
         description,
         nameGroup,
         profilePhoto,
-        idComment,
+        idSubComment,
         likes,
         liked,
+        idLastComment,
         authorId
-      }: CommentType, index) =>
-        <Comment
+    }: CommentType, index) =>
+        <LastComment
           key={index}
           author={author}
           date={date}
           description={description}
           nameGroup={nameGroup}
           profilePhoto={profilePhoto}
+          authorId={authorId}
           userId={userId!}
           subCollection={subCollection}
           idPost={idPost}
           idComment={idComment}
+          idSubComment={idSubComment}
           likes={likes}
           liked={liked}
-          authorId={authorId}
-          refCom={refCom!}
-          refDocCom={docFilesComments(userId!, subCollection!, idPost!, idComment!)}
-          refSubCom={subFilesComments(userId!, subCollection!, idPost!, idComment!)}
-        />
-    ) : <p className={styles.noComments}>{data?.Comments?.noComments}</p>}
-  </>;
-};
+          idLastComment={idLastComment}
+          refDocLastCom={docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, idLastComment!)}
+        />)
+    }
+  </>
+}

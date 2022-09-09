@@ -4,7 +4,7 @@ import { Avatar, Button, IconButton } from '@chakra-ui/react';
 
 import { PostType } from 'types/global.types';
 
-import { addingComment, groupsComments, likePost} from 'references/referencesFirebase';
+import { addingPostComment, likePost, postsComments } from 'references/referencesFirebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -83,8 +83,8 @@ export const Post = ({ author, title, date, description, idPost, nameGroup, user
       {likeCount}
     </p>
     <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-      {currentUser === userId && <NewComments name={nameGroup} refCom={addingComment(nameGroup, idPost!)} />}
-      <Comments refCom={groupsComments(nameGroup, idPost!)} />
+      {currentUser === userId && <NewComments name={nameGroup} refCom={addingPostComment(nameGroup, idPost!)} />}
+      <Comments refCom={postsComments(nameGroup, idPost!)} />
     </article>
   </article>
 }

@@ -21,7 +21,7 @@ type AddingPostType = {
   post: string;
 }
 
-export const AddingPost = ({ name }: AuthorType) => {
+export const AddingPost = ({ nameGroup }: AuthorType) => {
   const [showForm, setShowForm] = useState(false);
   
   const user = auth.currentUser;
@@ -39,8 +39,8 @@ export const AddingPost = ({ name }: AuthorType) => {
   
   const createNewPost = async ({ title, post }: AddingPostType, { resetForm }: FormType) => {
     try {
-      await addDoc(addingPost(name!), {
-        nameGroup: name,
+      await addDoc(addingPost(nameGroup!), {
+        nameGroup: nameGroup,
         title,
         message: post,
         date: serverTimestamp(),
