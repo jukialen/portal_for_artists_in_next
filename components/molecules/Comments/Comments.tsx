@@ -13,6 +13,7 @@ import { useHookSWR } from 'hooks/useHookSWR';
 import { Comment } from 'components/atoms/Comment/Comment';
 
 import styles from './Comments.module.scss';
+import { DCProvider } from 'providers/DeleteCommentProvider';
 
 export const Comments = ({ userId, subCollection, refCom, idPost }: AuthorType) => {
   const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
@@ -66,8 +67,8 @@ export const Comments = ({ userId, subCollection, refCom, idPost }: AuthorType) 
         liked,
         authorId
       }: CommentType, index) =>
+      <DCProvider key={index}>
         <Comment
-          key={index}
           author={author}
           date={date}
           description={description}
@@ -80,10 +81,10 @@ export const Comments = ({ userId, subCollection, refCom, idPost }: AuthorType) 
           likes={likes}
           liked={liked}
           authorId={authorId}
-          refCom={refCom!}
           refDocCom={docFilesComments(userId!, subCollection!, idPost!, idComment!)}
           refSubCom={subFilesComments(userId!, subCollection!, idPost!, idComment!)}
         />
+      </DCProvider>
     ) : <p className={styles.noComments}>{data?.Comments?.noComments}</p>}
   </>;
 };

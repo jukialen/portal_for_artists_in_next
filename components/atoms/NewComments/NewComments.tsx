@@ -1,21 +1,15 @@
 import { auth } from '../../../firebase';
-import { addDoc, CollectionReference, Query, serverTimestamp } from 'firebase/firestore';
+import { addDoc, serverTimestamp } from 'firebase/firestore';
 import { Avatar, Button, Textarea } from '@chakra-ui/react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { FormType, GroupNameType } from 'types/global.types';
+import { NewCommentsType, FormType} from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import styles from './NewComments.module.scss';
-
-type NewCommentsType = {
-  name?: GroupNameType;
-  refCom?: CollectionReference;
-  comment?: string;
-}
 
 export const NewComments = ({ name, refCom }: NewCommentsType ) => {
   const initialValues = {

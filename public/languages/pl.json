@@ -242,7 +242,10 @@
     "newComPlaceholder": "Napisz nowy komentarz",
     "newComAria": "Dodanie oipsu dla nowego commentarza",
     "newComButton": "Dodaj komentarz",
-    "noComments": "Brak komentarzy"
+    "noComments": "Brak komentarzy",
+    "updateTitle": "Edycja komentarza",
+    "updateButton": "Zaktualizuj",
+    "deleteCommentTitle": "Usuń komentarz?"
   },
   "Regulations":  {
     "regulation": "Regulamin",

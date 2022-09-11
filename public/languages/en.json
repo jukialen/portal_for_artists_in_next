@@ -242,7 +242,10 @@
     "newComPlaceholder": "Write new comment",
     "newComAria": "Adding description for new comment",
     "newComButton": "Adding a comment",
-    "noComments": "No comments"
+    "noComments": "No comments",
+    "updateTitle": "Edit comment",
+    "updateButton": "Update",
+    "deleteCommentTitle": "Delete comment"
   },
   "Regulations": {
    "regulation": "regulation",

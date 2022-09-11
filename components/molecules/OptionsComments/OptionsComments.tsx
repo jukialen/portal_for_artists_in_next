@@ -1,6 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { auth } from '../../../firebase';
-import { arrayRemove, arrayUnion, deleteDoc, setDoc } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, deleteDoc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { ErrorMessage, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -9,12 +12,18 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  IconButton
+  IconButton,
+  Textarea
 } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { CommentType } from 'types/global.types';
+import { CommentType, FormType, NewCommentsType } from 'types/global.types';
+
+import { docLastFilesComment, docSubFilesComment, subFilesComments, subLastFilesComments} from 'references/referencesFirebase';
+
+import { ModeContext } from 'providers/ModeProvider';
+import { DCContext } from 'providers/DeleteCommentProvider';
 
 import { NewComments } from 'components/atoms/NewComments/NewComments';
 import { SubComments } from 'components/molecules/SubComments/SubComments';
@@ -32,35 +41,37 @@ export const OptionsComments = ({
   authorId,
   likes,
   liked,
+  refDelCom,
   refDocCom,
   refSubCom,
-  refDelCom,
   refDocSubCom,
-  refLastCom
+  refLastCom,
+  refDocLastCom
 }: CommentType) => {
-  const [com, setCom] = useState(false);
   const [like, setLike] = useState(false);
   let [likeCount, setLikeCount] = useState(likes);
   const [moreOptions, setMoreOptions] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [com, setCom] = useState(false);
+  const { isMode } = useContext(ModeContext);
+  const { changeDel } = useContext(DCContext);
   
+  const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const cancelRef = useRef(null);
+  const cancelEditRef = useRef(null);
+  
   const data = useHookSWR();
   
   const currentUser = auth.currentUser?.uid;
   
-  const openMoreOptions = () => setMoreOptions(!moreOptions);
-  const openComs = () => setCom(!com);
-  const onClose = () => setOpen(false);
+  const initialValues = { comment: '' };
   
-  const deleteComment = async () => {
-    try {
-      await deleteDoc(refDelCom!);
-      await onClose();
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const schemaNew = Yup.object({ comment: SchemaValidation().description });
+  
+  const openMoreOptions = () => setMoreOptions(!moreOptions);
+  const onClose = () => setOpen(false);
+  const onCloseEdit = () => setOpenEdit(false);
+  const openComs = () => setCom(!com);
   
   const likedCount = () => {
     try {
@@ -70,12 +81,9 @@ export const OptionsComments = ({
     }
   };
   
-  useEffect(() => {
-    likedCount();
-  }, []);
+  useEffect(() => { likedCount() }, []);
   
   const toggleLike = async () => {
-    
     if (like) {
       await setDoc(refDelCom!,
         { likes: likeCount -= 1, liked: arrayRemove(currentUser) },
@@ -85,9 +93,65 @@ export const OptionsComments = ({
         { likes: likeCount += 1, liked: arrayUnion(currentUser) },
         { merge: true });
     };
-    
+  
     setLikeCount(like ? likeCount -= 1 : likeCount += 1);
     setLike(!like);
+  };
+  
+  const deleteComment = async () => {
+    try {
+      const deleteSubComWithLasts = async () => {
+        const docSnap  = await getDoc(refDocSubCom!);
+  
+        if(docSnap.exists()) {
+          const docsSnapshot = await getDocs(subLastFilesComments(userId!, subCollection!, idPost!, idComment!, docSnap.id!));
+          
+          for (const doc of docsSnapshot.docs) {
+            await deleteDoc(docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, doc.id))
+          };
+        }
+        
+        await deleteDoc(refDocSubCom!);
+      };
+      
+      const deleteComWithSubsAndLasts = async () => {
+        const docSnap = await getDoc(refDocCom!);
+  
+        if(docSnap.exists()) {
+          const docsSnapshot = await getDocs(subFilesComments(userId!, subCollection!, idPost!, docSnap.id));
+          
+          for (const doc of docsSnapshot.docs) {
+            await deleteDoc(docSubFilesComment(userId!, subCollection!, idPost!, idComment!, doc.id));
+           
+            const docsSnapshot2 = await getDocs(subLastFilesComments(userId!, subCollection!, idPost!, docSnap.id, doc.id))
+            
+            for (const doc2 of docsSnapshot2.docs) {
+              await deleteDoc(docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, doc2.id))
+            };
+          }
+        
+          await deleteDoc(refDocCom!);
+        };
+      };
+      
+      !!refDocLastCom && await deleteDoc(refDocLastCom!);
+      !!refDocSubCom && await deleteSubComWithLasts();
+      !!refDocCom && await deleteComWithSubsAndLasts();
+      await changeDel();
+      await onClose();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  
+  const updateComment = async ({ comment }: NewCommentsType, { resetForm }: FormType) => {
+    try {
+      await updateDoc(refDelCom!, { message: comment });
+      await onCloseEdit();
+      resetForm(initialValues);
+    } catch (e) {
+      console.error(e);
+    }
   };
   
   return <>
@@ -122,11 +186,12 @@ export const OptionsComments = ({
                 className={styles.delete}
                 onClick={() => setOpen(!open)}
               >
-                {data.DeletionFile?.deleteButton}
+                {data?.DeletionFile?.deleteButton}
               </Button>
               <Button
                 variant='link'
                 className={styles.edit}
+                onClick={() => setOpenEdit(!openEdit)}
               >
                 {data?.edit}
               </Button>
@@ -140,7 +205,7 @@ export const OptionsComments = ({
             <AlertDialogOverlay>
               <AlertDialogContent m='auto'>
                 <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                  {data?.DeletionFile?.title}
+                  {data?.Comments?.deleteCommentTitle}
                 </AlertDialogHeader>
                 
                 <AlertDialogBody>
@@ -155,6 +220,78 @@ export const OptionsComments = ({
                     {data?.DeletionFile?.deleteButton}
                   </Button>
                 </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialogOverlay>
+          </AlertDialog>
+  
+          <AlertDialog
+            isOpen={openEdit}
+            leastDestructiveRef={cancelEditRef}
+            onClose={onCloseEdit}
+          >
+            <AlertDialogOverlay>
+              <AlertDialogContent m='auto' backgroundColor={`${isMode ? '#2D3748' : '#f7f7f7'}`}>
+                <AlertDialogHeader fontSize='lg' fontWeight='bold' color={`${isMode ? '#f7f7f7' : '#2D3748'}`}>
+                  {data?.Comments?.updateTitle}
+                </AlertDialogHeader>
+        
+                <AlertDialogBody>
+                  <Formik
+                    initialValues={initialValues}
+                    validationSchema={schemaNew}
+                    onSubmit={updateComment}
+                  >
+                    {({ values, handleChange }) => (
+                      <Form>
+                        <div
+                          style={{
+                            width: '95%',
+                            margin: '1rem auto 0',
+                            padding: '0 0.25rem'
+                          }}
+                        >
+                          <Textarea
+                            name='comment'
+                            id='comment'
+                            value={values.comment}
+                            onChange={handleChange}
+                            placeholder={data?.Comments?.newComPlaceholder}
+                            aria-label={data?.Comments?.newComAria}
+                            isRequired
+                            color='#4F8DFF'
+                          />
+                        </div>
+                
+                        <div style={{ display: 'flex', gap: '1rem', margin: '2rem', justifyContent: 'space-around' }}>
+                          <Button
+                            type='submit'
+                            colorScheme='blue'
+                            display='flex'
+                            backgroundColor='#4F8DFF'
+                            borderColor='#4F8DFF'
+                            // margin='1rem 2rem'
+                            cursor='pointer'
+                          >
+                            {data?.Comments?.updateButton}
+                          </Button>
+                  
+                          <Button
+                            ref={cancelRef}
+                            backgroundColor='gray.300'
+                            borderColor='gray.300'
+                            onClick={onCloseEdit}
+                            cursor='pointer'
+                            // margin='1rem 0 1rem 2rem'
+                          >
+                            {data?.DeletionFile?.cancelButton}
+                          </Button>
+                
+                        </div>
+                        <ErrorMessage name='comment' />
+                      </Form>
+                    )}
+                  </Formik>
+                </AlertDialogBody>
               </AlertDialogContent>
             </AlertDialogOverlay>
           </AlertDialog>
@@ -176,7 +313,7 @@ export const OptionsComments = ({
         <NewComments
           name={subCollection!}
           // @ts-ignore
-          refCom={refSubCom! || refLastCom!}
+          refCom={refLastCom! || refSubCom!}
         />
         {
           !!refDocCom ? <SubComments

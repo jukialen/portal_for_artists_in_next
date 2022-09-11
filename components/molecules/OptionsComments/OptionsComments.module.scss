@@ -32,6 +32,7 @@
 
 		.moreBut {
 			font-size: 1.6rem;
+			background-color: transparent;
 			border-color: transparent;
 			cursor: pointer;
 		}
@@ -40,12 +41,14 @@
 			width: max-content;
 			display: flex;
 			position: absolute;
-			right: 8rem;
+			right: 110%;
 			background-color: $third__color;
 			border-radius: 1rem;
 
 			.edit, .delete {
-				width: 5rem;
+				min-width: 5rem;
+				//width: max-content;
+				padding: 0 1rem;
 				border-color: transparent;
 				cursor: pointer;
 			}
@@ -61,8 +64,8 @@
 		}
 
 		.answer {
-			border-color: transparent;
 			padding: .1rem 1rem;
+			border-color: transparent;
 			cursor: pointer;
 		}
 	}

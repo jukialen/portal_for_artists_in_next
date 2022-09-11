@@ -8,6 +8,8 @@ import { AuthorType, CommentType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 
+import { DCProvider } from 'providers/DeleteCommentProvider';
+
 import { LastComment } from 'components/atoms/LastComment/LastComment';
 
 export const LastComments = ({ userId, subCollection, idPost, idComment, idSubComment, refLastCom }: AuthorType) => {
@@ -57,30 +59,30 @@ export const LastComments = ({ userId, subCollection, idPost, idComment, idSubCo
         description,
         nameGroup,
         profilePhoto,
-        idSubComment,
         likes,
         liked,
         idLastComment,
         authorId
     }: CommentType, index) =>
-        <LastComment
-          key={index}
-          author={author}
-          date={date}
-          description={description}
-          nameGroup={nameGroup}
-          profilePhoto={profilePhoto}
-          authorId={authorId}
-          userId={userId!}
-          subCollection={subCollection}
-          idPost={idPost}
-          idComment={idComment}
-          idSubComment={idSubComment}
-          likes={likes}
-          liked={liked}
-          idLastComment={idLastComment}
-          refDocLastCom={docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, idLastComment!)}
-        />)
+        <DCProvider key={index}>
+          <LastComment
+            author={author}
+            date={date}
+            description={description}
+            nameGroup={nameGroup}
+            profilePhoto={profilePhoto}
+            authorId={authorId}
+            userId={userId!}
+            subCollection={subCollection}
+            idPost={idPost}
+            idComment={idComment}
+            idSubComment={idSubComment}
+            likes={likes}
+            liked={liked}
+            idLastComment={idLastComment}
+            refDocLastCom={docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, idLastComment!)}
+          />
+        </DCProvider>)
     }
   </>
 }

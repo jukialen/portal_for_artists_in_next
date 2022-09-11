@@ -85,6 +85,11 @@ export type PostType = {
   liked?: string[];
   logoUser?: string;
 }
+export type NewCommentsType = {
+  name?: GroupNameType;
+  refCom?: CollectionReference;
+  comment?: string;
+}
 
 export type CommentType = {
   author?: string;

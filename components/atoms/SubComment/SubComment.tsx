@@ -1,6 +1,9 @@
+import { useContext } from 'react';
 import { Avatar } from '@chakra-ui/react';
 
 import { CommentType } from 'types/global.types';
+
+import { DCContext } from 'providers/DeleteCommentProvider';
 
 import { OptionsComments } from 'components/molecules/OptionsComments/OptionsComments';
 
@@ -19,10 +22,13 @@ export const SubComment = ({
   idSubComment,
   likes,
   liked,
+  refSubCom,
   refDocSubCom,
   refLastCom
 }: CommentType) => {
-  return <div className={styles.container}>
+  const { del } = useContext(DCContext);
+  
+  return <div className={del ? styles.container__deleted : styles.container}>
     <div className={styles.comment}>
       <Avatar src={profilePhoto} className={styles.avatar} />
       <div className={styles.rightSideComment}>
@@ -45,6 +51,7 @@ export const SubComment = ({
       authorId={authorId}
       likes={likes}
       liked={liked}
+      refSubCom={refSubCom}
       refLastCom={refLastCom!}
       refDelCom={refDocSubCom!}
       refDocSubCom={refDocSubCom!}

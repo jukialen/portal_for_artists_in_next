@@ -9,6 +9,7 @@ import { docSubFilesComment, subLastFilesComments, user } from 'references/refer
 import { getDate } from 'helpers/getDate';
 
 import { SubComment } from 'components/atoms/SubComment/SubComment';
+import { DCProvider } from 'providers/DeleteCommentProvider';
 
 export const SubComments = ({ refSubCom, userId, subCollection, idPost, idComment }: AuthorType) => {
   const [subCommentsArray, setSubCommentsArray] = useState<CommentType[]>([]);
@@ -61,9 +62,8 @@ export const SubComments = ({ refSubCom, userId, subCollection, idPost, idCommen
         likes,
         liked,
         authorId
-      }: CommentType, index) =>
+      }: CommentType, index) => <DCProvider key={index}>
         <SubComment
-          key={index}
           author={author}
           date={date}
           description={description}
@@ -77,9 +77,10 @@ export const SubComments = ({ refSubCom, userId, subCollection, idPost, idCommen
           likes={likes}
           liked={liked}
           authorId={authorId}
+          refSubCom={refSubCom}
           refDocSubCom={docSubFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!)}
           refLastCom={subLastFilesComments(userId!, subCollection!, idPost!, idComment!, idSubComment!)}
-        />)
+        /></DCProvider>)
     }
   </>
 };

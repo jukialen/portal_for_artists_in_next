@@ -4,18 +4,20 @@ import { useRouter } from 'next/router';
 
 import { FileContainerType } from 'types/global.types';
 
-import { addingFilesComment, docFilesComments, filesComments, subFilesComments } from 'references/referencesFirebase';
+import { addingFilesComment, filesComments } from 'references/referencesFirebase';
 
 import { Comments } from 'components/molecules/Comments/Comments';
 import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
 import { NewComments } from 'components/atoms/NewComments/NewComments';
 
 import styles from './FileOptions.module.scss';
+import { useHookSWR } from 'hooks/useHookSWR';
 
 export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, description }: FileContainerType) => {
   const [open, setOpen] = useState(false);
-  
   const { locale } = useRouter();
+  
+  const data = useHookSWR();
   
   const showOpenComments = () => setOpen(!open);
   
@@ -33,7 +35,9 @@ export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, descr
   
         <SharingButton link={linkShare} tag={tag} authorName={authorName} titleShare={titleShare} />
       </div>
-      <button className={styles.comments} onClick={showOpenComments}>Comments</button>
+      <button className={styles.comments} onClick={showOpenComments}>
+        {data?.Comments?.comments}
+      </button>
       {open && <>
         <NewComments
           name={subCollection!}
