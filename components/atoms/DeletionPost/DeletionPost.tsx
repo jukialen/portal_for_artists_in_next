@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { deleteDoc } from 'firebase/firestore';
+import { deleteDoc, getDocs } from 'firebase/firestore';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -11,7 +11,14 @@ import {
   IconButton
 } from '@chakra-ui/react';
 
-import { deletingPost } from 'references/referencesFirebase';
+import {
+  deletingPost,
+  docLastPostsComments,
+  docPostsComments,
+  docSubPostsComments,
+  lastPostsComments, postsComments,
+  subPostsComments
+} from 'references/referencesFirebase';
 
 import { GroupNameType } from 'types/global.types';
 
@@ -43,6 +50,22 @@ export const DeletePost = ({ name, idPost }: DeletionPostType) => {
       await onClose();
       await setDeleting(!deleting);
       await setValues(data?.DeletionPost?.deleting);
+      const docsSnap = await getDocs(postsComments(name, idPost));
+
+      for (const doc of docsSnap.docs) {
+        const docsSnap2 = await getDocs(subPostsComments(name, idPost, doc.id));
+        
+          for (const doc2 of docsSnap2.docs) {
+            const docsSnap3 = await getDocs(lastPostsComments(name, idPost, doc.id, doc2.id));
+
+            for (const doc3 of docsSnap3.docs) {
+              await deleteDoc(docLastPostsComments(name, idPost, doc.id, doc2.id, doc3.id));
+            };
+            await deleteDoc(docSubPostsComments(name, idPost, doc.id, doc2.id));
+          };
+        await deleteDoc(docPostsComments(name, idPost, doc.id))
+      }
+  
       await deleteDoc(deletingPost(name, idPost));
       await setValues(data?.DeletionPost?.deleted);
       await setDeleting(!deleting);
@@ -56,6 +79,7 @@ export const DeletePost = ({ name, idPost }: DeletionPostType) => {
     <>
       <IconButton
         icon={del ? <ChevronUpIcon /> : <ChevronDownIcon />}
+        width='3rem'
         height='3rem'
         onClick={() => setDel(!del)}
         className={styles.icon}
@@ -68,7 +92,6 @@ export const DeletePost = ({ name, idPost }: DeletionPostType) => {
         <Button
           isLoading={deleting}
           loadingText={data?.DeletionFile?.loadingText}
-          size='md'
           leftIcon={<DeleteIcon />}
           colorScheme='red'
           borderColor='red.500'
