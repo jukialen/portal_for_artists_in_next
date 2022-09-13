@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getDoc, getDocs } from 'firebase/firestore';
 
-import { docLastFilesComment, user } from 'references/referencesFirebase';
+import { docLastFilesComment, docLastPostsComments, user } from 'references/referencesFirebase';
 
 import { AuthorType, CommentType } from 'types/global.types';
 
@@ -12,7 +12,7 @@ import { DCProvider } from 'providers/DeleteCommentProvider';
 
 import { LastComment } from 'components/atoms/LastComment/LastComment';
 
-export const LastComments = ({ userId, subCollection, idPost, idComment, idSubComment, refLastCom }: AuthorType) => {
+export const LastComments = ({ userId, subCollection, idPost, idComment, idSubComment, refLastCom, groupSource }: AuthorType) => {
   const [lastCommentsArray, setLastCommentsArray] = useState<CommentType[]>([]);
   
   const { locale } = useRouter();
@@ -80,7 +80,11 @@ export const LastComments = ({ userId, subCollection, idPost, idComment, idSubCo
             likes={likes}
             liked={liked}
             idLastComment={idLastComment}
-            refDocLastCom={docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, idLastComment!)}
+            refDocLastCom={groupSource ?
+              docLastPostsComments(nameGroup!, idPost!, idComment!, idSubComment!, idLastComment!) :
+              docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, idLastComment!)
+            }
+            groupSource={groupSource}
           />
         </DCProvider>)
     }

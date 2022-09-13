@@ -13,6 +13,7 @@ export const SubComment = ({
   author,
   date,
   description,
+  nameGroup,
   profilePhoto,
   userId,
   subCollection,
@@ -24,7 +25,8 @@ export const SubComment = ({
   liked,
   refSubCom,
   refDocSubCom,
-  refLastCom
+  refLastCom,
+  groupSource
 }: CommentType) => {
   const { del } = useContext(DCContext);
   
@@ -55,6 +57,8 @@ export const SubComment = ({
       refLastCom={refLastCom!}
       refDelCom={refDocSubCom!}
       refDocSubCom={refDocSubCom!}
+      nameGroup={nameGroup}
+      groupSource={groupSource}
     />
   </div>
 }

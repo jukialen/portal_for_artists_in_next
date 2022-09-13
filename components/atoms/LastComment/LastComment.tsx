@@ -13,6 +13,7 @@ export const LastComment = ({
   author,
   date,
   description,
+  nameGroup,
   profilePhoto,
   userId,
   subCollection,
@@ -22,7 +23,8 @@ export const LastComment = ({
   authorId,
   likes,
   liked,
-  refDocLastCom
+  refDocLastCom,
+  groupSource
 }: CommentType) => {
   const { del } = useContext(DCContext);
   
@@ -51,6 +53,8 @@ export const LastComment = ({
       liked={liked}
       refDelCom={refDocLastCom!}
       refDocLastCom={refDocLastCom!}
+      nameGroup={nameGroup}
+      groupSource={groupSource}
     />
   </div>
 };

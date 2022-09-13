@@ -4,18 +4,25 @@ import { getDoc, getDocs } from 'firebase/firestore';
 
 import { AuthorType, CommentType } from 'types/global.types';
 
-import { docFilesComments, subFilesComments, user } from 'references/referencesFirebase';
+import {
+  docFilesComments,
+  docPostsComments,
+  subFilesComments,
+  subPostsComments,
+  user
+} from 'references/referencesFirebase';
 
 import { getDate } from 'helpers/getDate';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
+import { DCProvider } from 'providers/DeleteCommentProvider';
+
 import { Comment } from 'components/atoms/Comment/Comment';
 
 import styles from './Comments.module.scss';
-import { DCProvider } from 'providers/DeleteCommentProvider';
 
-export const Comments = ({ userId, subCollection, refCom, idPost }: AuthorType) => {
+export const Comments = ({ userId, subCollection, refCom, idPost, groupSource }: AuthorType) => {
   const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
   
   const { locale } = useRouter();
@@ -81,8 +88,17 @@ export const Comments = ({ userId, subCollection, refCom, idPost }: AuthorType) 
           likes={likes}
           liked={liked}
           authorId={authorId}
-          refDocCom={docFilesComments(userId!, subCollection!, idPost!, idComment!)}
-          refSubCom={subFilesComments(userId!, subCollection!, idPost!, idComment!)}
+          refDocCom={
+            groupSource ?
+            docPostsComments(nameGroup!, idPost!, idComment!) :
+            docFilesComments(userId!, subCollection!, idPost!, idComment!)
+          }
+          refSubCom={
+            groupSource ?
+              subPostsComments(nameGroup!, idPost!, idComment!) :
+              subFilesComments(userId!, subCollection!, idPost!, idComment!)
+          }
+          groupSource={groupSource}
         />
       </DCProvider>
     ) : <p className={styles.noComments}>{data?.Comments?.noComments}</p>}

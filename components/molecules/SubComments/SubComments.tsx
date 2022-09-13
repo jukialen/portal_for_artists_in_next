@@ -4,14 +4,20 @@ import { getDoc, getDocs } from 'firebase/firestore';
 
 import { AuthorType, CommentType } from 'types/global.types';
 
-import { docSubFilesComment, subLastFilesComments, user } from 'references/referencesFirebase';
+import {
+  docSubFilesComment,
+  docSubPostsComments,
+  lastPostsComments,
+  subLastFilesComments,
+  user
+} from 'references/referencesFirebase';
 
 import { getDate } from 'helpers/getDate';
 
 import { SubComment } from 'components/atoms/SubComment/SubComment';
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
-export const SubComments = ({ refSubCom, userId, subCollection, idPost, idComment }: AuthorType) => {
+export const SubComments = ({ refSubCom, userId, subCollection, idPost, idComment, groupSource }: AuthorType) => {
   const [subCommentsArray, setSubCommentsArray] = useState<CommentType[]>([]);
   
   const { locale } = useRouter();
@@ -78,9 +84,17 @@ export const SubComments = ({ refSubCom, userId, subCollection, idPost, idCommen
           liked={liked}
           authorId={authorId}
           refSubCom={refSubCom}
-          refDocSubCom={docSubFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!)}
-          refLastCom={subLastFilesComments(userId!, subCollection!, idPost!, idComment!, idSubComment!)}
-        /></DCProvider>)
+          refDocSubCom={groupSource ?
+            docSubPostsComments(nameGroup!, idPost!, idComment!, idSubComment!) :
+            docSubFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!)
+          }
+          refLastCom={groupSource ?
+            lastPostsComments(nameGroup!, idPost!, idComment!, idSubComment!) :
+            subLastFilesComments(userId!, subCollection!, idPost!, idComment!, idSubComment!)
+          }
+          groupSource={groupSource}
+        />
+      </DCProvider>)
     }
   </>
 };

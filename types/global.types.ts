@@ -70,6 +70,7 @@ export type AuthorType = {
   idComment?: string;
   idSubComment?: string;
   idLastComment?: string;
+  groupSource?: boolean;
 }
 
 export type PostType = {
@@ -114,4 +115,5 @@ export type CommentType = {
   refDocCom?: DocumentReference;
   refDocSubCom?: DocumentReference;
   refDocLastCom?: DocumentReference;
+  groupSource?: boolean;
 }

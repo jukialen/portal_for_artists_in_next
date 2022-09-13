@@ -3,9 +3,11 @@ import { db } from '../firebase';
 
 import { GroupNameType } from 'types/global.types';
 
+
 // USERS
 export const user = (username: string) => doc(db, `users/${username}`);
 export const usersRef = collection(db, 'users');
+
 
 // FILES
 const maxItems = 10;
@@ -56,6 +58,7 @@ export const userVideosRef = (user: string) => {
   return collection(db, `users/${user}/videos`);
 };
 
+
 // GROUPS
 export const groupRef = collection(db, 'groups');
 export const groupsQuery = (currentUser: string) => query(groupRef, where('admin', '==', currentUser),
@@ -65,6 +68,7 @@ query(groupRef, limit(5), orderBy('name'));
 export const usersInGroup = (name: GroupNameType) => doc(db, `groups/${name}`);
 
 export const groupSection = (name: GroupNameType) => query(groupRef, where('name', '==', name));
+
 
 // POSTS
 export const addingPost = (name: GroupNameType) => collection(db, `groups/${name}/posts`);
@@ -77,33 +81,57 @@ export const likePost = (name: GroupNameType, idPost: string) => doc(db, `groups
 
 export const deletingPost = (name: GroupNameType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
 
-// COMMENTS
+
+// GROUP COMMENTS
 export const addingPostComment = (name: GroupNameType, idPost: string) => collection(db,
   `groups/${name}/posts/${idPost}/comments`);
-
-export const addingFilesComment = (uid: string, subCollection: string, idPost: string) => {
-  return collection(db, `users/${uid}/${subCollection}/${idPost}/comments`);
-}
 
 export const postsComments = (name: GroupNameType, idPost: string) => {
   return query(collection(db, `groups/${name}/posts/${idPost}/comments`),
     orderBy('date', 'desc'));
 };
 
+export const docPostsComments = (name: GroupNameType, idPost: string, idComment: string) => {
+  return doc(db, `groups/${name}/posts/${idPost}/comments/${idComment}`);
+};
+
+// GROUP SUBCOMMENTS
+export const subPostsComments = (name: GroupNameType, idPost: string, idComment: string) => {
+  return collection(db, `groups/${name}/posts/${idPost}/comments/${idComment}/subcomments`);
+};
+
+export const docSubPostsComments = (name: GroupNameType, idPost: string, idComment: string, idSubComment: string) => {
+  return doc(db, `groups/${name}/posts/${idPost}/comments/${idComment}/subcomments/${idSubComment}`);
+};
+
+// GROUP LASTCOMMENTS
+export const lastPostsComments = (name: GroupNameType, idPost: string, idComment: string, idSubComment: string) => {
+  return collection(db, `groups/${name}/posts/${idPost}/comments/${idComment}/subcomments/${idSubComment}/lastcomments`);
+};
+export const docLastPostsComments = (name: GroupNameType, idPost: string, idComment: string, idSubComment: string, idLastComment: string) => {
+  return doc(db, `groups/${name}/posts/${idPost}/comments/${idComment}/subcomments/${idSubComment}/lastcomments/${idLastComment}`);
+};
+
+
+// FILE COMMENTS
+export const addingFilesComment = (uid: string, subCollection: string, idPost: string) => {
+  return collection(db, `users/${uid}/${subCollection}/${idPost}/comments`);
+};
+
 export const filesComments = (uid: string, subCollection: string, idPost: string) => {
-  return collection(db, `users/${uid}/${subCollection}/${idPost}/comments`)
-}
+  return collection(db, `users/${uid}/${subCollection}/${idPost}/comments`);
+};
 
 export const docFilesComments = (userId: string, subCollection: string, idPost: string, idComment: string) => {
-  return doc(db, `users/${userId}/${subCollection}/${idPost}/comments/${idComment}`)
-}
+  return doc(db, `users/${userId}/${subCollection}/${idPost}/comments/${idComment}`);
+};
 
 export const commentsFiles = (subCollection: string, description: string) => {
   return query(collectionGroup(db, subCollection),
     where('description', '==', description), orderBy('timeCreated', 'desc'));
 }
 
-// SUBCOMMENTS
+// FILE SUBCOMMENTS
 export const subFilesComments = (uid: string, subCollection: string, idPost: string, idComment: string) => {
   return collection(db, `users/${uid}/${subCollection}/${idPost}/comments/${idComment}/subcomments`)
 }
@@ -112,7 +140,7 @@ export const docSubFilesComment = (userId: string, subCollection: string, idPost
   return doc(db, `users/${userId}/${subCollection}/${idPost}/comments/${idComment}/subcomments/${idSubComment}`)
 }
 
-//LAST SUBCOMMENTS
+//FILE LASTCOMMENTS
 export const subLastFilesComments = (uid: string, subCollection: string, idPost: string, idComment: string, idSubComment: string) => {
   return collection(db, `users/${uid}/${subCollection}/${idPost}/comments/${idComment}/subcomments/${idSubComment}/lastcomment`)
 }

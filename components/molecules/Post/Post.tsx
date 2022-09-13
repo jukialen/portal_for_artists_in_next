@@ -87,8 +87,8 @@ export const Post = ({ author, title, date, description, idPost, nameGroup, user
       {likeCount}
     </p>
     <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-      <Comments refCom={postsComments(nameGroup, idPost!)} />
       <NewComments name={nameGroup} refCom={addingPostComment(nameGroup, idPost!)} />
+      <Comments refCom={postsComments(nameGroup, idPost!)} idPost={idPost!} groupSource />
     </article>
   </article>
 }

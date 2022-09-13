@@ -20,7 +20,13 @@ import { useHookSWR } from 'hooks/useHookSWR';
 
 import { CommentType, FormType, NewCommentsType } from 'types/global.types';
 
-import { docLastFilesComment, docSubFilesComment, subFilesComments, subLastFilesComments} from 'references/referencesFirebase';
+import {
+  docLastFilesComment, docLastPostsComments,
+  docSubFilesComment, docSubPostsComments, lastPostsComments,
+  subFilesComments,
+  subLastFilesComments,
+  subPostsComments
+} from 'references/referencesFirebase';
 
 import { ModeContext } from 'providers/ModeProvider';
 import { DCContext } from 'providers/DeleteCommentProvider';
@@ -46,7 +52,9 @@ export const OptionsComments = ({
   refSubCom,
   refDocSubCom,
   refLastCom,
-  refDocLastCom
+  refDocLastCom,
+  groupSource,
+  nameGroup
 }: CommentType) => {
   const [like, setLike] = useState(false);
   let [likeCount, setLikeCount] = useState(likes);
@@ -104,10 +112,15 @@ export const OptionsComments = ({
         const docSnap  = await getDoc(refDocSubCom!);
   
         if(docSnap.exists()) {
-          const docsSnapshot = await getDocs(subLastFilesComments(userId!, subCollection!, idPost!, idComment!, docSnap.id!));
+          const docsSnapshot = await getDocs(groupSource ?
+            lastPostsComments(nameGroup!, idPost!, idComment!, docSnap.id) :
+            subLastFilesComments(userId!, subCollection!, idPost!, idComment!, docSnap.id!)
+          );
           
           for (const doc of docsSnapshot.docs) {
-            await deleteDoc(docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, doc.id))
+            await deleteDoc(groupSource ?
+              docLastPostsComments(nameGroup!, idPost!, idComment!, idSubComment!, doc.id) :
+              docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, doc.id))
           };
         }
         
@@ -118,16 +131,27 @@ export const OptionsComments = ({
         const docSnap = await getDoc(refDocCom!);
   
         if(docSnap.exists()) {
-          const docsSnapshot = await getDocs(subFilesComments(userId!, subCollection!, idPost!, docSnap.id));
+          const docsSnapshot = await getDocs(groupSource ?
+            subPostsComments(nameGroup!, idPost!, docSnap.id) :
+            subFilesComments(userId!, subCollection!, idPost!, docSnap.id)
+          );
           
           for (const doc of docsSnapshot.docs) {
-            await deleteDoc(docSubFilesComment(userId!, subCollection!, idPost!, idComment!, doc.id));
-           
-            const docsSnapshot2 = await getDocs(subLastFilesComments(userId!, subCollection!, idPost!, docSnap.id, doc.id))
-            
+            const docsSnapshot2 = await getDocs(groupSource ?
+              lastPostsComments(nameGroup!, idPost!, docSnap.id, doc.id) :
+              subLastFilesComments(userId!, subCollection!, idPost!, docSnap.id, doc.id)
+            )
+  
             for (const doc2 of docsSnapshot2.docs) {
-              await deleteDoc(docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, doc2.id))
+              await deleteDoc(groupSource ?
+                docLastPostsComments(nameGroup!, idPost!, docSnap.id, doc.id, doc2.id) :
+                docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, doc2.id))
             };
+            
+            await deleteDoc(groupSource ?
+              docSubPostsComments(nameGroup!, idPost!, docSnap.id, doc.id) :
+              docSubFilesComment(userId!, subCollection!, idPost!, idComment!, doc.id)
+            );
           }
         
           await deleteDoc(refDocCom!);
@@ -307,11 +331,10 @@ export const OptionsComments = ({
         </Button>}
       </div>
     </div>
-    
     {
       com && <>
         <NewComments
-          name={subCollection!}
+          name={groupSource? nameGroup : subCollection}
           // @ts-ignore
           refCom={refLastCom! || refSubCom!}
         />
@@ -322,6 +345,7 @@ export const OptionsComments = ({
             subCollection={subCollection}
             idPost={idPost}
             idComment={idComment}
+            groupSource={groupSource}
           /> : !!refDocSubCom ? <LastComments
             userId={userId}
             subCollection={subCollection}
@@ -329,6 +353,7 @@ export const OptionsComments = ({
             idComment={idComment}
             idSubComment={idSubComment}
             refLastCom={refLastCom!}
+            groupSource={groupSource}
           /> : null
         }
       </>

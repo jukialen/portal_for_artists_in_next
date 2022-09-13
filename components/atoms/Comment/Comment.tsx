@@ -22,10 +22,12 @@ export const Comment = ({
   liked,
   authorId,
   refDocCom,
-  refSubCom
+  refSubCom,
+  groupSource,
+  nameGroup
 }: CommentType) => {
   const { del } = useContext(DCContext);
-  
+
   return <div className={del ? styles.container__deleted : styles.container}>
     <div className={styles.comment}>
       <Avatar src={profilePhoto} className={styles.avatar} />
@@ -50,6 +52,8 @@ export const Comment = ({
       refDelCom={refDocCom}
       refDocCom={refDocCom}
       refSubCom={refSubCom}
+      groupSource={groupSource}
+      nameGroup={nameGroup}
     />
   </div>;
 };
