@@ -6,12 +6,13 @@ import { posts, user } from 'references/referencesFirebase';
 
 import { AuthorType, PostType } from 'types/global.types';
 
+import { useHookSWR } from 'hooks/useHookSWR';
+
 import { getDate } from 'helpers/getDate';
 
 import { Post } from 'components/molecules/Post/Post';
 
 import styles from './Posts.module.scss';
-import { useHookSWR } from '../../../hooks/useHookSWR';
 
 export const Posts = ({ nameGroup, currentUser }: AuthorType) => {
   const [postsArray, setPostsArray] = useState<PostType[]>([]);
@@ -24,23 +25,25 @@ export const Posts = ({ nameGroup, currentUser }: AuthorType) => {
       const postArray: PostType[] = [];
       const querySnapshot = await getDocs(posts(nameGroup!));
       
-      querySnapshot.forEach(async (document) => {
-        const docSnap = await getDoc(user(document.data().author));
+      for (const query of querySnapshot.docs) {
+        const docSnap = await getDoc(user(query.data().author));
+        
         if (docSnap.exists()) {
           postArray.push({
             author: docSnap.data().pseudonym,
-            title: document.data().title,
-            date: getDate(locale!, document.data().date),
-            description: document.data().message,
-            idPost: document.id,
-            nameGroup: document.data().nameGroup,
-            userId: document.data().author,
-            likes: document.data().likes,
-            liked: document.data().liked,
+            title: query.data().title,
+            date: getDate(locale!, query.data().date),
+            description: query.data().message,
+            idPost: query.id,
+            nameGroup: query.data().nameGroup,
+            userId: query.data().author,
+            likes: query.data().likes,
+            liked: query.data().liked,
             logoUser: docSnap.data().profilePhoto
           });
         }
-      });
+      };
+
       setPostsArray(postArray);
     } catch (e) {
       console.error(e);
@@ -52,9 +55,9 @@ export const Posts = ({ nameGroup, currentUser }: AuthorType) => {
   }, [nameGroup, locale]);
   
   return <section className={styles.posts}>
-    {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, nameGroup, userId, likes, liked, logoUser }: PostType) =>
+    {postsArray.length > 0 ? postsArray.map(({ author, title, date, description, idPost, nameGroup, userId, likes, liked, logoUser }: PostType, index) =>
       <Post
-        key={idPost}
+        key={index}
         author={author}
         title={title}
         date={date}

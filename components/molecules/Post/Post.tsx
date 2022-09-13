@@ -57,11 +57,13 @@ export const Post = ({ author, title, date, description, idPost, nameGroup, user
       <Avatar src={logoUser || group} />
       <div className={styles.username}>
         <a href={`/user/${author}`}>{author}</a>
+        <div className={styles.time}>
+          {date}
+        </div>
       </div>
-      {currentUser === userId && <DeletePost name={nameGroup} idPost={idPost!} />}
+      {currentUser === userId && <DeletePost name={nameGroup} idPost={idPost!}  />}
     </div>
     <div className={styles.titlePost}>{title}</div>
-    <div className={styles.time}>{date}</div>
     <div className={styles.description}>{description}</div>
     <div className={styles.options}>
       <IconButton
@@ -76,15 +78,17 @@ export const Post = ({ author, title, date, description, idPost, nameGroup, user
         onClick={showingComments}
         className={styles.commentsButton}
         variant='ghost'
-      >{data?.Comments?.comments}</Button>
+      >
+        {data?.Comments?.comments}
+      </Button>
       <SharingButton link={link} />
     </div>
     <p className={styles.likesCount} style={{ marginLeft: likeCount < 10 ? '.8rem' : '.5rem' }}>
       {likeCount}
     </p>
     <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-      {currentUser === userId && <NewComments name={nameGroup} refCom={addingPostComment(nameGroup, idPost!)} />}
       <Comments refCom={postsComments(nameGroup, idPost!)} />
+      <NewComments name={nameGroup} refCom={addingPostComment(nameGroup, idPost!)} />
     </article>
   </article>
 }
