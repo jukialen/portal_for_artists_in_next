@@ -61,13 +61,14 @@ export const AddingPost = ({ nameGroup }: AuthorType) => {
     >
       {data?.Groups?.addingPost?.add}
     </button>
+    
     <Formik
       initialValues={initialValues}
       validationSchema={schemaNew}
       onSubmit={createNewPost}
     >
       {({ values, handleChange, errors, touched }) => (
-        <Form className={showForm ? '' : styles.hiding}>
+        <Form className={showForm ? styles.form : styles.hiding}>
           <Input
             id='title'
             name='title'

@@ -1,4 +1,4 @@
-@use '../../../styles/variables' as *;
+@use 'styles/variables' as *;
 
 .showForm {
 	width: 10rem;
@@ -14,24 +14,30 @@
 	cursor: pointer;
 }
 
-.title, .title__error, .description, .description__error {
-	max-width: 95%;
-	margin: 1rem auto;
-	padding: 0.3rem 0.5rem;
-	border-color: $third__color;
-	color: $third__color;
+.form {
+	display: flex;
+	flex-direction: column;
 
-	&__error {
-		border-color: $required__color;
+	.title, .title__error, .description, .description__error {
+		max-width: 95%;
+		margin: 1rem auto;
+		padding: 0.3rem 0.5rem;
+		border-color: $third__color;
+		color: $third__color;
+
+		&__error {
+			border-color: $required__color;
+		}
+	}
+
+	.addingButton {
+		margin: 2rem auto 1rem;
+		background: $third__color;
+		border-color: $third__color;
+		cursor: pointer;
 	}
 }
 
-.addingButton {
-	margin: 2rem auto 1rem;
-	background: $third__color;
-	border-color: $third__color;
-	cursor: pointer;
-}
 
 .hiding {
 	display: none;
