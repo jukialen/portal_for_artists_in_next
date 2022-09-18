@@ -82,7 +82,7 @@ export default function Drawings() {
   const nextElements = async () => {
     try {
       const nextPage = query(allPhotosCollectionRef(),
-        where('tag', 'in', pid),
+        where('tag', '==', pid),
         orderBy('timeCreated', 'desc'),
         limit(maxItems),
         startAfter(lastVisible),
