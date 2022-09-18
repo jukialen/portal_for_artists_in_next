@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { auth } from '../../../firebase';
-import { arrayUnion, setDoc } from 'firebase/firestore';
+import { addDoc, arrayUnion, setDoc } from 'firebase/firestore';
 import { Avatar, IconButton, Link } from '@chakra-ui/react';
 
 import { GroupNameType } from 'types/global.types';
 
-import { usersInGroup } from 'references/referencesFirebase';
+import { moderators, user, groups } from 'references/referencesFirebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -33,21 +33,17 @@ export const UsersButton = ({ id, name, pseudonym, logo, admin, moderatorsArray 
   const [toggleModRole, setToggleModRole] = useState(false);
   
   const data = useHookSWR()
+  const currentUser = auth.currentUser?.uid;
   
   useEffect(() => {
     moderatorsArray.length > 0 && moderatorsArray.map(({ modId }: ModeratorsType) => {
       id === modId ? setToggleModRole(true) : setToggleModRole(false)
     })
-  }, [name, id])
+  }, [moderatorsArray, id])
   
-  const user = auth.currentUser;
-  const currentUser = user?.uid;
-  
-  const addingModerators = async (name: GroupNameType, pseudonym: string) => {
+  const addingModerators = async (name: GroupNameType) => {
     try {
-      await setDoc(usersInGroup(name!),
-        { moderators: arrayUnion(pseudonym) },
-        { merge: true });
+      await addDoc(moderators(name!),{ moderator: user(id) } );
       await setToggleModRole(true);
     } catch (e) {
       console.error(e);
@@ -63,7 +59,7 @@ export const UsersButton = ({ id, name, pseudonym, logo, admin, moderatorsArray 
       type='submit'
       aria-label={toggleModRole ? data?.Members?.button?.addedModAria : data?.Members?.button?.addModAria}
       icon={toggleModRole ? <CheckIcon /> : <AddIcon />}
-      onClick={() => addingModerators(name, id)}
+      onClick={() => addingModerators(name)}
     />}
   </div>
 }

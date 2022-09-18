@@ -3,7 +3,7 @@ import { getDoc, getDocs } from 'firebase/firestore';
 import { auth } from '../../../firebase';
 import { Divider } from '@chakra-ui/react';
 
-import { groupsQuery, user, usersInGroup } from 'references/referencesFirebase';
+import { adminInGroups, user, groups } from 'references/referencesFirebase';
 
 import { GroupType } from 'types/global.types';
 
@@ -24,8 +24,7 @@ export const GroupUsers = () => {
   
   const downloadGroupsList = async () => {
     try {
-      const docSnap = await getDoc(user(currentUser!));
-      const querySnapshot = await getDocs(groupsQuery(currentUser!));
+      const querySnapshot = await getDocs(adminInGroups(currentUser!));
       
       const adminArray: GroupType[] = [];
       const moderatorArray: GroupType[] = [];
@@ -39,29 +38,6 @@ export const GroupUsers = () => {
       });
       
       setAdminsArray(adminArray);
-  
-      if (docSnap.exists()) {
-        const groups = docSnap.data().groups;
-        groups.sort();
-        
-        for (const group of groups) {
-          const groupData = await getDoc(usersInGroup(group));
-          
-          if (groupData.exists()) {
-            const logoUrl: string = groupData.data().logo || '/#';
-            
-            groupArray.push({ nameGroup: group, logoUrl });
-            
-            for (const moderator of groupData.data().moderators) {
-              currentUser === moderator && moderatorArray.push({ nameGroup: group, logoUrl });
-            }
-          }
-        }
-        setModeratorsArray(moderatorArray);
-        setGroupsArray(groupArray);
-      } else {
-        console.log('No your groups!');
-      }
     } catch (e) {
       console.error(e);
     }

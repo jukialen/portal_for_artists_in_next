@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { auth } from '../../firebase';
-import { arrayRemove, arrayUnion, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
+import { arrayRemove, arrayUnion, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 
-import { user, usersRef } from 'references/referencesFirebase';
+import { delFriends, friends, user, usersRef } from 'references/referencesFirebase';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { ProfileUser } from 'components/atoms/ProfileUser/ProfileUser';
@@ -50,17 +50,19 @@ export default function User() {
         setDescription(doc.data().description);
       });
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
   
   const downloadFriends = async () => {
-    const docRef = user(currentUser!);
-    const docSnap = await getDoc(docRef);
-    
-    docSnap.exists() ? docSnap.data().friends.forEach((friend: string) => {
-      friend === uid && setAddF(!addF);
-    }) : console.error('No such friends!');
+    const docRef = query(friends(currentUser!), where('friend', '==', doc(db, `users/${uid}`)));
+  
+    const querySnapshot = await getDocs(docRef);
+    querySnapshot.forEach((document) => {
+      !!document && setAddF(!addF);
+    });
+  
+    const docSnap = await getDoc(user(currentUser!));
     
     if (docSnap.exists()) {
       docSnap.data().favoriteFriends.forEach((favoriteFriend: string) => {
@@ -69,25 +71,28 @@ export default function User() {
       });
       setFavoriteLength(docSnap.data().favoriteFriends.length);
     } else {
-      console.error('No such friends!');
+      console.error('No such favorite friends!');
     }
   };
   
-  useEffect(() => {
-    !!author && downLoadUid();
-  }, [author]);
+  useEffect(() => { !!author && downLoadUid() }, [author]);
   
-  useEffect(() => {
-    !!uid && downloadFriends();
-  }, [uid]);
+  useEffect(() => { !!uid && downloadFriends() }, [uid]);
   
-  const addToFriend = async () => {
+  const addToFriends = async () => {
     try {
       if (addF) {
-        await setDoc(user(currentUser!), { friends: arrayRemove(uid) }, { merge: true });
+        const docRef = query(friends(currentUser!), where('friend', '==', doc(db, `users/${uid}`)));
+
+        const querySnapshot = await getDocs(docRef);
+        querySnapshot.forEach((document) => {
+          deleteDoc(delFriends(currentUser!, document.id));
+        });
+
+        await setDoc(user(currentUser!), { favoriteFriends: arrayRemove(uid) }, { merge: true });
         setAddF(false);
       } else {
-        await setDoc(user(currentUser!), { friends: arrayUnion(uid) }, { merge: true });
+        await setDoc(doc(friends(currentUser!)), { friend: doc(db, `users/${uid}`) });
         setAddF(true);
       }
     } catch (e) {
@@ -110,13 +115,11 @@ export default function User() {
       setFavorite(!favorite);
       
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   
-  if (loading) {
-    return null;
-  }
+  if (loading) { return null }
   
   return <>
     <HeadCom path={`/user/${author}`} content={`${author} site`} />
@@ -127,7 +130,7 @@ export default function User() {
       {currentUser === uid ? null :
         <button
           className={addF ? styles.addedButton : styles.addButton}
-          onClick={addToFriend}
+          onClick={addToFriends}
         >
           {addF ? <CheckIcon boxSize='1rem' /> : <SmallAddIcon boxSize='1.5rem' />}
           <p>{addF ? data?.Friends?.added : data?.Friends?.add}</p>

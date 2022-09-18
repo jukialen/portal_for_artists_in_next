@@ -3,29 +3,15 @@ import { useRouter } from 'next/router';
 import { auth, storage } from '../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { UploadTaskSnapshot } from '@firebase/storage';
-import { arrayRemove, arrayUnion, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import {
-  Button,
-  Divider,
-  IconButton,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Progress,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  useDisclosure
+  query as qFire, arrayRemove, arrayUnion, deleteDoc, getDoc, getDocs, setDoc, updateDoc, where, addDoc
+} from 'firebase/firestore';
+import {
+  Button, Divider, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader,
+  ModalOverlay, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, useDisclosure
 } from '@chakra-ui/react';
 
-import { groupSection, user, usersInGroup } from 'references/referencesFirebase';
+import { deleteUsers, user, usersGroups, groups } from 'references/referencesFirebase';
 
 import { EventType } from 'types/global.types';
 
@@ -47,8 +33,6 @@ export default function Groups() {
   const [admin, setAdmin] = useState('');
   const [description, setDescription] = useState('');
   const [logo, setLogo] = useState('');
-  const [moderators, setModerators] = useState<string[]>([]);
-  const [users, setUsers] = useState<string[]>([]);
   const [join, setJoin] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [favoriteLength, setFavoriteLength] = useState(0);
@@ -84,10 +68,26 @@ export default function Groups() {
     color: activeColor,
   };
   
+  const joinedUsers = async () => {
+    try {
+      const queryRef = qFire(usersGroups(name!), where('user', '==', user(currentUser!)));
+      const querySnapshot = await getDocs(queryRef);
+  
+      for (const user of querySnapshot.docs) {
+        !!user.data().user.id ? setUserId(user.data().user.id) : setUserId(null);
+        !!user.data().user.id ? setJoin(true) : setJoin(false);
+      };
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  
+  useEffect(() => { !loading && !!name && joinedUsers() }, [name, loading]);
+  
   const favoriteGroup = async () => {
     try {
       const docSnap = await getDoc(user(currentUser!));
-    
+      
       if (docSnap.exists()) {
         docSnap.data().favoriteGroups.forEach((favoriteGroup: string) => {
           favoriteGroup === name ? setFavorite(true) : setFavorite(false);
@@ -99,53 +99,41 @@ export default function Groups() {
     };
   };
   
-  useEffect(() => {
-    !loading && !!name && favoriteGroup();
-  }, [name, loading]);
-  
-  const joinedUsers = async () => {
-    try {
-      const docSnap = await getDoc(usersInGroup(name!));
-      
-      if (docSnap.exists()) {
-        (docSnap.data().users).forEach((user: string) => {
-          !!user ? setUserId(user) : setUserId(null);
-          !!user ? setJoin(true) : setJoin(false);
-        });
-      } else {
-        console.log('No join to group!');
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  
-  useEffect(() => {
-    !loading && !!name && joinedUsers();
-  }, [name, loading]);
+  useEffect(() => { !loading && !!name && favoriteGroup() }, [name, loading]);
   
   const joinToGroup = async () => {
     try {
+      const queryRef = qFire(usersGroups(name!), where('user', '==', user(currentUser!)));
+      const querySnapshot = await getDocs(queryRef);
+      
       if (join && !!userId) {
-        await setDoc(usersInGroup(name!),
-          { users: arrayRemove(currentUser) },
-          { merge: true });
-        await setDoc(user(currentUser!),
-          { groups: arrayRemove(name), favoriteGroups: arrayRemove(name) },
-          { merge: true });
+        for (const userGroup of querySnapshot.docs) {
+          await deleteDoc(deleteUsers(name!, userGroup.id!));
+          await setDoc(user(currentUser!),{ favoriteGroups: arrayRemove(name) },{ merge: true });
+        }
       } else {
-        await setDoc(usersInGroup(name!),
-          { users: arrayUnion(currentUser) },
-          { merge: true });
-        await setDoc(user(currentUser!),
-          { groups: arrayUnion(name) },
-          { merge: true });
+        await addDoc(usersGroups(name!), { user: user(currentUser!)});
       }
       setJoin(!join);
     } catch (e) {
       console.error(e);
     }
   };
+  
+  const groupInfo = async () => {
+    try {
+      const docSnap = await getDoc(groups(name!));
+      if (docSnap.exists()) {
+        setAdmin(docSnap.data().admin);
+        setDescription(docSnap.data().description);
+        setLogo(!!docSnap.data().logo ? docSnap.data().logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  
+  useEffect(() => { !loading && !!name && groupInfo() }, [name, loading]);
   
   const addToFavorites = async () => {
     try {
@@ -163,25 +151,6 @@ export default function Groups() {
       console.log(e);
     }
   };
-  
-  const groupInfo = async () => {
-    try {
-      const querySnapshot = await getDocs(groupSection(name!));
-      querySnapshot.forEach((doc) => {
-        setAdmin(doc.data().admin);
-        setDescription(doc.data().description);
-        setLogo(!!doc.data().logo ? doc.data().logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`);
-        setModerators(doc.data().moderators);
-        setUsers(doc.data().users);
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  
-  useEffect(() => {
-    !loading && !!name && groupInfo();
-  }, [name, loading]);
   
   const changeFile = (e: EventType) => {
     if (e.target.files?.[0]) {
@@ -218,7 +187,7 @@ export default function Groups() {
           const groupLogoURL = await getDownloadURL(fileRef);
 
           setLogoUrl(groupLogoURL);
-          await updateDoc(usersInGroup(name!), { logo: groupLogoURL });
+          await updateDoc(groups(name!), { logo: groupLogoURL });
 
           setValuesFields(`${data?.AnotherForm?.uploadFile}`);
           setNewLogo(null);
@@ -230,7 +199,9 @@ export default function Groups() {
     }
   };
   
-  return !loading ? <>
+  if (loading) { return null };
+  
+  return <>
     <HeadCom path={asPath} content={`"${name}" group website`} />
     
     <article className={styles.mainContainer}>
@@ -306,20 +277,20 @@ export default function Groups() {
       </Modal>
       <h2 className={styles.nameGroup}>{name}</h2>
     </article>
-    
-    <div className={styles.buttons}>
+  
+    { admin !== currentUser && <div className={styles.buttons}>
       <Button
-        leftIcon={join && currentUser === userId ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
-        style={join && currentUser === userId ? addingToGroupOutline : addingToGroup}
+        leftIcon={join ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
+        style={join ? addingToGroupOutline : addingToGroup}
         colorScheme='blue'
         onClick={joinToGroup}
-        variant={join && !!userId ? 'outline' : 'solid'}
+        variant={join ? 'outline' : 'solid'}
         className={styles.button}
       >
-        {join && currentUser === userId ? data?.Groups?.joined : data?.Groups?.join}
+        {join ? data?.Groups?.joined : data?.Groups?.join}
       </Button>
       
-      {(join && currentUser === userId) && <div>
+      { (join && currentUser === userId) && <div>
         <Button
         leftIcon={favorite ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
         style={favorite ? addingToGroupOutline : addingToGroup}
@@ -333,9 +304,9 @@ export default function Groups() {
         </Button>
         {!favorite && <p>{favoriteLength !== 5 ? data?.Groups?.favorite?.maxFav : data?.Groups?.favorite?.maximumAchieved}</p>}
       </div>}
-    </div>
-    
-    <Divider orientation='horizontal' />
+    </div> }
+  
+    { admin !== currentUser && <Divider orientation='horizontal' /> }
     
     <Tabs
       className={styles.tabs}
@@ -377,17 +348,21 @@ export default function Groups() {
       <TabPanels padding={0}>
         <TabPanel padding={0}>
           <>
-            { (join && currentUser === userId) && <AddingPost nameGroup={name} /> }
-            <Posts nameGroup={name} currentUser={currentUser} />
+            { (join && currentUser === userId || admin) && <AddingPost nameGroup={name} /> }
+            {
+              (join && currentUser === userId || admin )
+                ? <Posts nameGroup={name} currentUser={currentUser} />
+                : <p className={styles.noPermission}>{data?.Groups?.noPermission}</p>
+            }
           </>
         </TabPanel>
         <TabPanel padding={0}>
-          <Members admin={admin} moderators={moderators} users={users} />
+          <Members admin={admin} name={name!} />
         </TabPanel>
         <TabPanel padding={0}>
           <DescriptionSection description={description} admin={admin} name={name} />
         </TabPanel>
       </TabPanels>
     </Tabs>
-  </> : null
+  </>
 }

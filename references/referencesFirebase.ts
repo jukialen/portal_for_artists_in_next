@@ -3,15 +3,17 @@ import { db } from '../firebase';
 
 import { GroupNameType } from 'types/global.types';
 
+const maxItems = 30;
+
 
 // USERS
 export const user = (username: string) => doc(db, `users/${username}`);
 export const usersRef = collection(db, 'users');
+export const friends = (username: string) => collection(db, `users/${username}/friends`);
+export const delFriends = (username: string, docId: string) => doc(db, `users/${username}/friends/${docId}`);
 
 
 // FILES
-const maxItems = 10;
-
 export const allPhotosCollectionRef = () => collectionGroup(db, 'photos');
 export const allAnimatedCollectionRef = () => collectionGroup(db, 'animations');
 export const allVideosCollectionRef = () => collectionGroup(db, 'videos');
@@ -61,14 +63,14 @@ export const userVideosRef = (user: string) => {
 
 // GROUPS
 export const groupRef = collection(db, 'groups');
-export const groupsQuery = (currentUser: string) => query(groupRef, where('admin', '==', currentUser),
-  orderBy('name'));
-query(groupRef, limit(5), orderBy('name'));
+export const adminInGroups = (currentUser: string) => query(groupRef, where('admin', '==', currentUser),
+  orderBy('name'), limit(maxItems));
 
-export const usersInGroup = (name: GroupNameType) => doc(db, `groups/${name}`);
-
-export const groupSection = (name: GroupNameType) => query(groupRef, where('name', '==', name));
-
+export const groups = (name: GroupNameType) => doc(db, `groups/${name}`);
+export const moderators = (name: GroupNameType) => collection(db, `groups/${name}/moderators`);
+export const deleteModerators = (name: GroupNameType, modId: string) => doc(db, `groups/${name}/moderators/${modId}`);
+export const usersGroups = (name: GroupNameType) => collection(db, `groups/${name}/users`);
+export const deleteUsers = (name: GroupNameType, userId: string) => doc(db, `groups/${name}/users/${userId}`);
 
 // POSTS
 export const addingPost = (name: GroupNameType) => collection(db, `groups/${name}/posts`);

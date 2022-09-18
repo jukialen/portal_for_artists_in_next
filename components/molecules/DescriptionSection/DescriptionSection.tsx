@@ -7,7 +7,7 @@ import { Button, Divider, IconButton, Textarea } from '@chakra-ui/react';
 
 import { FormType } from 'types/global.types';
 
-import { usersInGroup } from 'references/referencesFirebase';
+import { groups } from 'references/referencesFirebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -46,7 +46,7 @@ export const DescriptionSection = ({ description, admin, name }: DescriptionSect
   
   const getRegulation = async () => {
     try {
-      const docSnap = await getDoc(usersInGroup(name!));
+      const docSnap = await getDoc(groups(name!));
       
       docSnap.exists() ? setRegulation(docSnap.data().regulation) : console.log('No regulation!');
     } catch (e) {
@@ -60,7 +60,7 @@ export const DescriptionSection = ({ description, admin, name }: DescriptionSect
   
   const updateDescription = async ({ newDescription }: NewDescType, { resetForm }: FormType) => {
     try {
-      await updateDoc(usersInGroup(name!), { description: newDescription });
+      await updateDoc(groups(name!), { description: newDescription });
       resetForm(initialValuesDes);
     } catch (e) {
       console.error(e);
@@ -76,7 +76,7 @@ export const DescriptionSection = ({ description, admin, name }: DescriptionSect
   const updateRegulations = async ({ newRegulation }: NewRegulationType, { resetForm }: FormType) => {
     try {
       const newRerArray = newRegulation.split(/\r?\n/).filter(el => el);
-      await setDoc(usersInGroup(name!), { regulation: newRerArray }, { merge: true });
+      await setDoc(groups(name!), { regulation: newRerArray }, { merge: true });
       resetForm(initialValuesReg);
     } catch (e) {
       console.error(e);

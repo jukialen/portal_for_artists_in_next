@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter } from 'firebase/firestore';
-import { Button } from '@chakra-ui/react';
 
 import { groupRef } from 'references/referencesFirebase';
 
@@ -12,6 +11,7 @@ import { useCurrentUser } from 'hooks/useCurrentUser';
 import { Tile } from 'components/molecules/GroupTile/Tile';
 
 import styles from './index.module.scss';
+import { MoreButton } from '../../../components/atoms/MoreButton/MoreButton';
 
 export default function List() {
   const [listArray, setListArray] = useState<GroupType[]>([]);
@@ -20,9 +20,10 @@ export default function List() {
   
   const data = useHookSWR();
   const loading = useCurrentUser('/');
+  const maxItems = 30;
   
   const downloadGroupsList = async () => {
-    const queryFirst = query(groupRef, orderBy('name'), limit(30));
+    const queryFirst = query(groupRef, orderBy('name'), limit(maxItems));
     const groupList = await getDocs(queryFirst);
   
     const grLArray: GroupType[] = [];
@@ -31,7 +32,7 @@ export default function List() {
       nameGroup: doc.data().name,
       logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`
     }));
-    grLArray.length === 30 && setLastVisible(groupList.docs[groupList.docs.length - 1]);
+    grLArray.length === maxItems && setLastVisible(groupList.docs[groupList.docs.length - 1]);
     setListArray(grLArray);
   };
   
@@ -40,7 +41,7 @@ export default function List() {
   }, [loading]);
   
   const downloadNextGroupsList = async () => {
-    const queryNext = query(groupRef, orderBy('name'), startAfter(lastVisible), limit(30));
+    const queryNext = query(groupRef, orderBy('name'), startAfter(lastVisible), limit(maxItems));
     const groupList = await getDocs(queryNext);
     
     const grLArray: GroupType[] = [];
@@ -51,7 +52,7 @@ export default function List() {
     }));
   
     setListArray(listArray.concat(...grLArray));
-    setLastVisible( groupList.docs[groupList.docs.length - 1]);
+    setLastVisible(groupList.docs[groupList.docs.length - 1]);
     setI(++i);
   };
   
@@ -60,31 +61,24 @@ export default function List() {
   }
   
   return <section className={styles.container}>
-    <h2 className={styles.title}>{data?.Groups?.list?.title}</h2>
-    <div className={styles.list}>
-      {
-        listArray.length > 0
-          ? listArray.map(({ nameGroup, logoUrl }, index) => <Tile
-            key={index}
-            name={nameGroup}
-            link={`/groups/${nameGroup}`}
-            logoUrl={logoUrl}
-          />)
-          : <p>{data?.Groups?.noGroups}</p>
-      }
+    <div className={styles.container__section}>
+      <h2 className={styles.title}>{data?.Groups?.list?.title}</h2>
+      <div className={styles.list}>
+        {
+          listArray.length > 0
+            ? listArray.map(({ nameGroup, logoUrl }, index) => <Tile
+              key={index}
+              name={nameGroup}
+              link={`/groups/${nameGroup}`}
+              logoUrl={logoUrl}
+            />)
+            : <p>{data?.Groups?.noGroups}</p>
+        }
+      </div>
     </div>
     {
-      !!lastVisible && listArray.length === 30 * i
-        ? <Button
-          colorScheme='blue'
-          backgroundColor='#4F8DFF'
-          color='#000'
-          borderRadius='3xl'
-          className={styles.more}
-          onClick={downloadNextGroupsList}
-        >
-          {data?.Groups?.list?.more}
-        </Button>
+      !!lastVisible && listArray.length === maxItems * i
+        ? <MoreButton nextElements={downloadNextGroupsList} />
         : <p className={styles.noALl}>{data?.Groups?.list?.all}</p>
     }
   </section>;

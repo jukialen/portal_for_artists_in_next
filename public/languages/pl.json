@@ -193,7 +193,8 @@
       "more": "Więcej",
       "all": "To już wszystkie grupy."
     },
-    "noGroups": "Brak ulubionych grup"
+    "noGroups": "Brak ulubionych grup",
+    "noPermission": "Aby zobaczyć posty musisz dołączyć do grupy."
   },
   "Friends": {
     "add": "Dodaj do znajomych",

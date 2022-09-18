@@ -5,7 +5,7 @@ import { auth } from '../../../firebase';
 import { getDoc } from 'firebase/firestore';
 import { Button } from '@chakra-ui/react';
 
-import { user, usersInGroup } from 'references/referencesFirebase';
+import { user, groups } from 'references/referencesFirebase';
 
 import { DataType, GroupType } from 'types/global.types';
 
@@ -35,7 +35,7 @@ export const Groups = ({ data }: DataType) => {
         favorites.sort();
     
         for (const favorite of favorites) {
-          const favoriteList = await getDoc(usersInGroup(favorite));
+          const favoriteList = await getDoc(groups(favorite));
       
           if (favoriteList.exists()) {
             groupList.push({

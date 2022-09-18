@@ -30,13 +30,15 @@ export const Comments = ({ userId, subCollection, refCom, idPost, groupSource }:
   
   const { locale } = useRouter();
   const data = useHookSWR();
-  const maxItems = 5;
+  const maxItems = 30;
   
   const showingComments = async () => {
     try {
       const firstPage = query(
         refCom!,
-        orderBy('user', 'desc'), orderBy('message', 'desc'),
+        orderBy('date', 'desc'),
+        orderBy('user', 'desc'),
+        orderBy('message', 'desc'),
         limit(maxItems)
       );
       const documentSnapshots = await getDocs(firstPage);
@@ -75,6 +77,7 @@ export const Comments = ({ userId, subCollection, refCom, idPost, groupSource }:
     try {
       const nextPage = query(
         refCom!,
+        orderBy('date', 'desc'),
         orderBy('user', 'desc'),
         orderBy('message', 'desc'),
         limit(maxItems),
