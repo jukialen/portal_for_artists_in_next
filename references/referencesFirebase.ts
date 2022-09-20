@@ -1,5 +1,5 @@
 import { collection, collectionGroup, doc, limit, orderBy, query, where } from 'firebase/firestore';
-import { db } from '../firebase';
+import { auth, db } from '../firebase';
 
 import { GroupNameType } from 'types/global.types';
 
@@ -63,14 +63,21 @@ export const userVideosRef = (user: string) => {
 
 // GROUPS
 export const groupRef = collection(db, 'groups');
-export const adminInGroups = (currentUser: string) => query(groupRef, where('admin', '==', currentUser),
-  orderBy('name'), limit(maxItems));
-
 export const groups = (name: GroupNameType) => doc(db, `groups/${name}`);
+
+export const adminInGroups = (userId: string) => query(
+  groupRef, where('admin', '==', userId), orderBy('name'), limit(maxItems)
+);
+
 export const moderators = (name: GroupNameType) => collection(db, `groups/${name}/moderators`);
+export const moderatorsGroups = () => collectionGroup(db, 'moderators');
 export const deleteModerators = (name: GroupNameType, modId: string) => doc(db, `groups/${name}/moderators/${modId}`);
-export const usersGroups = (name: GroupNameType) => collection(db, `groups/${name}/users`);
-export const deleteUsers = (name: GroupNameType, userId: string) => doc(db, `groups/${name}/users/${userId}`);
+
+export const members = (name: GroupNameType) => collection(db, `groups/${name}/members`);
+export const membersGroup = () => collectionGroup(db, 'members');
+export const deleteMembers = (name: GroupNameType, memberId: string) =>
+  doc(db, `groups/${name}/members/${memberId}`);
+
 
 // POSTS
 export const addingPost = (name: GroupNameType) => collection(db, `groups/${name}/posts`);

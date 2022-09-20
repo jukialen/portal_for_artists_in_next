@@ -113,12 +113,12 @@
       "userAvatar": "avatar"
     },
     "groups": {
-      "adminTitle": "Grupy, które stworzyłeś/aś",
-      "noAdmin": "Nie stworzyłeś jeszcze żadnej grupy",
-      "modsTitle": "Grupy którymi zarządzasz",
+      "adminTitle": "Grupy, które stworzyłaś/eś",
+      "noAdmin": "Nie stworzyłaś/eś jeszcze żadnej grupy.",
+      "modsTitle": "Grupy, którymi zarządzasz",
       "noMods": "Obecnie nie jesteś moderatorem żadnej grupy.",
-      "usersTitle": "Grupy do których dołączyłeś",
-      "noUsers": "Nie dołączyłeś jeszcze do żadnej grupy."
+      "usersTitle": "Grupy, do których dołączyłaś/eś",
+      "noUsers": "Nie dołączyłaś/eś jeszcze do żadnej grupy."
     }
   },
   "Main": {

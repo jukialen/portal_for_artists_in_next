@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useHookSWR } from '../hooks/useHookSWR';
+import { useHookSWR } from 'hooks/useHookSWR';
 
 export const SchemaValidation = () => {
   const data = useHookSWR();

@@ -179,8 +179,7 @@
       "maximumAchieved": "You already have 5 favorite groups."
     },
     "menu": {
-      "members": "Members",
-      "noPermission": "In order can to see a posts, you need to join to the group."
+      "members": "Members"
     },
     "addingPost": {
       "add": "Add a post",
@@ -194,7 +193,8 @@
       "more": "More",
       "all": "These are already all groups."
     },
-    "noGroups": "No favorite group"
+    "noGroups": "No favorite group",
+    "noPermission": "In order can to see a posts, you need to join to the group."
   },
   "Friends": {
     "add": "Add to friends",

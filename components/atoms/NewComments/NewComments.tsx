@@ -17,12 +17,9 @@ export const NewComments = ({ name, refCom }: NewCommentsType ) => {
   };
   
   const data = useHookSWR();
-  
   const user = auth.currentUser;
   
-  const schemaNew = Yup.object({
-    comment: SchemaValidation().description,
-  });
+  const schemaNew = Yup.object({ comment: SchemaValidation().description });
   
   const createNewComment = async ({ comment }: NewCommentsType, { resetForm }: FormType) => {
     try {

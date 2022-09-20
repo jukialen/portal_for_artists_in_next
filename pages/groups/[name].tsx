@@ -11,7 +11,9 @@ import {
   ModalOverlay, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, useDisclosure
 } from '@chakra-ui/react';
 
-import { deleteUsers, user, usersGroups, groups } from 'references/referencesFirebase';
+import {
+  deleteMembers, user, members, groups, moderators, deleteModerators
+} from 'references/referencesFirebase';
 
 import { EventType } from 'types/global.types';
 
@@ -58,24 +60,18 @@ export default function Groups() {
   const checkIcon = '1rem';
   const smallIcon = '1.5rem';
   
-  const addingToGroup = {
-    background: activeColor,
-    color: '#000',
-  };
+  const addingToGroup = { background: activeColor, color: '#000' };
   
-  const addingToGroupOutline = {
-    background: 'transparent',
-    color: activeColor,
-  };
+  const addingToGroupOutline = { background: 'transparent', color: activeColor };
   
   const joinedUsers = async () => {
     try {
-      const queryRef = qFire(usersGroups(name!), where('user', '==', user(currentUser!)));
+      const queryRef = qFire(members(name!), where('member', '==', user(currentUser!)));
       const querySnapshot = await getDocs(queryRef);
   
-      for (const user of querySnapshot.docs) {
-        !!user.data().user.id ? setUserId(user.data().user.id) : setUserId(null);
-        !!user.data().user.id ? setJoin(true) : setJoin(false);
+      for (const member of querySnapshot.docs) {
+        !!member.data().member.id ? setUserId(member.data().member.id) : setUserId(null);
+        !!member.data().member.id ? setJoin(true) : setJoin(false);
       };
     } catch (e) {
       console.error(e);
@@ -103,16 +99,22 @@ export default function Groups() {
   
   const joinToGroup = async () => {
     try {
-      const queryRef = qFire(usersGroups(name!), where('user', '==', user(currentUser!)));
-      const querySnapshot = await getDocs(queryRef);
+      const membersRef = qFire(members(name!), where('member', '==', user(currentUser!)));
+      const memberSnapshot = await getDocs(membersRef);
+      
+      const moderatorsRef = qFire(moderators(name!), where('moderator', '==', user(currentUser!)));
+      const moderatorSnapshot = await  getDocs(moderatorsRef);
       
       if (join && !!userId) {
-        for (const userGroup of querySnapshot.docs) {
-          await deleteDoc(deleteUsers(name!, userGroup.id!));
-          await setDoc(user(currentUser!),{ favoriteGroups: arrayRemove(name) },{ merge: true });
-        }
+        for (const memberGroup of memberSnapshot.docs) {
+          await deleteDoc(deleteMembers(name!, memberGroup.id!));
+        };
+        for (const moderatorGroup of moderatorSnapshot.docs) {
+          await deleteDoc(deleteModerators(name!, moderatorGroup.id!));
+        };
+        await setDoc(user(currentUser!),{ favoriteGroups: arrayRemove(name) },{ merge: true });
       } else {
-        await addDoc(usersGroups(name!), { user: user(currentUser!)});
+        await addDoc(members(name!), { member: user(currentUser!)});
       }
       setJoin(!join);
     } catch (e) {
@@ -138,13 +140,9 @@ export default function Groups() {
   const addToFavorites = async () => {
     try {
       if (favorite) {
-        await setDoc(user(currentUser!), {
-          favoriteGroups: arrayRemove(name)
-        }, { merge: true });
+        await setDoc(user(currentUser!), { favoriteGroups: arrayRemove(name) }, { merge: true });
       } else {
-        await setDoc(user(currentUser!), {
-          favoriteGroups: arrayUnion(name)
-        }, { merge: true });
+        await setDoc(user(currentUser!), { favoriteGroups: arrayUnion(name) }, { merge: true });
       }
       setFavorite(!favorite);
     } catch (e) {
@@ -290,7 +288,7 @@ export default function Groups() {
         {join ? data?.Groups?.joined : data?.Groups?.join}
       </Button>
       
-      { (join && currentUser === userId) && <div>
+      { join && <div>
         <Button
         leftIcon={favorite ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
         style={favorite ? addingToGroupOutline : addingToGroup}
@@ -348,9 +346,9 @@ export default function Groups() {
       <TabPanels padding={0}>
         <TabPanel padding={0}>
           <>
-            { (join && currentUser === userId || admin) && <AddingPost nameGroup={name} /> }
+            { join && <AddingPost nameGroup={name} /> }
             {
-              (join && currentUser === userId || admin )
+              join
                 ? <Posts nameGroup={name} currentUser={currentUser} />
                 : <p className={styles.noPermission}>{data?.Groups?.noPermission}</p>
             }

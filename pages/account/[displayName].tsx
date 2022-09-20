@@ -29,166 +29,145 @@ export default function Account() {
   const activeColor = '#82FF82';
   const borderColor = '#4F8DFF';
   
-  return !loading ? (
-    <>
-      <HeadCom path={`/account/${pseudonym || user?.displayName}`} content='Account portal site.' />
+  if (loading) { return null };
+  
+  return <>
+    <HeadCom path={`/account/${pseudonym || user?.displayName}`} content='Account portal site.' />
       
-      <h2 className={styles.account__h2}>{data?.Nav?.account}</h2>
+    <h2 className={styles.account__h2}>{data?.Nav?.account}</h2>
       
-      <Tabs
-        className={styles.tabsMenu}
-        size='sm'
-        isLazy
-        lazyBehavior='keepMounted'
-        isFitted
-        variant='unstyled'
-      >
-        <TabList
-          className={styles.topTabList}
-          role='tablist'
-        >
-          <div className={styles.account__menu}>
-            <div className={styles.content}>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role='tab'
-              >
-                {data?.Account?.aMenu?.general}
-              </Tab>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role='tab'
-              >
-                {data?.Account?.aMenu?.gallery}
-              </Tab>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role='tab'
-              >
-                {data?.Account?.aMenu?.profile}
-              </Tab>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role='tab'
-              >
-                {data?.Account?.aMenu?.friends}
-              </Tab>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role='tab'
-              >
-                {data?.Account?.aMenu?.groups}
-              </Tab>
-            </div>
-          </div>
-        </TabList>
-    
-        <TabPanels className={styles.tabPanels}>
-          <TabPanel
-            className={styles.tabPanel}
-            role='tabpanel'
-          >
-            <>
-              <AccountData data={data} />
-              <DeleteAccount />
-            </>
-          </TabPanel>
-          <TabPanel
-            className={styles.tabPanel}
-            role='tabpanel'
-          >
-            <FilesUpload />
-            <Tabs
-              size='sm'
-              isLazy
-              lazyBehavior='keepMounted'
-              isFitted
-              variant='unstyled'
-              className={styles.tabsForPanels}
+    <Tabs
+      className={styles.tabsMenu}
+      size='sm'
+      isLazy
+      lazyBehavior='keepMounted'
+      isFitted
+      variant='unstyled'
+    >
+      <TabList className={styles.topTabList} role='tablist'>
+        <div className={styles.account__menu}>
+          <div className={styles.content}>
+            <Tab
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={borderColor}
+              role='tab'
             >
-              <TabList
-                className={styles.tabList}
-                role='tablist'
+              {data?.Account?.aMenu?.general}
+            </Tab>
+            <Tab
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={borderColor}
+              role='tab'
+            >
+              {data?.Account?.aMenu?.gallery}
+            </Tab>
+            <Tab
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={borderColor}
+              role='tab'
+            >
+              {data?.Account?.aMenu?.profile}
+            </Tab>
+            <Tab
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={borderColor}
+              role='tab'
+            >
+              {data?.Account?.aMenu?.friends}
+            </Tab>
+            <Tab
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={borderColor}
+              role='tab'
+            >
+              {data?.Account?.aMenu?.groups}
+            </Tab>
+          </div>
+        </div>
+      </TabList>
+  
+      <TabPanels className={styles.tabPanels}>
+        <TabPanel className={styles.tabPanel} role='tabpanel'>
+          <>
+            <AccountData data={data} />
+            <DeleteAccount />
+          </>
+        </TabPanel>
+        <TabPanel className={styles.tabPanel} role='tabpanel'>
+          <FilesUpload />
+          <Tabs
+            size='sm'
+            isLazy
+            lazyBehavior='keepMounted'
+            isFitted
+            variant='unstyled'
+            className={styles.tabsForPanels}
+          >
+            <TabList className={styles.tabList} role='tablist'>
+              <Tab
+                className={styles.tabForPanels}
+                _selected={{ borderColor: selectedColor }}
+                _hover={{ borderColor: hoverColor }}
+                _active={{  borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
               >
-                <Tab
-                  className={styles.tabForPanels}
-                  _selected={{ borderColor: selectedColor }}
-                  _hover={{ borderColor: hoverColor }}
-                  _active={{  borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role='tab'
-                >
-                  {data?.Aside?.photos}
-                </Tab>
-                <Tab
-                  className={styles.tabForPanels}
-                  _selected={{  borderColor: selectedColor }}
-                  _hover={{  borderColor: hoverColor }}
-                  _active={{ borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role='tab'
-                >
-                  {data?.Aside?.animations}
-                </Tab>
-                <Tab
-                  className={styles.tabForPanels}
-                  _selected={{ borderColor: selectedColor }}
-                  _hover={{  borderColor: hoverColor }}
-                  _active={{ borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role='tab'
-                >
-                  {data?.Aside?.videos}
-                </Tab>
-              </TabList>
-              <TabPanels padding={0}>
-                <TabPanel padding={0} role='tabpanel'>
-                  <PhotosGallery user={user?.uid} data={data} pseudonym={pseudonym} />
-                </TabPanel>
-                <TabPanel padding={0} role='tabpanel'>
-                  <AnimatedGallery user={user?.uid} data={data} pseudonym={pseudonym} />
-                </TabPanel>
-                <TabPanel padding={0} role='tabpanel'>
-                  <VideoGallery user={user?.uid} data={data} pseudonym={pseudonym} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </TabPanel>
-          <TabPanel
-            className={styles.tabPanel}
-            role='tabpanel'
-          >
-            <ProfileAccount data={data} />
-          </TabPanel>
-          <TabPanel
-            className={styles.tabPanel}
-            role='tabpanel'
-          >
-            <FriendsList uid={user?.uid!} />
-          </TabPanel>
-          <TabPanel
-            className={styles.tabPanel}
-            role='tabpanel'
-          >
-            <GroupUsers />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </>
-  ) : null
+                {data?.Aside?.photos}
+              </Tab>
+              <Tab
+                className={styles.tabForPanels}
+                _selected={{  borderColor: selectedColor }}
+                _hover={{  borderColor: hoverColor }}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
+              >
+                {data?.Aside?.animations}
+              </Tab>
+              <Tab
+                className={styles.tabForPanels}
+                _selected={{ borderColor: selectedColor }}
+                _hover={{  borderColor: hoverColor }}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role='tab'
+              >
+                {data?.Aside?.videos}
+              </Tab>
+            </TabList>
+            <TabPanels padding={0}>
+              <TabPanel padding={0} role='tabpanel'>
+                <PhotosGallery user={user?.uid} data={data} pseudonym={pseudonym} />
+              </TabPanel>
+              <TabPanel padding={0} role='tabpanel'>
+                <AnimatedGallery user={user?.uid} data={data} pseudonym={pseudonym} />
+              </TabPanel>
+              <TabPanel padding={0} role='tabpanel'>
+                <VideoGallery user={user?.uid} data={data} pseudonym={pseudonym} />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </TabPanel>
+        <TabPanel className={styles.tabPanel} role='tabpanel'>
+          <ProfileAccount data={data} />
+        </TabPanel>
+        <TabPanel className={styles.tabPanel} role='tabpanel'>
+          <FriendsList uid={user?.uid!} />
+        </TabPanel>
+        <TabPanel className={styles.tabPanel} role='tabpanel'>
+          <GroupUsers uid={user?.uid!} />
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
+  </>
 };

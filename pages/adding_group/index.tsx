@@ -101,87 +101,87 @@ export default function AddingGroup() {
           });
       }
       
-      logoGroup === null ? newGroup() : newGroupWithLogo();
+      logoGroup === null ? await newGroup() : newGroupWithLogo();
     } catch (e) {
       console.log(e);
       setValuesFields(data?.NewUser?.errorSending);
     }
   };
   
-  return !loading ? (
-    <>
-      <HeadCom path={asPath} content="User's adding some group " />
+  if (loading) { return null };
   
-      <Formik
-        initialValues={initialValues}
-        validationSchema={schemaValidation}
-        onSubmit={createGroup}
-      >
-        {({ values, handleChange, errors, touched }) => (
-          <Form className={styles.container__form}>
-            <h2 className={styles.title}>{data?.AddingGroup.title}</h2>
-        
-            <Input
-              id='groupName'
-              name='groupName'
-              value={values.groupName}
-              onChange={handleChange}
-              placeholder={data?.AddingGroup?.name}
-              className={touched.groupName && !!errors.groupName ? styles.field__error : styles.field}
-            />
-        
-            <FormError nameError='groupName' />
-        
-            <Textarea
-              id='description'
-              name='description'
-              value={values.description}
-              onChange={handleChange}
-              placeholder={data?.AnotherForm?.description}
-              className={touched.description && !!errors.description ? styles.field__error : styles.field}
-            />
-        
-            <FormError nameError='description' />
-        
-            <Input
-              name='logo'
-              type='file'
-              accept='.jpg, .jpeg, .png, .webp, .avif'
-              onChange={handleChangeFile}
-              placeholder={data?.AnotherForm?.profilePhoto}
-              focusBorderColor='transparent'
-              className={styles.input}
-            />
-            
-            <Button
-              colorScheme='transparent'
-              color='black.800'
-              type='submit'
-              className={`button ${styles.submit__button}`}
-              aria-label={data?.NewUser?.ariaLabelButtom}
-            >
-              {data?.AnotherForm?.send}
-            </Button>
-        
-            {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) &&
-            <Progress
-              value={progressUpload}
-              colorScheme='green'
-              isAnimated
-              hasStripe
-              min={0}
-              max={100}
-              w={280}
-              bg='blue.400'
-              m='1.5rem auto'
-              size='md'
-            />
-            }
-        
-            {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-          </Form>
-        )}
-      </Formik>
-    
-    </>) : null;
+  return <>
+    <HeadCom path={asPath} content="User's adding some group " />
+
+    <Formik
+      initialValues={initialValues}
+      validationSchema={schemaValidation}
+      onSubmit={createGroup}
+    >
+      {({ values, handleChange, errors, touched }) => (
+        <Form className={styles.container__form}>
+          <h2 className={styles.title}>{data?.AddingGroup.title}</h2>
+      
+          <Input
+            id='groupName'
+            name='groupName'
+            value={values.groupName}
+            onChange={handleChange}
+            placeholder={data?.AddingGroup?.name}
+            className={touched.groupName && !!errors.groupName ? styles.field__error : styles.field}
+          />
+      
+          <FormError nameError='groupName' />
+      
+          <Textarea
+            id='description'
+            name='description'
+            value={values.description}
+            onChange={handleChange}
+            placeholder={data?.AnotherForm?.description}
+            className={touched.description && !!errors.description ? styles.field__error : styles.field}
+          />
+      
+          <FormError nameError='description' />
+      
+          <Input
+            name='logo'
+            type='file'
+            accept='.jpg, .jpeg, .png, .webp, .avif'
+            onChange={handleChangeFile}
+            placeholder={data?.AnotherForm?.profilePhoto}
+            focusBorderColor='transparent'
+            className={styles.input}
+          />
+          
+          <Button
+            colorScheme='transparent'
+            color='black.800'
+            type='submit'
+            className={`button ${styles.submit__button}`}
+            aria-label={data?.NewUser?.ariaLabelButtom}
+          >
+            {data?.AnotherForm?.send}
+          </Button>
+      
+          {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) &&
+          <Progress
+            value={progressUpload}
+            colorScheme='green'
+            isAnimated
+            hasStripe
+            min={0}
+            max={100}
+            w={280}
+            bg='blue.400'
+            m='1.5rem auto'
+            size='md'
+          />
+          }
+      
+          {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+        </Form>
+      )}
+    </Formik>
+  </>
 }

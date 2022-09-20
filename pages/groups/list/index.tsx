@@ -8,10 +8,10 @@ import { GroupType } from 'types/global.types';
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/molecules/GroupTile/Tile';
 
 import styles from './index.module.scss';
-import { MoreButton } from '../../../components/atoms/MoreButton/MoreButton';
 
 export default function List() {
   const [listArray, setListArray] = useState<GroupType[]>([]);
@@ -56,9 +56,7 @@ export default function List() {
     setI(++i);
   };
   
-  if (loading) {
-    return null;
-  }
+  if (loading) { return null };
   
   return <section className={styles.container}>
     <div className={styles.container__section}>

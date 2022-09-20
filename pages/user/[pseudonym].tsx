@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { auth, db } from '../../firebase';
-import { arrayRemove, arrayUnion, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, deleteDoc, doc, getDoc, getDocs, query as qFire, setDoc, where } from 'firebase/firestore';
 import { Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
@@ -29,6 +29,8 @@ export default function User() {
   
   const data = useHookSWR();
   const loading = useCurrentUser('/');
+  const { query, push } = useRouter();
+  const { pseudonym } = query;
   const currentUser = auth.currentUser?.uid;
   
   const selectedColor = '#FFD068';
@@ -36,14 +38,10 @@ export default function User() {
   const activeColor = '#82FF82';
   const borderColor = '#4F8DFF';
   
-  const { asPath } = useRouter();
-  const split = asPath.split('/');
-  const author = decodeURIComponent(split[split.length - 1]);
-  
-  const uidRef = query(usersRef, where('pseudonym', '==', author));
-  
   const downLoadUid = async () => {
     try {
+      const uidRef = qFire(usersRef, where('pseudonym', '==', pseudonym));
+      
       const querySnapshot = await getDocs(uidRef);
       querySnapshot.forEach((doc) => {
         setUid(doc.id);
@@ -55,12 +53,10 @@ export default function User() {
   }
   
   const downloadFriends = async () => {
-    const docRef = query(friends(currentUser!), where('friend', '==', doc(db, `users/${uid}`)));
+    const docRef = qFire(friends(currentUser!), where('friend', '==', doc(db, `users/${uid}`)));
   
     const querySnapshot = await getDocs(docRef);
-    querySnapshot.forEach((document) => {
-      !!document && setAddF(!addF);
-    });
+    querySnapshot.forEach((document) => !!document && setAddF(!addF));
   
     const docSnap = await getDoc(user(currentUser!));
     
@@ -75,14 +71,14 @@ export default function User() {
     }
   };
   
-  useEffect(() => { !!author && downLoadUid() }, [author]);
+  useEffect(() => { !!pseudonym && downLoadUid() }, [pseudonym]);
   
   useEffect(() => { !!uid && downloadFriends() }, [uid]);
   
   const addToFriends = async () => {
     try {
       if (addF) {
-        const docRef = query(friends(currentUser!), where('friend', '==', doc(db, `users/${uid}`)));
+        const docRef = qFire(friends(currentUser!), where('friend', '==', doc(db, `users/${uid}`)));
 
         const querySnapshot = await getDocs(docRef);
         querySnapshot.forEach((document) => {
@@ -99,7 +95,6 @@ export default function User() {
       console.error(e);
     }
   };
-  
   
   const addToFavorites = async () => {
     try {
@@ -119,12 +114,16 @@ export default function User() {
     }
   };
   
-  if (loading) { return null }
+  useEffect(() => {
+    currentUser === uid && push(`/account/${pseudonym}`);
+  }, [currentUser, uid])
+  
+  if (loading) { return null };
   
   return <>
-    <HeadCom path={`/user/${author}`} content={`${author} site`} />
+    <HeadCom path={`/user/${pseudonym}`} content={`${pseudonym} site`} />
     
-    <h2 className={styles.profile__user__title}>{author}</h2>
+    <h2 className={styles.profile__user__title}>{pseudonym}</h2>
     
     <div className={styles.friendsButtons}>
       {currentUser === uid ? null :
@@ -261,19 +260,19 @@ export default function User() {
                 className={styles.tabPanel}
                 role='tabpanel'
               >
-                <PhotosGallery user={uid} data={data} pseudonym={author} />
+                <PhotosGallery user={uid} data={data} pseudonym={pseudonym!} />
               </TabPanel>
               <TabPanel
                   className={styles.tabPanel}
                   role='tabpanel'
                 >
-                  <AnimatedGallery user={uid} data={data} pseudonym={author} />
+                  <AnimatedGallery user={uid} data={data} pseudonym={pseudonym!} />
                 </TabPanel>
                 <TabPanel
                   className={styles.tabPanel}
                   role='tabpanel'
                 >
-                  <VideoGallery user={uid} data={data} pseudonym={author} />
+                  <VideoGallery user={uid} data={data} pseudonym={pseudonym!} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -284,7 +283,7 @@ export default function User() {
           >
             <ProfileUser
               data={data}
-              pseudonym={author}
+              pseudonym={pseudonym}
               fileUrl={uid!}
               description={description}
             />

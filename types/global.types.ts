@@ -8,7 +8,7 @@ export type DataType = any;
 
 export type UserType = {
   user: string | undefined;
-  pseudonym?: string;
+  pseudonym?: string | string[];
   data: DataType
 };
 
@@ -51,7 +51,14 @@ export type GroupType = {
   nameGroup: string;
   logoUrl: string;
   description?: string;
-}
+};
+
+export type MembersAndModeratorsType = {
+  mid: string;
+  cid?: string;
+  pseudonym: string;
+  profilePhoto: string;
+};
 
 export type AuthorType = {
   nameGroup?: GroupNameType;

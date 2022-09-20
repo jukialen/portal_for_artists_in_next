@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { auth } from '../../../firebase';
-import { addDoc, arrayUnion, setDoc } from 'firebase/firestore';
+import { addDoc } from 'firebase/firestore';
 import { Avatar, IconButton, Link } from '@chakra-ui/react';
 
-import { GroupNameType } from 'types/global.types';
+import { GroupNameType, MembersAndModeratorsType } from 'types/global.types';
 
-import { moderators, user, groups } from 'references/referencesFirebase';
+import { moderators, user } from 'references/referencesFirebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -14,19 +14,13 @@ import styles from './UsersButton.module.scss';
 import group from 'public/group.svg';
 import { AddIcon, CheckIcon } from '@chakra-ui/icons';
 
-type ModeratorsType = {
-  modId: string;
-  pseudonymModerators?: string;
-  logo?: string;
-}
-
 type UsersButtonType = {
   id: string
   name: GroupNameType;
   pseudonym: string;
   logo: string;
   admin: string;
-  moderatorsArray: ModeratorsType[];
+  moderatorsArray: MembersAndModeratorsType[];
 };
 
 export const UsersButton = ({ id, name, pseudonym, logo, admin, moderatorsArray }: UsersButtonType) => {
@@ -36,9 +30,9 @@ export const UsersButton = ({ id, name, pseudonym, logo, admin, moderatorsArray 
   const currentUser = auth.currentUser?.uid;
   
   useEffect(() => {
-    moderatorsArray.length > 0 && moderatorsArray.map(({ modId }: ModeratorsType) => {
-      id === modId ? setToggleModRole(true) : setToggleModRole(false)
-    })
+    moderatorsArray.length > 0 &&
+      moderatorsArray.map(({ cid }: MembersAndModeratorsType) =>
+        cid === id ? setToggleModRole(true) : setToggleModRole(false))
   }, [moderatorsArray, id])
   
   const addingModerators = async (name: GroupNameType) => {
@@ -55,11 +49,14 @@ export const UsersButton = ({ id, name, pseudonym, logo, admin, moderatorsArray 
     <NextLink href={`/user/${pseudonym}`} passHref>
       <Link>{pseudonym}</Link>
     </NextLink>
-    {admin === currentUser && <IconButton
-      type='submit'
-      aria-label={toggleModRole ? data?.Members?.button?.addedModAria : data?.Members?.button?.addModAria}
-      icon={toggleModRole ? <CheckIcon /> : <AddIcon />}
-      onClick={() => addingModerators(name)}
-    />}
+    {
+      admin === currentUser &&
+        <IconButton
+          type='submit'
+          aria-label={toggleModRole ? data?.Members?.button?.addedModAria : data?.Members?.button?.addModAria}
+          icon={toggleModRole ? <CheckIcon /> : <AddIcon />}
+          onClick={() => addingModerators(name)}
+        />
+    }
   </div>
 }
