@@ -20,7 +20,7 @@
     "validateUsernameMin": "Name is too short.",
     "validatePseudonymNum": "Pseudonym must have at least 1 number.",
     "validatePseudonymSpec": "Pseudonym must include at least 1 special character: #?!@$%^&*-＃？！＄％＆＊ー",
-    "validatePseudonymHKik":"Pseudonym accept only letters. These can be Hiragana, Katakana and kanji characters",
+    "validatePseudonymHKik": "Pseudonym accept only letters. These can be Hiragana, Katakana and kanji characters",
     "validatePseudonymMin": "Pseudonym is too short.",
     "validatePseudonymMax": "Pseudonym is too long. Must have a maximum 15 letters.",
     "validateEmail": "Invalid email address",
@@ -231,7 +231,7 @@
       "addedModAria": "Added a moderator"
     }
   },
-  "Description" : {
+  "Description": {
     "textPlaceholder": "new description of group",
     "textAria": "field for new description",
     "submit": "Update",
@@ -249,7 +249,7 @@
     "deleteCommentTitle": "Delete comment"
   },
   "Regulations": {
-   "regulation": "regulation",
+    "regulation": "regulation",
     "noRegulation": "No regulation"
   },
   "ZeroFiles": {

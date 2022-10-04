@@ -24,36 +24,38 @@ export const Comment = ({
   refDocCom,
   refSubCom,
   groupSource,
-  nameGroup
+  nameGroup,
 }: CommentType) => {
   const { del } = useContext(DCContext);
 
-  return <div className={del ? styles.container__deleted : styles.container}>
-    <div className={styles.comment}>
-      <Avatar src={profilePhoto} className={styles.avatar} />
-      <div className={styles.rightSideComment}>
-        <div className={styles.topPartComment}>
-          <p className={styles.pseudonym}>
-            <a href={`/user/${author}`}>{author}</a>
-          </p>
-          <p className={styles.date}>{date}</p>
+  return (
+    <div className={del ? styles.container__deleted : styles.container}>
+      <div className={styles.comment}>
+        <Avatar src={profilePhoto} className={styles.avatar} />
+        <div className={styles.rightSideComment}>
+          <div className={styles.topPartComment}>
+            <p className={styles.pseudonym}>
+              <a href={`/user/${author}`}>{author}</a>
+            </p>
+            <p className={styles.date}>{date}</p>
+          </div>
+          <h2 className={styles.text}>{description}</h2>
         </div>
-        <h2 className={styles.text}>{description}</h2>
       </div>
+      <OptionsComments
+        userId={userId}
+        subCollection={subCollection}
+        idPost={idPost}
+        idComment={idComment}
+        authorId={authorId}
+        likes={likes}
+        liked={liked}
+        refDelCom={refDocCom}
+        refDocCom={refDocCom}
+        refSubCom={refSubCom}
+        groupSource={groupSource}
+        nameGroup={nameGroup}
+      />
     </div>
-    <OptionsComments
-      userId={userId}
-      subCollection={subCollection}
-      idPost={idPost}
-      idComment={idComment}
-      authorId={authorId}
-      likes={likes}
-      liked={liked}
-      refDelCom={refDocCom}
-      refDocCom={refDocCom}
-      refSubCom={refSubCom}
-      groupSource={groupSource}
-      nameGroup={nameGroup}
-    />
-  </div>;
+  );
 };

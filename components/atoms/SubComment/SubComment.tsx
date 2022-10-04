@@ -26,39 +26,41 @@ export const SubComment = ({
   refSubCom,
   refDocSubCom,
   refLastCom,
-  groupSource
+  groupSource,
 }: CommentType) => {
   const { del } = useContext(DCContext);
-  
-  return <div className={del ? styles.container__deleted : styles.container}>
-    <div className={styles.comment}>
-      <Avatar src={profilePhoto} className={styles.avatar} />
-      <div className={styles.rightSideComment}>
-        <div className={styles.topPartComment}>
-          <p className={styles.pseudonym}>
-            <a href={`/user/${author}`}>{author}</a>
-          </p>
-          <p className={styles.date}>{date}</p>
+
+  return (
+    <div className={del ? styles.container__deleted : styles.container}>
+      <div className={styles.comment}>
+        <Avatar src={profilePhoto} className={styles.avatar} />
+        <div className={styles.rightSideComment}>
+          <div className={styles.topPartComment}>
+            <p className={styles.pseudonym}>
+              <a href={`/user/${author}`}>{author}</a>
+            </p>
+            <p className={styles.date}>{date}</p>
+          </div>
+          <h2 className={styles.text}>{description}</h2>
         </div>
-        <h2 className={styles.text}>{description}</h2>
       </div>
+
+      <OptionsComments
+        userId={userId}
+        subCollection={subCollection}
+        idPost={idPost}
+        idComment={idComment}
+        idSubComment={idSubComment}
+        authorId={authorId}
+        likes={likes}
+        liked={liked}
+        refSubCom={refSubCom}
+        refLastCom={refLastCom!}
+        refDelCom={refDocSubCom!}
+        refDocSubCom={refDocSubCom!}
+        nameGroup={nameGroup}
+        groupSource={groupSource}
+      />
     </div>
-  
-    <OptionsComments
-      userId={userId}
-      subCollection={subCollection}
-      idPost={idPost}
-      idComment={idComment}
-      idSubComment={idSubComment}
-      authorId={authorId}
-      likes={likes}
-      liked={liked}
-      refSubCom={refSubCom}
-      refLastCom={refLastCom!}
-      refDelCom={refDocSubCom!}
-      refDocSubCom={refDocSubCom!}
-      nameGroup={nameGroup}
-      groupSource={groupSource}
-    />
-  </div>
-}
+  );
+};

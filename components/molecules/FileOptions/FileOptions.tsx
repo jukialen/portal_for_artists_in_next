@@ -13,17 +13,24 @@ import { NewComments } from 'components/atoms/NewComments/NewComments';
 import styles from './FileOptions.module.scss';
 import { useHookSWR } from 'hooks/useHookSWR';
 
-export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, description }: FileContainerType) => {
+export const FileOptions = ({
+  uid,
+  idPost,
+  authorName,
+  tag,
+  subCollection,
+  description,
+}: FileContainerType) => {
   const [open, setOpen] = useState(false);
   const { locale } = useRouter();
-  
+
   const data = useHookSWR();
-  
+
   const showOpenComments = () => setOpen(!open);
-  
+
   const titleShare = `Share ${authorName} user post from category ${tag}`;
   const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/post/${authorName}/${description}/${uid}/${subCollection}/${idPost}/${tag}`;
-  
+
   return (
     <div className={styles.options}>
       <div className={styles.bottomPanel}>
@@ -32,24 +39,26 @@ export const FileOptions = ({ uid, idPost, authorName, tag, subCollection, descr
             <a>{authorName}</a>
           </Link>
         </div>
-  
+
         <SharingButton link={linkShare} tag={tag} authorName={authorName} titleShare={titleShare} />
       </div>
       <button className={styles.comments} onClick={showOpenComments}>
         {data?.Comments?.comments}
       </button>
-      {open && <>
-        <NewComments
-          name={subCollection!}
-          refCom={addingFilesComment(uid!, subCollection!, idPost!)}
-        />
-        <Comments
-          refCom={filesComments(uid!, subCollection!, idPost!)}
-          userId={uid}
-          subCollection={subCollection}
-          idPost={idPost}
-        />
-      </>}
+      {open && (
+        <>
+          <NewComments
+            name={subCollection!}
+            refCom={addingFilesComment(uid!, subCollection!, idPost!)}
+          />
+          <Comments
+            refCom={filesComments(uid!, subCollection!, idPost!)}
+            userId={uid}
+            subCollection={subCollection}
+            idPost={idPost}
+          />
+        </>
+      )}
     </div>
-  )
-}
+  );
+};

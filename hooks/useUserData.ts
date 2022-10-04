@@ -6,7 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 export const useUserData = () => {
   const [pseudonym, setPseudonym] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  
+
   const user = auth.currentUser;
 
   const docRef = doc(db, `users/${user?.uid}`);
@@ -14,15 +14,15 @@ export const useUserData = () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       setPseudonym(docSnap.data().pseudonym);
-      setDescription(docSnap.data().description)
+      setDescription(docSnap.data().description);
     } else {
-      console.log("No such document!");
+      console.log('No such document!');
     }
-  }
-  
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => !!user && getUserData())
-  }, [docRef])
+  };
 
-  return { pseudonym, description }
-}
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => !!user && getUserData());
+  }, [docRef]);
+
+  return { pseudonym, description };
+};

@@ -1,10 +1,9 @@
-import { FC, useContext } from 'react';
-import { ChakraProvider } from '@chakra-ui/react'
+import { ReactNode, useContext } from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
-import { Footer } from 'components/molecules/Footer/Footer';
 import { Header } from 'components/organisms/Header/Header';
 import { Create } from 'components/organisms/NavForm/Create/Create';
 import { Login } from 'components/organisms/NavForm/Login/Login';
@@ -13,39 +12,52 @@ import { Aside } from 'components/organisms/Aside/Aside';
 import { ModeContext } from 'providers/ModeProvider';
 import { ShowMenuProvider } from 'providers/ShowMenuProvider';
 import { NavFormProvider } from 'providers/NavFormProvider';
-import { StatusLoginContext } from "providers/StatusLogin";
+import { StatusLoginContext } from 'providers/StatusLogin';
 
-export const Layout: FC = ({ children }) => {
+import styles from './Layout.module.scss';
+
+type ChildrenType = {
+  children: ReactNode;
+};
+
+export const Layout = ({ children }: ChildrenType) => {
   const { isMode } = useContext(ModeContext);
   const { isUser } = useContext(StatusLoginContext);
-  
+
   const data = useHookSWR();
-  
+
   return (
     <ChakraProvider resetCSS={false}>
-      <div className={`whole__page ${isMode ? 'dark' : ''}`}>
+      <div className={`${styles.whole__page} ${isMode ? 'dark' : ''}`}>
         <ShowMenuProvider>
-          {isUser ?
+          {isUser ? (
             <>
-              <Header titleFirstNav={data?.Nav?.signOut} titleSecondNav={data?.Nav?.account} logoLink='/app' />
-              <Aside />
+              <Header
+                titleFirstNav={data?.Nav?.signOut}
+                titleSecondNav={data?.Nav?.account}
+                logoLink="/app"
+              />
             </>
-            : (
-              <NavFormProvider>
-                <Header titleFirstNav={data?.Nav?.signIn} titleSecondNav={data?.Nav?.signUp} logoLink='/' />
-                <Create data={data} />
-                <Login data={data} />
-              </NavFormProvider>
-            )
-          }
+          ) : (
+            <NavFormProvider>
+              <Header
+                titleFirstNav={data?.Nav?.signIn}
+                titleSecondNav={data?.Nav?.signUp}
+                logoLink="/"
+              />
+              <Create data={data} />
+              <Login data={data} />
+            </NavFormProvider>
+          )}
         </ShowMenuProvider>
-        <main className={`main__container ${isMode ? 'main__container--dark' : ''}`}>
-          <section className='workspace'>
-            { children }
-          </section>
-        </main>
+
+        <div className={styles.container}>
+          {isUser && <Aside />}
+          <main className={`${styles.main__container} ${isMode ? 'main__container--dark' : ''}`}>
+            <section className={styles.workspace}>{children}</section>
+          </main>
+        </div>
       </div>
-      <Footer />
       <AffixButton />
     </ChakraProvider>
   );

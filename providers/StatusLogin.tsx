@@ -14,14 +14,14 @@ export const StatusLoginProvider = ({ children }: childrenType) => {
   const [isUser, setUser] = useLocalState(false, 'SL');
   // @ts-ignore
   const showUser = () => setUser(!isUser);
-  
+
   return (
     <StatusLoginContext.Provider
-      value={{ // @ts-ignore
+      value={{
+        // @ts-ignore
         isUser,
-        showUser
-      }}
-    >
+        showUser,
+      }}>
       {children}
     </StatusLoginContext.Provider>
   );

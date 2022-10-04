@@ -10,8 +10,8 @@ import 'styles/darkLightMode.scss';
 import './_app.scss';
 
 type AppPropsWithLayout = AppProps & {
-  Component: NextPage
-}
+  Component: NextPage;
+};
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
@@ -22,5 +22,5 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         </Layout>
       </StatusLoginProvider>
     </ModeProvider>
-  )
-};
+  );
+}

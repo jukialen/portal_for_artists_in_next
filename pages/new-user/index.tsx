@@ -26,42 +26,44 @@ import styles from './index.module.scss';
 type FirstDataType = {
   username: string;
   pseudonym: string;
-}
+};
 
 export default function NewUser() {
   const [valuesFields, setValuesFields] = useState<string>('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [progressUpload, setProgressUpload] = useState<number>(0);
-  
+
   const { push, asPath } = useRouter();
   const loading = useCurrentUser('/');
   const data = useHookSWR();
   const { showUser } = useContext(StatusLoginContext);
-  
+
   const user = auth.currentUser!;
-  
+
   const initialValues = {
     username: '',
     pseudonym: '',
   };
-  
+
   const schemaValidation = Yup.object({
     username: SchemaValidation().username,
     pseudonym: SchemaValidation().pseudonym,
   });
-  
+
   const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
-  
+
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
-      if(!!photo) {
+      if (!!photo) {
         const fileRef = await ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
-  
+
         const upload = uploadBytesResumable(fileRef, photo!);
-  
-        upload.on('state_changed', (snapshot: UploadTaskSnapshot) => {
+
+        upload.on(
+          'state_changed',
+          (snapshot: UploadTaskSnapshot) => {
             const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             setProgressUpload(progress);
             switch (snapshot.state) {
@@ -72,120 +74,135 @@ export default function NewUser() {
                 setValuesFields('Upload is paused');
                 break;
             }
-          }, (e) => {
+          },
+          (e) => {
             console.error(e);
             setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
           },
           async () => {
             const photoURL = await getDownloadURL(fileRef);
-      
+
             await setDoc(doc(db, `users/${user?.uid}`), {
-              pseudonym, profilePhoto: photoURL, groups: [], favoriteGroups: [], friends: [], favoriteFriends: []
+              pseudonym,
+              profilePhoto: photoURL,
+              groups: [],
+              favoriteGroups: [],
+              friends: [],
+              favoriteFriends: [],
             });
-      
+
             setValuesFields(`${data?.AnotherForm?.uploadFile}`);
             setPhoto(null);
-      
+
             await updateProfile(user, {
-              displayName: username, photoURL: photoURL
+              displayName: username,
+              photoURL: photoURL,
             });
-      
+
             setValuesFields(data?.NewUser?.successSending);
             await showUser();
             return push('/app');
-          });
+          },
+        );
       } else {
         await setDoc(doc(db, `users/${user?.uid}`), {
-          pseudonym, profilePhoto: null, groups: [], favoriteGroups: [], friends: [], favoriteFriends: []
+          pseudonym,
+          profilePhoto: null,
+          groups: [],
+          favoriteGroups: [],
+          friends: [],
+          favoriteFriends: [],
         });
-  
+
         await updateProfile(user, {
-          displayName: username, photoURL: null
+          displayName: username,
+          photoURL: null,
         });
-  
+
         setValuesFields(data?.NewUser?.successSending);
         await showUser();
         return push('/app');
       }
     } catch (error) {
-      setValuesFields(data?.NewUser?.errorSending)
+      setValuesFields(data?.NewUser?.errorSending);
     }
   };
-  
-  return !loading ? (
-  <>
-    <HeadCom path={asPath} content='The first addition of data by a new user.' />
-    
-    <Formik
-      initialValues={initialValues}
-      validationSchema={schemaValidation}
-      onSubmit={sendingData}
-    >
-      {({ values, handleChange, errors, touched }) => (
-        <Form className={styles.first__data}>
-          <h2 className={styles.title}>{data?.NewUser?.title}</h2>
-    
-          <Input
-            name='username'
-            type='text'
-            value={values.username}
-            onChange={handleChange}
-            placeholder={data?.NewUser?.name}
-            className={touched.username && !!errors.username ? styles.inputForm__error : styles.inputForm}
-          />
-    
-          <FormError nameError='username' />
-    
-          <Input
-            name='pseudonym'
-            type='text'
-            value={values.pseudonym}
-            onChange={handleChange}
-            placeholder={data?.AnotherForm?.pseudonym}
-            className={touched.pseudonym && !!errors.pseudonym ? styles.inputForm__error : styles.inputForm}
-          />
-        
-        <FormError nameError='pseudonym' />
-  
-          <Input
-            name='profilePhoto'
-            type='file'
-            accept='.jpg, .jpeg, .png, .webp, .avif'
-            onChange={handleChangeFile}
-            placeholder={data?.AnotherForm?.profilePhoto}
-            className={styles.inputForm}
-          />
-        
-        <FormError nameError='profilePhoto' />
-        
-        <button
-          type='submit'
-          className={`button ${styles.submit__button}`}
-          aria-label={data?.NewUser?.ariaLabelButtom}
-        >
-          {data?.AnotherForm?.send}
-        </button>
-  
-        { progressUpload >= 1 && !(valuesFields ===`${data?.AnotherForm?.uploadFile}`) &&
-        <Progress
-          value={progressUpload}
-          colorScheme='green'
-          isAnimated
-          hasStripe
-          min={0}
-          max={100}
-          w={280}
-          bg='blue.400'
-          m='1.5rem auto'
-          size='md'
-        />
-        }
-  
-        {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-      </Form>
-        )}
-    </Formik>
-  </>
-) : null;
-}
 
+  return !loading ? (
+    <>
+      <HeadCom path={asPath} content="The first addition of data by a new user." />
+
+      <Formik
+        initialValues={initialValues}
+        validationSchema={schemaValidation}
+        onSubmit={sendingData}>
+        {({ values, handleChange, errors, touched }) => (
+          <Form className={styles.first__data}>
+            <h2 className={styles.title}>{data?.NewUser?.title}</h2>
+
+            <Input
+              name="username"
+              type="text"
+              value={values.username}
+              onChange={handleChange}
+              placeholder={data?.NewUser?.name}
+              className={
+                touched.username && !!errors.username ? styles.inputForm__error : styles.inputForm
+              }
+            />
+
+            <FormError nameError="username" />
+
+            <Input
+              name="pseudonym"
+              type="text"
+              value={values.pseudonym}
+              onChange={handleChange}
+              placeholder={data?.AnotherForm?.pseudonym}
+              className={
+                touched.pseudonym && !!errors.pseudonym ? styles.inputForm__error : styles.inputForm
+              }
+            />
+
+            <FormError nameError="pseudonym" />
+
+            <Input
+              name="profilePhoto"
+              type="file"
+              accept=".jpg, .jpeg, .png, .webp, .avif"
+              onChange={handleChangeFile}
+              placeholder={data?.AnotherForm?.profilePhoto}
+              className={styles.inputForm}
+            />
+
+            <FormError nameError="profilePhoto" />
+
+            <button
+              type="submit"
+              className={`button ${styles.submit__button}`}
+              aria-label={data?.NewUser?.ariaLabelButtom}>
+              {data?.AnotherForm?.send}
+            </button>
+
+            {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) && (
+              <Progress
+                value={progressUpload}
+                colorScheme="green"
+                isAnimated
+                hasStripe
+                min={0}
+                max={100}
+                w={280}
+                bg="blue.400"
+                m="1.5rem auto"
+                size="md"
+              />
+            )}
+
+            {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+          </Form>
+        )}
+      </Formik>
+    </>
+  ) : null;
+}

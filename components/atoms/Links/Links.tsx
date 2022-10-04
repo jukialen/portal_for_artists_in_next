@@ -1,4 +1,4 @@
-import { FC, ReactChildren, ReactElement, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 type LinksType = {
   idInput?: string;
@@ -7,13 +7,7 @@ type LinksType = {
   children: ReactNode;
 };
 
-export const Links = ({
-  idInput,
-  hrefLink,
-  classLink,
-  children,
-  ...props
-}: LinksType) => {
+export const Links = ({ idInput, hrefLink, classLink, children, ...props }: LinksType) => {
   return (
     <a href={hrefLink} id={idInput} className={classLink} {...props}>
       {children}

@@ -1,54 +1,72 @@
 @use 'styles/variables' as *;
 
 .footer {
+  width: 100vw;
   display: flex;
   flex-flow: row wrap;
+  margin-bottom: -1rem;
   background-color: $third__color;
 
   .button {
     width: 10rem;
     height: 2rem;
+    border: 0;
+    margin: 0.5rem auto;
+    font-size: 1rem;
+    cursor: pointer;
     background-color: inherit;
     color: $another__color;
-    border: 0;
-    cursor: pointer;
-    margin: 0.5rem auto;
+
+    .languages {
+      height: 0;
+      display: flex;
+      position: relative;
+      font-size: 1.2rem;
+      bottom: 4rem;
+      right: 10vw;
+      opacity: 0;
+      visibility: hidden;
+      width: fit-content;
+      margin: 0 auto;
+
+      &__version {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $primary__color;
+        color: $dark__background__light__color;
+        margin: 0 .1rem;
+      }
+
+      &__active {
+        height: 2rem;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity .5s ease-in-out, visibility .5s ease-in-out;
+      }
+    }
+
+    @media (min-width: 496px) {
+      .languages { right: 7vw }
+    }
+    @media (min-width: 800px) and (max-width: 935px) {
+      .languages { right: 10vw }
+    }
+
+    @media (min-width: 1091px) {
+      .languages { right: 6vw }
+    }
+
+    @media (min-width: 1202px) {
+      .languages { right: 4rem }
+    }
+
+    @media (min-width: 1292px) {
+      .languages { right: 3vw }
+    }
+
+    @media (min-width: 1900px) {
+      .languages { right: 2vw }
+    }
   }
-}
-
-/*LANGUAGES*/
-
-.languages {
-  height: 0;
-  display: flex;
-  position: relative;
-  font-size: 1.2rem;
-  bottom: 4rem;
-  right: 4rem;
-  opacity: 0;
-  visibility: hidden;
-  width: fit-content;
-  margin: 0 auto;
-
-  .languages__version {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    background-color: $primary__color;
-    color: $dark__background__light__color;
-    margin: 0 .1rem;
-  }
-}
-
-@media (min-width: 720px) and (max-width: 1026px) {
-  .languages {
-    right: 6rem
-  }
-}
-
-.languages__active {
-  height: 2rem;
-  opacity: 1;
-  visibility: visible;
-  transition: all 0.5s ease-in-out;
 }

@@ -9,7 +9,7 @@ import {
   docPostsComments,
   subFilesComments,
   subPostsComments,
-  user
+  user,
 } from 'references/referencesFirebase';
 
 import { getDate } from 'helpers/getDate';
@@ -27,11 +27,11 @@ export const Comments = ({ userId, subCollection, refCom, idPost, groupSource }:
   const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
   let [i, setI] = useState(1);
-  
+
   const { locale } = useRouter();
   const data = useHookSWR();
   const maxItems = 30;
-  
+
   const showingComments = async () => {
     try {
       const firstPage = query(
@@ -39,15 +39,15 @@ export const Comments = ({ userId, subCollection, refCom, idPost, groupSource }:
         orderBy('date', 'desc'),
         orderBy('user', 'desc'),
         orderBy('message', 'desc'),
-        limit(maxItems)
+        limit(maxItems),
       );
       const documentSnapshots = await getDocs(firstPage);
-      
+
       const commentArray: CommentType[] = [];
-      
+
       for (const document of documentSnapshots.docs) {
         const docSnap = await getDoc(user(document.data().user));
-        
+
         if (docSnap.exists()) {
           commentArray.push({
             author: docSnap.data().pseudonym,
@@ -58,21 +58,21 @@ export const Comments = ({ userId, subCollection, refCom, idPost, groupSource }:
             idComment: document.id,
             likes: document.data().likes | 0,
             liked: document.data().liked || [],
-            authorId: document.data().user
+            authorId: document.data().user,
           });
-        };
-      };
+        }
+      }
       setCommentsArray(commentArray);
       commentArray.length === maxItems && setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
     } catch (e) {
       console.error(e);
     }
   };
-  
+
   useEffect(() => {
     !!refCom && showingComments();
   }, [refCom]);
-  
+
   const nextShowingComments = async () => {
     try {
       const nextPage = query(
@@ -81,17 +81,17 @@ export const Comments = ({ userId, subCollection, refCom, idPost, groupSource }:
         orderBy('user', 'desc'),
         orderBy('message', 'desc'),
         limit(maxItems),
-        startAfter(lastVisible)
+        startAfter(lastVisible),
       );
       const documentSnapshots = await getDocs(nextPage);
-  
+
       setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
-  
+
       const nextCommentArray: CommentType[] = [];
-      
+
       for (const document of documentSnapshots.docs) {
         const docSnap = await getDoc(user(document.data().user));
-        
+
         if (docSnap.exists()) {
           nextCommentArray.push({
             author: docSnap.data().pseudonym,
@@ -102,64 +102,59 @@ export const Comments = ({ userId, subCollection, refCom, idPost, groupSource }:
             idComment: document.id,
             likes: document.data().likes | 0,
             liked: document.data().liked || [],
-            authorId: document.data().user
+            authorId: document.data().user,
           });
-        };
-      };
-      
+        }
+      }
       const nextArray = commentsArray.concat(...nextCommentArray);
       setCommentsArray(nextArray);
       setI(++i);
     } catch (e) {
       console.error(e);
-    };
+    }
   };
-  
-  return <>
-    {
-      commentsArray.length > 0 ? commentsArray.map(({
-          author,
-          date,
-          description,
-          nameGroup,
-          profilePhoto,
-          idComment,
-          likes,
-          liked,
-          authorId
-        }: CommentType, index) =>
-          <DCProvider key={index}>
-            <Comment
-              author={author}
-              date={date}
-              description={description}
-              nameGroup={nameGroup}
-              profilePhoto={profilePhoto}
-              userId={userId!}
-              subCollection={subCollection}
-              idPost={idPost}
-              idComment={idComment}
-              likes={likes}
-              liked={liked}
-              authorId={authorId}
-              refDocCom={
-                groupSource ?
-                docPostsComments(nameGroup!, idPost!, idComment!) :
-                  docFilesComments(userId!, subCollection!, idPost!, idComment!)
-              }
-              refSubCom={
-                groupSource ?
-                  subPostsComments(nameGroup!, idPost!, idComment!) :
-                  subFilesComments(userId!, subCollection!, idPost!, idComment!)
-              }
-              groupSource={groupSource}
-            />
-          </DCProvider>
-      ) : <p className={styles.noComments}>{data?.Comments?.noComments}</p>
-    }
-    {
-      !!lastVisible && commentsArray.length === maxItems * i
-      && <MoreButton nextElements={nextShowingComments} />
-    }
-  </>
+
+  return (
+    <>
+      {commentsArray.length > 0 ? (
+        commentsArray.map(
+          (
+            { author, date, description, nameGroup, profilePhoto, idComment, likes, liked, authorId }: CommentType,
+            index,
+          ) => (
+            <DCProvider key={index}>
+              <Comment
+                author={author}
+                date={date}
+                description={description}
+                nameGroup={nameGroup}
+                profilePhoto={profilePhoto}
+                userId={userId!}
+                subCollection={subCollection}
+                idPost={idPost}
+                idComment={idComment}
+                likes={likes}
+                liked={liked}
+                authorId={authorId}
+                refDocCom={
+                  groupSource
+                    ? docPostsComments(nameGroup!, idPost!, idComment!)
+                    : docFilesComments(userId!, subCollection!, idPost!, idComment!)
+                }
+                refSubCom={
+                  groupSource
+                    ? subPostsComments(nameGroup!, idPost!, idComment!)
+                    : subFilesComments(userId!, subCollection!, idPost!, idComment!)
+                }
+                groupSource={groupSource}
+              />
+            </DCProvider>
+          ),
+        )
+      ) : (
+        <p className={styles.noComments}>{data?.Comments?.noComments}</p>
+      )}
+      {!!lastVisible && commentsArray.length === maxItems * i && <MoreButton nextElements={nextShowingComments} />}
+    </>
+  );
 };

@@ -1,0 +1,49 @@
+@use 'styles/variables' as *;
+
+.footer {
+  display: flex;
+  text-align: center;
+  flex-wrap: wrap;
+
+  div, .button {
+    width: 8rem;
+    height: 1.5rem;
+    color: inherit;
+    margin: 0.5rem auto;
+    border: 0;
+    font-size: 1rem;
+    background-color: inherit;
+    cursor: pointer;
+  }
+
+  .button {
+    width: auto;
+
+    .languages {
+      width: 100%;
+      display: flex;
+      position: relative;
+      font-size: 1.2rem;
+      bottom: 4rem;
+      opacity: 0;
+      visibility: hidden;
+      margin: 0 auto;
+
+      &__version {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 0.2rem;
+        background-color: $primary__color;
+        color: $dark__background__light__color;
+      }
+
+      &__active {
+        height: 2rem;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity .5s ease-in-out, visibility .5s ease-in-out;
+      }
+    }
+  }
+}

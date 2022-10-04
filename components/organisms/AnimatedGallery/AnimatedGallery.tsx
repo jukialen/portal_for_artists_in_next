@@ -9,7 +9,7 @@ import {
   orderBy,
   query,
   QueryDocumentSnapshot,
-  startAfter
+  startAfter,
 } from 'firebase/firestore';
 
 import { user as currentUser, userAnimationsRef } from 'references/referencesFirebase';
@@ -27,23 +27,23 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
   const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
   let [i, setI] = useState(1);
-  
+
   const { asPath } = useRouter();
-  
+
   const maxItems = 30;
-  
+
   const downloadAnimations = async () => {
     try {
       const firstPage = query(
         userAnimationsRef(user!),
         orderBy('timeCreated', 'desc'),
-        limit(maxItems)
+        limit(maxItems),
       );
-      
+
       const filesArray: FileType[] = [];
-      
+
       const documentSnapshots = await getDocs(firstPage);
-      
+
       for (const document of documentSnapshots.docs) {
         const docSnap = await getDoc(currentUser(document.data().uid));
         if (docSnap.exists()) {
@@ -53,16 +53,17 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
         }
       }
       setUserAnimatedPhotos(filesArray);
-      filesArray.length === maxItems && setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      filesArray.length === maxItems &&
+        setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
     } catch (e) {
       console.log('No such document!', e);
     }
   };
-  
+
   useEffect(() => {
-     !!user && downloadAnimations();
+    !!user && downloadAnimations();
   }, [user]);
-  
+
   const nextElements = async () => {
     try {
       const nextPage = query(
@@ -71,16 +72,16 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
         limit(maxItems),
         startAfter(lastVisible),
       );
-      
+
       const documentSnapshots = await getDocs(nextPage);
-      
+
       setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
-      
+
       const nextArray: FileType[] = [];
-      
+
       for (const document of documentSnapshots.docs) {
         const docSnap = await getDoc(currentUser(document.data().uid));
-        
+
         if (docSnap.exists()) {
           filesElements(nextArray, document, docSnap.data().pseudonym);
         } else {
@@ -94,34 +95,38 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
       console.error(e);
     }
   };
-  
+
   return (
-    <article id='user__gallery__in__account' className='user__gallery__in__account'>
-      {decodeURIComponent(asPath) === `/account/${pseudonym}` && <em className='title'>{data?.Account?.gallery?.userAnimationsTitle}</em>}
+    <article id="user__gallery__in__account" className="user__gallery__in__account">
+      {decodeURIComponent(asPath) === `/account/${pseudonym}` && (
+        <em className="title">{data?.Account?.gallery?.userAnimationsTitle}</em>
+      )}
 
       <Wrapper>
-        {
-          userAnimatedPhotos.length > 0 ?
-            userAnimatedPhotos.map(({ fileUrl, description, time, tags, uid, idPost }: FileType, index) =>
+        {userAnimatedPhotos.length > 0 ? (
+          userAnimatedPhotos.map(
+            ({ fileUrl, description, time, tags, uid, idPost }: FileType, index) => (
               <Article
                 key={index}
                 link={fileUrl}
                 refFile={userAnimationsRef(user!)}
-                subCollection='animations'
+                subCollection="animations"
                 refStorage={ref(storage, `${user}/animations/${description}`)}
                 description={description}
                 tag={tags}
                 unopt
                 uid={uid}
                 idPost={idPost}
-              />) :
-            <ZeroFiles text={data?.ZeroFiles?.animations} />
-        }
-  
-        {
-          !!lastVisible && userAnimatedPhotos.length === maxItems * i &&
+              />
+            ),
+          )
+        ) : (
+          <ZeroFiles text={data?.ZeroFiles?.animations} />
+        )}
+
+        {!!lastVisible && userAnimatedPhotos.length === maxItems * i && (
           <MoreButton nextElements={nextElements} />
-        }
+        )}
       </Wrapper>
     </article>
   );

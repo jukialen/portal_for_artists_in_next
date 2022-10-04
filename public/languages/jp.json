@@ -20,7 +20,7 @@
     "validateUsernameMin": "名前が短すぎまあす。",
     "validatePseudonymNum": "あだ名が少なくとも一ナンバーがでなければなりません。",
     "validatePseudonymSpec": "あだ名が少なくとも一特殊文字を含めることが出来ます: #?!@$%^&*-＃？！＄％＆＊ー",
-    "validatePseudonymHKik":"あだ名は字だけ受け入れます。今、ひらがなとカタカナと漢字が出来ます。",
+    "validatePseudonymHKik": "あだ名は字だけ受け入れます。今、ひらがなとカタカナと漢字が出来ます。",
     "validatePseudonymMin": "あだ名が短すぎまあす。",
     "validatePseudonymMax": "あだ名が長すぎる。最大限十五字をなければなりません。",
     "validateEmail": "メールが正しくないです。",
@@ -231,7 +231,7 @@
       "addedModAria": "モデレータが付け加えました"
     }
   },
-  "Description" : {
+  "Description": {
     "textPlaceholder": "新しい叙述の団体",
     "textAria": "新しい叙述の団体の場",
     "submit": "アップデート",

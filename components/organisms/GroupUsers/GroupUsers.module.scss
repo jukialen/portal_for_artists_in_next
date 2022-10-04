@@ -1,39 +1,39 @@
 @use 'styles/variables' as *;
 
 .tilesSection {
-	display: flex;
-	flex-wrap: wrap;
-	margin: auto;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
 
-	.container {
-		width: 100%;
-		display: flex;
-		justify-content: flex-start;
-		margin: 2rem 2rem 1rem;
+  .container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    margin: 2rem 2rem 1rem;
 
-		&__button {
-			width: fit-content;
-			background-color: $third__color;
-			border-color: $third__color;
-		}
-	}
+    &__button {
+      width: fit-content;
+      background-color: $third__color;
+      border-color: $third__color;
+    }
+  }
 
-	.title {
-		width: 90%;
-		font-size: 1.4rem;
-		margin-left: 1rem;
-		margin-top: 2rem;
-	}
+  .title {
+    width: 90%;
+    font-size: 1.4rem;
+    margin-left: 1rem;
+    margin-top: 2rem;
+  }
 
-	.divider {
-		width: 90%;
-		margin-bottom: 1rem;
-	}
+  .divider {
+    width: 90%;
+    margin-bottom: 1rem;
+  }
 
-	.noGroups {
-		margin: 2rem;
-	}
+  .noGroups {
+    margin: 2rem;
+  }
 }
 

@@ -1,24 +1,24 @@
 .categories__index__in__account {
-	width: 100%;
+  width: 100%;
 }
 
 .title {
-	display: flex;
-	justify-content: center;
-	margin: 3rem auto;
-	font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  margin: 3rem auto;
+  font-size: 2rem;
 }
 
 .user__drawings {
-	display: flex;
-	flex-direction: column;
-	width: 100vw;
-	max-width: 40rem;
-	justify-content: center;
-	align-items: center;
-	margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  max-width: 40rem;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto;
 
-	@media (min-width: 2000px) and (min-height: 1366px) {
-		max-width: 50vw;
-	}
+  @media (min-width: 2000px) and (min-height: 1366px) {
+    max-width: 50vw;
+  }
 }

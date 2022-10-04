@@ -2,26 +2,26 @@ import { ChangeEvent } from 'react';
 import { CollectionReference, DocumentReference, Query } from 'firebase/firestore';
 import { StorageReference } from 'firebase/storage';
 
-export type GroupNameType = string | string[]
+export type GroupNameType = string | string[];
 
 export type DataType = any;
 
 export type UserType = {
   user: string | undefined;
   pseudonym?: string | string[];
-  data: DataType
+  data: DataType;
 };
 
-export type EventType =  ChangeEvent<EventTarget & HTMLInputElement>;
+export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
 
 export type FormType = {
-  resetForm: any
-}
+  resetForm: any;
+};
 
 export type UserDataType = {
   email?: string;
-  password?: string
-}
+  password?: string;
+};
 
 export type FileType = {
   fileUrl: string;
@@ -31,13 +31,13 @@ export type FileType = {
   pseudonym: string;
   uid: string;
   idPost: string;
-}
+};
 
 export type FileContainerType = {
   link?: string;
-  refFile?:  CollectionReference | Query;
+  refFile?: CollectionReference | Query;
   subCollection?: string;
-  refStorage?:  StorageReference;
+  refStorage?: StorageReference;
   description?: string;
   authorName?: string;
   tag?: string;
@@ -78,7 +78,7 @@ export type AuthorType = {
   idSubComment?: string;
   idLastComment?: string;
   groupSource?: boolean;
-}
+};
 
 export type PostType = {
   author: string;
@@ -92,12 +92,12 @@ export type PostType = {
   likes: number;
   liked?: string[];
   logoUser?: string;
-}
+};
 export type NewCommentsType = {
   name?: GroupNameType;
   refCom?: CollectionReference;
   comment?: string;
-}
+};
 
 export type CommentType = {
   author?: string;
@@ -123,4 +123,4 @@ export type CommentType = {
   refDocSubCom?: DocumentReference;
   refDocLastCom?: DocumentReference;
   groupSource?: boolean;
-}
+};

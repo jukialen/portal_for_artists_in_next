@@ -5,75 +5,62 @@ import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { NewCommentsType, FormType} from 'types/global.types';
+import { FormType, NewCommentsType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import styles from './NewComments.module.scss';
 
-export const NewComments = ({ name, refCom }: NewCommentsType ) => {
+export const NewComments = ({ name, refCom }: NewCommentsType) => {
   const initialValues = {
     comment: '',
   };
-  
+
   const data = useHookSWR();
   const user = auth.currentUser;
-  
+
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
-  
+
   const createNewComment = async ({ comment }: NewCommentsType, { resetForm }: FormType) => {
     try {
       await addDoc(refCom!, {
         nameGroup: name,
         message: comment,
         date: serverTimestamp(),
-        user: user?.uid
+        user: user?.uid,
       });
       resetForm(initialValues);
-    }
-    catch (e) {
+    } catch (e) {
       console.error(e);
     }
   };
-  
-  return <Formik
-    initialValues={initialValues}
-    validationSchema={schemaNew}
-    onSubmit={createNewComment}
-  >
-    {({ values, handleChange }) => (
-      <Form>
-        <div className={styles.comments}>
-          <Avatar
-            src={user?.photoURL!}
-            width={10}
-            height={10}
-            marginTop='.4rem'
-          />
-  
-          <Textarea
-            name='comment'
-            id='comment'
-            value={values.comment}
-            onChange={handleChange}
-            placeholder={data?.Comments?.newComPlaceholder}
-            aria-label={data?.Comments?.newComAria}
-            isRequired
-            className={styles.text}
-          />
-        </div>
-        
-        <Button
-          type='submit'
-          colorScheme='blue'
-          display='flex'
-          className={styles.addingButton}
-        >
-          {data?.Comments?.newComButton}
-        </Button>
-        
-        <ErrorMessage name='comment' />
-      </Form>
-    )}
-  </Formik>
-}
+
+  return (
+    <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={createNewComment}>
+      {({ values, handleChange }) => (
+        <Form>
+          <div className={styles.comments}>
+            <Avatar src={user?.photoURL!} width={10} height={10} marginTop=".4rem" />
+
+            <Textarea
+              name="comment"
+              id="comment"
+              value={values.comment}
+              onChange={handleChange}
+              placeholder={data?.Comments?.newComPlaceholder}
+              aria-label={data?.Comments?.newComAria}
+              isRequired
+              className={styles.text}
+            />
+          </div>
+
+          <Button type="submit" colorScheme="blue" display="flex" className={styles.addingButton}>
+            {data?.Comments?.newComButton}
+          </Button>
+
+          <ErrorMessage name="comment" />
+        </Form>
+      )}
+    </Formik>
+  );
+};

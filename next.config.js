@@ -1,5 +1,5 @@
-/** @type {import('next').NextConfig} */
-const withPWA = require("next-pwa");
+/** @type {import("next").NextConfig} */
+const withPWA = require('next-pwa');
 
 // import('firebase/firestore').then(() => {
 //   const firestore = app.firestore();
@@ -30,9 +30,8 @@ module.exports = withPWA({
     formats: ['image/avif', 'image/webp'],
   },
   pwa: {
-    dest: "public",
+    dest: 'public',
     register: true,
     skipWaiting: true,
   },
 });
-

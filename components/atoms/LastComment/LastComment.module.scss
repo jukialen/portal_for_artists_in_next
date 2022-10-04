@@ -1,50 +1,50 @@
 .container {
-	margin: 1rem 0 1rem 1rem;
+  margin: 1rem 0 1rem 1rem;
 
-	.comment {
-		display: grid;
-		grid-template-columns: 3rem 1fr;
-		align-items: center;
+  .comment {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    align-items: center;
 
-		.avatar {
-			width: 2rem;
-			height: 2rem;
-			margin: .5rem;
-			align-self: flex-start;
-		}
+    .avatar {
+      width: 2rem;
+      height: 2rem;
+      margin: .5rem;
+      align-self: flex-start;
+    }
 
-		.rightSideComment {
-			display: flex;
-			flex-direction: column;
-			margin: 0.5rem 0.5rem 0.5rem 0;
+    .rightSideComment {
+      display: flex;
+      flex-direction: column;
+      margin: 0.5rem 0.5rem 0.5rem 0;
 
-			.topPartComment {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				justify-content: space-between;
-				align-items: center;
-				padding: 0 0.5rem 0.5rem 0;
+      .topPartComment {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 0.5rem 0.5rem 0;
 
-				.pseudonym {
-					font-size: 1.2rem;
-					text-align: inherit;
-					font-style: oblique;
-				}
+        .pseudonym {
+          font-size: 1.2rem;
+          text-align: inherit;
+          font-style: oblique;
+        }
 
-				.date {
-					text-align: right;
-					font-size: .9rem;
-				}
-			}
+        .date {
+          text-align: right;
+          font-size: .9rem;
+        }
+      }
 
-			.text {
-				font-size: 1rem;
-				text-align: inherit;
-			}
-		}
-	}
+      .text {
+        font-size: 1rem;
+        text-align: inherit;
+      }
+    }
+  }
 
-	&__deleted {
-		display: none;
-	}
+  &__deleted {
+    display: none;
+  }
 }

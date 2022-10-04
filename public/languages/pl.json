@@ -20,7 +20,7 @@
     "validateUsernameMin": "Imię jest za krótkie.",
     "validatePseudonymNum": "Pseudonym musi mieć conajmniej 1 cyfrę.",
     "validatePseudonymSpec": "Pseudonym musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-＃？！＄％＆＊ー",
-    "validatePseudonymHKik":"Pseudonym przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji",
+    "validatePseudonymHKik": "Pseudonym przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji",
     "validatePseudonymMin": "Pseudonym jest za krótkie.",
     "validatePseudonymMax": "Pseudonym jest za długi. Maksymalnie musi mieć 15 znaków.",
     "validateEmail": "Niepoprawny adres e-mail.",
@@ -231,7 +231,7 @@
       "addedModAria": "Dodany moderator"
     }
   },
-  "Description" : {
+  "Description": {
     "textPlaceholder": "nowy opis grupy",
     "textAria": "pole dla nowego opisu grupy",
     "submit": "Zaktualizuj",
@@ -248,7 +248,7 @@
     "updateButton": "Zaktualizuj",
     "deleteCommentTitle": "Usuń komentarz?"
   },
-  "Regulations":  {
+  "Regulations": {
     "regulation": "Regulamin",
     "noRegulation": "Brak regulaminu"
   },

@@ -1,8 +1,12 @@
-import { DocumentSnapshot, QueryDocumentSnapshot } from 'firebase/firestore';
+import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { FileType } from 'types/global.types';
 
-export const filesElements = (filesArray: FileType[], document: QueryDocumentSnapshot, pseudonym: string) => {
+export const filesElements = (
+  filesArray: FileType[],
+  document: QueryDocumentSnapshot,
+  pseudonym: string,
+) => {
   return filesArray.push({
     fileUrl: document.data().fileUrl,
     time: document.data().timeCreated,
@@ -10,6 +14,6 @@ export const filesElements = (filesArray: FileType[], document: QueryDocumentSna
     pseudonym: pseudonym,
     description: document.data().description,
     uid: document.data().uid,
-    idPost: document.id
+    idPost: document.id,
   });
-}
+};

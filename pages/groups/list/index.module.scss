@@ -1,49 +1,49 @@
 @use 'styles/variables' as *;
 
 .container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-	.container__section {
-		width: 44rem;
-		max-width: 100vw;
-		min-height: 80vh;
+  .container__section {
+    width: 44rem;
+    max-width: 100vw;
+    min-height: 80vh;
 
-		.title, .noALl {
-			margin: 2rem 0;
-			text-align: center;
-		}
+    .title, .noALl {
+      margin: 2rem 0;
+      text-align: center;
+    }
 
-		.list {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: center;
-		}
+    .list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
-		.more {
-			display: flex;
-			width: 6rem;
-			margin: 2rem auto;
-			border: .1rem solid $third__color;
-			cursor: pointer;
-		}
+    .more {
+      display: flex;
+      width: 6rem;
+      margin: 2rem auto;
+      border: .1rem solid $third__color;
+      cursor: pointer;
+    }
 
-		.noALl {
-			font-size: 1.2rem;
-		}
-	}
+    .noALl {
+      font-size: 1.2rem;
+    }
+  }
 
-	@media (min-width: 1108px) {
-		.container__section {
-			width: 52rem;
-		}
-	}
+  @media (min-width: 1108px) {
+    .container__section {
+      width: 52rem;
+    }
+  }
 
-	@media (min-width: 1552px) {
-		.container__section {
-			width: 80rem;
-		}
-	}
+  @media (min-width: 1552px) {
+    .container__section {
+      width: 80rem;
+    }
+  }
 }
 

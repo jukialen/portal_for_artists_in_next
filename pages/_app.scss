@@ -6,38 +6,10 @@
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode',
   'Geneva', 'Verdana', sans-serif;
 }
-html {
-  scrollbar-width: thin;
-  scrollbar-color: $dark__background__light__color black;
 
-  &:hover {
-    scrollbar-color: $secondary__color black;
-  }
-
-  &:active {
-    scrollbar-color: $secondary__color black;
-  }
-
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: black;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: $dark__background__light__color;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: $secondary__color;
-    border-radius: 20px;
-  }
-
-  &::-webkit-scrollbar-thumb:active {
-    background: $secondary__color;
-    border-radius: 20px;
+@media (min-width: 982px) {
+  html {
+    overflow: hidden;
   }
 }
 
@@ -81,22 +53,6 @@ a {
 
 button {
   background-color: transparent;
-}
-
-.main__container {
-  margin: 0 auto;
-}
-
-.whole__page {
-  position: relative;
-  display: flex;
-}
-
-.workspace {
-  display: flex;
-  flex-direction: column;
-  margin: 4rem auto;
-  padding-top: 3rem;
 }
 
 .title {

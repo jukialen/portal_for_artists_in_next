@@ -1,4 +1,4 @@
-import { ReactNode, useState, createContext, useCallback } from 'react';
+import { createContext, ReactNode, useCallback, useState } from 'react';
 
 export const NavFormContext = createContext({
   isLogin: false,
@@ -26,8 +26,7 @@ export const NavFormProvider = ({ children }: childrenType) => {
         showLoginForm,
         isCreate,
         showCreateForm,
-      }}
-    >
+      }}>
       {children}
     </NavFormContext.Provider>
   );

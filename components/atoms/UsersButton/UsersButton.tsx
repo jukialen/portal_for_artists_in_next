@@ -15,7 +15,7 @@ import group from 'public/group.svg';
 import { AddIcon, CheckIcon } from '@chakra-ui/icons';
 
 type UsersButtonType = {
-  id: string
+  id: string;
   name: GroupNameType;
   pseudonym: string;
   logo: string;
@@ -23,40 +23,51 @@ type UsersButtonType = {
   moderatorsArray: MembersAndModeratorsType[];
 };
 
-export const UsersButton = ({ id, name, pseudonym, logo, admin, moderatorsArray }: UsersButtonType) => {
+export const UsersButton = ({
+  id,
+  name,
+  pseudonym,
+  logo,
+  admin,
+  moderatorsArray,
+}: UsersButtonType) => {
   const [toggleModRole, setToggleModRole] = useState(false);
-  
-  const data = useHookSWR()
+
+  const data = useHookSWR();
   const currentUser = auth.currentUser?.uid;
-  
+
   useEffect(() => {
     moderatorsArray.length > 0 &&
       moderatorsArray.map(({ cid }: MembersAndModeratorsType) =>
-        cid === id ? setToggleModRole(true) : setToggleModRole(false))
-  }, [moderatorsArray, id])
-  
+        cid === id ? setToggleModRole(true) : setToggleModRole(false),
+      );
+  }, [moderatorsArray, id]);
+
   const addingModerators = async (name: GroupNameType) => {
     try {
-      await addDoc(moderators(name!),{ moderator: user(id) } );
+      await addDoc(moderators(name!), { moderator: user(id) });
       await setToggleModRole(true);
     } catch (e) {
       console.error(e);
     }
   };
-  
-  return <div className={styles.usersButton}>
-    <Avatar name={pseudonym} src={!!logo ? logo : group} />
-    <NextLink href={`/user/${pseudonym}`} passHref>
-      <Link>{pseudonym}</Link>
-    </NextLink>
-    {
-      admin === currentUser &&
+
+  return (
+    <div className={styles.usersButton}>
+      <Avatar name={pseudonym} src={!!logo ? logo : group} />
+      <NextLink href={`/user/${pseudonym}`} passHref>
+        <Link>{pseudonym}</Link>
+      </NextLink>
+      {admin === currentUser && (
         <IconButton
-          type='submit'
-          aria-label={toggleModRole ? data?.Members?.button?.addedModAria : data?.Members?.button?.addModAria}
+          type="submit"
+          aria-label={
+            toggleModRole ? data?.Members?.button?.addedModAria : data?.Members?.button?.addModAria
+          }
           icon={toggleModRole ? <CheckIcon /> : <AddIcon />}
           onClick={() => addingModerators(name)}
         />
-    }
-  </div>
-}
+      )}
+    </div>
+  );
+};

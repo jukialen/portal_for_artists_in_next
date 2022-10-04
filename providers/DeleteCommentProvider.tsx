@@ -6,19 +6,13 @@ type ChildrenType = {
 
 export const DCContext = createContext({
   del: false,
-  changeDel: () => {}
+  changeDel: () => {},
 });
 
 export const DCProvider = ({ children }: ChildrenType) => {
   const [del, setDel] = useState(false);
-  
+
   const changeDel = () => setDel(!del);
-  
-  return (
-    <DCContext.Provider
-      value={{ del, changeDel }}
-    >
-      {children}
-    </DCContext.Provider>
-  );
+
+  return <DCContext.Provider value={{ del, changeDel }}>{children}</DCContext.Provider>;
 };
