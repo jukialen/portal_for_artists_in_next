@@ -3,6 +3,7 @@
 .whole__page {
   position: relative;
   display: flex;
+  overflow: hidden;
 
   .container {
     width: 100vw;
@@ -50,6 +51,19 @@
           border-radius: 20px;
         }
       }
+
+      .workspace {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        margin: 4rem auto 1rem;
+        padding-top: 3rem;
+      }
+    }
+
+    .home__container {
+      width: 100vw;
+      margin: 0 auto;
 
       .workspace {
         min-height: 100vh;

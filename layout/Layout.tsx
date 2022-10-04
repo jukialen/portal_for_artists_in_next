@@ -32,19 +32,11 @@ export const Layout = ({ children }: ChildrenType) => {
         <ShowMenuProvider>
           {isUser ? (
             <>
-              <Header
-                titleFirstNav={data?.Nav?.signOut}
-                titleSecondNav={data?.Nav?.account}
-                logoLink="/app"
-              />
+              <Header titleFirstNav={data?.Nav?.signOut} titleSecondNav={data?.Nav?.account} logoLink="/app" />
             </>
           ) : (
             <NavFormProvider>
-              <Header
-                titleFirstNav={data?.Nav?.signIn}
-                titleSecondNav={data?.Nav?.signUp}
-                logoLink="/"
-              />
+              <Header titleFirstNav={data?.Nav?.signIn} titleSecondNav={data?.Nav?.signUp} logoLink="/" />
               <Create data={data} />
               <Login data={data} />
             </NavFormProvider>
@@ -53,7 +45,10 @@ export const Layout = ({ children }: ChildrenType) => {
 
         <div className={styles.container}>
           {isUser && <Aside />}
-          <main className={`${styles.main__container} ${isMode ? 'main__container--dark' : ''}`}>
+          <main
+            className={`${isUser ? styles.main__container : styles.home__container} ${
+              isMode ? 'main__container--dark' : ''
+            }`}>
             <section className={styles.workspace}>{children}</section>
           </main>
         </div>

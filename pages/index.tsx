@@ -38,8 +38,6 @@ export default function Home() {
 
   useLayoutEffect(() => {
     try {
-      // ScrollTrigger.refresh();
-      window.innerWidth >= 982 && ScrollTrigger.normalizeScroll(true);
       gsap.registerPlugin(ScrollTrigger);
 
       const sections = document.querySelectorAll('article');
@@ -61,7 +59,6 @@ export default function Home() {
             },
           },
         );
-        console.log(section);
       });
     } catch (e) {
       console.error(e);
@@ -103,7 +100,15 @@ export default function Home() {
           <p className={styles.answer}>{data?.Main?.containerFirstAnswer}</p>
         </div>
 
-        <Image src={upload} width={width} height={height} className={styles.image} alt="picture.jpg" priority quality={quality} />
+        <Image
+          src={upload}
+          width={width}
+          height={height}
+          className={styles.image}
+          alt="picture.jpg"
+          priority
+          quality={quality}
+        />
       </article>
 
       <article className={styles.main__container}>
@@ -113,7 +118,15 @@ export default function Home() {
           <p className={styles.answer}>{data?.Main?.containerSecondAnswer}</p>
         </div>
 
-        <Image src={authorButton} width={width} height={height} className={styles.image} alt="picture.jpg" priority quality={quality} />
+        <Image
+          src={authorButton}
+          width={width}
+          height={height}
+          className={styles.image}
+          alt="picture.jpg"
+          priority
+          quality={quality}
+        />
       </article>
 
       <article className={styles.main__container}>
@@ -123,7 +136,15 @@ export default function Home() {
           <p className={styles.answer}>{data?.Main?.containerThirdAnswer}</p>
         </div>
 
-        <Image src={top} width={width} height={height} className={styles.image} alt="sign in photo file" priority quality={quality} />
+        <Image
+          src={top}
+          width={width}
+          height={height}
+          className={styles.image}
+          alt="sign in photo file"
+          priority
+          quality={quality}
+        />
       </article>
 
       <article className={styles.main__container}>
@@ -136,7 +157,15 @@ export default function Home() {
           <p className={styles.answer}>{data?.Main?.containerFourthAnswer}</p>
         </div>
 
-        <Image src={likes} width={width} height={height} className={styles.image} alt="picture.jpg" priority quality={quality} />
+        <Image
+          src={likes}
+          width={width}
+          height={height}
+          className={styles.image}
+          alt="picture.jpg"
+          priority
+          quality={quality}
+        />
       </article>
 
       <article className={styles.main__container}>
@@ -167,7 +196,14 @@ export default function Home() {
         <div className={styles.image}>
           <div className={styles.modeImage}>
             <Image src={light_mode} width={width} height={height} alt="picture.jpg" priority quality={quality} />
-            <Image src={dark_mode} width={width} height={height} alt="dark mode photo file" priority quality={quality} />
+            <Image
+              src={dark_mode}
+              width={width}
+              height={height}
+              alt="dark mode photo file"
+              priority
+              quality={quality}
+            />
           </div>
         </div>
       </article>
@@ -197,7 +233,15 @@ export default function Home() {
           <p className={styles.answer}>{data?.Main?.containerEighthAnswer}</p>
         </div>
 
-        <Image src={groups} width={width} height={height} className={styles.image} alt="groups photo file" priority quality={quality} />
+        <Image
+          src={groups}
+          width={width}
+          height={height}
+          className={styles.image}
+          alt="groups photo file"
+          priority
+          quality={quality}
+        />
       </article>
 
       <article className={styles.main__container}>
@@ -207,7 +251,15 @@ export default function Home() {
           <p className={styles.answer}>{data?.Main?.containerNinthAnswer}</p>
         </div>
 
-        <Image src={friends} width={width} height={height} className={styles.image} alt="friends photo file" priority quality={quality} />
+        <Image
+          src={friends}
+          width={width}
+          height={height}
+          className={styles.image}
+          alt="friends photo file"
+          priority
+          quality={quality}
+        />
       </article>
 
       <Footer />
