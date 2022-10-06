@@ -195,10 +195,7 @@ export const FilesUpload = () => {
 
           <p className={styles.error}>{!file && required && data?.NavForm?.validateRequired}</p>
 
-          <button
-            type="submit"
-            className={`button ${styles.button}`}
-            aria-label={data?.AnotherForm?.arialSendingFile}>
+          <button type="submit" className={`button ${styles.button}`} aria-label={data?.AnotherForm?.arialSendingFile}>
             {data?.AnotherForm?.send}
           </button>
 

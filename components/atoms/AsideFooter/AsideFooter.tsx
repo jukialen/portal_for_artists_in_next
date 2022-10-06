@@ -7,7 +7,7 @@ import { useHookSWR } from 'hooks/useHookSWR';
 import styles from './AsideFooter.module.scss';
 
 export const AsideFooter = () => {
-  const { asPath } = useRouter();
+  const { locale, asPath } = useRouter();
   const data = useHookSWR();
 
   const [isLanguage, setLanguage] = useState(false);
@@ -22,13 +22,13 @@ export const AsideFooter = () => {
         </Link>
       </div>
       <div>
-        <Link href="/privacy">
-          <a>{data?.Footer?.privacyPolice}</a>
-        </Link>
-      </div>
-      <div>
         <Link href="/contact">
           <a>{data?.Aside?.contact}</a>
+        </Link>
+      </div>{' '}
+      <div style={locale === 'jp' ? { fontSize: '.8rem' } : {}}>
+        <Link href="/privacy">
+          <a>{data?.Footer?.privacyPolice}</a>
         </Link>
       </div>
       <div>

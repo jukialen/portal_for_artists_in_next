@@ -4,6 +4,7 @@
   display: flex;
   text-align: center;
   flex-wrap: wrap;
+  margin-top: 2rem;
 
   div, .button {
     width: 8rem;
@@ -11,7 +12,7 @@
     color: inherit;
     margin: 0.5rem auto;
     border: 0;
-    font-size: 1rem;
+    font-size: .88rem;
     background-color: inherit;
     cursor: pointer;
   }

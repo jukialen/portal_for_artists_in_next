@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  QueryDocumentSnapshot,
-  startAfter,
-} from 'firebase/firestore';
+import { getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter } from 'firebase/firestore';
 
 import { groupRef } from 'references/referencesFirebase';
 
@@ -70,6 +63,7 @@ export default function List() {
   if (loading) {
     return null;
   }
+
   return (
     <section className={styles.container}>
       <div className={styles.container__section}>
