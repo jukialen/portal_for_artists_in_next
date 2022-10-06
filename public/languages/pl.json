@@ -67,7 +67,7 @@
     "termsOfUse": "Warunki korzystania",
     "privacyPolice": "Polityka prywatności",
     "faq": "FAQ",
-    "changeLanguage": "Zmiana języka"
+    "changeLanguage": "Język"
   },
   "App": {
     "lastDrawings": "Ostatnie rysunki",
@@ -285,6 +285,19 @@
     "title": "Usunięcie pliku",
     "deleting": "Usuwanie postu.",
     "deleted": "Usunięto post."
+  },
+  "Contact": {
+    "title": "Witaj! Cieszę się, że chcesz się ze mną skontaktować.",
+    "subTitleFirst": "Jeżeli chcesz przekazać opinię lub problem, wyślij formularz. Dzięki tym wiadomościom pomagasz mi ulepszyć serwis.",
+    "toFAQ": "Możesz również sprawdzić ",
+    "toFAQHere": "Często Zadawane Pytania (FAQ)",
+    "dot": ".",
+    "suggestion": "Sugestia",
+    "problem": "Problem",
+    "success": "E-mail został wysłany. Dziękuję za wiadomość. Najszybciej jak to będzie możliwe zajmę się problemem lub rozpatrzę sugestię.",
+    "fail": "E-mail nie został wysłany. Sprawdź połączenie z internetem.",
+    "titleInput": "Tytuł",
+    "message": "Wiadomość"
   },
   "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",

@@ -67,7 +67,7 @@
     "termsOfUse": "Terms of use",
     "privacyPolice": "Privacy police",
     "faq": "FAQ",
-    "changeLanguage": "Change language"
+    "changeLanguage": "Language"
   },
   "App": {
     "lastDrawings": "Last drawings",
@@ -285,6 +285,19 @@
     "title": "Delete the post",
     "deleting": "Deleting the post.",
     "deleted": "The post has deleted."
+  },
+  "Contact": {
+    "title": "Welcome! I enjoy that  you want to contact to me.",
+    "subTitleFirst": "If you want to give the opinion or a problem, send form. Thanks to these messages, you help me to improvement this service.",
+    "toFAQ": "You also can check ",
+    "toFAQHere": "Frequently Asked Questions",
+    "dot": ".",
+    "suggestion": "Suggestion",
+    "problem": "Problem",
+    "success": "E-mail was sent. I thank you for the message.  As soon as possible, I'll deal with the problem or consider the suggestion.",
+    "fail": "E-mail wasn't sent. Check your Internet connection.",
+    "titleInput": "Title",
+    "message": "Message"
   },
   "error": "Try again or check your internet connection.",
   "edit": "Edit",

@@ -1,11 +1,99 @@
-.container {
-  width: 100vw;
-  min-height: 87vh;
-  display: flex;
-  flex-direction: column;
+@use 'styles/variables' as *;
 
-  h2 {
-    margin: 2rem auto;
+.container {
+  width: 92%;
+  min-height: 87.8vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-content: space-evenly;
+  margin: -3rem auto 3rem;
+  gap: 2rem;
+
+  .welcomeContainer {
+    width: 100%;
+    max-width: 35rem;
+    align-content: space-evenly;
+    padding: 0 1rem;
+
+    .title {
+      margin: 2rem 0;
+    }
+
+    p:nth-of-type(2) {
+      margin-top: 1rem;
+    }
   }
 
+  .form, .form__dark {
+    width: 100%;
+    max-width: 29rem;
+    padding: 0 1rem;
+
+    input, textarea, button {
+      margin: 1rem 0;
+      border-color: $third__color;
+    }
+
+    .select, .select__dark {
+      color: $third__color;
+
+      .tags, .tags__error {
+        font-size: 1rem;
+        color: $dark__background__light__color;
+        border-color: $third__color;
+
+        &__error {
+          border-color: $required__color;
+        }
+
+        option {
+          background-color: $dark__color__light__back;
+        }
+      }
+
+      &__dark {
+        .tags, .tags__error {
+          //margin: .5rem auto;
+          font-size: 1rem;
+          border-color: $third__color;
+          color: $third__color;
+          background-color: $dark__background__light__color;
+
+          &__error {
+            border-color: $required__color;
+          }
+
+          option {
+            color: inherit;
+            background-color: inherit;
+          }
+        }
+      }
+    }
+
+    .button {
+      width: 6rem;
+      padding: .5rem 0;
+      border-radius: 0.5rem;
+      background-color: transparent;
+      cursor: pointer;
+      margin-left: .25rem;
+
+      &:hover {
+        background-color: $third__color;
+        color: $dark__color__light__back;
+      }
+    }
+  }
+
+  .form__dark {
+     input, textarea, button {
+      color: $third__color;
+    }
+  }
+
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+  }
 }

@@ -281,6 +281,19 @@
     "deleting": "掲示が消してます。",
     "deleted": "掲示が消しました。"
   },
+  "Contact": {
+    "title": "初めまして！連絡を入れたいのがうれしいです。",
+    "subTitleFirst": "もし、オピニオンか誤りが呉れたい、フォーマットが送りますくだし。 Thanks to these messages, you help me to improvement this service.",
+    "toFAQ": "You also can check ",
+    "toFAQHere": "Frequently Asked Questions",
+    "dot": "。",
+    "suggestion": "暗示",
+    "problem": "問題",
+    "success": "E-mail was sent. I thank you for the message.  As soon as possible, I'll deal with the problem or consider the suggestion.",
+    "fail": "E-mail wasn't sent. Check your Internet connection.",
+    "titleInput": "題",
+    "message": "メッセージ"
+  },
   "error": "Try again or check your internet connection.",
   "edit": "エディト",
   "cancel": "取り止める",
