@@ -17,11 +17,6 @@ export function Footer() {
   return (
     <footer className={styles.footer}>
       <button className={styles.button}>
-        <Link href="/contact">
-          <a>{data?.Aside?.contact}</a>
-        </Link>
-      </button>
-      <button className={styles.button}>
         <Link href="/terms">
           <a>{data?.Footer?.termsOfUse}</a>
         </Link>
@@ -29,6 +24,11 @@ export function Footer() {
       <button className={styles.button}>
         <Link href="/privacy">
           <a>{data?.Footer?.privacyPolice}</a>
+        </Link>
+      </button>
+      <button className={styles.button}>
+        <Link href="/contact">
+          <a>{data?.Aside?.contact}</a>
         </Link>
       </button>
       <button className={styles.button}>
