@@ -33,14 +33,14 @@ async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
       </html>`,
     };
 
-    // sgMail
-    //   .send(msg)
-    //   .then(() => {
-    //     console.log('Email sent');
-    //   })
-    //   .catch((e) => {
-    //     console.error('e', e);
-    //   });
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log('Email sent');
+      })
+      .catch((e) => {
+        console.error('e', e);
+      });
 
     //  @ts-ignore
   } catch (e: { statusCode: number; message: string }) {
