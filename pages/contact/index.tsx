@@ -97,7 +97,7 @@ export default function Contact() {
                   value={values.tags}
                   onChange={handleChange}
                   className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}
-                  placeholder={data?.chooseTag}>
+                  placeholder={data?.Contact?.chooseTitle}>
                   <option role="option" value={data?.Contact?.suggestion}>
                     {data?.Contact?.suggestion}
                   </option>
@@ -113,6 +113,7 @@ export default function Contact() {
                 name="title"
                 value={values.title}
                 onChange={handleChange}
+                className={!!errors.title && touched.title ? styles.titleInput__error : ''}
                 placeholder={data?.Contact?.titleInput}
               />
 
@@ -122,6 +123,7 @@ export default function Contact() {
                 name="message"
                 value={values.message}
                 onChange={handleChange}
+                className={!!errors.message && touched.message ? styles.message_error : ''}
                 placeholder={data?.Contact?.message}
               />
 
@@ -132,7 +134,7 @@ export default function Contact() {
                 type="submit"
                 variant="outline"
                 className={styles.button}
-                aria-label={data?.AnotherForm?.arialSendingFile}>
+                aria-label={data?.Contact?.ariaSend}>
                 {data?.AnotherForm?.send}
               </Button>
             </Form>

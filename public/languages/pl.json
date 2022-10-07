@@ -292,12 +292,14 @@
     "toFAQ": "Możesz również sprawdzić ",
     "toFAQHere": "Często Zadawane Pytania (FAQ)",
     "dot": ".",
+    "chooseTitle": "Wybierz temat",
     "suggestion": "Sugestia",
     "problem": "Problem",
     "success": "E-mail został wysłany. Dziękuję za wiadomość. Najszybciej jak to będzie możliwe zajmę się problemem lub rozpatrzę sugestię.",
     "fail": "E-mail nie został wysłany. Sprawdź połączenie z internetem.",
     "titleInput": "Tytuł",
-    "message": "Wiadomość"
+    "message": "Wiadomość",
+    "ariaSend": "przycisk do wysłania e-maila"
   },
   "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",

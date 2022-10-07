@@ -30,17 +30,28 @@
     max-width: 29rem;
     padding: 0 1rem;
 
+    select.tags, input, textarea {
+      &:hover {
+        border-color: rgba(79, 141, 255, .5);
+      }
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: $third__color;
+    }
+
     input, textarea, button {
       margin: 1rem 0;
       border-color: $third__color;
     }
 
     .select, .select__dark {
+      margin: 1rem 0;
       color: $third__color;
 
       .tags, .tags__error {
         font-size: 1rem;
-        color: $dark__background__light__color;
+        color: $third__color;
         border-color: $third__color;
 
         &__error {
@@ -54,7 +65,6 @@
 
       &__dark {
         .tags, .tags__error {
-          //margin: .5rem auto;
           font-size: 1rem;
           border-color: $third__color;
           color: $third__color;
@@ -70,6 +80,10 @@
           }
         }
       }
+    }
+
+    .titleInput__error, .message_error {
+      border-color: $required__color;
     }
 
     .button {

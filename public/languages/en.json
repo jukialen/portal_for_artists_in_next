@@ -292,12 +292,14 @@
     "toFAQ": "You also can check ",
     "toFAQHere": "Frequently Asked Questions",
     "dot": ".",
+    "chooseTitle": "Choose a title",
     "suggestion": "Suggestion",
     "problem": "Problem",
     "success": "E-mail was sent. I thank you for the message.  As soon as possible, I'll deal with the problem or consider the suggestion.",
     "fail": "E-mail wasn't sent. Check your Internet connection.",
     "titleInput": "Title",
-    "message": "Message"
+    "message": "Message",
+    "ariaSend": "button for sending a e-mail"
   },
   "error": "Try again or check your internet connection.",
   "edit": "Edit",
