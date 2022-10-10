@@ -2,6 +2,8 @@ import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { Accordion, Link } from '@chakra-ui/react';
 
+import { useHookSWR } from 'hooks/useHookSWR';
+
 import { StatusLoginContext } from 'providers/StatusLogin';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
@@ -14,18 +16,15 @@ import { ExternalLinkIcon } from '@chakra-ui/icons';
 export default function Faq() {
   const { isUser } = useContext(StatusLoginContext);
   const { asPath } = useRouter();
+  const data = useHookSWR();
 
-  const backgroundColor = '#2D3748';
-  const color = '#FFD068';
-  const m = '2rem 0';
+  const externalLink = '#4F8DFF !important';
 
   return (
     <>
       <div className={styles.container}>
         <HeadCom path={asPath} content="Faq site" />
-
-        <h2 className={styles.h2}>Częste pytania</h2>
-
+        <h2 className={styles.h2}>{data?.Contact?.toFAQHere}</h2>
         <Accordion
           defaultIndex={[0]}
           allowMultiple
@@ -34,48 +33,25 @@ export default function Faq() {
           justifyContent="space-around"
           alignSelf="center"
           m="2rem 0">
-          <FaqItems
-            textHead="Czy korzystanie z serwisu jest darmowe?"
-            textBody="Tak. Z serwisu można korzystać za darmo. Jednak aby skorzystać z dodatkowych korzyści,
-            należy wykupić plan Premium."
-            bcc={backgroundColor}
-            c={color}
-            m={m}
-          />
+          <FaqItems textHead={data?.FAQ?.head1} textBody={data?.FAQ?.body1} />
 
           <FaqItems
-            textHead="Jakie korzyści daje plan Premium?"
+            textHead={data?.FAQ?.head2}
             textBody={
               <div>
-                Plan Premium m. in. zapewnia priorytetowe wsparcie naszego wsparcia klienta oraz
-                brak reklam. Jeśli chcesz się więcej dowiedzieć, możesz dowiedzieć się{' '}
-                <Link href="#" color="#4F8DFF !important" isExternal>
-                  tutaj <ExternalLinkIcon mx="2px" color="#4F8DFF" />
+                {data?.FAQ?.body2}
+                <Link href="#" color={externalLink} isExternal>
+                  {data?.FAQ?.body2Link}
+                  <ExternalLinkIcon mx="2px" color={externalLink} />
                 </Link>
-                .
+                {data?.FAQ?.body2dot}
               </div>
             }
-            bcc={backgroundColor}
-            c={color}
-            m={m}
           />
 
-          <FaqItems
-            textHead="Czy wykupienie usługi Premium jest potrzebne do korzystania z serwisu?"
-            textBody="Nie jest potrzebne. Możesz korzystać z serwisu bez planu Premium."
-            bcc={backgroundColor}
-            c={color}
-            m={m}
-          />
+          <FaqItems textHead={data?.FAQ?.head3} textBody={data?.FAQ?.body3} />
 
-          <FaqItems
-            textHead="Jak mogę usunąć konto?"
-            textBody="Wystarczy, żę klikniesz w przycisk na dole strony swojego konta i zatwierdzisz wybór. Po zatwierdzeniu
-            rozpoczyna się usuwanie wszystkich twoich danych."
-            bcc={backgroundColor}
-            c={color}
-            m={m}
-          />
+          <FaqItems textHead={data?.FAQ?.head4} textBody={data?.FAQ?.body4} />
         </Accordion>
       </div>
       {!isUser && <Footer />}

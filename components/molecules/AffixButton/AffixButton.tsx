@@ -1,8 +1,7 @@
 import { MouseEventHandler, useState } from 'react';
+import { Affix, Button } from 'antd';
 
 import styles from './AffixButton.module.scss';
-
-import { Affix, Button } from 'antd';
 import { UpOutlined } from '@ant-design/icons';
 
 export const AffixButton = () => {
@@ -18,15 +17,13 @@ export const AffixButton = () => {
     }
   };
 
-  const setBootom: MouseEventHandler = () => {
-    setBottom(0);
-  };
+  const changeBottom: MouseEventHandler = () => setBottom(0);
 
   typeof window !== 'undefined' && window.addEventListener('scroll', toggleVisible);
 
   return (
     <Affix offsetBottom={bottom}>
-      <Button type="primary" href="#" onClick={setBootom}>
+      <Button type="primary" href="#" onClick={changeBottom}>
         <UpOutlined
           className={`${styles.up} ${visible && styles.up__active}`}
           aria-label="top of page button"

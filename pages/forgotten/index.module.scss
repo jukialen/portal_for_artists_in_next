@@ -1,22 +1,22 @@
 @use 'styles/variables' as *;
 
 .forgotten {
-  height: 75vh;
+  width: 30rem;
+  max-width: 94vw;
+  height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-self: center;
+  margin: -3rem auto 0;
 
   .borderContainer {
-    margin: auto;
     padding: 4rem 9% 3rem;
     box-shadow: 0 0 1.4rem $third__color;
     border-radius: 2rem;
-    width: 30rem;
-    max-width: 98vw;
 
     .title {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
     }
 
     .subtitle {
@@ -25,9 +25,9 @@
     }
 
     .inputForm, .inputForm__error {
-      display: block;
       width: 17rem;
       max-width: 90%;
+      display: block;
       margin: 1rem auto 1.5rem;
       color: $third__color;
     }
@@ -41,8 +41,9 @@
     }
 
     .submit__button {
-      width: 11rem;
+      width: 7rem;
       margin: 1rem auto;
+      padding: .5rem;
     }
   }
 

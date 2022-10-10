@@ -1,24 +1,25 @@
-import { ReactNode } from 'react';
-import {
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-} from '@chakra-ui/react';
+import { ReactNode, useContext } from 'react';
+import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
+
+import { ModeContext } from 'providers/ModeProvider';
 
 type FaqItemsType = {
   textHead: string;
   textBody: ReactNode;
-  bcc: string;
-  c: string;
-  m: string;
 };
-export const FaqItems = ({ textHead, textBody, bcc, c, m }: FaqItemsType) => {
+
+export const FaqItems = ({ textHead, textBody }: FaqItemsType) => {
+  const { isMode } = useContext(ModeContext);
+
+  const backgroundColor = 'transparent';
+  const color = isMode ? '#FFD068' : '#2D3748';
+  const borderColor = '#FFD068';
+  const m = '2rem 0';
+
   return (
-    <AccordionItem margin={m} backgroundColor={bcc} color={c}>
+    <AccordionItem margin={m} backgroundColor={backgroundColor} color={color}>
       <h2>
-        <AccordionButton color={c} borderColor={c}>
+        <AccordionButton textAlign="inherit" color={color} borderColor={borderColor}>
           <Box flex="1">{textHead}</Box>
           <AccordionIcon />
         </AccordionButton>
