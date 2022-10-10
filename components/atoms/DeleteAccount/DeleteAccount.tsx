@@ -19,6 +19,8 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  toast,
+  useToast,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import axios from 'axios';
@@ -28,6 +30,7 @@ export const DeleteAccount = () => {
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState<string>('');
   const cancelRef = useRef(null);
+  const toast = useToast();
 
   const { push } = useRouter();
   const data = useHookSWR();
@@ -43,19 +46,33 @@ export const DeleteAccount = () => {
     try {
       await onClose();
       await setDeleting(!deleting);
-      await deleteObject(profileUserRef);
+      // await deleteObject(profileUserRef);
       setValues('Usuwanie zdjęcia profilowego');
-      await deleteDoc(doc(db, userRef));
+      // await deleteDoc(doc(db, userRef));
       setValues(data?.progressDeletionUser);
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_PAGE}/api/sendgrid/deleteUser`, {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_PAGE}/api/deleteUser`, {
         email: user!.email,
         uid: user!.uid,
       });
       console.log(res);
-      await deleteUser(user);
+      console.log(res.request);
+      res.status === 200
+        ? toast({
+            description: data?.Contact?.success,
+            status: 'success',
+            variant: 'subtle',
+            duration: 9000,
+          })
+        : toast({
+            description: data?.Contact?.fail,
+            status: 'error',
+            variant: 'subtle',
+            duration: 9000,
+          });
+      // await deleteUser(user);
       await setDeleting(!deleting);
       setValues(data?.deletionUser);
-      await push('/');
+      // await push('/');
     } catch (e) {
       setValues(data?.error);
       console.error(e);

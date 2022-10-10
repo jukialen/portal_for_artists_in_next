@@ -301,6 +301,18 @@
     "message": "Wiadomość",
     "ariaSend": "przycisk do wysłania e-maila"
   },
+  "FAQ": {
+    "head1": "Czy korzystanie z serwisu jest darmowe?",
+    "body1": "Tak. Z serwisu można korzystać za darmo. Jednak aby skorzystać z dodatkowych korzyści, należy wykupić plan Premium.",
+    "head2": "Jakie korzyści daje plan Premium?",
+    "body2": "Plan Premium m. in. zapewnia wsparcie klienta oraz brak reklam. Więcej o planie Premium, możesz dowiedzieć się ",
+    "body2Link": "tutaj",
+    "body2dot": ".",
+    "head3": "Czy plan Premium jest potrzebny do korzystania z serwisu?",
+    "body3": "Nie jest potrzebny. Możesz korzystać z serwisu bez planu Premium.",
+    "head4": "Jak mogę usunąć konto?",
+    "body4": "Wystarczy, że na dole strony w pierwszej zakladce podstrony konta klikniesz w przycisk 'Usuń' i zatwierdzisz wybór. Po zatwierdzeniu rozpoczyna się usuwanie wszystkich twoich danych."
+  },
   "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",
   "cancel": "Anuluj",
