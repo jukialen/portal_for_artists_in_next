@@ -313,6 +313,14 @@
     "head4": "Jak mogę usunąć konto?",
     "body4": "Wystarczy, że na dole strony w pierwszej zakladce podstrony konta klikniesz w przycisk 'Usuń' i zatwierdzisz wybór. Po zatwierdzeniu rozpoczyna się usuwanie wszystkich twoich danych."
   },
+  "DeletionAccount": {
+    "button": "Usuń",
+    "title": "Usuń konto",
+    "body": "Jesteś pewien/pewna? Nie będziesz mógł/mogła tego cofnić.",
+    "cancel": "Cofnij",
+    "deletionProfilePhoto": "Usuwanie zdjęcia profilowego",
+    "deletionAccount": "Usuwanie konta"
+  },
   "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",
   "cancel": "Anuluj",

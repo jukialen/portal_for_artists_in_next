@@ -22,6 +22,8 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case data?.AnotherForm?.uploadFile:
       case data?.Account?.profile?.successSending:
         return (status = 'success');
+      case data?.DeletionAccount?.deletionProfilePhoto:
+      case data?.DeletionAccount?.deletionAccount:
       case data?.DeletionPost?.deleting:
       case data?.DeletionFile?.deleting:
       case 'Upload is running':
@@ -53,6 +55,8 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case data?.AnotherForm?.uploadFile:
       case data?.Account?.profile?.successSending:
         return (color = 'green');
+      case data?.DeletionAccount?.deletionProfilePhoto:
+      case data?.DeletionAccount?.deletionAccount:
       case data?.DeletionPost?.deleting:
       case data?.DeletionFile?.deleting:
       case 'Upload is running':

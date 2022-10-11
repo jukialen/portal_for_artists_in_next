@@ -1,16 +1,10 @@
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth, db, storage } from '../../../firebase';
-import { deleteUser } from '@firebase/auth';
+import { auth, storage } from '../../../firebase';
+import { deleteUser } from 'firebase/auth';
+import { deleteDoc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
-import { deleteDoc } from '@firebase/firestore';
-import { doc } from 'firebase/firestore';
-
-import { useHookSWR } from 'hooks/useHookSWR';
-
-import { Alerts } from 'components/atoms/Alerts/Alerts';
-
-import styles from './DeleteAccount.module.scss';
+import axios from 'axios';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -19,11 +13,17 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  toast,
   useToast,
 } from '@chakra-ui/react';
+
+import { useHookSWR } from 'hooks/useHookSWR';
+
+import { user } from 'references/referencesFirebase';
+
+import { Alerts } from 'components/atoms/Alerts/Alerts';
+
+import styles from './DeleteAccount.module.scss';
 import { DeleteIcon } from '@chakra-ui/icons';
-import axios from 'axios';
 
 export const DeleteAccount = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,10 +35,9 @@ export const DeleteAccount = () => {
   const { push } = useRouter();
   const data = useHookSWR();
 
-  const user = auth.currentUser!;
+  const currentUser = auth.currentUser!;
 
-  const profileUserRef = ref(storage, `profilePhotos/${user?.uid}/${user?.uid}`);
-  const userRef = `users/${user?.uid}`;
+  const profileUserRef = ref(storage, `profilePhotos/${currentUser?.uid}/${currentUser?.uid}`);
 
   const onClose = () => setIsOpen(false);
 
@@ -46,16 +45,15 @@ export const DeleteAccount = () => {
     try {
       await onClose();
       await setDeleting(!deleting);
-      // await deleteObject(profileUserRef);
-      setValues('Usuwanie zdjęcia profilowego');
-      // await deleteDoc(doc(db, userRef));
-      setValues(data?.progressDeletionUser);
+      await deleteObject(profileUserRef);
+      await setValues(data?.DeletionAccount?.deletionProfilePhoto);
+      await deleteDoc(user(currentUser?.uid));
+      await setValues(data?.DeletionAccount?.deletionAccount);
       const res = await axios.post(`${process.env.NEXT_PUBLIC_PAGE}/api/deleteUser`, {
-        email: user!.email,
-        uid: user!.uid,
+        email: currentUser!.email,
+        uid: currentUser!.uid,
       });
-      console.log(res);
-      console.log(res.request);
+      await setValues('');
       res.status === 200
         ? toast({
             description: data?.Contact?.success,
@@ -69,10 +67,9 @@ export const DeleteAccount = () => {
             variant: 'subtle',
             duration: 9000,
           });
-      // await deleteUser(user);
+      await deleteUser(currentUser);
       await setDeleting(!deleting);
-      setValues(data?.deletionUser);
-      // await push('/');
+      await push('/');
     } catch (e) {
       setValues(data?.error);
       console.error(e);
@@ -91,27 +88,24 @@ export const DeleteAccount = () => {
         w={145}
         m={4}
         onClick={() => setIsOpen(true)}>
-        Deletion
+        {data?.DeletionAccount?.button}
       </Button>
 
       <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
         <AlertDialogOverlay>
           <AlertDialogContent m="auto">
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete Account
+              {data?.DeletionAccount?.title}
             </AlertDialogHeader>
 
-            <AlertDialogBody>
-              {/* eslint-disable-next-line react/no-unescaped-entities */}
-              Are you sure? You can't undo this action afterwards.
-            </AlertDialogBody>
+            <AlertDialogBody>{data?.DeletionAccount?.body}</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} borderColor="gray.100" onClick={onClose}>
-                Cancel
+                {data?.DeletionAccount?.cancel}
               </Button>
               <Button colorScheme="red" borderColor="red.500" onClick={deletionUser} ml={3}>
-                Delete
+                {data?.DeletionAccount?.button}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

@@ -18,7 +18,7 @@ async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
         <head>
           <meta charset="utf-8">
           <title>User sent ${req.body.tags}</title>
-          <meta name="description" content="User snet ${req.body.tags}">
+          <meta name="description" content="User sent ${req.body.tags}">
           <meta name="author" content="jukialen">
           <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
           <link rel="stylesheet" href="css/styles.css?v=1.0">

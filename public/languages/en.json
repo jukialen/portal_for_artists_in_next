@@ -313,6 +313,14 @@
     "head4": "How can I delete my account?",
     "body4": "All you need to do is click in the 'Delete' button at the bottom of page in first bookmark of Account subpage and confirm your selection. After confirm, the deletion all your data begins."
   },
+  "DeletionAccount": {
+    "button": "Delete",
+    "title": "Delete the account",
+    "body": "Are you sure? You won't can undo this action afterwards.",
+    "cancel": "Cancel",
+    "deletionProfilePhoto": "Deleting your profile photo",
+    "deletionAccount": "Deleting the account"
+  },
   "error": "Try again or check your internet connection.",
   "edit": "Edit",
   "cancel": "Cancel",
