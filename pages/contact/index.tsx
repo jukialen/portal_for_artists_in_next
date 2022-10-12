@@ -70,7 +70,7 @@ export default function Contact() {
   };
 
   return (
-    <>
+    <div className={isUser ? styles.site__without__footer : styles.site}>
       <HeadCom path={asPath} content="Site for contact to me." />
 
       <div className={styles.container}>
@@ -141,8 +141,7 @@ export default function Contact() {
           )}
         </Formik>
       </div>
-
       {!isUser && <Footer />}
-    </>
+    </div>
   );
 }

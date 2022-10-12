@@ -21,7 +21,7 @@ export default function Faq() {
   const externalLink = '#4F8DFF !important';
 
   return (
-    <>
+    <div className={styles.site}>
       <div className={styles.container}>
         <HeadCom path={asPath} content="Faq site" />
         <h2 className={styles.h2}>{data?.Contact?.toFAQHere}</h2>
@@ -55,6 +55,6 @@ export default function Faq() {
         </Accordion>
       </div>
       {!isUser && <Footer />}
-    </>
+    </div>
   );
 }
