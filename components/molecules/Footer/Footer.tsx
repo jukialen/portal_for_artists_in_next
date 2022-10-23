@@ -28,12 +28,17 @@ export function Footer() {
       </button>
       <button className={styles.button}>
         <Link href="/contact">
-          <a>{data?.Aside?.contact}</a>
+          <a>{data?.Footer?.contact}</a>
         </Link>
       </button>
       <button className={styles.button}>
         <Link href="/faq">
           <a>{data?.Footer?.faq}</a>
+        </Link>
+      </button>
+      <button className={styles.button}>
+        <Link href="/pricing">
+          <a>{data?.Footer?.pricing}</a>
         </Link>
       </button>
       <button className={styles.button} onClick={showLanguages}>

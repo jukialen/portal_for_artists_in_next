@@ -23,7 +23,7 @@ export const AsideFooter = () => {
       </div>
       <div>
         <Link href="/contact">
-          <a>{data?.Aside?.contact}</a>
+          <a>{data?.Footer?.contact}</a>
         </Link>
       </div>{' '}
       <div style={locale === 'jp' ? { fontSize: '.8rem' } : {}}>
@@ -34,6 +34,11 @@ export const AsideFooter = () => {
       <div>
         <Link href="/faq">
           <a>{data?.Footer?.faq}</a>
+        </Link>
+      </div>
+      <div>
+        <Link href="/pricing">
+          <a>{data?.Footer?.pricing}</a>
         </Link>
       </div>
       <button className={styles.button} onClick={showLanguages}>

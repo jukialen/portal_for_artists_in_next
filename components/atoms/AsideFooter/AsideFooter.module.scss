@@ -18,17 +18,18 @@
   }
 
   .button {
-    width: auto;
-
     .languages {
-      width: 100%;
+      width: fit-content;
+      height: 0;
       display: flex;
+      flex-direction: column;
+      gap: .4rem;
       position: relative;
       font-size: 1.2rem;
-      bottom: 4rem;
+      bottom: 6.85rem;
+      right: 4.8rem;
       opacity: 0;
       visibility: hidden;
-      margin: 0 auto;
 
       &__version {
         display: inline-flex;
@@ -40,10 +41,15 @@
       }
 
       &__active {
-        height: 2rem;
         opacity: 1;
         visibility: visible;
         transition: opacity .5s ease-in-out, visibility .5s ease-in-out;
+      }
+
+      @media (max-width: 284px) {
+        right: 0;
+        bottom: 9rem;
+        margin: auto;
       }
     }
   }

@@ -18,16 +18,17 @@
     color: $another__color;
 
     .languages {
+      width: fit-content;
       height: 0;
       display: flex;
+      flex-direction: column;
+      gap: .4rem;
       position: relative;
+      bottom: 6.5rem;
+      right: 3rem;
       font-size: 1.2rem;
-      bottom: 4rem;
-      right: 10vw;
       opacity: 0;
       visibility: hidden;
-      width: fit-content;
-      margin: 0 auto;
 
       &__version {
         display: inline-flex;
@@ -39,34 +40,22 @@
       }
 
       &__active {
-        height: 2rem;
         opacity: 1;
         visibility: visible;
         transition: opacity .5s ease-in-out, visibility .5s ease-in-out;
       }
-    }
 
-    @media (min-width: 496px) {
-      .languages { right: 7vw }
+      @media (max-width: 319px) {
+        right: 0;
+        bottom: 9rem;
+        margin: auto;
+      }
     }
-    @media (min-width: 800px) and (max-width: 935px) {
-      .languages { right: 10vw }
-    }
-
-    @media (min-width: 1091px) {
-      .languages { right: 6vw }
-    }
-
-    @media (min-width: 1202px) {
-      .languages { right: 4rem }
-    }
-
-    @media (min-width: 1292px) {
-      .languages { right: 3vw }
-    }
-
-    @media (min-width: 1900px) {
-      .languages { right: 2vw }
-    }
+  }
+  
+  @media (min-width: 640px) and (max-width: 959px)  {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr;
   }
 }

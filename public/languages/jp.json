@@ -59,13 +59,13 @@
     "friends": "フェイバリットの友達",
     "groups": "フェイバリットの団体",
     "addingGroup": "団体が増設",
-    "contact": "連絡",
     "photos": "フォト"
   },
   "Footer": {
-    "authors": "原著者",
     "termsOfUse": "利用条件",
     "privacyPolice": "プライバシーポリシー",
+    "contact": "連絡",
+    "pricing": "値付け",
     "faq": "FAQ",
     "changeLanguage": "言語"
   },
@@ -89,11 +89,19 @@
       "currentPlan": "現在の計画",
       "changeButton": " 変わります",
       "actualEmail": "現在のメール",
-      "changeEmail": "メールが 変わります",
+      "changeEmail": "メールが変わります",
       "currentPassword": "現在のパスポート入ります",
       "newPassword": "新しいパスポートが入ります",
       "againNewPassword": "新しいパスポートが繰り返します",
-      "changePassword": "パスポートが 変わります"
+      "changePassword": "パスポートが 変わります",
+      "Premium": {
+        "header": "サブスクリプションが変わります",
+        "select__error": "プランが選びませんでした。",
+        "body": "計画を知る様に、この ",
+        "bodyLink": "リンク",
+        "bodyDot": "がクリックします。",
+        "update": "アップデート"
+      }
     },
     "gallery": {
       "userPhotosTitle": "貴職の写真と素描",
@@ -301,7 +309,7 @@
     "body1": "はい、無料です。然しながら、もし、追加的の余沢が投じりたいだったら、プレミアムの計は購入です。",
     "head2": "プレミアムの計が何余沢上げりますか。",
     "body2": "プレミアムの計が取り分け取引先の支援と広告はないのは設ける。 もっとプレミアムの計を、",
-    "body2Link": "今",
+    "body2Link": "ヘレ",
     "body2dot": "、知れます。",
     "head3": "プレミアムの計が使わなければなりませんか。",
     "body3": "いいえ、使わなければなりませんでした。無しプレミアムの計が使えます。",
@@ -315,6 +323,27 @@
     "cancel": "取り消します",
     "deletionProfilePhoto": "フォトのプロフィールが消してます。",
     "deletionAccount": "アカウントが消してます。"
+  },
+  "Pricing": {
+    "title": "Pfartistsのプラン",
+    "subTitle": "最適なプランをお選びください",
+    "period": "/月例",
+    "grLength": "無制限のグラフィックスのファイル＊",
+    "animLength": "無制限のアニメーション＊",
+    "vidLength": "無制限の映画＊",
+    "grAnimSize": "グラフィックファイルとアニメーションは1MBまで。",
+    "grAnimSizeP": "グラフィックファイルとアニメーションは3MBまで。",
+    "grAnimSizeG": "グラフィックファイルとアニメーションはMBまで。",
+    "vidSize": "動画サイズ15MBまで",
+    "vidSizeP": "動画サイズ50MBまで",
+    "vidSizeG": "動画サイズ200MBまで",
+    "noAds": "広告がありません",
+    "support": "補助の取引先＊＊",
+    "pSupport": "先決の補助の取引先＊＊＊",
+    "choosePlan": "プランが選ぶ",
+    "formats": "＊対応フォーマット： ",
+    "supInfo": "＊＊四営業日以内にメールにてご連絡ください。",
+    "pSupInfo": "＊＊＊二営業日以内にメールにてご連絡ください。さらにSlackにアクセス。"
   },
   "error": "遣り返すかインターネット接続が見えてください。",
   "edit": "エディト",

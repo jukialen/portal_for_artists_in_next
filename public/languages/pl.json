@@ -59,14 +59,14 @@
     "friends": "Ulubieni znajomi",
     "groups": "Ulubione grupy",
     "addingGroup": "Dodaj grupę",
-    "contact": "Kontakt",
     "photos": "Zdjęcia"
   },
   "Footer": {
-    "authors": "Autorzy",
     "termsOfUse": "Warunki korzystania",
     "privacyPolice": "Polityka prywatności",
+    "contact": "Kontakt",
     "faq": "FAQ",
+    "pricing": "Cennik",
     "changeLanguage": "Język"
   },
   "App": {
@@ -93,7 +93,15 @@
       "currentPassword": "Wpisz aktualne hasło",
       "newPassword": "Wpisz nowe hasło",
       "againNewPassword": "Powtórz nowe hasło",
-      "changePassword": "Zmień hasło"
+      "changePassword": "Zmień hasło",
+      "Premium": {
+        "header": "Zmień subskrypcję",
+        "select__error": "Nie wybrałaś/eś planu.",
+        "body": "Aby dowiedzieć się o planach, kliknij ten ",
+        "bodyLink": "link",
+        "bodyDot": ".",
+        "update": "Aktualizuj"
+      }
     },
     "gallery": {
       "userPhotosTitle": "Twoje zdjęcia i rysunki",
@@ -320,6 +328,27 @@
     "cancel": "Cofnij",
     "deletionProfilePhoto": "Usuwanie zdjęcia profilowego",
     "deletionAccount": "Usuwanie konta"
+  },
+  "Pricing": {
+    "title": "Pfartists plany",
+    "subTitle": "Wybierz plan który jest najlepszy dla ciebie",
+    "period": "/MIESIĘCZNIE",
+    "grLength": "Nielimitowana ilość plików graficznych*",
+    "animLength": "Nielimitowana ilość animacji*",
+    "vidLength": "Nielimitowana ilość filmóœ*",
+    "grAnimSize": "Pliki graficzne i animacje do 1 MB",
+    "grAnimSizeP": "Pliki graficzne i animacje do 3MB",
+    "grAnimSizeG": "Pliki graficzne i animacje do 5MB",
+    "vidSize": "Filmy do 15MB",
+    "vidSizeP": "Filmy do 50MB",
+    "vidSizeG": "Filmy do 200MB",
+    "noAds": "brak reklam",
+    "support": "Wsparcie klienta**",
+    "pSupport": "Priorytetowe wsparcie klienta***",
+    "choosePlan": "Wybierz plan",
+    "formats": "* wspierane formaty: ",
+    "supInfo": "** kontakt przez e-mail w ciągu 4 dni roboczych",
+    "pSupInfo": "*** kontakt przez emailw ciągu 2 dni roboczych. Dodatkowo dostęp do grupy na Slacku"
   },
   "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",

@@ -40,7 +40,7 @@ export default function Faq() {
             textBody={
               <div>
                 {data?.FAQ?.body2}
-                <Link href="#" color={externalLink} isExternal>
+                <Link href="/pricing" color={externalLink} isExternal>
                   {data?.FAQ?.body2Link}
                   <ExternalLinkIcon mx="2px" color={externalLink} />
                 </Link>

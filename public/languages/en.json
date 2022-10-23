@@ -59,13 +59,13 @@
     "friends": "Favorite friends",
     "groups": "Favorite groups",
     "addingGroup": "Adding a group",
-    "contact": "Contact",
     "photos": "Photos"
   },
   "Footer": {
-    "authors": "Authors",
     "termsOfUse": "Terms of use",
     "privacyPolice": "Privacy police",
+    "contact": "Contact",
+    "pricing": "Pricing",
     "faq": "FAQ",
     "changeLanguage": "Language"
   },
@@ -93,7 +93,15 @@
       "currentPassword": "Enter current password",
       "newPassword": "Enter new password",
       "againNewPassword": "Repeat new password",
-      "changePassword": "Change password"
+      "changePassword": "Change password",
+      "Premium": {
+        "header": "Change a subscription",
+        "select__error": "You didn't choose plan.",
+        "body": "To learn about plans, click this ",
+        "bodyLink": "link",
+        "bodyDot": ".",
+        "update": "Update"
+      }
     },
     "gallery": {
       "userPhotosTitle": "Your photos and draws",
@@ -194,7 +202,7 @@
       "all": "These are already all groups."
     },
     "noGroups": "No favorite group",
-    "noPermission": "In order can to see a posts, you need to join to the group."
+    "noPermission": "In order to can see a posts, you need to join to the group."
   },
   "Friends": {
     "add": "Add to friends",
@@ -320,6 +328,27 @@
     "cancel": "Cancel",
     "deletionProfilePhoto": "Deleting your profile photo",
     "deletionAccount": "Deleting the account"
+  },
+  "Pricing": {
+    "title": "Pfartists plans",
+    "subTitle": "Choose plan, which is the best for you",
+    "period": "/MONTHLY",
+    "grLength": "Unlimited graphics files*",
+    "animLength": "Unlimited animations*",
+    "vidLength": "Unlimited videos*",
+    "grAnimSize": "Graphics files and animations size up 1 MB",
+    "grAnimSizeP": "Graphics files and animations size up 3MB",
+    "grAnimSizeG": "Graphics files and animations size up 5MB",
+    "vidSize": "Videos size up 15 MB",
+    "vidSizeP": "Videos size up 50MB",
+    "vidSizeG": "Videos size up 200MB",
+    "noAds": "No ads",
+    "support": "Client support**",
+    "pSupport": "Priority Client support***",
+    "choosePlan": "Choose Plan",
+    "formats": "* supported formats: ",
+    "supInfo": "** contact through e-mail within 4 working days",
+    "pSupInfo": "*** contact through e-mail within 2 working days. Additionally access to Slack."
   },
   "error": "Try again or check your internet connection.",
   "edit": "Edit",
