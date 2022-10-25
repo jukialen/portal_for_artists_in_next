@@ -1,17 +1,18 @@
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Button } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
+import { NavFormProvider } from 'providers/NavFormProvider';
 import { StatusLoginContext } from 'providers/StatusLogin';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
+import { ChoosePlanPriButton } from 'components/atoms/ChoosePlanPriButton/ChoosePlanPriButton';
 import { Footer } from 'components/molecules/Footer/Footer';
 
 import styles from './index.module.scss';
-import { ArrowForwardIcon, CheckIcon } from '@chakra-ui/icons';
+import { CheckIcon } from '@chakra-ui/icons';
 
 export default function Pricing() {
   const { isUser } = useContext(StatusLoginContext);
@@ -19,7 +20,7 @@ export default function Pricing() {
   const { asPath } = useRouter();
 
   return (
-    <>
+    <NavFormProvider>
       <HeadCom path={asPath} content="Pricing site" />
       <div className={styles.container}>
         <h2 className={styles.title}>{data?.Pricing?.title}</h2>
@@ -60,13 +61,9 @@ export default function Pricing() {
                   </li>
                 </ul>
               </div>
-              <Button
-                colorScheme="whiteAlpha"
-                iconSpacing={20}
-                rightIcon={<ArrowForwardIcon />}
-                className={styles.choosePlan}>
-                {data?.Pricing?.choosePlan}
-              </Button>
+              <div className={styles.choosePlan}>
+                <ChoosePlanPriButton />
+              </div>
             </div>
             <div className={styles.box}>
               <h3 className={styles.box__title}>PREMIUM</h3>
@@ -106,13 +103,9 @@ export default function Pricing() {
                   </li>
                 </ul>
               </div>
-              <Button
-                colorScheme="whiteAlpha"
-                iconSpacing={20}
-                rightIcon={<ArrowForwardIcon />}
-                className={styles.choosePlan}>
-                {data?.Pricing?.choosePlan}
-              </Button>
+              <div className={styles.chooseSecondPlan}>
+                <ChoosePlanPriButton />
+              </div>
             </div>
             <div className={styles.box}>
               <h3 className={styles.box__title}>GOLD</h3>
@@ -152,13 +145,9 @@ export default function Pricing() {
                   </li>
                 </ul>
               </div>
-              <Button
-                colorScheme="whiteAlpha"
-                iconSpacing={20}
-                rightIcon={<ArrowForwardIcon />}
-                className={styles.choosePlan}>
-                {data?.Pricing?.choosePlan}
-              </Button>
+              <div className={styles.choosePlan}>
+                <ChoosePlanPriButton />
+              </div>
             </div>
           </div>
           <div className={styles.toFaq}>
@@ -180,6 +169,6 @@ export default function Pricing() {
         </div>
         {!isUser && <Footer />}
       </div>
-    </>
+    </NavFormProvider>
   );
 }
