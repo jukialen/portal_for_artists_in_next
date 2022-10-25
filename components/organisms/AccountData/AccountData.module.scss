@@ -73,10 +73,12 @@ section.subscription, section.subscription__dark {
 
     select {
       border-color: $third__color;
+      cursor: pointer;
     }
+
     &__error {
       color: $required__color;
-      margin: -1rem 0 .5rem;
+      margin-bottom: .5rem;
     }
 
     .req__error {
@@ -111,8 +113,22 @@ section.subscription, section.subscription__dark {
     }
   }
 
-  .message a {
+  .message {
+    margin: 1rem 0 2rem;
+
+    a {
     text-decoration: underline $third__color;
+    }
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -.5rem;
+
+    button {
+      border-color: transparent;
+    }
   }
 
   footer {

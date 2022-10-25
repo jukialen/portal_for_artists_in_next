@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { getAuth, updateEmail, updatePassword } from 'firebase/auth';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -12,7 +12,6 @@ import {
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
-  PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
   Portal,
@@ -29,9 +28,15 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './AccountData.module.scss';
 import Link from 'next/link';
+import { getDoc, setDoc } from 'firebase/firestore';
+import { user } from 'references/referencesFirebase';
 
 const initialValues = {
   email: '',
+};
+
+const initialPlan = {
+  plan: '',
 };
 
 const initialValuesPass = {
@@ -44,24 +49,42 @@ type ResetPassword = {
   repeatNewPassword: string;
 };
 
+type SubscriptionType = {
+  plan: string;
+};
+
 export const AccountData = ({ data }: DataType) => {
   const [valuesFields, setValuesFields] = useState<string>('');
   const [valuesFieldsPass, setValuesFieldsPass] = useState<string>('');
-  const [subscriptionPlan, setSubscriptionPlan] = useState<'FREE' | 'PREMIUM' | 'GOLD'>('FREE');
-  const [plan, setPlan] = useState<'FREE' | 'PREMIUM' | 'GOLD'>();
-  const [reqVal, setReqVal] = useState(false);
+  const [subscriptionPlan, setSubscriptionPlan] = useState('FREE');
   const { onOpen, onClose, isOpen } = useDisclosure();
-
   const { isMode } = useContext(ModeContext);
 
   const auth = getAuth();
   auth.useDeviceLanguage();
-  const user = auth.currentUser!;
+  const currentUser = auth.currentUser!;
 
   const schemaValidation = Yup.object({
     newPassword: SchemaValidation().password,
     repeatNewPassword: SchemaValidation().password,
   });
+
+  const schemaSubscription = Yup.object({
+    plan: SchemaValidation().tags,
+  });
+
+  const getPlan = async () => {
+    try {
+      const docSnap = await getDoc(user(currentUser.uid));
+
+      docSnap.exists() ? setSubscriptionPlan(docSnap.data().plan) : console.log('No plan!');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  useEffect(() => {
+    !!currentUser && getPlan();
+  }, [currentUser]);
 
   const update__email = async ({ email }: UserDataType, { resetForm }: FormType) => {
     try {
@@ -81,7 +104,7 @@ export const AccountData = ({ data }: DataType) => {
         return;
       }
 
-      await updatePassword(user, newPassword);
+      await updatePassword(currentUser, newPassword);
       resetForm(initialValues);
       setValuesFieldsPass(data?.PasswordAccount?.success);
     } catch (e) {
@@ -90,25 +113,14 @@ export const AccountData = ({ data }: DataType) => {
     }
   };
 
-  const changeSubVal = (e: ChangeEvent<HTMLSelectElement> & { target: { value: 'FREE' | 'PREMIUM' | 'GOLD' } }) => {
-    console.log(plan);
-    console.log(e.target.value);
-    e.target.value === undefined ? setReqVal(true) : setReqVal(false);
-    e.target.value !== undefined && setPlan(e.target.value);
-    console.log('after', plan);
-  };
-
-  const changeSubscription = () => {
+  const changeSubscription = async ({ plan }: SubscriptionType, { resetForm }: FormType) => {
     try {
       if (plan !== undefined) {
-        setReqVal(false);
-        !reqVal && setSubscriptionPlan(plan);
-        !reqVal && onClose();
-      } else {
-        setReqVal(true);
+        await setDoc(user(currentUser.uid), { plan }, { merge: true });
+        await setSubscriptionPlan(plan!);
+        await resetForm(initialPlan);
+        await onClose();
       }
-      console.log(plan);
-      console.log(reqVal);
     } catch (e) {
       console.error(e);
     }
@@ -141,38 +153,57 @@ export const AccountData = ({ data }: DataType) => {
               <PopoverCloseButton className={styles.closeButton} />
               <PopoverBody>
                 <div className={isMode ? styles.selectSub__dark : styles.selectSub}>
-                  <Select
-                    required={plan === undefined}
-                    placeholder={data?.Pricing?.choosePlan}
-                    onChange={changeSubVal}
-                    className={reqVal ? styles.req__error : ''}>
-                    <option value="FREE">FREE</option>
-                    <option value="PREMIUM">PREMIUM</option>
-                    <option value="GOLD">GOLD</option>
-                  </Select>
+                  <Formik
+                    initialValues={initialPlan}
+                    validationSchema={schemaSubscription}
+                    onSubmit={changeSubscription}>
+                    {({ values, handleChange, errors, touched }) => (
+                      <Form>
+                        <Select
+                          name="plan"
+                          value={values.plan}
+                          onChange={handleChange}
+                          focusBorderColor={touched.plan && !!errors.plan ? 'red.500' : 'blue.500'}
+                          className={touched.plan && !!errors.plan ? styles.req__error : ''}>
+                          <option role="option" value="">
+                            {data?.Pricing?.choosePlan}
+                          </option>
+                          <option role="option" value="FREE">
+                            FREE
+                          </option>
+                          <option role="option" value="PREMIUM">
+                            PREMIUM
+                          </option>
+                          <option role="option" value="GOLD">
+                            GOLD
+                          </option>
+                        </Select>
+                        {touched.plan && !!errors.plan && (
+                          <p className={styles.selectSub__error}>{data?.Account?.aData?.Premium?.select__error}</p>
+                        )}
+                        <p className={styles.message}>
+                          {data?.Account?.aData?.Premium?.body}
+                          <Link href="/pricing">
+                            <a>{data?.Account?.aData?.Premium?.bodyLink}</a>
+                          </Link>
+                          {data?.Account?.aData?.Premium?.bodyDot}
+                        </p>
+                        <ButtonGroup size="sm" className={styles.buttonContainer}>
+                          <Button
+                            variant="ghost"
+                            _hover={{ backgroundColor: isMode ? 'gray.600' : 'gray.100' }}
+                            onClick={onClose}>
+                            {data?.cancel}
+                          </Button>
+                          <Button type="submit" colorScheme="blue">
+                            {data?.Account?.aData?.Premium?.update}
+                          </Button>
+                        </ButtonGroup>
+                      </Form>
+                    )}
+                  </Formik>
                 </div>
-                {reqVal && <p className={styles.selectSub__error}>{data?.Account?.aData?.Premium?.select__error}</p>}
-                <p className={styles.message}>
-                  {data?.Account?.aData?.Premium?.body}
-                  <Link href="/pricing">
-                    <a>{data?.Account?.aData?.Premium?.bodyLink}</a>
-                  </Link>
-                  {data?.Account?.aData?.Premium?.bodyDot}
-                </p>
               </PopoverBody>
-              <PopoverFooter>
-                <ButtonGroup size="sm">
-                  <Button
-                    variant="ghost"
-                    _hover={{ backgroundColor: isMode ? 'gray.600' : 'gray.100' }}
-                    onClick={onClose}>
-                    {data?.cancel}
-                  </Button>
-                  <Button colorScheme="blue" onClick={changeSubscription}>
-                    {data?.Account?.aData?.Premium?.update}
-                  </Button>
-                </ButtonGroup>
-              </PopoverFooter>
             </PopoverContent>
           </Portal>
         </Popover>
