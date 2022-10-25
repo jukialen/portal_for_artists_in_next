@@ -1,14 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { auth } from '../../../firebase';
-import {
-  arrayRemove,
-  arrayUnion,
-  deleteDoc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
+import { arrayRemove, arrayUnion, deleteDoc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -106,17 +98,9 @@ export const OptionsComments = ({
 
   const toggleLike = async () => {
     if (like) {
-      await setDoc(
-        refDelCom!,
-        { likes: (likeCount -= 1), liked: arrayRemove(currentUser) },
-        { merge: true },
-      );
+      await setDoc(refDelCom!, { likes: (likeCount -= 1), liked: arrayRemove(currentUser) }, { merge: true });
     } else {
-      await setDoc(
-        refDelCom!,
-        { likes: (likeCount += 1), liked: arrayUnion(currentUser) },
-        { merge: true },
-      );
+      await setDoc(refDelCom!, { likes: (likeCount += 1), liked: arrayUnion(currentUser) }, { merge: true });
     }
     setLikeCount(like ? (likeCount -= 1) : (likeCount += 1));
     setLike(!like);
@@ -138,14 +122,7 @@ export const OptionsComments = ({
             await deleteDoc(
               groupSource
                 ? docLastPostsComments(nameGroup!, idPost!, idComment!, idSubComment!, doc.id)
-                : docLastFilesComment(
-                    userId!,
-                    subCollection!,
-                    idPost!,
-                    idComment!,
-                    idSubComment!,
-                    doc.id,
-                  ),
+                : docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, doc.id),
             );
           }
         }
@@ -174,14 +151,7 @@ export const OptionsComments = ({
               await deleteDoc(
                 groupSource
                   ? docLastPostsComments(nameGroup!, idPost!, docSnap.id, doc.id, doc2.id)
-                  : docLastFilesComment(
-                      userId!,
-                      subCollection!,
-                      idPost!,
-                      idComment!,
-                      idSubComment!,
-                      doc2.id,
-                    ),
+                  : docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, doc2.id),
               );
             }
             await deleteDoc(
@@ -243,17 +213,10 @@ export const OptionsComments = ({
               />
               {moreOptions && (
                 <div className={styles.more}>
-                  <Button
-                    variant="ghost"
-                    colorScheme="red"
-                    className={styles.delete}
-                    onClick={() => setOpen(!open)}>
+                  <Button variant="ghost" colorScheme="red" className={styles.delete} onClick={() => setOpen(!open)}>
                     {data?.DeletionFile?.deleteButton}
                   </Button>
-                  <Button
-                    variant="link"
-                    className={styles.edit}
-                    onClick={() => setOpenEdit(!openEdit)}>
+                  <Button variant="link" className={styles.edit} onClick={() => setOpenEdit(!openEdit)}>
                     {data?.edit}
                   </Button>
                 </div>
@@ -271,11 +234,7 @@ export const OptionsComments = ({
                       <Button ref={cancelRef} borderColor="gray.100" onClick={onClose}>
                         {data?.DeletionFile?.cancelButton}
                       </Button>
-                      <Button
-                        colorScheme="red"
-                        borderColor="red.500"
-                        onClick={deleteComment}
-                        ml={3}>
+                      <Button colorScheme="red" borderColor="red.500" onClick={deleteComment} ml={3}>
                         {data?.DeletionFile?.deleteButton}
                       </Button>
                     </AlertDialogFooter>
@@ -283,26 +242,15 @@ export const OptionsComments = ({
                 </AlertDialogOverlay>
               </AlertDialog>
 
-              <AlertDialog
-                isOpen={openEdit}
-                leastDestructiveRef={cancelEditRef}
-                onClose={onCloseEdit}>
+              <AlertDialog isOpen={openEdit} leastDestructiveRef={cancelEditRef} onClose={onCloseEdit}>
                 <AlertDialogOverlay>
-                  <AlertDialogContent
-                    m="auto"
-                    backgroundColor={`${isMode ? '#2D3748' : '#f7f7f7'}`}>
-                    <AlertDialogHeader
-                      fontSize="lg"
-                      fontWeight="bold"
-                      color={`${isMode ? '#f7f7f7' : '#2D3748'}`}>
+                  <AlertDialogContent m="auto" backgroundColor={`${isMode ? '#2D3748' : '#f7f7f7'}`}>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold" color={`${isMode ? '#f7f7f7' : '#2D3748'}`}>
                       {data?.Comments?.updateTitle}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
-                      <Formik
-                        initialValues={initialValues}
-                        validationSchema={schemaNew}
-                        onSubmit={updateComment}>
+                      <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={updateComment}>
                         {({ values, handleChange }) => (
                           <Form>
                             <div
@@ -336,7 +284,6 @@ export const OptionsComments = ({
                                 display="flex"
                                 backgroundColor="#4F8DFF"
                                 borderColor="#4F8DFF"
-                                // margin='1rem 2rem'
                                 cursor="pointer">
                                 {data?.Comments?.updateButton}
                               </Button>
@@ -346,9 +293,7 @@ export const OptionsComments = ({
                                 backgroundColor="gray.300"
                                 borderColor="gray.300"
                                 onClick={onCloseEdit}
-                                cursor="pointer"
-                                // margin='1rem 0 1rem 2rem'
-                              >
+                                cursor="pointer">
                                 {data?.DeletionFile?.cancelButton}
                               </Button>
                             </div>
