@@ -13,21 +13,14 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
 
 export const ChoosePlanPriButton = () => {
   const { isUser } = useContext(StatusLoginContext);
-  const data = useHookSWR();
-  const { replace } = useRouter();
+  const { showLoginForm, showCreateForm } = useContext(NavFormContext);
   const [open, setOpen] = useState(false);
+  const { replace } = useRouter();
 
-  const { isLogin, showLoginForm, showCreateForm } = useContext(NavFormContext);
+  const data = useHookSWR();
   const currentUser = auth.currentUser?.uid;
 
-  const changePlan = () => {
-    isUser ? replace(`/account/${currentUser}`) : setOpen(!open);
-  };
-
-  const openLogin = () => {
-    console.log(isLogin);
-    showLoginForm();
-  };
+  const changePlan = () => (isUser ? replace(`/account/${currentUser}`) : setOpen(!open));
 
   return (
     <>
@@ -37,11 +30,11 @@ export const ChoosePlanPriButton = () => {
         rightIcon={<ArrowForwardIcon />}
         className={styles.choosePlan}
         onClick={changePlan}>
-        {data?.Pricing?.choosePlan}
+        {data?.Plans?.choosePlan}
       </Button>
       <div className={open ? styles.openButton : styles.hideButton}>
         <div className={styles.noUsersPlan}>
-          <Button colorScheme="whiteAlpha" onClick={openLogin}>
+          <Button colorScheme="whiteAlpha" onClick={showLoginForm}>
             {data?.Nav?.signIn}
           </Button>
           <Button colorScheme="whiteAlpha" onClick={showCreateForm}>
