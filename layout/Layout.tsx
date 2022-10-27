@@ -29,29 +29,28 @@ export const Layout = ({ children }: ChildrenType) => {
   return (
     <ChakraProvider resetCSS={false}>
       <div className={`${styles.whole__page} ${isMode ? 'dark' : ''}`}>
-        <ShowMenuProvider>
-          {isUser ? (
-            <>
+        <NavFormProvider>
+          <ShowMenuProvider>
+            {isUser ? (
               <Header titleFirstNav={data?.Nav?.signOut} titleSecondNav={data?.Nav?.account} logoLink="/app" />
-            </>
-          ) : (
-            <NavFormProvider>
-              <Header titleFirstNav={data?.Nav?.signIn} titleSecondNav={data?.Nav?.signUp} logoLink="/" />
-              <Create data={data} />
-              <Login data={data} />
-            </NavFormProvider>
-          )}
-        </ShowMenuProvider>
-
-        <div className={styles.container}>
-          {isUser && <Aside />}
-          <main
-            className={`${isUser ? styles.main__container : styles.home__container} ${
-              isMode ? 'main__container--dark' : ''
-            }`}>
-            <section className={styles.workspace}>{children}</section>
-          </main>
-        </div>
+            ) : (
+              <>
+                <Header titleFirstNav={data?.Nav?.signIn} titleSecondNav={data?.Nav?.signUp} logoLink="/" />
+                <Create data={data} />
+                <Login data={data} />
+              </>
+            )}
+          </ShowMenuProvider>
+          <div className={styles.container}>
+            {isUser && <Aside />}
+            <main
+              className={`${isUser ? styles.main__container : styles.home__container} ${
+                isMode ? 'main__container--dark' : ''
+              }`}>
+              <section className={styles.workspace}>{children}</section>
+            </main>
+          </div>
+        </NavFormProvider>
       </div>
       <AffixButton />
     </ChakraProvider>

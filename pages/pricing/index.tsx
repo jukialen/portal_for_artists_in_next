@@ -4,7 +4,6 @@ import Link from 'next/link';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { NavFormProvider } from 'providers/NavFormProvider';
 import { StatusLoginContext } from 'providers/StatusLogin';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
@@ -20,7 +19,7 @@ export default function Pricing() {
   const { asPath } = useRouter();
 
   return (
-    <NavFormProvider>
+    <>
       <HeadCom path={asPath} content="Pricing site" />
       <div className={styles.container}>
         <h2 className={styles.title}>{data?.Pricing?.title}</h2>
@@ -169,6 +168,6 @@ export default function Pricing() {
         </div>
         {!isUser && <Footer />}
       </div>
-    </NavFormProvider>
+    </>
   );
 }
