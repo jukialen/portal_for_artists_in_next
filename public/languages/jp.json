@@ -65,7 +65,7 @@
     "termsOfUse": "利用条件",
     "privacyPolice": "プライバシーポリシー",
     "contact": "連絡",
-    "pricing": "値付け",
+    "plans": "プラン",
     "faq": "FAQ",
     "changeLanguage": "言語"
   },
@@ -324,7 +324,7 @@
     "deletionProfilePhoto": "フォトのプロフィールが消してます。",
     "deletionAccount": "アカウントが消してます。"
   },
-  "Pricing": {
+  "Plans": {
     "title": "Pfartistsのプラン",
     "subTitle": "最適なプランをお選びください",
     "period": "/月例",

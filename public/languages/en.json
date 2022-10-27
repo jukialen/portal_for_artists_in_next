@@ -65,7 +65,7 @@
     "termsOfUse": "Terms of use",
     "privacyPolice": "Privacy police",
     "contact": "Contact",
-    "pricing": "Pricing",
+    "plans": "Plans",
     "faq": "FAQ",
     "changeLanguage": "Language"
   },
@@ -329,7 +329,7 @@
     "deletionProfilePhoto": "Deleting your profile photo",
     "deletionAccount": "Deleting the account"
   },
-  "Pricing": {
+  "Plans": {
     "title": "Pfartists plans",
     "subTitle": "Choose plan, which is the best for you",
     "period": "/MONTHLY",

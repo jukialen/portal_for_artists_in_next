@@ -22,8 +22,8 @@ export default function Faq() {
 
   return (
     <div className={styles.site}>
+      <HeadCom path={asPath} content="Faq site" />
       <div className={styles.container}>
-        <HeadCom path={asPath} content="Faq site" />
         <h2 className={styles.h2}>{data?.Contact?.toFAQHere}</h2>
         <Accordion
           defaultIndex={[0]}
@@ -40,7 +40,7 @@ export default function Faq() {
             textBody={
               <div>
                 {data?.FAQ?.body2}
-                <Link href="/pricing" color={externalLink} isExternal>
+                <Link href="/plans" color={externalLink} isExternal>
                   {data?.FAQ?.body2Link}
                   <ExternalLinkIcon mx="2px" color={externalLink} />
                 </Link>

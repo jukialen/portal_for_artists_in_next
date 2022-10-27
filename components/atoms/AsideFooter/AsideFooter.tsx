@@ -37,7 +37,7 @@ export const AsideFooter = () => {
         </Link>
       </div>
       <div>
-        <Link href="/pricing">
+        <Link href="/plans">
           <a>{data?.Footer?.pricing}</a>
         </Link>
       </div>

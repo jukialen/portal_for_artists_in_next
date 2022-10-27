@@ -37,8 +37,8 @@ export function Footer() {
         </Link>
       </button>
       <button className={styles.button}>
-        <Link href="/pricing">
-          <a>{data?.Footer?.pricing}</a>
+        <Link href="/plans">
+          <a>{data?.Footer?.plans}</a>
         </Link>
       </button>
       <button className={styles.button} onClick={showLanguages}>

@@ -66,7 +66,7 @@
     "privacyPolice": "Polityka prywatności",
     "contact": "Kontakt",
     "faq": "FAQ",
-    "pricing": "Cennik",
+    "plans": "Plany",
     "changeLanguage": "Język"
   },
   "App": {
@@ -298,7 +298,7 @@
     "title": "Witaj! Cieszę się, że chcesz się ze mną skontaktować.",
     "subTitleFirst": "Jeżeli chcesz przekazać opinię lub problem, wyślij formularz. Dzięki tym wiadomościom pomagasz mi ulepszyć serwis.",
     "toFAQ": "Możesz również sprawdzić ",
-    "toFAQHere": "Często Zadawane Pytania (FAQ)",
+    "toFAQHere": "Często Zadawane Pytania",
     "dot": ".",
     "chooseTitle": "Wybierz temat",
     "suggestion": "Sugestia",
@@ -329,7 +329,7 @@
     "deletionProfilePhoto": "Usuwanie zdjęcia profilowego",
     "deletionAccount": "Usuwanie konta"
   },
-  "Pricing": {
+  "Plans": {
     "title": "Pfartists plany",
     "subTitle": "Wybierz plan który jest najlepszy dla ciebie",
     "period": "/MIESIĘCZNIE",

@@ -183,7 +183,7 @@ export const AccountData = ({ data }: DataType) => {
                         )}
                         <p className={styles.message}>
                           {data?.Account?.aData?.Premium?.body}
-                          <Link href="/pricing">
+                          <Link href="/plans">
                             <a>{data?.Account?.aData?.Premium?.bodyLink}</a>
                           </Link>
                           {data?.Account?.aData?.Premium?.bodyDot}

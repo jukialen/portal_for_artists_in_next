@@ -13,50 +13,50 @@ import { Footer } from 'components/molecules/Footer/Footer';
 import styles from './index.module.scss';
 import { CheckIcon } from '@chakra-ui/icons';
 
-export default function Pricing() {
+export default function Plans() {
   const { isUser } = useContext(StatusLoginContext);
   const data = useHookSWR();
   const { asPath } = useRouter();
 
   return (
     <>
-      <HeadCom path={asPath} content="Pricing site" />
+      <HeadCom path={asPath} content="Plans site" />
       <div className={styles.container}>
-        <h2 className={styles.title}>{data?.Pricing?.title}</h2>
-        <h3 className={styles.subTitle}>{data?.Pricing?.subTitle}</h3>
+        <h2 className={styles.title}>{data?.Plans?.title}</h2>
+        <h3 className={styles.subTitle}>{data?.Plans?.subTitle}</h3>
         <div className={styles.plansFormats}>
           <div className={isUser ? styles.plans__user : styles.plans}>
             <div className={styles.box}>
               <h3 className={styles.box__title}>FREE</h3>
               <div className={styles.box__price}>
                 <p>$0</p>
-                <p>{data?.Pricing?.period}</p>
+                <p>{data?.Plans?.period}</p>
               </div>
               <div className={styles.list}>
                 <ul>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.grLength}</p>
+                    <p>{data?.Plans?.grLength}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.animLength}</p>
+                    <p>{data?.Plans?.animLength}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.vidLength}</p>
+                    <p>{data?.Plans?.vidLength}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.grAnimSize}</p>
+                    <p>{data?.Plans?.grAnimSize}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.vidSize}</p>
+                    <p>{data?.Plans?.vidSize}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.noAds}</p>
+                    <p>{data?.Plans?.noAds}</p>
                   </li>
                 </ul>
               </div>
@@ -68,37 +68,37 @@ export default function Pricing() {
               <h3 className={styles.box__title}>PREMIUM</h3>
               <div className={styles.box__price}>
                 <p>$10</p>
-                <p>{data?.Pricing?.period}</p>
+                <p>{data?.Plans?.period}</p>
               </div>
               <div className={styles.list}>
                 <ul>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.grLength}</p>
+                    <p>{data?.Plans?.grLength}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.animLength}</p>
+                    <p>{data?.Plans?.animLength}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.vidLength}</p>
+                    <p>{data?.Plans?.vidLength}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.grAnimSizeP}</p>
+                    <p>{data?.Plans?.grAnimSizeP}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.vidSizeP}</p>
+                    <p>{data?.Plans?.vidSizeP}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.noAds}</p>
+                    <p>{data?.Plans?.noAds}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.support}</p>
+                    <p>{data?.Plans?.support}</p>
                   </li>
                 </ul>
               </div>
@@ -110,37 +110,37 @@ export default function Pricing() {
               <h3 className={styles.box__title}>GOLD</h3>
               <div className={styles.box__price}>
                 <p>$20</p>
-                <p>{data?.Pricing?.period}</p>
+                <p>{data?.Plans?.period}</p>
               </div>
               <div className={styles.list}>
                 <ul>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.grLength}</p>
+                    <p>{data?.Plans?.grLength}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.animLength}</p>
+                    <p>{data?.Plans?.animLength}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.vidLength}</p>
+                    <p>{data?.Plans?.vidLength}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.grAnimSizeG}</p>
+                    <p>{data?.Plans?.grAnimSizeG}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.vidSizeG}</p>
+                    <p>{data?.Plans?.vidSizeG}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.noAds}</p>
+                    <p>{data?.Plans?.noAds}</p>
                   </li>
                   <li>
                     <CheckIcon className={styles.icon} />
-                    <p>{data?.Pricing?.pSupport}</p>
+                    <p>{data?.Plans?.pSupport}</p>
                   </li>
                 </ul>
               </div>
@@ -159,11 +159,11 @@ export default function Pricing() {
             </p>
           </div>
           <p className={styles.formats}>
-            {data?.Pricing?.formats}.jpg, .jpeg, .png, .webp, .avif
+            {data?.Plans?.formats}.jpg, .jpeg, .png, .webp, .avif
             <br />
-            {data?.Pricing?.supInfo}
+            {data?.Plans?.supInfo}
             <br />
-            {data?.Pricing?.pSupInfo}
+            {data?.Plans?.pSupInfo}
           </p>
         </div>
         {!isUser && <Footer />}
