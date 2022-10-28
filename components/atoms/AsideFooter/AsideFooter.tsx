@@ -38,7 +38,7 @@ export const AsideFooter = () => {
       </div>
       <div>
         <Link href="/plans">
-          <a>{data?.Footer?.pricing}</a>
+          <a>{data?.Footer?.plans}</a>
         </Link>
       </div>
       <button className={styles.button} onClick={showLanguages}>
