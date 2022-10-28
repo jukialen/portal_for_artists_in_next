@@ -22,7 +22,7 @@ import artist from 'public/artist.jpg';
 import searchingService from 'public/searching.jpg';
 import upload from 'public/upload.png';
 import authorButton from 'public/authorButton.png';
-import top from 'public/top.png';
+import top from 'public/top.jpg';
 import minimalism from 'public/minimalism.png';
 import likes from 'public/likes.png';
 

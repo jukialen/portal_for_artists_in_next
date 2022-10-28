@@ -11,14 +11,13 @@ import { FaqItems } from 'components/atoms/FaqItems/FaqItems';
 import { Footer } from 'components/molecules/Footer/Footer';
 
 import styles from './index.module.scss';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export default function Faq() {
   const { isUser } = useContext(StatusLoginContext);
   const { asPath } = useRouter();
   const data = useHookSWR();
 
-  const externalLink = '#4F8DFF !important';
+  const link = '#4F8DFF !important';
 
   return (
     <div className={styles.site}>
@@ -40,9 +39,8 @@ export default function Faq() {
             textBody={
               <div>
                 {data?.FAQ?.body2}
-                <Link href="/plans" color={externalLink} isExternal>
+                <Link href="/plans" color={link}>
                   {data?.FAQ?.body2Link}
-                  <ExternalLinkIcon mx="2px" color={externalLink} />
                 </Link>
                 {data?.FAQ?.body2dot}
               </div>

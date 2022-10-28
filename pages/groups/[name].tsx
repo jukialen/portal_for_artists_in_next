@@ -36,14 +36,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import {
-  deleteMembers,
-  deleteModerators,
-  groups,
-  members,
-  moderators,
-  user,
-} from 'references/referencesFirebase';
+import { deleteMembers, deleteModerators, groups, members, moderators, user } from 'references/referencesFirebase';
 
 import { EventType } from 'types/global.types';
 
@@ -162,9 +155,7 @@ export default function Groups() {
       if (docSnap.exists()) {
         setAdmin(docSnap.data().admin);
         setDescription(docSnap.data().description);
-        setLogo(
-          !!docSnap.data().logo ? docSnap.data().logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-        );
+        setLogo(!!docSnap.data().logo ? docSnap.data().logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`);
       }
     } catch (e) {
       console.error(e);
@@ -277,9 +268,7 @@ export default function Groups() {
                 borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
               />
 
-              <p style={{ color: '#bd0000' }}>
-                {!newLogo && required && data?.NavForm?.validateRequired}
-              </p>
+              <p style={{ color: '#bd0000' }}>{!newLogo && required && data?.NavForm?.validateRequired}</p>
               {logoUrl && (
                 <img
                   src={logoUrl}
@@ -325,12 +314,10 @@ export default function Groups() {
         <h2 className={styles.nameGroup}>{name}</h2>
       </article>
 
-      {admin !== currentUser && (
+      {admin === currentUser && (
         <div className={styles.buttons}>
           <Button
-            leftIcon={
-              join ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />
-            }
+            leftIcon={join ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
             style={join ? addingToGroupOutline : addingToGroup}
             colorScheme="blue"
             onClick={joinToGroup}
@@ -342,29 +329,17 @@ export default function Groups() {
           {join && (
             <div>
               <Button
-                leftIcon={
-                  favorite ? (
-                    <CheckIcon boxSize={checkIcon} />
-                  ) : (
-                    <SmallAddIcon boxSize={smallIcon} />
-                  )
-                }
+                leftIcon={favorite ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
                 style={favorite ? addingToGroupOutline : addingToGroup}
                 colorScheme="blue"
                 disabled={!favorite && favoriteLength === 5}
                 onClick={addToFavorites}
                 variant={favorite ? 'solid' : 'outline'}
                 className={`${styles.button} ${styles.favoriteButton}`}>
-                {favorite
-                  ? data?.Groups?.favorite?.addedToFav
-                  : data?.Groups?.favorite?.addToFavorite}
+                {favorite ? data?.Groups?.favorite?.addedToFav : data?.Groups?.favorite?.addToFavorite}
               </Button>
               {!favorite && (
-                <p>
-                  {favoriteLength !== 5
-                    ? data?.Groups?.favorite?.maxFav
-                    : data?.Groups?.favorite?.maximumAchieved}
-                </p>
+                <p>{favoriteLength !== 5 ? data?.Groups?.favorite?.maxFav : data?.Groups?.favorite?.maximumAchieved}</p>
               )}
             </div>
           )}
