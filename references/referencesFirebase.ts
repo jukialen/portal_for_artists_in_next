@@ -9,10 +9,10 @@ const maxItems = 30;
 export const user = (username: string) => doc(db, `users/${username}`);
 export const usersRef = collection(db, 'users');
 export const friends = (username: string) => collection(db, `users/${username}/friends`);
-export const delFriends = (username: string, docId: string) =>
-  doc(db, `users/${username}/friends/${docId}`);
+export const delFriends = (username: string, docId: string) => doc(db, `users/${username}/friends/${docId}`);
 
 // FILES
+export const allCollectionRef = (doc: string | string[] | undefined) => collectionGroup(db, <string>doc);
 export const allPhotosCollectionRef = () => collectionGroup(db, 'photos');
 export const allAnimatedCollectionRef = () => collectionGroup(db, 'animations');
 export const allVideosCollectionRef = () => collectionGroup(db, 'videos');
@@ -73,29 +73,21 @@ export const adminInGroups = (userId: string) =>
 
 export const moderators = (name: GroupNameType) => collection(db, `groups/${name}/moderators`);
 export const moderatorsGroups = () => collectionGroup(db, 'moderators');
-export const deleteModerators = (name: GroupNameType, modId: string) =>
-  doc(db, `groups/${name}/moderators/${modId}`);
+export const deleteModerators = (name: GroupNameType, modId: string) => doc(db, `groups/${name}/moderators/${modId}`);
 
 export const members = (name: GroupNameType) => collection(db, `groups/${name}/members`);
 export const membersGroup = () => collectionGroup(db, 'members');
-export const deleteMembers = (name: GroupNameType, memberId: string) =>
-  doc(db, `groups/${name}/members/${memberId}`);
+export const deleteMembers = (name: GroupNameType, memberId: string) => doc(db, `groups/${name}/members/${memberId}`);
 
 // POSTS
 export const addingPost = (name: GroupNameType) => collection(db, `groups/${name}/posts`);
 
 export const posts = (name: GroupNameType) => {
-  return query(
-    collectionGroup(db, 'posts'),
-    where('nameGroup', '==', name),
-    orderBy('date', 'desc'),
-  );
+  return query(collectionGroup(db, 'posts'), where('nameGroup', '==', name), orderBy('date', 'desc'));
 };
-export const likePost = (name: GroupNameType, idPost: string) =>
-  doc(db, `groups/${name}/posts/${idPost}`);
+export const likePost = (name: GroupNameType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
 
-export const deletingPost = (name: GroupNameType, idPost: string) =>
-  doc(db, `groups/${name}/posts/${idPost}`);
+export const deletingPost = (name: GroupNameType, idPost: string) => doc(db, `groups/${name}/posts/${idPost}`);
 
 // GROUP COMMENTS
 export const addingPostComment = (name: GroupNameType, idPost: string) =>
@@ -114,25 +106,12 @@ export const subPostsComments = (name: GroupNameType, idPost: string, idComment:
   return collection(db, `groups/${name}/posts/${idPost}/comments/${idComment}/subcomments`);
 };
 
-export const docSubPostsComments = (
-  name: GroupNameType,
-  idPost: string,
-  idComment: string,
-  idSubComment: string,
-) => {
-  return doc(
-    db,
-    `groups/${name}/posts/${idPost}/comments/${idComment}/subcomments/${idSubComment}`,
-  );
+export const docSubPostsComments = (name: GroupNameType, idPost: string, idComment: string, idSubComment: string) => {
+  return doc(db, `groups/${name}/posts/${idPost}/comments/${idComment}/subcomments/${idSubComment}`);
 };
 
 // GROUP LASTCOMMENTS
-export const lastPostsComments = (
-  name: GroupNameType,
-  idPost: string,
-  idComment: string,
-  idSubComment: string,
-) => {
+export const lastPostsComments = (name: GroupNameType, idPost: string, idComment: string, idSubComment: string) => {
   return collection(
     db,
     `groups/${name}/posts/${idPost}/comments/${idComment}/subcomments/${idSubComment}/lastcomments`,
@@ -160,12 +139,7 @@ export const filesComments = (uid: string, subCollection: string, idPost: string
   return collection(db, `users/${uid}/${subCollection}/${idPost}/comments`);
 };
 
-export const docFilesComments = (
-  userId: string,
-  subCollection: string,
-  idPost: string,
-  idComment: string,
-) => {
+export const docFilesComments = (userId: string, subCollection: string, idPost: string, idComment: string) => {
   return doc(db, `users/${userId}/${subCollection}/${idPost}/comments/${idComment}`);
 };
 
@@ -178,16 +152,8 @@ export const commentsFiles = (subCollection: string, description: string) => {
 };
 
 // FILE SUBCOMMENTS
-export const subFilesComments = (
-  uid: string,
-  subCollection: string,
-  idPost: string,
-  idComment: string,
-) => {
-  return collection(
-    db,
-    `users/${uid}/${subCollection}/${idPost}/comments/${idComment}/subcomments`,
-  );
+export const subFilesComments = (uid: string, subCollection: string, idPost: string, idComment: string) => {
+  return collection(db, `users/${uid}/${subCollection}/${idPost}/comments/${idComment}/subcomments`);
 };
 
 export const docSubFilesComment = (
@@ -197,10 +163,7 @@ export const docSubFilesComment = (
   idComment: string,
   idSubComment: string,
 ) => {
-  return doc(
-    db,
-    `users/${userId}/${subCollection}/${idPost}/comments/${idComment}/subcomments/${idSubComment}`,
-  );
+  return doc(db, `users/${userId}/${subCollection}/${idPost}/comments/${idComment}/subcomments/${idSubComment}`);
 };
 
 //FILE LASTCOMMENTS
