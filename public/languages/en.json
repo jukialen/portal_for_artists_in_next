@@ -190,11 +190,11 @@
       "members": "Members"
     },
     "addingPost": {
-      "add": "Add a post",
-      "addTitPlaceholder": "Add a title",
-      "addTitAria": "Adding title for new post",
-      "addDescription": "Add a description",
-      "addDesAria": "Adding description for new post"
+      "add": "Add post",
+      "addTitPlaceholder": "Title",
+      "addTitAria": "Adding a title for new post",
+      "addDescription": "Description",
+      "addDesAria": "Adding a description for new post"
     },
     "list": {
       "title": "Groups list",
@@ -225,7 +225,7 @@
   "Posts": {
     "likeAria": "to like",
     "likedAria": "liked",
-    "noPosts": "Brak postów"
+    "noPosts": "No posts"
   },
   "Members": {
     "admin": "Admin",

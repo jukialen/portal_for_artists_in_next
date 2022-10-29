@@ -191,9 +191,9 @@
     },
     "addingPost": {
       "add": "Dodaj post",
-      "addTitPlaceholder": "Dodaj tytuł",
+      "addTitPlaceholder": "Tytuł",
       "addTitAria": "Dodanie tytułu dla nowego postu",
-      "addDescription": "Dodaj opis",
+      "addDescription": "Opis",
       "addDesAria": "Dodanie opisu dla nowego postu"
     },
     "list": {

@@ -12,15 +12,15 @@
     margin-bottom: 1rem;
     cursor: pointer;
 
-    &__jp {
-      padding-left: 0;
-      font-size: 1.3rem;
-    }
-
     p, .title__others {
       width: 100%;
       padding-left: 1rem;
     }
+  }
+
+  p.title__jp {
+    padding-left: 0;
+    font-size: 1.3rem;
   }
 
   .groups__container {

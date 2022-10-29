@@ -314,7 +314,7 @@ export default function Groups() {
         <h2 className={styles.nameGroup}>{name}</h2>
       </article>
 
-      {admin === currentUser && (
+      {admin !== currentUser && (
         <div className={styles.buttons}>
           <Button
             leftIcon={join ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
