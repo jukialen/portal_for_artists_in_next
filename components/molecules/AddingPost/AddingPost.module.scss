@@ -19,7 +19,7 @@
   flex-direction: column;
 
   .title, .title__error, .description, .description__error {
-    max-width: 95%;
+    max-width: 90%;
     margin: 1rem auto;
     padding: 0.3rem 0.5rem;
     border-color: $third__color;
@@ -30,8 +30,12 @@
     }
   }
 
-  .addingButton {
+  .title, .title__error {
     margin: 2rem auto 1rem;
+  }
+
+  .addingButton {
+    margin: 1rem auto;
     background: $third__color;
     border-color: $third__color;
     cursor: pointer;

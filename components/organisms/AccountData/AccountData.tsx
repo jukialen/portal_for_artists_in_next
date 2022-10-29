@@ -82,6 +82,7 @@ export const AccountData = ({ data }: DataType) => {
       console.error(e);
     }
   };
+
   useEffect(() => {
     !!currentUser && getPlan();
   }, [currentUser]);
@@ -166,7 +167,7 @@ export const AccountData = ({ data }: DataType) => {
                           focusBorderColor={touched.plan && !!errors.plan ? 'red.500' : 'blue.500'}
                           className={touched.plan && !!errors.plan ? styles.req__error : ''}>
                           <option role="option" value="">
-                            {data?.Pricing?.choosePlan}
+                            {data?.Plans?.choosePlan}
                           </option>
                           <option role="option" value="FREE">
                             FREE

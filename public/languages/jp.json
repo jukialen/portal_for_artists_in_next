@@ -191,9 +191,9 @@
     },
     "addingPost": {
       "add": "追加が追加する",
-      "addTitPlaceholder": "名称が付け加える",
+      "addTitPlaceholder": "名称",
       "addTitAria": "新しい追加に名称立項",
-      "addDescription": "叙述が付け加える",
+      "addDescription": "叙述",
       "addDesAria": "新しい追加に叙述立項"
     },
     "list": {

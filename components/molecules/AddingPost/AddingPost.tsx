@@ -70,7 +70,7 @@ export const AddingPost = ({ nameGroup }: AuthorType) => {
               onChange={handleChange}
               placeholder={data?.Groups?.addingPost?.addTitPlaceholder}
               aria-label={data?.Groups?.addingPost?.addTitAria}
-              className={styles.title__error}
+              className={touched.title && !!errors.title ? styles.title__error : styles.title}
             />
 
             <FormError nameError="title" />
@@ -83,9 +83,7 @@ export const AddingPost = ({ nameGroup }: AuthorType) => {
               resize="vertical"
               placeholder={data?.Groups?.addingPost?.addDescription}
               aria-label={data?.Groups?.addingPost?.addDesAria}
-              className={
-                !!errors.post && touched.post ? styles.description__error : styles.description
-              }
+              className={!!errors.post && touched.post ? styles.description__error : styles.description}
             />
 
             <FormError nameError="post" />
