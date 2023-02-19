@@ -21,7 +21,7 @@ import {
   nextPhotos,
   nextVideos,
   user,
-} from 'references/referencesFirebase';
+} from 'config/referencesFirebase';
 
 import { Article } from 'components/molecules/Article/Article';
 import { Videos } from 'components/molecules/Videos/Videos';

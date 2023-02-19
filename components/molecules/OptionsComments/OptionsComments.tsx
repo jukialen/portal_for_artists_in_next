@@ -29,7 +29,7 @@ import {
   subFilesComments,
   subLastFilesComments,
   subPostsComments,
-} from 'references/referencesFirebase';
+} from 'config/referencesFirebase';
 
 import { ModeContext } from 'providers/ModeProvider';
 import { DCContext } from 'providers/DeleteCommentProvider';

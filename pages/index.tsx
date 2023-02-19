@@ -36,12 +36,12 @@ export default function Home() {
     isUser && push('/app');
   }, [isUser]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     try {
       gsap.registerPlugin(ScrollTrigger);
 
       const sections = document.querySelectorAll('article');
-      sections.forEach((section: HTMLElement) => {
+      return sections.forEach((section: HTMLElement) => {
         gsap.fromTo(
           section.children,
           { y: '+=250', opacity: 0 },

@@ -5,7 +5,7 @@ import { auth } from '../../../firebase';
 import { getDoc } from 'firebase/firestore';
 import { Button } from '@chakra-ui/react';
 
-import { groups, user } from 'references/referencesFirebase';
+import { groups, user } from 'config/referencesFirebase';
 
 import { DataType, GroupType } from 'types/global.types';
 

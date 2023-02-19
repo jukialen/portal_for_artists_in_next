@@ -4,7 +4,7 @@ import { Avatar, Button, IconButton } from '@chakra-ui/react';
 
 import { PostType } from 'types/global.types';
 
-import { addingPostComment, likePost, postsComments } from 'references/referencesFirebase';
+import { addingPostComment, likePost, postsComments } from 'config/referencesFirebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 

@@ -19,7 +19,7 @@ import {
   userAnimationsRef,
   userPhotosRef,
   userVideosRef,
-} from 'references/referencesFirebase';
+} from 'config/referencesFirebase';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';

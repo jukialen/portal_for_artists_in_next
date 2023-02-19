@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getDoc, getDocs } from 'firebase/firestore';
 
-import { posts, user } from 'references/referencesFirebase';
+import { posts, user } from 'config/referencesFirebase';
 
 import { AuthorType, PostType } from 'types/global.types';
 

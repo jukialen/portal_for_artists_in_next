@@ -18,7 +18,7 @@ import {
   lastPostsComments,
   subLastFilesComments,
   user,
-} from 'references/referencesFirebase';
+} from 'config/referencesFirebase';
 
 import { getDate } from 'helpers/getDate';
 

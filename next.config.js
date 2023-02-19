@@ -1,21 +1,9 @@
 /** @type {import("next").NextConfig} */
-const withPWA = require('next-pwa');
 
-// import('firebase/firestore').then(() => {
-//   const firestore = app.firestore();
-//   // Use Cloud Firestore ...
-//   firestore().settings({
-//     cacheSizeBytes: 400
-//   });
-//   firestore.enableIndexedDbPersistence()
-//   .catch((e) => {
-//     if (e.code === 'failed-precondition') {
-//       console.error(e.code)
-//     } else if (e.code === 'unimplemented') {
-//       console.error(e.code)
-//     }
-//   });
-// });
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+})
 
 module.exports = withPWA({
   reactStrictMode: true,
@@ -28,10 +16,5 @@ module.exports = withPWA({
     loader: 'default',
     domains: ['firebasestorage.googleapis.com', 's.yimg.com', 'localhost', 'pfartists.xyz'],
     formats: ['image/avif', 'image/webp'],
-  },
-  pwa: {
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
   },
 });

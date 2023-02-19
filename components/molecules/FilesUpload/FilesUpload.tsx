@@ -10,7 +10,7 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { ModeContext } from 'providers/ModeProvider';
 
-import { userAnimationsRef, userPhotosRef, userVideosRef } from 'references/referencesFirebase';
+import { userAnimationsRef, userPhotosRef, userVideosRef } from 'config/referencesFirebase';
 
 import { EventType, FormType } from 'types/global.types';
 

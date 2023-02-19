@@ -36,7 +36,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { deleteMembers, deleteModerators, groups, members, moderators, user } from 'references/referencesFirebase';
+import { deleteMembers, deleteModerators, groups, members, moderators, user } from 'config/referencesFirebase';
 
 import { EventType } from 'types/global.types';
 

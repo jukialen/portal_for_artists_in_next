@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 import { FileContainerType } from 'types/global.types';
 
-import { addingFilesComment, filesComments } from 'references/referencesFirebase';
+import { addingFilesComment, filesComments } from 'config/referencesFirebase';
 
 import { Comments } from 'components/molecules/Comments/Comments';
 import { SharingButton } from 'components/atoms/SharingButton/SharingButton';

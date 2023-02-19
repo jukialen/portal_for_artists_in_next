@@ -10,7 +10,7 @@ import {
   startAfter,
 } from 'firebase/firestore';
 
-import { docLastFilesComment, docLastPostsComments, user } from 'references/referencesFirebase';
+import { docLastFilesComment, docLastPostsComments, user } from 'config/referencesFirebase';
 
 import { AuthorType, CommentType } from 'types/global.types';
 

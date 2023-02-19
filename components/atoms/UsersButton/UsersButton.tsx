@@ -6,7 +6,7 @@ import { Avatar, IconButton, Link } from '@chakra-ui/react';
 
 import { GroupNameType, MembersAndModeratorsType } from 'types/global.types';
 
-import { moderators, user } from 'references/referencesFirebase';
+import { moderators, user } from 'config/referencesFirebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 

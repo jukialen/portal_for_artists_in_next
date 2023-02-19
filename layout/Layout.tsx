@@ -25,7 +25,7 @@ export const Layout = ({ children }: ChildrenType) => {
   const { isUser } = useContext(StatusLoginContext);
 
   const data = useHookSWR();
-
+  
   return (
     <ChakraProvider resetCSS={false}>
       <div className={`${styles.whole__page} ${isMode ? 'dark' : ''}`}>

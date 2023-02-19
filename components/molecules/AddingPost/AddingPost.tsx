@@ -8,7 +8,7 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { AuthorType, FormType } from 'types/global.types';
 
-import { addingPost } from 'references/referencesFirebase';
+import { addingPost } from 'config/referencesFirebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 

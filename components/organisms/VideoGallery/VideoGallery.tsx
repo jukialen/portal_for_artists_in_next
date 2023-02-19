@@ -12,7 +12,7 @@ import {
   startAfter,
 } from 'firebase/firestore';
 
-import { user as currentUser, userVideosRef } from 'references/referencesFirebase';
+import { user as currentUser, userVideosRef } from 'config/referencesFirebase';
 
 import { FileType, UserType } from 'types/global.types';
 

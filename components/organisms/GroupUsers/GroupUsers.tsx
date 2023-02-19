@@ -17,7 +17,7 @@ import {
   membersGroup,
   moderatorsGroups,
   user,
-} from 'references/referencesFirebase';
+} from 'config/referencesFirebase';
 
 import { GroupType } from 'types/global.types';
 

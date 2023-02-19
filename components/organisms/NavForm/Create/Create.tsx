@@ -1,7 +1,7 @@
 import { useCallback, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { auth } from '../../../../firebase';
+import { doesEmailExist, emailPasswordSignUp } from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import { sendVerificationEmail } from "supertokens-web-js/recipe/emailverification";
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -16,6 +16,7 @@ import { NavFormContext } from 'providers/NavFormProvider';
 
 import styles from '../NavForm.module.scss';
 import { Divider, Input } from '@chakra-ui/react';
+import { StatusLoginContext } from 'providers/StatusLogin';
 
 const initialValues = {
   email: '',
@@ -27,9 +28,7 @@ export const Create = ({ data }: DataType) => {
   const [valuesFields, setValuesFields] = useState<string>('');
   const { locale } = useRouter();
 
-  const { isCreate } = useContext(NavFormContext);
-
-  const actionCodeSettings = { url: `${process.env.NEXT_PUBLIC_NEW_USER}` };
+  const { isCreate, showCreateForm, showLoginForm } = useContext(NavFormContext);
 
   const schemaValidation = Yup.object({
     email: SchemaValidation().email,
@@ -38,20 +37,44 @@ export const Create = ({ data }: DataType) => {
 
   const submitAccountData = useCallback(
     async ({ email, password }: UserDataType, { resetForm }: FormType) => {
-      auth.useDeviceLanguage();
       setIsLoading(true);
-      createUserWithEmailAndPassword(auth, email!, password!)
-        .then((userCredential) => {
-          resetForm(initialValues);
-          sendEmailVerification(auth.currentUser!, actionCodeSettings);
-          setValuesFields(data?.NavForm?.successInfoRegistration);
+      try {
+        const response = await emailPasswordSignUp({
+          formFields: [
+            { id: "email", value: email! },
+            { id: "password", value: password! }
+          ]
         })
-        .catch((e) => {
-          console.log(e);
-          e.code === 'auth/email-already-in-use'
-            ? setValuesFields(data?.NavForm?.theSameEmail)
-            : setValuesFields(data?.error);
-        });
+
+        console.log(response);
+        if (response.status === "FIELD_ERROR") {
+          response.formFields.forEach((formField: { id: string, error: string }) => setValuesFields(formField.error));
+        } else if (!!email) {
+            const exist = await doesEmailExist({ email });
+
+            console.log(e)
+            if (!!exist.doesExist) {
+              setValuesFields("Email already exists. Please sign in instead");
+              showCreateForm();
+              showLoginForm();
+            }
+          }
+
+          const res = await sendVerificationEmail();
+          if (res.status === "EMAIL_ALREADY_VERIFIED_ERROR") {
+            // This can happen if the info about email verification in the session was outdated.
+            // Redirect the user to the home page
+            showCreateForm();
+            showLoginForm();
+          } else {
+            // email was sent successfully.
+            resetForm(initialValues);
+            setValuesFields(data?.NavForm?.successInfoRegistration);
+          }
+      } catch (e: any) {
+        setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.error);
+
+      }
       setIsLoading(false);
     },
     [data?.NavForm?.theSameEmail, data?.NavForm?.successInfoRegistration],
@@ -112,16 +135,14 @@ export const Create = ({ data }: DataType) => {
       <p className={styles.acceptInfo}>
         {data?.NavForm?.acceptInfoOne}
         <a
-          href={`${process.env.NEXT_PUBLIC_PAGE}${
-            locale === 'en' ? '/terms' : `/${locale}/terms`
-          }`}>
+          href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '/terms' : `/${locale}/terms`
+            }`}>
           {data?.NavForm?.acceptInfoTwo}
         </a>
         {data?.NavForm?.acceptInfoThree}
         <a
-          href={`${process.env.NEXT_PUBLIC_PAGE}${
-            locale === 'en' ? '/privacy' : `/${locale}/privacy`
-          }`}>
+          href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '/privacy' : `/${locale}/privacy`
+            }`}>
           {data?.NavForm?.acceptInfoFour}
         </a>
       </p>

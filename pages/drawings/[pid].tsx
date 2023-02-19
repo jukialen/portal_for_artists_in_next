@@ -16,7 +16,7 @@ import { ref } from 'firebase/storage';
 
 import { FileType } from 'types/global.types';
 
-import { allPhotosCollectionRef, user, userPhotosRef } from 'references/referencesFirebase';
+import { allPhotosCollectionRef, user, userPhotosRef } from 'config/referencesFirebase';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';

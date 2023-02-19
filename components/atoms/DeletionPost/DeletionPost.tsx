@@ -19,7 +19,7 @@ import {
   lastPostsComments,
   postsComments,
   subPostsComments,
-} from 'references/referencesFirebase';
+} from 'config/referencesFirebase';
 
 import { GroupNameType } from 'types/global.types';
 

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { auth } from '../../../firebase';
 import { getDoc } from 'firebase/firestore';
 
-import { likePost, user } from 'references/referencesFirebase';
+import { likePost, user } from 'config/referencesFirebase';
 
 import { getDate } from 'helpers/getDate';
 

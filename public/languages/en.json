@@ -37,7 +37,7 @@
     "createSubmit": "Register",
     "loginSubmit": "Login",
     "loadingRegistration": "I'm registering you...",
-    "successInfoRegistration": "Congratulation! You are registered. Check your mailbox and confirm your e-mail in order to you'll can log　in.",
+    "successInfoRegistration": "Congratulation! You are registered. Check your mailbox and confirm your e-mail in order to you'll can sign in.",
     "providerTitleRegistration": "Or register yourself using:",
     "providerTitleLogin": "Or login via:",
     "acceptInfoOne": "By signing up, you agree to our ",
