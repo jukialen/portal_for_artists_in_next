@@ -48,37 +48,43 @@ export const Create = ({ data }: DataType) => {
 
         console.log(response);
         if (response.status === "FIELD_ERROR") {
-          response.formFields.forEach((formField: { id: string, error: string }) => setValuesFields(formField.error));
+          response.formFields.forEach((formField: { id: string, error: string }) => {
+            console.log(formField.error === 'This email already exists. Please sign in instead.' ? data?.NavForm?.theSameEmail : formField.error);
+            setValuesFields(formField.error === 'This email already exists. Please sign in instead.' ? data?.NavForm?.theSameEmail : formField.error);
+            return null;
+          })
         } else if (!!email) {
-            const exist = await doesEmailExist({ email });
+          const exist = await doesEmailExist({ email });
 
-            console.log(e)
-            if (!!exist.doesExist) {
-              setValuesFields("Email already exists. Please sign in instead");
-              showCreateForm();
-              showLoginForm();
-            }
+          console.log(exist);
+          if (!!exist.doesExist) {
+            setValuesFields(data?.NavForm?.theSameEmail);
+            resetForm(initialValues);
+            return null;
           }
-
+        } else {
           const res = await sendVerificationEmail();
+          console.log(res);
+          
           if (res.status === "EMAIL_ALREADY_VERIFIED_ERROR") {
-            // This can happen if the info about email verification in the session was outdated.
-            // Redirect the user to the home page
+            console.log('st', res.status)
             showCreateForm();
             showLoginForm();
+            return null;
           } else {
-            // email was sent successfully.
             resetForm(initialValues);
             setValuesFields(data?.NavForm?.successInfoRegistration);
+            return null;
           }
+        }   
+        setIsLoading(false);
       } catch (e: any) {
+        console.log(e);
         setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.error);
 
       }
-      setIsLoading(false);
     },
-    [data?.NavForm?.theSameEmail, data?.NavForm?.successInfoRegistration],
-  );
+    []);
 
   return (
     <div className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
