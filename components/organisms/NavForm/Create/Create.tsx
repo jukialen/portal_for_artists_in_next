@@ -16,7 +16,6 @@ import { NavFormContext } from 'providers/NavFormProvider';
 
 import styles from '../NavForm.module.scss';
 import { Divider, Input } from '@chakra-ui/react';
-import { StatusLoginContext } from 'providers/StatusLogin';
 
 const initialValues = {
   email: '',
@@ -49,7 +48,6 @@ export const Create = ({ data }: DataType) => {
         console.log(response);
         if (response.status === "FIELD_ERROR") {
           response.formFields.forEach((formField: { id: string, error: string }) => {
-            console.log(formField.error === 'This email already exists. Please sign in instead.' ? data?.NavForm?.theSameEmail : formField.error);
             setValuesFields(formField.error === 'This email already exists. Please sign in instead.' ? data?.NavForm?.theSameEmail : formField.error);
             return null;
           })
