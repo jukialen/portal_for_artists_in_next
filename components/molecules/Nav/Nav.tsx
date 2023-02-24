@@ -10,6 +10,7 @@ import { useUserData } from 'hooks/useUserData';
 import { NavFormContext } from 'providers/NavFormProvider';
 import { ShowMenuContext } from 'providers/ShowMenuProvider';
 import { StatusLoginContext } from 'providers/StatusLogin';
+import Session from "supertokens-web-js/recipe/session";
 
 import styles from './Nav.module.scss';
 
@@ -38,7 +39,8 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   const sign__out = async () => {
     try {
       showUser();
-      await signOut(auth);
+      // await signOut(auth);
+      await Session.signOut();
       titleFirstNav !== `${data?.Nav?.sign__out}` && showMenu();
       return push('/');
     } catch (error) {
