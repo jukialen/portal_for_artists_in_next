@@ -17,6 +17,7 @@ import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from '../NavForm.module.scss';
 import { Divider, Input } from '@chakra-ui/react';
+import { useUserData } from 'hooks/useUserData';
 
 const initialValues = {
   email: '',
@@ -27,10 +28,10 @@ export const Login = ({ data }: DataType) => {
   const { isLogin, showLoginForm } = useContext(NavFormContext);
   const { showMenu } = useContext(ShowMenuContext);
   const { showUser } = useContext(StatusLoginContext);
+  const { push } = useRouter();
+  const { pseudonym } = useUserData();
 
   const [valuesFields, setValuesFields] = useState<string>('');
-
-  const { push } = useRouter();
 
   const schemaValidation = Yup.object({
     email: SchemaValidation().email,
@@ -43,8 +44,6 @@ export const Login = ({ data }: DataType) => {
   };
 
   const submitAccountData = async ({ email, password }: UserDataType, { resetForm }: FormType) => {
-    // setValuesFields(data?.NavForm?.unVerified);
-   
     try {
       const response = await emailPasswordSignIn({
         formFields: [
@@ -58,11 +57,15 @@ export const Login = ({ data }: DataType) => {
       } else if (response.status === "WRONG_CREDENTIALS_ERROR") {
         setValuesFields("Email password combination is incorrect.");
       } else {
-        resetForm(initialValues);
-        setValuesFields(data?.NavForm?.statusLogin);
-        showLoginForm();
-        showUser();
-        push('/app');
+        if (!!pseudonym) {
+          resetForm(initialValues);
+          setValuesFields(data?.NavForm?.statusLogin);
+          showLoginForm();
+          showUser();
+          push('/app');
+        } else {
+          push('/new-user');
+        }
       }
     } catch (e: any) {
       setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.error);
