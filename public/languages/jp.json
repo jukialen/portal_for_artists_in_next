@@ -8,7 +8,7 @@
   },
   "NavForm": {
     "setErrorMessageCreate": "登録することが出来ません。",
-    "theSameEmail": "このメールのアカウントはいます。",
+    "theSameEmail": "このメールのアカウントはいます。代わりにサインインして下さい。",
     "setErrorMessageLogin": "メールかパスポートが正しくないです。",
     "unVerified": "メールがベリファイいませんでした。",
     "statusLogin": "ログイン中している。",
