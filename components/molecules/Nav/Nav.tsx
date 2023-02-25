@@ -32,7 +32,7 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
     showCreateForm();
     titleSecondNav === `${data?.Nav?.account}` && showMenu();
   };
-
+  
   const sign__out = async () => {
     try {
       showUser();

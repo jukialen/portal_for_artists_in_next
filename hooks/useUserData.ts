@@ -1,28 +1,31 @@
-import { useEffect, useState } from 'react';
-import { auth, db } from '../firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { useState } from 'react';
+import Session from 'supertokens-web-js/recipe/session';
+import axios from 'axios';
+import { useCurrentUser } from './useCurrentUser';
 
 export const useUserData = () => {
-  const [pseudonym, setPseudonym] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [pseudonym, setPseudonym] = useState('');
+  const [description, setDescription] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState('');
 
-  const user = auth.currentUser;
-
-  const docRef = doc(db, `users/${user?.uid}`);
   const getUserData = async () => {
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      setPseudonym(docSnap.data().pseudonym);
-      setDescription(docSnap.data().description);
+    if (await Session.doesSessionExist()) {
+      const userId = await Session.getUserId();
+      const data: { pseudonym: string, destription: string, profilePhoto: string } = await axios.get('/users', { params: { where: {id: userId}}});
+
+      if (!!data) {
+        setPseudonym(data.pseudonym);
+        setDescription(data.destription);
+        setProfilePhoto(data.profilePhoto);
+      }
     } else {
       console.log('No such document!');
-    }
+    }    
   };
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => !!user && getUserData());
-  }, [docRef]);
+  
+  !!useCurrentUser('/') && getUserData();
 
-  return { pseudonym, description };
+  return { pseudonym, description, profilePhoto };
 };
+
