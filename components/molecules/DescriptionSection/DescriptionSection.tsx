@@ -7,7 +7,7 @@ import { Button, Divider, IconButton, Textarea } from '@chakra-ui/react';
 
 import { FormType } from 'types/global.types';
 
-import { groups } from 'references/referencesFirebase';
+import { groups } from 'config/referencesFirebase';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 

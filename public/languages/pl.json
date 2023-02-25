@@ -8,7 +8,7 @@
   },
   "NavForm": {
     "setErrorMessageCreate": "Nie mogliśmy Cię zarejestrować.",
-    "theSameEmail": "Konto z takim adresem e-mail już istnieje.",
+    "theSameEmail": "Konto z takim adresem e-mail już istnieje. Proszę się zalogować.",
     "setErrorMessageLogin": "Niepoprawny e-mail lub hasło.",
     "unVerified": "Niezweryfikowany e-mail.",
     "statusLogin": "Zostałaś/eś zalogowana/y",

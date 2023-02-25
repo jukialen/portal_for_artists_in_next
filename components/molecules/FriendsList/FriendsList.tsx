@@ -11,7 +11,7 @@ import {
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { friends } from 'references/referencesFirebase';
+import { friends } from 'config/referencesFirebase';
 
 import { Tile } from 'components/molecules/GroupTile/Tile';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';

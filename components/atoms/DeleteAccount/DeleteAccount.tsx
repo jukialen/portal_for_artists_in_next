@@ -18,7 +18,7 @@ import {
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { user } from 'references/referencesFirebase';
+import { user } from 'config/referencesFirebase';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 

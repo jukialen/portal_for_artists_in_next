@@ -1,8 +1,7 @@
 import { useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../../firebase';
+import Session from "supertokens-web-js/recipe/session";
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useUserData } from 'hooks/useUserData';
@@ -22,7 +21,6 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   const { asPath, push, locale } = useRouter();
   const data = useHookSWR();
   const { pseudonym } = useUserData();
-  const user = auth.currentUser;
 
   const { showUser } = useContext(StatusLoginContext);
   const { isMenu, showMenu } = useContext(ShowMenuContext);
@@ -34,11 +32,11 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
     showCreateForm();
     titleSecondNav === `${data?.Nav?.account}` && showMenu();
   };
-
+  
   const sign__out = async () => {
     try {
       showUser();
-      await signOut(auth);
+      await Session.signOut();
       titleFirstNav !== `${data?.Nav?.sign__out}` && showMenu();
       return push('/');
     } catch (error) {
@@ -63,7 +61,7 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
           <Link
             href={
               titleSecondNav === `${data?.Nav?.account}`
-                ? `/account/${pseudonym || user?.providerData[0].displayName}`
+                ? `/account/${pseudonym}`
                 : asPath
             }>
             <a onClick={hideMenuCreate}>{titleSecondNav}</a>

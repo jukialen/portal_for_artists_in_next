@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter } from 'firebase/firestore';
 
-import { groupRef } from 'references/referencesFirebase';
+import { groupRef } from 'config/referencesFirebase';
 
 import { GroupType } from 'types/global.types';
 

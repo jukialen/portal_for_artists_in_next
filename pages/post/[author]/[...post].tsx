@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getDocs } from 'firebase/firestore';
 
-import { commentsFiles } from 'references/referencesFirebase';
+import { commentsFiles } from 'config/referencesFirebase';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';

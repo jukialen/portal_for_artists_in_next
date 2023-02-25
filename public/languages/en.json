@@ -8,7 +8,7 @@
   },
   "NavForm": {
     "setErrorMessage": "We weren't able to register you.",
-    "theSameEmail": "Account with this e-mail already exist.",
+    "theSameEmail": "Account with this e-mail already exist. Please sign in instead.",
     "setErrorMessageLogin": "Your e-mail or password is incorrect.",
     "unVerified": "Unverified e-mail.",
     "statusLogin": "You're logged in",
@@ -37,7 +37,7 @@
     "createSubmit": "Register",
     "loginSubmit": "Login",
     "loadingRegistration": "I'm registering you...",
-    "successInfoRegistration": "Congratulation! You are registered. Check your mailbox and confirm your e-mail in order to you'll can log　in.",
+    "successInfoRegistration": "Congratulation! You are registered. Check your mailbox and confirm your e-mail in order to you'll can sign in.",
     "providerTitleRegistration": "Or register yourself using:",
     "providerTitleLogin": "Or login via:",
     "acceptInfoOne": "By signing up, you agree to our ",

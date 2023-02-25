@@ -29,7 +29,7 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 import styles from './AccountData.module.scss';
 import Link from 'next/link';
 import { getDoc, setDoc } from 'firebase/firestore';
-import { user } from 'references/referencesFirebase';
+import { user } from 'config/referencesFirebase';
 
 const initialValues = {
   email: '',

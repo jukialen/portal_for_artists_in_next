@@ -20,7 +20,7 @@ import {
   membersGroup,
   moderatorsGroups,
   user,
-} from 'references/referencesFirebase';
+} from 'config/referencesFirebase';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/molecules/GroupTile/Tile';

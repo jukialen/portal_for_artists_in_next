@@ -17,21 +17,28 @@ import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGa
 import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
 
 import styles from './index.module.scss';
+import { useRouter } from 'next/router';
 
-export default function Account() {
+type SessionType = {
+  userId?: string;
+}
+
+export default function Account({ userId }: SessionType) {
   const user = auth.currentUser;
   const data = useHookSWR();
   const loading = useCurrentUser('/');
   const { pseudonym } = useUserData();
+  const { push } = useRouter();
 
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
   const activeColor = '#82FF82';
   const borderColor = '#4F8DFF';
 
-  if (loading) {
-    return null;
-  }
+  if (userId) {
+    return push('/');
+  };
+
   return (
     <>
       <HeadCom path={`/account/${pseudonym || user?.displayName}`} content="Account portal site." />

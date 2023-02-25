@@ -16,7 +16,7 @@ import {
   allPhotosCollectionRef,
   user as currentUser,
   userPhotosRef,
-} from 'references/referencesFirebase';
+} from 'config/referencesFirebase';
 
 import { filesElements } from 'helpers/fileElements';
 

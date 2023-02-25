@@ -10,7 +10,7 @@ import {
   subFilesComments,
   subPostsComments,
   user,
-} from 'references/referencesFirebase';
+} from 'config/referencesFirebase';
 
 import { getDate } from 'helpers/getDate';
 

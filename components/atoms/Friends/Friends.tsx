@@ -7,7 +7,7 @@ import { getDoc } from 'firebase/firestore';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { user } from 'references/referencesFirebase';
+import { user } from 'config/referencesFirebase';
 
 import styles from './Friends.module.scss';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';

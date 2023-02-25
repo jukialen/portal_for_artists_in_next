@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../../../firebase';
+import { emailPasswordSignIn } from "supertokens-web-js/recipe/thirdpartyemailpassword";
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -18,6 +17,7 @@ import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from '../NavForm.module.scss';
 import { Divider, Input } from '@chakra-ui/react';
+import { useUserData } from 'hooks/useUserData';
 
 const initialValues = {
   email: '',
@@ -28,10 +28,10 @@ export const Login = ({ data }: DataType) => {
   const { isLogin, showLoginForm } = useContext(NavFormContext);
   const { showMenu } = useContext(ShowMenuContext);
   const { showUser } = useContext(StatusLoginContext);
+  const { push } = useRouter();
+  const { pseudonym } = useUserData();
 
   const [valuesFields, setValuesFields] = useState<string>('');
-
-  const { push } = useRouter();
 
   const schemaValidation = Yup.object({
     email: SchemaValidation().email,
@@ -44,25 +44,35 @@ export const Login = ({ data }: DataType) => {
   };
 
   const submitAccountData = async ({ email, password }: UserDataType, { resetForm }: FormType) => {
-    signInWithEmailAndPassword(auth, email!, password!)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        if (user.emailVerified) {
+    try {
+      const response = await emailPasswordSignIn({
+        formFields: [
+          { id: "email", value: email!}, 
+          { id: "password", value: password!}
+        ]
+      });
+
+      if (response.status === "FIELD_ERROR") {
+        response.formFields.forEach(formField => setValuesFields(formField.error));
+      } else if (response.status === "WRONG_CREDENTIALS_ERROR") {
+        setValuesFields("Email password combination is incorrect.");
+      } else {
+        if (!!pseudonym) {
           resetForm(initialValues);
           setValuesFields(data?.NavForm?.statusLogin);
           showLoginForm();
-          await push('/app');
-          await showUser();
+          showUser();
+          push('/app');
         } else {
-          setValuesFields(data?.NavForm?.unVerified);
+          push('/new-user');
         }
-      })
-      .catch((e) => {
-        console.log(e);
-        setValuesFields(data?.NavForm?.setErrorMessageLogin);
-        e.code === 'auth/user-not-found' && setValuesFields(data?.NavForm?.notExist);
-      });
+      }
+    } catch (e: any) {
+      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.error);
+    }
   };
+
+
 
   const forgotten__password = () => {
     hideMenuLogin();

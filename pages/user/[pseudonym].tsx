@@ -17,7 +17,7 @@ import { Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/rea
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
 
-import { delFriends, friends, user, usersRef } from 'references/referencesFirebase';
+import { delFriends, friends, user, usersRef } from 'config/referencesFirebase';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { ProfileUser } from 'components/atoms/ProfileUser/ProfileUser';
