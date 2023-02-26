@@ -1,10 +1,6 @@
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth, db, storage } from '../../firebase';
-import { updateProfile } from 'firebase/auth';
-import { UploadTaskSnapshot } from '@firebase/storage';
-import { doc, setDoc } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Progress } from '@chakra-ui/react';
@@ -38,8 +34,6 @@ export default function NewUser() {
   const data = useHookSWR();
   const { showUser } = useContext(StatusLoginContext);
 
-  const user = auth.currentUser!;
-
   const initialValues = {
     username: '',
     pseudonym: '',
@@ -56,71 +50,18 @@ export default function NewUser() {
 
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
+      const userData = await axios.post('/users', { username, pseudonym });
+
       if (!!photo) {
-        const fileRef = await ref(storage, `profilePhotos/${user?.uid}/${photo?.name}`);
-
-        const upload = uploadBytesResumable(fileRef, photo!);
-
-        upload.on(
-          'state_changed',
-          (snapshot: UploadTaskSnapshot) => {
-            const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setProgressUpload(progress);
-            switch (snapshot.state) {
-              case 'running':
-                setValuesFields('Upload is running');
-                break;
-              case 'paused':
-                setValuesFields('Upload is paused');
-                break;
-            }
-          },
-          (e) => {
-            console.error(e);
-            setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
-          },
-          async () => {
-            const photoURL = await getDownloadURL(fileRef);
-
-            await setDoc(doc(db, `users/${user?.uid}`), {
-              pseudonym,
-              profilePhoto: photoURL,
-              groups: [],
-              favoriteGroups: [],
-              friends: [],
-              favoriteFriends: [],
-            });
-
-            setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-            setPhoto(null);
-
-            await updateProfile(user, {
-              displayName: username,
-              photoURL: photoURL,
-            });
-
-            setValuesFields(data?.NewUser?.successSending);
-            await showUser();
-            return push('/app');
-          },
-        );
-      } else {
-        await setDoc(doc(db, `users/${user?.uid}`), {
-          pseudonym,
-          profilePhoto: null,
-          groups: [],
-          favoriteGroups: [],
-          friends: [],
-          favoriteFriends: [],
-        });
-
-        await updateProfile(user, {
-          displayName: username,
-          photoURL: null,
-        });
-
+        await axios.post('/files', { file: photo, ownerFile: pseudonym });
+        userData;
         setValuesFields(data?.NewUser?.successSending);
-        await showUser();
+        showUser();
+        return push('/app');
+      } else {
+        userData;
+        setValuesFields(data?.NewUser?.successSending);
+        showUser();
         return push('/app');
       }
     } catch (error) {
