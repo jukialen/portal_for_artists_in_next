@@ -45,7 +45,6 @@ export const Create = ({ data }: DataType) => {
           ]
         })
 
-        console.log(response);
         if (response.status === "FIELD_ERROR") {
           response.formFields.forEach((formField: { id: string, error: string }) => {
             setValuesFields(formField.error === 'This email already exists. Please sign in instead.' ? data?.NavForm?.theSameEmail : formField.error);
@@ -54,7 +53,6 @@ export const Create = ({ data }: DataType) => {
         } else if (!!email) {
           const exist = await doesEmailExist({ email });
 
-          console.log(exist);
           if (!!exist.doesExist) {
             setValuesFields(data?.NavForm?.theSameEmail);
             resetForm(initialValues);
@@ -62,10 +60,8 @@ export const Create = ({ data }: DataType) => {
           }
         } else {
           const res = await sendVerificationEmail();
-          console.log(res);
           
           if (res.status === "EMAIL_ALREADY_VERIFIED_ERROR") {
-            console.log('st', res.status)
             showCreateForm();
             showLoginForm();
             return null;
@@ -77,7 +73,7 @@ export const Create = ({ data }: DataType) => {
         }   
         setIsLoading(false);
       } catch (e: any) {
-        console.log(e);
+        console.error(e);
         setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.error);
 
       }
