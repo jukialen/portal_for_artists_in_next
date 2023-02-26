@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Session from 'supertokens-web-js/recipe/session';
 import axios from 'axios';
 import { useCurrentUser } from './useCurrentUser';
@@ -23,8 +23,9 @@ export const useUserData = () => {
     }    
   };
 
-  
-  !!useCurrentUser('/') && getUserData();
+  useEffect(() => {
+    getUserData();
+  }, [])
 
   return { pseudonym, description, profilePhoto };
 };
