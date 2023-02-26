@@ -39,15 +39,15 @@ export default function Forgotten() {
       const response = await sendPasswordResetEmail({ formFields: [{ id: 'email', value: email! }]});
       if (response.status === "FIELD_ERROR") {
         response.formFields.forEach(formField => {
-            formField.id === "email" && setValuesFields(formField.error)
+          formField.id === "email" && setValuesFields(formField.error)
         })
       } else {
         resetForm(initialValues);
         setValuesFields(data?.Forgotten?.success);
       } 
     } catch (e: any) {
-      console.log(e);
-        setValuesFields(e.isSuperTokensGeneralError === true ? e.message : 'Oops! Something went wrong.');
+      console.error(e);
+      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : 'Oops! Something went wrong.');
       setValuesFields(data?.error);
     }
   };
@@ -86,7 +86,7 @@ export default function Forgotten() {
           </Form>
         )}
       </Formik>
-      {!isUser && <Footer />}
+       <Footer />
     </>
   );
 }
