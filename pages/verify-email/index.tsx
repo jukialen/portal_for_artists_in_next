@@ -3,6 +3,8 @@ import Image from 'next/image';
 import { verifyEmail, sendVerificationEmail } from 'supertokens-web-js/recipe/emailverification';
 import { Button } from '@chakra-ui/react';
 
+import { useHookSWR } from 'hooks/useHookSWR';
+
 import { Footer } from 'components/molecules/Footer/Footer';
 
 import styles from './index.module.scss';
@@ -13,6 +15,8 @@ export default function VerifyEmail() {
   const [status, setStatus] = useState<'success' | 'error' | ''>('');
   const [valuesFields, setValuesFields] = useState<string>('');
 
+  const data = useHookSWR();
+  
   const sendEmail = async () => {
     try {
       const response = await sendVerificationEmail();
@@ -20,7 +24,7 @@ export default function VerifyEmail() {
         setValuesFields('Please check your email and click the link in it');
       }
     } catch (e: any) {
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message :'Oops! Something went wrong.');      
+      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);      
     }
   };
 
@@ -28,14 +32,14 @@ export default function VerifyEmail() {
     try {
       const response = await verifyEmail();
       if (response.status === 'EMAIL_VERIFICATION_INVALID_TOKEN_ERROR') {
-        setValuesFields('The verification code is expired or invalid. Please click the button to send new email verification link again.');
+        setValuesFields(data?.EmailVerification?.expired);
         setStatus('error');
       } else {
-        setValuesFields('You verified your e-mail.');
+        setValuesFields(data?.EmailVerification?.verified);
         setStatus('success');
       }
     } catch (e: any) {
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message :'Oops! Something went wrong.');      
+      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);      
     }
   };
 

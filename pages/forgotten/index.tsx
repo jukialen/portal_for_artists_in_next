@@ -47,7 +47,7 @@ export default function Forgotten() {
       } 
     } catch (e: any) {
       console.error(e);
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : 'Oops! Something went wrong.');
+      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);
       setValuesFields(data?.error);
     }
   };

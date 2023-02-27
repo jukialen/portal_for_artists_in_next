@@ -9,8 +9,8 @@
   "NavForm": {
     "setErrorMessageCreate": "登録することが出来ません。",
     "theSameEmail": "このメールのアカウントはいます。代わりにサインインして下さい。",
-    "setErrorMessageLogin": "メールかパスポートが正しくないです。",
     "unVerified": "メールがベリファイいませんでした。",
+    "wrongLoginData": "メールパスワードの組み合わせが正しくありません。",
     "statusLogin": "ログイン中している。",
     "notExist": "ユーザーは生きませｎ。",
     "validateRequired": "所要",
@@ -274,6 +274,11 @@
     "buttonAria": "button to reset the button",
     "success": "Check your mailbox."
   },
+  "ResetPassword": {
+    "wrongValues": "価値観は同じではありません。",
+    "success": "パスワードのリセットに成功しました！",
+    "failed": "パスワードのリセットに失敗しました。もう一度やり直してください。"
+  },
   "DeletionFile": {
     "loadingText": "消してます",
     "deletionButton": "消します",
@@ -345,6 +350,11 @@
     "supInfo": "＊＊四営業日以内にメールにてご連絡ください。",
     "pSupInfo": "＊＊＊二営業日以内にメールにてご連絡ください。さらにSlackにアクセス。"
   },
+  "EmailVerification": {
+    "expired": "認証コードの有効期限が切れているか、無効になっています。ボタンをクリックして、新しい確認用Eメールリンクを再度送信してください。",
+    "verified": "メールを確認しました。"
+  },
+  "unknownError": "おっと？！何かが間違っていた。",
   "error": "遣り返すかインターネット接続が見えてください。",
   "edit": "エディト",
   "cancel": "取り止める",

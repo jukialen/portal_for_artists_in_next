@@ -9,8 +9,8 @@
   "NavForm": {
     "setErrorMessageCreate": "Nie mogliśmy Cię zarejestrować.",
     "theSameEmail": "Konto z takim adresem e-mail już istnieje. Proszę się zalogować.",
-    "setErrorMessageLogin": "Niepoprawny e-mail lub hasło.",
     "unVerified": "Niezweryfikowany e-mail.",
+    "wrongLoginData": "Kombinacja hasła e-mail jest nieprawidłowa.",
     "statusLogin": "Zostałaś/eś zalogowana/y",
     "notExist": "Użytkownik nie istnieje.",
     "validateRequired": "Wymagane",
@@ -274,6 +274,11 @@
     "buttonAria": "przycisk do resetowania hasła",
     "success": "Sprawdź swoją skrzynkę mailową."
   },
+  "ResetPassword": {
+    "wrongValues": "Pola nie mają tej samej wartości.",
+    "success": "Resetowanie hasła zakończone sukcesem!",
+    "failed": "Resetowanie hasła nie powiodło się. Proszę spróbować ponownie."
+  },
   "PasswordAccount": {
     "differentPasswords": "Hasła nie są takie same",
     "buttonAria": "przycisk do aktualizacji hasła",
@@ -350,6 +355,11 @@
     "supInfo": "** kontakt przez e-mail w ciągu 4 dni roboczych",
     "pSupInfo": "*** kontakt przez emailw ciągu 2 dni roboczych. Dodatkowo dostęp do grupy na Slacku"
   },
+  "EmailVerification": {
+    "expired": "The verification code is expired or invalid. Please click the button to send new email verification link again.",
+    "verified": "Zweryfikowałeś swój e-mail."
+  },
+  "unknownError": "Ups! Coś poszło nie tak.",
   "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",
   "cancel": "Anuluj",

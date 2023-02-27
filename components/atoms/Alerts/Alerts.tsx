@@ -13,6 +13,8 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let status: string;
 
     switch (valueFields) {
+      case data?.ResetPassword?.success:
+      case data?.NewUser?.successSending:
       case data?.DeletionPost?.deleted:
       case data?.DeletionFile?.deleted:
       case data?.NavForm?.statusLogin:
@@ -34,11 +36,18 @@ export const Alerts = ({ valueFields }: AlertsType) => {
         return (status = 'warning');
       case 'Nie usunięto pliku.':
       case data?.NavForm?.notExist:
-      case data?.NavForm?.setErrorMessageLogin:
       case data?.NavForm?.theSameEmail:
       case data?.AnotherForm?.notUploadFile:
+      case data?.ResetPassword?.failed:
+      case data?.NewUser?.errorSending:
+      case data?.EmailVerification?.expired:
+      case data?.unknownError:
+      case data?.ResetPassword?.wrongValues:
+      case data?.NavForm?.wrongLoginData:
       case data?.error:
         return (status = 'error');
+      default:
+        return (status = 'warning');
     }
   };
 
@@ -46,6 +55,8 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let color: string;
 
     switch (valueFields) {
+      case data?.ResetPassword?.success:
+      case data?.NewUser?.successSending:
       case data?.DeletionPost?.deleted:
       case data?.DeletionFile?.deleted:
       case data?.NavForm?.statusLogin:
@@ -67,11 +78,18 @@ export const Alerts = ({ valueFields }: AlertsType) => {
         return (color = 'yellow');
       case 'Nie usunięto pliku.':
       case data?.NavForm?.notExist:
-      case data?.NavForm?.setErrorMessageLogin:
       case data?.NavForm?.theSameEmail:
       case data?.AnotherForm?.notUploadFile:
+      case data?.ResetPassword?.failed:
+      case data?.NewUser?.errorSending:
+      case data?.EmailVerification?.expired:
+      case data?.unknownError:
+      case data?.ResetPassword?.wrongValues:
+      case data?.NavForm?.wrongLoginData:
       case data?.error:
         return (color = 'red');
+      default:
+        return (color = 'yellow');
     }
   };
 

@@ -38,7 +38,7 @@ export default function ResetPassword() {
   const newPasswordEntered = async ({ newPassword, repeatPassword }: ResetPasswordType) => {
     try {
       if (newPassword !== repeatPassword) {
-        setValuesFields("Values isn't the same");
+        setValuesFields(data?.ResetPassword?.wrongValues);
         return null;
       } else {
         const response = await submitNewPassword({ formFields: [{ id: 'password', value: newPassword }] });
@@ -46,16 +46,16 @@ export default function ResetPassword() {
         if (response.status === 'FIELD_ERROR') {
           response.formFields.forEach((formField) => formField.id === 'password' && setValuesFields(formField.error));
         } else if (response.status === 'RESET_PASSWORD_INVALID_TOKEN_ERROR') {
-          setValuesFields('Password reset failed. Please try again');
+          setValuesFields(data?.ResetPassword?.failed);
           push('/');
         } else {
-          setValuesFields('Password reset successful!');
+          setValuesFields(data?.ResetPassword?.success);
           push('/');
         }
       }
     } catch (e: any) {
       console.error(e);
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : 'Oops! Something went wrong.');
+      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);
     }
   };
 

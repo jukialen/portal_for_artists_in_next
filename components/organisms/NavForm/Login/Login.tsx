@@ -55,7 +55,7 @@ export const Login = ({ data }: DataType) => {
       if (response.status === "FIELD_ERROR") {
         response.formFields.forEach(formField => setValuesFields(formField.error));
       } else if (response.status === "WRONG_CREDENTIALS_ERROR") {
-        setValuesFields("Email password combination is incorrect.");
+        setValuesFields(data?.NavForm?.wrongLoginData);
       } else {
         if (!!pseudonym) {
           resetForm(initialValues);

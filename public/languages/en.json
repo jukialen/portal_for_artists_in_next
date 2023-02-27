@@ -9,8 +9,8 @@
   "NavForm": {
     "setErrorMessage": "We weren't able to register you.",
     "theSameEmail": "Account with this e-mail already exist. Please sign in instead.",
-    "setErrorMessageLogin": "Your e-mail or password is incorrect.",
     "unVerified": "Unverified e-mail.",
+    "wrongLoginData": "Email password combination is incorrect.",
     "statusLogin": "You're logged in",
     "notExist": "User doesn't exist.",
     "validateRequired": "Required",
@@ -274,6 +274,11 @@
     "buttonAria": "button to reset the button",
     "success": "Check your mailbox."
   },
+  "ResetPassword": {
+    "wrongValues": "Values aren't the same.",
+    "success": "Password reset successful!",
+    "failed": "Password reset failed. Please try again."
+  },
   "PasswordAccount": {
     "differentPasswords": "Passwords aren't the same.",
     "buttonAria": "button to update the password",
@@ -350,6 +355,11 @@
     "supInfo": "** contact through e-mail within 4 working days",
     "pSupInfo": "*** contact through e-mail within 2 working days. Additionally access to Slack."
   },
+  "EmailVerification": {
+    "expired": "The verification code is expired or invalid. Please click the button to send new email verification link again.",
+    "verified": "You verified your e-mail."
+  },
+  "unknownError": "Oops! Something went wrong.",
   "error": "Try again or check your internet connection.",
   "edit": "Edit",
   "cancel": "Cancel",
