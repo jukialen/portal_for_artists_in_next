@@ -21,7 +21,7 @@ export default function VerifyEmail() {
     try {
       const response = await sendVerificationEmail();
       if (response.status === 'OK') {
-        setValuesFields('Please check your email and click the link in it');
+        setValuesFields(data?.EmailVerification?.sendedSuccess);
       }
     } catch (e: any) {
       setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);      

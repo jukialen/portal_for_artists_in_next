@@ -356,6 +356,7 @@
     "pSupInfo": "*** contact through e-mail within 2 working days. Additionally access to Slack."
   },
   "EmailVerification": {
+    "sendedSuccess": "Please check your email and click the link in it.",
     "expired": "The verification code is expired or invalid. Please click the button to send new email verification link again.",
     "verified": "You verified your e-mail."
   },

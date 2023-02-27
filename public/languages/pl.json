@@ -356,7 +356,8 @@
     "pSupInfo": "*** kontakt przez emailw ciągu 2 dni roboczych. Dodatkowo dostęp do grupy na Slacku"
   },
   "EmailVerification": {
-    "expired": "The verification code is expired or invalid. Please click the button to send new email verification link again.",
+    "sendedSuccess": "Proszę sprawdzić swoją skrzynkę e-mailową i kliknąć w link w nim zawarty.",
+    "expired": "Kod weryfikacyjny wygasł lub jest nieważny. Proszę kliknąć przycisk, aby ponownie wysłać nowy link weryfikacyjny e-mailem.",
     "verified": "Zweryfikowałeś swój e-mail."
   },
   "unknownError": "Ups! Coś poszło nie tak.",
