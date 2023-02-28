@@ -13,7 +13,7 @@ import error from 'public/error.png';
 
 export default function VerifyEmail() {
   const [status, setStatus] = useState<'success' | 'error' | ''>('');
-  const [valuesFields, setValuesFields] = useState<string>('');
+  const [valuesFields, setValuesFields] = useState('');
 
   const data = useHookSWR();
   
