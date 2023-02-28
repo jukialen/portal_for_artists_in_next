@@ -1,32 +1,46 @@
 @use 'styles/variables' as *;
 
 .providers {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   justify-items: center;
-  margin: 1.5rem auto 2rem;
+  margin: 0 auto;
 
-  .google,
-  .yahoo,
-  .github {
-    width: 3rem;
-    height: 3rem;
-    margin: .5rem 1rem;
+  .button {
+    width: 90%;
+    height: 2.7rem;
+    display: flex;
+    gap: 0 1rem;
+    justify-content: center;
+    align-items: center;
+    margin: .5rem;
     border: 0.1rem solid $secondary__color;
     color: $dark__background__light__color;
-    border-radius: 50%;
+    border-radius: 2rem;
+    padding: 0 .7rem;
     cursor: pointer;
 
     .svg {
       font-size: 1.2rem;
     }
-  }
 
-  .google {
-    color: $google__provide;
-  }
+    p {
+      font-size: 1rem;
+    }
 
-  .yahoo {
-    color: $yahoo_provider;
+    &:first-child {
+      color: $google__provider;
+    }
+    
+    &:nth-child(2) {
+      color: $spotify_provider;
+    }
+
+    &:nth-child(3) {
+      color: $discord_provider;
+    }
+
+    &:nth-child(4) {
+      color: $line_provider;
+    }
   }
 }

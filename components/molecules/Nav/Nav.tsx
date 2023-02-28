@@ -26,11 +26,13 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   const { isMenu, showMenu } = useContext(ShowMenuContext);
   const { showLoginForm, showCreateForm } = useContext(NavFormContext);
 
-  const hideMenuLogin = () => showLoginForm();
-
+  const hideMenuLogin = () => {
+    showLoginForm();
+    showMenu();
+  }
   const hideMenuCreate = () => {
     showCreateForm();
-    titleSecondNav === `${data?.Nav?.account}` && showMenu();
+    showMenu();
   };
   
   const sign__out = async () => {

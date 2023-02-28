@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import { emailPasswordSignIn } from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import { emailPasswordSignIn } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -25,7 +25,7 @@ const initialValues = {
 };
 
 export const Login = ({ data }: DataType) => {
-  const { isLogin, showLoginForm } = useContext(NavFormContext);
+  const { isLogin, showLoginForm, showCreateForm } = useContext(NavFormContext);
   const { showMenu } = useContext(ShowMenuContext);
   const { showUser } = useContext(StatusLoginContext);
   const { push } = useRouter();
@@ -43,18 +43,23 @@ export const Login = ({ data }: DataType) => {
     showMenu();
   };
 
+  const changeForm = () => {
+    showCreateForm();
+    showLoginForm();
+  };
+  
   const submitAccountData = async ({ email, password }: UserDataType, { resetForm }: FormType) => {
     try {
       const response = await emailPasswordSignIn({
         formFields: [
-          { id: "email", value: email!}, 
-          { id: "password", value: password!}
-        ]
+          { id: 'email', value: email! },
+          { id: 'password', value: password! },
+        ],
       });
 
-      if (response.status === "FIELD_ERROR") {
-        response.formFields.forEach(formField => setValuesFields(formField.error));
-      } else if (response.status === "WRONG_CREDENTIALS_ERROR") {
+      if (response.status === 'FIELD_ERROR') {
+        response.formFields.forEach((formField) => setValuesFields(formField.error));
+      } else if (response.status === 'WRONG_CREDENTIALS_ERROR') {
         setValuesFields(data?.NavForm?.wrongLoginData);
       } else {
         if (!!pseudonym) {
@@ -72,8 +77,6 @@ export const Login = ({ data }: DataType) => {
     }
   };
 
-
-
   const forgotten__password = () => {
     hideMenuLogin();
     return push('/forgotten');
@@ -81,10 +84,7 @@ export const Login = ({ data }: DataType) => {
 
   return (
     <div className={`${styles.login} ${isLogin ? styles.form__menu__active : ''}`}>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={schemaValidation}
-        onSubmit={submitAccountData}>
+      <Formik initialValues={initialValues} validationSchema={schemaValidation} onSubmit={submitAccountData}>
         {({ values, handleChange, errors, touched }) => (
           <Form>
             <h2 className={styles.title}>{data?.NavForm?.titleOfLogin}</h2>
@@ -95,9 +95,7 @@ export const Login = ({ data }: DataType) => {
               value={values.email}
               onChange={handleChange}
               placeholder={data?.NavForm?.email}
-              className={
-                touched.email && !!errors.email ? styles.inputForm__error : styles.inputForm
-              }
+              className={touched.email && !!errors.email ? styles.inputForm__error : styles.inputForm}
             />
 
             <FormError nameError="email" />
@@ -108,34 +106,33 @@ export const Login = ({ data }: DataType) => {
               value={values.password}
               onChange={handleChange}
               placeholder={data?.NavForm?.password}
-              className={
-                touched.password && !!errors.password ? styles.inputForm__error : styles.inputForm
-              }
+              className={touched.password && !!errors.password ? styles.inputForm__error : styles.inputForm}
             />
 
             <FormError nameError="password" />
 
-            <button
-              type="submit"
-              className={`button ${styles.submit__button}`}
-              aria-label="login button">
+            <button type="submit" className={`button ${styles.submit__button}`} aria-label="login button">
               {data?.NavForm?.loginSubmit}
             </button>
 
             {!!valuesFields && <Alerts valueFields={valuesFields} />}
-
-            <button className={`button ${styles.forgotten}`} onClick={forgotten__password}>
-              I forgot my password
-            </button>
           </Form>
         )}
       </Formik>
 
-      <Divider width="90%" />
+      <a className={` ${styles.forgotten}`} onClick={forgotten__password}>
+        {data?.NavForm?.forgottenPasswordLink}
+      </a>
 
-      <h4 className={styles.provider__title}>{data?.NavForm?.providerTitleLogin}</h4>
+      <div className={styles.dividerWIthText}>
+        <Divider />
+        <h4 className={styles.provider__title}>{data?.NavForm?.providerTitleLogin}</h4>
+        <Divider />
+      </div>
 
       <Providers />
+
+      <p className={styles.changeForm}>{data?.NavForm?.changeToLogin}<a onClick={changeForm}>{data?.Nav?.signUp}</a></p>
     </div>
   );
 };
