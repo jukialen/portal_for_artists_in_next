@@ -8,7 +8,7 @@
   },
   "NavForm": {
     "setErrorMessage": "We weren't able to register you.",
-    "theSameEmail": "Account with this e-mail already exist. Please sign in instead.",
+    "theSameEmail": "Account with this e-mail already exists. Please sign in instead.",
     "unVerified": "Unverified e-mail.",
     "wrongLoginData": "Email password combination is incorrect.",
     "statusLogin": "You're logged in",

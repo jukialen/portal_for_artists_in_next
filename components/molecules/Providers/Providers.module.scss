@@ -1,8 +1,10 @@
 @use 'styles/variables' as *;
 
 .providers {
+  height: 5rem;
   display: flex;
-  justify-items: center;
+  justify-content: center;
+  align-items: center;
   margin: 0 auto;
 
   .button {
