@@ -13,7 +13,7 @@ export const useCurrentUser = (adress: string) => {
 
   useEffect(() => {
     currentUser();
-  }, [Session.doesSessionExist()]);
+  }, []);
 
   return loading;
 };
