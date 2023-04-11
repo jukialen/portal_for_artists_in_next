@@ -39,9 +39,17 @@ export const Create = ({ data }: DataType) => {
     showCreateForm();
   };
 
-  const submitAccountData = useCallback(async ({ email, password }: UserDataType, { resetForm }: FormType) => {
+  const registration = async ({ email, password }: UserDataType, { resetForm }: FormType) => {
     setIsLoading(true);
     try {
+      const exist = await doesEmailExist({ email });
+
+      if (!!exist.doesExist) {
+        setValuesFields(data?.NavForm?.theSameEmail);
+        resetForm(initialValues);
+        setIsLoading(false);
+      }
+
       const response = await emailPasswordSignUp({
         formFields: [
           { id: 'email', value: email! },
@@ -58,18 +66,11 @@ export const Create = ({ data }: DataType) => {
           );
           return null;
         });
-      } else if (!!email) {
-        const exist = await doesEmailExist({ email });
-
-        if (!!exist.doesExist) {
-          setValuesFields(data?.NavForm?.theSameEmail);
-          resetForm(initialValues);
-          return null;
-        }
       } else {
         const res = await sendVerificationEmail();
 
         if (res.status === 'EMAIL_ALREADY_VERIFIED_ERROR') {
+          resetForm(initialValues);
           showCreateForm();
           showLoginForm();
           return null;
@@ -83,12 +84,13 @@ export const Create = ({ data }: DataType) => {
     } catch (e: any) {
       console.error(e);
       setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.error);
+      setIsLoading(!isLoading);
     }
-  }, []);
+  };
 
   return (
     <div className={`${styles.create__account} ${isCreate ? styles.form__menu__active : ''}`}>
-      <Formik initialValues={initialValues} validationSchema={schemaValidation} onSubmit={submitAccountData}>
+      <Formik initialValues={initialValues} validationSchema={schemaValidation} onSubmit={registration}>
         {({ values, handleChange, errors, touched }) => (
           <Form>
             <h2 className={styles.title}>{data?.NavForm?.titleOfRegistration}</h2>
@@ -130,7 +132,6 @@ export const Create = ({ data }: DataType) => {
         <Divider />
       </div>
 
-          
       <Providers />
       <p className={styles.acceptInfo}>
         {data?.NavForm?.acceptInfoOne}
@@ -144,7 +145,10 @@ export const Create = ({ data }: DataType) => {
         {data?.NavForm?.dot}
       </p>
 
-      <p className={styles.changeForm}>{data?.NavForm?.changeToCreate}<a onClick={changeForm}>{data?.Nav?.signIn}</a></p>
+      <p className={styles.changeForm}>
+        {data?.NavForm?.changeToCreate}
+        <a onClick={changeForm}>{data?.Nav?.signIn}</a>
+      </p>
     </div>
   );
 };

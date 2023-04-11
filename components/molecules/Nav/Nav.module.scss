@@ -24,6 +24,15 @@
         align-items: center;
         justify-content: center;
       }
+
+      .withLogo {
+        display: grid;
+        grid-template-columns: 2rem 5.5rem;
+        gap: .5rem;
+        justify-content: center;
+        align-items: center;
+        margin-left: 0;
+      }
     }
   }
 

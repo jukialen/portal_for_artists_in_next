@@ -47,30 +47,26 @@ export const Login = ({ data }: DataType) => {
     showCreateForm();
     showLoginForm();
   };
-  
-  const submitAccountData = async ({ email, password }: UserDataType, { resetForm }: FormType) => {
+
+  const signIn = async ({ email, password }: UserDataType, { resetForm }: FormType) => {
     try {
-      const response = await emailPasswordSignIn({
+      const res = await emailPasswordSignIn({
         formFields: [
           { id: 'email', value: email! },
           { id: 'password', value: password! },
         ],
       });
 
-      if (response.status === 'FIELD_ERROR') {
-        response.formFields.forEach((formField) => setValuesFields(formField.error));
-      } else if (response.status === 'WRONG_CREDENTIALS_ERROR') {
+      if (res.status === 'FIELD_ERROR') {
+        res.formFields.forEach((formField) => setValuesFields(formField.error));
+      } else if (res.status === 'WRONG_CREDENTIALS_ERROR') {
         setValuesFields(data?.NavForm?.wrongLoginData);
       } else {
-        if (!!pseudonym) {
-          resetForm(initialValues);
-          setValuesFields(data?.NavForm?.statusLogin);
-          showLoginForm();
-          showUser();
-          push('/app');
-        } else {
-          push('/new-user');
-        }
+        resetForm(initialValues);
+        setValuesFields(data?.NavForm?.statusLogin);
+        showLoginForm();
+        showUser();
+        !!pseudonym ? push('/app') : push('/new-user');
       }
     } catch (e: any) {
       setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.error);
@@ -79,12 +75,12 @@ export const Login = ({ data }: DataType) => {
 
   const forgotten__password = () => {
     hideMenuLogin();
-    return push('/forgotten');
+    push('/forgotten');
   };
 
   return (
     <div className={`${styles.login} ${isLogin ? styles.form__menu__active : ''}`}>
-      <Formik initialValues={initialValues} validationSchema={schemaValidation} onSubmit={submitAccountData}>
+      <Formik initialValues={initialValues} validationSchema={schemaValidation} onSubmit={signIn}>
         {({ values, handleChange, errors, touched }) => (
           <Form>
             <h2 className={styles.title}>{data?.NavForm?.titleOfLogin}</h2>
@@ -132,7 +128,10 @@ export const Login = ({ data }: DataType) => {
 
       <Providers />
 
-      <p className={styles.changeForm}>{data?.NavForm?.changeToLogin}<a onClick={changeForm}>{data?.Nav?.signUp}</a></p>
+      <p className={styles.changeForm}>
+        {data?.NavForm?.changeToLogin}
+        <a onClick={changeForm}>{data?.Nav?.signUp}</a>
+      </p>
     </div>
   );
 };

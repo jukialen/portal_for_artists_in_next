@@ -28,6 +28,7 @@ export const Providers = () => {
       });
       push(authUrl);
     } catch (e: any) {
+      console.error('e', e);
       setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);
     }
   };
