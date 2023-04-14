@@ -1,22 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { storage } from '../../../firebase';
-import { ref } from 'firebase/storage';
-import {
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  QueryDocumentSnapshot,
-  startAfter,
-} from 'firebase/firestore';
-
-import { user as currentUser, userVideosRef } from 'config/referencesFirebase';
+import axios from 'axios';
 
 import { FileType, UserType } from 'types/global.types';
 
-import { filesElements } from 'helpers/fileElements';
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
@@ -25,7 +13,7 @@ import { Videos } from 'components/molecules/Videos/Videos';
 
 export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
   const [userVideos, setUserVideos] = useState<FileType[]>([]);
-  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
+  const [lastVisible, setLastVisible] = useState<FileType>();
   let [i, setI] = useState(1);
 
   const { asPath } = useRouter();
@@ -34,28 +22,33 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
 
   const downloadVideos = async () => {
     try {
-      const firstPage = query(
-        userVideosRef(user!),
-        orderBy('timeCreated', 'desc'),
-        limit(maxItems),
+      const firstPage: [{ name: string; ownerFile: string; createdAt: string; updatedAt: string }] = await axios.get(
+        `${backUrl}/files`,
+        {
+          params: {
+            where: {
+              AND: [{ tags: 'videos' }, { pseudonym }],
+            },
+            limit: maxItems,
+            sortBy: 'name, DESC',
+          },
+        },
       );
 
       const filesArray: FileType[] = [];
 
-      const documentSnapshots = await getDocs(firstPage);
-
-      for (const document of documentSnapshots.docs) {
-        const docSnap = await getDoc(currentUser(document.data().uid));
-
-        if (docSnap.exists()) {
-          filesElements(filesArray, document, !!pseudonym ? pseudonym : docSnap.data().pseudonym);
-        } else {
-          console.error('No such doc');
-        }
+      for (const file of firstPage) {
+        filesArray.push({
+          name: file.name,
+          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          time: file.updatedAt || file.createdAt,
+          pseudonym,
+          description: file.name,
+        });
       }
+
       setUserVideos(filesArray);
-      filesArray.length === maxItems &&
-        setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      filesArray.length === maxItems && setLastVisible(filesArray[filesArray.length - 1]);
     } catch (e) {
       console.log('No such document!', e);
     }
@@ -67,28 +60,32 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
 
   const nextElements = async () => {
     try {
-      const nextPage = query(
-        userVideosRef(user!),
-        orderBy('timeCreated', 'desc'),
-        limit(maxItems),
-        startAfter(lastVisible),
+      const nextPage: [{ name: string; ownerFile: string; createdAt: string; updatedAt: string }] = await axios.get(
+        `${backUrl}/files`,
+        {
+          params: {
+            where: {
+              AND: [{ tags: 'videos' }, { pseudonym }],
+            },
+            limit: maxItems,
+            sortBy: 'name, DESC',
+            cursor: lastVisible,
+          },
+        },
       );
-
-      const documentSnapshots = await getDocs(nextPage);
-
-      setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
 
       const nextArray: FileType[] = [];
 
-      for (const document of documentSnapshots.docs) {
-        const docSnap = await getDoc(currentUser(document.data().uid));
-
-        if (docSnap.exists()) {
-          filesElements(nextArray, document, docSnap.data().pseudonym);
-        } else {
-          console.log('No more drawings');
-        }
+      for (const file of nextPage) {
+        nextArray.push({
+          name: file.name,
+          fileUrl: `${cloudFrontUrl}/files`,
+          time: file.updatedAt || file.createdAt,
+          pseudonym,
+          description: file.name,
+        });
       }
+
       const newArray = userVideos.concat(...nextArray);
       setUserVideos(newArray);
       setI(++i);
@@ -105,25 +102,14 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
 
       <Wrapper>
         {userVideos.length > 0 ? (
-          userVideos.map(({ fileUrl, description, time, tags, uid, idPost }: FileType, index) => (
-            <Videos
-              key={index}
-              link={fileUrl}
-              refFile={userVideosRef(user!)}
-              refStorage={ref(storage, `${user}/videos/${description}`)}
-              description={description}
-              tag={tags}
-              uid={uid}
-              idPost={idPost}
-            />
+          userVideos.map(({ name, fileUrl, description, time, tags }: FileType, index) => (
+            <Videos key={index} name={name} link={fileUrl} description={description} tag={tags} time={time} />
           ))
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.videos} />
         )}
 
-        {!!lastVisible && userVideos.length === maxItems * i && (
-          <MoreButton nextElements={nextElements} />
-        )}
+        {!!lastVisible && userVideos.length === maxItems * i && <MoreButton nextElements={nextElements} />}
       </Wrapper>
     </article>
   );

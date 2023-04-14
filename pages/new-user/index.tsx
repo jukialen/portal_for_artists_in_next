@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
+import { getUserInfo } from 'helpers/getUserInfo';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -7,6 +8,8 @@ import { Input, Progress } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { EventType } from 'types/global.types';
+
+import { backUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
@@ -50,33 +53,32 @@ export default function NewUser() {
 
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
-      const userData = await axios.post('/users', { username, pseudonym });
-
-      if (!!photo) {
-        await axios.post('/files', { file: photo, ownerFile: pseudonym });
-        userData;
-        setValuesFields(data?.NewUser?.successSending);
-        showUser();
-        return push('/app');
-      } else {
-        userData;
-        setValuesFields(data?.NewUser?.successSending);
-        showUser();
-        return push('/app');
-      }
+      const { userId } = await getUserInfo();
+      !!photo &&
+        (await axios.post(`${backUrl}/files`, {
+          data: { file: photo, ownerFile: userId },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }));
+      await axios.post(`${backUrl}/users`, { username, pseudonym });
+      setValuesFields(data?.NewUser?.successSending);
+      showUser();
+      return push('/app');
     } catch (error) {
       setValuesFields(data?.NewUser?.errorSending);
     }
   };
 
-  return !loading ? (
+  if (loading) {
+    return null;
+  }
+
+  return (
     <>
       <HeadCom path={asPath} content="The first addition of data by a new user." />
 
-      <Formik
-        initialValues={initialValues}
-        validationSchema={schemaValidation}
-        onSubmit={sendingData}>
+      <Formik initialValues={initialValues} validationSchema={schemaValidation} onSubmit={sendingData}>
         {({ values, handleChange, errors, touched }) => (
           <Form className={styles.first__data}>
             <h2 className={styles.title}>{data?.NewUser?.title}</h2>
@@ -87,9 +89,7 @@ export default function NewUser() {
               value={values.username}
               onChange={handleChange}
               placeholder={data?.NewUser?.name}
-              className={
-                touched.username && !!errors.username ? styles.inputForm__error : styles.inputForm
-              }
+              className={touched.username && !!errors.username ? styles.inputForm__error : styles.inputForm}
             />
 
             <FormError nameError="username" />
@@ -100,9 +100,7 @@ export default function NewUser() {
               value={values.pseudonym}
               onChange={handleChange}
               placeholder={data?.AnotherForm?.pseudonym}
-              className={
-                touched.pseudonym && !!errors.pseudonym ? styles.inputForm__error : styles.inputForm
-              }
+              className={touched.pseudonym && !!errors.pseudonym ? styles.inputForm__error : styles.inputForm}
             />
 
             <FormError nameError="pseudonym" />
@@ -145,5 +143,5 @@ export default function NewUser() {
         )}
       </Formik>
     </>
-  ) : null;
+  );
 }

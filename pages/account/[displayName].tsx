@@ -19,15 +19,10 @@ import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
 import styles from './index.module.scss';
 import { useRouter } from 'next/router';
 
-type SessionType = {
-  userId?: string;
-}
-
-export default function Account({ userId }: SessionType) {
-  const user = auth.currentUser;
+export default function Account() {
   const data = useHookSWR();
   const loading = useCurrentUser('/');
-  const { pseudonym } = useUserData();
+  const { id, pseudonym } = useUserData();
   const { push } = useRouter();
 
   const selectedColor = '#FFD068';
@@ -35,23 +30,17 @@ export default function Account({ userId }: SessionType) {
   const activeColor = '#82FF82';
   const borderColor = '#4F8DFF';
 
-  if (userId) {
+  if (loading) {
     return push('/');
-  };
+  }
 
   return (
     <>
-      <HeadCom path={`/account/${pseudonym || user?.displayName}`} content="Account portal site." />
+      <HeadCom path={`/account/${pseudonym}`} content="Account portal site." />
 
       <h2 className={styles.account__h2}>{data?.Nav?.account}</h2>
 
-      <Tabs
-        className={styles.tabsMenu}
-        size="sm"
-        isLazy
-        lazyBehavior="keepMounted"
-        isFitted
-        variant="unstyled">
+      <Tabs className={styles.tabsMenu} size="sm" isLazy lazyBehavior="keepMounted" isFitted variant="unstyled">
         <TabList className={styles.topTabList} role="tablist">
           <div className={styles.account__menu}>
             <div className={styles.content}>
@@ -103,7 +92,7 @@ export default function Account({ userId }: SessionType) {
           <TabPanel className={styles.tabPanel} role="tabpanel">
             <>
               <AccountData data={data} />
-              <DeleteAccount />
+              <DeleteAccount pseudonym={pseudonym} />
             </>
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
@@ -146,13 +135,13 @@ export default function Account({ userId }: SessionType) {
               </TabList>
               <TabPanels padding={0}>
                 <TabPanel padding={0} role="tabpanel">
-                  <PhotosGallery user={user?.uid} data={data} pseudonym={pseudonym} />
+                  <PhotosGallery user={id} data={data} pseudonym={pseudonym} />
                 </TabPanel>
                 <TabPanel padding={0} role="tabpanel">
-                  <AnimatedGallery user={user?.uid} data={data} pseudonym={pseudonym} />
+                  <AnimatedGallery user={id} data={data} pseudonym={pseudonym} />
                 </TabPanel>
                 <TabPanel padding={0} role="tabpanel">
-                  <VideoGallery user={user?.uid} data={data} pseudonym={pseudonym} />
+                  <VideoGallery user={id} data={data} pseudonym={pseudonym} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -161,10 +150,10 @@ export default function Account({ userId }: SessionType) {
             <ProfileAccount data={data} />
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
-            <FriendsList uid={user?.uid!} />
+            <FriendsList uid={id} />
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
-            <GroupUsers uid={user?.uid!} />
+            <GroupUsers id={id} />
           </TabPanel>
         </TabPanels>
       </Tabs>

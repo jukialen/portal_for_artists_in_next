@@ -94,6 +94,7 @@
       "actualEmail": "Aktualny e-mail",
       "changeEmail": "Zmień adres e-mail",
       "currentPassword": "Wpisz aktualne hasło",
+      "oldPassword:": "Wpisz stare hasło",
       "newPassword": "Wpisz nowe hasło",
       "againNewPassword": "Powtórz nowe hasło",
       "changePassword": "Zmień hasło",
@@ -334,7 +335,6 @@
     "title": "Usuń konto",
     "body": "Jesteś pewien/pewna? Nie będziesz mógł/mogła tego cofnić.",
     "cancel": "Cofnij",
-    "deletionProfilePhoto": "Usuwanie zdjęcia profilowego",
     "deletionAccount": "Usuwanie konta"
   },
   "Plans": {

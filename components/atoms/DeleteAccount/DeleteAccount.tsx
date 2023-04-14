@@ -1,9 +1,5 @@
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth, storage } from '../../../firebase';
-import { deleteUser } from 'firebase/auth';
-import { deleteDoc } from 'firebase/firestore';
-import { deleteObject, ref } from 'firebase/storage';
 import axios from 'axios';
 import {
   AlertDialog,
@@ -18,26 +14,24 @@ import {
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { user } from 'config/referencesFirebase';
+import { backUrl } from 'utilites/constants';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './DeleteAccount.module.scss';
 import { DeleteIcon } from '@chakra-ui/icons';
 
-export const DeleteAccount = () => {
+type DeletionPropsType = { pseudonym: string };
+
+export const DeleteAccount = ({ pseudonym }: DeletionPropsType) => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [values, setValues] = useState<string>('');
+  const [values, setValues] = useState('');
   const cancelRef = useRef(null);
   const toast = useToast();
 
   const { push } = useRouter();
   const data = useHookSWR();
-
-  const currentUser = auth.currentUser!;
-
-  const profileUserRef = ref(storage, `profilePhotos/${currentUser?.uid}/${currentUser?.uid}`);
 
   const onClose = () => setIsOpen(false);
 
@@ -45,15 +39,10 @@ export const DeleteAccount = () => {
     try {
       await onClose();
       await setDeleting(!deleting);
-      await deleteObject(profileUserRef);
-      await setValues(data?.DeletionAccount?.deletionProfilePhoto);
-      await deleteDoc(user(currentUser?.uid));
       await setValues(data?.DeletionAccount?.deletionAccount);
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_PAGE}/api/deleteUser`, {
-        email: currentUser!.email,
-        uid: currentUser!.uid,
-      });
+      const res = await axios.delete(`${backUrl}/users`, { params: { pseudonym } });
       await setValues('');
+
       res.status === 200
         ? toast({
             description: data?.Contact?.success,
@@ -67,7 +56,7 @@ export const DeleteAccount = () => {
             variant: 'subtle',
             duration: 9000,
           });
-      await deleteUser(currentUser);
+
       await setDeleting(!deleting);
       await push('/');
     } catch (e) {

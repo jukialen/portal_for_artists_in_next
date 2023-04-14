@@ -159,7 +159,7 @@ export default function Plans() {
             </p>
           </div>
           <p className={styles.formats}>
-            {data?.Plans?.formats}.jpg, .jpeg, .png, .webp, .avif
+            {data?.Plans?.formats}.jpg, .jpeg, .png, .webp, .avif, .mp4, .webm
             <br />
             {data?.Plans?.supInfo}
             <br />

@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { db, storage } from '../../../firebase';
-import { getAuth, updateProfile } from 'firebase/auth';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { UploadTaskSnapshot } from '@firebase/storage';
-import { doc, updateDoc } from 'firebase/firestore';
+import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Progress, Textarea } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { DataType, EventType, FormType } from 'types/global.types';
+
+import { backUrl } from 'utilites/constants';
 
 import { useUserData } from 'hooks/useUserData';
 
@@ -27,18 +25,15 @@ type ProfileType = {
 
 export const ProfileAccount = ({ data }: DataType) => {
   const [valuesFields, setValuesFields] = useState<string>('');
-  const { pseudonym, description } = useUserData();
+  const { id, pseudonym, description, profilePhoto } = useUserData();
   const [form, setForm] = useState(false);
   const [photoURL, setPhotoURL] = useState<string>('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [progressUpload, setProgressUpload] = useState<number>(0);
 
-  const auth = getAuth();
-  const user = auth.currentUser!;
-
   useEffect(() => {
-    user?.photoURL && setPhotoURL(user?.photoURL);
-  }, [user]);
+    profilePhoto && setPhotoURL(profilePhoto);
+  }, []);
 
   const initialValues = {
     newPseudonym: pseudonym,
@@ -55,55 +50,30 @@ export const ProfileAccount = ({ data }: DataType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
 
-  const fileRef = ref(storage, `profilePhotos/${user?.uid}/${user?.uid}`);
-
-  const updateProfileData = async (
-    { newPseudonym, newDescription }: ProfileType,
-    { resetForm }: FormType,
-  ) => {
+  const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: FormType) => {
     try {
-      photo === null &&
-        (await updateDoc(doc(db, `users/${user.uid}`), {
-          pseudonym: newPseudonym,
-          description: newDescription,
-        }));
+      const newUserData = await axios.patch(`${backUrl}/users`, {
+        pseudonym: newPseudonym,
+        description: newDescription,
+      });
+      photo === null && newUserData;
 
       if (photo !== null) {
-        const upload = uploadBytesResumable(fileRef, photo!);
-
-        upload.on(
-          'state_changed',
-          (snapshot: UploadTaskSnapshot) => {
-            const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setProgressUpload(progress);
-            switch (snapshot.state) {
-              case 'running':
-                setValuesFields('Upload is running');
-                break;
-              case 'paused':
-                setValuesFields('Upload is paused');
-                break;
-            }
+        await axios.patch(`${backUrl}/files`, {
+          data: {
+            file: photo,
+            data: { userId: id },
           },
-          (e) => {
-            console.log(e);
-            setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+          headers: {
+            'Content-Type': 'multipart/form-data',
           },
-          async () => {
-            const photoURL = await getDownloadURL(fileRef);
+        });
 
-            setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-            setPhoto(null);
+        newUserData;
 
-            await updateDoc(doc(db, `users/${user.uid}`), {
-              pseudonym: newPseudonym,
-              description: newDescription,
-              profilePhoto: photoURL,
-            });
+        setValuesFields(`${data?.AnotherForm?.uploadFile}`);
 
-            await updateProfile(user, { photoURL: photoURL });
-          },
-        );
+        //     setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
       }
 
       resetForm(initialValues);
@@ -147,10 +117,7 @@ export const ProfileAccount = ({ data }: DataType) => {
       )}
 
       {form && (
-        <Formik
-          initialValues={initialValues}
-          validationSchema={schemaNew}
-          onSubmit={updateProfileData}>
+        <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={updateProfileData}>
           {({ values, handleChange, errors, touched }) => (
             <Form>
               <div className={styles.container}>
@@ -179,11 +146,7 @@ export const ProfileAccount = ({ data }: DataType) => {
                   value={values.newPseudonym}
                   onChange={handleChange}
                   placeholder={data?.AnotherForm?.pseudonym}
-                  className={
-                    !!errors.newPseudonym && touched.newPseudonym
-                      ? styles.input__error
-                      : styles.input
-                  }
+                  className={!!errors.newPseudonym && touched.newPseudonym ? styles.input__error : styles.input}
                 />
               </div>
 
@@ -200,9 +163,7 @@ export const ProfileAccount = ({ data }: DataType) => {
                   onChange={handleChange}
                   placeholder={data?.Account?.profile?.aboutMe}
                   className={
-                    !!errors.newDescription && touched.newDescription
-                      ? styles.description__error
-                      : styles.description
+                    !!errors.newDescription && touched.newDescription ? styles.description__error : styles.description
                   }
                 />
               </div>

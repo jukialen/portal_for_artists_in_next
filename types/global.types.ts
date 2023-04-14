@@ -1,6 +1,4 @@
 import { ChangeEvent } from 'react';
-import { CollectionReference, DocumentReference, Query } from 'firebase/firestore';
-import { StorageReference } from 'firebase/storage';
 
 export type GroupNameType = string | string[];
 
@@ -8,7 +6,7 @@ export type DataType = any;
 
 export type UserType = {
   user: string | undefined;
-  pseudonym?: string | string[];
+  pseudonym: string;
   data: DataType;
 };
 
@@ -19,32 +17,27 @@ export type FormType = {
 };
 
 export type UserDataType = {
-  email?: string;
+  email: string;
   password?: string;
 };
 
 export type FileType = {
-  fileUrl: string;
-  description: string;
-  time?: string;
-  tags: string;
+  name: string;
   pseudonym: string;
-  uid: string;
-  idPost: string;
+  fileUrl: string;
+  tags: string;
+  time: string;
 };
 
 export type FileContainerType = {
-  link?: string;
-  refFile?: CollectionReference | Query;
-  subCollection?: string;
-  refStorage?: StorageReference;
+  name: string;
+  link: string;
   description?: string;
   authorName?: string;
-  tag?: string;
+  time: string;
+  tag: string;
   unopt?: boolean;
   titleShare?: string;
-  uid?: string;
-  idPost?: string;
 };
 
 export type GroupType = {
@@ -67,12 +60,6 @@ export type AuthorType = {
   subCollection?: string;
   authorId?: string;
   userId?: string | null;
-  refCom?: CollectionReference | Query;
-  refSubCom?: CollectionReference | Query;
-  refLastCom?: CollectionReference | Query;
-  refDocCom?: DocumentReference;
-  refDocSubCom?: DocumentReference;
-  refDocLastCom?: DocumentReference;
   idPost?: string;
   idComment?: string;
   idSubComment?: string;
@@ -95,7 +82,6 @@ export type PostType = {
 };
 export type NewCommentsType = {
   name?: GroupNameType;
-  refCom?: CollectionReference;
   comment?: string;
 };
 
@@ -115,12 +101,5 @@ export type CommentType = {
   idComment?: string;
   idSubComment?: string;
   idLastComment?: string;
-  refDelCom?: DocumentReference;
-  refCom?: CollectionReference | Query;
-  refSubCom?: CollectionReference | Query;
-  refLastCom?: CollectionReference | Query;
-  refDocCom?: DocumentReference;
-  refDocSubCom?: DocumentReference;
-  refDocLastCom?: DocumentReference;
   groupSource?: boolean;
 };

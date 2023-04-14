@@ -94,6 +94,7 @@
       "actualEmail": "Current e-mail",
       "changeEmail": "Change e-mail",
       "currentPassword": "Enter current password",
+      "oldPassword:": "Enter old password",
       "newPassword": "Enter new password",
       "againNewPassword": "Repeat new password",
       "changePassword": "Change password",
@@ -334,7 +335,6 @@
     "title": "Delete the account",
     "body": "Are you sure? You won't can undo this action afterwards.",
     "cancel": "Cancel",
-    "deletionProfilePhoto": "Deleting your profile photo",
     "deletionAccount": "Deleting the account"
   },
   "Plans": {

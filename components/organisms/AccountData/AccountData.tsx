@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
-import { getAuth, updateEmail, updatePassword } from 'firebase/auth';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -21,30 +23,29 @@ import {
 
 import { DataType, FormType, UserDataType } from 'types/global.types';
 
+import { useUserData } from 'hooks/useUserData';
+
+import { backUrl } from 'utilites/constants';
+
 import { ModeContext } from 'providers/ModeProvider';
 
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './AccountData.module.scss';
-import Link from 'next/link';
-import { getDoc, setDoc } from 'firebase/firestore';
-import { user } from 'config/referencesFirebase';
 
-const initialValues = {
-  email: '',
-};
+const initialValues = { email: '' };
 
-const initialPlan = {
-  plan: '',
-};
+const initialPlan = { plan: '' };
 
 const initialValuesPass = {
+  oldPassword: '',
   newPassword: '',
   repeatNewPassword: '',
 };
 
 type ResetPassword = {
+  oldPassword: string;
   newPassword: string;
   repeatNewPassword: string;
 };
@@ -54,15 +55,13 @@ type SubscriptionType = {
 };
 
 export const AccountData = ({ data }: DataType) => {
-  const [valuesFields, setValuesFields] = useState<string>('');
-  const [valuesFieldsPass, setValuesFieldsPass] = useState<string>('');
+  const [valuesFields, setValuesFields] = useState('');
+  const [valuesFieldsPass, setValuesFieldsPass] = useState('');
   const [subscriptionPlan, setSubscriptionPlan] = useState('FREE');
   const { onOpen, onClose, isOpen } = useDisclosure();
   const { isMode } = useContext(ModeContext);
-
-  const auth = getAuth();
-  auth.useDeviceLanguage();
-  const currentUser = auth.currentUser!;
+  const { id } = useUserData();
+  const { push } = useRouter();
 
   const schemaValidation = Yup.object({
     newPassword: SchemaValidation().password,
@@ -75,37 +74,43 @@ export const AccountData = ({ data }: DataType) => {
 
   const getPlan = async () => {
     try {
-      const docSnap = await getDoc(user(currentUser.uid));
+      const data: { plan: string } = await axios.get(`${backUrl}/users`, {
+        params: { where: { id } },
+      });
 
-      docSnap.exists() ? setSubscriptionPlan(docSnap.data().plan) : console.log('No plan!');
+      setSubscriptionPlan(data.plan);
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    !!currentUser && getPlan();
-  }, [currentUser]);
+    !!id && getPlan();
+  }, [id]);
 
   const update__email = async ({ email }: UserDataType, { resetForm }: FormType) => {
     try {
-      await updateEmail(auth.currentUser!, email!);
       resetForm(initialValues);
+      await axios.patch(`${backUrl}/auth/change-email`, { user_id: id, newEmail: email });
       setValuesFields(data?.Forgotten?.success);
+      await push('/');
     } catch (e) {
       console.error(e);
       setValuesFields(data?.error);
     }
   };
 
-  const newPassword = async ({ newPassword, repeatNewPassword }: ResetPassword, { resetForm }: FormType) => {
+  const newPassword = async (
+    { oldPassword, newPassword, repeatNewPassword }: ResetPassword,
+    { resetForm }: FormType,
+  ) => {
     try {
       if (newPassword !== repeatNewPassword) {
         setValuesFieldsPass(data?.PasswordAccount?.differentPasswords);
         return;
       }
 
-      await updatePassword(currentUser, newPassword);
+      await axios.patch(`${backUrl}/auth/change-password`, { oldPassword, newPassword });
       resetForm(initialValues);
       setValuesFieldsPass(data?.PasswordAccount?.success);
     } catch (e) {
@@ -116,12 +121,10 @@ export const AccountData = ({ data }: DataType) => {
 
   const changeSubscription = async ({ plan }: SubscriptionType, { resetForm }: FormType) => {
     try {
-      if (plan !== undefined) {
-        await setDoc(user(currentUser.uid), { plan }, { merge: true });
-        await setSubscriptionPlan(plan!);
-        await resetForm(initialPlan);
-        await onClose();
-      }
+      await axios.patch(`${backUrl}/users`, { plan });
+      await setSubscriptionPlan(plan);
+      await resetForm(initialPlan);
+      await onClose();
     } catch (e) {
       console.error(e);
     }
@@ -243,6 +246,15 @@ export const AccountData = ({ data }: DataType) => {
             <label className={styles.title} htmlFor="password">
               {data?.NavForm?.password}
             </label>
+            <Input
+              name="oldPassword"
+              type="password"
+              value={values.oldPassword}
+              onChange={handleChange}
+              placeholder={data?.Account?.aData?.oldPassword}
+              className={styles.input}
+            />
+            <FormError nameError="oldPassword" />
             <Input
               name="newPassword"
               type="password"

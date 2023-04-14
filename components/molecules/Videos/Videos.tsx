@@ -7,28 +7,12 @@ import { FileContainerType } from 'types/global.types';
 import { DeletionFile } from 'components/molecules/DeletionFile/DeletionFile';
 import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
 
-export const Videos = ({
-  link,
-  description,
-  refFile,
-  refStorage,
-  authorName,
-  tag,
-  uid,
-  idPost,
-}: FileContainerType) => {
+export const Videos = ({ name, link, authorName, tag, time }: FileContainerType) => {
   const { pseudonym } = useUserData();
 
   return (
     <div className={styles.videos}>
-      {pseudonym === authorName && (
-        <DeletionFile
-          description={description}
-          subCollection="videos"
-          refFile={refFile!}
-          refStorage={refStorage!}
-        />
-      )}
+      { pseudonym === authorName && <DeletionFile name={name} /> }
 
       <video preload="metadata" controls className={styles.video} playsInline>
         <source src={link} />
@@ -39,16 +23,7 @@ export const Videos = ({
         and watch it with your favorite video player!
       </video>
 
-      <FileOptions
-        authorName={authorName}
-        refFile={refFile}
-        link={link}
-        subCollection="videos"
-        tag={tag}
-        description={description}
-        uid={uid}
-        idPost={idPost}
-      />
+      <FileOptions name={name} link={link} authorName={authorName} tag={tag} time={time} />
     </div>
   );
 };

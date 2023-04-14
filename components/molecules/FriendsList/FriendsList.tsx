@@ -1,105 +1,102 @@
 import { useEffect, useState } from 'react';
-import {
-  DocumentData,
-  getDoc,
-  getDocs,
-  limit,
-  query,
-  QueryDocumentSnapshot,
-  startAfter,
-} from 'firebase/firestore';
 
 import { useHookSWR } from 'hooks/useHookSWR';
+import { useUserData } from 'hooks/useUserData';
 
-import { friends } from 'config/referencesFirebase';
+import { backUrl } from 'utilites/constants';
 
 import { Tile } from 'components/molecules/GroupTile/Tile';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './FriendsList.module.scss';
+import axios from 'axios';
 
 type FriendsListType = {
   uid: string;
 };
 
 type FriendsListArrayType = {
-  name: string;
+  pseudonym: string;
   profilePhoto: string;
 };
 
 export const FriendsList = ({ uid }: FriendsListType) => {
   const [friendsList, setFriendsList] = useState<FriendsListArrayType[]>([]);
-  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
+  const [lastVisible, setLastVisible] = useState<string | null>();
   let [i, setI] = useState(1);
+  const { id } = useUserData();
 
   const data = useHookSWR();
   const maxItems = 30;
 
-  const sortAsc = (a: FriendsListArrayType, b: FriendsListArrayType) => {
-    const nameA = a.name.toUpperCase();
-    const nameB = b.name.toUpperCase();
-    if (nameA < nameB) {
-      return -1;
-    }
-    if (nameA > nameB) {
-      return 1;
-    }
+  
 
-    return 0;
-  };
-
-  const downloadFriends = async () => {
+  const firstFriends = async () => {
     try {
-      const firstPage = query(friends(uid!), limit(maxItems));
+      const friendsId: [{ usernameId: string, friendId: string }] = await axios.get('/friends', {
+        params: {
+          where: {
+            usernameId: id,
+          },
+          orderBy: 'friendId, DESC',
+          limit: maxItems,
+        },
+      });
 
       const friendArray: FriendsListArrayType[] = [];
 
-      const documentSnapshots = await getDocs(firstPage);
+      await friendsId.forEach(async (friend) => {
+        const friends: FriendsListArrayType = await axios.get(`${backUrl}/users`, {
+          params: {
+            where: { id: friend },
+          },
+        });
 
-      for (const doc of documentSnapshots.docs) {
-        const docSnap = await getDoc<DocumentData>(doc.data().friend);
+        const { pseudonym, profilePhoto } = friends;
 
-        docSnap.exists() &&
-          friendArray.push({
-            name: docSnap.data().pseudonym,
-            profilePhoto:
-              docSnap.data().profilePhoto || `${process.env.NEXT_PUBLIC_PAGE}/friends.svg}`,
-          });
-      }
-      friendArray.sort(sortAsc);
+        friendArray.push({ pseudonym, profilePhoto });
+      });
       setFriendsList(friendArray);
       friendArray.length === maxItems &&
-        setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      setLastVisible(friendsId[friendsId.length - 1].usernameId);
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    !!uid && downloadFriends();
+    !!uid && firstFriends();
   }, [uid]);
 
   const nextFriends = async () => {
     try {
-      const nextPage = query(friends(uid!), limit(maxItems), startAfter(lastVisible));
+      const friendsId: [{ usernameId: string, friendId: string }] = await axios.get(`${backUrl}/users`, {
+        params: {
+          where: {
+            usernameId: id,
+          },
+          orderBy: 'friendId, DESC',
+          limit: maxItems,
+          cursor: lastVisible
+        },
+      });
 
       const nextFriendArray: FriendsListArrayType[] = [];
 
-      const documentSnapshots = await getDocs(nextPage);
-      for (const doc of documentSnapshots.docs) {
-        const docSnap = await getDoc<DocumentData>(doc.data().friend);
+      await friendsId.forEach(async (friend) => {
+        const friends: FriendsListArrayType = await axios.get('/users', {
+          params: {
+            where: { id: friend },
+          },
+        });
 
-        docSnap.exists() &&
-          nextFriendArray.push({
-            name: docSnap.data().pseudonym,
-            profilePhoto:
-              docSnap.data().profilePhoto || `${process.env.NEXT_PUBLIC_PAGE}/friends.svg}`,
-          });
-      }
+        const { pseudonym, profilePhoto } = friends;
+
+        nextFriendArray.push({ pseudonym, profilePhoto });
+      });      
       const nextArray = friendsList.concat(...nextFriendArray);
-      nextArray.sort(sortAsc);
       setFriendsList(nextArray);
-      setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      setLastVisible(friendsId[friendsId.length - 1].usernameId);
       setI(++i);
     } catch (e) {
       console.error(e);
@@ -110,16 +107,14 @@ export const FriendsList = ({ uid }: FriendsListType) => {
     <div className={styles.container}>
       <section className={styles.container__section}>
         {friendsList.length > 0 ? (
-          friendsList.map(({ name, profilePhoto }, index) => (
-            <Tile key={index} name={name} link={`/user/${name}`} logoUrl={profilePhoto} />
+          friendsList.map(({ pseudonym, profilePhoto }, index) => (
+            <Tile key={index} name={pseudonym} link={`/user/${pseudonym}`} logoUrl={profilePhoto} />
           ))
         ) : (
           <p className={styles.noFriends}>{data?.Friends?.noFriends}</p>
         )}
       </section>
-      {!!lastVisible && friendsList.length === maxItems * i && (
-        <MoreButton nextElements={nextFriends} />
-      )}
+      {!!lastVisible && friendsList.length === maxItems * i && <MoreButton nextElements={nextFriends} />}
     </div>
   );
 };

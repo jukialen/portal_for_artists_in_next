@@ -1,15 +1,6 @@
 import { useRef, useState } from 'react';
-import { auth, db } from '../../../firebase';
-import {
-  CollectionReference,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  Query,
-  where,
-} from 'firebase/firestore';
-import { deleteObject, StorageReference } from 'firebase/storage';
+
+import { backUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -27,47 +18,34 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
+import axios from 'axios';
 
 type DeletionFileType = {
-  subCollection: string;
-  refFile: CollectionReference | Query;
-  refStorage: StorageReference;
-  description?: string;
+  name: string;
 };
 
-export const DeletionFile = ({
-  subCollection,
-  refFile,
-  refStorage,
-  description,
-}: DeletionFileType) => {
+export const DeletionFile = ({ name }: DeletionFileType) => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState<string>('');
-
-  const user = auth.currentUser;
-  const cancelRef = useRef(null);
-  const onClose = () => setIsOpen(false);
   const [del, setDel] = useState(false);
+
+  const cancelRef = useRef(null);
+  
+  const onClose = () => setIsOpen(false);
 
   const data = useHookSWR();
 
   const deleteFile = async () => {
     try {
-      const queryFile = query(refFile, where('description', '==', description));
       await onClose();
       await setDeleting(!deleting);
       await setValues(data?.DeletionFile?.deleting);
-      await deleteObject(refStorage!);
-      const querySnapshot = await getDocs(queryFile);
-      await querySnapshot.forEach((document) => {
-        deleteDoc(doc(db, `users/${user?.uid}/${subCollection}/${document.id}`));
-      });
-      await setDeleting(!deleting);
+      await axios.delete(`${backUrl}/files`, { params: { where: { name } }});
       await setValues(data?.DeletionFile?.deleted);
       await setDeleting(!deleting);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       setValues(data?.error);
     }
   };
@@ -114,7 +92,6 @@ export const DeletionFile = ({
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              {/* eslint-disable-next-line react/no-unescaped-entities */}
               {data?.DeletionFile?.question}
             </AlertDialogBody>
 

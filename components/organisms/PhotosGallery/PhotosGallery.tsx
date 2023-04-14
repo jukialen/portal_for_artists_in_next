@@ -1,24 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { storage } from '../../../firebase';
-import { ref } from 'firebase/storage';
-import {
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  QueryDocumentSnapshot,
-  startAfter,
-} from 'firebase/firestore';
+import axios from 'axios';
 
-import {
-  allPhotosCollectionRef,
-  user as currentUser,
-  userPhotosRef,
-} from 'config/referencesFirebase';
-
-import { filesElements } from 'helpers/fileElements';
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { FileType, UserType } from 'types/global.types';
 
@@ -29,7 +13,7 @@ import { Article } from 'components/molecules/Article/Article';
 
 export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
-  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
+  const [lastVisible, setLastVisible] = useState<FileType>();
   let [i, setI] = useState(1);
 
   const maxItems = 30;
@@ -37,28 +21,37 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
 
   const downloadFiles = async () => {
     try {
-      const firstPage = query(
-        userPhotosRef(user!),
-        orderBy('timeCreated', 'desc'),
-        limit(maxItems),
-      );
+      const firstPage: [{ name: string; ownerFile: string; createdAt: string; updatedAt: string; tags: string }] =
+        await axios.get(`${backUrl}/files`, {
+          params: {
+            where: {
+              AND: [
+                { tags: 'realistic' },
+                { tags: 'manga' },
+                { tags: 'anime' },
+                { tags: 'comics' },
+                { tags: 'photograpths' },
+                { pseudonym },
+              ],
+            },
+            limit: maxItems,
+            sortBy: 'name, DESC',
+          },
+        });
 
       const filesArray: FileType[] = [];
 
-      const documentSnapshots = await getDocs(firstPage);
-
-      for (const document of documentSnapshots.docs) {
-        const docSnap = await getDoc(currentUser(document.data().uid));
-
-        if (docSnap.exists()) {
-          filesElements(filesArray, document, !!pseudonym ? pseudonym : docSnap.data().pseudonym);
-        } else {
-          console.error('No such doc');
-        }
+      for (const file of firstPage) {
+        filesArray.push({
+          name: file.name,
+          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          time: file.updatedAt || file.createdAt,
+          pseudonym,
+          tags: file.tags,
+        });
       }
       setUserPhotos(filesArray);
-      filesArray.length === maxItems &&
-        setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      filesArray.length === maxItems && setLastVisible(filesArray[filesArray.length - 1]);
     } catch (e) {
       console.log('No such document!', e);
     }
@@ -70,30 +63,40 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
 
   const nextElements = async () => {
     try {
-      const nextPage = query(
-        allPhotosCollectionRef(),
-        orderBy('timeCreated', 'desc'),
-        limit(maxItems),
-        startAfter(lastVisible),
-      );
-
-      const documentSnapshots = await getDocs(nextPage);
-
-      setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      const nextPage: [{ name: string; ownerFile: string; createdAt: string; updatedAt: string; tags: string }] =
+        await axios.get(`${backUrl}/files`, {
+          params: {
+            where: {
+              AND: [
+                { tags: 'realistic' },
+                { tags: 'manga' },
+                { tags: 'anime' },
+                { tags: 'comics' },
+                { tags: 'photograpths' },
+                { pseudonym },
+              ],
+            },
+            limit: maxItems,
+            sortBy: 'name, DESC',
+            cursor: lastVisible,
+          },
+        });
 
       const nextArray: FileType[] = [];
 
-      for (const document of documentSnapshots.docs) {
-        const docSnap = await getDoc(currentUser(document.data().uid));
-
-        if (docSnap.exists()) {
-          filesElements(nextArray, document, docSnap.data().pseudonym);
-        } else {
-          console.log('No more drawings');
-        }
+      for (const file of nextPage) {
+        nextArray.push({
+          name: file.name,
+          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          time: file.updatedAt || file.createdAt,
+          pseudonym,
+          tags: file.tags,
+        });
       }
+
       const newArray = userPhotos.concat(...nextArray);
       setUserPhotos(newArray);
+      setLastVisible(nextArray[nextArray.length - 1]);
       setI(++i);
     } catch (e) {
       console.error(e);
@@ -108,29 +111,14 @@ export const PhotosGallery = ({ user, pseudonym, data }: UserType) => {
 
       <Wrapper>
         {userPhotos.length > 0 ? (
-          userPhotos.map(
-            ({ fileUrl, description, time, tags, pseudonym, uid, idPost }: FileType, index) => (
-              <Article
-                key={index}
-                link={fileUrl}
-                refFile={userPhotosRef(user!)}
-                subCollection="photos"
-                refStorage={ref(storage, `${user}/photos/${description}`)}
-                description={description}
-                tag={tags}
-                authorName={pseudonym}
-                uid={uid}
-                idPost={idPost}
-              />
-            ),
-          )
+          userPhotos.map(({ name, fileUrl, pseudonym, tags, time }: FileType, index) => (
+            <Article key={index} name={name} link={fileUrl} tag={tags} authorName={pseudonym} time={time} />
+          ))
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.photos} />
         )}
 
-        {!!lastVisible && userPhotos.length === maxItems * i && (
-          <MoreButton nextElements={nextElements} />
-        )}
+        {!!lastVisible && userPhotos.length === maxItems * i && <MoreButton nextElements={nextElements} />}
       </Wrapper>
     </article>
   );

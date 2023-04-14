@@ -1,25 +1,10 @@
 import { useEffect, useState } from 'react';
-import {
-  getDoc,
-  getDocs,
-  limit,
-  query,
-  QueryDocumentSnapshot,
-  startAfter,
-  where,
-} from 'firebase/firestore';
-import { auth } from '../../../firebase';
+import axios from 'axios';
 import { Divider } from '@chakra-ui/react';
 
-import {
-  adminInGroups,
-  groups,
-  membersGroup,
-  moderatorsGroups,
-  user,
-} from 'config/referencesFirebase';
-
 import { GroupType } from 'types/global.types';
+
+import { backUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -29,131 +14,135 @@ import { Tile } from 'components/molecules/GroupTile/Tile';
 
 import styles from './GroupUsers.module.scss';
 
-type GroupUsersType = { uid: string };
+type GroupUsersType = { id: string };
 
-export const GroupUsers = ({ uid }: GroupUsersType) => {
+export const GroupUsers = ({ id }: GroupUsersType) => {
   const [adminsArray, setAdminsArray] = useState<GroupType[]>([]);
-  const [lastAdminsVisible, setAdminsLastVisible] = useState<QueryDocumentSnapshot>();
+  const [lastAdminsVisible, setAdminsLastVisible] = useState<GroupType>();
   let [iAdmins, setIAdmins] = useState(1);
   const [moderatorsArray, setModeratorsArray] = useState<GroupType[]>([]);
-  const [lastModeratorsVisible, setModeratorsLastVisible] = useState<QueryDocumentSnapshot>();
+  const [lastModeratorsVisible, setModeratorsLastVisible] = useState<GroupType>();
   let [iModerators, setIModerators] = useState(1);
   const [membersArray, setMembersArray] = useState<GroupType[]>([]);
-  const [lastMembersVisible, setMembersLastVisible] = useState<QueryDocumentSnapshot>();
+  const [lastMembersVisible, setMembersLastVisible] = useState<GroupType>();
   let [iMembers, setIMembers] = useState(1);
 
-  const currentUser = auth.currentUser?.uid;
   const data = useHookSWR();
   const maxItems = 30;
 
   const firstAdminList = async () => {
     try {
-      const adminSnapshot = adminInGroups(currentUser!);
+      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+        params: {
+          where: { adminId: id },
+          orderBy: 'name, DESC',
+          limit: maxItems,
+        },
+      });
+
       const adminArray: GroupType[] = [];
 
-      const documentSnapshots = await getDocs(adminSnapshot);
-
-      for (const doc of documentSnapshots.docs) {
+      for (const group of groupList) {
         adminArray.push({
-          nameGroup: doc.data().name,
-          logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          nameGroup: group.name,
+          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
 
       setAdminsArray(adminArray);
-      adminArray.length === maxItems &&
-        setAdminsLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      adminArray.length === maxItems && setAdminsLastVisible(adminArray[adminArray.length - 1]);
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    !!currentUser && firstAdminList();
+    !!id && firstAdminList();
   }, []);
 
   const firstModeratorsList = async () => {
     try {
-      const moderatorsSnapshot = query(
-        moderatorsGroups(),
-        where('moderator', '==', user(uid)),
-        limit(maxItems),
-      );
-      const documentSnapshots = await getDocs(moderatorsSnapshot);
+      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+        params: {
+          where: { moderatorsId: id },
+          orderBy: 'name, DESC',
+          limit: maxItems,
+        },
+      });
 
       const moderatorArray: GroupType[] = [];
 
-      for (const doc of documentSnapshots.docs) {
-        const docSnap = await getDoc(groups(doc.ref.parent.parent!.id));
-
-        docSnap.exists() &&
-          moderatorArray.push({
-            nameGroup: docSnap.data().name,
-            logoUrl: docSnap.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          });
+      for (const group of groupList) {
+        moderatorArray.push({
+          nameGroup: group.name,
+          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        });
       }
 
       setModeratorsArray(moderatorArray);
-      moderatorArray.length === maxItems &&
-        setModeratorsLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      moderatorArray.length === maxItems && setModeratorsLastVisible(moderatorArray[moderatorArray.length - 1]);
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    !!currentUser && firstModeratorsList();
+    !!id && firstModeratorsList();
   }, []);
 
   const firstMembersList = async () => {
     try {
-      const membersSnapshot = query(
-        membersGroup(),
-        where('member', '==', user(uid)),
-        limit(maxItems),
-      );
-      const documentSnapshots = await getDocs(membersSnapshot);
+      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+        params: {
+          where: { usersId: id },
+          orderBy: 'name, DESC',
+          limit: maxItems,
+        },
+      });
 
       const memberArray: GroupType[] = [];
 
-      for (const doc of documentSnapshots.docs) {
-        const docSnap = await getDoc(groups(doc.ref.parent.parent!.id));
-
-        docSnap.exists() &&
-          memberArray.push({
-            nameGroup: docSnap.data().name,
-            logoUrl: docSnap.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          });
+      for (const group of groupList) {
+        memberArray.push({
+          nameGroup: group.name,
+          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        });
       }
+
       setMembersArray(memberArray);
-      memberArray.length === maxItems &&
-        setMembersLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      memberArray.length === maxItems && setMembersLastVisible(memberArray[memberArray.length - 1]);
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    !!currentUser && firstMembersList();
+    !!id && firstMembersList();
   }, []);
 
   const nextAdminList = async () => {
     try {
-      const adminSnapshot = await adminInGroups(currentUser!);
-      const documentSnapshots = await getDocs(adminSnapshot);
+      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+        params: {
+          where: { adminId: id },
+          orderBy: 'name, DESC',
+          limit: maxItems,
+          cursor: lastAdminsVisible,
+        },
+      });
 
       const nextAdminArray: GroupType[] = [];
 
-      for (const doc of documentSnapshots.docs) {
+      for (const group of groupList) {
         nextAdminArray.push({
-          nameGroup: doc.data().name,
-          logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          nameGroup: group.name,
+          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
 
       const nextArray = adminsArray.concat(...nextAdminArray);
       setAdminsArray(nextArray);
-      setAdminsLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      setAdminsLastVisible(nextArray[nextArray.length - 1]);
       setIAdmins(iAdmins++);
     } catch (e) {
       console.error(e);
@@ -162,29 +151,28 @@ export const GroupUsers = ({ uid }: GroupUsersType) => {
 
   const nextModeratorsList = async () => {
     try {
-      const moderatorsSnapshot = query(
-        moderatorsGroups(),
-        where('moderator', '==', user(uid)),
-        limit(maxItems),
-        startAfter(lastModeratorsVisible),
-      );
-      const documentSnapshots = await getDocs(moderatorsSnapshot);
+      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+        params: {
+          where: { moderatorsId: id },
+          orderBy: 'name, DESC',
+          limit: maxItems,
+          cursor: lastModeratorsVisible,
+        },
+      });
 
       const nextModeratorArray: GroupType[] = [];
 
-      for (const doc of documentSnapshots.docs) {
-        const docSnap = await getDoc(groups(doc.ref.parent.parent!.id));
-
-        docSnap.exists() &&
-          nextModeratorArray.push({
-            nameGroup: docSnap.data().name,
-            logoUrl: docSnap.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          });
+      for (const group of groupList) {
+        nextModeratorArray.push({
+          nameGroup: group.name,
+          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        });
       }
+
       const nextArray = moderatorsArray.concat(...nextModeratorArray);
 
       setModeratorsArray(nextArray);
-      setModeratorsLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      setModeratorsLastVisible(nextArray[nextArray.length - 1]);
       setIModerators(iModerators++);
     } catch (e) {
       console.error(e);
@@ -193,25 +181,24 @@ export const GroupUsers = ({ uid }: GroupUsersType) => {
 
   const nextMembersList = async () => {
     try {
-      const membersSnapshot = query(
-        membersGroup(),
-        where('user', '==', user(uid)),
-        limit(maxItems),
-        startAfter(lastMembersVisible),
-      );
-      const documentSnapshots = await getDocs(membersSnapshot);
+      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+        params: {
+          where: { usersId: id },
+          orderBy: 'name, DESC',
+          limit: maxItems,
+          cursor: lastMembersVisible
+        },
+      });
 
       const nextMemberArray: GroupType[] = [];
 
-      for (const doc of documentSnapshots.docs) {
-        const docSnap = await getDoc(groups(doc.ref.parent.parent!.id));
-
-        docSnap.exists() &&
-          nextMemberArray.push({
-            nameGroup: docSnap.data().name,
-            logoUrl: docSnap.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          });
+      for (const group of groupList) {
+        nextMemberArray.push({
+          nameGroup: group.name,
+          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        });
       }
+
       const nextArray = membersArray.concat(...nextMemberArray);
       setMembersArray(nextArray);
       setIMembers(iMembers++);
@@ -239,9 +226,7 @@ export const GroupUsers = ({ uid }: GroupUsersType) => {
       ) : (
         <p className={styles.noGroups}>{data?.Account?.groups?.noAdmin}</p>
       )}
-      {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && (
-        <MoreButton nextElements={nextAdminList} />
-      )}
+      {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && <MoreButton nextElements={nextAdminList} />}
       <h2 className={styles.title}>{data?.Account?.groups?.modsTitle}</h2>
       <Divider className={styles.divider} />
       {moderatorsArray.length > 0 ? (

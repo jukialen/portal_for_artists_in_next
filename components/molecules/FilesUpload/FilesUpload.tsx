@@ -1,8 +1,6 @@
 import { useContext, useState } from 'react';
-import { auth, storage } from '../../../firebase';
-import { getDownloadURL, ref, uploadBytesResumable, UploadTask } from 'firebase/storage';
-import { UploadTaskSnapshot } from '@firebase/storage';
-import { addDoc, CollectionReference } from 'firebase/firestore';
+import { getUserInfo } from 'helpers/getUserInfo';
+import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Progress, Select } from '@chakra-ui/react';
@@ -10,9 +8,9 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { ModeContext } from 'providers/ModeProvider';
 
-import { userAnimationsRef, userPhotosRef, userVideosRef } from 'config/referencesFirebase';
-
 import { EventType, FormType } from 'types/global.types';
+
+import { backUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -31,15 +29,13 @@ const initialValues = {
 };
 
 export const FilesUpload = () => {
-  const [file, setFile] = useState<Blob | Uint8Array | ArrayBuffer | File | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
   const [progressUpload, setProgressUpload] = useState<number>(0);
   const [required, setRequired] = useState(false);
 
   const { isMode } = useContext(ModeContext);
   const data = useHookSWR();
-
-  const user = auth.currentUser;
 
   const schemaFile = Yup.object({
     tags: SchemaValidation().tags,
@@ -57,83 +53,95 @@ export const FilesUpload = () => {
 
   const uploadFiles = async ({ tags }: FileDataType, { resetForm }: FormType) => {
     try {
-      // @ts-ignore
-      const photosRef = ref(storage, `${user?.uid}/photos/${file?.name}`);
-      // @ts-ignore
-      const videosRef = ref(storage, `${user?.uid}/videos/${file?.name}`);
-      // @ts-ignore
-      const animationsRef = ref(storage, `${user?.uid}/animations/${file?.name}`);
+      !file && setRequired(true);
+      const { userId } = await getUserInfo();
+      await axios.patch(`${backUrl}/files`,
+        {
+          data: { file, data: { tags, ownerFile: userId }},
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+      setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+      setFile(null);
+      setRequired(false);
+      resetForm(initialValues);
+      // const photosRef = ref(storage, `${user?.uid}/photos/${file?.name}`);
+      // // @ts-ignore
+      // const videosRef = ref(storage, `${user?.uid}/videos/${file?.name}`);
+      // // @ts-ignore
+      // const animationsRef = ref(storage, `${user?.uid}/animations/${file?.name}`);
+      
+      // let upload: UploadTask;
 
-      !file ? setRequired(true) : setRequired(false);
+      // switch (tags) {
+      //   case 'animations':
+      //     upload = uploadBytesResumable(animationsRef, file!);
+      //     break;
+      //   case 'videos':
+      //     upload = uploadBytesResumable(videosRef, file!);
+      //     break;
+      //   default:
+      //     upload = uploadBytesResumable(photosRef, file!);
+      // }
 
-      let upload: UploadTask;
+      // let refName: string;
 
-      switch (tags) {
-        case 'animations':
-          upload = uploadBytesResumable(animationsRef, file!);
-          break;
-        case 'videos':
-          upload = uploadBytesResumable(videosRef, file!);
-          break;
-        default:
-          upload = uploadBytesResumable(photosRef, file!);
-      }
+      // !!file &&
+      //   !required &&
+      //   upload.on(
+      //     'state_changed',
+      //     (snapshot: UploadTaskSnapshot) => {
+      //       const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      //       setProgressUpload(progress);
 
-      let refName: string;
+      //       switch (snapshot.state) {
+      //         case 'running':
+      //           setValuesFields('Upload is running');
+      //           return (refName = snapshot.ref.name);
+      //         case 'paused':
+      //           setValuesFields('Upload is paused');
+      //           break;
+      //       }
+      //     },
+      //     (e) => {
+      //       console.error('error', e);
+      //       setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+      //     },
+      //     async () => {
+      //       const sendToFirestore = (colRef: CollectionReference, url: string) => {
+      //         addDoc(colRef, {
+      //           fileUrl: url,
+      //           description: refName,
+      //           tag: tags,
+      //           timeCreated: Date.now(),
+      //           uid: user?.uid,
+      //         });
+      //         setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+      //         setFile(null);
+      //         setRequired(false);
+      //         resetForm(initialValues);
+      //       };
 
-      !!file &&
-        !required &&
-        upload.on(
-          'state_changed',
-          (snapshot: UploadTaskSnapshot) => {
-            const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setProgressUpload(progress);
-
-            switch (snapshot.state) {
-              case 'running':
-                setValuesFields('Upload is running');
-                return (refName = snapshot.ref.name);
-              case 'paused':
-                setValuesFields('Upload is paused');
-                break;
-            }
-          },
-          (e) => {
-            console.error('error', e);
-            setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
-          },
-          async () => {
-            const sendToFirestore = (colRef: CollectionReference, url: string) => {
-              addDoc(colRef, {
-                fileUrl: url,
-                description: refName,
-                tag: tags,
-                timeCreated: Date.now(),
-                uid: user?.uid,
-              });
-              setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-              setFile(null);
-              setRequired(false);
-              resetForm(initialValues);
-            };
-
-            switch (tags) {
-              case 'animations':
-                const animationURL = await getDownloadURL(animationsRef);
-                sendToFirestore(userAnimationsRef(user?.uid!), animationURL);
-                break;
-              case 'videos':
-                const videoURL = await getDownloadURL(videosRef);
-                sendToFirestore(userVideosRef(user?.uid!), videoURL);
-                break;
-              default:
-                const photoURL = await getDownloadURL(photosRef);
-                sendToFirestore(userPhotosRef(user?.uid!), photoURL);
-            }
-          },
-        );
+      //       switch (tags) {
+      //         case 'animations':
+      //           const animationURL = await getDownloadURL(animationsRef);
+      //           sendToFirestore(userAnimationsRef(user?.uid!), animationURL);
+      //           break;
+      //         case 'videos':
+      //           const videoURL = await getDownloadURL(videosRef);
+      //           sendToFirestore(userVideosRef(user?.uid!), videoURL);
+      //           break;
+      //         default:
+      //           const photoURL = await getDownloadURL(photosRef);
+      //           sendToFirestore(userPhotosRef(user?.uid!), photoURL);
+      //       }
+      //     },
+      //   );
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
     }
   };
 
@@ -186,7 +194,7 @@ export const FilesUpload = () => {
           <Input
             name="file"
             type="file"
-            accept=".jpg, .jpeg, .png, .webp, .avif"
+            accept=".jpg, .jpeg, .png, .webp, .avif, .gif, .mp4, .webm"
             onChange={handleChangeFile}
             placeholder={data?.AnotherForm?.file}
             focusBorderColor="transparent"

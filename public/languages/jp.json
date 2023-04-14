@@ -94,6 +94,7 @@
       "actualEmail": "現在のメール",
       "changeEmail": "メールが変わります",
       "currentPassword": "現在のパスポート入ります",
+      "oldPassword:": "古いがパスポートが入ります",
       "newPassword": "新しいパスポートが入ります",
       "againNewPassword": "新しいパスポートが繰り返します",
       "changePassword": "パスポートが 変わります",
@@ -329,7 +330,6 @@
     "title": "アカウントが消します",
     "body": "違いないですか。この作用が取り消せません。",
     "cancel": "取り消します",
-    "deletionProfilePhoto": "フォトのプロフィールが消してます。",
     "deletionAccount": "アカウントが消してます。"
   },
   "Plans": {
