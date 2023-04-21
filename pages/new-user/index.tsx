@@ -61,7 +61,7 @@ export default function NewUser() {
             'Content-Type': 'multipart/form-data',
           },
         }));
-      await axios.post(`${backUrl}/users`, { username, pseudonym });
+      await axios.post(`${backUrl}/users`, { username, pseudonym, profilePhoto: photo?.name || null });
       setValuesFields(data?.NewUser?.successSending);
       showUser();
       return push('/app');
