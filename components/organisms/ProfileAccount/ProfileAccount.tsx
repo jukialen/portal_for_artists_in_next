@@ -33,7 +33,7 @@ export const ProfileAccount = ({ data }: DataType) => {
 
   useEffect(() => {
     profilePhoto && setPhotoURL(profilePhoto);
-  }, []);
+  }, [profilePhoto]);
 
   const initialValues = {
     newPseudonym: pseudonym,
@@ -52,14 +52,13 @@ export const ProfileAccount = ({ data }: DataType) => {
 
   const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: FormType) => {
     try {
-      const newUserData = await axios.patch(`${backUrl}/users`, {
+      const newUserData = axios.patch(`${backUrl}/users/${pseudonym}`, {
         pseudonym: newPseudonym,
         description: newDescription,
       });
-      photo === null && newUserData;
 
       if (photo !== null) {
-        await axios.patch(`${backUrl}/files`, {
+        await axios.patch(`${backUrl}/files/${id}`, {
           data: {
             file: photo,
             data: { userId: id },
@@ -69,11 +68,13 @@ export const ProfileAccount = ({ data }: DataType) => {
           },
         });
 
-        newUserData;
+        await newUserData;
 
         setValuesFields(`${data?.AnotherForm?.uploadFile}`);
 
         //     setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+      } else {
+        return newUserData;
       }
 
       resetForm(initialValues);

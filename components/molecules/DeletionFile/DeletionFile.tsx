@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import axios from 'axios';
 
 import { backUrl } from 'utilites/constants';
 
@@ -18,7 +19,6 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
-import axios from 'axios';
 
 type DeletionFileType = {
   name: string;
@@ -31,7 +31,7 @@ export const DeletionFile = ({ name }: DeletionFileType) => {
   const [del, setDel] = useState(false);
 
   const cancelRef = useRef(null);
-  
+
   const onClose = () => setIsOpen(false);
 
   const data = useHookSWR();
@@ -41,7 +41,7 @@ export const DeletionFile = ({ name }: DeletionFileType) => {
       await onClose();
       await setDeleting(!deleting);
       await setValues(data?.DeletionFile?.deleting);
-      await axios.delete(`${backUrl}/files`, { params: { where: { name } }});
+      await axios.delete(`${backUrl}/files/${name}`);
       await setValues(data?.DeletionFile?.deleted);
       await setDeleting(!deleting);
     } catch (e) {
@@ -91,9 +91,7 @@ export const DeletionFile = ({ name }: DeletionFileType) => {
               {data?.DeletionFile?.title}
             </AlertDialogHeader>
 
-            <AlertDialogBody>
-              {data?.DeletionFile?.question}
-            </AlertDialogBody>
+            <AlertDialogBody>{data?.DeletionFile?.question}</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} borderColor="gray.100" onClick={onClose}>

@@ -40,7 +40,7 @@ export const DeleteAccount = ({ pseudonym }: DeletionPropsType) => {
       await onClose();
       await setDeleting(!deleting);
       await setValues(data?.DeletionAccount?.deletionAccount);
-      const res = await axios.delete(`${backUrl}/users`, { params: { pseudonym } });
+      const res = await axios.delete(`${backUrl}/users/${pseudonym}`);
       await setValues('');
 
       res.status === 200

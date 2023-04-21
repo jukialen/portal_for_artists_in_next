@@ -36,7 +36,7 @@ import styles from './AccountData.module.scss';
 
 const initialValues = { email: '' };
 
-const initialPlan = { plan: '' };
+const initialPlan = { newPlan: '' };
 
 const initialValuesPass = {
   oldPassword: '',
@@ -51,17 +51,19 @@ type ResetPassword = {
 };
 
 type SubscriptionType = {
-  plan: string;
+  newPlan: string;
 };
 
 export const AccountData = ({ data }: DataType) => {
+  const { id, pseudonym, plan } = useUserData();
+
+  const { isMode } = useContext(ModeContext);
+  const { push } = useRouter();
+
   const [valuesFields, setValuesFields] = useState('');
   const [valuesFieldsPass, setValuesFieldsPass] = useState('');
-  const [subscriptionPlan, setSubscriptionPlan] = useState('FREE');
+  const [subscriptionPlan, setSubscriptionPlan] = useState(plan);
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const { isMode } = useContext(ModeContext);
-  const { id } = useUserData();
-  const { push } = useRouter();
 
   const schemaValidation = Yup.object({
     newPassword: SchemaValidation().password,
@@ -71,22 +73,6 @@ export const AccountData = ({ data }: DataType) => {
   const schemaSubscription = Yup.object({
     plan: SchemaValidation().tags,
   });
-
-  const getPlan = async () => {
-    try {
-      const data: { plan: string } = await axios.get(`${backUrl}/users`, {
-        params: { where: { id } },
-      });
-
-      setSubscriptionPlan(data.plan);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !!id && getPlan();
-  }, [id]);
 
   const update__email = async ({ email }: UserDataType, { resetForm }: FormType) => {
     try {
@@ -119,10 +105,10 @@ export const AccountData = ({ data }: DataType) => {
     }
   };
 
-  const changeSubscription = async ({ plan }: SubscriptionType, { resetForm }: FormType) => {
+  const changeSubscription = async ({ newPlan }: SubscriptionType, { resetForm }: FormType) => {
     try {
-      await axios.patch(`${backUrl}/users`, { plan });
-      await setSubscriptionPlan(plan);
+      await axios.patch(`${backUrl}/users/${pseudonym}`, { plan: newPlan });
+      await setSubscriptionPlan(newPlan);
       await resetForm(initialPlan);
       await onClose();
     } catch (e) {
@@ -164,11 +150,11 @@ export const AccountData = ({ data }: DataType) => {
                     {({ values, handleChange, errors, touched }) => (
                       <Form>
                         <Select
-                          name="plan"
-                          value={values.plan}
+                          name="newPlan"
+                          value={values.newPlan}
                           onChange={handleChange}
-                          focusBorderColor={touched.plan && !!errors.plan ? 'red.500' : 'blue.500'}
-                          className={touched.plan && !!errors.plan ? styles.req__error : ''}>
+                          focusBorderColor={touched.newPlan && !!errors.newPlan ? 'red.500' : 'blue.500'}
+                          className={touched.newPlan && !!errors.newPlan ? styles.req__error : ''}>
                           <option role="option" value="">
                             {data?.Plans?.choosePlan}
                           </option>
@@ -182,7 +168,7 @@ export const AccountData = ({ data }: DataType) => {
                             GOLD
                           </option>
                         </Select>
-                        {touched.plan && !!errors.plan && (
+                        {touched.newPlan && !!errors.newPlan && (
                           <p className={styles.selectSub__error}>{data?.Account?.aData?.Premium?.select__error}</p>
                         )}
                         <p className={styles.message}>
