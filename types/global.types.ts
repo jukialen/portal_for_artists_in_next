@@ -1,105 +1,150 @@
 import { ChangeEvent } from 'react';
 
-export type GroupNameType = string | string[];
+//ENUMS
+enum MembershipStatus {
+  MEMBER,
+  MODERATOR,
+  ADMIN
+}
+
+enum Plan {
+  FREE,
+  PREMIUM,
+  GOLD
+}
+
+export enum Tags {
+  realistic,
+  manga,
+  anime,
+  comics,
+  photographs,
+  videos,
+  animations,
+  others
+}
+
+//GENERAL
+type Like = {
+  likes: number;
+  liked?: string[];
+}
+
+type Logo = {
+  profilePhoto?: string;
+}
+
+//DELETE
+export type AuthorType = Logo & {
+  nameGroup?: string;
+  currentUser?: string;
+  authorId?: string;
+  userId?: string | null;
+}; 
+// DELETE
+
+type UserPost = Logo & {
+  pseudonym: string;
+  date?: string;
+  nameGroup: string;
+  userId?: string | null;
+  authorId?: string;
+}
 
 export type DataType = any;
 
-export type UserType = {
-  user: string | undefined;
-  pseudonym: string;
-  data: DataType;
-};
-
+//FORMS & CONTROLLERS ELEMENTS
 export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
 
-export type FormType = {
+export type ResetFormType = {
   resetForm: any;
 };
 
-export type UserDataType = {
+//USERS
+export type PlanType = {
+  newPlan: Plan
+}
+
+export type UserType = Logo & PlanType & {
+  id: string;
+  pseudonym: string;
+  destination: string;
+  data: any;
+};
+
+export type UserFormType = {
   email: string;
   password?: string;
 };
 
-export type FileType = {
+//FILES
+type File = {
   name: string;
-  pseudonym: string;
   fileUrl: string;
-  tags: string;
+  tags: Tags;
   time: string;
+}
+
+export type FileType = File & {
+  ownerId: string;
+  profileType?: boolean;
 };
 
-export type FileContainerType = {
-  name: string;
-  link: string;
-  description?: string;
+export type FileContainerType = File & {
   authorName?: string;
-  time: string;
-  tag: string;
   unopt?: boolean;
   titleShare?: string;
 };
 
-export type GroupType = {
-  nameGroup: string;
+//FRIENDS
+export type FriendType = {
+  id?: string;
+  usernameId: string;
+  friendId: string;
+  favorite: string;
+  time: string;
+}
+
+//GROUPS
+type Group = {
+  name: string;
   logoUrl: string;
   description?: string;
+  time: string;
+  status: MembershipStatus
+}
+
+export type GroupType = Group & {
+  id?: string;
 };
 
-export type MembersAndModeratorsType = {
-  mid: string;
-  cid?: string;
-  pseudonym: string;
-  profilePhoto: string;
+export type MembersType = Group & {
+  groupId: string;
+  userId: string;
 };
 
-export type AuthorType = {
-  nameGroup?: GroupNameType;
-  currentUser?: string;
-  profilePhoto?: string;
-  subCollection?: string;
-  authorId?: string;
-  userId?: string | null;
-  idPost?: string;
-  idComment?: string;
-  idSubComment?: string;
-  idLastComment?: string;
-  groupSource?: boolean;
-};
-
-export type PostType = {
-  author: string;
+//POSTS
+export type PostType = UserPost & Like & {
   title: string;
-  date: string;
-  description: string;
-  nameGroup: GroupNameType;
+  content: string;
   idPost?: string;
-  currentUser?: string;
-  userId?: string | null;
-  likes: number;
-  liked?: string[];
-  logoUser?: string;
-};
-export type NewCommentsType = {
-  name?: GroupNameType;
-  comment?: string;
 };
 
-export type CommentType = {
-  author?: string;
-  date?: string;
-  description?: string;
-  nameGroup?: GroupNameType;
-  post?: string;
-  profilePhoto?: string;
-  authorId?: string;
-  userId?: string;
-  subCollection?: string;
-  likes: number;
-  liked?: string[];
-  idPost?: string;
-  idComment?: string;
-  idSubComment?: string;
-  idLastComment?: string;
-  groupSource?: boolean;
+// COMMENTS
+export type NewCommentsType = Comment & {
 };
+
+type Comment = UserPost & {
+  comment: string;
+  idPost: string;
+}
+
+export type CommentType = Comment & {
+  commentId: string;
+};
+
+export type SubCommentType = CommentType
+
+export type LastCommentType = Comment & {
+  subCommenId: string;
+}
