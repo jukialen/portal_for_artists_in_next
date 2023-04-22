@@ -1,27 +1,14 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { auth, storage } from '../../firebase';
-import { getDoc, getDocs } from 'firebase/firestore';
-import { ref } from 'firebase/storage';
+import axios from 'axios';
 
-import { FileType } from 'types/global.types';
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
-import { filesElements } from 'helpers/fileElements';
+import { FileType, UserType } from 'types/global.types';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
-
-import {
-  allAnimatedCollectionRef,
-  allPhotosCollectionRef,
-  allVideosCollectionRef,
-  nextAnimations,
-  nextDrawings,
-  nextOthers,
-  nextPhotos,
-  nextVideos,
-  user,
-} from 'config/referencesFirebase';
+import { useUserData } from 'hooks/useUserData';
 
 import { Article } from 'components/molecules/Article/Article';
 import { Videos } from 'components/molecules/Videos/Videos';
@@ -36,6 +23,7 @@ export default function Application() {
 
   const data = useHookSWR();
   const loading = useCurrentUser('/');
+  const { id } = useUserData();
 
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
@@ -43,21 +31,31 @@ export default function Application() {
   const [userVideos, setUserVideos] = useState<FileType[]>([]);
   const [userOthers, setUserOthers] = useState<FileType[]>([]);
 
-  const currentUser = auth?.currentUser?.uid;
+  const maxItems = 30;
 
   const downloadDrawings = async () => {
     try {
-      const querySnapshot = await getDocs(nextDrawings);
       const filesArray: FileType[] = [];
 
-      for (const document of querySnapshot.docs) {
-        const docSnap = await getDoc(user(document.data().uid));
+      const drawings: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: {
+            AND: [{ tags: 'realistic' }, { tags: 'manga' }, { tags: 'anime' }, { tags: 'comics' }],
+          },
+          limit: maxItems,
+          sortBy: 'name, DESC',
+        },
+      });
+      for (const draw of drawings) {
+        const owner: UserType = await axios.get(`${backUrl}/users/${draw.ownerFile}`);
 
-        if (docSnap.exists()) {
-          filesElements(filesArray, document, docSnap.data().pseudonym);
-        } else {
-          console.error('No such drawings');
-        }
+        filesArray.push({
+          name: draw.name,
+          fileUrl: `${cloudFrontUrl}/${draw.name}`,
+          tags: draw.tags,
+          time: draw.updatedAt! || draw.createdAt!,
+          authorName: owner.pseudonym,
+        });
       }
 
       setUserDrawings(filesArray);
@@ -69,17 +67,27 @@ export default function Application() {
 
   const downloadPhotos = async () => {
     try {
-      const querySnapshot = await getDocs(nextPhotos);
       const filesArray: FileType[] = [];
+      const photographs: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: {
+            AND: [{ tags: 'photographs' }],
+          },
+          limit: maxItems,
+          sortBy: 'name, DESC',
+        },
 
-      for (const document of querySnapshot.docs) {
-        const docSnap = await getDoc(user(document.data().uid));
+      });
+      for (const photo of photographs) {
+        const owner: UserType = await axios.get(`${backUrl}/users/${photo.ownerFile}`);
 
-        if (docSnap.exists()) {
-          filesElements(filesArray, document, docSnap.data().pseudonym);
-        } else {
-          console.error('No such photos');
-        }
+        filesArray.push({
+          name: photo.name,
+          fileUrl: `${cloudFrontUrl}/${photo.name}`,
+          tags: photo.tags,
+          time: photo.updatedAt! || photo.createdAt!,
+          authorName: owner.pseudonym,
+        });
       }
 
       setUserPhotos(filesArray);
@@ -91,17 +99,26 @@ export default function Application() {
 
   const downloadAnimations = async () => {
     try {
-      const querySnapshot = await getDocs(nextAnimations);
       const filesArray: FileType[] = [];
+      const animations: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: {
+            AND: [{ tags: 'photographs' }],
+          },
+          limit: maxItems,
+          sortBy: 'name, DESC',
+        },
+      });
+      for (const animation of animations) {
+        const owner: UserType = await axios.get(`${backUrl}/users/${animation.ownerFile}`);
 
-      for (const document of querySnapshot.docs) {
-        const docSnap = await getDoc(user(document.data().uid));
-
-        if (docSnap.exists()) {
-          filesElements(filesArray, document, docSnap.data().pseudonym);
-        } else {
-          console.error('No such animations');
-        }
+        filesArray.push({
+          name: animation.name,
+          fileUrl: `${cloudFrontUrl}/${animation.name}`,
+          tags: animation.tags,
+          time: animation.updatedAt! || animation.createdAt!,
+          authorName: owner.pseudonym,
+        });
       }
 
       setUserAnimations(filesArray);
@@ -113,17 +130,26 @@ export default function Application() {
 
   const downloadVideos = async () => {
     try {
-      const querySnapshot = await getDocs(nextVideos);
       const filesArray: FileType[] = [];
+      const videos: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: {
+            AND: [{ tags: 'photographs' }],
+          },
+          limit: maxItems,
+          sortBy: 'name, DESC',
+        },
+      });
+      for (const video of videos) {
+        const owner: UserType = await axios.get(`${backUrl}/users/${video.ownerFile}`);
 
-      for (const document of querySnapshot.docs) {
-        const docSnap = await getDoc(user(document.data().uid));
-
-        if (docSnap.exists()) {
-          filesElements(filesArray, document, docSnap.data().pseudonym);
-        } else {
-          console.error('No such videos');
-        }
+        filesArray.push({
+          name: video.name,
+          fileUrl: `${cloudFrontUrl}/${video.name}`,
+          tags: video.tags,
+          time: video.updatedAt! || video.createdAt!,
+          authorName: owner.pseudonym,
+        });
       }
 
       setUserVideos(filesArray);
@@ -135,17 +161,26 @@ export default function Application() {
 
   const downloadOthers = async () => {
     try {
-      const querySnapshot = await getDocs(nextOthers);
       const filesArray: FileType[] = [];
+      const others: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: {
+            AND: [{ tags: 'photographs' }],
+          },
+          limit: maxItems,
+          sortBy: 'name, DESC',
+        },
+      });
+      for (const other of others) {
+        const owner: UserType = await axios.get(`${backUrl}/users/${other.ownerFile}`);
 
-      for (const document of querySnapshot.docs) {
-        const docSnap = await getDoc(user(document.data().uid));
-
-        if (docSnap.exists()) {
-          filesElements(filesArray, document, docSnap.data().pseudonym);
-        } else {
-          console.error('No such others');
-        }
+        filesArray.push({
+          name: other.name,
+          fileUrl: `${cloudFrontUrl}/${other.name}`,
+          tags: other.tags,
+          time: other.updatedAt! || other.createdAt!,
+          authorName: owner.pseudonym,
+        });
       }
 
       setUserOthers(filesArray);
@@ -156,20 +191,20 @@ export default function Application() {
   };
 
   useEffect(() => {
-    !!nextDrawings && downloadDrawings();
-  }, [nextDrawings]);
+    downloadDrawings();
+  }, []);
   useEffect(() => {
-    !!nextPhotos && downloadPhotos();
-  }, [nextPhotos]);
+    downloadPhotos();
+  }, []);
   useEffect(() => {
-    !!nextAnimations && downloadAnimations();
-  }, [nextAnimations]);
+    downloadAnimations();
+  }, []);
   useEffect(() => {
-    !!nextVideos && downloadVideos();
-  }, [nextVideos]);
+    downloadVideos();
+  }, []);
   useEffect(() => {
-    !!nextOthers && downloadOthers();
-  }, [nextOthers]);
+    downloadOthers();
+  }, []);
 
   if (loading) {
     return null;
@@ -181,23 +216,10 @@ export default function Application() {
 
       <h2 className={styles.top__among__users}>{data?.App?.lastDrawings}</h2>
       <AppWrapper>
-        {!!nextDrawings && userDrawings.length > 0 ? (
-          userDrawings.map(
-            ({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) => (
-              <Article
-                key={index}
-                link={fileUrl}
-                description={description}
-                authorName={pseudonym}
-                refFile={allPhotosCollectionRef()}
-                subCollection="photos"
-                refStorage={ref(storage, `${currentUser}/photos/${description}`)}
-                tag={tags}
-                uid={uid}
-                idPost={idPost}
-              />
-            ),
-          )
+        {userDrawings.length > 0 && userDrawings.length > 0 ? (
+          userDrawings.map(({ name, fileUrl, authorName, tags, time }: FileType, index) => (
+            <Article key={index} name={name} fileUrl={fileUrl} authorName={authorName} tags={tags} time={time} />
+          ))
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.drawings} />
         )}
@@ -206,95 +228,44 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastPhotos}</h2>
       <AppWrapper>
         {userPhotos.length > 0 ? (
-          userPhotos.map(
-            ({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) => (
-              <Article
-                key={index}
-                link={fileUrl}
-                description={description}
-                authorName={pseudonym}
-                refFile={allPhotosCollectionRef()}
-                subCollection="photos"
-                refStorage={ref(storage, `${currentUser}/photos/${description}`)}
-                tag={tags}
-                uid={uid}
-                idPost={idPost}
-              />
-            ),
-          )
+          userPhotos.map(({ name, fileUrl, authorName, tags, time }: FileType, index) => (
+            <Article key={index} name={name} fileUrl={fileUrl} authorName={authorName} tags={tags} time={time} />
+          ))
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.photos} />
-        )}
-      </AppWrapper>
-
-      <h2 className={styles.top__among__users}>{data?.App?.lastOthers}</h2>
-      <AppWrapper>
-        {userOthers.length > 0 ? (
-          userOthers.map(
-            ({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) => (
-              <Article
-                key={index}
-                link={fileUrl}
-                description={description}
-                authorName={pseudonym}
-                refFile={allPhotosCollectionRef()}
-                subCollection="photos"
-                refStorage={ref(storage, `${currentUser}/photos/${description}`)}
-                tag={tags}
-                uid={uid}
-                idPost={idPost}
-              />
-            ),
-          )
-        ) : (
-          <ZeroFiles text={data?.ZeroFiles?.others} />
         )}
       </AppWrapper>
 
       <h2 className={styles.top__among__users}>{data?.App?.lastAnimations}</h2>
       <AppWrapper>
         {userAnimations.length > 0 ? (
-          userAnimations.map(
-            ({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) => (
-              <Article
-                key={index}
-                link={fileUrl}
-                description={description}
-                authorName={pseudonym}
-                refFile={allAnimatedCollectionRef()}
-                unopt
-                subCollection="animations"
-                refStorage={ref(storage, `${currentUser}/animations/${description}`)}
-                tag={tags}
-                uid={uid}
-                idPost={idPost}
-              />
-            ),
-          )
+          userAnimations.map(({ name, fileUrl, authorName, tags, time }: FileType, index) => (
+            <Article key={index} name={name} fileUrl={fileUrl} authorName={authorName} tags={tags} time={time} />
+          ))
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.animations} />
         )}
       </AppWrapper>
+
       <h2 className={styles.liked}>{data?.App?.lastVideos}</h2>
       <AppWrapper>
         {userVideos.length > 0 ? (
-          userVideos.map(
-            ({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) => (
-              <Videos
-                key={index}
-                link={fileUrl}
-                description={description}
-                authorName={pseudonym}
-                refFile={allVideosCollectionRef()}
-                refStorage={ref(storage, `${currentUser}/videos/${description}`)}
-                tag={tags}
-                uid={uid}
-                idPost={idPost}
-              />
-            ),
-          )
+          userVideos.map(({ name, fileUrl, authorName, tags, time }: FileType, index) => (
+            <Videos key={index} name={name} fileUrl={fileUrl} authorName={authorName} tags={tags} time={time} />
+          ))
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.videos} />
+        )}
+      </AppWrapper>
+
+      <h2 className={styles.top__among__users}>{data?.App?.lastOthers}</h2>
+      <AppWrapper>
+        {userOthers.length > 0 ? (
+          userOthers.map(({ name, fileUrl, authorName, tags, time }: FileType, index) => (
+            <Article key={index} name={name} fileUrl={fileUrl} authorName={authorName} tags={tags} time={time} />
+          ))
+        ) : (
+          <ZeroFiles text={data?.ZeroFiles?.others} />
         )}
       </AppWrapper>
     </>
