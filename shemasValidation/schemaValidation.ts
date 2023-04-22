@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { useHookSWR } from 'hooks/useHookSWR';
+import { Tags } from 'types/global.types';
 
 export const SchemaValidation = () => {
   const data = useHookSWR();
@@ -33,7 +34,7 @@ export const SchemaValidation = () => {
 
   const description = Yup.string().required(data?.NavForm?.validateRequired);
 
-  const tags = Yup.string().required(data?.NavForm?.validateRequired);
+  const tags = Yup.mixed().oneOf(Object.values(Tags)).required(data?.NavForm?.validateRequired);
 
   const groupName = Yup.string()
     .required(data?.NavForm?.validateRequired)
