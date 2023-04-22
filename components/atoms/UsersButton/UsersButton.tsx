@@ -4,7 +4,7 @@ import { auth } from '../../../firebase';
 import { addDoc } from 'firebase/firestore';
 import { Avatar, IconButton, Link } from '@chakra-ui/react';
 
-import { GroupNameType, MembersAndModeratorsType } from 'types/global.types';
+import { GroupNameType, MembersType } from 'types/global.types';
 
 import { moderators, user } from 'config/referencesFirebase';
 
@@ -20,7 +20,7 @@ type UsersButtonType = {
   pseudonym: string;
   logo: string;
   admin: string;
-  moderatorsArray: MembersAndModeratorsType[];
+  moderatorsArray: MembersType[];
 };
 
 export const UsersButton = ({
@@ -38,7 +38,7 @@ export const UsersButton = ({
 
   useEffect(() => {
     moderatorsArray.length > 0 &&
-      moderatorsArray.map(({ cid }: MembersAndModeratorsType) =>
+      moderatorsArray.map(({ cid }: MembersType) =>
         cid === id ? setToggleModRole(true) : setToggleModRole(false),
       );
   }, [moderatorsArray, id]);

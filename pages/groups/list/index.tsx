@@ -30,7 +30,7 @@ export default function List() {
 
     groupList.forEach((doc) =>
       grLArray.push({
-        nameGroup: doc.data().name,
+        name: doc.data().name,
         logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
       }),
     );
@@ -50,7 +50,7 @@ export default function List() {
 
     groupList.forEach((doc) =>
       grLArray.push({
-        nameGroup: doc.data().name,
+        name: doc.data().name,
         logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/groups.png`,
       }),
     );
@@ -70,7 +70,7 @@ export default function List() {
         <h2 className={styles.title}>{data?.Groups?.list?.title}</h2>
         <div className={styles.list}>
           {listArray.length > 0 ? (
-            listArray.map(({ nameGroup, logoUrl }, index) => (
+            listArray.map(({ name: nameGroup, logoUrl }, index) => (
               <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
             ))
           ) : (

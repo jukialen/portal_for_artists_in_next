@@ -54,7 +54,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
 
       for (const doc of documentSnapshots.docs) {
         adminArray.push({
-          nameGroup: doc.data().name,
+          name: doc.data().name,
           logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
@@ -87,7 +87,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
 
         docSnap.exists() &&
           moderatorArray.push({
-            nameGroup: docSnap.data().name,
+            name: docSnap.data().name,
             logoUrl: docSnap.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
           });
       }
@@ -120,7 +120,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
 
         docSnap.exists() &&
           memberArray.push({
-            nameGroup: docSnap.data().name,
+            name: docSnap.data().name,
             logoUrl: docSnap.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
           });
       }
@@ -145,7 +145,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
 
       for (const doc of documentSnapshots.docs) {
         nextAdminArray.push({
-          nameGroup: doc.data().name,
+          name: doc.data().name,
           logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
@@ -176,7 +176,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
 
         docSnap.exists() &&
           nextModeratorArray.push({
-            nameGroup: docSnap.data().name,
+            name: docSnap.data().name,
             logoUrl: docSnap.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
           });
       }
@@ -207,7 +207,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
 
         docSnap.exists() &&
           nextMemberArray.push({
-            nameGroup: docSnap.data().name,
+            name: docSnap.data().name,
             logoUrl: docSnap.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
           });
       }
@@ -224,7 +224,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
       <h2 className={styles.title}>{data?.groupsUser?.adminTitle}</h2>
       <Divider className={styles.divider} />
       {adminsArray.length > 0 ? (
-        adminsArray.map(({ nameGroup, logoUrl }, index) => (
+        adminsArray.map(({ name: nameGroup, logoUrl }, index) => (
           <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
         ))
       ) : (
@@ -236,7 +236,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
       <h2 className={styles.title}>{data?.groupsUser?.modsTitle}</h2>
       <Divider className={styles.divider} />
       {moderatorsArray.length > 0 ? (
-        moderatorsArray.map(({ nameGroup, logoUrl }, index) => (
+        moderatorsArray.map(({ name: nameGroup, logoUrl }, index) => (
           <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
         ))
       ) : (
@@ -248,7 +248,7 @@ export const GroupUser = ({ uidUser }: GroupUserType) => {
       <h2 className={styles.title}>{data?.groupsUser?.usersTitle}</h2>
       <Divider className={styles.divider} />
       {membersArray.length > 0 ? (
-        membersArray.map(({ nameGroup, logoUrl }, index) => (
+        membersArray.map(({ name: nameGroup, logoUrl }, index) => (
           <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
         ))
       ) : (

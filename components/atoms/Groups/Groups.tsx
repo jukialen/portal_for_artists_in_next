@@ -39,7 +39,7 @@ export const Groups = ({ data }: DataType) => {
 
           if (favoriteList.exists()) {
             groupList.push({
-              nameGroup: favorite,
+              name: favorite,
               logoUrl: !!favoriteList.data().logo
                 ? favoriteList.data().logo
                 : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
@@ -70,7 +70,7 @@ export const Groups = ({ data }: DataType) => {
 
       <div className={open ? styles.groups__container : styles.hiddenGroups}>
         {groupsArray.length > 0 ? (
-          groupsArray.map(({ nameGroup, logoUrl, description }, index) => (
+          groupsArray.map(({ name: nameGroup, logoUrl, description }, index) => (
             <div className={styles.container} key={index}>
               <img src={logoUrl} alt={`${nameGroup} logo`} />
               <Links

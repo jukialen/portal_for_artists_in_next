@@ -18,7 +18,7 @@ import {
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { CommentType, FormType, NewCommentsType } from 'types/global.types';
+import { CommentType, ResetFormType, NewCommentsType } from 'types/global.types';
 
 import {
   docLastFilesComment,
@@ -175,7 +175,7 @@ export const OptionsComments = ({
     }
   };
 
-  const updateComment = async ({ comment }: NewCommentsType, { resetForm }: FormType) => {
+  const updateComment = async ({ comment }: NewCommentsType, { resetForm }: ResetFormType) => {
     try {
       await updateDoc(refDelCom!, { message: comment });
       await onCloseEdit();

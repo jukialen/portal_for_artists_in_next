@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Divider, Input } from '@chakra-ui/react';
 
-import { FormType, UserDataType } from 'types/global.types';
+import { ResetFormType, UserFormType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -34,7 +34,7 @@ export default function Forgotten() {
 
   const { asPath } = useRouter();
 
-  const reset__password = async ({ email }: UserDataType, { resetForm }: FormType) => {
+  const reset__password = async ({ email }: UserFormType, { resetForm }: ResetFormType) => {
     try {
       const response = await sendPasswordResetEmail({ formFields: [{ id: 'email', value: email! }]});
       if (response.status === "FIELD_ERROR") {

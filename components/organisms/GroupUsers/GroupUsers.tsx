@@ -44,7 +44,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
       for (const group of groupList) {
         adminArray.push({
-          nameGroup: group.name,
+          name: group.name,
           logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
@@ -74,7 +74,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
       for (const group of groupList) {
         moderatorArray.push({
-          nameGroup: group.name,
+          name: group.name,
           logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
@@ -104,7 +104,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
       for (const group of groupList) {
         memberArray.push({
-          nameGroup: group.name,
+          name: group.name,
           logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
@@ -118,7 +118,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   useEffect(() => {
     !!id && firstMembersList();
-  }, []);
+  }, [id]);
 
   const nextAdminList = async () => {
     try {
@@ -135,7 +135,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
       for (const group of groupList) {
         nextAdminArray.push({
-          nameGroup: group.name,
+          name: group.name,
           logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
@@ -164,7 +164,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
       for (const group of groupList) {
         nextModeratorArray.push({
-          nameGroup: group.name,
+          name: group.name,
           logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
@@ -186,7 +186,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
           where: { usersId: id },
           orderBy: 'name, DESC',
           limit: maxItems,
-          cursor: lastMembersVisible
+          cursor: lastMembersVisible,
         },
       });
 
@@ -194,7 +194,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
       for (const group of groupList) {
         nextMemberArray.push({
-          nameGroup: group.name,
+          name: group.name,
           logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
@@ -220,7 +220,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
       <h2 className={styles.title}>{data?.Account?.groups?.adminTitle}</h2>
       <Divider className={styles.divider} />
       {adminsArray.length > 0 ? (
-        adminsArray.map(({ nameGroup, logoUrl }, index) => (
+        adminsArray.map(({ name: nameGroup, logoUrl }, index) => (
           <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
         ))
       ) : (
@@ -230,7 +230,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
       <h2 className={styles.title}>{data?.Account?.groups?.modsTitle}</h2>
       <Divider className={styles.divider} />
       {moderatorsArray.length > 0 ? (
-        moderatorsArray.map(({ nameGroup, logoUrl }, index) => (
+        moderatorsArray.map(({ name: nameGroup, logoUrl }, index) => (
           <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
         ))
       ) : (
@@ -242,7 +242,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
       <h2 className={styles.title}>{data?.Account?.groups?.usersTitle}</h2>
       <Divider className={styles.divider} />
       {membersArray.length > 0 ? (
-        membersArray.map(({ nameGroup, logoUrl }, index) => (
+        membersArray.map(({ name: nameGroup, logoUrl }, index) => (
           <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
         ))
       ) : (

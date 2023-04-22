@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useUserData } from 'hooks/useUserData';
 
 import { backUrl } from 'utilites/constants';
 
+import { FriendType } from 'types/global.types';
+
 import { Tile } from 'components/molecules/GroupTile/Tile';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './FriendsList.module.scss';
-import axios from 'axios';
 
 type FriendsListType = {
   uid: string;
@@ -29,11 +31,9 @@ export const FriendsList = ({ uid }: FriendsListType) => {
   const data = useHookSWR();
   const maxItems = 30;
 
-  
-
   const firstFriends = async () => {
     try {
-      const friendsId: [{ usernameId: string, friendId: string }] = await axios.get('/friends', {
+      const friendsId: FriendType[] = await axios.get(`${backUrl}/friends`, {
         params: {
           where: {
             usernameId: id,
@@ -45,7 +45,7 @@ export const FriendsList = ({ uid }: FriendsListType) => {
 
       const friendArray: FriendsListArrayType[] = [];
 
-      await friendsId.forEach(async (friend) => {
+      for (const friend of friendsId) {
         const friends: FriendsListArrayType = await axios.get(`${backUrl}/users`, {
           params: {
             where: { id: friend },
@@ -55,10 +55,9 @@ export const FriendsList = ({ uid }: FriendsListType) => {
         const { pseudonym, profilePhoto } = friends;
 
         friendArray.push({ pseudonym, profilePhoto });
-      });
+      }
       setFriendsList(friendArray);
-      friendArray.length === maxItems &&
-      setLastVisible(friendsId[friendsId.length - 1].usernameId);
+      friendArray.length === maxItems && setLastVisible(friendsId[friendsId.length - 1].usernameId);
     } catch (e) {
       console.error(e);
     }
@@ -70,20 +69,20 @@ export const FriendsList = ({ uid }: FriendsListType) => {
 
   const nextFriends = async () => {
     try {
-      const friendsId: [{ usernameId: string, friendId: string }] = await axios.get(`${backUrl}/users`, {
+      const friendsId: [{ usernameId: string; friendId: string }] = await axios.get(`${backUrl}/friends`, {
         params: {
           where: {
             usernameId: id,
           },
           orderBy: 'friendId, DESC',
           limit: maxItems,
-          cursor: lastVisible
+          cursor: lastVisible,
         },
       });
 
       const nextFriendArray: FriendsListArrayType[] = [];
 
-      await friendsId.forEach(async (friend) => {
+      for (const friend of friendsId) {
         const friends: FriendsListArrayType = await axios.get('/users', {
           params: {
             where: { id: friend },
@@ -93,7 +92,7 @@ export const FriendsList = ({ uid }: FriendsListType) => {
         const { pseudonym, profilePhoto } = friends;
 
         nextFriendArray.push({ pseudonym, profilePhoto });
-      });      
+      }
       const nextArray = friendsList.concat(...nextFriendArray);
       setFriendsList(nextArray);
       setLastVisible(friendsId[friendsId.length - 1].usernameId);

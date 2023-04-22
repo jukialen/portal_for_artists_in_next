@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { Input, Progress, Textarea } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { DataType, EventType, FormType } from 'types/global.types';
+import { DataType, EventType, ResetFormType } from 'types/global.types';
 
 import { backUrl } from 'utilites/constants';
 
@@ -50,7 +50,7 @@ export const ProfileAccount = ({ data }: DataType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
 
-  const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: FormType) => {
+  const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: ResetFormType) => {
     try {
       const newUserData = axios.patch(`${backUrl}/users/${pseudonym}`, {
         pseudonym: newPseudonym,

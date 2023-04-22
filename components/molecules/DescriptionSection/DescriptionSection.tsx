@@ -5,7 +5,7 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Divider, IconButton, Textarea } from '@chakra-ui/react';
 
-import { FormType } from 'types/global.types';
+import { ResetFormType } from 'types/global.types';
 
 import { groups } from 'config/referencesFirebase';
 
@@ -58,7 +58,7 @@ export const DescriptionSection = ({ description, admin, name }: DescriptionSect
     !!name && getRegulation();
   }, [name]);
 
-  const updateDescription = async ({ newDescription }: NewDescType, { resetForm }: FormType) => {
+  const updateDescription = async ({ newDescription }: NewDescType, { resetForm }: ResetFormType) => {
     try {
       await updateDoc(groups(name!), { description: newDescription });
       resetForm(initialValuesDes);
@@ -80,7 +80,7 @@ export const DescriptionSection = ({ description, admin, name }: DescriptionSect
 
   const updateRegulations = async (
     { newRegulation }: NewRegulationType,
-    { resetForm }: FormType,
+    { resetForm }: ResetFormType,
   ) => {
     try {
       const newRerArray = newRegulation.split(/\r?\n/).filter((el) => el);

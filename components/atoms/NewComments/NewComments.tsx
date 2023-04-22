@@ -5,13 +5,13 @@ import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { FormType, NewCommentsType } from 'types/global.types';
+import { ResetFormType, NewCommentsType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import styles from './NewComments.module.scss';
 
-export const NewComments = ({ name, refCom }: NewCommentsType) => {
+export const NewComments = ({ name }: NewCommentsType) => {
   const initialValues = {
     comment: '',
   };
@@ -21,7 +21,7 @@ export const NewComments = ({ name, refCom }: NewCommentsType) => {
 
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
 
-  const createNewComment = async ({ comment }: NewCommentsType, { resetForm }: FormType) => {
+  const createNewComment = async ({ comment }: NewCommentsType, { resetForm }: ResetFormType) => {
     try {
       await addDoc(refCom!, {
         nameGroup: name,

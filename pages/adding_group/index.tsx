@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { EventType, FormType } from 'types/global.types';
+import { EventType, ResetFormType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
@@ -54,7 +54,7 @@ export default function AddingGroup() {
 
   const createGroup = async (
     { groupName, description }: AddingGroupType,
-    { resetForm }: FormType,
+    { resetForm }: ResetFormType,
   ) => {
     try {
       const fileRef = await ref(storage, `groups/${groupName}/${logoGroup?.name}`);

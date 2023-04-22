@@ -59,17 +59,17 @@ export default function PostFromGroup() {
 
   return (
     <Post
-      author={author}
+      pseudonym={author}
       title={title}
       date={date}
-      description={description}
+      content={description}
       nameGroup={name}
       idPost={idPost}
-      currentUser={currentUser}
+      authorId={currentUser}
       userId={userId}
       likes={likes}
       liked={liked}
-      logoUser={logoUser}
+      profilePhoto={logoUser}
     />
   );
 }

@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { Button, Input, Textarea } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { AuthorType, FormType } from 'types/global.types';
+import { AuthorType, ResetFormType } from 'types/global.types';
 
 import { addingPost } from 'config/referencesFirebase';
 
@@ -37,7 +37,7 @@ export const AddingPost = ({ nameGroup }: AuthorType) => {
     title: SchemaValidation().description,
   });
 
-  const createNewPost = async ({ title, post }: AddingPostType, { resetForm }: FormType) => {
+  const createNewPost = async ({ title, post }: AddingPostType, { resetForm }: ResetFormType) => {
     try {
       await addDoc(addingPost(nameGroup!), {
         nameGroup: nameGroup,

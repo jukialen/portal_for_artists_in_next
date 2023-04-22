@@ -136,7 +136,7 @@ export default function Drawings() {
                 <Skeleton isLoaded={loadingFiles} key={time}>
                   {index === 'videos' ? (
                     <Videos
-                      link={fileUrl}
+                      fileUrl={fileUrl}
                       description={description}
                       authorName={pseudonym}
                       refFile={userVideosRef(user?.uid!)}
@@ -147,7 +147,7 @@ export default function Drawings() {
                     />
                   ) : (
                     <Article
-                      link={fileUrl}
+                      fileUrl={fileUrl}
                       description={description}
                       authorName={pseudonym}
                       unopt={index === 'animations'}

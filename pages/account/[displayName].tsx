@@ -1,4 +1,4 @@
-import { auth } from '../../firebase';
+import { useRouter } from 'next/router';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
@@ -17,7 +17,6 @@ import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGa
 import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
 
 import styles from './index.module.scss';
-import { useRouter } from 'next/router';
 
 export default function Account() {
   const data = useHookSWR();
@@ -135,13 +134,13 @@ export default function Account() {
               </TabList>
               <TabPanels padding={0}>
                 <TabPanel padding={0} role="tabpanel">
-                  <PhotosGallery user={id} data={data} pseudonym={pseudonym} />
+                  <PhotosGallery id={id} data={data} pseudonym={pseudonym} />
                 </TabPanel>
                 <TabPanel padding={0} role="tabpanel">
-                  <AnimatedGallery user={id} data={data} pseudonym={pseudonym} />
+                  <AnimatedGallery id={id} data={data} pseudonym={pseudonym} />
                 </TabPanel>
                 <TabPanel padding={0} role="tabpanel">
-                  <VideoGallery user={id} data={data} pseudonym={pseudonym} />
+                  <VideoGallery id={id} data={data} pseudonym={pseudonym} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

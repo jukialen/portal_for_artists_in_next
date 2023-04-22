@@ -18,17 +18,17 @@ import group from 'public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 export const Post = ({
-  author,
+  pseudonym: author,
   title,
   date,
-  description,
+  content: description,
   idPost,
   nameGroup,
   userId,
-  currentUser,
+  authorId: currentUser,
   likes,
   liked,
-  logoUser,
+  profilePhoto: logoUser,
 }: PostType) => {
   const [showComments, setShowComments] = useState(false);
   const [like, setLike] = useState(false);
@@ -97,7 +97,7 @@ export const Post = ({
           variant="ghost">
           {data?.Comments?.comments}
         </Button>
-        <SharingButton link={link} />
+        <SharingButton fileUrl={link} />
       </div>
       <p className={styles.likesCount} style={{ marginLeft: likeCount < 10 ? '.8rem' : '.5rem' }}>
         {likeCount}

@@ -132,7 +132,7 @@ export default function Drawings() {
             ({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType, index) => (
               <Article
                 key={index}
-                link={fileUrl}
+                fileUrl={fileUrl}
                 description={description}
                 authorName={pseudonym}
                 refFile={userPhotosRef(currentUser?.uid!)}

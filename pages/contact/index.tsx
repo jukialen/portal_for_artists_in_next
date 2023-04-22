@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Button, Input, Select, Textarea, useToast } from '@chakra-ui/react';
 
-import { FormType } from 'types/global.types';
+import { ResetFormType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -20,7 +20,7 @@ import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './index.module.scss';
 
-type FileDataType = {
+type ContactType = {
   title: string;
   message: string;
   tags: string;
@@ -45,7 +45,7 @@ export default function Contact() {
     tags: SchemaValidation().tags,
   });
 
-  const sendFeedback = async ({ title, message, tags }: FileDataType, { resetForm }: FormType) => {
+  const sendFeedback = async ({ title, message, tags }: ContactType, { resetForm }: ResetFormType) => {
     const messages = await axios.post(`${process.env.NEXT_PUBLIC_PAGE}/api/contact`, {
       tags,
       title,

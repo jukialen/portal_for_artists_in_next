@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { FileContainerType } from 'types/global.types';
+import { FileType } from 'types/global.types';
 
 import { Comments } from 'components/molecules/Comments/Comments';
 import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
@@ -11,13 +11,7 @@ import { NewComments } from 'components/atoms/NewComments/NewComments';
 import styles from './FileOptions.module.scss';
 import { useHookSWR } from 'hooks/useHookSWR';
 
-export const FileOptions = ({
-  authorName,
-  tag,
-  name,
-  time
-
-}: FileContainerType) => {
+export const FileOptions = ({ name, authorName, tags, time }: FileType) => {
   const [open, setOpen] = useState(false);
   const { locale } = useRouter();
 
@@ -25,9 +19,7 @@ export const FileOptions = ({
 
   const showOpenComments = () => setOpen(!open);
 
-  const titleShare = `Share ${authorName} user post from category ${tag}`;
-  const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/post/${authorName}/${name}/${tag}`;
-  // const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/post/${authorName}/${description}/${uid}/${subCollection}/${idPost}/${tag}`;
+  const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/post/${authorName}/${tags}/${name}`;
 
   return (
     <div className={styles.options}>
@@ -38,7 +30,7 @@ export const FileOptions = ({
           </Link>
         </div>
 
-        <SharingButton link={linkShare} tag={tag} authorName={authorName} titleShare={titleShare} name={name} time={time} />
+        <SharingButton name={name} fileUrl={linkShare} authorName={authorName} tags={tags} time={time} />
       </div>
       <button className={styles.comments} onClick={showOpenComments}>
         {data?.Comments?.comments}
@@ -46,7 +38,7 @@ export const FileOptions = ({
       {open && (
         <>
           <NewComments name={name} />
-          <Comments  userId={''} />
+          <Comments userId={''} />
         </>
       )}
     </div>

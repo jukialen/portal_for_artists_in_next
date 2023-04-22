@@ -30,16 +30,16 @@ export const Posts = ({ nameGroup, currentUser }: AuthorType) => {
 
         if (docSnap.exists()) {
           postArray.push({
-            author: docSnap.data().pseudonym,
+            pseudonym: docSnap.data().pseudonym,
             title: query.data().title,
             date: getDate(locale!, query.data().date),
-            description: query.data().message,
+            content: query.data().message,
             idPost: query.id,
             nameGroup: query.data().nameGroup,
             userId: query.data().author,
             likes: query.data().likes,
             liked: query.data().liked,
-            logoUser: docSnap.data().profilePhoto,
+            profilePhoto: docSnap.data().profilePhoto,
           });
         }
       }
@@ -59,32 +59,32 @@ export const Posts = ({ nameGroup, currentUser }: AuthorType) => {
         postsArray.map(
           (
             {
-              author,
+              pseudonym: author,
               title,
               date,
-              description,
+              content: description,
               idPost,
               nameGroup,
               userId,
               likes,
               liked,
-              logoUser,
+              profilePhoto: logoUser,
             }: PostType,
             index,
           ) => (
             <Post
               key={index}
-              author={author}
+              pseudonym={author}
               title={title}
               date={date}
-              description={description}
+              content={description}
               nameGroup={nameGroup}
               idPost={idPost}
-              currentUser={currentUser}
+              authorId={currentUser}
               userId={userId}
               likes={likes}
               liked={liked}
-              logoUser={logoUser}
+              profilePhoto={logoUser}
             />
           ),
         )
