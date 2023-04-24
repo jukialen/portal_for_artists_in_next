@@ -1,12 +1,6 @@
 import { ChangeEvent } from 'react';
 
 //ENUMS
-enum MembershipStatus {
-  MEMBER,
-  MODERATOR,
-  ADMIN,
-}
-
 enum Plan {
   FREE,
   PREMIUM,
@@ -34,13 +28,19 @@ type Logo = {
   profilePhoto?: string;
 };
 
-type UserPost = Logo & {
-  pseudonym: string;
-  date?: string;
-  nameGroup: string;
-  userId?: string | null;
-  authorId?: string;
+type Time = {
+  createdAt?: string;
+  updatedAt?: string;
 };
+
+type UserPost = Time &
+  Logo & {
+    pseudonym: string;
+    date?: string;
+    nameGroup: string;
+    userId?: string | null;
+    authorId?: string;
+  };
 
 export type DataType = any;
 
@@ -57,8 +57,9 @@ export type PlanType = {
 };
 
 export type UserType = Logo &
-  PlanType & {
-    id: string;
+  PlanType &
+  Time & {
+    id?: string;
     pseudonym: string;
     description?: string;
     data: any;
@@ -70,7 +71,7 @@ export type UserFormType = {
 };
 
 //FILES
-export type FileType = {
+export type FileType = Time & {
   ownerFile?: string;
   name: string;
   fileUrl: string;
@@ -78,26 +79,23 @@ export type FileType = {
   time: string;
   authorName?: string;
   profileType?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
 };
 
 //FRIENDS
-export type FriendType = {
+export type FriendType = Time & {
   id?: string;
   usernameId: string;
   friendId: string;
-  favorite: string;
-  time: string;
+  favorite?: boolean;
+  time?: string;
 };
 
 //GROUPS
-type Group = {
+type Group = Time & {
   name: string;
   logoUrl: string;
   description?: string;
-  time: string;
-  status: MembershipStatus;
+  time?: string;
 };
 
 export type GroupType = Group & {
@@ -118,12 +116,12 @@ export type PostType = UserPost &
   };
 
 // COMMENTS
-export type NewCommentsType = Comment & {};
-
 type Comment = UserPost & {
   comment: string;
   idPost: string;
 };
+
+export type NewCommentsType = Comment & {};
 
 export type CommentType = Comment & {
   commentId: string;

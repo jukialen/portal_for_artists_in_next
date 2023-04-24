@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { getDownloadURL, ref } from 'firebase/storage';
-import { storage } from '../../../firebase';
 
 import { DataType, FileType } from 'types/global.types';
 
@@ -9,29 +7,13 @@ import styles from './index.module.scss';
 import defaultAvatar from 'public/defaultAvatar.png';
 
 export const ProfileUser = ({ data, pseudonym, description, fileUrl }: FileType | DataType) => {
-  const [photoUrl, setPhotoUrl] = useState<string>('');
-
-  const fileRef = ref(storage, `profilePhotos/${fileUrl}/${fileUrl}`);
-
-  const profilePhoto = async () => {
-    try {
-      setPhotoUrl(await getDownloadURL(fileRef));
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    profilePhoto();
-  }, []);
-
   return (
     <article className={styles.profile}>
       <div className={styles.photo__profile}>
         <Image
           layout="fill"
-          src={photoUrl ? photoUrl : defaultAvatar}
-          alt={photoUrl ? data?.userAvatar : data?.defaultAvatar}
+          src={fileUrl ? fileUrl : defaultAvatar}
+          alt={fileUrl ? data?.userAvatar : data?.defaultAvatar}
           aria-label={fileUrl ? data?.userAvatar : data?.defaultAvatar}
           priority
         />

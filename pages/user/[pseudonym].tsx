@@ -1,23 +1,15 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { auth, db } from '../../firebase';
-import {
-  arrayRemove,
-  arrayUnion,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query as qFire,
-  setDoc,
-  where,
-} from 'firebase/firestore';
+import axios from 'axios';
 import { Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
+
+import { FriendType, UserType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
-
-import { delFriends, friends, user, usersRef } from 'config/referencesFirebase';
+import { useUserData } from 'hooks/useUserData';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { ProfileUser } from 'components/atoms/ProfileUser/ProfileUser';
@@ -31,78 +23,86 @@ import styles from './index.module.scss';
 import { CheckIcon, SmallAddIcon } from '@chakra-ui/icons';
 
 export default function User() {
-  const [uid, setUid] = useState<string | undefined>(undefined);
-  const [description, setDescription] = useState<string>('');
+  const [idenFriend, setIdenFriend] = useState('');
+  const [fid, setFid] = useState('');
+  const [fileUrl, setFileUrl] = useState('');
+  const [description, setDescription] = useState('');
   const [addF, setAddF] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [favoriteLength, setFavoriteLength] = useState(0);
 
   const data = useHookSWR();
+  const { asPath, push } = useRouter();
+  const { id } = useUserData();
+
   const loading = useCurrentUser('/');
-  const { query, push } = useRouter();
-  const { pseudonym } = query;
-  const currentUser = auth.currentUser?.uid;
+
+  const pseudonym = decodeURIComponent(asPath.split('/')[2]);
+  const contentList = [
+    data?.Account?.aMenu?.gallery,
+    data?.Account?.aMenu?.profile,
+    data?.Account?.aMenu?.friends,
+    data?.Account?.aMenu?.groups,
+  ];
+  const fileTabList = [data?.Aside?.photos, data?.Aside?.animations, data?.Aside?.videos];
 
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
   const activeColor = '#82FF82';
   const borderColor = '#4F8DFF';
 
-  const downLoadUid = async () => {
+  const downLoadFid = async () => {
     try {
-      const uidRef = qFire(usersRef, where('pseudonym', '==', pseudonym));
+      const user: UserType = await axios.get(`${backUrl}/users/${pseudonym}`);
 
-      const querySnapshot = await getDocs(uidRef);
-      querySnapshot.forEach((doc) => {
-        setUid(doc.id);
-        setDescription(doc.data().description);
-      });
+      setFid(user.id!);
+      setDescription(user.description!);
+      setFileUrl(`${cloudFrontUrl}/${user.profilePhoto}`);
     } catch (e) {
       console.error(e);
     }
   };
 
-  const downloadFriends = async () => {
-    const docRef = qFire(friends(currentUser!), where('friend', '==', doc(db, `users/${uid}`)));
+  const matchingFriend = async () => {
+    const friends: FriendType = await axios.get(`${backUrl}/friends`, {
+      params: {
+        where: {
+          AND: [{ usernameId: id }, { friendId: fid }],
+        },
+      },
+    });
 
-    const querySnapshot = await getDocs(docRef);
-    querySnapshot.forEach((document) => !!document && setAddF(!addF));
-
-    const docSnap = await getDoc(user(currentUser!));
-
-    if (docSnap.exists()) {
-      docSnap.data().favoriteFriends.forEach((favoriteFriend: string) => {
-        favoriteFriend === uid && setFavorite(!favorite);
-        favoriteFriend === uid && setFavoriteLength(favoriteFriend.length);
-      });
-      setFavoriteLength(docSnap.data().favoriteFriends.length);
+    if (!!friends) {
+      setAddF(!addF);
+      setFavorite(friends.favorite);
+      setIdenFriend(friends.id!);
     } else {
-      console.error('No such favorite friends!');
+      console.error('No such friends!');
     }
   };
 
-  useEffect(() => {
-    !!pseudonym && downLoadUid();
-  }, [pseudonym]);
+  const favFriendLength = async () => {
+    const favs: FriendType[] = await axios.get(`${backUrl}/friends`, {
+      params: {
+        AND: [{ usernameId: id }, { favorite: true }],
+      },
+    });
 
-  useEffect(() => {
-    !!uid && downloadFriends();
-  }, [uid]);
+    setFavoriteLength(favs.length);
+  };
 
   const addToFriends = async () => {
     try {
       if (addF) {
-        const docRef = qFire(friends(currentUser!), where('friend', '==', doc(db, `users/${uid}`)));
+        await axios.delete(`${backUrl}/friends/${idenFriend}`);
 
-        const querySnapshot = await getDocs(docRef);
-        querySnapshot.forEach((document) => {
-          deleteDoc(delFriends(currentUser!, document.id));
-        });
-
-        await setDoc(user(currentUser!), { favoriteFriends: arrayRemove(uid) }, { merge: true });
-        setAddF(false);
+        setFavorite(false);
+        setAddF(!addF);
       } else {
-        await setDoc(doc(friends(currentUser!)), { friend: doc(db, `users/${uid}`) });
+        await axios.post(`${backUrl}/friends`, {
+          username: id,
+          firned: fid,
+        });
         setAddF(true);
       }
     } catch (e) {
@@ -112,23 +112,7 @@ export default function User() {
 
   const addToFavorites = async () => {
     try {
-      if (favorite) {
-        await setDoc(
-          user(currentUser!),
-          {
-            favoriteFriends: arrayRemove(uid),
-          },
-          { merge: true },
-        );
-      } else {
-        await setDoc(
-          user(currentUser!),
-          {
-            favoriteFriends: arrayUnion(uid),
-          },
-          { merge: true },
-        );
-      }
+      await axios.patch(`${backUrl}/friends/${idenFriend}`, { favorite: !favorite });
       setFavorite(!favorite);
     } catch (e) {
       console.error(e);
@@ -136,12 +120,25 @@ export default function User() {
   };
 
   useEffect(() => {
-    currentUser === uid && push(`/account/${pseudonym}`);
-  }, [currentUser, uid]);
+    id === fid && push(`/account/${pseudonym}`);
+  }, [id, fid]);
+
+  useEffect(() => {
+    !!pseudonym && downLoadFid();
+  }, [pseudonym]);
+
+  useEffect(() => {
+    !!id && matchingFriend();
+  }, [id]);
+
+  useEffect(() => {
+    favFriendLength();
+  }, [id]);
 
   if (loading) {
     return null;
   }
+
   return (
     <>
       <HeadCom path={`/user/${pseudonym}`} content={`${pseudonym} site`} />
@@ -149,83 +146,46 @@ export default function User() {
       <h2 className={styles.profile__user__title}>{pseudonym}</h2>
 
       <div className={styles.friendsButtons}>
-        {currentUser === uid ? null : (
+        {id === fid ? null : (
           <button className={addF ? styles.addedButton : styles.addButton} onClick={addToFriends}>
             {addF ? <CheckIcon boxSize="1rem" /> : <SmallAddIcon boxSize="1.5rem" />}
             <p>{addF ? data?.Friends?.added : data?.Friends?.add}</p>
           </button>
         )}
 
-        {currentUser === uid ? null : !addF ? null : (
+        {id === fid ? null : !addF ? null : (
           <div>
             <button
               className={addF && favorite ? styles.addedButton : styles.addButton}
               onClick={addToFavorites}
               disabled={favoriteLength === 5}>
-              {favorite && favoriteLength !== 5 ? (
-                <CheckIcon boxSize="1rem" />
-              ) : (
-                <SmallAddIcon boxSize="1.5rem" />
-              )}
+              {favorite && favoriteLength !== 5 ? <CheckIcon boxSize="1rem" /> : <SmallAddIcon boxSize="1.5rem" />}
               <p>{addF && favorite ? data?.Friends?.addedFav : data?.Friends?.addFav}</p>
             </button>
             {!favorite && (
-              <p>
-                {!addF
-                  ? ''
-                  : !favorite && favoriteLength < 5
-                  ? data?.Friends?.max
-                  : data?.Friends?.addedMax}
-              </p>
+              <p>{!addF ? '' : !favorite && favoriteLength < 5 ? data?.Friends?.max : data?.Friends?.addedMax}</p>
             )}
           </div>
         )}
       </div>
 
-      {currentUser === uid ? null : <Divider orientation="horizontal" width="95%" />}
+      {id === fid ? null : <Divider orientation="horizontal" width="95%" />}
 
-      <Tabs
-        className={styles.tabs}
-        size="sm"
-        isLazy
-        lazyBehavior="keepMounted"
-        isFitted
-        variant="unstyled">
+      <Tabs className={styles.tabs} size="sm" isLazy lazyBehavior="keepMounted" isFitted variant="unstyled">
         <TabList className={styles.topTabList} role="tablist">
           <div className={styles.profile__user__menu}>
             <div className={styles.content}>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role="tab">
-                {data?.Account?.aMenu?.gallery}
-              </Tab>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role="tab">
-                {data?.Account?.aMenu?.profile}
-              </Tab>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role="tab">
-                {data?.Account?.aMenu?.friends}
-              </Tab>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role="tab">
-                {data?.Account?.aMenu?.groups}
-              </Tab>
+              {contentList.map((content, index) => (
+                <Tab
+                  key={index}
+                  _selected={{ borderColor: selectedColor }}
+                  _hover={{ borderColor: hoverColor }}
+                  _active={{ borderColor: activeColor }}
+                  borderColor={borderColor}
+                  role="tab">
+                  {content}
+                </Tab>
+              ))}
             </div>
           </div>
         </TabList>
@@ -240,60 +200,40 @@ export default function User() {
               variant="unstyled"
               className={styles.tabsForPanels}>
               <TabList className={styles.tabList} role="tablist">
-                <Tab
-                  className={styles.tabForPanels}
-                  _selected={{ borderColor: selectedColor }}
-                  _hover={{ borderColor: hoverColor }}
-                  _active={{ borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role="tab">
-                  {data?.Aside?.photos}
-                </Tab>
-                <Tab
-                  className={styles.tabForPanels}
-                  _selected={{ borderColor: selectedColor }}
-                  _hover={{ borderColor: hoverColor }}
-                  _active={{ borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role="tab">
-                  {data?.Aside?.animations}
-                </Tab>
-                <Tab
-                  className={styles.tabForPanels}
-                  _selected={{ borderColor: selectedColor }}
-                  _hover={{ borderColor: hoverColor }}
-                  _active={{ borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role="tab">
-                  {data?.Aside?.videos}
-                </Tab>
+                {fileTabList.map((tab, index) => (
+                  <Tab
+                    key={index}
+                    className={styles.tabForPanels}
+                    _selected={{ borderColor: selectedColor }}
+                    _hover={{ borderColor: hoverColor }}
+                    _active={{ borderColor: activeColor }}
+                    borderColor={borderColor}
+                    role="tab">
+                    {tab}
+                  </Tab>
+                ))}
               </TabList>
               <TabPanels className={styles.tabPanels}>
                 <TabPanel className={styles.tabPanel} role="tabpanel">
-                  <PhotosGallery user={uid} data={data} pseudonym={pseudonym!} />
+                  <PhotosGallery id={id} data={data} pseudonym={pseudonym} />
                 </TabPanel>
                 <TabPanel className={styles.tabPanel} role="tabpanel">
-                  <AnimatedGallery user={uid} data={data} pseudonym={pseudonym!} />
+                  <AnimatedGallery id={id} data={data} pseudonym={pseudonym!} />
                 </TabPanel>
                 <TabPanel className={styles.tabPanel} role="tabpanel">
-                  <VideoGallery user={uid} data={data} pseudonym={pseudonym!} />
+                  <VideoGallery id={id} data={data} pseudonym={pseudonym!} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
-            <ProfileUser
-              data={data}
-              pseudonym={pseudonym}
-              fileUrl={uid!}
-              description={description}
-            />
+            <ProfileUser data={data} pseudonym={pseudonym} fileUrl={fileUrl} description={description} />
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
-            <FriendsList uid={uid!} />
+            <FriendsList id={fid} />
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
-            <GroupUser uidUser={uid!} />
+            <GroupUser id={fid} />
           </TabPanel>
         </TabPanels>
       </Tabs>

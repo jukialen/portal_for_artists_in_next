@@ -11,7 +11,7 @@ import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Videos } from 'components/molecules/Videos/Videos';
 
-export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
+export const VideoGallery = ({ id, pseudonym, data }: UserType) => {
   const [userVideos, setUserVideos] = useState<FileType[]>([]);
   const [lastVisible, setLastVisible] = useState<FileType>();
   let [i, setI] = useState(1);
@@ -22,18 +22,15 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
 
   const downloadVideos = async () => {
     try {
-      const firstPage: [{ name: string; ownerFile: string; createdAt: string; updatedAt: string }] = await axios.get(
-        `${backUrl}/files`,
-        {
-          params: {
-            where: {
-              AND: [{ tags: 'videos' }, { pseudonym }],
-            },
-            limit: maxItems,
-            sortBy: 'name, DESC',
+      const firstPage: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: {
+            AND: [{ tags: 'videos' }, { ownerFile: id }],
           },
+          limit: maxItems,
+          sortBy: 'name, DESC',
         },
-      );
+      });
 
       const filesArray: FileType[] = [];
 
@@ -41,9 +38,8 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
         filesArray.push({
           name: file.name,
           fileUrl: `${cloudFrontUrl}/${file.name}`,
-          time: file.updatedAt || file.createdAt,
-          pseudonym,
-          description: file.name,
+          tags: file.tags,
+          time: file.updatedAt! || file.createdAt!,
         });
       }
 
@@ -55,24 +51,21 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
   };
 
   useEffect(() => {
-    !!user && downloadVideos();
-  }, [user]);
+    !!id && downloadVideos();
+  }, [id]);
 
   const nextElements = async () => {
     try {
-      const nextPage: [{ name: string; ownerFile: string; createdAt: string; updatedAt: string }] = await axios.get(
-        `${backUrl}/files`,
-        {
-          params: {
-            where: {
-              AND: [{ tags: 'videos' }, { pseudonym }],
-            },
-            limit: maxItems,
-            sortBy: 'name, DESC',
-            cursor: lastVisible,
+      const nextPage: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: {
+            AND: [{ tags: 'videos' }, { ownerFile: id }],
           },
+          limit: maxItems,
+          sortBy: 'name, DESC',
+          cursor: lastVisible,
         },
-      );
+      });
 
       const nextArray: FileType[] = [];
 
@@ -80,9 +73,8 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
         nextArray.push({
           name: file.name,
           fileUrl: `${cloudFrontUrl}/files`,
-          time: file.updatedAt || file.createdAt,
-          pseudonym,
-          description: file.name,
+          tags: file.tags,
+          time: file.updatedAt! || file.createdAt!,
         });
       }
 
@@ -102,8 +94,8 @@ export const VideoGallery = ({ user, pseudonym, data }: UserType) => {
 
       <Wrapper>
         {userVideos.length > 0 ? (
-          userVideos.map(({ name, fileUrl, description, time, tags }: FileType, index) => (
-            <Videos key={index} name={name} link={fileUrl} description={description} tag={tags} time={time} />
+          userVideos.map(({ name, fileUrl, time, tags }: FileType, index) => (
+            <Videos key={index} name={name} fileUrl={fileUrl} authorName={pseudonym} tags={tags} time={time} />
           ))
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.videos} />

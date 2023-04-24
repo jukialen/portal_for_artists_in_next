@@ -6,14 +6,12 @@ import { FileType, UserType } from 'types/global.types';
 
 import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
-import { filesElements } from 'helpers/fileElements';
-
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
 
-export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
+export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
   const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
   const [lastVisible, setLastVisible] = useState<FileType>();
   let [i, setI] = useState(1);
@@ -24,27 +22,24 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
 
   const downloadAnimations = async () => {
     try {
-      const firstPage: [{ name: string; ownerFile: string; createdAt: string; updatedAt: string }] = await axios.get(
-        `${backUrl}/files`,
-        {
-          params: {
-            where: {
-              AND: [{ tags: 'animations' }, { pseudonym }],
-            },
-            limit: maxItems,
-            sortBy: 'name, DESC',
+      const firstPage: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: {
+            AND: [{ tags: 'animations' }, { ownerFile: id }],
           },
+          limit: maxItems,
+          sortBy: 'name, DESC',
         },
-      );
+      });
 
       const filesArray: FileType[] = [];
 
       for (const file of firstPage) {
         filesArray.push({
-          fileUrl: `${cloudFrontUrl}/${file.name}`,
-          time: file.updatedAt || file.createdAt,
-          pseudonym,
-          description: file.name,
+          name: file.name,
+          fileUrl: `${cloudFrontUrl}/files`,
+          tags: file.tags,
+          time: file.updatedAt! || file.createdAt!,
         });
       }
 
@@ -56,33 +51,30 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
   };
 
   useEffect(() => {
-    !!user && downloadAnimations();
-  }, [user]);
+    !!id && downloadAnimations();
+  }, [id]);
 
   const nextElements = async () => {
     try {
-      const nextPage: [{ name: string; ownerFile: string; createdAt: string; updatedAt: string }] = await axios.get(
-        `${backUrl}/files`,
-        {
-          params: {
-            where: {
-              AND: [{ tags: 'animations' }, { pseudonym }],
-            },
-            limit: maxItems,
-            sortBy: 'name, DESC',
-            cursor: lastVisible,
+      const nextPage: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: {
+            AND: [{ tags: 'animations' }, { ownerFile: id }],
           },
+          limit: maxItems,
+          sortBy: 'name, DESC',
+          cursor: lastVisible,
         },
-      );
+      });
 
       const nextArray: FileType[] = [];
 
       for (const file of nextPage) {
         nextArray.push({
+          name: file.name,
           fileUrl: `${cloudFrontUrl}/files`,
-          time: file.updatedAt || file.createdAt,
-          pseudonym,
-          description: file.name,
+          tags: file.tags,
+          time: file.updatedAt! || file.createdAt!,
         });
       }
       const newArray = userAnimatedPhotos.concat(...nextArray);
@@ -102,16 +94,8 @@ export const AnimatedGallery = ({ user, pseudonym, data }: UserType) => {
 
       <Wrapper>
         {userAnimatedPhotos.length > 0 ? (
-          userAnimatedPhotos.map(({ fileUrl, description, time, tags }: FileType, index) => (
-            <Article
-              key={index}
-              link={fileUrl}
-              subCollection="animations"
-              time={time}
-              description={description}
-              tag={tags}
-              unopt
-            />
+          userAnimatedPhotos.map(({ name, fileUrl, time, tags }: FileType, index) => (
+            <Article key={index} name={name} fileUrl={fileUrl} authorName={pseudonym} time={time} tags={tags} />
           ))
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.animations} />

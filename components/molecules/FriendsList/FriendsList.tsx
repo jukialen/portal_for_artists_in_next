@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { useHookSWR } from 'hooks/useHookSWR';
-import { useUserData } from 'hooks/useUserData';
 
 import { backUrl } from 'utilites/constants';
 
-import { FriendType } from 'types/global.types';
+import { FriendType, UserType } from 'types/global.types';
 
 import { Tile } from 'components/molecules/GroupTile/Tile';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -14,7 +13,7 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import styles from './FriendsList.module.scss';
 
 type FriendsListType = {
-  uid: string;
+  id: string;
 };
 
 type FriendsListArrayType = {
@@ -22,11 +21,10 @@ type FriendsListArrayType = {
   profilePhoto: string;
 };
 
-export const FriendsList = ({ uid }: FriendsListType) => {
+export const FriendsList = ({ id }: FriendsListType) => {
   const [friendsList, setFriendsList] = useState<FriendsListArrayType[]>([]);
-  const [lastVisible, setLastVisible] = useState<string | null>();
+  const [lastVisible, setLastVisible] = useState<string | null>(null);
   let [i, setI] = useState(1);
-  const { id } = useUserData();
 
   const data = useHookSWR();
   const maxItems = 30;
@@ -35,9 +33,7 @@ export const FriendsList = ({ uid }: FriendsListType) => {
     try {
       const friendsId: FriendType[] = await axios.get(`${backUrl}/friends`, {
         params: {
-          where: {
-            usernameId: id,
-          },
+          where: { usernameId: id },
           orderBy: 'friendId, DESC',
           limit: maxItems,
         },
@@ -46,15 +42,11 @@ export const FriendsList = ({ uid }: FriendsListType) => {
       const friendArray: FriendsListArrayType[] = [];
 
       for (const friend of friendsId) {
-        const friends: FriendsListArrayType = await axios.get(`${backUrl}/users`, {
-          params: {
-            where: { id: friend },
-          },
-        });
+        const friends: UserType = await axios.get(`${backUrl}/users/${friend.friendId}`);
 
         const { pseudonym, profilePhoto } = friends;
 
-        friendArray.push({ pseudonym, profilePhoto });
+        friendArray.push({ pseudonym, profilePhoto: profilePhoto! });
       }
       setFriendsList(friendArray);
       friendArray.length === maxItems && setLastVisible(friendsId[friendsId.length - 1].usernameId);
@@ -64,16 +56,14 @@ export const FriendsList = ({ uid }: FriendsListType) => {
   };
 
   useEffect(() => {
-    !!uid && firstFriends();
-  }, [uid]);
+    !!id && firstFriends();
+  }, [id]);
 
   const nextFriends = async () => {
     try {
-      const friendsId: [{ usernameId: string; friendId: string }] = await axios.get(`${backUrl}/friends`, {
+      const friendsId: FriendType[] = await axios.get(`${backUrl}/friends`, {
         params: {
-          where: {
-            usernameId: id,
-          },
+          where: { usernameId: id },
           orderBy: 'friendId, DESC',
           limit: maxItems,
           cursor: lastVisible,
@@ -83,12 +73,7 @@ export const FriendsList = ({ uid }: FriendsListType) => {
       const nextFriendArray: FriendsListArrayType[] = [];
 
       for (const friend of friendsId) {
-        const friends: FriendsListArrayType = await axios.get('/users', {
-          params: {
-            where: { id: friend },
-          },
-        });
-
+        const friends: FriendsListArrayType = await axios.get(`${backUrl}/users/${friend.friendId}`);
         const { pseudonym, profilePhoto } = friends;
 
         nextFriendArray.push({ pseudonym, profilePhoto });
