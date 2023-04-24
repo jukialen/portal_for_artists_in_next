@@ -74,7 +74,7 @@ export default function User() {
 
     if (!!friends) {
       setAddF(!addF);
-      setFavorite(friends.favorite);
+      setFavorite(friends.favorite!);
       setIdenFriend(friends.id!);
     } else {
       console.error('No such friends!');
