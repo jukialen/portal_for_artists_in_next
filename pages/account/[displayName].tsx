@@ -149,7 +149,7 @@ export default function Account() {
             <ProfileAccount data={data} />
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
-            <FriendsList uid={id} />
+            <FriendsList id={id} />
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
             <GroupUsers id={id} />

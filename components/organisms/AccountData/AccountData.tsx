@@ -21,7 +21,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { DataType, FormType, UserDataType } from 'types/global.types';
+import { DataType, ResetFormType, UserFormType } from 'types/global.types';
 
 import { useUserData } from 'hooks/useUserData';
 
@@ -74,7 +74,7 @@ export const AccountData = ({ data }: DataType) => {
     plan: SchemaValidation().tags,
   });
 
-  const update__email = async ({ email }: UserDataType, { resetForm }: FormType) => {
+  const update__email = async ({ email }: UserFormType, { resetForm }: ResetFormType) => {
     try {
       resetForm(initialValues);
       await axios.patch(`${backUrl}/auth/change-email`, { user_id: id, newEmail: email });
@@ -88,7 +88,7 @@ export const AccountData = ({ data }: DataType) => {
 
   const newPassword = async (
     { oldPassword, newPassword, repeatNewPassword }: ResetPassword,
-    { resetForm }: FormType,
+    { resetForm }: ResetFormType,
   ) => {
     try {
       if (newPassword !== repeatNewPassword) {
@@ -96,7 +96,7 @@ export const AccountData = ({ data }: DataType) => {
         return;
       }
 
-      await axios.patch(`${backUrl}/auth/change-password`, { oldPassword, newPassword });
+      await axios.post(`${backUrl}/auth/change-password`, { oldPassword, newPassword });
       resetForm(initialValues);
       setValuesFieldsPass(data?.PasswordAccount?.success);
     } catch (e) {
@@ -105,7 +105,7 @@ export const AccountData = ({ data }: DataType) => {
     }
   };
 
-  const changeSubscription = async ({ newPlan }: SubscriptionType, { resetForm }: FormType) => {
+  const changeSubscription = async ({ newPlan }: SubscriptionType, { resetForm }: ResetFormType) => {
     try {
       await axios.patch(`${backUrl}/users/${pseudonym}`, { plan: newPlan });
       await setSubscriptionPlan(newPlan);
