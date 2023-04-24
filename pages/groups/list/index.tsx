@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter } from 'firebase/firestore';
+import axios from 'axios';
 
-import { groupRef } from 'config/referencesFirebase';
+import { backUrl } from 'utilites/constants';
 
 import { GroupType } from 'types/global.types';
 
@@ -15,48 +15,57 @@ import styles from './index.module.scss';
 
 export default function List() {
   const [listArray, setListArray] = useState<GroupType[]>([]);
-  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
+  const [lastVisible, setLastVisible] = useState<GroupType>();
   let [i, setI] = useState(1);
 
   const data = useHookSWR();
   const loading = useCurrentUser('/');
   const maxItems = 30;
 
-  const downloadGroupsList = async () => {
-    const queryFirst = query(groupRef, orderBy('name'), limit(maxItems));
-    const groupList = await getDocs(queryFirst);
+  const getGroupsList = async () => {
+    const groups: GroupType[] = await axios.get(`${backUrl}/groups`, {
+      params: {
+        sortBy: 'name, DESC',
+        limit: maxItems,
+      },
+    });
 
-    const grLArray: GroupType[] = [];
+    const groupArray: GroupType[] = [];
 
-    groupList.forEach((doc) =>
-      grLArray.push({
-        name: doc.data().name,
-        logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-      }),
-    );
-    grLArray.length === maxItems && setLastVisible(groupList.docs[groupList.docs.length - 1]);
-    setListArray(grLArray);
+    for (const group of groups) {
+      groupArray.push({
+        name: group.name,
+        logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+      });
+    }
+    groupArray.length === maxItems && setLastVisible(groupArray[groupArray.length - 1]);
+    setListArray(groupArray);
   };
 
   useEffect(() => {
-    !loading && downloadGroupsList();
+    !loading && getGroupsList();
   }, [loading]);
 
-  const downloadNextGroupsList = async () => {
-    const queryNext = query(groupRef, orderBy('name'), startAfter(lastVisible), limit(maxItems));
-    const groupList = await getDocs(queryNext);
+  const nextGroupsList = async () => {
+    const groups: GroupType[] = await axios.get(`${backUrl}/groups`, {
+      params: {
+        sortBy: 'name, DESC',
+        limit: maxItems,
+        cursor: lastVisible,
+      },
+    });
 
-    const grLArray: GroupType[] = [];
+    const groupArray: GroupType[] = [];
 
-    groupList.forEach((doc) =>
-      grLArray.push({
-        name: doc.data().name,
-        logoUrl: doc.data().logo || `${process.env.NEXT_PUBLIC_PAGE}/groups.png`,
-      }),
-    );
+    for (const group of groups) {
+      groupArray.push({
+        name: group.name,
+        logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+      });
+    }
 
-    setListArray(listArray.concat(...grLArray));
-    setLastVisible(groupList.docs[groupList.docs.length - 1]);
+    setListArray(listArray.concat(...groupArray));
+    setLastVisible(groupArray[groupArray.length - 1]);
     setI(++i);
   };
 
@@ -79,7 +88,7 @@ export default function List() {
         </div>
       </div>
       {!!lastVisible && listArray.length === maxItems * i ? (
-        <MoreButton nextElements={downloadNextGroupsList} />
+        <MoreButton nextElements={nextGroupsList} />
       ) : (
         <p className={styles.noALl}>{data?.Groups?.list?.all}</p>
       )}
