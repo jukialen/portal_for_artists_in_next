@@ -59,10 +59,7 @@ export const ProfileAccount = ({ data }: DataType) => {
 
       if (photo !== null) {
         await axios.patch(`${backUrl}/files/${id}`, {
-          data: {
-            file: photo,
-            data: { userId: id },
-          },
+          data: { file: photo },
           headers: {
             'Content-Type': 'multipart/form-data',
           },
