@@ -1,20 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth, storage } from '../../firebase';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { UploadTaskSnapshot } from '@firebase/storage';
-import {
-  addDoc,
-  arrayRemove,
-  arrayUnion,
-  deleteDoc,
-  getDoc,
-  getDocs,
-  query as qFire,
-  setDoc,
-  updateDoc,
-  where,
-} from 'firebase/firestore';
+import axios from 'axios';
 import {
   Button,
   Divider,
@@ -36,12 +22,13 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { deleteMembers, deleteModerators, groups, members, moderators, user } from 'config/referencesFirebase';
+import { EventType, GroupType, Role } from 'types/global.types';
 
-import { EventType } from 'types/global.types';
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
+import { useUserData } from 'hooks/useUserData';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
@@ -55,16 +42,17 @@ import { CheckIcon, SmallAddIcon } from '@chakra-ui/icons';
 import { MdCameraEnhance } from 'react-icons/md';
 
 export default function Groups() {
-  const [admin, setAdmin] = useState('');
+  const [admin, setAdmin] = useState(false);
   const [description, setDescription] = useState('');
   const [logo, setLogo] = useState('');
   const [join, setJoin] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [favoriteLength, setFavoriteLength] = useState(0);
-  const [userId, setUserId] = useState<string | null>(null);
+  const [usersGroupsId, setUsersGroupsId] = useState<string | null>(null);
+  const [roleId, setRoleId] = useState('');
+  const [groupId, setGroupId] = useState('');
 
   const [required, setRequired] = useState(false);
-  const [logoUrl, setLogoUrl] = useState('');
   const [newLogo, setNewLogo] = useState<File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
   const [progressUpload, setProgressUpload] = useState<number>(0);
@@ -73,9 +61,9 @@ export default function Groups() {
 
   const { query, asPath } = useRouter();
   const { name } = query;
-  const currentUser = auth.currentUser?.uid;
   const data = useHookSWR();
   const loading = useCurrentUser('/');
+  const { id } = useUserData();
 
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
@@ -89,59 +77,42 @@ export default function Groups() {
 
   const joinedUsers = async () => {
     try {
-      const queryRef = qFire(members(name!), where('member', '==', user(currentUser!)));
-      const querySnapshot = await getDocs(queryRef);
+      const groups: GroupType = await axios.get(`${backUrl}/groups/${name}`);
+      setLogo(groups.logo);
+      setDescription(groups.description!);
+      setRoleId(groups.roleId!);
+      setGroupId(groups.groupId!);
 
-      for (const member of querySnapshot.docs) {
-        !!member.data().member.id ? setUserId(member.data().member.id) : setUserId(null);
-        !!member.data().member.id ? setJoin(true) : setJoin(false);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !loading && !!name && joinedUsers();
-  }, [name, loading]);
-
-  const favoriteGroup = async () => {
-    try {
-      const docSnap = await getDoc(user(currentUser!));
-
-      if (docSnap.exists()) {
-        docSnap.data().favoriteGroups.forEach((favoriteGroup: string) => {
-          favoriteGroup === name ? setFavorite(true) : setFavorite(false);
-        });
-        setFavoriteLength(docSnap.data().favoriteGroups.length);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !loading && !!name && favoriteGroup();
-  }, [name, loading]);
-
-  const joinToGroup = async () => {
-    try {
-      const membersRef = qFire(members(name!), where('member', '==', user(currentUser!)));
-      const memberSnapshot = await getDocs(membersRef);
-
-      const moderatorsRef = qFire(moderators(name!), where('moderator', '==', user(currentUser!)));
-      const moderatorSnapshot = await getDocs(moderatorsRef);
-
-      if (join && !!userId) {
-        for (const memberGroup of memberSnapshot.docs) {
-          await deleteDoc(deleteMembers(name!, memberGroup.id!));
-        }
-        for (const moderatorGroup of moderatorSnapshot.docs) {
-          await deleteDoc(deleteModerators(name!, moderatorGroup.id!));
-        }
-        await setDoc(user(currentUser!), { favoriteGroups: arrayRemove(name) }, { merge: true });
+      if (!!groups) {
+        setJoin(true);
+        setFavorite(groups.favorited!);
+        setFavoriteLength(groups.favorites!);
+        setAdmin(groups.role! === Role.ADMIN);
+        setUsersGroupsId(groups.usersGroupsId!);
       } else {
-        await addDoc(members(name!), { member: user(currentUser!) });
+        setJoin(false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    !loading && joinedUsers();
+  }, [name, loading]);
+
+  const toggleToGroup = async () => {
+    try {
+      if (join) {
+        await axios.post(`${backUrl}/users-groups`, {
+          usersId: id,
+          groupId,
+          roleId,
+        });
+      } else {
+        await axios.delete(`${backUrl}/users-groups`, {
+          params: { where: { usersGroupsId } },
+        });
       }
       setJoin(!join);
     } catch (e) {
@@ -149,29 +120,18 @@ export default function Groups() {
     }
   };
 
-  const groupInfo = async () => {
-    try {
-      const docSnap = await getDoc(groups(name!));
-      if (docSnap.exists()) {
-        setAdmin(docSnap.data().admin);
-        setDescription(docSnap.data().description);
-        setLogo(!!docSnap.data().logo ? docSnap.data().logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !loading && !!name && groupInfo();
-  }, [name, loading]);
-
   const addToFavorites = async () => {
     try {
       if (favorite) {
-        await setDoc(user(currentUser!), { favoriteGroups: arrayRemove(name) }, { merge: true });
+        await axios.patch(`${backUrl}/users-groups/${name}`, {
+          favorite: false,
+        });
+        setFavoriteLength(favoriteLength - 1);
       } else {
-        await setDoc(user(currentUser!), { favoriteGroups: arrayUnion(name) }, { merge: true });
+        await axios.patch(`${backUrl}/users-groups/${name}`, {
+          favorite: true,
+        });
+        setFavoriteLength(favoriteLength + 1);
       }
       setFavorite(!favorite);
     } catch (e) {
@@ -191,58 +151,30 @@ export default function Groups() {
 
   const updateLogo = async () => {
     try {
-      const fileRef = await ref(storage, `groups/${name}/${newLogo?.name}`);
-
-      const upload = uploadBytesResumable(fileRef, newLogo!);
-
       !!newLogo &&
         !required &&
-        upload.on(
-          'state_changed',
-          (snapshot: UploadTaskSnapshot) => {
-            const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setProgressUpload(progress);
-            switch (snapshot.state) {
-              case 'running':
-                setValuesFields('Upload is running');
-                break;
-              case 'paused':
-                setValuesFields('Upload is paused');
-                break;
-            }
-          },
-          (e) => {
-            console.error(e);
-            setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
-          },
-          async () => {
-            const groupLogoURL = await getDownloadURL(fileRef);
-
-            setLogoUrl(groupLogoURL);
-            await updateDoc(groups(name!), { logo: groupLogoURL });
-
-            setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-            setNewLogo(null);
-            setRequired(false);
-            return null;
-          },
-        );
+        admin &&
+        (await axios.patch(`${backUrl}/groups/${name}`, {
+          logo: newLogo,
+          usersGroupsId,
+        }));
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
   if (loading) {
     return null;
   }
+
   return (
     <>
       <HeadCom path={asPath} content={`"${name}" group website`} />
 
       <article className={styles.mainContainer}>
         <div className={styles.logo}>
-          <img src={logo} alt={`${name} logo`} />
-          {currentUser === admin && (
+          <img src={`${cloudFrontUrl}/${logo}`} alt={`${name} logo`} />
+          {admin && (
             <IconButton
               aria-label="update group logo"
               icon={<MdCameraEnhance />}
@@ -260,8 +192,8 @@ export default function Groups() {
             <ModalBody className={styles.modal}>
               <Input
                 type="file"
-                name="logo"
-                id="logo"
+                name="newLogo"
+                id="newLogo"
                 padding=".35rem 1rem"
                 margin=".5rem auto 1.5rem"
                 onChange={changeFile}
@@ -269,9 +201,9 @@ export default function Groups() {
               />
 
               <p style={{ color: '#bd0000' }}>{!newLogo && required && data?.NavForm?.validateRequired}</p>
-              {logoUrl && (
+              {!!newLogo && (
                 <img
-                  src={logoUrl}
+                  src={`${process.env.NEXT_PUBLIC_PAGE}/${newLogo.name}`}
                   alt="preview new logo"
                   width={192}
                   height={192}
@@ -314,13 +246,13 @@ export default function Groups() {
         <h2 className={styles.nameGroup}>{name}</h2>
       </article>
 
-      {admin !== currentUser && (
+      {!admin && (
         <div className={styles.buttons}>
           <Button
             leftIcon={join ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
             style={join ? addingToGroupOutline : addingToGroup}
             colorScheme="blue"
-            onClick={joinToGroup}
+            onClick={toggleToGroup}
             variant={join ? 'outline' : 'solid'}
             className={styles.button}>
             {join ? data?.Groups?.joined : data?.Groups?.join}
@@ -346,7 +278,7 @@ export default function Groups() {
         </div>
       )}
 
-      {admin !== currentUser && <Divider orientation="horizontal" />}
+      {!admin && <Divider orientation="horizontal" />}
 
       <Tabs className={styles.tabs} isLazy lazyBehavior="keepMounted" isFitted variant="unstyled">
         <TabList className={styles.tablist}>
@@ -381,7 +313,7 @@ export default function Groups() {
             <>
               {join && <AddingPost nameGroup={name} />}
               {join ? (
-                <Posts nameGroup={name} currentUser={currentUser} />
+                <Posts nameGroup={name} currentUser={id} />
               ) : (
                 <p className={styles.noPermission}>{data?.Groups?.noPermission}</p>
               )}
