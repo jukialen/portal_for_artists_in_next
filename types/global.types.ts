@@ -18,6 +18,13 @@ export enum Tags {
   others,
 }
 
+export enum Role {
+  ADMIN,
+  MODERATOR,
+  USER,
+  AUTHOR,
+}
+
 //GENERAL
 type Like = {
   likes: number;
@@ -93,13 +100,18 @@ export type FriendType = Time & {
 //GROUPS
 type Group = Time & {
   name: string;
-  logoUrl: string;
+  logo: string;
   description?: string;
   time?: string;
+  favorites?: number;
+  favorited?: boolean;
+  role?: Role;
+  usersGroupsId?: string;
+  roleId?: string;
 };
 
 export type GroupType = Group & {
-  id?: string;
+  groupId?: string;
 };
 
 export type MembersType = Group & {
