@@ -8,7 +8,7 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { ModeContext } from 'providers/ModeProvider';
 
-import { EventType, FormType } from 'types/global.types';
+import { Tags, EventType, ResetFormType } from 'types/global.types';
 
 import { backUrl } from 'utilites/constants';
 
@@ -20,11 +20,10 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 import styles from './FileUpload.module.scss';
 
 type FileDataType = {
-  tags: string;
+  tags: Tags | '';
 };
 
-const initialValues = {
-  description: '',
+const initialValues: FileDataType = {
   tags: '',
 };
 
@@ -51,94 +50,24 @@ export const FilesUpload = () => {
     }
   };
 
-  const uploadFiles = async ({ tags }: FileDataType, { resetForm }: FormType) => {
+  const uploadFiles = async ({ tags }: FileDataType, { resetForm }: ResetFormType) => {
     try {
       !file && setRequired(true);
-      const { userId } = await getUserInfo();
-      await axios.patch(`${backUrl}/files`,
-        {
-          data: { file, data: { tags, ownerFile: userId }},
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      );
+      await axios.post(`${backUrl}/files`, {
+        data: { tags },
+        file,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       setValuesFields(`${data?.AnotherForm?.uploadFile}`);
       setFile(null);
       setRequired(false);
       resetForm(initialValues);
-      // const photosRef = ref(storage, `${user?.uid}/photos/${file?.name}`);
-      // // @ts-ignore
-      // const videosRef = ref(storage, `${user?.uid}/videos/${file?.name}`);
-      // // @ts-ignore
-      // const animationsRef = ref(storage, `${user?.uid}/animations/${file?.name}`);
-      
-      // let upload: UploadTask;
 
-      // switch (tags) {
-      //   case 'animations':
-      //     upload = uploadBytesResumable(animationsRef, file!);
-      //     break;
-      //   case 'videos':
-      //     upload = uploadBytesResumable(videosRef, file!);
-      //     break;
-      //   default:
-      //     upload = uploadBytesResumable(photosRef, file!);
-      // }
-
-      // let refName: string;
-
-      // !!file &&
-      //   !required &&
-      //   upload.on(
-      //     'state_changed',
-      //     (snapshot: UploadTaskSnapshot) => {
-      //       const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      //       setProgressUpload(progress);
-
-      //       switch (snapshot.state) {
-      //         case 'running':
       //           setValuesFields('Upload is running');
-      //           return (refName = snapshot.ref.name);
-      //         case 'paused':
-      //           setValuesFields('Upload is paused');
-      //           break;
-      //       }
-      //     },
-      //     (e) => {
-      //       console.error('error', e);
-      //       setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
-      //     },
-      //     async () => {
-      //       const sendToFirestore = (colRef: CollectionReference, url: string) => {
-      //         addDoc(colRef, {
-      //           fileUrl: url,
-      //           description: refName,
-      //           tag: tags,
-      //           timeCreated: Date.now(),
-      //           uid: user?.uid,
-      //         });
-      //         setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-      //         setFile(null);
-      //         setRequired(false);
-      //         resetForm(initialValues);
-      //       };
 
-      //       switch (tags) {
-      //         case 'animations':
-      //           const animationURL = await getDownloadURL(animationsRef);
-      //           sendToFirestore(userAnimationsRef(user?.uid!), animationURL);
-      //           break;
-      //         case 'videos':
-      //           const videoURL = await getDownloadURL(videosRef);
-      //           sendToFirestore(userVideosRef(user?.uid!), videoURL);
-      //           break;
-      //         default:
-      //           const photoURL = await getDownloadURL(photosRef);
-      //           sendToFirestore(userPhotosRef(user?.uid!), photoURL);
-      //       }
-      //     },
-      //   );
+      //           setValuesFields('Upload is paused');
     } catch (e) {
       console.error(e);
       setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
