@@ -1,6 +1,5 @@
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getUserInfo } from 'helpers/getUserInfo';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -13,6 +12,7 @@ import { backUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
+import { useUserData } from 'hooks/useUserData';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -34,6 +34,7 @@ export default function NewUser() {
 
   const { push, asPath } = useRouter();
   const loading = useCurrentUser('/');
+  const { id } = useUserData();
   const data = useHookSWR();
   const { showUser } = useContext(StatusLoginContext);
 
@@ -53,10 +54,9 @@ export default function NewUser() {
 
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
-      const { userId } = await getUserInfo();
       !!photo &&
-        (await axios.post(`${backUrl}/files`, {
-          data: { file: photo, ownerFile: userId },
+        (await axios.patch(`${backUrl}/files${id}`, {
+          file: photo,
           headers: {
             'Content-Type': 'multipart/form-data',
           },
