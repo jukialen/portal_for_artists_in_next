@@ -238,10 +238,7 @@
     "noMods": "モデレータがいません",
     "anotherMembers": "他人の隊員",
     "noMembers": "隊員がいません",
-    "button": {
-      "addModAria": "モデレータが付け加える",
-      "addedModAria": "モデレータが付け加えました"
-    }
+    "addModAria": "モデレータが付け加える"
   },
   "Description": {
     "textPlaceholder": "新しい叙述の団体",

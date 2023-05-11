@@ -70,6 +70,7 @@ export default function Groups() {
   const activeColor = '#4F8DFF';
   const checkIcon = '1rem';
   const smallIcon = '1.5rem';
+  const zeroPadding = 0;
 
   const addingToGroup = { background: activeColor, color: '#000' };
 
@@ -120,7 +121,7 @@ export default function Groups() {
     }
   };
 
-  const addToFavorites = async () => {
+  const toggleToFavorites = async () => {
     try {
       if (favorite) {
         await axios.patch(`${backUrl}/users-groups/${name}`, {
@@ -265,7 +266,7 @@ export default function Groups() {
                 style={favorite ? addingToGroupOutline : addingToGroup}
                 colorScheme="blue"
                 disabled={!favorite && favoriteLength === 5}
-                onClick={addToFavorites}
+                onClick={toggleToFavorites}
                 variant={favorite ? 'solid' : 'outline'}
                 className={`${styles.button} ${styles.favoriteButton}`}>
                 {favorite ? data?.Groups?.favorite?.addedToFav : data?.Groups?.favorite?.addToFavorite}
@@ -290,14 +291,16 @@ export default function Groups() {
             className={styles.tab}>
             {decodeURIComponent(data?.Account?.aMenu?.general)}
           </Tab>
-          <Tab
-            _selected={{ borderColor: selectedColor }}
-            _hover={{ borderColor: hoverColor }}
-            _active={{ borderColor: activeColor }}
-            borderColor={activeColor}
-            className={styles.tab}>
-            {decodeURIComponent(data?.Groups?.menu?.members)}
-          </Tab>
+          {admin && (
+            <Tab
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={activeColor}
+              className={styles.tab}>
+              {decodeURIComponent(data?.Groups?.menu?.members)}
+            </Tab>
+          )}
           <Tab
             _selected={{ borderColor: selectedColor }}
             _hover={{ borderColor: hoverColor }}
@@ -308,8 +311,8 @@ export default function Groups() {
           </Tab>
         </TabList>
 
-        <TabPanels padding={0}>
-          <TabPanel padding={0}>
+        <TabPanels padding={zeroPadding}>
+          <TabPanel padding={zeroPadding}>
             <>
               {join && <AddingPost nameGroup={name} />}
               {join ? (
@@ -319,11 +322,13 @@ export default function Groups() {
               )}
             </>
           </TabPanel>
-          <TabPanel padding={0}>
-            <Members admin={admin} name={name!} />
-          </TabPanel>
-          <TabPanel padding={0}>
-            <DescriptionSection description={description} admin={admin} name={name} />
+          {admin && (
+            <TabPanel padding={zeroPadding}>
+              <Members admin={admin} name={name!} />
+            </TabPanel>
+          )}
+          <TabPanel padding={zeroPadding}>
+            <DescriptionSection description={description} admin={admin} name={name} usersGroupsId={usersGroupsId!} />
           </TabPanel>
         </TabPanels>
       </Tabs>

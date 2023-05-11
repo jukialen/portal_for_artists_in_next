@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth } from '../../../firebase';
-import { getDoc } from 'firebase/firestore';
-
-import { likePost, user } from 'config/referencesFirebase';
 
 import { getDate } from 'helpers/getDate';
 
@@ -19,32 +15,31 @@ export default function PostFromGroup() {
   const [logoUser, setLogoUser] = useState('');
 
   const { locale, asPath } = useRouter();
-  const currentUser = auth.currentUser?.uid;
 
   const split = asPath.split('/');
   const name = decodeURIComponent(split[2]);
-  const author = decodeURIComponent(split[3]);
+  const authorName = decodeURIComponent(split[3]);
   const idPost = decodeURIComponent(split[4]);
 
   const downloadPosts = async () => {
     try {
-      const docSnap = await getDoc(likePost(name!, idPost));
+      
 
       if (docSnap.exists()) {
-        setUserId(docSnap.data().author);
-        setTitle(docSnap.data().title);
-        setDate(getDate(locale!, docSnap.data().date));
-        setDescription(docSnap.data().message);
-        setLiked(docSnap.data().liked);
-        setLikes(docSnap.data().likes);
+//        setUserId(docSnap.data().author);
+//        setTitle(docSnap.data().title);
+//        setDate(getDate(locale!, docSnap.data().date));
+//        setDescription(docSnap.data().message);
+//        setLiked(docSnap.data().liked);
+//        setLikes(docSnap.data().likes);
 
-        const logo = await getDoc(user(docSnap.data().author));
+//        const logo = await getDoc(user(docSnap.data().author));
 
-        if (logo.exists()) {
-          setLogoUser(logo.data().profilePhoto);
-        } else {
-          console.log('No profile photo');
-        }
+//        if (logo.exists()) {
+//          setLogoUser(logo.data().profilePhoto);
+//        } else {
+//          console.log('No profile photo');
+//        }
       } else {
         console.log('No such document!');
       }

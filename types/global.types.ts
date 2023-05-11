@@ -69,7 +69,7 @@ export type UserType = Logo &
     id?: string;
     pseudonym: string;
     description?: string;
-    data: any;
+    data?: any;
   };
 
 export type UserFormType = {
@@ -77,7 +77,7 @@ export type UserFormType = {
   password?: string;
 };
 
-//FILES
+//FiLES
 export type FileType = Time & {
   ownerFile?: string;
   name: string;
@@ -114,9 +114,10 @@ export type GroupType = Group & {
   groupId?: string;
 };
 
-export type MembersType = Group & {
-  groupId: string;
-  userId: string;
+export type MemberType = {
+  usersGroupsId?: string;
+  pseudonym: string;
+  profilePhoto: string;
 };
 
 //POSTS

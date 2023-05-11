@@ -1,127 +1,76 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
-import { auth } from '../../../firebase';
-import {
-  deleteDoc,
-  DocumentData,
-  getDoc,
-  getDocs,
-  limit,
-  query,
-  QueryDocumentSnapshot,
-  startAfter,
-} from 'firebase/firestore';
+import axios from 'axios';
+
 import { Avatar, Divider, IconButton, Link } from '@chakra-ui/react';
 
-import {
-  deleteModerators,
-  members,
-  moderators,
-  user as user_ref,
-} from 'config/referencesFirebase';
-
-import { GroupNameType, MembersType } from 'types/global.types';
+import { MemberType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { UsersButton } from 'components/atoms/UsersButton/UsersButton';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
+import { backUrl } from 'utilites/constants';
 
 import styles from './Members.module.scss';
 import group from 'public/group.svg';
-import { MinusIcon } from '@chakra-ui/icons';
+import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 
 type MembersType = {
-  admin: string;
+  admin: boolean;
   name: string | string[];
 };
 
 export const Members = ({ admin, name }: MembersType) => {
   const [pseudonymAdmin, setPseudonymAdmin] = useState('');
   const [profilePhotoAdmin, setProfilePhotoAdmin] = useState('');
-  const [moderatorsArray, setModeratorsArray] = useState<MembersType[]>([]);
-  const [lastModeratorsVisible, setModeratorsLastVisible] = useState<QueryDocumentSnapshot>();
+  const [moderatorsArray, setModeratorsArray] = useState<MemberType[]>([]);
+  const [lastModeratorsVisible, setModeratorsLastVisible] = useState<MemberType>();
   let [iModerators, setIModerators] = useState(1);
-  const [membersArray, setMembersArray] = useState<MembersType[]>([]);
-  const [lastMembersVisible, setMembersLastVisible] = useState<QueryDocumentSnapshot>();
+  const [membersArray, setMembersArray] = useState<MemberType[]>([]);
+  const [lastMembersVisible, setMembersLastVisible] = useState<MemberType>();
   let [iMembers, setIMembers] = useState(1);
 
   const data = useHookSWR();
   const maxItems = 30;
 
-  const currentUser = auth.currentUser?.uid;
-
   const downloadAdmin = async () => {
-    const docSnap = await getDoc(user_ref(admin));
-
-    if (docSnap.exists()) {
-      setPseudonymAdmin(docSnap.data().pseudonym);
-      setProfilePhotoAdmin(docSnap.data().profilePhoto);
-    } else {
-      console.log('No admin found');
-    }
+    const admin: MemberType = await axios.get(`${backUrl}/users/members`, {
+      params: {
+        name,
+        role: 'ADMIN',
+      },
+    });
+    setPseudonymAdmin(admin.pseudonym);
+    setProfilePhotoAdmin(admin.profilePhoto!);
   };
 
   useEffect(() => {
-    !!admin && downloadAdmin();
-  }, [admin, name]);
+    downloadAdmin();
+  }, [name]);
 
   const moderatorsList = async () => {
     try {
-      const firstModerators = query(moderators(name), limit(maxItems));
-      const documentSnapshots = await getDocs(firstModerators);
+      const moderatorArray: MemberType[] = [];
 
-      const moderatorArray: MembersType[] = [];
+      const moderators: MemberType[] = await axios.get(`${backUrl}/users/members`, {
+        params: {
+          orderBy: 'pseudonym, DESC',
+          limit: maxItems,
+          name,
+          role: 'MODERATOR',
+        },
+      });
 
-      for (const doc of documentSnapshots.docs) {
-        const docSnap = await getDoc<DocumentData>(doc.data().moderator);
-
-        docSnap.exists() &&
-          moderatorArray.push({
-            mid: doc.id,
-            cid: docSnap.id,
-            pseudonym: docSnap.data().pseudonym,
-            profilePhoto: docSnap.data().profilePhoto,
-          });
+      for (const mod of moderators) {
+        moderatorArray.push({
+          usersGroupsId: mod.usersGroupsId,
+          pseudonym: mod.pseudonym,
+          profilePhoto: mod.profilePhoto!,
+        });
       }
+
       setModeratorsArray(moderatorArray);
-      moderatorArray.length === maxItems &&
-        setModeratorsLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !!name && moderatorsList();
-  }, [name]);
-
-  const nextModeratorsList = async () => {
-    try {
-      const firstModerators = query(
-        moderators(name),
-        limit(maxItems),
-        startAfter(lastModeratorsVisible),
-      );
-      const documentSnapshots = await getDocs(firstModerators);
-
-      const nextModeratorArray: MembersType[] = [];
-
-      for (const doc of documentSnapshots.docs) {
-        const docSnap = await getDoc<DocumentData>(doc.data().moderator);
-
-        docSnap.exists() &&
-          nextModeratorArray.push({
-            mid: docSnap.id,
-            cid: docSnap.id,
-            pseudonym: docSnap.data().pseudonym,
-            profilePhoto: docSnap.data().profilePhoto,
-          });
-      }
-      const nextArray = moderatorsArray.concat(...nextModeratorArray);
-      setModeratorsArray(nextArray);
-      setModeratorsLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
-      setIModerators(iModerators++);
+      moderatorArray.length === maxItems && setModeratorsLastVisible(moderatorArray[moderatorArray.length - 1]);
     } catch (e) {
       console.error(e);
     }
@@ -129,24 +78,27 @@ export const Members = ({ admin, name }: MembersType) => {
 
   const membersList = async () => {
     try {
-      const firstUsers = query(members(name), limit(maxItems));
-      const documentSnapshots = await getDocs(firstUsers);
+      const memberArray: MemberType[] = [];
 
-      const memberArray: MembersType[] = [];
+      const users: MemberType[] = await axios.get(`${backUrl}/users/members`, {
+        params: {
+          orderBy: 'pseudonym, DESC',
+          limit: maxItems,
+          name,
+          role: 'USER',
+        },
+      });
 
-      for (const doc of documentSnapshots.docs) {
-        const docSnap = await getDoc<DocumentData>(doc.data().member);
-
-        docSnap.exists() &&
-          memberArray.push({
-            mid: docSnap.id,
-            pseudonym: docSnap.data().pseudonym,
-            profilePhoto: docSnap.data().profilePhoto,
-          });
+      for (const user of users) {
+        memberArray.push({
+          usersGroupsId: user.usersGroupsId,
+          pseudonym: user.pseudonym,
+          profilePhoto: user.profilePhoto!,
+        });
       }
+
       setMembersArray(memberArray);
-      memberArray.length === maxItems &&
-        setMembersLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      memberArray.length === maxItems && setMembersLastVisible(memberArray[memberArray.length - 1]);
     } catch (e) {
       console.error(e);
     }
@@ -154,38 +106,102 @@ export const Members = ({ admin, name }: MembersType) => {
 
   useEffect(() => {
     !!name && membersList();
-  }, []);
+  }, [name]);
+
+  useEffect(() => {
+    !!name && moderatorsList();
+  }, [name]);
+
+  const nextModeratorsList = async () => {
+    try {
+      const nextModeratorArray: MemberType[] = [];
+
+      const moderators: MemberType[] = await axios.get(`${backUrl}/users/members`, {
+        params: {
+          orderBy: 'pseudonym, DESC',
+          limit: maxItems,
+          name,
+          role: 'MODERATOR',
+          cursor: lastModeratorsVisible,
+        },
+      });
+
+      for (const mod of moderators) {
+        nextModeratorArray.push({
+          usersGroupsId: mod.usersGroupsId,
+          pseudonym: mod.pseudonym,
+          profilePhoto: mod.profilePhoto!,
+        });
+      }
+
+      const nextArray = moderatorsArray.concat(...nextModeratorArray);
+      setModeratorsArray(nextArray);
+      setModeratorsLastVisible(nextModeratorArray[nextModeratorArray.length - 1]);
+      setIModerators(iModerators++);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const nextMembersList = async () => {
     try {
-      const firstUsers = query(members(name), limit(maxItems), startAfter(lastMembersVisible));
-      const documentSnapshots = await getDocs(firstUsers);
+      const nextMemberArray: MemberType[] = [];
 
-      const nextMemberArray: MembersType[] = [];
+      const users: MemberType[] = await axios.get(`${backUrl}/users/members`, {
+        params: {
+          orderBy: 'pseudonym, DESC',
+          limit: maxItems,
+          name,
+          role: 'USER',
+        },
+      });
 
-      for (const doc of documentSnapshots.docs) {
-        const docSnap = await getDoc<DocumentData>(doc.data().users);
-
-        docSnap.exists() &&
-          nextMemberArray.push({
-            mid: docSnap.id,
-            pseudonym: docSnap.data().pseudonym,
-            profilePhoto: docSnap.data().profilePhoto,
-          });
+      for (const user of users) {
+        nextMemberArray.push({
+          usersGroupsId: user.usersGroupsId,
+          pseudonym: user.pseudonym,
+          profilePhoto: user.profilePhoto!,
+        });
       }
+
       const nextArray = membersArray.concat(...nextMemberArray);
       setMembersArray(nextArray);
-      setMembersLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      setMembersLastVisible(nextMemberArray[nextMemberArray.length - 1]);
       setIMembers(iMembers++);
     } catch (e) {
       console.error(e);
     }
   };
 
-  const removingModerators = async (name: GroupNameType, modId: string) => {
+  const toggleModerators = async (
+    usersGroupsId: string,
+    pseudonym: string,
+    profilePhoto: string,
+    index: number,
+    user: boolean,
+  ) => {
     try {
-      await deleteDoc(deleteModerators(name!, modId));
-      await moderatorsList();
+      const dataUser = { usersGroupsId, pseudonym, profilePhoto };
+
+      if (user) {
+        await axios.patch(`${backUrl}/users-groups/${name}`, {
+          data: { role: 'MODERATOR', usersGroupsId },
+        });
+
+        const deletedMem = membersArray.splice(index, 1);
+        setMembersArray(deletedMem);
+        const newModeratorsList = moderatorsArray.concat(dataUser);
+        setModeratorsArray(newModeratorsList);
+      } else {
+        await axios.patch(`${backUrl}/users-groups/${name}`, {
+          data: { role: 'USER', usersGroupsId },
+        });
+
+        const deletedMod = moderatorsArray.splice(index, 1);
+        setModeratorsArray(deletedMod);
+        const newMember = membersArray.concat(dataUser);
+        setMembersArray(newMember);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -206,18 +222,18 @@ export const Members = ({ admin, name }: MembersType) => {
       <p className={styles.roles}>{data?.Members?.moderators}</p>
       <Divider orientation="horizontal" />
       {moderatorsArray.length > 0 ? (
-        moderatorsArray.map(({ mid, pseudonym, profilePhoto }: MembersType, index) => (
+        moderatorsArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
           <div className={styles.usersButton} key={index}>
             <Avatar name={pseudonym} src={!!profilePhoto ? profilePhoto : group} />
             <NextLink href={`/user/${pseudonym}`} passHref>
               <Link>{pseudonym}</Link>
             </NextLink>
-            {admin === currentUser && !!mid && (
+            {admin && (
               <IconButton
                 type="submit"
                 aria-label={data?.Members?.modsAria}
                 icon={<MinusIcon />}
-                onClick={() => removingModerators(name, mid)}
+                onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, false)}
               />
             )}
           </div>
@@ -231,16 +247,21 @@ export const Members = ({ admin, name }: MembersType) => {
       <p className={styles.roles}>{data?.Members?.anotherMembers}</p>
       <Divider orientation="horizontal" />
       {membersArray.length > 0 ? (
-        membersArray.map(({ mid, pseudonym, profilePhoto }: MembersType, index) => (
-          <UsersButton
-            key={index}
-            id={mid}
-            name={name}
-            pseudonym={pseudonym}
-            logo={profilePhoto}
-            admin={admin}
-            moderatorsArray={moderatorsArray}
-          />
+        membersArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
+          <div className={styles.usersButton} key={index}>
+            <Avatar name={pseudonym} src={!!profilePhoto ? profilePhoto : group} />
+            <NextLink href={`/user/${pseudonym}`} passHref>
+              <Link>{pseudonym}</Link>
+            </NextLink>
+            {admin && (
+              <IconButton
+                type="submit"
+                aria-label={data?.Members?.addModAria}
+                icon={<AddIcon />}
+                onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, true)}
+              />
+            )}
+          </div>
         ))
       ) : (
         <p>{data?.Members?.noMembers}</p>

@@ -238,10 +238,7 @@
     "noMods": "No moderators",
     "anotherMembers": "Members",
     "noMembers": "No members",
-    "button": {
-      "addModAria": "Add a moderator",
-      "addedModAria": "Added a moderator"
-    }
+    "addModAria": "Add a moderator"
   },
   "Description": {
     "textPlaceholder": "new description of group",
