@@ -1,35 +1,36 @@
 import { useState } from 'react';
-import { auth } from '../../../firebase';
-import { addDoc, serverTimestamp } from 'firebase/firestore';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Input, Textarea } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { AuthorType, ResetFormType } from 'types/global.types';
-
-import { addingPost } from 'config/referencesFirebase';
+import { ResetFormType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './AddingPost.module.scss';
+import axios from 'axios';
+import { backUrl } from 'utilites/constants';
 
 type AddingPostType = {
-  title: string;
-  post: string;
+  usersGroupsId: string;
 };
 
-export const AddingPost = ({ nameGroup }: AuthorType) => {
+type NewPostType = {
+  title: string;
+  content: string;
+};
+
+export const AddingPost = ({ usersGroupsId }: AddingPostType) => {
   const [showForm, setShowForm] = useState(false);
 
-  const user = auth.currentUser;
   const data = useHookSWR();
 
   const initialValues = {
     title: '',
-    post: '',
+    content: '',
   };
 
   const schemaNew = Yup.object({
@@ -37,16 +38,12 @@ export const AddingPost = ({ nameGroup }: AuthorType) => {
     title: SchemaValidation().description,
   });
 
-  const createNewPost = async ({ title, post }: AddingPostType, { resetForm }: ResetFormType) => {
+  const createNewPost = async ({ title, content }: NewPostType, { resetForm }: ResetFormType) => {
     try {
-      await addDoc(addingPost(nameGroup!), {
-        nameGroup: nameGroup,
+      await axios.post(`${backUrl}/posts`, {
         title,
-        message: post,
-        date: serverTimestamp(),
-        author: user?.uid,
-        likes: 0,
-        liked: [],
+        content,
+        groupId: usersGroupsId,
       });
       resetForm(initialValues);
     } catch (e) {
@@ -78,15 +75,15 @@ export const AddingPost = ({ nameGroup }: AuthorType) => {
             <Textarea
               id="post"
               name="post"
-              value={values.post}
+              value={values.content}
               onChange={handleChange}
               resize="vertical"
               placeholder={data?.Groups?.addingPost?.addDescription}
               aria-label={data?.Groups?.addingPost?.addDesAria}
-              className={!!errors.post && touched.post ? styles.description__error : styles.description}
+              className={!!errors.content && touched.content ? styles.description__error : styles.description}
             />
 
-            <FormError nameError="post" />
+            <FormError nameError="content" />
 
             <Button type="submit" colorScheme="blue.800" className={styles.addingButton}>
               {data?.Groups?.addingPost?.add}
