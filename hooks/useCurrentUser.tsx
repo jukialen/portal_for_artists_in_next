@@ -6,10 +6,9 @@ export const useCurrentUser = (adress: string) => {
   const { push } = useRouter();
   const [loading, setLoading] = useState(true);
 
- 
   const currentUser = async () => {
-    await Session.doesSessionExist() ? setLoading(false) : push(adress);
-  }
+    (await Session.doesSessionExist()) ? setLoading(false) : await push(adress);
+  };
 
   useEffect(() => {
     currentUser();
