@@ -9,14 +9,14 @@ import { AiOutlineShareAlt } from 'react-icons/ai';
 import { LineIcon, LineShareButton, WeiboIcon, WeiboShareButton, WhatsappIcon, WhatsappShareButton } from 'next-share';
 import { RWebShare } from 'react-web-share';
 
-export const SharingButton = ({ fileUrl, authorName, tags }: FileType) => {
+export const SharingButton = ({ fileUrl, pseudonym, tags }: FileType) => {
   const [share, setShare] = useState(false);
 
   const showShare = () => setShare(!share);
 
   const icon = 40;
   const border = 20;
-  const titleShare = `Share ${authorName} user post from category ${tags}`;
+  const titleShare = `Share ${pseudonym} user post from category ${tags}`;
 
   return (
     <div className={styles.share}>

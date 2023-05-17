@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import { deleteDoc, getDocs } from 'firebase/firestore';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -11,31 +10,20 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 
-import {
-  deletingPost,
-  docLastPostsComments,
-  docPostsComments,
-  docSubPostsComments,
-  lastPostsComments,
-  postsComments,
-  subPostsComments,
-} from 'config/referencesFirebase';
-
-import { GroupNameType } from 'types/global.types';
-
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './DeletionPost.module.scss';
 import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
+import axios from 'axios';
+import { backUrl } from '../../../utilites/constants';
 
 type DeletionPostType = {
-  name: GroupNameType;
-  idPost: string;
+  postId: string;
 };
 
-export const DeletePost = ({ name, idPost }: DeletionPostType) => {
+export const DeletePost = ({ postId }: DeletionPostType) => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState<string>('');
@@ -51,23 +39,8 @@ export const DeletePost = ({ name, idPost }: DeletionPostType) => {
       await onClose();
       await setDeleting(!deleting);
       await setValues(data?.DeletionPost?.deleting);
-      const docsSnap = await getDocs(postsComments(name, idPost));
 
-      for (const doc of docsSnap.docs) {
-        const docsSnap2 = await getDocs(subPostsComments(name, idPost, doc.id));
-
-        for (const doc2 of docsSnap2.docs) {
-          const docsSnap3 = await getDocs(lastPostsComments(name, idPost, doc.id, doc2.id));
-
-          for (const doc3 of docsSnap3.docs) {
-            await deleteDoc(docLastPostsComments(name, idPost, doc.id, doc2.id, doc3.id));
-          }
-          await deleteDoc(docSubPostsComments(name, idPost, doc.id, doc2.id));
-        }
-        await deleteDoc(docPostsComments(name, idPost, doc.id));
-      }
-
-      await deleteDoc(deletingPost(name, idPost));
+      await axios.delete(`${backUrl}/groups-posts/${postId}`);
       await setValues(data?.DeletionPost?.deleted);
       await setDeleting(!deleting);
     } catch (e) {
