@@ -1,48 +1,64 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getDoc, getDocs } from 'firebase/firestore';
+import axios from 'axios';
 
-import { posts, user } from 'config/referencesFirebase';
+import { PostType } from 'types/global.types';
 
-import { AuthorType, PostType } from 'types/global.types';
+import { backUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { getDate } from 'helpers/getDate';
 
 import { Post } from 'components/molecules/Post/Post';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './Posts.module.scss';
 
-export const Posts = ({ nameGroup, currentUser }: AuthorType) => {
+type GroupsPropsType = {
+  name: string;
+  groupId: string;
+};
+
+export const Posts = ({ name, groupId }: GroupsPropsType) => {
   const [postsArray, setPostsArray] = useState<PostType[]>([]);
+  const [lastVisible, setLastVisible] = useState('');
+  let [i, setI] = useState(1);
 
   const { locale } = useRouter();
   const data = useHookSWR();
+  const maxItems = 30;
 
-  const downloadPosts = async () => {
+  const firstPosts = async () => {
     try {
       const postArray: PostType[] = [];
-      const querySnapshot = await getDocs(posts(nameGroup!));
 
-      for (const query of querySnapshot.docs) {
-        const docSnap = await getDoc(user(query.data().author));
+      const posts: PostType[] = await axios.get(`${backUrl}/posts`, {
+        params: {
+          where: { groupId },
+          orderBy: 'createdAt',
+          limit: maxItems,
+        },
+      });
 
-        if (docSnap.exists()) {
-          postArray.push({
-            pseudonym: docSnap.data().pseudonym,
-            title: query.data().title,
-            date: getDate(locale!, query.data().date),
-            content: query.data().message,
-            idPost: query.id,
-            nameGroup: query.data().nameGroup,
-            userId: query.data().author,
-            likes: query.data().likes,
-            liked: query.data().liked,
-            profilePhoto: docSnap.data().profilePhoto,
-          });
-        }
+      for (const post of posts) {
+        postArray.push({
+          groupsPostsId: post.groupsPostsId,
+          postId: post.postId!,
+          groupId: post.groupId,
+          title: post.title,
+          content: post.content,
+          likes: post.likes,
+          liked: post.liked,
+          date: getDate(locale!, post.updatedAt || post.createdAt),
+          name,
+          pseudonym: post.pseudonym,
+          authorId: post.authorId,
+          profilePhoto: post.profilePhoto,
+        });
       }
+
+      setLastVisible(postArray[postArray.length - 1].postId);
       setPostsArray(postArray);
     } catch (e) {
       console.error(e);
@@ -50,8 +66,46 @@ export const Posts = ({ nameGroup, currentUser }: AuthorType) => {
   };
 
   useEffect(() => {
-    !!nameGroup && downloadPosts();
-  }, [nameGroup, locale]);
+    !!name && firstPosts();
+  }, [name, locale]);
+
+  const nextPosts = async () => {
+    try {
+      const nextArray: PostType[] = [];
+
+      const posts: PostType[] = await axios.get(`${backUrl}/groups-posts`, {
+        params: {
+          where: { groupId },
+          orderBy: 'createdAt',
+          limit: maxItems,
+          cursor: lastVisible,
+        },
+      });
+      for (const post of posts) {
+        nextArray.push({
+          groupsPostsId: post.groupsPostsId,
+          postId: post.postId!,
+          groupId: post.groupId,
+          title: post.title,
+          content: post.content,
+          likes: post.likes,
+          liked: post.liked,
+          date: getDate(locale!, post.updatedAt || post.createdAt),
+          name,
+          pseudonym: post.pseudonym,
+          authorId: post.authorId,
+          profilePhoto: post.profilePhoto,
+        });
+      }
+
+      nextArray.length === maxItems && setLastVisible(nextArray[nextArray.length - 1].postId);
+      setI(++i);
+      const newArray = postsArray.concat(nextArray);
+      setPostsArray(newArray);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <section className={styles.posts}>
@@ -59,38 +113,39 @@ export const Posts = ({ nameGroup, currentUser }: AuthorType) => {
         postsArray.map(
           (
             {
-              pseudonym: author,
+              pseudonym,
               title,
               date,
               content: description,
-              idPost,
-              nameGroup,
-              userId,
+              postId,
+              name,
+              authorId,
               likes,
               liked,
-              profilePhoto: logoUser,
+              profilePhoto,
             }: PostType,
             index,
           ) => (
             <Post
               key={index}
-              pseudonym={author}
+              pseudonym={pseudonym}
               title={title}
               date={date}
               content={description}
-              nameGroup={nameGroup}
-              idPost={idPost}
-              authorId={currentUser}
-              userId={userId}
+              name={name}
+              postId={postId}
+              authorId={authorId}
               likes={likes}
               liked={liked}
-              profilePhoto={logoUser}
+              profilePhoto={profilePhoto}
             />
           ),
         )
       ) : (
         <p className={styles.noPosts}>{data?.Posts.noPosts}</p>
       )}
+
+      {!!lastVisible && postsArray.length === maxItems * i && <MoreButton nextElements={nextPosts} />}
     </section>
   );
 };

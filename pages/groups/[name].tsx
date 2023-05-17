@@ -314,9 +314,9 @@ export default function Groups() {
         <TabPanels padding={zeroPadding}>
           <TabPanel padding={zeroPadding}>
             <>
-              {join && <AddingPost nameGroup={name} />}
+              {join && <AddingPost groupId={groupId!} />}
               {join ? (
-                <Posts nameGroup={name} currentUser={id} />
+                <Posts name={name!.toString()} groupId={groupId!} />
               ) : (
                 <p className={styles.noPermission}>{data?.Groups?.noPermission}</p>
               )}

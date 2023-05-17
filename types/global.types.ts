@@ -28,7 +28,7 @@ export enum Role {
 //GENERAL
 type Like = {
   likes: number;
-  liked?: string[];
+  liked: boolean;
 };
 
 type Logo = {
@@ -44,9 +44,9 @@ type UserPost = Time &
   Logo & {
     pseudonym: string;
     date?: string;
-    nameGroup: string;
-    userId?: string | null;
-    authorId?: string;
+    name: string;
+    postId: string;
+    authorId: string;
   };
 
 export type DataType = any;
@@ -79,12 +79,11 @@ export type UserFormType = {
 
 //FiLES
 export type FileType = Time & {
-  ownerFile?: string;
-  name: string;
+  name?: string;
   fileUrl: string;
-  tags: Tags;
+  tags?: Tags;
   time: string;
-  authorName?: string;
+  pseudonym?: string;
   profileType?: boolean;
 };
 
@@ -123,18 +122,19 @@ export type MemberType = {
 //POSTS
 export type PostType = UserPost &
   Like & {
+    groupsPostsId?: string;
+    groupId?: string;
     title: string;
     content: string;
-    idPost?: string;
+    shared?: number;
   };
 
 // COMMENTS
 type Comment = UserPost & {
   comment: string;
-  idPost: string;
 };
 
-export type NewCommentsType = Comment & {};
+export type NewCommentsType = Comment;
 
 export type CommentType = Comment & {
   commentId: string;

@@ -40,7 +40,7 @@ export const AddingPost = ({ groupId }: AddingPostType) => {
 
   const createNewPost = async ({ title, content }: NewPostType, { resetForm }: ResetFormType) => {
     try {
-      await axios.post(`${backUrl}/posts`, {
+      await axios.post(`${backUrl}/groups-posts`, {
         title,
         content,
         groupId,
