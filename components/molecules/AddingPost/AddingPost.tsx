@@ -15,7 +15,7 @@ import axios from 'axios';
 import { backUrl } from 'utilites/constants';
 
 type AddingPostType = {
-  usersGroupsId: string;
+  groupId: string;
 };
 
 type NewPostType = {
@@ -23,7 +23,7 @@ type NewPostType = {
   content: string;
 };
 
-export const AddingPost = ({ usersGroupsId }: AddingPostType) => {
+export const AddingPost = ({ groupId }: AddingPostType) => {
   const [showForm, setShowForm] = useState(false);
 
   const data = useHookSWR();
@@ -43,7 +43,7 @@ export const AddingPost = ({ usersGroupsId }: AddingPostType) => {
       await axios.post(`${backUrl}/posts`, {
         title,
         content,
-        groupId: usersGroupsId,
+        groupId,
       });
       resetForm(initialValues);
     } catch (e) {
