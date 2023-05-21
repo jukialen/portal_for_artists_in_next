@@ -25,9 +25,14 @@ export const Layout = ({ children }: ChildrenType) => {
   const { isUser } = useContext(StatusLoginContext);
 
   const data = useHookSWR();
-  
+
   return (
     <ChakraProvider resetCSS={false}>
+      {/*// <!-- Google Tag Manager (noscript) -->*/}
+      <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-THTTL3P" height="0" width="0"></iframe>
+      </noscript>
+      {/*// <!-- End Google Tag Manager (noscript) -->*/}
       <div className={`${styles.whole__page} ${isMode ? 'dark' : ''}`}>
         <NavFormProvider>
           <ShowMenuProvider>
