@@ -1,6 +1,4 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { auth } from '../../../firebase';
-import { arrayRemove, arrayUnion, deleteDoc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -20,17 +18,6 @@ import { useHookSWR } from 'hooks/useHookSWR';
 
 import { CommentType, ResetFormType, NewCommentsType } from 'types/global.types';
 
-import {
-  docLastFilesComment,
-  docLastPostsComments,
-  docSubFilesComment,
-  docSubPostsComments,
-  lastPostsComments,
-  subFilesComments,
-  subLastFilesComments,
-  subPostsComments,
-} from 'config/referencesFirebase';
-
 import { ModeContext } from 'providers/ModeProvider';
 import { DCContext } from 'providers/DeleteCommentProvider';
 
@@ -40,24 +27,17 @@ import { LastComments } from 'components/molecules/LastComments/LastComments';
 
 import styles from './OptionsComments.module.scss';
 import { AiFillLike, AiOutlineLike, AiOutlineMore } from 'react-icons/ai';
+import { useUserData } from '../../../hooks/useUserData';
 
 export const OptionsComments = ({
   userId,
-  subCollection,
-  idPost,
-  idComment,
-  idSubComment,
+  postId,
+  commentId,
+  subCommentId,
   authorId,
   likes,
   liked,
-  refDelCom,
-  refDocCom,
-  refSubCom,
-  refDocSubCom,
-  refLastCom,
-  refDocLastCom,
-  groupSource,
-  nameGroup,
+  name,
 }: CommentType) => {
   const [like, setLike] = useState(false);
   let [likeCount, setLikeCount] = useState(likes);
@@ -72,8 +52,7 @@ export const OptionsComments = ({
   const cancelEditRef = useRef(null);
 
   const data = useHookSWR();
-
-  const currentUser = auth.currentUser?.uid;
+  const { id } = useUserData();
 
   const initialValues = { comment: '' };
 
@@ -86,7 +65,7 @@ export const OptionsComments = ({
 
   const likedCount = () => {
     try {
-      liked?.forEach((like) => (like === userId ? setLike(true) : setLike(false)));
+      //      liked?.forEach((like) => (like === userId ? setLike(true) : setLike(false)));
     } catch (e) {
       console.error(e);
     }
@@ -98,9 +77,7 @@ export const OptionsComments = ({
 
   const toggleLike = async () => {
     if (like) {
-      await setDoc(refDelCom!, { likes: (likeCount -= 1), liked: arrayRemove(currentUser) }, { merge: true });
     } else {
-      await setDoc(refDelCom!, { likes: (likeCount += 1), liked: arrayUnion(currentUser) }, { merge: true });
     }
     setLikeCount(like ? (likeCount -= 1) : (likeCount += 1));
     setLike(!like);
@@ -108,66 +85,10 @@ export const OptionsComments = ({
 
   const deleteComment = async () => {
     try {
-      const deleteSubComWithLasts = async () => {
-        const docSnap = await getDoc(refDocSubCom!);
+      const deleteSubComWithLasts = async () => {};
 
-        if (docSnap.exists()) {
-          const docsSnapshot = await getDocs(
-            groupSource
-              ? lastPostsComments(nameGroup!, idPost!, idComment!, docSnap.id)
-              : subLastFilesComments(userId!, subCollection!, idPost!, idComment!, docSnap.id!),
-          );
+      const deleteComWithSubsAndLasts = async () => {};
 
-          for (const doc of docsSnapshot.docs) {
-            await deleteDoc(
-              groupSource
-                ? docLastPostsComments(nameGroup!, idPost!, idComment!, idSubComment!, doc.id)
-                : docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, doc.id),
-            );
-          }
-        }
-
-        await deleteDoc(refDocSubCom!);
-      };
-
-      const deleteComWithSubsAndLasts = async () => {
-        const docSnap = await getDoc(refDocCom!);
-
-        if (docSnap.exists()) {
-          const docsSnapshot = await getDocs(
-            groupSource
-              ? subPostsComments(nameGroup!, idPost!, docSnap.id)
-              : subFilesComments(userId!, subCollection!, idPost!, docSnap.id),
-          );
-
-          for (const doc of docsSnapshot.docs) {
-            const docsSnapshot2 = await getDocs(
-              groupSource
-                ? lastPostsComments(nameGroup!, idPost!, docSnap.id, doc.id)
-                : subLastFilesComments(userId!, subCollection!, idPost!, docSnap.id, doc.id),
-            );
-
-            for (const doc2 of docsSnapshot2.docs) {
-              await deleteDoc(
-                groupSource
-                  ? docLastPostsComments(nameGroup!, idPost!, docSnap.id, doc.id, doc2.id)
-                  : docLastFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!, doc2.id),
-              );
-            }
-            await deleteDoc(
-              groupSource
-                ? docSubPostsComments(nameGroup!, idPost!, docSnap.id, doc.id)
-                : docSubFilesComment(userId!, subCollection!, idPost!, idComment!, doc.id),
-            );
-          }
-
-          await deleteDoc(refDocCom!);
-        }
-      };
-
-      !!refDocLastCom && (await deleteDoc(refDocLastCom!));
-      !!refDocSubCom && (await deleteSubComWithLasts());
-      !!refDocCom && (await deleteComWithSubsAndLasts());
       await changeDel();
       await onClose();
     } catch (e) {
@@ -177,7 +98,6 @@ export const OptionsComments = ({
 
   const updateComment = async ({ comment }: NewCommentsType, { resetForm }: ResetFormType) => {
     try {
-      await updateDoc(refDelCom!, { message: comment });
       await onCloseEdit();
       resetForm(initialValues);
     } catch (e) {
@@ -200,7 +120,7 @@ export const OptionsComments = ({
         </div>
 
         <div className={styles.buttons}>
-          {authorId === currentUser && (
+          {authorId === id && (
             <>
               <IconButton
                 variant="outline"
@@ -307,40 +227,40 @@ export const OptionsComments = ({
               </AlertDialog>
             </>
           )}
-          {!!(refDocCom || refDocSubCom) && (
+          {/*{!!(refDocCom || refDocSubCom) && (*/}
             <Button variant="link" color="blue" className={styles.answer} onClick={openComs}>
               {data?.Comments?.reply}
             </Button>
-          )}
+          {/*)}*/}
         </div>
       </div>
       {com && (
         <>
-          <NewComments
-            name={groupSource ? nameGroup : subCollection}
-            // @ts-ignore
-            refCom={refLastCom! || refSubCom!}
-          />
-          {!!refDocCom ? (
-            <SubComments
-              refSubCom={refSubCom}
-              userId={userId}
-              subCollection={subCollection}
-              idPost={idPost}
-              idComment={idComment}
-              groupSource={groupSource}
-            />
-          ) : !!refDocSubCom ? (
-            <LastComments
-              userId={userId}
-              subCollection={subCollection}
-              idPost={idPost}
-              idComment={idComment}
-              idSubComment={idSubComment}
-              refLastCom={refLastCom!}
-              groupSource={groupSource}
-            />
-          ) : null}
+          {/*<NewComments*/}
+          {/*  name={groupSource ? nameGroup : subCollection}*/}
+          {/*  // @ts-ignore*/}
+          {/*  refCom={refLastCom! || refSubCom!}*/}
+          {/*/>*/}
+          {/*{!!refDocCom ? (*/}
+          {/*  <SubComments*/}
+          {/*    refSubCom={refSubCom}*/}
+          {/*    userId={userId}*/}
+          {/*    subCollection={subCollection}*/}
+          {/*    idPost={idPost}*/}
+          {/*    idComment={idComment}*/}
+          {/*    groupSource={groupSource}*/}
+          {/*  />*/}
+          {/*) : !!refDocSubCom ? (*/}
+          {/*  <LastComments*/}
+          {/*    userId={userId}*/}
+          {/*    subCollection={subCollection}*/}
+          {/*    idPost={idPost}*/}
+          {/*    idComment={idComment}*/}
+          {/*    idSubComment={idSubComment}*/}
+          {/*    refLastCom={refLastCom!}*/}
+          {/*    groupSource={groupSource}*/}
+          {/*  />*/}
+          {/*) : null}*/}
         </>
       )}
     </>

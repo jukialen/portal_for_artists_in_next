@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { auth } from '../../../firebase';
-import { getDoc } from 'firebase/firestore';
 import { Button } from '@chakra-ui/react';
-
-import { groups, user } from 'config/referencesFirebase';
 
 import { DataType, GroupType } from 'types/global.types';
 
@@ -20,7 +16,6 @@ export const Groups = ({ data }: DataType) => {
 
   const { locale } = useRouter();
 
-  const currentUser = auth.currentUser?.uid;
   const arrowIcons = '1.5rem';
 
   const changeOpenGroups = () => setOpen(!open);
@@ -28,34 +23,29 @@ export const Groups = ({ data }: DataType) => {
   const groupList = async () => {
     try {
       const groupList: GroupType[] = [];
-      const docSnap = await getDoc(user(currentUser!));
 
-      if (docSnap.exists()) {
-        const favorites = docSnap.data().favoriteGroups;
-        favorites.sort();
 
-        for (const favorite of favorites) {
-          const favoriteList = await getDoc(groups(favorite));
-
-          if (favoriteList.exists()) {
-            groupList.push({
-              name: favorite,
-              logoUrl: !!favoriteList.data().logo
-                ? favoriteList.data().logo
-                : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-            });
-          }
-        }
+//        for (const favorite of favorites) {
+//
+//          if (favoriteList.exists()) {
+//            groupList.push({
+//              name: favorite,
+//              logoUrl: !!favoriteList.data().logo
+//                ? favoriteList.data().logo
+//                : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+//            });
+//          }
+//        }
         setGroupsArray(groupList);
-      }
+//      }
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-    !!currentUser && groupList();
-  }, [currentUser]);
+     groupList();
+  }, []);
 
   return (
     <div className={styles.groups}>
@@ -70,14 +60,14 @@ export const Groups = ({ data }: DataType) => {
 
       <div className={open ? styles.groups__container : styles.hiddenGroups}>
         {groupsArray.length > 0 ? (
-          groupsArray.map(({ name: nameGroup, logoUrl, description }, index) => (
+          groupsArray.map(({ name, logo, description }, index) => (
             <div className={styles.container} key={index}>
-              <img src={logoUrl} alt={`${nameGroup} logo`} />
+              <img src={logo} alt={`${name} logo`} />
               <Links
-                hrefLink={`/groups/${nameGroup}`}
+                hrefLink={`/groups/${name}`}
                 classLink={styles.container__item}
                 arial-label={description}>
-                <h4>{nameGroup}</h4>
+                <h4>{name}</h4>
               </Links>
             </div>
           ))

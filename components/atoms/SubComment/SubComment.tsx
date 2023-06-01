@@ -12,21 +12,15 @@ import styles from './SubComment.module.scss';
 export const SubComment = ({
   author,
   date,
-  description,
-  nameGroup,
+  name,
   profilePhoto,
-  userId,
-  subCollection,
   authorId,
-  idPost,
-  idComment,
-  idSubComment,
+  postId,
+  commentId,
+  comment,
+  subCommentId,
   likes,
   liked,
-  refSubCom,
-  refDocSubCom,
-  refLastCom,
-  groupSource,
 }: CommentType) => {
   const { del } = useContext(DCContext);
 
@@ -41,25 +35,19 @@ export const SubComment = ({
             </p>
             <p className={styles.date}>{date}</p>
           </div>
-          <h2 className={styles.text}>{description}</h2>
+          <h2 className={styles.text}>{comment}</h2>
         </div>
       </div>
 
       <OptionsComments
-        userId={userId}
-        subCollection={subCollection}
-        idPost={idPost}
-        idComment={idComment}
-        idSubComment={idSubComment}
+//        userId={userId}
+        postId={postId}
+        commentId={commentId}
+//        subCommentId={subCommentId}
         authorId={authorId}
-        likes={likes}
-        liked={liked}
-        refSubCom={refSubCom}
-        refLastCom={refLastCom!}
-        refDelCom={refDocSubCom!}
-        refDocSubCom={refDocSubCom!}
-        nameGroup={nameGroup}
-        groupSource={groupSource}
+//        likes={likes}
+//        liked={liked}
+        name={name}
       />
     </div>
   );

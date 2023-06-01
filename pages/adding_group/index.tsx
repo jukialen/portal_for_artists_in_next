@@ -1,8 +1,4 @@
 import { useState } from 'react';
-import { auth, db, storage } from '../../firebase';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { UploadTaskSnapshot } from '@firebase/storage';
-import { doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { Form, Formik } from 'formik';
 import { Button, Input, Progress, Textarea } from '@chakra-ui/react';
@@ -46,8 +42,6 @@ export default function AddingGroup() {
     description: SchemaValidation().description,
   });
 
-  const user = auth.currentUser!;
-
   const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] ? setLogoGroup(e.target.files[0]) : setLogoGroup(null);
   };
@@ -57,55 +51,14 @@ export default function AddingGroup() {
     { resetForm }: ResetFormType,
   ) => {
     try {
-      const fileRef = await ref(storage, `groups/${groupName}/${logoGroup?.name}`);
 
       const newGroup = async () => {
-        await setDoc(doc(db, `groups/${groupName}`), {
-          name: groupName,
-          description,
-          logo: null,
-          admin: user.uid,
-        });
+
         await resetForm(initialValues);
       };
 
       const newGroupWithLogo = () => {
-        const upload = uploadBytesResumable(fileRef, logoGroup!);
 
-        upload.on(
-          'state_changed',
-          (snapshot: UploadTaskSnapshot) => {
-            const progress: number = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setProgressUpload(progress);
-            switch (snapshot.state) {
-              case 'running':
-                setValuesFields('Upload is running');
-                break;
-              case 'paused':
-                setValuesFields('Upload is paused');
-                break;
-            }
-          },
-          (e) => {
-            console.error(e);
-            setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
-          },
-          async () => {
-            const groupLogoURL = await getDownloadURL(fileRef);
-
-            await setDoc(doc(db, `groups/${groupName}`), {
-              name: groupName,
-              description,
-              logo: groupLogoURL,
-              admin: user.uid,
-            });
-
-            await setValuesFields(`${data?.AnotherForm?.uploadFile}`);
-            await setLogoGroup(null);
-            await resetForm(initialValues);
-            return null;
-          },
-        );
       };
 
       logoGroup === null ? await newGroup() : newGroupWithLogo();

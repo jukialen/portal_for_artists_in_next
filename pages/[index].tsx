@@ -1,25 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth, db, storage } from '../firebase';
-import { ref } from 'firebase/storage';
-import { doc, getDoc, limit, onSnapshot, orderBy, Query, query, where } from 'firebase/firestore';
 import { Skeleton } from '@chakra-ui/react';
 
 import { FileType } from 'types/global.types';
 
-import { filesElements } from 'helpers/fileElements';
-
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
-
-import {
-  allAnimatedCollectionRef,
-  allPhotosCollectionRef,
-  allVideosCollectionRef,
-  userAnimationsRef,
-  userPhotosRef,
-  userVideosRef,
-} from 'config/referencesFirebase';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
@@ -131,46 +117,6 @@ export default function Drawings() {
 
         <Wrapper>
           {userDrawings.length > 0 ? (
-            userDrawings.map(
-              ({ fileUrl, time, description, pseudonym, tags, uid, idPost }: FileType) => (
-                <Skeleton isLoaded={loadingFiles} key={time}>
-                  {index === 'videos' ? (
-                    <Videos
-                      fileUrl={fileUrl}
-                      description={description}
-                      authorName={pseudonym}
-                      refFile={userVideosRef(user?.uid!)}
-                      refStorage={ref(storage, `${user?.uid}/videos/${description}`)}
-                      tag={tags}
-                      uid={uid}
-                      idPost={idPost}
-                    />
-                  ) : (
-                    <Article
-                      fileUrl={fileUrl}
-                      description={description}
-                      authorName={pseudonym}
-                      unopt={index === 'animations'}
-                      refFile={
-                        index === 'animations'
-                          ? userAnimationsRef(user?.uid!)
-                          : userPhotosRef(user?.uid!)
-                      }
-                      subCollection={index === 'animations' ? 'animations' : 'photos'}
-                      refStorage={ref(
-                        storage,
-                        `${user?.uid}/${
-                          index === 'animations' ? 'animations' : 'photos'
-                        }/${description}`,
-                      )}
-                      tag={tags}
-                      uid={uid}
-                      idPost={idPost}
-                    />
-                  )}
-                </Skeleton>
-              ),
-            )
           ) : (
             <ZeroFiles text={data?.ZeroFiles?.videos} />
           )}

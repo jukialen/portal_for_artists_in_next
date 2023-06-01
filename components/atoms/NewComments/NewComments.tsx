@@ -1,5 +1,3 @@
-import { auth } from '../../../firebase';
-import { addDoc, serverTimestamp } from 'firebase/firestore';
 import { Avatar, Button, Textarea } from '@chakra-ui/react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -17,18 +15,12 @@ export const NewComments = ({ name }: NewCommentsType) => {
   };
 
   const data = useHookSWR();
-  const user = auth.currentUser;
 
+  let user: { photoURL: string | undefined };
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
 
   const createNewComment = async ({ comment }: NewCommentsType, { resetForm }: ResetFormType) => {
     try {
-      await addDoc(refCom!, {
-        nameGroup: name,
-        message: comment,
-        date: serverTimestamp(),
-        user: user?.uid,
-      });
       resetForm(initialValues);
     } catch (e) {
       console.error(e);

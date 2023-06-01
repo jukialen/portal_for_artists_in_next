@@ -25,7 +25,6 @@ Site's in full responsive on target devices from small smartphones to TV and SMA
 - REST API;
 - axios;
 - Typescript;
-- Firebase;
 - Gsap + ScrollTrigger;
 - Next-pwa.
 

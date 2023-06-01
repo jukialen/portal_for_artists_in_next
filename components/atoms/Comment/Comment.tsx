@@ -12,19 +12,16 @@ import styles from './Comment.module.scss';
 export const Comment = ({
   author,
   date,
-  description,
+  comment,
   profilePhoto,
-  idPost,
-  idComment,
+  postId,
+  commentId,
   userId,
-  subCollection,
   likes,
   liked,
   authorId,
-  refDocCom,
-  refSubCom,
   groupSource,
-  nameGroup,
+  name,
 }: CommentType) => {
   const { del } = useContext(DCContext);
 
@@ -39,22 +36,18 @@ export const Comment = ({
             </p>
             <p className={styles.date}>{date}</p>
           </div>
-          <h2 className={styles.text}>{description}</h2>
+          <h2 className={styles.text}>{comment}</h2>
         </div>
       </div>
       <OptionsComments
         userId={userId}
-        subCollection={subCollection}
-        idPost={idPost}
-        idComment={idComment}
+        postId={postId}
+        commentId={commentId}
         authorId={authorId}
         likes={likes}
         liked={liked}
-        refDelCom={refDocCom}
-        refDocCom={refDocCom}
-        refSubCom={refSubCom}
         groupSource={groupSource}
-        nameGroup={nameGroup}
+        name={name}
       />
     </div>
   );
