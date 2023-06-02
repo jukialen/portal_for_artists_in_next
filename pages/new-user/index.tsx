@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
@@ -12,7 +12,6 @@ import { backUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
-import { useUserData } from 'hooks/useUserData';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -34,7 +33,6 @@ export default function NewUser() {
 
   const { push, asPath } = useRouter();
   const loading = useCurrentUser('/');
-  const { id } = useUserData();
   const data = useHookSWR();
   const { showUser } = useContext(StatusLoginContext);
 
@@ -54,14 +52,20 @@ export default function NewUser() {
 
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
-      !!photo &&
-        (await axios.patch(`${backUrl}/files${id}`, {
+      if (!!photo) {
+        return axios.post(`${backUrl}/files`, {
           file: photo,
+          data: {
+            name: photo?.name,
+            profileType: true,
+            tags: 'profile',
+          },
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        }));
-      await axios.post(`${backUrl}/users`, { username, pseudonym, profilePhoto: photo?.name || null });
+        });
+      }
+      await axios.post(`${backUrl}/users`, { userData: { username, pseudonym } });
       setValuesFields(data?.NewUser?.successSending);
       showUser();
       return push('/app');

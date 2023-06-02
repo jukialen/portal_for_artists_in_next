@@ -70,6 +70,7 @@ export type UserType = Logo &
     pseudonym: string;
     description?: string;
     data?: any;
+    plan: string;
   };
 
 export type UserFormType = {

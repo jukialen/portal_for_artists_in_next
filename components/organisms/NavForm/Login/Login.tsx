@@ -5,7 +5,7 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { DataType, FormType, UserDataType } from 'types/global.types';
+import { DataType, ResetFormType, UserFormType } from 'types/global.types';
 
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Providers } from 'components/molecules/Providers/Providers';
@@ -48,7 +48,7 @@ export const Login = ({ data }: DataType) => {
     showLoginForm();
   };
 
-  const signIn = async ({ email, password }: UserDataType, { resetForm }: FormType) => {
+  const signIn = async ({ email, password }: UserFormType, { resetForm }: ResetFormType) => {
     try {
       const res = await emailPasswordSignIn({
         formFields: [
@@ -65,8 +65,12 @@ export const Login = ({ data }: DataType) => {
         resetForm(initialValues);
         setValuesFields(data?.NavForm?.statusLogin);
         showLoginForm();
-        showUser();
-        !!pseudonym ? push('/app') : push('/new-user');
+        if (!!pseudonym) {
+          showUser();
+          await push('/app');
+        } else {
+          await push('/new-user');
+        }
       }
     } catch (e: any) {
       setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.error);

@@ -6,7 +6,7 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { DataType, FormType, UserDataType } from 'types/global.types';
+import { DataType, ResetFormType, UserFormType } from 'types/global.types';
 
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Providers } from 'components/molecules/Providers/Providers';
@@ -25,7 +25,7 @@ const initialValues = {
 export const Create = ({ data }: DataType) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [valuesFields, setValuesFields] = useState<string>('');
-  const { locale } = useRouter();
+  const { locale, push } = useRouter();
 
   const { isCreate, showCreateForm, showLoginForm } = useContext(NavFormContext);
 
@@ -39,15 +39,17 @@ export const Create = ({ data }: DataType) => {
     showCreateForm();
   };
 
-  const registration = async ({ email, password }: UserDataType, { resetForm }: FormType) => {
-    setIsLoading(true);
+  const registration = async ({ email, password }: UserFormType, { resetForm }: ResetFormType) => {
     try {
+      setIsLoading(true);
       const exist = await doesEmailExist({ email });
 
-      if (!!exist.doesExist) {
+      if (exist.doesExist) {
         setValuesFields(data?.NavForm?.theSameEmail);
         resetForm(initialValues);
         setIsLoading(false);
+        await push('/');
+        return null;
       }
 
       const response = await emailPasswordSignUp({
@@ -73,14 +75,15 @@ export const Create = ({ data }: DataType) => {
           resetForm(initialValues);
           showCreateForm();
           showLoginForm();
+          setIsLoading(false);
           return null;
         } else {
           resetForm(initialValues);
           setValuesFields(data?.NavForm?.successInfoRegistration);
+          setIsLoading(false);
           return null;
         }
       }
-      setIsLoading(false);
     } catch (e: any) {
       console.error(e);
       setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.error);
@@ -121,7 +124,11 @@ export const Create = ({ data }: DataType) => {
               {isLoading ? data?.NavForm?.loadingRegistration : data?.NavForm?.createSubmit}
             </button>
 
-            {!!valuesFields && <Alerts valueFields={valuesFields} />}
+            {!!valuesFields && (
+              <div className={styles.chakraAlert}>
+                <Alerts valueFields={valuesFields} />
+              </div>
+            )}
           </Form>
         )}
       </Formik>

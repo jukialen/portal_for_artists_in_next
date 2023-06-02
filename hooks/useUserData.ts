@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import Session from 'supertokens-web-js/recipe/session';
 import axios from 'axios';
+
+import { UserType } from 'types/global.types';
+
 import { backUrl } from 'utilites/constants';
 
 export const useUserData = () => {
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo, setUserInfo] = useState<UserType>({
     id: '',
     pseudonym: '',
     description: '',
@@ -15,20 +18,16 @@ export const useUserData = () => {
   const getUserData = async () => {
     if (await Session.doesSessionExist()) {
       const userId = await Session.getUserId();
-      const data: {
-        id: string;
-        pseudonym: string;
-        destription: string;
-        profilePhoto: string;
-        plan: string;
-      } = await axios.get(`${backUrl}/users`, { params: { where: { id: userId } } });
+      const data: { data: UserType } = await axios.get(`${backUrl}/users`, { params: { where: { id: userId } } });
+
+      const { id, pseudonym, description, profilePhoto, plan } = data.data;
 
       setUserInfo({
-        id: data.id,
-        pseudonym: data.pseudonym,
-        description: data.destription,
-        profilePhoto: data.profilePhoto,
-        plan: data.plan,
+        id,
+        pseudonym,
+        description,
+        profilePhoto,
+        plan,
       });
     }
   };
