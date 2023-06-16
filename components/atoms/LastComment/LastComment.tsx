@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import Link from 'next/link';
 import { Avatar } from '@chakra-ui/react';
 
 import { CommentType } from 'types/global.types';
@@ -35,7 +36,7 @@ export const LastComment = ({
         <div className={styles.rightSideComment}>
           <div className={styles.topPartComment}>
             <p className={styles.pseudonym}>
-              <a href={`/user/${author}`}>{author}</a>
+              <Link href={`/user/${author}`}>{author}</Link>
             </p>
             <p className={styles.date}>{date}</p>
           </div>

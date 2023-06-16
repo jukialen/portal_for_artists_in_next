@@ -26,9 +26,7 @@ export function Header({ titleFirstNav, titleSecondNav, logoLink }: TitleNav) {
     <header className={styles.header}>
       <h1 className={styles.title}>
         <Link href={logoLink}>
-          <a>
-            <Image src="/pfartists.png" width={58} height={58} alt="Pfartists logo" quality={100} />
-          </a>
+          <Image src="/pfartists.png" width={58} height={58} alt="Pfartists logo" quality={100} />
         </Link>
       </h1>
 

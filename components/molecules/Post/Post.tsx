@@ -64,7 +64,7 @@ export const Post = ({
       <div className={styles.avatarWithUsername}>
         <Avatar src={`${cloudFrontUrl}/${profilePhoto}` || group} />
         <div className={styles.username}>
-          <a href={`/user/${pseudonym}`}>{pseudonym}</a>
+          <Link href={`/user/${pseudonym}`}>{pseudonym}</Link>
           <div className={styles.time}>{date}</div>
         </div>
         {id === authorId && <DeletePost postId={postId!} />}

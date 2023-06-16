@@ -1,8 +1,8 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Session from "supertokens-web-js/recipe/session";
-import { Avatar } from '@chakra-ui/react'
+import Session from 'supertokens-web-js/recipe/session';
+import { Avatar } from '@chakra-ui/react';
 
 import { cloudFrontUrl } from 'utilites/constants';
 import { useHookSWR } from 'hooks/useHookSWR';
@@ -31,12 +31,13 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   const hideMenuLogin = () => {
     showLoginForm();
     showMenu();
-  }
+  };
+
   const hideMenuCreate = () => {
     showCreateForm();
     showMenu();
   };
-  
+
   const sign__out = async () => {
     try {
       showUser();
@@ -49,31 +50,26 @@ export const Nav = ({ titleFirstNav, titleSecondNav }: TitleNavType) => {
   };
 
   return (
-    <nav
-      className={`${styles.nav} ${isMenu && styles.menu__active} ${
-        locale === 'jp' ? styles.nav__jp : ''
-      }`}>
+    <nav className={`${styles.nav} ${isMenu && styles.menu__active} ${locale === 'jp' ? styles.nav__jp : ''}`}>
       <ul className={styles.list}>
         <li className={styles.menu}>
-          <Link href={asPath}>
-            <a onClick={titleFirstNav !== `${data?.Nav?.signOut}` ? hideMenuLogin : sign__out}>
-              {titleFirstNav}
-            </a>
+          <Link href={asPath} onClick={titleFirstNav !== `${data?.Nav?.signOut}` ? hideMenuLogin : sign__out}>
+            {titleFirstNav}
           </Link>
         </li>
         <li className={styles.menu}>
-          {
-            titleSecondNav === `${data?.Nav?.account}` 
-            ?  <div className={styles.withLogo}>
-                <Avatar name={pseudonym} src={`${cloudFrontUrl}/${profilePhoto}`} size='sm' />
-                <Link href={`/account/${pseudonym}`}>
-                  <a onClick={hideMenuCreate}>{titleSecondNav}</a>
-                </Link>
-              </div>
-            : <Link href={asPath}>
-                <a onClick={hideMenuCreate}>{titleSecondNav}</a>
+          {titleSecondNav === `${data?.Nav?.account}` ? (
+            <div className={styles.withLogo}>
+              <Avatar name={pseudonym} src={`${cloudFrontUrl}/${profilePhoto}`} size="sm" />
+              <Link href={`/account/${pseudonym}`} onClick={hideMenuCreate}>
+                {titleSecondNav}
               </Link>
-          }
+            </div>
+          ) : (
+            <Link href={asPath} onClick={hideMenuCreate}>
+              {titleSecondNav}
+            </Link>
+          )}
         </li>
       </ul>
     </nav>

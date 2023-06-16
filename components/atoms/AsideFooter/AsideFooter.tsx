@@ -17,41 +17,31 @@ export const AsideFooter = () => {
   return (
     <footer className={styles.footer}>
       <div>
-        <Link href="/terms">
-          <a>{data?.Footer?.termsOfUse}</a>
-        </Link>
+        <Link href="/terms">{data?.Footer?.termsOfUse}</Link>
       </div>
       <div>
-        <Link href="/contact">
-          <a>{data?.Footer?.contact}</a>
-        </Link>
+        <Link href="/contact">{data?.Footer?.contact}</Link>
       </div>{' '}
       <div style={locale === 'jp' ? { fontSize: '.8rem' } : {}}>
-        <Link href="/privacy">
-          <a>{data?.Footer?.privacyPolice}</a>
-        </Link>
+        <Link href="/privacy">{data?.Footer?.privacyPolice}</Link>
       </div>
       <div>
-        <Link href="/faq">
-          <a>{data?.Footer?.faq}</a>
-        </Link>
+        <Link href="/faq">{data?.Footer?.faq}</Link>
       </div>
       <div>
-        <Link href="/plans">
-          <a>{data?.Footer?.plans}</a>
-        </Link>
+        <Link href="/plans">{data?.Footer?.plans}</Link>
       </div>
       <button className={styles.button} onClick={showLanguages}>
         {data?.Footer?.changeLanguage}
         <div className={`${styles.languages} ${isLanguage ? styles.languages__active : ''}`}>
-          <Link href={asPath} locale="en">
-            <a className={`${styles.languages__version} button`}>EN</a>
+          <Link href={asPath} locale="en" className={`${styles.languages__version} button`}>
+            EN
           </Link>
-          <Link href={asPath} locale="jp">
-            <a className={`${styles.languages__version} button`}>JP</a>
+          <Link href={asPath} locale="jp" className={`${styles.languages__version} button`}>
+            JP
           </Link>
-          <Link href={asPath} locale="pl">
-            <a className={`${styles.languages__version} button`}>PL</a>
+          <Link href={asPath} locale="pl" className={`${styles.languages__version} button`}>
+            PL
           </Link>
         </div>
       </button>

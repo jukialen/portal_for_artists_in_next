@@ -63,10 +63,7 @@ export const Groups = ({ data }: DataType) => {
           groupsArray.map(({ name, logo, description }, index) => (
             <div className={styles.container} key={index}>
               <img src={logo} alt={`${name} logo`} />
-              <Links
-                hrefLink={`/groups/${name}`}
-                classLink={styles.container__item}
-                arial-label={description}>
+              <Links hrefLink={`/groups/${name}`} classLink={styles.container__item} arial-label={description}>
                 <h4>{name}</h4>
               </Links>
             </div>
@@ -74,13 +71,9 @@ export const Groups = ({ data }: DataType) => {
         ) : (
           <p className={styles.no__groups}>{data?.Groups?.noGroups}</p>
         )}
-        <Button
-          colorScheme="orange"
-          borderColor="transparent"
-          className={styles.listButton}
-          variant="ghost">
+        <Button colorScheme="orange" borderColor="transparent" className={styles.listButton} variant="ghost">
           <Link href="/groups/list" aria-label="all group link">
-            <a>All groups</a>
+            All groups
           </Link>
         </Button>
       </div>

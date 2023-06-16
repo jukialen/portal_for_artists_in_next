@@ -152,9 +152,7 @@ export default function Plans() {
           <div className={styles.toFaq}>
             <p>
               {data?.Contact?.toFAQ}
-              <Link href="/faq">
-                <a> {data?.Contact?.toFAQHere}</a>
-              </Link>
+              <Link href="/faq">{data?.Contact?.toFAQHere}</Link>
               {data?.Contact?.dot}
             </p>
           </div>

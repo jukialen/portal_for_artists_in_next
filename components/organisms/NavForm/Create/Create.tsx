@@ -142,19 +142,21 @@ export const Create = ({ data }: DataType) => {
       <Providers />
       <p className={styles.acceptInfo}>
         {data?.NavForm?.acceptInfoOne}
-        <a href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '/terms' : `/${locale}/terms`}`}>
+        <Link href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '/terms' : `/${locale}/terms`}`}>
           {data?.NavForm?.acceptInfoTwo}
-        </a>
+        </Link>
         {data?.NavForm?.acceptInfoThree}
-        <a href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '/privacy' : `/${locale}/privacy`}`}>
+        <Link href={`${process.env.NEXT_PUBLIC_PAGE}${locale === 'en' ? '/privacy' : `/${locale}/privacy`}`}>
           {data?.NavForm?.acceptInfoFour}
-        </a>
+        </Link>
         {data?.NavForm?.dot}
       </p>
 
       <p className={styles.changeForm}>
         {data?.NavForm?.changeToCreate}
-        <a onClick={changeForm}>{data?.Nav?.signIn}</a>
+        <Link href="/#" onClick={changeForm}>
+          {data?.Nav?.signIn}
+        </Link>
       </p>
     </div>
   );

@@ -52,13 +52,11 @@ export const Friends = () => {
       <div className={open ? styles.container : styles.hiddenFriends}>
         {favoriteFriendArray.length > 0 ? (
           favoriteFriendArray.map(({ pseudonym, profilePhoto }, index) => (
-            <Link href={`/user/${pseudonym}`} key={index}>
-              <a className={styles.link}>
-                <div className={styles.item}>
-                  <Image src={profilePhoto} layout="fill" alt={`${pseudonym}'s profile photo`} />
-                </div>
-                <div className={styles.pseudonym}>{pseudonym}</div>
-              </a>
+            <Link href={`/user/${pseudonym}`} key={index} className={styles.link}>
+              <div className={styles.item}>
+                <Image src={profilePhoto} layout="fill" alt={`${pseudonym}'s profile photo`} />
+              </div>
+              <div className={styles.pseudonym}>{pseudonym}</div>
             </Link>
           ))
         ) : (

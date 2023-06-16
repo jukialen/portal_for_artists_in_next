@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import Link from 'next/link';
 
 type LinksType = {
   idInput?: string;
@@ -9,8 +10,8 @@ type LinksType = {
 
 export const Links = ({ idInput, hrefLink, classLink, children, ...props }: LinksType) => {
   return (
-    <a href={hrefLink} id={idInput} className={classLink} {...props}>
+    <Link href={hrefLink} id={idInput} className={classLink} {...props}>
       {children}
-    </a>
+    </Link>
   );
 };

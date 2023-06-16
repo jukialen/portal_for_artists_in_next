@@ -120,9 +120,9 @@ export const Login = ({ data }: DataType) => {
         )}
       </Formik>
 
-      <a className={` ${styles.forgotten}`} onClick={forgotten__password}>
+      <Link href="/forgotten" className={` ${styles.forgotten}`} onClick={forgotten__password}>
         {data?.NavForm?.forgottenPasswordLink}
-      </a>
+      </Link>
 
       <div className={styles.dividerWIthText}>
         <Divider />
@@ -134,7 +134,9 @@ export const Login = ({ data }: DataType) => {
 
       <p className={styles.changeForm}>
         {data?.NavForm?.changeToLogin}
-        <a onClick={changeForm}>{data?.Nav?.signUp}</a>
+        <Link href="/#" onClick={changeForm}>
+          {data?.Nav?.signUp}
+        </Link>
       </p>
     </div>
   );

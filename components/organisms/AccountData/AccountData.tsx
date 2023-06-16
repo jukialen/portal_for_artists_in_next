@@ -173,9 +173,7 @@ export const AccountData = ({ data }: DataType) => {
                         )}
                         <p className={styles.message}>
                           {data?.Account?.aData?.Premium?.body}
-                          <Link href="/plans">
-                            <a>{data?.Account?.aData?.Premium?.bodyLink}</a>
-                          </Link>
+                          <Link href="/plans">{data?.Account?.aData?.Premium?.bodyLink}</Link>
                           {data?.Account?.aData?.Premium?.bodyDot}
                         </p>
                         <ButtonGroup size="sm" className={styles.buttonContainer}>

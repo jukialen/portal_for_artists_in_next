@@ -25,9 +25,7 @@ export const FileOptions = ({ name, authorName, tags, time }: FileType) => {
     <div className={styles.options}>
       <div className={styles.bottomPanel}>
         <div className={styles.author__name}>
-          <Link href={`${locale === 'en' ? '/' : `/${locale}/`}user/${authorName}`}>
-            <a>{authorName}</a>
-          </Link>
+          <Link href={`${locale === 'en' ? '/' : `/${locale}/`}user/${authorName}`}>{authorName}</Link>
         </div>
 
         <SharingButton name={name} fileUrl={linkShare} authorName={authorName} tags={tags} time={time} />
