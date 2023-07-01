@@ -1,18 +1,13 @@
-import { useContext } from 'react';
 import { useRouter } from 'next/router';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { StatusLoginContext } from 'providers/StatusLogin';
-
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
-import { Footer } from 'components/molecules/Footer/Footer';
 
 import styles from './index.module.scss';
 
 export default function Terms() {
   const { asPath } = useRouter();
-  const { isUser } = useContext(StatusLoginContext);
 
   return (
     <>
@@ -428,8 +423,6 @@ export default function Terms() {
           libero eget vehicula. In hac habitasse platea dictumst.
         </p>
       </div>
-
-      {!isUser && <Footer />}
     </>
   );
 }

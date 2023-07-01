@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { sendPasswordResetEmail } from "supertokens-web-js/recipe/thirdpartyemailpassword";
 import { Form, Formik } from 'formik';
@@ -10,12 +10,9 @@ import { ResetFormType, UserFormType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { StatusLoginContext } from 'providers/StatusLogin';
-
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { FormError } from 'components/molecules/FormError/FormError';
-import { Footer } from 'components/molecules/Footer/Footer';
 
 import styles from './index.module.scss';
 
@@ -24,15 +21,14 @@ const initialValues = {
 };
 
 export default function Forgotten() {
-  const { isUser } = useContext(StatusLoginContext);
-  const [valuesFields, setValuesFields] = useState<string>('');
+  const [valuesFields, setValuesFields] = useState('');
   const data = useHookSWR();
+  const { asPath } = useRouter();
 
   const schemaValidation = Yup.object({
     email: SchemaValidation().email,
   });
 
-  const { asPath } = useRouter();
 
   const reset__password = async ({ email }: UserFormType, { resetForm }: ResetFormType) => {
     try {
@@ -86,7 +82,6 @@ export default function Forgotten() {
           </Form>
         )}
       </Formik>
-       <Footer />
     </>
   );
 }

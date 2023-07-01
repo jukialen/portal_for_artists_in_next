@@ -11,14 +11,13 @@ import { ResetFormType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { StatusLoginContext } from 'providers/StatusLogin';
 import { ModeContext } from 'providers/ModeProvider';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
-import { Footer } from 'components/molecules/Footer/Footer';
 import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './index.module.scss';
+import { useUserData } from 'hooks/useUserData';
 
 type ContactType = {
   title: string;
@@ -28,7 +27,7 @@ type ContactType = {
 
 export default function Contact() {
   const { asPath } = useRouter();
-  const { isUser } = useContext(StatusLoginContext);
+  const { pseudonym } = useUserData();
   const { isMode } = useContext(ModeContext);
   const data = useHookSWR();
   const toast = useToast();
@@ -70,7 +69,7 @@ export default function Contact() {
   };
 
   return (
-    <div className={isUser ? styles.site__without__footer : styles.site}>
+    <div className={pseudonym ? styles.site__without__footer : styles.site}>
       <HeadCom path={asPath} content="Site for contact to me." />
 
       <div className={styles.container}>
@@ -139,7 +138,6 @@ export default function Contact() {
           )}
         </Formik>
       </div>
-      {!isUser && <Footer />}
     </div>
   );
 }

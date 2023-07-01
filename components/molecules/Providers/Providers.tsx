@@ -1,23 +1,17 @@
-import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getAuthorisationURLWithQueryParamsAndSetState } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
-import { Icon } from '@chakra-ui/react'
+import { Icon, useToast } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { NavFormContext } from 'providers/NavFormProvider';
-import { StatusLoginContext } from 'providers/StatusLogin';
-
 import styles from './Providers.module.scss';
-import { FaDiscord, FaSpotify } from "react-icons/fa";
-import { RiGoogleFill, RiLineFill } from "react-icons/ri";
+import { FaDiscord, FaSpotify } from 'react-icons/fa';
+import { RiGoogleFill, RiLineFill } from 'react-icons/ri';
 
 export const Providers = () => {
   const { push } = useRouter();
-  const { showUser } = useContext(StatusLoginContext);
-  const { isLogin, isCreate, showLoginForm, showCreateForm } = useContext(NavFormContext);
-  const [valuesFields, setValuesFields] = useState<string>('');
 
+  const toast = useToast();
   const data = useHookSWR();
 
   const signInWithProvider = async (provider: string) => {
@@ -26,10 +20,17 @@ export const Providers = () => {
         providerId: provider,
         authorisationURL: `${process.env.NEXT_PUBLIC_PAGE}/callback/${provider}`,
       });
-      push(authUrl);
+      console.log(authUrl);
+
+      await push(authUrl);
     } catch (e: any) {
       console.error('e', e);
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);
+      toast({
+        description: e.isSuperTokensGeneralError === true ? e.message : data?.unknownError,
+        status: 'error',
+        variant: 'subtle',
+        duration: 9000,
+      });
     }
   };
 
@@ -40,7 +41,7 @@ export const Providers = () => {
         type="submit"
         aria-label="google provider"
         onClick={() => signInWithProvider('google')}>
-          <Icon as={RiGoogleFill} className={styles.svg} />
+        <Icon as={RiGoogleFill} className={styles.svg} />
       </button>
 
       <button
@@ -48,7 +49,7 @@ export const Providers = () => {
         type="submit"
         aria-label="spotify provider"
         onClick={() => signInWithProvider('spotify')}>
-          <Icon as={FaSpotify} className={styles.svg} />
+        <Icon as={FaSpotify} className={styles.svg} />
       </button>
       <button
         className={styles.button}

@@ -1,7 +1,7 @@
 @use 'styles/variables' as *;
 
 .providers {
-  height: 5rem;
+  height: fit-content;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,7 +32,7 @@
     &:first-child {
       color: $google__provider;
     }
-    
+
     &:nth-child(2) {
       color: $spotify_provider;
     }
@@ -44,5 +44,9 @@
     &:nth-child(4) {
       color: $line_provider;
     }
+  }
+
+  @media (min-width: 768px) {
+    margin: 1rem auto .5rem;
   }
 }

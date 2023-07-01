@@ -6,7 +6,7 @@
   position: absolute;
   display: none;
   right: 2rem;
-  bottom: 3rem;
+  bottom: 5rem;
   font-size: 2rem;
   padding: .5rem;
   background-color: $another__color;
@@ -17,4 +17,10 @@
 
 .up__active {
   display: block;
+}
+
+@media (min-width: 768px) {
+  .up {
+    bottom: 3rem;
+  }
 }

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useLayoutEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import gsap from 'gsap';
@@ -7,9 +7,6 @@ import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
-import { Footer } from 'components/molecules/Footer/Footer';
-
-import { StatusLoginContext } from 'providers/StatusLogin';
 
 import styles from './index.module.scss';
 import dark_mode from 'public/dark_mode.png';
@@ -25,16 +22,16 @@ import authorButton from 'public/authorButton.png';
 import top from 'public/top.jpg';
 import minimalism from 'public/minimalism.png';
 import likes from 'public/likes.png';
+import { useUserData } from '../hooks/useUserData';
 
 export default function Home() {
-  const { isUser } = useContext(StatusLoginContext);
   const { asPath, push } = useRouter();
-
+  const { pseudonym } = useUserData();
   const data = useHookSWR();
 
   useEffect(() => {
-    isUser && push('/app');
-  }, [isUser]);
+    pseudonym && push('/app');
+  }, []);
 
   useEffect(() => {
     try {
@@ -261,8 +258,6 @@ export default function Home() {
           quality={quality}
         />
       </article>
-
-      <Footer />
     </>
   );
 }

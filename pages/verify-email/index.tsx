@@ -5,8 +5,6 @@ import { Button } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { Footer } from 'components/molecules/Footer/Footer';
-
 import styles from './index.module.scss';
 import success from 'public/success.png';
 import error from 'public/error.png';
@@ -77,7 +75,6 @@ export default function VerifyEmail() {
           </>
         )}
       </div>
-      <Footer />
     </>
   );
 }

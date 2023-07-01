@@ -360,6 +360,10 @@
     "expired": "Kod weryfikacyjny wygasł lub jest nieważny. Proszę kliknąć przycisk, aby ponownie wysłać nowy link weryfikacyjny e-mailem.",
     "verified": "Zweryfikowałeś swój e-mail."
   },
+  "Settings": {
+    "title": "Ustawienia",
+    "dark_mode": "Ciemny motyw"
+  },
   "unknownError": "Ups! Coś poszło nie tak.",
   "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",

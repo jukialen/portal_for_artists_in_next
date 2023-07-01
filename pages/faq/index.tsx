@@ -1,19 +1,14 @@
-import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { Accordion, Link } from '@chakra-ui/react';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { StatusLoginContext } from 'providers/StatusLogin';
-
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { FaqItems } from 'components/atoms/FaqItems/FaqItems';
-import { Footer } from 'components/molecules/Footer/Footer';
 
 import styles from './index.module.scss';
 
 export default function Faq() {
-  const { isUser } = useContext(StatusLoginContext);
   const { asPath } = useRouter();
   const data = useHookSWR();
 
@@ -52,7 +47,6 @@ export default function Faq() {
           <FaqItems textHead={data?.FAQ?.head4} textBody={data?.FAQ?.body4} />
         </Accordion>
       </div>
-      {!isUser && <Footer />}
     </div>
   );
 }

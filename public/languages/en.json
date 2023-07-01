@@ -360,6 +360,10 @@
     "expired": "The verification code is expired or invalid. Please click the button to send new email verification link again.",
     "verified": "You verified your e-mail."
   },
+  "Settings": {
+    "title": "Settings",
+    "dark_mode": "Dark mode"
+  },
   "unknownError": "Oops! Something went wrong.",
   "error": "Try again or check your internet connection.",
   "edit": "Edit",

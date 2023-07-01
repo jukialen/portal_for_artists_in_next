@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
@@ -17,8 +17,6 @@ import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/molecules/FormError/FormError';
 
-import { StatusLoginContext } from 'providers/StatusLogin';
-
 import styles from './index.module.scss';
 
 type FirstDataType = {
@@ -34,7 +32,6 @@ export default function NewUser() {
   const { push, asPath } = useRouter();
   const loading = useCurrentUser('/');
   const data = useHookSWR();
-  const { showUser } = useContext(StatusLoginContext);
 
   const initialValues = {
     username: '',
@@ -67,7 +64,6 @@ export default function NewUser() {
       }
       await axios.post(`${backUrl}/users`, { userData: { username, pseudonym } });
       setValuesFields(data?.NewUser?.successSending);
-      showUser();
       return push('/app');
     } catch (error) {
       setValuesFields(data?.NewUser?.errorSending);

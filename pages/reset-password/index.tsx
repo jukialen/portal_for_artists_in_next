@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -11,7 +11,6 @@ import { useHookSWR } from 'hooks/useHookSWR';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { FormError } from 'components/molecules/FormError/FormError';
-import { Footer } from 'components/molecules/Footer/Footer';
 
 import styles from './index.module.scss';
 
@@ -104,7 +103,6 @@ export default function ResetPassword() {
           </Form>
         )}
       </Formik>
-      <Footer />
     </>
   );
 }

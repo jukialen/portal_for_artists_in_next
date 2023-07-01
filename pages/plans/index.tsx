@@ -1,22 +1,19 @@
-import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import { useHookSWR } from 'hooks/useHookSWR';
-
-import { StatusLoginContext } from 'providers/StatusLogin';
+import { useUserData } from 'hooks/useUserData';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { ChoosePlanPriButton } from 'components/atoms/ChoosePlanPriButton/ChoosePlanPriButton';
-import { Footer } from 'components/molecules/Footer/Footer';
 
 import styles from './index.module.scss';
 import { CheckIcon } from '@chakra-ui/icons';
 
 export default function Plans() {
-  const { isUser } = useContext(StatusLoginContext);
   const data = useHookSWR();
   const { asPath } = useRouter();
+  const { pseudonym } = useUserData();
 
   return (
     <>
@@ -25,7 +22,7 @@ export default function Plans() {
         <h2 className={styles.title}>{data?.Plans?.title}</h2>
         <h3 className={styles.subTitle}>{data?.Plans?.subTitle}</h3>
         <div className={styles.plansFormats}>
-          <div className={isUser ? styles.plans__user : styles.plans}>
+          <div className={pseudonym ? styles.plans__user : styles.plans}>
             <div className={styles.box}>
               <h3 className={styles.box__title}>FREE</h3>
               <div className={styles.box__price}>
@@ -164,7 +161,6 @@ export default function Plans() {
             {data?.Plans?.pSupInfo}
           </p>
         </div>
-        {!isUser && <Footer />}
       </div>
     </>
   );
