@@ -5,8 +5,6 @@ import { useUserData } from 'hooks/useUserData';
 
 import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
 import { Header } from 'components/organisms/Header/Header';
-import { Create } from 'components/organisms/NavForm/Create/Create';
-import { Login } from 'components/organisms/NavForm/Login/Login';
 import { Aside } from 'components/organisms/Aside/Aside';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -26,9 +24,9 @@ export const Layout = ({ children }: ChildrenType) => {
   return (
     <ChakraProvider resetCSS={false}>
       <div className={`${styles.whole__page} ${isMode ? 'dark' : ''}`}>
-        {!!pseudonym ? <UserHeader /> : <Header />}
+        {!pseudonym ? <UserHeader /> : <Header />}
         <div className={styles.container}>
-          {!!pseudonym && <Aside />}
+          {!pseudonym && <Aside />}
           <main
             className={`${pseudonym ? styles.main__container : styles.home__container} ${
               isMode ? 'main__container--dark' : ''

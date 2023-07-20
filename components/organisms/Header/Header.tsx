@@ -8,7 +8,7 @@ import { useHookSWR } from 'hooks/useHookSWR';
 import { Nav } from 'components/molecules/Nav/Nav';
 
 import styles from './Header.module.scss';
-import { MdOutlineAccountCircle, MdOutlineSettings } from 'react-icons/md';
+import { MdOutlineSettings } from 'react-icons/md';
 import { BiLogInCircle } from 'react-icons/bi';
 
 export function Header() {
@@ -42,7 +42,7 @@ export function Header() {
         className={styles.menu_buttons}
         aria-label="Settings">
         <Icon as={MdOutlineSettings} />
-        <p> Settings</p>
+        <p>{data?.Settings?.title}</p>
       </Button>
     </header>
   );

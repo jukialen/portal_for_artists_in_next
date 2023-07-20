@@ -35,16 +35,28 @@ export function UserHeader() {
 
   return (
     <header className={styles.header}>
-      <Button colorScheme="yellow" onClick={() => push('/app')} className={styles.menu_buttons}>
-        <Icon as={MdOutlineHome} aria-label="button for groups" />
-        <p>Home</p>
+      <Button
+        colorScheme="yellow"
+        onClick={() => push('/app')}
+        className={styles.menu_buttons}
+        aria-label="this button redirect to groups's section">
+        <Icon as={MdOutlineHome} />
+        <p>{data?.Nav?.home}</p>
       </Button>
       <div className={styles.buttons}>
-        <Button onClick={() => push('/groups')} colorScheme="yellow" className={styles.menu_buttons}>
-          <Icon as={MdOutlineGroups} aria-label="button for groups" />
-          <p>Groups</p>
+        <Button
+          onClick={() => push('/groups')}
+          colorScheme="yellow"
+          className={styles.menu_buttons}
+          aria-label="button for groups">
+          <Icon as={MdOutlineGroups} />
+          <p>{data?.Nav?.groups}</p>
         </Button>
-        <Button onClick={() => push('/friends')} colorScheme="yellow" className={styles.menu_buttons}>
+        <Button
+          onClick={() => push('/friends')}
+          colorScheme="yellow"
+          className={styles.menu_buttons}
+          aria-label="this button redirect to friends's section">
           <Icon
             width="22"
             height="22"
@@ -53,18 +65,21 @@ export function UserHeader() {
             stroke="#000000"
             stroke-width="2"
             stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-label="button for groups">
+            stroke-linejoin="round">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
             <circle cx="9" cy="7" r="4" />
             <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </Icon>
-          <p>Friends</p>
+          <p>{data?.Nav?.friends}</p>
         </Button>
-        <Button colorScheme="yellow" className={styles.menu_buttons} onClick={toggleSearch}>
+        <Button
+          colorScheme="yellow"
+          className={styles.menu_buttons}
+          onClick={toggleSearch}
+          aria-label="this button shows searching">
           <SearchIcon />
-          <p>Search</p>
+          <p>{data?.Nav?.search}</p>
         </Button>
       </div>
       <Button colorScheme="yellow" className={styles.menu_buttons} onClick={toggleProfileMenu}>
@@ -73,7 +88,7 @@ export function UserHeader() {
       </Button>
 
       <InputGroup className={`${styles.search} ${search ? styles.search__active : ''}`}>
-        <Input type="search" placeholder="search" />
+        <Input type="search" placeholder={data?.Nav?.search} />
         <InputRightElement>
           <IconButton
             colorScheme="pink"
@@ -87,12 +102,12 @@ export function UserHeader() {
       <ul className={`${styles.menu_profile} ${profileMenu ? styles.menu_profile__active : ''}`}>
         <li>
           <Link href={`/account/${pseudonym}`} onClick={toggleProfileMenu}>
-            Profile
+            {data?.Nav?.profile}
           </Link>
         </li>
         <li>
           <Link href="/settings" onClick={toggleProfileMenu}>
-            Settings
+            {data?.Settings?.title}
           </Link>
         </li>
         <li>
