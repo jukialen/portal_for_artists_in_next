@@ -85,6 +85,18 @@ div.drawer {
 }
 
 @media (min-width: 768px) {
+  div.drawer {
+    margin-bottom: 0;
+
+    .aside .rolling {
+      .h3 {
+        margin-top: 7rem;
+      }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
   .aside {
     width: 17rem;
     height: 100vh;

@@ -41,7 +41,6 @@ export function Aside() {
 
           <Friends />
         </div>
-        {/*<AsideFooter />*/}
       </aside>
 
       <button className={styles.aside__right} aria-label="left menu button" onClick={onOpen}>

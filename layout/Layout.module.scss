@@ -67,3 +67,19 @@
     padding-top: 3rem;
   }
 }
+
+@media (min-width: 1024px) {
+  .workspace {
+    width: calc(100vw - 17rem);
+  }
+
+  .whole__page .container {
+    height: 100vh;
+
+    .home__container {
+      width: min-content;
+      overflow-y: scroll;
+
+    }
+  }
+}

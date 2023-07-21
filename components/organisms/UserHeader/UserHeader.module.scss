@@ -80,7 +80,7 @@
     transform: translateY(8.5rem);
     transition: transform .9s .1s ease-in-out;
 
-    input::placeholder {
+    input::placeholder, input {
       color: $dark__color__light__back
     }
 
@@ -181,8 +181,8 @@
 
     .search {
       bottom: unset;
-      top: 3.45rem;
-      transform: translateY(-7rem);
+      top: 3.5rem;
+      transform: translateY(-8rem);
     }
 
     .menu_profile {
@@ -208,7 +208,7 @@
     transition: none;
   }
 
-.search, .search__active {
+  .search, .search__active {
     transition: none;
   }
 }
