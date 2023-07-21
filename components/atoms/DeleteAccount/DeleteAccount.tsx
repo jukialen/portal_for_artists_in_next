@@ -21,7 +21,9 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 import styles from './DeleteAccount.module.scss';
 import { DeleteIcon } from '@chakra-ui/icons';
 
-type DeletionPropsType = { pseudonym: string };
+type DeletionPropsType = {
+  pseudonym: string;
+};
 
 export const DeleteAccount = ({ pseudonym }: DeletionPropsType) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,17 +69,19 @@ export const DeleteAccount = ({ pseudonym }: DeletionPropsType) => {
 
   return (
     <div className={styles.deleteDiv}>
+      {/*<h3>Do you want to delete your account?</h3>*/}
       <Button
         isLoading={deleting}
         loadingText="Deleting"
         size="md"
         leftIcon={<DeleteIcon />}
+        variant="ghost"
         colorScheme="red"
         borderColor="red.500"
         w={145}
         m={4}
         onClick={() => setIsOpen(true)}>
-        {data?.DeletionAccount?.button}
+        {`${data?.DeletionAccount?.button} account`}
       </Button>
 
       <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>

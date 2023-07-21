@@ -7,18 +7,15 @@ import { UserType } from 'types/global.types';
 import { backUrl } from 'utilites/constants';
 
 export const useUserData = () => {
-  const [userInfo, setUserInfo] = useState<UserType>({
-    id: '',
-    pseudonym: '',
-    description: '',
-    profilePhoto: '',
-    plan: '',
-  });
+  const [userInfo, setUserInfo] = useState<UserType | {}>({});
 
   const getUserData = async () => {
     if (await Session.doesSessionExist()) {
       const userId = await Session.getUserId();
-      const data: { data: UserType } = await axios.get(`${backUrl}/users`, { params: { where: { id: userId } } });
+      const accessTokenPayload = await Session.getAccessTokenPayloadSecurely();
+      const data: {
+        data: UserType;
+      } = await axios.get(`${backUrl}/users`, { params: { where: { id: userId } } });
 
       const { id, pseudonym, description, profilePhoto, plan } = data.data;
 
@@ -28,7 +25,10 @@ export const useUserData = () => {
         description,
         profilePhoto,
         plan,
+        email: accessTokenPayload.email,
       });
+    } else {
+      setUserInfo({});
     }
   };
 
@@ -36,11 +36,5 @@ export const useUserData = () => {
     getUserData();
   }, []);
 
-  return {
-    id: userInfo.id,
-    pseudonym: userInfo.pseudonym,
-    description: userInfo.description,
-    profilePhoto: userInfo.profilePhoto,
-    plan: userInfo.plan,
-  };
+  return !!userInfo ? { ...userInfo } : {};
 };

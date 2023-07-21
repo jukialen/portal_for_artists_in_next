@@ -69,7 +69,7 @@ export default function Login() {
 
   return (
     <>
-      <HeadCom path={asPath} content="Sign up site" />
+      <HeadCom path={asPath} content="Sign in site" />
 
       <div className={styles.login}>
         <Formik initialValues={initialValues} validationSchema={schemaValidation} onSubmit={signIn}>

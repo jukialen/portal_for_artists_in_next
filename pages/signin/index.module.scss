@@ -10,7 +10,7 @@
   align-self: center;
   justify-self: center;
   padding-bottom: 4rem;
-  margin: -7rem auto auto auto;
+  margin: -7rem auto -1rem auto;
   color: $dark__background__light__color;
   background-color: $primary__color;
 
@@ -63,14 +63,14 @@
 
     .submit__button {
       width: 10rem;
-      margin: 1.5rem auto 0rem;
+      margin: 1.5rem auto 0;
       color: $dark__background__light__color;
     }
   }
 }
 
 .forgotten {
-  margin: 0 auto;
+  margin: -1rem auto 0;
   background: none;
   border-color: transparent;
   color: $dark__background__light__color;
@@ -109,6 +109,33 @@
   z-index: 1;
 }
 
-.login {
-  display: flex;
+@media (min-width: 786px) {
+  .dividerWIthText {
+    width: 25rem;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1100px) {
+  .login:before, .login:after {
+    content: '';
+    width: calc(50vw - 12rem);
+    max-width: 640px;
+    height: 427px;
+    max-height: calc(50vw - 12rem);
+    position: absolute;
+    object-fit: scale-down;
+    background-repeat: no-repeat;
+  }
+
+  .login:before {
+    background-image: url('https://res.cloudinary.com/pfartists/image/upload/s--hMQIiVKe--/v1689782566/pfartists/2_photo_eis7sn.png');
+    top: 4rem;
+  }
+
+  .login:after {
+    background-image: url('https://res.cloudinary.com/pfartists/image/upload/s--10_oeyxh--/v1689782566/pfartists/leaf_back_forms_yrifiu.jpg');
+    bottom: 0;
+    right: 0;
+  }
 }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 
-export const useLocalState = (defaultValue: boolean, key: string) => {
+import { ModeType } from 'types/global.types';
+
+export const useLocalState = (defaultValue: ModeType, key: string) => {
   const [value, setValue] = useState(defaultValue);
 
   useEffect(() => {
