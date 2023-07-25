@@ -22,7 +22,9 @@ export function Aside() {
 
   return (
     <>
-      <aside id="top__menu" className={styles.aside}>
+      <aside className={styles.aside}>
+        <div className={styles.blur}></div>
+
         <div className={styles.rolling}>
           <h3 className={`${styles.h3} ${!open ? styles.afterHidden : ''}`} onClick={showCategories}>
             <p>{data?.Aside?.category}</p>
@@ -43,14 +45,18 @@ export function Aside() {
         </div>
       </aside>
 
-      <button className={styles.aside__right} aria-label="left menu button" onClick={onOpen}>
-        <RightOutlined />
-      </button>
+      {!isOpen && (
+        <button className={styles.aside__right} aria-label="left menu button" onClick={onOpen}>
+          <RightOutlined />
+        </button>
+      )}
 
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent style={{ width: undefined }} className={styles.drawer}>
           <DrawerBody className={styles.aside}>
+            <div className={styles.blur}></div>
+
             <div className={styles.rolling}>
               <h3 className={`${!open ? styles.afterHidden : ''} ${styles.h3}`} onClick={showCategories}>
                 <p>{data?.Aside?.category}</p>
@@ -69,6 +75,7 @@ export function Aside() {
 
               <Friends />
             </div>
+
             <Button
               colorScheme="pink"
               className={styles.drawer__right}

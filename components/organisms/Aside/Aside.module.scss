@@ -2,37 +2,53 @@
 
 .aside {
   display: none;
-
-  &__right {
-    width: 2.5rem;
-    height: 3.5rem;
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    bottom: 5rem;
-    font-size: 2rem;
-    border: 0;
-    background-color: $another__color;
-    cursor: pointer;
-    z-index: 1;
-  }
 }
+
+div button.aside__right {
+  width: 2.5rem;
+  height: 3.5rem;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 5rem;
+  font-size: 2rem;
+  border: 0;
+  background-color: $another__color;
+  color: $dark__background__light__color;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.blur {
+  position: absolute;
+  width: 17rem;
+  max-width: 100vh;
+  height: 100vh;
+  background-image: linear-gradient(rgb($secondary__color, .2), rgb($secondary__color, .2), rgb($secondary__color, .2));
+  backdrop-filter: blur(2px);
+  background-color: rgb($secondary__color, .5);
+  z-index: -1;
+}
+
 
 div.drawer {
   width: 17rem;
   max-width: 100vh;
-  margin-bottom: 3.98rem;
-  padding-bottom: 3.5rem;
-  background-color: $secondary__color;
+  background-color: transparent;
+  margin-bottom: 4rem;
 
   .aside {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 0;
+    background-color: rgb($dark__color__light__back, .5);
+    z-index: 1;
 
     .rolling {
+      margin-bottom: 4rem;
+
       .h3 {
         width: 100%;
         display: grid;
@@ -103,12 +119,13 @@ div.drawer {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding-top: 4rem;
+    position: relative;
+    padding-top: 3.5rem;
     font-size: 1.5rem;
     overflow: hidden auto;
     scrollbar-width: thin;
     scrollbar-color: $another__color $fourth__color;
-    background-color: $secondary__color;
+    background-color: rgb($secondary__color, .5);
 
     &::-webkit-scrollbar {
       width: 10px
@@ -136,10 +153,6 @@ div.drawer {
       border-radius: 20px;
     }
 
-    &__right {
-      display: none
-    }
-
     .rolling {
       .h3 {
         display: grid;
@@ -148,6 +161,8 @@ div.drawer {
         align-items: center;
         margin: 2rem 0 .25rem;
         cursor: pointer;
+        z-index: 1;
+
 
         p {
           width: 100%;
@@ -159,6 +174,11 @@ div.drawer {
         margin-bottom: 2rem;
       }
     }
+  }
+
+
+  div button.aside__right {
+    display: none
   }
 
   div.drawer {
