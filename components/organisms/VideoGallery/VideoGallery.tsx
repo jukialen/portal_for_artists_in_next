@@ -87,9 +87,9 @@ export const VideoGallery = ({ id, pseudonym, data }: UserType) => {
   };
 
   return (
-    <article id="user__gallery__in__account" className="user__gallery__in__account">
+    <article>
       {decodeURIComponent(asPath) === `/account/${pseudonym}` && (
-        <em className="title">{data?.Account?.gallery?.userVideosTitle}</em>
+        <h2 className="title">{data?.Account?.gallery?.userVideosTitle}</h2>
       )}
 
       <Wrapper>

@@ -177,7 +177,6 @@
     "fileTitle": "Adding a file",
     "tags": "Tags",
     "file": "File",
-    "arialSendingFile": "sending file",
     "send": "Send",
     "uploadFile": "File has been uploaded.",
     "notUploadFile": "File hasn't been uploaded."

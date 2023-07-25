@@ -89,6 +89,7 @@ export const FriendsList = ({ id }: FriendsListType) => {
 
   return (
     <div className={styles.container}>
+      <h2 className={styles.title}>{data?.Nav?.friends}</h2>
       <section className={styles.container__section}>
         {friendsList.length > 0 ? (
           friendsList.map(({ pseudonym, profilePhoto }, index) => (

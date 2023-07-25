@@ -100,9 +100,9 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
   };
 
   return (
-    <article id="user__gallery__in__account" className="user__gallery__in__account">
+    <article>
       {decodeURIComponent(asPath) === `/account/${pseudonym}` && (
-        <em className="title">{data?.Account?.gallery?.userPhotosTitle}</em>
+        <h2 className="title">{data?.Account?.gallery?.userPhotosTitle}</h2>
       )}
       <Wrapper>
         {userPhotos.length > 0 ? (

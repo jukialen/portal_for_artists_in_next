@@ -1,21 +1,23 @@
 @use 'styles/variables' as *;
 
 .tilesSection {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  margin: auto;
   justify-content: center;
   align-items: center;
+  margin: 2rem auto 6rem;
 
-  .container {
-    width: 100%;
+  .sectionTitleNewGroup {
+    width: inherit;
     display: flex;
-    justify-content: flex-start;
-    margin: 2rem 2rem 1rem;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 1.5rem 2rem;
 
     &__button {
       width: fit-content;
-      background-color: $third__color;
+      height: 2.5rem;
       border-color: $third__color;
     }
   }
@@ -33,7 +35,9 @@
   }
 
   .noGroups {
-    margin: 2rem;
+    width: 80%;
+    margin: 2rem auto;
+    font-size: 1rem;
   }
 }
 
