@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { FileType, Tags } from 'types/global.types';
+import { FileType } from 'types/global.types';
+
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
@@ -13,6 +15,7 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
 
 import styles from './index.module.scss';
+import axios from 'axios';
 
 export default function Drawings() {
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
@@ -28,7 +31,29 @@ export default function Drawings() {
 
   const downloadDrawings = async () => {
     try {
+      const filesArray: FileType[] = [];
+
+      const firstPage: FileType[] = await axios.get(`${backUrl}/users-files`, {
+        params: {
+          where: { tags: pid! },
+          orderBy: 'createdAt, desc',
+          limit: maxItems,
+          cursor: lastVisible,
+        },
+      });
+
+      for (const file of firstPage) {
+        filesArray.push({
+          fileId: file.fileId,
+          name: file.name,
+          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          pseudonym: file.pseudonym,
+          time: file.updatedAt! || file.createdAt!,
+        });
       }
+
+      setUserDrawings(filesArray);
+      filesArray.length === maxItems && setLastVisible(filesArray[filesArray.length - 1].fileId);
     } catch (e) {
       console.error(e);
       console.log('No such drawings!');
@@ -41,7 +66,28 @@ export default function Drawings() {
 
   const nextElements = async () => {
     try {
+      const filesArray: FileType[] = [];
+
+      const nextArray: FileType[] = await axios.get(`${backUrl}/users-files`, {
+        params: {
+          where: { tags: pid! },
+          orderBy: 'createdAt, desc',
+          limit: maxItems,
+          cursor: lastVisible,
+        },
+      });
+
+      for (const file of nextArray) {
+        filesArray.push({
+          fileId: file.fileId,
+          name: file.name,
+          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          pseudonym: file.pseudonym,
+          time: file.updatedAt! || file.createdAt!,
+        });
       }
+
+      setLastVisible(filesArray[filesArray.length - 1].fileId);
       const newArray = userDrawings.concat(...nextArray);
       setUserDrawings(newArray);
       setI(++i);
@@ -64,6 +110,9 @@ export default function Drawings() {
 
       <Wrapper>
         {userDrawings.length > 0 ? (
+          userDrawings.map(({ fileUrl, time, pseudonym, tags, fileId }: FileType, index) => (
+            <Article key={index} fileUrl={fileUrl} authorName={pseudonym!} tags={tags} fileId={fileId} time={time} />
+          ))
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.files} />
         )}
