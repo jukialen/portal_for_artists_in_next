@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Link from 'next/link';
 import axios from 'axios';
 
 import { Avatar, Button, IconButton } from '@chakra-ui/react';
@@ -20,16 +21,17 @@ import group from 'public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 export const Post = ({
-  groupsPostsId,
-  postId,
   pseudonym,
   title,
   date,
   content,
   name,
+  postId,
   authorId,
   likes,
   liked,
+  commented,
+  shared,
   profilePhoto,
 }: PostType) => {
   const [showComments, setShowComments] = useState(false);
@@ -39,18 +41,18 @@ export const Post = ({
   const { id } = useUserData();
   const data = useHookSWR();
 
-  const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${pseudonym}/${title}`;
+  const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${pseudonym}/${postId}`;
 
   const showingComments = () => setShowComments(!showComments);
 
   const addLike = async () => {
     if (like) {
-      await axios.patch(`${backUrl}/posts/${groupsPostsId}`, {
+      await axios.patch(`${backUrl}/posts/${title}`, {
         id,
         likes: (likeCount += 1),
       });
     } else {
-      await axios.patch(`${backUrl}/posts/${groupsPostsId}`, {
+      await axios.patch(`${backUrl}/posts/${title}`, {
         id,
         likes: (likeCount -= 1),
       });

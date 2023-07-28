@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import Link from 'next/link';
 import { Avatar } from '@chakra-ui/react';
 
 import { CommentType } from 'types/global.types';
@@ -40,13 +41,13 @@ export const SubComment = ({
       </div>
 
       <OptionsComments
-//        userId={userId}
+        //        userId={userId}
         postId={postId}
         commentId={commentId}
-//        subCommentId={subCommentId}
+        //        subCommentId={subCommentId}
         authorId={authorId}
-//        likes={likes}
-//        liked={liked}
+        //        likes={likes}
+        //        liked={liked}
         name={name}
       />
     </div>

@@ -11,14 +11,22 @@ import { DeletionFile } from 'components/molecules/DeletionFile/DeletionFile';
 
 import styles from './Article.module.scss';
 
-export const Article = ({ name, fileUrl, authorName, tags, time }: FileType) => {
+export const Article = ({
+  name,
+  fileUrl,
+  authorName,
+  tags,
+  time,
+}: FileType & {
+  authorName: string;
+}) => {
   const { isMode } = useContext(ModeContext);
   const { pseudonym } = useUserData();
   let img = 600;
 
   return (
     <div className={styles.article}>
-      {pseudonym === authorName && <DeletionFile name={name} />}
+      {pseudonym === authorName && <DeletionFile name={name!} />}
       <Image
         className={isMode ? styles.item : styles.item__dark}
         src={fileUrl}
@@ -29,7 +37,7 @@ export const Article = ({ name, fileUrl, authorName, tags, time }: FileType) => 
         priority
       />
 
-      <FileOptions authorName={authorName} tags={tags} name={name} time={time} fileUrl={fileUrl} />
+      <FileOptions pseudonym={authorName} tags={tags} name={name} time={time} fileUrl={fileUrl} />
     </div>
   );
 };

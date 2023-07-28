@@ -33,7 +33,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
     try {
       const postArray: PostType[] = [];
 
-      const posts: PostType[] = await axios.get(`${backUrl}/posts`, {
+      const posts: PostType[] = await axios.get(`${backUrl}/groups-posts`, {
         params: {
           where: { groupId },
           orderBy: 'createdAt',

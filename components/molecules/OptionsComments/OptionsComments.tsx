@@ -228,9 +228,9 @@ export const OptionsComments = ({
             </>
           )}
           {/*{!!(refDocCom || refDocSubCom) && (*/}
-            <Button variant="link" color="blue" className={styles.answer} onClick={openComs}>
-              {data?.Comments?.reply}
-            </Button>
+          <Button variant="link" color="blue" className={styles.answer} onClick={openComs}>
+            {data?.Comments?.reply}
+          </Button>
           {/*)}*/}
         </div>
       </div>
