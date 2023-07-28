@@ -20,9 +20,7 @@ export const SchemaValidation = () => {
     .max(15, data?.NavForm?.validatePseudonymMax)
     .required(data?.NavForm?.validateRequired);
 
-  const email = Yup.string()
-    .email(data?.NacForm?.validateEmail)
-    .required(data?.NavForm?.validateRequired);
+  const email = Yup.string().email(data?.NacForm?.validateEmail).required(data?.NavForm?.validateRequired);
 
   const password = Yup.string()
     .min(9, data?.NavForm?.validatePasswordNum)
