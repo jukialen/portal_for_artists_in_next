@@ -15,17 +15,14 @@ export default function BackToApp() {
     try {
       const response = await thirdPartySignInAndUp();
 
-      console.log(response);
-
       if (response.status === 'OK') {
-        console.log(response.user);
         toast({
           description: 'Success!',
           status: 'success',
           variant: 'subtle',
           duration: 9000,
         });
-        response.createdNewUser && push('/app');
+        !response.createdNewUser && (await push('/app'));
       } else {
         toast({
           description: 'No email provided by social login. Please use another form of login',
@@ -33,7 +30,7 @@ export default function BackToApp() {
           variant: 'subtle',
           duration: 9000,
         });
-        push('/');
+        await push('/');
       }
     } catch (e: any) {
       toast({
@@ -42,6 +39,7 @@ export default function BackToApp() {
         variant: 'subtle',
         duration: 9000,
       });
+      await push('/');
     }
   };
 

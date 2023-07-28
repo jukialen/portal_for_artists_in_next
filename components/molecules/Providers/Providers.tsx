@@ -20,7 +20,6 @@ export const Providers = () => {
         providerId: provider,
         authorisationURL: `${process.env.NEXT_PUBLIC_PAGE}/callback/${provider}`,
       });
-      console.log(authUrl);
 
       await push(authUrl);
     } catch (e: any) {
