@@ -3,30 +3,95 @@
 import { useContext, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Divider, Icon, Switch } from '@chakra-ui/react';
+import axios from 'axios';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { Divider, Icon, Switch, Input, Progress, Textarea } from '@chakra-ui/react';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
+
+import { EventType, ResetFormType } from 'types/global.types';
+
+import { backUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
+import { useUserData } from 'hooks/useUserData';
 
 import { ModeContext } from 'providers/ModeProvider';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
-import { AccountData } from 'components/organisms/AccountData/AccountData';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { DeleteAccount } from 'components/atoms/DeleteAccount/DeleteAccount';
+import { FormError } from 'components/molecules/FormError/FormError';
+import { AccountData } from 'components/organisms/AccountData/AccountData';
 
 import styles from './index.module.scss';
-
 import { ChevronDownIcon, SunIcon } from '@chakra-ui/icons';
 import { MdLanguage } from 'react-icons/md';
-import { useUserData } from 'hooks/useUserData';
+
+type ProfileType = {
+  newPseudonym: string;
+  newDescription: string;
+};
 
 export default function Setings() {
-  const { id, pseudonym } = useUserData();
+  const { id, description, pseudonym, profilePhoto, provider } = useUserData();
   const { isMode, changeMode } = useContext(ModeContext);
   const [isLanguage, setLanguage] = useState(false);
   const data = useHookSWR();
   const { asPath, locale } = useRouter();
 
+  const [valuesFields, setValuesFields] = useState('');
+  const [photo, setPhoto] = useState<File | string | null>(profilePhoto || null);
+  const [progressUpload, setProgressUpload] = useState(0);
+
   const showLanguages = () => setLanguage(!isLanguage);
+  
+  const initialValues = {
+    newPseudonym: pseudonym!,
+    newDescription: description!,
+    photo: null,
+  };
+
+  const schemaNew = Yup.object({
+    newPseudonym: SchemaValidation().pseudonym,
+    newDescription: SchemaValidation().description,
+  });
+
+  const handleChangeFile = async (e: EventType) => {
+    e.target.files?.[0] && setPhoto(e.target.files[0]);
+  };
+
+  const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: ResetFormType) => {
+    try {
+      const newUserData = axios.patch(`${backUrl}/users/${pseudonym}`, {
+        pseudonym: newPseudonym,
+        description: newDescription,
+      });
+
+      if (profilePhoto !== null) {
+        await axios.patch(`${backUrl}/files/${id}`, {
+          data: { file: photo },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        await newUserData;
+
+        setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+
+        //     setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+      } else {
+        return newUserData;
+      }
+
+      resetForm(initialValues);
+      setValuesFields(data?.Account?.profile?.successSending);
+    } catch (e) {
+      console.log(e);
+      setValuesFields(data?.Account?.profile?.errorSending);
+    }
+  };
 
   return (
     <>
@@ -120,6 +185,103 @@ export default function Setings() {
         </div>
 
         {!id && <AccountData data={data} />}
+
+        <h3>{data?.Nav?.profile}</h3>
+
+        <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={updateProfileData}>
+          {({ values, handleChange, errors, touched }) => (
+            <Form className={styles.form}>
+              <div className={styles.container}>
+                <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.title}>
+                  {data?.AnotherForm?.profilePhoto}
+                </label>
+                <Input
+                  name="photo"
+                  type="file"
+                  accept=".jpg, .jpeg, .png, .webp, .avif"
+                  onChange={handleChangeFile}
+                  placeholder={data?.AnotherForm?.profilePhoto}
+                  className={(photo === null || undefined) && touched.photo ? styles.input__error : styles.input}
+                />
+              </div>
+
+              {(photo === null || undefined) && touched.photo && (
+                <p className={styles.error_profile}>{data?.NavForm?.validateRequired}</p>
+              )}
+
+              <div className={styles.container}>
+                <label className={styles.title} htmlFor="newPseudonym">
+                  {data?.AnotherForm?.pseudonym}
+                </label>
+                <Input
+                  id="newPseudonym"
+                  name="newPseudonym"
+                  value={values.newPseudonym}
+                  onChange={handleChange}
+                  placeholder={data?.AnotherForm?.pseudonym}
+                  className={`
+                  ${!!errors.newPseudonym && touched.newPseudonym ? styles.input__error : styles.input}
+                  ${isMode ? styles.input__dark : ''}
+                  `}
+                />
+              </div>
+
+              {!!errors.newPseudonym && touched.newPseudonym && (
+                <div className={styles.error_wrap}>
+                  <FormError nameError="newPseudonym" />
+                </div>
+              )}
+
+              <div className={styles.container}>
+                <label className={styles.title} htmlFor="newDescription">
+                  {data?.Account?.profile?.aboutMe}
+                </label>
+                <Textarea
+                  id="newDescription"
+                  name="newDescription"
+                  value={values.newDescription}
+                  onChange={handleChange}
+                  placeholder={data?.Account?.profile?.aboutMe}
+                  className={`
+                    ${
+                      !!errors.newDescription && touched.newDescription ? styles.description__error : styles.description
+                    }
+                    ${isMode ? styles.description__dark : ''}
+                  `}
+                />
+              </div>
+              {!!errors.newDescription && touched.newDescription && (
+                <div className={styles.error_wrap}>
+                  <FormError nameError="newDescription" />
+                </div>
+              )}
+
+              <button
+                className={`${styles.button} button`}
+                type="submit"
+                aria-label={data?.Account?.profile?.ariaLabelButton}>
+                {data?.Account?.profile?.save}
+              </button>
+
+              {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) && (
+                <Progress
+                  value={progressUpload}
+                  colorScheme="green"
+                  isAnimated
+                  hasStripe
+                  min={0}
+                  max={100}
+                  w={280}
+                  bg="blue.400"
+                  m="1.5rem auto"
+                  size="md"
+                />
+              )}
+
+              {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+            </Form>
+          )}
+        </Formik>
 
         <footer>
           <button className={styles.links}>

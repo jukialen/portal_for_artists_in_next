@@ -13,6 +13,7 @@
   h3 {
     margin-bottom: 1.5rem;
     font-size: 1.6rem;
+    color: $third__color;
   }
 
   .flow {
@@ -148,6 +149,53 @@
     }
   }
 
+
+  .form {
+    display: grid;
+    justify-content: center;
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      margin-top: 1rem;
+      justify-items: flex-start;
+
+      &:first-child input {
+        padding: .45rem;
+        border-radius: 1rem;
+      }
+
+      label {
+        padding-top: .45rem;
+      }
+
+      .input, .description {
+        padding: .45rem 1rem;
+        max-width: 17.5rem;
+        height: 2.5rem;
+        margin: 0.5rem auto;
+        border-color: $third__color;
+        border-radius: 1rem;
+
+        &__dark {
+          color: $dark__color__light__back;
+        }
+
+        &__error {
+          border-color: $required__color;
+        }
+      }
+
+    }
+
+    .error_profile, .error_wrap p {
+      margin: .5rem 1rem;
+      font-size: 1.2rem;
+      color: $required__color;
+    }
+  }
+
+
   footer {
     margin: 2rem auto 2rem;
 
@@ -160,6 +208,40 @@
       border-color: transparent;
     }
   }
+
+  .button {
+    width: fit-content;
+    height: 2.5rem;
+    margin: 1rem auto;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    background-color: transparent;
+    border: 0.1rem solid #FF5CAE;
+  }
+
+  @media (min-width: 600px) {
+    .form .container {
+      grid-template-columns: 10rem 1fr;
+      margin: .55rem 0;
+
+      &:first-child input {
+        max-width: 20.5rem;
+      }
+
+      .input, .input__error, .description, .description__error {
+        max-width: 20.5rem;
+      }
+    }
+
+    .form .error_profile {
+      margin-left: 11rem;
+    }
+
+    .publicContainer .firstTitle {
+      align-self: center;
+    }
+  }
+
 
   @media (min-width: 768px) {
     max-width: 31rem;
