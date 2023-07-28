@@ -1,6 +1,6 @@
 @use 'styles/variables' as *;
 
-.aside {
+.aside, .aside__dark {
   display: none;
 }
 
@@ -113,7 +113,7 @@ div.drawer {
 }
 
 @media (min-width: 1024px) {
-  .aside {
+  .aside, .aside__dark {
     width: 17rem;
     height: 100vh;
     display: flex;
@@ -125,7 +125,7 @@ div.drawer {
     overflow: hidden auto;
     scrollbar-width: thin;
     scrollbar-color: $another__color $fourth__color;
-    background-color: rgb($secondary__color, .5);
+    background-color: rgb($secondary__color, .75);
 
     &::-webkit-scrollbar {
       width: 10px
@@ -176,6 +176,9 @@ div.drawer {
     }
   }
 
+  .aside__dark {
+    background-color: rgb($secondary__color, .75);
+  }
 
   div button.aside__right {
     display: none
