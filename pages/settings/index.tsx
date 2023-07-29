@@ -45,7 +45,7 @@ export default function Setings() {
   const [progressUpload, setProgressUpload] = useState(0);
 
   const showLanguages = () => setLanguage(!isLanguage);
-  
+
   const initialValues = {
     newPseudonym: pseudonym!,
     newDescription: description!,

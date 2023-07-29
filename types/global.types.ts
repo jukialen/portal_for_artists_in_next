@@ -70,6 +70,7 @@ export type UserType = Logo &
     pseudonym: string;
     description?: string;
     data?: any;
+    email?: string;
     plan: string;
     provider?: boolean;
   };
