@@ -87,9 +87,9 @@ export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
   };
 
   return (
-    <article id="user__gallery__in__account" className="user__gallery__in__account">
+    <article>
       {decodeURIComponent(asPath) === `/account/${pseudonym}` && (
-        <em className="title">{data?.Account?.gallery?.userAnimationsTitle}</em>
+        <h2 className="title">{data?.Account?.gallery?.userAnimationsTitle}</h2>
       )}
 
       <Wrapper>

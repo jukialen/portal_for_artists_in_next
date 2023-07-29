@@ -34,7 +34,7 @@ type ProfileType = {
 };
 
 export default function Setings() {
-  const { id, description, pseudonym, profilePhoto, provider } = useUserData();
+  const { id, description, pseudonym, profilePhoto } = useUserData();
   const { isMode, changeMode } = useContext(ModeContext);
   const [isLanguage, setLanguage] = useState(false);
   const data = useHookSWR();
@@ -184,104 +184,107 @@ export default function Setings() {
           </div>
         </div>
 
-        {!id && <AccountData data={data} />}
+        {!id && (
+          <>
+            <AccountData data={data} />
+            <h3>{data?.Nav?.profile}</h3>
 
-        <h3>{data?.Nav?.profile}</h3>
+            <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={updateProfileData}>
+              {({ values, handleChange, errors, touched }) => (
+                <Form className={styles.form}>
+                  <div className={styles.container}>
+                    <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.title}>
+                      {data?.AnotherForm?.profilePhoto}
+                    </label>
+                    <Input
+                      name="photo"
+                      type="file"
+                      accept=".jpg, .jpeg, .png, .webp, .avif"
+                      onChange={handleChangeFile}
+                      placeholder={data?.AnotherForm?.profilePhoto}
+                      className={(photo === null || undefined) && touched.photo ? styles.input__error : styles.input}
+                    />
+                  </div>
 
-        <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={updateProfileData}>
-          {({ values, handleChange, errors, touched }) => (
-            <Form className={styles.form}>
-              <div className={styles.container}>
-                <label htmlFor={data?.AnotherForm?.profilePhoto} className={styles.title}>
-                  {data?.AnotherForm?.profilePhoto}
-                </label>
-                <Input
-                  name="photo"
-                  type="file"
-                  accept=".jpg, .jpeg, .png, .webp, .avif"
-                  onChange={handleChangeFile}
-                  placeholder={data?.AnotherForm?.profilePhoto}
-                  className={(photo === null || undefined) && touched.photo ? styles.input__error : styles.input}
-                />
-              </div>
+                  {(photo === null || undefined) && touched.photo && (
+                    <p className={styles.error_profile}>{data?.NavForm?.validateRequired}</p>
+                  )}
 
-              {(photo === null || undefined) && touched.photo && (
-                <p className={styles.error_profile}>{data?.NavForm?.validateRequired}</p>
-              )}
-
-              <div className={styles.container}>
-                <label className={styles.title} htmlFor="newPseudonym">
-                  {data?.AnotherForm?.pseudonym}
-                </label>
-                <Input
-                  id="newPseudonym"
-                  name="newPseudonym"
-                  value={values.newPseudonym}
-                  onChange={handleChange}
-                  placeholder={data?.AnotherForm?.pseudonym}
-                  className={`
+                  <div className={styles.container}>
+                    <label className={styles.title} htmlFor="newPseudonym">
+                      {data?.AnotherForm?.pseudonym}
+                    </label>
+                    <Input
+                      id="newPseudonym"
+                      name="newPseudonym"
+                      value={values.newPseudonym}
+                      onChange={handleChange}
+                      placeholder={data?.AnotherForm?.pseudonym}
+                      className={`
                   ${!!errors.newPseudonym && touched.newPseudonym ? styles.input__error : styles.input}
                   ${isMode ? styles.input__dark : ''}
                   `}
-                />
-              </div>
+                    />
+                  </div>
 
-              {!!errors.newPseudonym && touched.newPseudonym && (
-                <div className={styles.error_wrap}>
-                  <FormError nameError="newPseudonym" />
-                </div>
-              )}
+                  {!!errors.newPseudonym && touched.newPseudonym && (
+                    <div className={styles.error_wrap}>
+                      <FormError nameError="newPseudonym" />
+                    </div>
+                  )}
 
-              <div className={styles.container}>
-                <label className={styles.title} htmlFor="newDescription">
-                  {data?.Account?.profile?.aboutMe}
-                </label>
-                <Textarea
-                  id="newDescription"
-                  name="newDescription"
-                  value={values.newDescription}
-                  onChange={handleChange}
-                  placeholder={data?.Account?.profile?.aboutMe}
-                  className={`
+                  <div className={styles.container}>
+                    <label className={styles.title} htmlFor="newDescription">
+                      {data?.Account?.profile?.aboutMe}
+                    </label>
+                    <Textarea
+                      id="newDescription"
+                      name="newDescription"
+                      value={values.newDescription}
+                      onChange={handleChange}
+                      placeholder={data?.Account?.profile?.aboutMe}
+                      className={`
                     ${
                       !!errors.newDescription && touched.newDescription ? styles.description__error : styles.description
                     }
                     ${isMode ? styles.description__dark : ''}
                   `}
-                />
-              </div>
-              {!!errors.newDescription && touched.newDescription && (
-                <div className={styles.error_wrap}>
-                  <FormError nameError="newDescription" />
-                </div>
+                    />
+                  </div>
+                  {!!errors.newDescription && touched.newDescription && (
+                    <div className={styles.error_wrap}>
+                      <FormError nameError="newDescription" />
+                    </div>
+                  )}
+
+                  <button
+                    className={`${styles.button} button`}
+                    type="submit"
+                    aria-label={data?.Account?.profile?.ariaLabelButton}>
+                    {data?.Account?.profile?.save}
+                  </button>
+
+                  {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) && (
+                    <Progress
+                      value={progressUpload}
+                      colorScheme="green"
+                      isAnimated
+                      hasStripe
+                      min={0}
+                      max={100}
+                      w={280}
+                      bg="blue.400"
+                      m="1.5rem auto"
+                      size="md"
+                    />
+                  )}
+
+                  {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+                </Form>
               )}
-
-              <button
-                className={`${styles.button} button`}
-                type="submit"
-                aria-label={data?.Account?.profile?.ariaLabelButton}>
-                {data?.Account?.profile?.save}
-              </button>
-
-              {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) && (
-                <Progress
-                  value={progressUpload}
-                  colorScheme="green"
-                  isAnimated
-                  hasStripe
-                  min={0}
-                  max={100}
-                  w={280}
-                  bg="blue.400"
-                  m="1.5rem auto"
-                  size="md"
-                />
-              )}
-
-              {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-            </Form>
-          )}
-        </Formik>
+            </Formik>
+          </>
+        )}
 
         <footer>
           <button className={styles.links}>

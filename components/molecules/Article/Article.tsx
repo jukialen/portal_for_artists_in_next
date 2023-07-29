@@ -18,7 +18,7 @@ export const Article = ({ name, fileUrl, authorName, tags, time }: FileType) => 
 
   return (
     <div className={styles.article}>
-      {pseudonym === authorName && <DeletionFile name={name} />}
+      {pseudonym === authorName && <DeletionFile name={name!} />}
       <Image
         className={isMode ? styles.item : styles.item__dark}
         src={fileUrl}

@@ -1,14 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import {
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  QueryDocumentSnapshot,
-  startAfter,
-} from 'firebase/firestore';
+import { getDoc, getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter } from 'firebase/firestore';
 
 import { AuthorType, CommentType } from 'types/global.types';
 
@@ -27,14 +19,7 @@ import { DCProvider } from 'providers/DeleteCommentProvider';
 import { SubComment } from 'components/atoms/SubComment/SubComment';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
-export const SubComments = ({
-  refSubCom,
-  userId,
-  subCollection,
-  idPost,
-  idComment,
-  groupSource,
-}: AuthorType) => {
+export const SubComments = ({ refSubCom, userId, subCollection, idPost, idComment, groupSource }: AuthorType) => {
   const [subCommentsArray, setSubCommentsArray] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
   let [i, setI] = useState(1);
@@ -73,8 +58,7 @@ export const SubComments = ({
         }
       }
       setSubCommentsArray(commentArray);
-      commentArray.length === maxItems &&
-        setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      commentArray.length === maxItems && setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
     } catch (e) {
       console.error(e);
     }
@@ -130,17 +114,7 @@ export const SubComments = ({
       {subCommentsArray.length > 0 &&
         subCommentsArray.map(
           (
-            {
-              author,
-              date,
-              description,
-              nameGroup,
-              profilePhoto,
-              idSubComment,
-              likes,
-              liked,
-              authorId,
-            }: CommentType,
+            { author, date, description, nameGroup, profilePhoto, idSubComment, likes, liked, authorId }: CommentType,
             index,
           ) => (
             <DCProvider key={index}>
@@ -162,33 +136,19 @@ export const SubComments = ({
                 refDocSubCom={
                   groupSource
                     ? docSubPostsComments(nameGroup!, idPost!, idComment!, idSubComment!)
-                    : docSubFilesComment(
-                        userId!,
-                        subCollection!,
-                        idPost!,
-                        idComment!,
-                        idSubComment!,
-                      )
+                    : docSubFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!)
                 }
                 refLastCom={
                   groupSource
                     ? lastPostsComments(nameGroup!, idPost!, idComment!, idSubComment!)
-                    : subLastFilesComments(
-                        userId!,
-                        subCollection!,
-                        idPost!,
-                        idComment!,
-                        idSubComment!,
-                      )
+                    : subLastFilesComments(userId!, subCollection!, idPost!, idComment!, idSubComment!)
                 }
                 groupSource={groupSource}
               />
             </DCProvider>
           ),
         )}
-      {!!lastVisible && subCommentsArray.length === maxItems * i && (
-        <MoreButton nextElements={nextShowingComments} />
-      )}
+      {!!lastVisible && subCommentsArray.length === maxItems * i && <MoreButton nextElements={nextShowingComments} />}
     </>
   );
 };

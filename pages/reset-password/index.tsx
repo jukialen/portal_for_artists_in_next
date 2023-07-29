@@ -20,9 +20,9 @@ const initialValues = {
 };
 
 type ResetPasswordType = {
-    newPassword: string;
-    repeatPassword: string;  
-}
+  newPassword: string;
+  repeatPassword: string;
+};
 
 export default function ResetPassword() {
   const [valuesFields, setValuesFields] = useState<string>('');
@@ -85,7 +85,9 @@ export default function ResetPassword() {
                 type="password"
                 value={values.repeatPassword}
                 onChange={handleChange}
-                className={touched.repeatPassword && !!errors.repeatPassword ? styles.inputForm__error : styles.inputForm}
+                className={
+                  touched.repeatPassword && !!errors.repeatPassword ? styles.inputForm__error : styles.inputForm
+                }
                 placeholder={data?.Account?.aData?.againNewPassword}
               />
 
