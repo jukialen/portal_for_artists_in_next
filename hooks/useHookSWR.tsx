@@ -1,6 +1,7 @@
-import axios from 'axios';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import useSWR from 'swr';
+
 import { DataType } from 'types/global.types';
 
 export const useHookSWR = () => {

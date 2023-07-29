@@ -4,7 +4,12 @@
     "signIn": "サインイン",
     "signUp": "サインアップ",
     "signOut": "サインアウト",
-    "account": "アカウント"
+    "account": "アカウント",
+    "home": "ホーム",
+    "groups": "グループ",
+    "friends": "友達",
+    "search": "検索",
+    "profile": "プロフィール"
   },
   "NavForm": {
     "setErrorMessageCreate": "登録することが出来ません。",
@@ -94,7 +99,7 @@
       "actualEmail": "現在のメール",
       "changeEmail": "メールが変わります",
       "currentPassword": "現在のパスポート入ります",
-      "oldPassword:": "古いがパスポートが入ります",
+      "oldPassword": "古いがパスポートが入ります",
       "newPassword": "新しいパスポートが入ります",
       "againNewPassword": "新しいパスポートが繰り返します",
       "changePassword": "パスポートが 変わります",
@@ -172,7 +177,6 @@
     "fileTitle": "ファイルが追加",
     "tags": "タグ",
     "file": "ファイル",
-    "arialSendingFile": "sending file",
     "send": "送る",
     "uploadFile": "File has been uploaded.",
     "notUploadFile": "File hasn't been uploaded."
@@ -357,6 +361,7 @@
   },
   "Settings": {
     "title": "設定",
+    "appearance": "外観",
     "dark_mode": "暗いのモード"
   },
   "unknownError": "おっと？！何かが間違っていた。",

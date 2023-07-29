@@ -4,7 +4,12 @@
     "signIn": "Zaloguj",
     "signUp": "Zarejestruj",
     "signOut": "Wyloguj",
-    "account": "Konto"
+    "account": "Konto",
+    "home": "Dom",
+    "groups": "Grupy",
+    "friends": "Przyjaciele",
+    "search": "Szukaj",
+    "profile": "Profil"
   },
   "NavForm": {
     "setErrorMessageCreate": "Nie mogliśmy Cię zarejestrować.",
@@ -94,7 +99,7 @@
       "actualEmail": "Aktualny e-mail",
       "changeEmail": "Zmień adres e-mail",
       "currentPassword": "Wpisz aktualne hasło",
-      "oldPassword:": "Wpisz stare hasło",
+      "oldPassword": "Wpisz stare hasło",
       "newPassword": "Wpisz nowe hasło",
       "againNewPassword": "Powtórz nowe hasło",
       "changePassword": "Zmień hasło",
@@ -116,7 +121,7 @@
       "userLikedAnimations": "Polubione animacje"
     },
     "profile": {
-      "aboutMe": "O mnie:",
+      "aboutMe": "O mnie",
       "ariaLabelButton": "Aktualizacja pseudonimu i opisu użytkownika",
       "save": "Zapisz",
       "successSending": "Profile zaktualizowany",
@@ -172,7 +177,6 @@
     "fileTitle": "Dodaj plik",
     "tags": "Tagi",
     "file": "Plik",
-    "arialSendingFile": "wysyłanie pliku",
     "send": "Wyślij",
     "uploadFile": "Plik został wysłany.",
     "notUploadFile": "Plik nie został wysłany."
@@ -362,6 +366,7 @@
   },
   "Settings": {
     "title": "Ustawienia",
+    "appearance": "Wygląd",
     "dark_mode": "Ciemny motyw"
   },
   "unknownError": "Ups! Coś poszło nie tak.",

@@ -23,7 +23,7 @@ export const Categories = ({ data }: DataType) => {
 
   const changeOpenCategories = () => setArrowIcon(!arrowIcon);
 
-  const icons = 55;
+  const icons = 40;
   const arrowIcons = '1.5rem';
 
   return (

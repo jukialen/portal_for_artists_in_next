@@ -24,38 +24,33 @@ export const Groups = ({ data }: DataType) => {
     try {
       const groupList: GroupType[] = [];
 
-
-//        for (const favorite of favorites) {
-//
-//          if (favoriteList.exists()) {
-//            groupList.push({
-//              name: favorite,
-//              logoUrl: !!favoriteList.data().logo
-//                ? favoriteList.data().logo
-//                : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-//            });
-//          }
-//        }
-        setGroupsArray(groupList);
-//      }
+      //        for (const favorite of favorites) {
+      //
+      //          if (favoriteList.exists()) {
+      //            groupList.push({
+      //              name: favorite,
+      //              logoUrl: !!favoriteList.data().logo
+      //                ? favoriteList.data().logo
+      //                : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+      //            });
+      //          }
+      //        }
+      setGroupsArray(groupList);
+      //      }
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-     groupList();
+    groupList();
   }, []);
 
   return (
     <div className={styles.groups}>
       <h3 className={styles.title} onClick={changeOpenGroups}>
         <p className={locale === 'jp' ? styles.title__jp : ''}>{data?.Aside?.groups}</p>
-        {open ? (
-          <TriangleUpIcon w={arrowIcons} h={arrowIcons} />
-        ) : (
-          <TriangleDownIcon w={arrowIcons} h={arrowIcons} />
-        )}
+        {open ? <TriangleUpIcon w={arrowIcons} h={arrowIcons} /> : <TriangleDownIcon w={arrowIcons} h={arrowIcons} />}
       </h3>
 
       <div className={open ? styles.groups__container : styles.hiddenGroups}>

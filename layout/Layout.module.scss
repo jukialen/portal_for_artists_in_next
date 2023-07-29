@@ -7,10 +7,11 @@
 
   .container {
     width: 100vw;
+    min-height: 100vh;
     display: grid;
     grid-template-columns: auto 1fr;
 
-    .main__container {
+    .user__container {
       width: 100vw;
       margin: 0 auto;
 
@@ -53,7 +54,7 @@
       }
     }
 
-    .home__container {
+    .main__container {
       width: 100vw;
       margin: 0 auto;
     }
@@ -65,5 +66,19 @@
     flex-direction: column;
     margin: 4rem auto 1rem;
     padding-top: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .whole__page .container {
+    .user__container {
+      width: min-content;
+      overflow-y: scroll;
+
+      .workspace {
+        width: calc(100vw - 17rem);
+      }
+
+    }
   }
 }

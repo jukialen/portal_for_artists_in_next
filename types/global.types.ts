@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react';
 
 //ENUMS
-export enum Plan {
+enum Plan {
   FREE,
   PREMIUM,
   GOLD,
@@ -44,14 +44,12 @@ type UserPost = Time &
   Logo & {
     pseudonym: string;
     date?: string;
-    name?: string;
-    postId?: string;
+    name: string;
+    postId: string;
     authorId: string;
   };
 
 export type DataType = any;
-
-export type ModeType = boolean | '';
 
 //FORMS & CONTROLLERS ELEMENTS
 export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
@@ -72,9 +70,9 @@ export type UserType = Logo &
     pseudonym: string;
     description?: string;
     data?: any;
-    plan?: Plan;
     email?: string;
-    provider: boolean;
+    plan: string;
+    provider?: boolean;
   };
 
 export type UserFormType = {
@@ -84,13 +82,12 @@ export type UserFormType = {
 
 //FiLES
 export type FileType = Time & {
-  fileId?: string;
   name?: string;
   fileUrl: string;
-  userId?: string;
   tags?: Tags;
   time: string;
   pseudonym?: string;
+  authorName?: string;
   profileType?: boolean;
 };
 
@@ -133,9 +130,7 @@ export type PostType = UserPost &
     groupId?: string;
     title: string;
     content: string;
-    shared: number;
-    commented: string;
-    role?: string;
+    shared?: number;
   };
 
 // COMMENTS

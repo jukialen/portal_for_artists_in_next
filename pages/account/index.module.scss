@@ -1,9 +1,5 @@
 @use 'styles/variables' as *;
 
-.account__h2 {
-  margin: 3rem auto;
-}
-
 .tabsMenu {
   width: 100vw;
   max-width: 44.5rem;
@@ -17,6 +13,7 @@
 
   .topTabList {
     padding: 1rem 0;
+    position: relative;
 
     .account__menu {
       max-width: 100%;
@@ -77,13 +74,20 @@
         }
       }
     }
+
+    .menu {
+      position: absolute;
+      top: 1rem;
+    }
   }
 
   .tabPanels {
-    padding: 0;
+    margin: 2rem auto;
 
-    .tabPanel {
-      padding: 0;
+    div {
+      article h2 {
+        margin-left: 2rem;
+      }
 
       .tabsForPanels {
         justify-self: center;

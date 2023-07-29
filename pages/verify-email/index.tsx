@@ -14,7 +14,7 @@ export default function VerifyEmail() {
   const [valuesFields, setValuesFields] = useState('');
 
   const data = useHookSWR();
-  
+
   const sendEmail = async () => {
     try {
       const response = await sendVerificationEmail();
@@ -22,7 +22,7 @@ export default function VerifyEmail() {
         setValuesFields(data?.EmailVerification?.sendedSuccess);
       }
     } catch (e: any) {
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);      
+      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);
     }
   };
 
@@ -37,7 +37,7 @@ export default function VerifyEmail() {
         setStatus('success');
       }
     } catch (e: any) {
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);      
+      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.unknownError);
     }
   };
 
@@ -54,8 +54,7 @@ export default function VerifyEmail() {
       <div className={styles.container}>
         <Image
           src={status === 'success' ? success : error}
-          objectFit="contain"
-          objectPosition="center"
+          style={{ objectFit: 'contain', objectPosition: 'center' }}
           width="200"
           height="200"
           alt={`${status === 'success' ? 'success' : 'error'} icon`}

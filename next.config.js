@@ -12,9 +12,26 @@ module.exports = withPWA({
     defaultLocale: 'en',
   },
   images: {
-    deviceSizes: [280, 320, 375, 425, 768, 1024, 1200, 1440, 2560],
-    loader: 'default',
-    domains: [`${process.env.NEXT_PUBLIC_S3_URL}`, 's.yimg.com', 'localhost', 'pfartists.xyz'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: `${process.env.NEXT_PUBLIC_S3_URL}`,
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 's.yimg.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/pfartists/**',
+      },
+    ],
     formats: ['image/avif', 'image/webp'],
   },
 });

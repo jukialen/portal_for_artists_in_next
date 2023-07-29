@@ -5,8 +5,6 @@ import { useUserData } from 'hooks/useUserData';
 
 import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
 import { Header } from 'components/organisms/Header/Header';
-import { Create } from 'components/organisms/NavForm/Create/Create';
-import { Login } from 'components/organisms/NavForm/Login/Login';
 import { Aside } from 'components/organisms/Aside/Aside';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -30,7 +28,7 @@ export const Layout = ({ children }: ChildrenType) => {
         <div className={styles.container}>
           {!!pseudonym && <Aside />}
           <main
-            className={`${pseudonym ? styles.main__container : styles.home__container} ${
+            className={`${!!pseudonym ? styles.user__container : styles.main__container} ${
               isMode ? 'main__container--dark' : ''
             }`}>
             <section className={styles.workspace}>{children}</section>

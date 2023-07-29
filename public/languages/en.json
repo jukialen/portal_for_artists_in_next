@@ -4,7 +4,12 @@
     "signIn": "Log In",
     "signUp": "Sign up",
     "signOut": "Sign out",
-    "account": "Account"
+    "account": "Account",
+    "home": "Home",
+    "groups": "Groups",
+    "friends": "Friends",
+    "search": "Search",
+    "profile": "Profile"
   },
   "NavForm": {
     "setErrorMessage": "We weren't able to register you.",
@@ -94,7 +99,7 @@
       "actualEmail": "Current e-mail",
       "changeEmail": "Change e-mail",
       "currentPassword": "Enter current password",
-      "oldPassword:": "Enter old password",
+      "oldPassword": "Enter old password",
       "newPassword": "Enter new password",
       "againNewPassword": "Repeat new password",
       "changePassword": "Change password",
@@ -172,7 +177,6 @@
     "fileTitle": "Adding a file",
     "tags": "Tags",
     "file": "File",
-    "arialSendingFile": "sending file",
     "send": "Send",
     "uploadFile": "File has been uploaded.",
     "notUploadFile": "File hasn't been uploaded."
@@ -362,6 +366,7 @@
   },
   "Settings": {
     "title": "Settings",
+    "appearance": "Appearance",
     "dark_mode": "Dark mode"
   },
   "unknownError": "Oops! Something went wrong.",

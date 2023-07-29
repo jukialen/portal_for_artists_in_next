@@ -1,5 +1,33 @@
 @use 'styles/variables' as *;
 
+.updateLogo {
+  margin-top: 2rem;
+  border-color: transparent;
+  display: flex;
+  justify-self: flex-start;
+}
+
+section.darkModalContent {
+  background-color: $dark__background__light__color;
+
+  .closeButton:hover {
+    color: $link__dark__active;
+  }
+}
+
+section.modelContent {
+  color: $primary__color;
+
+  .closeButton {
+    border-color: transparent;
+    color: $primary__color;
+
+    &:hover {
+      color: $link__hover;
+    }
+  }
+}
+
 .adding__files {
   max-width: 99vw;
   display: flex;
@@ -8,7 +36,7 @@
   margin: 0.5rem auto 3.5rem;
 
   .title {
-    margin: 2rem 0;
+    margin-bottom: 1rem;
   }
 
   .select, .select__dark {
@@ -78,5 +106,13 @@
     width: 100vw;
     max-width: 22.5rem;
     margin: 1.5rem auto;
+  }
+
+  .buttons {
+    width: 100%;
+    margin: 2.7rem 1.1rem -3rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
   }
 }

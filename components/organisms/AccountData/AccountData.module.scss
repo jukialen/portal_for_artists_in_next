@@ -1,60 +1,77 @@
 @use 'styles/variables' as *;
 
 .account__data {
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-
-  @media (min-width: 719px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 1400px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
 
   .form {
     display: flex;
     flex-flow: column wrap;
-    margin: 1.5rem auto;
+    margin: 1.5rem 0;
 
     @media (min-width: 516px) {
-      margin: 2rem auto;
-    }
-
-    .subscription {
-      margin: .5rem auto 1rem;
-      font-size: 1.4rem;
+      margin: 2rem 0;
     }
 
     .title {
-      width: 100%;
       height: 3rem;
       display: inline-block;
       font-size: 1.6rem;
       margin-bottom: 1rem;
-      text-align: center;
+    }
+
+    .flow {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.4rem;
+
+    }
+
+    .input, .input__error {
+      max-width: 17.5rem;
+      height: 2.5rem;
+      margin: .5rem auto;
+      border-radius: 1rem;
+
+      &:placeholder-shown {
+        color: $dark__background__light__color;
+      }
     }
 
     .input {
-      width: 13rem;
-      height: 2.5rem;
-      margin: .5rem auto;
       border-color: $third__color;
-      border-radius: 1rem;
+    }
+
+    .input__error {
+      border-color: $required__color;
+    }
+
+    button.planButton {
+      margin: unset;
     }
 
     .button {
-      width: 13rem;
+      width: fit-content;
       height: 2.5rem;
-      margin: .5rem auto;
+      margin: 1rem auto;
+      border-radius: .5rem;
+      font-weight: bold;
+      background-color: transparent;
+      border: .1rem solid $secondary__color;
     }
+  }
+
+  .form_dark input {
+    color: $dark__color__light__back;
   }
 }
 
 section.subscription, section.subscription__dark {
-  max-width: 100vw;
+  max-width: inherit;
+  right: 1rem;
 
   .closeButton {
     border-color: transparent;
@@ -117,7 +134,7 @@ section.subscription, section.subscription__dark {
     margin: 1rem 0 2rem;
 
     a {
-    text-decoration: underline $third__color;
+      text-decoration: underline $third__color;
     }
   }
 
@@ -169,8 +186,8 @@ section.subscription {
 section.subscription__dark {
   background-color: $dark__background__light__color;
 
-   .arrow {
-    background: $dark__background__light__color !important;
+  .arrow {
+    background-color: $dark__background__light__color !important;
   }
 
   header {
@@ -183,5 +200,11 @@ section.subscription__dark {
 
   .message, .message a {
     color: $dark__color__light__back;
+  }
+}
+
+@media (min-width: 768px) {
+  section.subscription, section.subscription__dark {
+    right: 0;
   }
 }

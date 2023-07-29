@@ -14,7 +14,9 @@ import { Tile } from 'components/molecules/GroupTile/Tile';
 
 import styles from './GroupUsers.module.scss';
 
-type GroupUsersType = { id: string };
+type GroupUsersType = {
+  id: string;
+};
 
 export const GroupUsers = ({ id }: GroupUsersType) => {
   const [adminsArray, setAdminsArray] = useState<GroupType[]>([]);
@@ -32,7 +34,12 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const firstAdminList = async () => {
     try {
-      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+      const groupList: [
+        {
+          name: string;
+          logoUrl: string;
+        },
+      ] = await axios.get(`${backUrl}/groups`, {
         params: {
           where: { adminId: id },
           orderBy: 'name, DESC',
@@ -62,7 +69,12 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const firstModeratorsList = async () => {
     try {
-      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+      const groupList: [
+        {
+          name: string;
+          logoUrl: string;
+        },
+      ] = await axios.get(`${backUrl}/groups`, {
         params: {
           where: { moderatorsId: id },
           orderBy: 'name, DESC',
@@ -92,7 +104,12 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const firstMembersList = async () => {
     try {
-      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+      const groupList: [
+        {
+          name: string;
+          logoUrl: string;
+        },
+      ] = await axios.get(`${backUrl}/groups`, {
         params: {
           where: { usersId: id },
           orderBy: 'name, DESC',
@@ -122,7 +139,12 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const nextAdminList = async () => {
     try {
-      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+      const groupList: [
+        {
+          name: string;
+          logoUrl: string;
+        },
+      ] = await axios.get(`${backUrl}/groups`, {
         params: {
           where: { adminId: id },
           orderBy: 'name, DESC',
@@ -151,7 +173,12 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const nextModeratorsList = async () => {
     try {
-      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+      const groupList: [
+        {
+          name: string;
+          logoUrl: string;
+        },
+      ] = await axios.get(`${backUrl}/groups`, {
         params: {
           where: { moderatorsId: id },
           orderBy: 'name, DESC',
@@ -181,7 +208,12 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const nextMembersList = async () => {
     try {
-      const groupList: [{ name: string; logoUrl: string }] = await axios.get(`${backUrl}/groups`, {
+      const groupList: [
+        {
+          name: string;
+          logoUrl: string;
+        },
+      ] = await axios.get(`${backUrl}/groups`, {
         params: {
           where: { usersId: id },
           orderBy: 'name, DESC',
@@ -209,14 +241,16 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   return (
     <div className={styles.tilesSection}>
-      <div className={styles.container}>
+      <section className={styles.sectionTitleNewGroup}>
+        <h2>{data?.Nav?.groups}</h2>
         <Links
           hrefLink="/adding_group"
-          classLink={`${styles.container__button} button`}
+          classLink={`${styles.sectionTitleNewGroup__button} button`}
           aria-label={data?.Aside?.addingGroup}>
           {data?.Aside?.addingGroup}
         </Links>
-      </div>
+      </section>
+
       <h2 className={styles.title}>{data?.Account?.groups?.adminTitle}</h2>
       <Divider className={styles.divider} />
       {adminsArray.length > 0 ? (

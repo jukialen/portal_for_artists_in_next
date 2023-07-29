@@ -1,10 +1,11 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 
 import { useHookSWR } from 'hooks/useHookSWR';
+import { useUserData } from 'hooks/useUserData';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 
@@ -22,7 +23,6 @@ import authorButton from 'public/authorButton.png';
 import top from 'public/top.jpg';
 import minimalism from 'public/minimalism.png';
 import likes from 'public/likes.png';
-import { useUserData } from '../hooks/useUserData';
 
 export default function Home() {
   const { asPath, push } = useRouter();
