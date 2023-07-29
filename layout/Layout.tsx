@@ -24,11 +24,11 @@ export const Layout = ({ children }: ChildrenType) => {
   return (
     <ChakraProvider resetCSS={false}>
       <div className={`${styles.whole__page} ${isMode ? 'dark' : ''}`}>
-        {!pseudonym ? <UserHeader /> : <Header />}
+        {!!pseudonym ? <UserHeader /> : <Header />}
         <div className={styles.container}>
-          {!pseudonym && <Aside />}
+          {!!pseudonym && <Aside />}
           <main
-            className={`${pseudonym ? styles.main__container : styles.home__container} ${
+            className={`${!!pseudonym ? styles.user__container : styles.main__container} ${
               isMode ? 'main__container--dark' : ''
             }`}>
             <section className={styles.workspace}>{children}</section>
