@@ -71,6 +71,7 @@ export type UserType = Logo &
     description?: string;
     data?: any;
     plan: string;
+    provider?: boolean;
   };
 
 export type UserFormType = {
@@ -85,6 +86,7 @@ export type FileType = Time & {
   tags?: Tags;
   time: string;
   pseudonym?: string;
+  authorName?: string;
   profileType?: boolean;
 };
 
