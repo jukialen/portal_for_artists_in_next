@@ -24,7 +24,6 @@ export default function Drawings() {
 
   const router = useRouter();
   const { pid } = router.query;
-  const loading = useCurrentUser('/');
   const data = useHookSWR();
 
   const maxItems = 30;
@@ -33,7 +32,7 @@ export default function Drawings() {
     try {
       const filesArray: FileType[] = [];
 
-      const firstPage: FileType[] = await axios.get(`${backUrl}/users-files`, {
+      const firstPage: FileType[] = await axios.get(`${backUrl}/files`, {
         params: {
           where: { tags: pid! },
           orderBy: 'createdAt, desc',
@@ -68,7 +67,7 @@ export default function Drawings() {
     try {
       const filesArray: FileType[] = [];
 
-      const nextArray: FileType[] = await axios.get(`${backUrl}/users-files`, {
+      const nextArray: FileType[] = await axios.get(`${backUrl}/files`, {
         params: {
           where: { tags: pid! },
           orderBy: 'createdAt, desc',
@@ -96,9 +95,11 @@ export default function Drawings() {
     }
   };
 
-  if (loading) {
-    return null;
-  }
+  useCurrentUser('/');
+
+  useEffect(() => {
+    !!pid && downloadDrawings();
+  }, [pid]);
 
   return (
     <>
