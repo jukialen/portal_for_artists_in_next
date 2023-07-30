@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 import { CommentType } from 'types/global.types';
 
-import { getDate } from 'helpers/getDate';
+import { useGetDate } from 'helpers/useGetDate';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 

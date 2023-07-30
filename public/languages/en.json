@@ -369,6 +369,13 @@
     "appearance": "Appearance",
     "dark_mode": "Dark mode"
   },
+  "Date": {
+    "second": "s",
+    "minute": "m",
+    "hour": "h",
+    "day": "d",
+    "yearDateSeparator": "."
+  },
   "unknownError": "Oops! Something went wrong.",
   "error": "Try again or check your internet connection.",
   "edit": "Edit",

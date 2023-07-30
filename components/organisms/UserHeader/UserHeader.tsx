@@ -16,7 +16,7 @@ import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
 export function UserHeader() {
   const [profileMenu, showProfileMenu] = useState(false);
   const [search, setSearchh] = useState(false);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
   const { pseudonym, profilePhoto } = useUserData();
   const data = useHookSWR();
 

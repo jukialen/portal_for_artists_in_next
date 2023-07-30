@@ -12,7 +12,7 @@ import {
   user,
 } from 'config/referencesFirebase';
 
-import { getDate } from 'helpers/getDate';
+import { useGetDate } from 'helpers/useGetDate';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -46,7 +46,7 @@ export const SubComments = ({ refSubCom, userId, subCollection, idPost, idCommen
         if (docSnap.exists()) {
           commentArray.push({
             author: docSnap.data().pseudonym,
-            date: getDate(locale!, document.data().date),
+            date: useGetDate(locale!, document.data().date),
             description: document.data().message,
             nameGroup: document.data().nameGroup,
             profilePhoto: docSnap.data().profilePhoto,
@@ -90,7 +90,7 @@ export const SubComments = ({ refSubCom, userId, subCollection, idPost, idCommen
         if (docSnap.exists()) {
           nextCommentArray.push({
             author: docSnap.data().pseudonym,
-            date: getDate(locale!, document.data().date),
+            date: useGetDate(locale!, document.data().date),
             description: document.data().message,
             nameGroup: document.data().nameGroup,
             profilePhoto: docSnap.data().profilePhoto,

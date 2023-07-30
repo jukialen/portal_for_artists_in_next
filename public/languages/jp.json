@@ -364,6 +364,13 @@
     "appearance": "外観",
     "dark_mode": "暗いのモード"
   },
+  "Date": {
+    "second": "秒",
+    "minute": "分",
+    "hour": "時間",
+    "day": "日",
+    "yearDateSeparator": "年"
+  },
   "unknownError": "おっと？！何かが間違っていた。",
   "error": "遣り返すかインターネット接続が見えてください。",
   "edit": "エディト",

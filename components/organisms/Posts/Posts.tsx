@@ -8,7 +8,7 @@ import { backUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { getDate } from 'helpers/getDate';
+import { useGetDate } from 'helpers/useGetDate';
 
 import { Post } from 'components/molecules/Post/Post';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -50,7 +50,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           content: post.content,
           likes: post.likes,
           liked: post.liked,
-          date: getDate(locale!, post.updatedAt || post.createdAt),
+          date: useGetDate(locale!, post.updatedAt || post.createdAt),
           name,
           pseudonym: post.pseudonym,
           authorId: post.authorId,
@@ -90,7 +90,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           content: post.content,
           likes: post.likes,
           liked: post.liked,
-          date: getDate(locale!, post.updatedAt || post.createdAt),
+          date: useGetDate(locale!, post.updatedAt || post.createdAt),
           name,
           pseudonym: post.pseudonym,
           authorId: post.authorId,

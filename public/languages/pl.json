@@ -369,6 +369,13 @@
     "appearance": "Wygląd",
     "dark_mode": "Ciemny motyw"
   },
+  "Date": {
+    "second": "sek. temu",
+    "minute": "min. temu",
+    "hour": "godz. temu",
+    "day": "dni temu",
+    "yearDateSeparator": "."
+  },
   "unknownError": "Ups! Coś poszło nie tak.",
   "error": "Spróbuj ponownie lub sprawdź połączenie z internetem",
   "edit": "Edytuj",
