@@ -35,7 +35,7 @@ export const FileOptions = ({ name, authorName, tags, time }: FileType) => {
       </button>
       {open && (
         <>
-          <NewComments name={name} />
+          <NewComments name={name!} />
           <Comments userId={''} />
         </>
       )}

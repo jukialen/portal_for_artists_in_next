@@ -14,7 +14,7 @@ export const Videos = ({ name, fileUrl, authorName, tags, time }: FileType) => {
 
   return (
     <div className={styles.videos}>
-      {pseudonym === authorName && <DeletionFile name={name} />}
+      {pseudonym === authorName && <DeletionFile name={name!} />}
 
       <video preload="metadata" controls className={styles.video} playsInline>
         <source src={fileUrl} />

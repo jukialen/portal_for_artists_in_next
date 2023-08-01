@@ -11,17 +11,14 @@ import { OptionsComments } from 'components/molecules/OptionsComments/OptionsCom
 import styles from './SubComment.module.scss';
 
 export const SubComment = ({
-  author,
   date,
   name,
+  pseudonym,
   profilePhoto,
   authorId,
   postId,
   commentId,
   comment,
-  subCommentId,
-  likes,
-  liked,
 }: CommentType) => {
   const { del } = useContext(DCContext);
 
@@ -32,7 +29,7 @@ export const SubComment = ({
         <div className={styles.rightSideComment}>
           <div className={styles.topPartComment}>
             <p className={styles.pseudonym}>
-              <Link href={`/user/${author}`}>{author}</Link>
+              <Link href={`/user/${pseudonym}`}>{pseudonym}</Link>
             </p>
             <p className={styles.date}>{date}</p>
           </div>
@@ -49,6 +46,8 @@ export const SubComment = ({
         //        likes={likes}
         //        liked={liked}
         name={name}
+        pseudonym={pseudonym}
+        comment={comment}
       />
     </div>
   );

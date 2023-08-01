@@ -1,8 +1,7 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import Session from 'supertokens-web-js/recipe/session';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -58,13 +57,13 @@ type SubscriptionType = {
 export const AccountData = ({ data }: DataType) => {
   const { id, pseudonym, plan, email, provider } = useUserData();
 
-  const { isMode } = useContext(ModeContext);
-  const { push } = useRouter();
-
   const [valuesFields, setValuesFields] = useState('');
   const [valuesFieldsPass, setValuesFieldsPass] = useState('');
   const [subscriptionPlan, setSubscriptionPlan] = useState<Plan | string>(plan! || 'FREE');
   const { onOpen, onClose, isOpen } = useDisclosure();
+
+  const { isMode } = useContext(ModeContext);
+  const { push } = useRouter();
 
   const schemaEmail = Yup.object({
     email: SchemaValidation().email,
