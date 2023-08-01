@@ -3,8 +3,9 @@ import { useRouter } from 'next/router';
 
 import { CommentType } from 'types/global.types';
 
-import { useGetDate } from 'helpers/useGetDate';
+import { getDate } from 'helpers/getDate';
 
+import { useDateData } from 'hooks/useDateData';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
@@ -21,59 +22,61 @@ export const Comments = ({ userId, postId, groupSource }: CommentType) => {
 
   const { locale } = useRouter();
   const data = useHookSWR();
+  const dataDateObject = useDateData();
+
   const maxItems = 30;
 
   const showingComments = async () => {
     try {
-//      const firstPage =
+      //      const firstPage =
 
       const commentArray: CommentType[] = [];
 
-//          commentArray.push({
-//            author: docSnap.data().pseudonym,
-//            date: getDate(locale!, document.data().date),
-//            description: document.data().message,
-//            nameGroup: document.data().nameGroup,
-//            profilePhoto: docSnap.data().profilePhoto,
-//            idComment: document.id,
-//            likes: document.data().likes | 0,
-//            liked: document.data().liked || [],
-//            authorId: document.data().user,
-//          });
+      //          commentArray.push({
+      //            author: docSnap.data().pseudonym,
+      //            date: getDate(locale!, parseInt(`${post.updatedAt! || post.createdAt!}`), date),,
+      //            description: document.data().message,
+      //            nameGroup: document.data().nameGroup,
+      //            profilePhoto: docSnap.data().profilePhoto,
+      //            idComment: document.id,
+      //            likes: document.data().likes | 0,
+      //            liked: document.data().liked || [],
+      //            authorId: document.data().user,
+      //          });
 
       setCommentsArray(commentArray);
-//      commentArray.length === maxItems && setLa stVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      //      commentArray.length === maxItems && setLa stVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-     showingComments();
+    showingComments();
   }, []);
 
   const nextShowingComments = async () => {
     try {
-//      const nextPage = ;
+      //      const nextPage = ;
 
-//      setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      //      setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
 
       const nextCommentArray: CommentType[] = [];
 
-//          nextCommentArray.push({
-//            author: docSnap.data().pseudonym,
-//            date: getDate(locale!, document.data().date),
-//            description: document.data().message,
-//            nameGroup: document.data().nameGroup,
-//            profilePhoto: docSnap.data().profilePhoto,
-//            idComment: document.id,
-//            likes: document.data().likes | 0,
-//            liked: document.data().liked || [],
-//            authorId: document.data().user,
-//          });
+      //          nextCommentArray.push({
+      //            author: docSnap.data().pseudonym,
+      //            date: getDate(locale!, document.data().date),
+      //            description: document.data().message,
+      //            nameGroup: document.data().nameGroup,
+      //            profilePhoto: docSnap.data().profilePhoto,
+      //            idComment: document.id,
+      //            likes: document.data().likes | 0,
+      //            liked: document.data().liked || [],
+      //            authorId: document.data().user,
+      //          });
 
       const nextArray = commentsArray.concat(...nextCommentArray);
-//      setCommentsArray(nextArray);
+      //      setCommentsArray(nextArray);
       setI(++i);
     } catch (e) {
       console.error(e);
@@ -84,10 +87,7 @@ export const Comments = ({ userId, postId, groupSource }: CommentType) => {
     <>
       {commentsArray.length > 0 ? (
         commentsArray.map(
-          (
-            { author, date, comment, name, profilePhoto, commentId, likes, liked, authorId }: CommentType,
-            index,
-          ) => (
+          ({ author, date, comment, name, profilePhoto, commentId, likes, liked, authorId }: CommentType, index) => (
             <DCProvider key={index}>
               <Comment
                 author={author}

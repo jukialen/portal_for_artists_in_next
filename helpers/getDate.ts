@@ -1,8 +1,7 @@
-import { useHookSWR } from 'hooks/useHookSWR';
+import { DateObjectType } from 'types/global.types';
 
-export const useGetDate = (locale: string, dateField: number) => {
-  const today = new Date(dateField);
-  const data = useHookSWR();
+export const getDate = (locale: string, dateField: string, dataDateObject: DateObjectType) => {
+  const today = new Date(parseInt(dateField));
 
   const second = today.getSeconds();
   const hour = today.getHours();
@@ -19,10 +18,10 @@ export const useGetDate = (locale: string, dateField: number) => {
   const currentMonth = currentTime.getMonth() + 1;
   const currentYear = currentTime.getFullYear();
 
-  const simpleSeconds = `${curretSeconds - second}${data?.Date?.second}`;
-  const simpleMinutes = `${currentMinutes - minute}${data?.Date?.minute}`;
-  const simpleHours = `${currentHour - hour}${data?.Date?.hour}`;
-  const simpleDays = `${currentDay - day}${data?.Date?.day}`;
+  const simpleSeconds = `${curretSeconds - second}${dataDateObject.second}`;
+  const simpleMinutes = `${currentMinutes - minute}${dataDateObject.minute}`;
+  const simpleHours = `${currentHour - hour}${dataDateObject.hour}`;
+  const simpleDays = `${currentDay - day}${dataDateObject.day}`;
 
   const minutes = `${minute < 10 ? '0' : ''}${minute}`;
   const hours = `${hour < 10 ? '0' : ''}${hour}`;
@@ -30,11 +29,11 @@ export const useGetDate = (locale: string, dateField: number) => {
   const months = `${month < 10 ? '0' : ''}${month}`;
   const years = `${year !== currentYear ? year : ''}`;
 
-  const simpleYearSeparator = `${year !== currentYear ? data?.Date?.yearDateSeparator : ''}`;
+  const simpleYearSeparator = `${year !== currentYear ? dataDateObject.yearDateSeparator : ''}`;
   const simpleYears = locale === 'jp' ? `${years}${simpleYearSeparator}` : `${simpleYearSeparator}${years}`;
 
-  const jpTimes = `${hours}時${minutes}${data?.Date?.minute}`;
-  const jpDate = `${simpleYears}${months}月${days}${data?.Date?.day}`;
+  const jpTimes = `${hours}時${minutes}${dataDateObject.minute}`;
+  const jpDate = `${simpleYears}${months}月${days}${dataDateObject.day}`;
 
   const times = `${hours}:${minutes}`;
   const date = `${days}.${months}${simpleYears}`;
@@ -43,19 +42,14 @@ export const useGetDate = (locale: string, dateField: number) => {
     if (day === currentDay) {
       if (hour === currentHour) {
         if (minute === currentMinutes) {
-          console.log(simpleSeconds);
           return simpleSeconds;
         } else {
-          console.log(simpleMinutes);
           return simpleMinutes;
         }
       } else {
-        console.log(simpleHours);
         return simpleHours;
       }
     } else {
-      console.log(simpleDays);
-
       return simpleDays;
     }
   } else {

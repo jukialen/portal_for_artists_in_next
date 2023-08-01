@@ -1,70 +1,71 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+
+import { PostType } from 'types/global.types';
+
+import { backUrl } from 'utilites/constants';
 
 import { getDate } from 'helpers/getDate';
+
+import { useDateData } from 'hooks/useDateData';
 
 import { Post } from 'components/molecules/Post/Post';
 
 export default function PostFromGroup() {
-  const [userId, setUserId] = useState('');
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState('');
-  const [description, setDescription] = useState('');
-  const [liked, setLiked] = useState<string[]>([]);
-  const [likes, setLikes] = useState(0);
-  const [logoUser, setLogoUser] = useState('');
+  const [postData, setPostData] = useState<PostType>();
 
   const { locale, asPath } = useRouter();
 
+  const dataDateObject = useDateData();
+
   const split = asPath.split('/');
   const name = decodeURIComponent(split[2]);
-  const authorName = decodeURIComponent(split[3]);
-  const idPost = decodeURIComponent(split[4]);
+  const pseudonym = decodeURIComponent(split[3]);
+  const postId = decodeURIComponent(split[4]);
 
   const downloadPosts = async () => {
     try {
-      
+      const post: PostType = await axios.get(`${backUrl}/groups-posts/${postId}`);
 
-      if (docSnap.exists()) {
-//        setUserId(docSnap.data().author);
-//        setTitle(docSnap.data().title);
-//        setDate(getDate(locale!, docSnap.data().date));
-//        setDescription(docSnap.data().message);
-//        setLiked(docSnap.data().liked);
-//        setLikes(docSnap.data().likes);
-
-//        const logo = await getDoc(user(docSnap.data().author));
-
-//        if (logo.exists()) {
-//          setLogoUser(logo.data().profilePhoto);
-//        } else {
-//          console.log('No profile photo');
-//        }
-      } else {
-        console.log('No such document!');
-      }
+      setPostData({
+        title: post.title,
+        content: post.content,
+        commented: post.commented,
+        pseudonym,
+        profilePhoto: post.profilePhoto,
+        likes: post.likes,
+        liked: post.liked,
+        shared: post.shared,
+        groupId: post.groupId,
+        authorId: post.authorId,
+        role: post.role,
+        date: getDate(locale!, post.updatedAt! || post.createdAt!, dataDateObject),
+        groupsPostsId: post.groupsPostsId,
+      });
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    !!(name && idPost) && downloadPosts();
+    !!(name && postId) && downloadPosts();
   }, [locale]);
 
   return (
     <Post
-      pseudonym={author}
-      title={title}
-      date={date}
-      content={description}
-      nameGroup={name}
-      idPost={idPost}
-      authorId={currentUser}
-      userId={userId}
-      likes={likes}
-      liked={liked}
-      profilePhoto={logoUser}
+      pseudonym={pseudonym}
+      title={postData!.title}
+      date={postData!.date}
+      content={postData!.content}
+      name={name}
+      postId={postId}
+      authorId={postData!.authorId}
+      likes={postData!.likes}
+      liked={postData!.liked}
+      commented={postData!.commented}
+      shared={postData!.shared}
+      profilePhoto={postData?.profilePhoto}
     />
   );
 }

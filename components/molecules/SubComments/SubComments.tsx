@@ -1,18 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getDoc, getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter } from 'firebase/firestore';
 
-import { AuthorType, CommentType } from 'types/global.types';
+import { CommentType } from 'types/global.types';
 
-import {
-  docSubFilesComment,
-  docSubPostsComments,
-  lastPostsComments,
-  subLastFilesComments,
-  user,
-} from 'config/referencesFirebase';
+import { getDate } from 'helpers/getDate';
 
-import { useGetDate } from 'helpers/useGetDate';
+import { useDateData } from 'hooks/useDateData';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -21,44 +14,20 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 export const SubComments = ({ refSubCom, userId, subCollection, idPost, idComment, groupSource }: AuthorType) => {
   const [subCommentsArray, setSubCommentsArray] = useState<CommentType[]>([]);
-  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>();
+  const [lastVisible, setLastVisible] = useState<string>();
   let [i, setI] = useState(1);
 
   const { locale } = useRouter();
+  const dataDateObject = useDateData();
+
   const maxItems = 30;
 
   const showingComments = async () => {
     try {
-      const firstPage = query(
-        refSubCom!,
-        orderBy('date', 'desc'),
-        orderBy('user', 'desc'),
-        orderBy('message', 'desc'),
-        limit(maxItems),
-      );
-      const documentSnapshots = await getDocs(firstPage);
-
       const commentArray: CommentType[] = [];
 
-      for (const document of documentSnapshots.docs) {
-        const docSnap = await getDoc(user(document.data().user));
-
-        if (docSnap.exists()) {
-          commentArray.push({
-            author: docSnap.data().pseudonym,
-            date: useGetDate(locale!, document.data().date),
-            description: document.data().message,
-            nameGroup: document.data().nameGroup,
-            profilePhoto: docSnap.data().profilePhoto,
-            idSubComment: document.id,
-            likes: document.data().likes | 0,
-            liked: document.data().liked || [],
-            authorId: document.data().user,
-          });
-        }
-      }
       setSubCommentsArray(commentArray);
-      commentArray.length === maxItems && setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      //      commentArray.length === maxItems && setLastVisible();
     } catch (e) {
       console.error(e);
     }
@@ -70,37 +39,10 @@ export const SubComments = ({ refSubCom, userId, subCollection, idPost, idCommen
 
   const nextShowingComments = async () => {
     try {
-      const nextPage = query(
-        refSubCom!,
-        orderBy('date', 'desc'),
-        orderBy('user', 'desc'),
-        orderBy('message', 'desc'),
-        limit(maxItems),
-        startAfter(lastVisible),
-      );
-      const documentSnapshots = await getDocs(nextPage);
-
-      setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      //      setLastVisible();
 
       const nextCommentArray: CommentType[] = [];
 
-      for (const document of documentSnapshots.docs) {
-        const docSnap = await getDoc(user(document.data().user));
-
-        if (docSnap.exists()) {
-          nextCommentArray.push({
-            author: docSnap.data().pseudonym,
-            date: useGetDate(locale!, document.data().date),
-            description: document.data().message,
-            nameGroup: document.data().nameGroup,
-            profilePhoto: docSnap.data().profilePhoto,
-            idComment: document.id,
-            likes: document.data().likes | 0,
-            liked: document.data().liked || [],
-            authorId: document.data().user,
-          });
-        }
-      }
       const nextArray = subCommentsArray.concat(...nextCommentArray);
       setSubCommentsArray(nextArray);
       setI(++i);

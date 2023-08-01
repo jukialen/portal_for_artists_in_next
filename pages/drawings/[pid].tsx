@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 import { FileType } from 'types/global.types';
+
+import { getDate } from 'helpers/getDate';
 
 import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
+import { useDateData } from 'hooks/useDateData';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
@@ -15,7 +19,6 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
 
 import styles from './index.module.scss';
-import axios from 'axios';
 
 export default function Drawings() {
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
@@ -25,6 +28,7 @@ export default function Drawings() {
   const router = useRouter();
   const { pid } = router.query;
   const data = useHookSWR();
+  const date = useDateData();
 
   const maxItems = 30;
 
@@ -47,7 +51,8 @@ export default function Drawings() {
           name: file.name,
           fileUrl: `${cloudFrontUrl}/${file.name}`,
           pseudonym: file.pseudonym,
-          time: file.updatedAt! || file.createdAt!,
+          profilePhoto: file.profilePhoto,
+          time: getDate(router.locale!, file.updatedAt! || file.createdAt!, date),
         });
       }
 
@@ -58,10 +63,6 @@ export default function Drawings() {
       console.log('No such drawings!');
     }
   };
-
-  useEffect(() => {
-    !!pid && downloadDrawings();
-  }, [pid]);
 
   const nextElements = async () => {
     try {
@@ -82,7 +83,8 @@ export default function Drawings() {
           name: file.name,
           fileUrl: `${cloudFrontUrl}/${file.name}`,
           pseudonym: file.pseudonym,
-          time: file.updatedAt! || file.createdAt!,
+          profilePhoto: file.profilePhoto,
+          time: getDate(router.locale!, file.updatedAt! || file.createdAt!, date),
         });
       }
 

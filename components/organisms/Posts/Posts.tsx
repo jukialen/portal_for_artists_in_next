@@ -6,9 +6,10 @@ import { PostType } from 'types/global.types';
 
 import { backUrl } from 'utilites/constants';
 
+import { useDateData } from 'hooks/useDateData';
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { useGetDate } from 'helpers/useGetDate';
+import { getDate } from 'helpers/getDate';
 
 import { Post } from 'components/molecules/Post/Post';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -26,6 +27,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
   let [i, setI] = useState(1);
 
   const { locale } = useRouter();
+  const dataDateObject = useDateData();
   const data = useHookSWR();
   const maxItems = 30;
 
@@ -50,7 +52,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           content: post.content,
           likes: post.likes,
           liked: post.liked,
-          date: useGetDate(locale!, post.updatedAt || post.createdAt),
+          date: getDate(locale!, post.updatedAt! || post.createdAt!, dataDateObject),
           name,
           pseudonym: post.pseudonym,
           authorId: post.authorId,
@@ -90,7 +92,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           content: post.content,
           likes: post.likes,
           liked: post.liked,
-          date: useGetDate(locale!, post.updatedAt || post.createdAt),
+          date: getDate(locale!, post.updatedAt! || post.createdAt!, dataDateObject),
           name,
           pseudonym: post.pseudonym,
           authorId: post.authorId,

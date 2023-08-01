@@ -3,12 +3,14 @@ import { useRouter } from 'next/router';
 
 import { CommentType } from 'types/global.types';
 
-import { useGetDate } from 'helpers/useGetDate';
+import { getDate } from 'helpers/getDate';
+
+import { useDateData } from 'hooks/useDateData';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
 import { LastComment } from 'components/atoms/LastComment/LastComment';
-import { MoreButton } from '../../atoms/MoreButton/MoreButton';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 export const LastComments = ({ userId, postId, commentId, subCommentId, groupSource }: CommentType) => {
   const [lastCommentsArray, setLastCommentsArray] = useState<CommentType[]>([]);
@@ -16,6 +18,8 @@ export const LastComments = ({ userId, postId, commentId, subCommentId, groupSou
   let [i, setI] = useState(1);
 
   const { locale } = useRouter();
+  const dataDateObject = useDateData();
+
   const maxItems = 5;
 
   const showingComments = async () => {

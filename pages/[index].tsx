@@ -1,10 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import { Skeleton } from '@chakra-ui/react';
 
 import { FileType } from 'types/global.types';
 
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
+
+import { getDate } from 'helpers/getDate';
+
 import { useCurrentUser } from 'hooks/useCurrentUser';
+import { useDateData } from 'hooks/useDateData';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
@@ -16,95 +22,83 @@ import { Videos } from 'components/molecules/Videos/Videos';
 import styles from './categories_index.module.scss';
 
 export default function Drawings() {
+  const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
+  const [loadingFiles, setLoadingFiles] = useState(false);
+  const [lastVisible, setLastVisible] = useState<string>();
+  let [i, setI] = useState(1);
+
+  const data = useHookSWR();
+  const date = useDateData();
   const router = useRouter();
   const { index } = router.query;
   const loading = useCurrentUser('/');
 
   const maxItems: number = 10;
-  const user = auth?.currentUser;
 
-  const data = useHookSWR();
-  const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
-  const [loadingFiles, setLoadingFiles] = useState(false);
-  const [nextPage, setNextPage] = useState<Query>();
-
-  useEffect(() => {
-    switch (index) {
-      case 'photographs':
-        setNextPage(
-          query(
-            allPhotosCollectionRef(),
-            where('tag', '==', 'photographs'),
-            orderBy('timeCreated', 'desc'),
-            limit(maxItems),
-          ),
-        );
-        break;
-      case 'animations':
-        setNextPage(
-          query(
-            allAnimatedCollectionRef(),
-            where('tag', '==', 'animations'),
-            orderBy('timeCreated', 'desc'),
-            limit(maxItems),
-          ),
-        );
-        break;
-      case 'videos':
-        setNextPage(
-          query(
-            allVideosCollectionRef(),
-            where('tag', '==', 'videos'),
-            orderBy('timeCreated', 'desc'),
-            limit(maxItems),
-          ),
-        );
-        break;
-      case 'others':
-        setNextPage(
-          query(
-            allPhotosCollectionRef(),
-            where('tag', '==', 'others'),
-            orderBy('timeCreated', 'desc'),
-            limit(maxItems),
-          ),
-        );
-        break;
-    }
-  }, [index]);
-
-  const downloadDrawings = () => {
+  const downloadDrawings = async () => {
     try {
-      onSnapshot(
-        nextPage!,
-        (querySnapshot) => {
-          const filesArray: FileType[] = [];
+      const filesArray: FileType[] = [];
 
-          querySnapshot.forEach(async (document) => {
-            const docRef = doc(db, `users/${document.data().uid}`);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-              filesElements(filesArray, document, docSnap.data().pseudonym);
-              setUserDrawings(filesArray);
-              setLoadingFiles(true);
-            } else {
-              console.error('No such doc');
-            }
-          });
+      const firstPage: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: { tags: index },
+          orderBy: 'timeCreated, desc',
+          limit: maxItems,
         },
-        (e) => {
-          console.error('Error', e);
-        },
-      );
+      });
+      for (const file of firstPage) {
+        filesArray.push({
+          name: file.name,
+          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          pseudonym: file.pseudonym,
+          profilePhoto: file.profilePhoto,
+          time: getDate(router.locale!, file.updatedAt! || file.createdAt!, date),
+        });
+      }
+
+      setUserDrawings(filesArray);
+      setLoadingFiles(true);
     } catch (e) {
       console.error('Error', e);
       console.error('No such document!');
     }
   };
 
-  useMemo(() => {
-    return downloadDrawings();
-  }, [nextPage]);
+  useEffect(() => {
+    !!index && downloadDrawings();
+  }, [index]);
+
+  const nextElements = async () => {
+    try {
+      const filesArray: FileType[] = [];
+
+      const nextArray: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: { tags: index },
+          orderBy: 'createdAt, desc',
+          limit: maxItems,
+          cursor: lastVisible,
+        },
+      });
+
+      for (const file of nextArray) {
+        filesArray.push({
+          name: file.name,
+          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          pseudonym: file.pseudonym,
+          profilePhoto: file.profilePhoto,
+          time: getDate(router.locale!, file.updatedAt! || file.createdAt!, date),
+        });
+      }
+
+      setLastVisible(filesArray[filesArray.length - 1].fileId);
+      const newArray = userDrawings.concat(...nextArray);
+      setUserDrawings(newArray);
+      setI(++i);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return !loading ? (
     <>
@@ -117,6 +111,15 @@ export default function Drawings() {
 
         <Wrapper>
           {userDrawings.length > 0 ? (
+            userDrawings.map(({ fileUrl, time, name, pseudonym, tags }: FileType) => (
+              <Skeleton isLoaded={loadingFiles} key={time}>
+                {index === 'videos' ? (
+                  <Videos fileUrl={fileUrl} name={name} pseudonym={pseudonym} tags={tags} time={time} />
+                ) : (
+                  <Article fileUrl={fileUrl} name={name} authorName={pseudonym!} tags={tags} time={time} />
+                )}
+              </Skeleton>
+            ))
           ) : (
             <ZeroFiles text={data?.ZeroFiles?.videos} />
           )}
