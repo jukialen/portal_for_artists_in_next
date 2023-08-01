@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react';
 
 //ENUMS
-enum Plan {
+export enum Plan {
   FREE,
   PREMIUM,
   GOLD,
@@ -82,11 +82,13 @@ export type UserFormType = {
 
 //FiLES
 export type FileType = Time & {
+  fileId?: string;
   name?: string;
   fileUrl: string;
   tags?: Tags;
   time: string;
   pseudonym?: string;
+  profilePhoto: string;
   authorName?: string;
   profileType?: boolean;
 };
@@ -148,4 +150,13 @@ export type SubCommentType = CommentType;
 
 export type LastCommentType = Comment & {
   subCommenId: string;
+};
+
+//DATE OBJECT
+export type DateObjectType = {
+  second: string;
+  minute: string;
+  hour: string;
+  day: string;
+  yearDateSeparator: string;
 };
