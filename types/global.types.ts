@@ -84,6 +84,7 @@ export type UserFormType = {
 export type FileType = Time & {
   fileId?: string;
   name?: string;
+  shortDescription?: string;
   fileUrl: string;
   tags?: Tags;
   time: string;

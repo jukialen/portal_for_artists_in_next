@@ -14,6 +14,7 @@ import {
   useDisclosure,
   Button,
   Select,
+  Textarea,
 } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
@@ -32,10 +33,12 @@ import styles from './FileUpload.module.scss';
 import { MdUploadFile } from 'react-icons/md';
 
 type FileDataType = {
+  shortDescription: string;
   tags: Tags | '';
 };
 
 const initialValues: FileDataType = {
+  shortDescription: '',
   tags: '',
 };
 
@@ -52,6 +55,7 @@ export const FilesUpload = () => {
 
   const schemaFile = Yup.object({
     tags: SchemaValidation().tags,
+    shortDescription: SchemaValidation().shortDescription,
   });
 
   const handleChangeFile = async (e: EventType) => {
@@ -64,11 +68,13 @@ export const FilesUpload = () => {
     }
   };
 
-  const uploadFiles = async ({ tags }: FileDataType, { resetForm }: ResetFormType) => {
+  const uploadFiles = async ({ tags, shortDescription }: FileDataType, { resetForm }: ResetFormType) => {
     try {
+      console.log(shortDescription);
+
       !file && setRequired(true);
       await axios.post(`${backUrl}/files`, {
-        data: { tags },
+        data: { tags, shortDescription },
         file,
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -78,10 +84,6 @@ export const FilesUpload = () => {
       setFile(null);
       setRequired(false);
       resetForm(initialValues);
-
-      //           setValuesFields('Upload is running');
-
-      //           setValuesFields('Upload is paused');
     } catch (e) {
       console.error(e);
       setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
@@ -115,7 +117,6 @@ export const FilesUpload = () => {
                       name="tags"
                       value={values.tags}
                       onChange={handleChange}
-                      placeholder={data?.chooseTag}
                       className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}
                       backgroundColor="#red"
                       aria-required>
@@ -162,6 +163,27 @@ export const FilesUpload = () => {
                   />
 
                   <p className={styles.error}>{!file && required && data?.NavForm?.validateRequired}</p>
+
+                  <Textarea
+                    name="shortDescription"
+                    value={values.shortDescription}
+                    onChange={handleChange}
+                    placeholder="short description for file"
+                    className={`
+                    ${
+                      !!errors.shortDescription && touched.shortDescription
+                        ? styles.shortDescription__error
+                        : styles.shortDescription
+                    }
+                    ${isMode ? styles.shortDescription__dark : ''}
+                    `}
+                  />
+
+                  {!!errors.shortDescription && touched.shortDescription && (
+                    <div className={styles.error_wrap}>
+                      <FormError nameError="shortDescription" />
+                    </div>
+                  )}
 
                   {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) && (
                     <Progress

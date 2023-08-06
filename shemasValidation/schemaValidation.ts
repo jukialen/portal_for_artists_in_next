@@ -40,6 +40,8 @@ export const SchemaValidation = () => {
     .max(20, 'Group name is too long.');
   // .matches(/![#?!@$%^&*-]/g, 'Group name haven\'t to include special characters.');
 
+  const shortDescription = Yup.string().max(100, 'Description cannot be longer than 100 characters.');
+
   return {
     username,
     pseudonym,
@@ -48,5 +50,6 @@ export const SchemaValidation = () => {
     description,
     tags,
     groupName,
+    shortDescription,
   };
 };

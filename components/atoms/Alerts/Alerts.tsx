@@ -28,11 +28,9 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case data?.DeletionAccount?.deletionAccount:
       case data?.DeletionPost?.deleting:
       case data?.DeletionFile?.deleting:
-      case 'Upload is running':
         return (status = 'info');
       case data?.NavForm?.unVerified:
       case data?.PasswordAccount?.differentPasswords:
-      case 'Upload is paused':
         return (status = 'warning');
       case 'Nie usunięto pliku.':
       case data?.NavForm?.notExist:
@@ -70,11 +68,9 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case data?.DeletionAccount?.deletionAccount:
       case data?.DeletionPost?.deleting:
       case data?.DeletionFile?.deleting:
-      case 'Upload is running':
         return (color = 'blue');
       case data?.NavForm?.unVerified:
       case data?.PasswordAccount?.differentPasswords:
-      case 'Upload is paused':
         return (color = 'yellow');
       case 'Nie usunięto pliku.':
       case data?.NavForm?.notExist:
