@@ -1,14 +1,13 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
+import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useUserData } from 'hooks/useUserData';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
-import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
 import { PhotosGallery } from 'components/organisms/PhotosGallery/PhotosGallery';
 import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
-import { ProfileAccount } from 'components/organisms/ProfileAccount/ProfileAccount';
 import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
 import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
 import { MainCurrentUserProfileData } from 'components/atoms/MainCurrentUserProfileData/MainCurrentUserProfileData';
@@ -24,9 +23,7 @@ export default function Account() {
   const activeColor = '#82FF82';
   const borderColor = '#4F8DFF';
 
-  //  useCurrentUser('/');
-
-  /*  {data?.Account?.aMenu?.gallery}*/
+  useCurrentUser('/signin');
 
   return (
     <>
@@ -37,14 +34,6 @@ export default function Account() {
         <TabList className={styles.topTabList} role="tablist">
           <div className={styles.account__menu}>
             <div className={styles.content}>
-              <Tab
-                _selected={{ borderColor: selectedColor }}
-                _hover={{ borderColor: hoverColor }}
-                _active={{ borderColor: activeColor }}
-                borderColor={borderColor}
-                role="tab">
-                {data?.Account?.profile?.aboutMe}
-              </Tab>
               <Tab
                 _selected={{ borderColor: selectedColor }}
                 _hover={{ borderColor: hoverColor }}
@@ -90,14 +79,9 @@ export default function Account() {
               </Tab>
             </div>
           </div>
-
-          {/*<div classname={styles.menu}></div>*/}
         </TabList>
 
         <TabPanels className={styles.tabPanels}>
-          <TabPanel className={styles.tabPanel} role="tabpanel">
-            <ProfileAccount data={data} />
-          </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
             <FriendsList id={id!} />
           </TabPanel>

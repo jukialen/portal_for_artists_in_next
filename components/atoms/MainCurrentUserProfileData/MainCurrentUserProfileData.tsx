@@ -37,6 +37,8 @@ export const MainCurrentUserProfileData = ({ data }: DataType) => {
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
 
+  const { description } = useUserData();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isMode } = useContext(ModeContext);
 
@@ -65,78 +67,85 @@ export const MainCurrentUserProfileData = ({ data }: DataType) => {
   };
 
   return (
-    <section className={styles.mainData}>
-      <div className={styles.logo}>
-        <Image src={`https://${cloudFrontUrl}/${profilePhoto || 'lkjj.jpg'}`} fill alt={`${profilePhoto} logo`} />
-        <IconButton
-          aria-label="update group logo"
-          icon={<MdCameraEnhance />}
-          colorScheme="yellow"
-          className={styles.updateLogo}
-          onClick={onOpen}
-        />
+    <article className={styles.mainData}>
+      <div className={styles.logoPseu}>
+        <div className={styles.logo}>
+          <Image src={`https://${cloudFrontUrl}/${profilePhoto}`} fill alt={`${profilePhoto} logo`} />
+          <IconButton
+            aria-label="update group logo"
+            icon={<MdCameraEnhance />}
+            colorScheme="yellow"
+            className={styles.updateLogo}
+            onClick={onOpen}
+          />
+        </div>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalOverlay />
+          <ModalContent backgroundColor={`${isMode ? '#2D3748' : ''}`} color={selectedColor}>
+            <ModalHeader>Update logo</ModalHeader>
+            <ModalCloseButton color={selectedColor} borderColor="transparent" />
+            <ModalBody>
+              <Input
+                type="file"
+                name="newLogo"
+                id="newLogo"
+                padding=".5rem 1rem"
+                margin=".5rem auto 1.5rem"
+                borderRadius="1rem"
+                onChange={changeFile}
+                borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
+              />
+
+              <p style={{ color: '#bd0000' }}>{!newLogo && required && data?.NavForm?.validateRequired}</p>
+              {!!newLogo && (
+                <img
+                  src={`${process.env.NEXT_PUBLIC_PAGE}/${newLogo.name}`}
+                  alt="preview new logo"
+                  width={192}
+                  height={192}
+                  style={{
+                    margin: '1rem auto',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    borderRadius: '1rem',
+                  }}
+                />
+              )}
+
+              {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) && (
+                <Progress
+                  value={progressUpload}
+                  colorScheme="green"
+                  isAnimated
+                  hasStripe
+                  min={0}
+                  max={100}
+                  w={280}
+                  bg="blue.400"
+                  m="1.5rem auto"
+                  size="md"
+                />
+              )}
+
+              {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="blue" borderColor="transparent" mr={3} onClick={onClose}>
+                {data?.DeletionFile?.cancelButton}
+              </Button>
+              <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
+                {data?.Description?.submit}
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        <h1 className={styles.name}>{pseudonym || 'anarchymen'}</h1>
       </div>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent backgroundColor={`${isMode ? '#2D3748' : ''}`} color={selectedColor} className={styles.modal}>
-          <ModalHeader className={styles.header}>Update logo</ModalHeader>
-          <ModalCloseButton color={selectedColor} borderColor="transparent" fontSize="md" />
-          <ModalBody className={styles.modal}>
-            <Input
-              type="file"
-              name="newLogo"
-              id="newLogo"
-              padding=".35rem 1rem"
-              margin=".5rem auto 1.5rem"
-              onChange={changeFile}
-              borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
-            />
-
-            <p style={{ color: '#bd0000' }}>{!newLogo && required && data?.NavForm?.validateRequired}</p>
-            {!!newLogo && (
-              <img
-                src={`${process.env.NEXT_PUBLIC_PAGE}/${newLogo.name}`}
-                alt="preview new logo"
-                width={192}
-                height={192}
-                style={{
-                  margin: '1rem auto',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  borderRadius: '1rem',
-                }}
-              />
-            )}
-
-            {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) && (
-              <Progress
-                value={progressUpload}
-                colorScheme="green"
-                isAnimated
-                hasStripe
-                min={0}
-                max={100}
-                w={280}
-                bg="blue.400"
-                m="1.5rem auto"
-                size="md"
-              />
-            )}
-
-            {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" borderColor="transparent" mr={3} onClick={onClose}>
-              {data?.DeletionFile?.cancelButton}
-            </Button>
-            <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
-              {data?.Description?.submit}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      <h1 className={styles.name}>{pseudonym}</h1>
+      <div className={styles.description}>
+        {description ||
+          "I'm a visual artist who creates paintings, drawings, and sculptures. I'm inspired by the natural world and the human experience. I'm passionate about using my art to communicate my ideas and emotions. I'm always looking for new ways to express myself creatively."}
+      </div>
       <FilesUpload />
-    </section>
+    </article>
   );
 };
