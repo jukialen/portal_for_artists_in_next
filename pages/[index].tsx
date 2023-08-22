@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import url from 'url';
+
 import { Skeleton } from '@chakra-ui/react';
 
-import { FileType } from 'types/global.types';
+import { FileType, Tags } from 'types/global.types';
 
 import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
@@ -13,6 +15,7 @@ import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useDateData } from 'hooks/useDateData';
 import { useHookSWR } from 'hooks/useHookSWR';
 
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
@@ -28,31 +31,36 @@ export default function Drawings() {
   let [i, setI] = useState(1);
 
   const data = useHookSWR();
-  const date = useDateData();
+  const dataDateObject = useDateData();
   const router = useRouter();
   const { index } = router.query;
-  const loading = useCurrentUser('/');
 
   const maxItems: number = 10;
 
   const downloadDrawings = async () => {
+    const queryParams = {
+      orderBy: 'name, desc',
+      where: `{ tags: ${index} }`,
+      limit: maxItems.toString(),
+    };
+    const params = new url.URLSearchParams(queryParams);
+
     try {
       const filesArray: FileType[] = [];
+      const firstPage: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
 
-      const firstPage: FileType[] = await axios.get(`${backUrl}/files`, {
-        params: {
-          where: { tags: index },
-          orderBy: 'timeCreated, desc',
-          limit: maxItems,
-        },
-      });
       for (const file of firstPage) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+
         filesArray.push({
-          name: file.name,
-          fileUrl: `${cloudFrontUrl}/${file.name}`,
-          pseudonym: file.pseudonym,
-          profilePhoto: file.profilePhoto,
-          time: getDate(router.locale!, file.updatedAt! || file.createdAt!, date),
+          fileId,
+          name,
+          shortDescription,
+          pseudonym,
+          profilePhoto,
+          fileUrl: `${cloudFrontUrl}/${name}`,
+          authorId,
+          time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -69,25 +77,30 @@ export default function Drawings() {
   }, [index]);
 
   const nextElements = async () => {
+    const queryParamsWithCursor = {
+      orderBy: 'name, desc',
+      where: `{ tags: ${index} }`,
+      limit: maxItems.toString(),
+      cursor: lastVisible!,
+    };
+    const params = new url.URLSearchParams(queryParamsWithCursor);
+
     try {
       const filesArray: FileType[] = [];
-
-      const nextArray: FileType[] = await axios.get(`${backUrl}/files`, {
-        params: {
-          where: { tags: index },
-          orderBy: 'createdAt, desc',
-          limit: maxItems,
-          cursor: lastVisible,
-        },
-      });
+      const nextArray: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
 
       for (const file of nextArray) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+
         filesArray.push({
-          name: file.name,
-          fileUrl: `${cloudFrontUrl}/${file.name}`,
-          pseudonym: file.pseudonym,
-          profilePhoto: file.profilePhoto,
-          time: getDate(router.locale!, file.updatedAt! || file.createdAt!, date),
+          fileId,
+          name,
+          shortDescription,
+          pseudonym,
+          profilePhoto,
+          fileUrl: `${cloudFrontUrl}/${name}`,
+          authorId,
+          time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -100,31 +113,59 @@ export default function Drawings() {
     }
   };
 
-  return !loading ? (
-    <>
-      <article className={styles.categories__index__in__account}>
-        <HeadCom path={router.asPath} content={`Subpage with ${index}`} />
+  if (useCurrentUser('/signin')) {
+    return null;
+  }
 
-        <em className={styles.title}>
-          {data?.Aside?.category}: {index}
-        </em>
+  return (
+    <article className={styles.categories__index__in__account}>
+      <HeadCom path={router.asPath} content={`Subpage with ${index}`} />
 
-        <Wrapper>
-          {userDrawings.length > 0 ? (
-            userDrawings.map(({ fileUrl, time, name, pseudonym, tags }: FileType) => (
-              <Skeleton isLoaded={loadingFiles} key={time}>
-                {index === 'videos' ? (
-                  <Videos fileUrl={fileUrl} name={name} pseudonym={pseudonym} tags={tags} time={time} />
+      <em className={styles.title}>
+        {data?.Aside?.category}: {index}
+      </em>
+
+      <Wrapper>
+        {userDrawings.length > 0 ? (
+          userDrawings.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+              keyIndex,
+            ) => (
+              <Skeleton isLoaded={loadingFiles} key={keyIndex}>
+                {tags === Tags.videos ? (
+                  <Videos
+                    fileId={fileId!}
+                    name={name!}
+                    fileUrl={fileUrl}
+                    shortDescription={shortDescription!}
+                    tags={tags!}
+                    authorName={pseudonym!}
+                    profilePhoto={profilePhoto}
+                    authorId={authorId}
+                    time={time}
+                  />
                 ) : (
-                  <Article fileUrl={fileUrl} name={name} authorName={pseudonym!} tags={tags} time={time} />
+                  <Article
+                    fileId={fileId!}
+                    name={name!}
+                    fileUrl={fileUrl}
+                    shortDescription={shortDescription!}
+                    tags={tags!}
+                    authorName={pseudonym!}
+                    profilePhoto={profilePhoto}
+                    authorId={authorId}
+                    time={time}
+                  />
                 )}
               </Skeleton>
-            ))
-          ) : (
-            <ZeroFiles text={data?.ZeroFiles?.videos} />
-          )}
-        </Wrapper>
-      </article>
-    </>
-  ) : null;
+            ),
+          )
+        ) : (
+          <ZeroFiles text={data?.ZeroFiles?.videos} />
+        )}
+        {!!lastVisible && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+      </Wrapper>
+    </article>
+  );
 }

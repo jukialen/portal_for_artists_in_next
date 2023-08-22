@@ -28,7 +28,6 @@ import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
-import { useUserData } from 'hooks/useUserData';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
@@ -51,6 +50,7 @@ export default function Groups() {
   const [usersGroupsId, setUsersGroupsId] = useState<string | null>(null);
   const [roleId, setRoleId] = useState('');
   const [groupId, setGroupId] = useState('');
+  const [regulation, setRegulation] = useState('');
 
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
@@ -62,8 +62,6 @@ export default function Groups() {
   const { query, asPath } = useRouter();
   const { name } = query;
   const data = useHookSWR();
-  const loading = useCurrentUser('/');
-  const { id } = useUserData();
 
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
@@ -79,16 +77,17 @@ export default function Groups() {
   const joinedUsers = async () => {
     try {
       const groups: GroupType = await axios.get(`${backUrl}/groups/${name}`);
-      setLogo(groups.logo);
+      setLogo(`${cloudFrontUrl}/${groups.logo}`);
       setDescription(groups.description!);
-      setRoleId(groups.roleId!);
-      setGroupId(groups.groupId!);
+      setRegulation(groups.regulation);
 
       if (!!groups) {
         setJoin(true);
         setFavorite(groups.favorited!);
         setFavoriteLength(groups.favorites!);
-        setAdmin(groups.role! === Role.ADMIN);
+        setAdmin(groups.role === Role.ADMIN);
+        setGroupId(groups.groupId!);
+        setRoleId(groups.roleId!);
         setUsersGroupsId(groups.usersGroupsId!);
       } else {
         setJoin(false);
@@ -99,21 +98,15 @@ export default function Groups() {
   };
 
   useEffect(() => {
-    !loading && joinedUsers();
-  }, [name, loading]);
+    !!name && joinedUsers();
+  }, [name]);
 
   const toggleToGroup = async () => {
     try {
       if (join) {
-        await axios.post(`${backUrl}/users-groups`, {
-          usersId: id,
-          groupId,
-          roleId,
-        });
+        await axios.post(`${backUrl}/groups/join`, { name, groupId });
       } else {
-        await axios.delete(`${backUrl}/users-groups`, {
-          params: { where: { usersGroupsId } },
-        });
+        await axios.delete(`${backUrl}/groups/unjoin/${usersGroupsId}`);
       }
       setJoin(!join);
     } catch (e) {
@@ -124,13 +117,17 @@ export default function Groups() {
   const toggleToFavorites = async () => {
     try {
       if (favorite) {
-        await axios.patch(`${backUrl}/users-groups/${name}`, {
+        await axios.patch(`${backUrl}/groups/${name}`, {
           favorite: false,
+          groupId,
+          usersGroupsId,
         });
         setFavoriteLength(favoriteLength - 1);
       } else {
-        await axios.patch(`${backUrl}/users-groups/${name}`, {
+        await axios.patch(`${backUrl}/groups/${name}`, {
           favorite: true,
+          groupId,
+          usersGroupsId,
         });
         setFavoriteLength(favoriteLength + 1);
       }
@@ -157,6 +154,7 @@ export default function Groups() {
         admin &&
         (await axios.patch(`${backUrl}/groups/${name}`, {
           logo: newLogo,
+          groupId,
           usersGroupsId,
         }));
     } catch (e) {
@@ -164,7 +162,7 @@ export default function Groups() {
     }
   };
 
-  if (loading) {
+  if (useCurrentUser('/signin')) {
     return null;
   }
 
@@ -174,7 +172,7 @@ export default function Groups() {
 
       <article className={styles.mainContainer}>
         <div className={styles.logo}>
-          <img src={`${cloudFrontUrl}/${logo}`} alt={`${name} logo`} />
+          <img src={logo} alt={`${name} logo`} />
           {admin && (
             <IconButton
               aria-label="update group logo"
@@ -272,7 +270,7 @@ export default function Groups() {
                 {favorite ? data?.Groups?.favorite?.addedToFav : data?.Groups?.favorite?.addToFavorite}
               </Button>
               {!favorite && (
-                <p>{favoriteLength !== 5 ? data?.Groups?.favorite?.maxFav : data?.Groups?.favorite?.maximumAchieved}</p>
+                <p>{favoriteLength < 5 ? data?.Groups?.favorite?.maxFav : data?.Groups?.favorite?.maximumAchieved}</p>
               )}
             </div>
           )}
@@ -291,7 +289,7 @@ export default function Groups() {
             className={styles.tab}>
             {decodeURIComponent(data?.Account?.aMenu?.general)}
           </Tab>
-          {admin && (
+          {join && (
             <Tab
               _selected={{ borderColor: selectedColor }}
               _hover={{ borderColor: hoverColor }}
@@ -322,13 +320,19 @@ export default function Groups() {
               )}
             </>
           </TabPanel>
-          {admin && (
+          {join && (
             <TabPanel padding={zeroPadding}>
               <Members admin={admin} name={name!} />
             </TabPanel>
           )}
           <TabPanel padding={zeroPadding}>
-            <DescriptionSection description={description} admin={admin} name={name} usersGroupsId={usersGroupsId!} />
+            <DescriptionSection
+              description={description}
+              regulation={regulation}
+              admin={admin}
+              name={name}
+              usersGroupsId={usersGroupsId!}
+            />
           </TabPanel>
         </TabPanels>
       </Tabs>

@@ -5,7 +5,7 @@ import url from 'url';
 
 import { backUrl } from 'utilites/constants';
 
-import { CommentType } from 'types/global.types';
+import { CommentType, FilesCommentsType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 
@@ -17,12 +17,12 @@ import { DCProvider } from 'providers/DeleteCommentProvider';
 import { Comment } from 'components/atoms/Comment/Comment';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
-import styles from './Comments.module.scss';
+import styles from './FilesComments.module.scss';
 
-type CommentsType = { postId: string };
+type CommentsType = { fileId: string };
 
-export const Comments = ({ postId }: CommentsType) => {
-  const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
+export const FilesComments = ({ fileId }: CommentsType) => {
+  const [commentsArray, setCommentsArray] = useState<FilesCommentsType[]>([]);
   const [lastVisible, setLastVisible] = useState('');
   let [i, setI] = useState(1);
 
@@ -35,20 +35,20 @@ export const Comments = ({ postId }: CommentsType) => {
   const firstComments = async () => {
     const queryParams = {
       orderBy: 'createdAt, desc',
-      where: `{ postId: ${postId}}`,
+      where: `{ fileId: ${fileId}}`,
       limit: maxItems.toString(),
     };
 
     const params = new url.URLSearchParams(queryParams);
 
     try {
-      const firstPage: CommentType[] = await axios.get(`${backUrl}/comments/all?${params}`);
+      const firstPage: FilesCommentsType[] = await axios.get(`${backUrl}/comments/all?${params}`);
 
-      const commentArray: CommentType[] = [];
+      const commentArray: FilesCommentsType[] = [];
 
       for (const first of firstPage) {
         const {
-          commentId,
+          fileId,
           comment,
           pseudonym,
           profilePhoto,
@@ -62,7 +62,7 @@ export const Comments = ({ postId }: CommentsType) => {
         } = first;
 
         commentArray.push({
-          commentId,
+          fileId,
           comment,
           pseudonym,
           profilePhoto,
@@ -83,26 +83,26 @@ export const Comments = ({ postId }: CommentsType) => {
   };
 
   useEffect(() => {
-    !!postId && firstComments();
-  }, [postId]);
+    !!fileId && firstComments();
+  }, [fileId]);
 
   const nextComments = async () => {
     const queryParamsWithCursor = {
       orderBy: 'createdAt, desc',
-      where: postId,
+      where: `{ fileId: ${fileId}}`,
       limit: maxItems.toString(),
       cursor: lastVisible,
     };
     const paramsWithCursor = new url.URLSearchParams(queryParamsWithCursor);
 
     try {
-      const nextPage: CommentType[] = await axios.get(`${backUrl}/comments/all?${paramsWithCursor}`);
+      const nextPage: FilesCommentsType[] = await axios.get(`${backUrl}/files-comments/all?${paramsWithCursor}`);
 
-      const nextCommentArray: CommentType[] = [];
+      const nextCommentArray: FilesCommentsType[] = [];
 
       for (const next of nextPage) {
         const {
-          commentId,
+          fileId,
           comment,
           pseudonym,
           profilePhoto,

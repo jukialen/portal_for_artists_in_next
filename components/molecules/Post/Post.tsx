@@ -21,18 +21,19 @@ import group from 'public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 export const Post = ({
-  pseudonym,
   title,
-  date,
   content,
-  name,
-  postId,
-  authorId,
+  pseudonym,
+  profilePhoto,
   likes,
   liked,
-  commented,
   shared,
-  profilePhoto,
+  commented,
+  groupId,
+  authorId,
+  postId,
+  date,
+  name,
 }: PostType) => {
   const [showComments, setShowComments] = useState(false);
   let [like, setLike] = useState(liked);
@@ -46,18 +47,15 @@ export const Post = ({
   const showingComments = () => setShowComments(!showComments);
 
   const addLike = async () => {
+    const addLike = likeCount + 1;
+    const subtractLike = likeCount - 1;
+
     if (like) {
-      await axios.patch(`${backUrl}/posts/${title}`, {
-        id,
-        likes: (likeCount += 1),
-      });
+      await axios.patch(`${backUrl}/posts/${title}`, { id, likes: addLike });
     } else {
-      await axios.patch(`${backUrl}/posts/${title}`, {
-        id,
-        likes: (likeCount -= 1),
-      });
+      await axios.patch(`${backUrl}/posts/${title}`, { id, likes: subtractLike });
     }
-    setLikeCount(like ? (likeCount -= 1) : (likeCount += 1));
+    setLikeCount(like ? addLike : subtractLike);
     setLike(!like);
   };
 
@@ -69,7 +67,7 @@ export const Post = ({
           <Link href={`/user/${pseudonym}`}>{pseudonym}</Link>
           <div className={styles.time}>{date}</div>
         </div>
-        {id === authorId && <DeletePost postId={postId!} />}
+        {id === authorId && <DeletePost postId={postId!} groupId={groupId} />}
       </div>
       <div className={styles.titlePost}>{title}</div>
       <div className={styles.description}>{content}</div>
@@ -84,14 +82,14 @@ export const Post = ({
         <Button colorScheme="blue" onClick={showingComments} className={styles.commentsButton} variant="ghost">
           {data?.Comments?.comments}
         </Button>
-        <SharingButton fileUrl={link} pseudonym={pseudonym} time={date!} />
+        <SharingButton shareUrl={link} authorName={pseudonym} name={name} />
       </div>
       <p className={styles.likesCount} style={{ marginLeft: likeCount < 10 ? '.8rem' : '.5rem' }}>
         {likeCount}
       </p>
       <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-        <NewComments name={nameGroup} refCom={addingPostComment(nameGroup, idPost!)} />
-        <Comments refCom={postsComments(nameGroup, idPost!)} idPost={idPost!} groupSource />
+        <NewComments postId={postId} profilePhoto={profilePhoto!} />
+        <Comments postId={postId!} />
       </article>
     </article>
   );

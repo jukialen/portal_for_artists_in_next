@@ -1,12 +1,16 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import url from 'url';
 
 import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
-import { FileType, UserType } from 'types/global.types';
+import { FileType, Tags } from 'types/global.types';
+
+import { getDate } from 'helpers/getDate';
 
 import { useCurrentUser } from 'hooks/useCurrentUser';
+import { useDateData } from 'hooks/useDateData';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { AppWrapper } from 'components/atoms/AppWrapper/AppWrapper';
@@ -17,44 +21,46 @@ import { Videos } from 'components/molecules/Videos/Videos';
 
 import styles from './index.module.scss';
 
-export default function Application() {
+export default function App() {
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
   const [userAnimations, setUserAnimations] = useState<FileType[]>([]);
   const [userVideos, setUserVideos] = useState<FileType[]>([]);
   const [userOthers, setUserOthers] = useState<FileType[]>([]);
-  
-  const { asPath } = useRouter();
 
+  const { asPath, locale } = useRouter();
+
+  const dataDateObject = useDateData();
   const data = useHookSWR();
-  const loading = useCurrentUser('/');
 
   const maxItems = 10;
 
   const downloadDrawings = async () => {
+    const queryParams = {
+      orderBy: 'name, desc',
+      where: `{
+            AND: [{ tags: ${Tags.realistic} }, { tags: ${Tags.manga} }, { tags: ${Tags.anime} }, { tags: ${Tags.comics} }],
+          }`,
+      limit: maxItems.toString(),
+    };
+    const params = new url.URLSearchParams(queryParams);
+
     try {
       const filesArray: FileType[] = [];
+      const drawings: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
 
-      const drawings: FileType[] = await axios.get(`${backUrl}/files`, {
-        params: {
-          where: {
-            AND: [{ tags: 'realistic' }, { tags: 'manga' }, { tags: 'anime' }, { tags: 'comics' }],
-          },
-          limit: maxItems,
-          sortBy: 'name, DESC',
-        },
-      });
       for (const draw of drawings) {
-        const owner: UserType = await axios.get(`${backUrl}/users/${draw.fileId}`);
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = draw;
 
         filesArray.push({
-          name: draw.name,
-          fileUrl: `${cloudFrontUrl}/${draw.name}`,
-          tags: draw.tags,
-          time: draw.updatedAt! || draw.createdAt!,
-          pseudonym: owner.pseudonym,
-          profilePhoto: draw.profilePhoto,
-          fileId: draw.fileId,
+          fileId,
+          name,
+          shortDescription,
+          pseudonym,
+          profilePhoto,
+          fileUrl: `${cloudFrontUrl}/${name}`,
+          authorId,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -66,25 +72,29 @@ export default function Application() {
   };
 
   const downloadPhotos = async () => {
+    const queryParams = {
+      orderBy: 'name, desc',
+      where: `{ tags: ${Tags.photographs} }`,
+      limit: maxItems.toString(),
+    };
+    const params = new url.URLSearchParams(queryParams);
+
     try {
       const filesArray: FileType[] = [];
-      const photographs: FileType[] = await axios.get(`${backUrl}/files`, {
-        params: {
-          where: {
-            AND: [{ tags: 'photographs' }],
-          },
-          limit: maxItems,
-          sortBy: 'name, DESC',
-        },
-      });
+      const photographs: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
+
       for (const photo of photographs) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = photo;
+
         filesArray.push({
-          name: photo.name,
-          fileUrl: `${cloudFrontUrl}/${photo.name}`,
-          tags: photo.tags,
-          authorName: photo.pseudonym,
-          profilePhoto: photo.profilePhoto,
-          time: photo.updatedAt! || photo.createdAt!,
+          fileId,
+          name,
+          shortDescription,
+          pseudonym,
+          profilePhoto,
+          fileUrl: `${cloudFrontUrl}/${name}`,
+          authorId,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -96,25 +106,29 @@ export default function Application() {
   };
 
   const downloadAnimations = async () => {
+    const queryParams = {
+      orderBy: 'name, desc',
+      where: `{ tags: ${Tags.animations} }`,
+      limit: maxItems.toString(),
+    };
+    const params = new url.URLSearchParams(queryParams);
+
     try {
       const filesArray: FileType[] = [];
-      const animations: FileType[] = await axios.get(`${backUrl}/files`, {
-        params: {
-          where: {
-            AND: [{ tags: 'photographs' }],
-          },
-          limit: maxItems,
-          sortBy: 'name, DESC',
-        },
-      });
+      const animations: FileType[] = await axios.get(`${backUrl}/files?${params}`);
+
       for (const animation of animations) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = animation;
+
         filesArray.push({
-          name: animation.name,
-          fileUrl: `${cloudFrontUrl}/${animation.name}`,
-          tags: animation.tags,
-          pseudonym: animation.pseudonym,
-          profilePhoto: animation.profilePhoto,
-          time: animation.updatedAt! || animation.createdAt!,
+          fileId,
+          name,
+          shortDescription,
+          pseudonym,
+          profilePhoto,
+          fileUrl: `${cloudFrontUrl}/${name}`,
+          authorId,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -126,25 +140,29 @@ export default function Application() {
   };
 
   const downloadVideos = async () => {
+    const queryParams = {
+      orderBy: 'name, desc',
+      where: `{ tags: ${Tags.videos} }`,
+      limit: maxItems.toString(),
+    };
+    const params = new url.URLSearchParams(queryParams);
+
     try {
       const filesArray: FileType[] = [];
-      const videos: FileType[] = await axios.get(`${backUrl}/files`, {
-        params: {
-          where: {
-            AND: [{ tags: 'photographs' }],
-          },
-          limit: maxItems,
-          sortBy: 'name, DESC',
-        },
-      });
+      const videos: FileType[] = await axios.get(`${backUrl}/files?${params}`);
+
       for (const video of videos) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = video;
+
         filesArray.push({
-          name: video.name,
-          fileUrl: `${cloudFrontUrl}/${video.name}`,
-          tags: video.tags,
-          pseudonym: video.pseudonym,
-          profilePhoto: video.profilePhoto,
-          time: video.updatedAt! || video.createdAt!,
+          fileId,
+          name,
+          shortDescription,
+          pseudonym,
+          profilePhoto,
+          fileUrl: `${cloudFrontUrl}/${name}`,
+          authorId,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -156,25 +174,29 @@ export default function Application() {
   };
 
   const downloadOthers = async () => {
+    const queryParams = {
+      orderBy: 'name, desc',
+      where: `{ tags: ${Tags.others} }`,
+      limit: maxItems.toString(),
+    };
+    const params = new url.URLSearchParams(queryParams);
+
     try {
       const filesArray: FileType[] = [];
-      const others: FileType[] = await axios.get(`${backUrl}/files`, {
-        params: {
-          where: {
-            AND: [{ tags: 'photographs' }],
-          },
-          limit: maxItems,
-          sortBy: 'name, DESC',
-        },
-      });
+      const others: FileType[] = await axios.get(`${backUrl}/files?${params}`);
+
       for (const other of others) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = other;
+
         filesArray.push({
-          name: other.name,
-          fileUrl: `${cloudFrontUrl}/${other.name}`,
-          tags: other.tags,
-          pseudonym: other.pseudonym,
-          profilePhoto: other.profilePhoto,
-          time: other.updatedAt! || other.createdAt!,
+          fileId,
+          name,
+          shortDescription,
+          pseudonym,
+          profilePhoto,
+          fileUrl: `${cloudFrontUrl}/${name}`,
+          authorId,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -201,7 +223,7 @@ export default function Application() {
     downloadOthers();
   }, []);
 
-  if (loading) {
+  if (useCurrentUser('/signin')) {
     return null;
   }
 
@@ -212,9 +234,25 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastDrawings}</h2>
       <AppWrapper>
         {userDrawings.length > 0 && userDrawings.length > 0 ? (
-          userDrawings.map(({ name, fileUrl, pseudonym, tags, time }: FileType, index) => (
-            <Article key={index} name={name} fileUrl={fileUrl} authorName={pseudonym!} tags={tags} time={time} />
-          ))
+          userDrawings.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+              index,
+            ) => (
+              <Article
+                key={index}
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={pseudonym!}
+                profilePhoto={profilePhoto}
+                authorId={authorId}
+                time={time}
+              />
+            ),
+          )
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.drawings} />
         )}
@@ -223,9 +261,25 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastPhotos}</h2>
       <AppWrapper>
         {userPhotos.length > 0 ? (
-          userPhotos.map(({ name, fileUrl, pseudonym, tags, time }: FileType, index) => (
-            <Article key={index} name={name} fileUrl={fileUrl} authorName={pseudonym!} tags={tags} time={time} />
-          ))
+          userPhotos.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+              index,
+            ) => (
+              <Article
+                key={index}
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={pseudonym!}
+                profilePhoto={profilePhoto}
+                authorId={authorId}
+                time={time}
+              />
+            ),
+          )
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.photos} />
         )}
@@ -234,9 +288,25 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastAnimations}</h2>
       <AppWrapper>
         {userAnimations.length > 0 ? (
-          userAnimations.map(({ name, fileUrl, pseudonym, tags, time }: FileType, index) => (
-            <Article key={index} name={name} fileUrl={fileUrl} authorName={pseudonym!} tags={tags} time={time} />
-          ))
+          userAnimations.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+              index,
+            ) => (
+              <Article
+                key={index}
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={pseudonym!}
+                profilePhoto={profilePhoto}
+                authorId={authorId}
+                time={time}
+              />
+            ),
+          )
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.animations} />
         )}
@@ -245,9 +315,25 @@ export default function Application() {
       <h2 className={styles.liked}>{data?.App?.lastVideos}</h2>
       <AppWrapper>
         {userVideos.length > 0 ? (
-          userVideos.map(({ name, fileUrl, pseudonym, tags, time }: FileType, index) => (
-            <Videos key={index} name={name} fileUrl={fileUrl} authorName={pseudonym!} tags={tags} time={time} />
-          ))
+          userVideos.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+              index,
+            ) => (
+              <Videos
+                key={index}
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={pseudonym!}
+                profilePhoto={profilePhoto}
+                authorId={authorId}
+                time={time}
+              />
+            ),
+          )
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.videos} />
         )}
@@ -256,9 +342,25 @@ export default function Application() {
       <h2 className={styles.top__among__users}>{data?.App?.lastOthers}</h2>
       <AppWrapper>
         {userOthers.length > 0 ? (
-          userOthers.map(({ name, fileUrl, pseudonym, tags, time }: FileType, index) => (
-            <Article key={index} name={name} fileUrl={fileUrl} authorName={pseudonym!} tags={tags} time={time} />
-          ))
+          userOthers.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+              index,
+            ) => (
+              <Article
+                key={index}
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={pseudonym!}
+                profilePhoto={profilePhoto}
+                authorId={authorId}
+                time={time}
+              />
+            ),
+          )
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.others} />
         )}

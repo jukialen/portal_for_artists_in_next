@@ -1,7 +1,10 @@
+import axios from 'axios';
 import { Avatar, Button, Textarea } from '@chakra-ui/react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
+
+import { backUrl } from 'utilites/constants';
 
 import { ResetFormType, NewCommentsType } from 'types/global.types';
 
@@ -9,18 +12,20 @@ import { useHookSWR } from 'hooks/useHookSWR';
 
 import styles from './NewComments.module.scss';
 
-export const NewComments = ({ name }: NewCommentsType) => {
-  const initialValues = {
-    comment: '',
-  };
+type NewCommentType = { comment: string };
+
+export const NewComments = ({ profilePhoto, postId, fileId, fromFile }: NewCommentsType) => {
+  const initialValues = { comment: '' };
 
   const data = useHookSWR();
 
-  let user: { photoURL: string | undefined };
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
 
-  const createNewComment = async ({ comment }: NewCommentsType, { resetForm }: ResetFormType) => {
+  const createNewComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
+      fromFile
+        ? await axios.post(`${backUrl}/files-comments`, { comment, fileId })
+        : await axios.post(`${backUrl}/comments`, { comment, postId });
       resetForm(initialValues);
     } catch (e) {
       console.error(e);
@@ -32,7 +37,7 @@ export const NewComments = ({ name }: NewCommentsType) => {
       {({ values, handleChange }) => (
         <Form>
           <div className={styles.comments}>
-            <Avatar src={user?.photoURL!} width={10} height={10} marginTop=".4rem" />
+            <Avatar src={profilePhoto} width={10} height={10} marginTop=".4rem" />
 
             <Textarea
               name="comment"

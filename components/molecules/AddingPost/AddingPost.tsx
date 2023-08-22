@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Input, Textarea } from '@chakra-ui/react';
@@ -6,32 +7,24 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { ResetFormType } from 'types/global.types';
 
+import { backUrl } from 'utilites/constants';
+
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './AddingPost.module.scss';
-import axios from 'axios';
-import { backUrl } from 'utilites/constants';
 
-type AddingPostType = {
-  groupId: string;
-};
+type AddingPostType = { groupId: string };
 
-type NewPostType = {
-  title: string;
-  content: string;
-};
+type NewPostType = { title: string; content: string };
 
 export const AddingPost = ({ groupId }: AddingPostType) => {
   const [showForm, setShowForm] = useState(false);
 
   const data = useHookSWR();
 
-  const initialValues = {
-    title: '',
-    content: '',
-  };
+  const initialValues = { title: '', content: '' };
 
   const schemaNew = Yup.object({
     post: SchemaValidation().description,
@@ -40,7 +33,7 @@ export const AddingPost = ({ groupId }: AddingPostType) => {
 
   const createNewPost = async ({ title, content }: NewPostType, { resetForm }: ResetFormType) => {
     try {
-      await axios.post(`${backUrl}/groups-posts`, {
+      await axios.post(`${backUrl}/posts`, {
         title,
         content,
         groupId,

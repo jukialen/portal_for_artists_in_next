@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 import { ModeContext } from 'providers/ModeProvider';
 
-import { FileType } from 'types/global.types';
+import { ArticleVideosType } from 'types/global.types';
 
 import { useUserData } from 'hooks/useUserData';
 import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
@@ -12,14 +12,15 @@ import { DeletionFile } from 'components/molecules/DeletionFile/DeletionFile';
 import styles from './Article.module.scss';
 
 export const Article = ({
+  fileId,
   name,
   fileUrl,
   authorName,
+  profilePhoto,
+  shortDescription,
   tags,
   time,
-}: FileType & {
-  authorName: string;
-}) => {
+}: ArticleVideosType) => {
   const { isMode } = useContext(ModeContext);
   const { pseudonym } = useUserData();
   let img = 600;
@@ -36,8 +37,11 @@ export const Article = ({
         unoptimized={`${tags}` === 'animations'}
         priority
       />
+      <div className={styles.time}>{time}</div>
 
-      <FileOptions pseudonym={authorName} tags={tags} name={name} time={time} fileUrl={fileUrl} />
+      <div className={styles.shortDescription}>{shortDescription}</div>
+
+      <FileOptions fileId={fileId} authorName={authorName!} profilePhoto={profilePhoto} tags={tags!} name={name!} />
     </div>
   );
 };

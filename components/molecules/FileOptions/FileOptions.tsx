@@ -2,16 +2,27 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { FileType } from 'types/global.types';
+import { Tags } from 'types/global.types';
 
-import { Comments } from 'components/molecules/Comments/Comments';
-import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
-import { NewComments } from 'components/atoms/NewComments/NewComments';
-
-import styles from './FileOptions.module.scss';
 import { useHookSWR } from 'hooks/useHookSWR';
 
-export const FileOptions = ({ name, authorName, tags, time }: FileType) => {
+import { NewComments } from 'components/atoms/NewComments/NewComments';
+import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
+import { FilesComments } from 'components/molecules/FilesComments/FilesComments';
+
+import styles from './FileOptions.module.scss';
+
+type FileOptionsType = {
+  fileId: string;
+  authorName: string;
+  profilePhoto: string;
+  tags: Tags;
+  name: string;
+  subC?: string;
+  lastC?: string;
+};
+
+export const FileOptions = ({ fileId, authorName, profilePhoto, tags, name }: FileOptionsType) => {
   const [open, setOpen] = useState(false);
   const { locale } = useRouter();
 
@@ -28,15 +39,15 @@ export const FileOptions = ({ name, authorName, tags, time }: FileType) => {
           <Link href={`${locale === 'en' ? '/' : `/${locale}/`}user/${authorName}`}>{authorName}</Link>
         </div>
 
-        <SharingButton name={name} fileUrl={linkShare} authorName={authorName} tags={tags} time={time} />
+        <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} />
       </div>
       <button className={styles.comments} onClick={showOpenComments}>
         {data?.Comments?.comments}
       </button>
       {open && (
         <>
-          <NewComments name={name!} />
-          <Comments userId={''} />
+          <NewComments profilePhoto={profilePhoto} fileId={fileId} fromFile />
+          <FilesComments fileId={fileId} />
         </>
       )}
     </div>

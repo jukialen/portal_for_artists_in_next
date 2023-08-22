@@ -45,7 +45,7 @@ type UserPost = Time &
     pseudonym: string;
     date?: string;
     name: string;
-    postId: string;
+    postId?: string;
     authorId: string;
   };
 
@@ -85,13 +85,26 @@ export type FileType = Time & {
   fileId?: string;
   name?: string;
   shortDescription?: string;
-  fileUrl: string;
   tags?: Tags;
-  time: string;
   pseudonym?: string;
   profilePhoto: string;
   authorName?: string;
   profileType?: boolean;
+  authorId: string;
+  fileUrl: string;
+  time: string;
+};
+
+export type ArticleVideosType = {
+  fileId: string;
+  name: string;
+  fileUrl: string;
+  shortDescription: string;
+  authorName: string;
+  profilePhoto: string;
+  tags: Tags;
+  authorId: string;
+  time: string;
 };
 
 //FRIENDS
@@ -104,20 +117,18 @@ export type FriendType = Time & {
 };
 
 //GROUPS
-type Group = Time & {
-  name: string;
-  logo: string;
-  description?: string;
-  time?: string;
-  favorites?: number;
-  favorited?: boolean;
-  role?: Role;
-  usersGroupsId?: string;
-  roleId?: string;
-};
-
-export type GroupType = Group & {
+export type GroupType = Time & {
   groupId?: string;
+  name?: string;
+  description: string;
+  regulation: string;
+  logo: string;
+  usersGroupsId: string;
+  favorited?: boolean;
+  favorites: number;
+  role: Role;
+  roleId: string;
+  time?: string;
 };
 
 export type MemberType = {
@@ -129,28 +140,70 @@ export type MemberType = {
 //POSTS
 export type PostType = UserPost &
   Like & {
-    groupsPostsId?: string;
-    groupId?: string;
     title: string;
     content: string;
-    shared?: number;
+    likes: number;
+    liked: boolean;
+    shared: number;
+    commented: number;
+    groupId: string;
   };
 
 // COMMENTS
-type Comment = UserPost & {
-  comment: string;
+export type NewCommentsType = {
+  profilePhoto: string;
+  comment?: string;
+  postId?: string;
+  fileId?: string;
+  fromFile?: boolean;
 };
 
-export type NewCommentsType = Comment;
+type Comment = Time & {
+  authorId: string;
+  pseudonym: string;
+  profilePhoto: string;
+  role: Role;
+  roleId: string;
+  date?: string;
+};
 
 export type CommentType = Comment & {
   commentId: string;
+  postId?: string;
+  comment: string;
+  adModRoleId: string;
+  groupRole: Role;
 };
 
-export type SubCommentType = CommentType;
+export type FilesCommentsType = Comment & {
+  id: string;
+  fileId: string;
+  comment: string;
+};
 
-export type LastCommentType = Comment & {
-  subCommenId: string;
+export type CommentsType = Comment & {
+  commentId: string;
+  postId: string;
+  comment: string;
+  adModRoleId: string;
+  groupRole: Role;
+};
+
+export type SubCommentType = Comment & {
+  subCommentId: string;
+  commentId?: string;
+  subComment: string;
+  fileCommentId?: string;
+  adModRoleId?: string;
+  groupRole?: Role;
+};
+
+export type LastCommentType = Time & {
+  lastCommentId: string;
+  subCommentId: string;
+  lastComment: string;
+  adModRoleId?: string;
+  groupRole: Role;
 };
 
 //DATE OBJECT

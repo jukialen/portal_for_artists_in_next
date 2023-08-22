@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Divider, IconButton, Textarea } from '@chakra-ui/react';
 
 import { ResetFormType } from 'types/global.types';
+
+import { backUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -12,11 +15,10 @@ import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './DescriptionSection.module.scss';
 import { EditIcon } from '@chakra-ui/icons';
-import axios from 'axios';
-import { backUrl } from 'utilites/constants';
 
 type DescriptionSectionType = {
   description: string;
+  regulation: string;
   admin: boolean;
   name?: string | string[];
   usersGroupsId: string;
@@ -30,8 +32,8 @@ type NewRegulationType = {
   newRegulation: string;
 };
 
-export const DescriptionSection = ({ description, admin, name, usersGroupsId }: DescriptionSectionType) => {
-  const [regulation, setRegulation] = useState<string>('');
+export const DescriptionSection = ({ description, regulation, admin, name, usersGroupsId }: DescriptionSectionType) => {
+  const [regul, setRegul] = useState(regulation);
   const [openForm, setOpenForm] = useState(false);
   const [openUpRegulations, setOpenUpRegulations] = useState(false);
 
@@ -44,12 +46,7 @@ export const DescriptionSection = ({ description, admin, name, usersGroupsId }: 
   });
 
   const getRegulation = async () => {
-    try {
-      const reg: { regulation: string } = await axios.get(`${backUrl}/groups/${name}`);
-      setRegulation(!!reg.regulation ? reg.regulation.split('\n').join('\n') : data?.Regulations?.noRegulation);
-    } catch (e) {
-      console.error(e);
-    }
+    setRegul(regulation === '' ? regulation.split('\n').join('\n') : data?.Regulations?.noRegulation);
   };
 
   useEffect(() => {
@@ -68,7 +65,7 @@ export const DescriptionSection = ({ description, admin, name, usersGroupsId }: 
   };
 
   const initialValuesReg = {
-    newRegulation: regulation
+    newRegulation: regul,
   };
 
   const schemaNewReg = Yup.object({
@@ -135,7 +132,7 @@ export const DescriptionSection = ({ description, admin, name, usersGroupsId }: 
       <div className={styles.field}>
         {!openUpRegulations ? (
           <div className={styles.items}>
-            <p className={!!regulation ? styles.regulations__item : styles.regulations__no__item}>{regulation}</p>
+            <p className={!!regul ? styles.regulations__item : styles.regulations__no__item}>{regul}</p>
           </div>
         ) : (
           <Formik initialValues={initialValuesReg} validationSchema={schemaNewReg} onSubmit={updateRegulations}>

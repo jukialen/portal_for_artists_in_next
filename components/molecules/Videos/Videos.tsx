@@ -2,14 +2,14 @@ import Link from 'next/link';
 
 import { useUserData } from 'hooks/useUserData';
 
-import { FileType } from 'types/global.types';
+import { ArticleVideosType } from 'types/global.types';
 
 import { DeletionFile } from 'components/molecules/DeletionFile/DeletionFile';
 import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
 
 import styles from './Videos.module.scss';
 
-export const Videos = ({ name, fileUrl, authorName, tags, time }: FileType) => {
+export const Videos = ({ name, fileUrl, authorName, tags, postId }: ArticleVideosType) => {
   const { pseudonym } = useUserData();
 
   return (
@@ -25,7 +25,7 @@ export const Videos = ({ name, fileUrl, authorName, tags, time }: FileType) => {
         and watch it with your favorite video player!
       </video>
 
-      <FileOptions name={name} authorName={authorName} tags={tags} time={time} fileUrl={fileUrl} />
+      <FileOptions authorName={authorName!} tags={tags!} name={name!} postId={postId} />
     </div>
   );
 };

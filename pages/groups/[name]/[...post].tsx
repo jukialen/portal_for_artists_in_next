@@ -9,6 +9,7 @@ import { backUrl } from 'utilites/constants';
 import { getDate } from 'helpers/getDate';
 
 import { useDateData } from 'hooks/useDateData';
+import { useCurrentUser } from 'hooks/useCurrentUser';
 
 import { Post } from 'components/molecules/Post/Post';
 
@@ -20,28 +21,32 @@ export default function PostFromGroup() {
   const dataDateObject = useDateData();
 
   const split = asPath.split('/');
-  const name = decodeURIComponent(split[2]);
-  const pseudonym = decodeURIComponent(split[3]);
-  const postId = decodeURIComponent(split[4]);
+  const containUrl = split.includes('https') || split.includes('http');
+
+  const name = decodeURIComponent(split[containUrl ? 4 : 2]);
+  const pseudonym = decodeURIComponent(split[containUrl ? 5 : 3]);
+  const postId = decodeURIComponent(split[containUrl ? 6 : 4]);
 
   const downloadPosts = async () => {
     try {
-      const post: PostType = await axios.get(`${backUrl}/groups-posts/${postId}`);
+      const post: PostType = await axios.get(`${backUrl}/posts/${postId}`);
+
+      const { title, content, likes, liked, shared, commented, groupId, profilePhoto, createdAt, updatedAt, authorId } =
+        post;
 
       setPostData({
-        title: post.title,
-        content: post.content,
-        commented: post.commented,
+        title,
+        content,
+        likes,
+        liked,
+        shared,
+        commented,
+        groupId,
+        profilePhoto,
         pseudonym,
-        profilePhoto: post.profilePhoto,
-        likes: post.likes,
-        liked: post.liked,
-        shared: post.shared,
-        groupId: post.groupId,
-        authorId: post.authorId,
-        role: post.role,
-        date: getDate(locale!, post.updatedAt! || post.createdAt!, dataDateObject),
-        groupsPostsId: post.groupsPostsId,
+        authorId,
+        name,
+        date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
       });
     } catch (e) {
       console.error(e);
@@ -50,7 +55,11 @@ export default function PostFromGroup() {
 
   useEffect(() => {
     !!(name && postId) && downloadPosts();
-  }, [locale]);
+  }, [locale, name, postId]);
+
+  if (useCurrentUser('/signin')) {
+    return null;
+  }
 
   return (
     <Post
@@ -66,6 +75,7 @@ export default function PostFromGroup() {
       commented={postData!.commented}
       shared={postData!.shared}
       profilePhoto={postData?.profilePhoto}
+      groupId={postData!.groupId}
     />
   );
 }

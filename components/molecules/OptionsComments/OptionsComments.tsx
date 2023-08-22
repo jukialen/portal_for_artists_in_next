@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -14,9 +15,12 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+import { ResetFormType, Role } from 'types/global.types';
 
-import { CommentType, ResetFormType, NewCommentsType } from 'types/global.types';
+import { backUrl } from 'utilites/constants';
+
+import { useHookSWR } from 'hooks/useHookSWR';
+import { useUserData } from 'hooks/useUserData';
 
 import { ModeContext } from 'providers/ModeProvider';
 import { DCContext } from 'providers/DeleteCommentProvider';
@@ -27,20 +31,34 @@ import { LastComments } from 'components/molecules/LastComments/LastComments';
 
 import styles from './OptionsComments.module.scss';
 import { AiFillLike, AiOutlineLike, AiOutlineMore } from 'react-icons/ai';
-import { useUserData } from '../../../hooks/useUserData';
+
+type OptionsType = {
+  postId?: string;
+  commentId?: string;
+  subCommentId?: string;
+  lastComment?: string;
+  roleId: string;
+  groupRole: Role;
+  authorId: string;
+  liked?: boolean;
+  likes?: number;
+  name?: string;
+};
+
+type NewCommentType = { comment: string };
 
 export const OptionsComments = ({
-  userId,
   postId,
   commentId,
   subCommentId,
+  roleId,
+  groupRole,
   authorId,
-  likes,
   liked,
+  likes,
   name,
-}: CommentType) => {
+}: OptionsType) => {
   const [like, setLike] = useState(false);
-  let [likeCount, setLikeCount] = useState(likes);
   const [moreOptions, setMoreOptions] = useState(false);
   const [com, setCom] = useState(false);
   const { isMode } = useContext(ModeContext);
@@ -79,15 +97,13 @@ export const OptionsComments = ({
     if (like) {
     } else {
     }
-    setLikeCount(like ? (likeCount -= 1) : (likeCount += 1));
+    //    setLikeCount(like ? (likeCount -= 1) : (likeCount += 1));
     setLike(!like);
   };
 
   const deleteComment = async () => {
     try {
-      const deleteSubComWithLasts = async () => {};
-
-      const deleteComWithSubsAndLasts = async () => {};
+      await axios.delete(`${backUrl}/comments/${commentId}/${roleId}/${groupRole}`);
 
       await changeDel();
       await onClose();
@@ -96,7 +112,7 @@ export const OptionsComments = ({
     }
   };
 
-  const updateComment = async ({ comment }: NewCommentsType, { resetForm }: ResetFormType) => {
+  const updateComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
       await onCloseEdit();
       resetForm(initialValues);
@@ -116,7 +132,7 @@ export const OptionsComments = ({
             className={styles.likes}
             onClick={toggleLike}
           />
-          <p className={styles.likesCount}>{likeCount}</p>
+          <p className={styles.likesCount}>{likes}</p>
         </div>
 
         <div className={styles.buttons}>

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import axios from 'axios';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -12,21 +13,22 @@ import {
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
+import { backUrl } from 'utilites/constants';
+
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './DeletionPost.module.scss';
 import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
-import axios from 'axios';
-import { backUrl } from '../../../utilites/constants';
 
 type DeletionPostType = {
   postId: string;
+  groupId: string;
 };
 
-export const DeletePost = ({ postId }: DeletionPostType) => {
+export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [values, setValues] = useState<string>('');
+  const [values, setValues] = useState('');
 
   const cancelRef = useRef(null);
   const onClose = () => setIsOpen(false);
@@ -39,8 +41,7 @@ export const DeletePost = ({ postId }: DeletionPostType) => {
       await onClose();
       await setDeleting(!deleting);
       await setValues(data?.DeletionPost?.deleting);
-
-      await axios.delete(`${backUrl}/groups-posts/${postId}`);
+      await axios.delete(`${backUrl}/posts/${postId}${groupId}`);
       await setValues(data?.DeletionPost?.deleted);
       await setDeleting(!deleting);
     } catch (e) {

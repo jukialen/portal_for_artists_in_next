@@ -19,4 +19,9 @@
     object-fit: contain;
     background-color: $dark__color__light__back;
   }
+
+  .shortDescription {
+    width: inherit;
+    margin: .5rem 0;
+  }
 }

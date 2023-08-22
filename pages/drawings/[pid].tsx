@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import url from 'url';
 
 import { FileType } from 'types/global.types';
 
@@ -28,31 +29,35 @@ export default function Drawings() {
   const router = useRouter();
   const { pid } = router.query;
   const data = useHookSWR();
-  const date = useDateData();
+  const dataDateObject = useDateData();
 
   const maxItems = 30;
 
   const downloadDrawings = async () => {
+    const queryParams = {
+      orderBy: 'createdAt, desc',
+      where: `{ tags: ${pid} }`,
+      limit: maxItems.toString(),
+    };
+    const params = new url.URLSearchParams(queryParams);
+
     try {
       const filesArray: FileType[] = [];
 
-      const firstPage: FileType[] = await axios.get(`${backUrl}/files`, {
-        params: {
-          where: { tags: pid! },
-          orderBy: 'createdAt, desc',
-          limit: maxItems,
-          cursor: lastVisible,
-        },
-      });
+      const firstPage: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
 
       for (const file of firstPage) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+
         filesArray.push({
-          fileId: file.fileId,
-          name: file.name,
-          fileUrl: `${cloudFrontUrl}/${file.name}`,
-          pseudonym: file.pseudonym,
-          profilePhoto: file.profilePhoto,
-          time: getDate(router.locale!, file.updatedAt! || file.createdAt!, date),
+          fileId,
+          name,
+          shortDescription,
+          pseudonym,
+          profilePhoto,
+          fileUrl: `${cloudFrontUrl}/${name}`,
+          authorId,
+          time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -65,26 +70,31 @@ export default function Drawings() {
   };
 
   const nextElements = async () => {
+    const queryParams = {
+      orderBy: 'createdAt, desc',
+      where: `{ tags: ${pid} }`,
+      limit: maxItems.toString(),
+      cursor: lastVisible!,
+    };
+    const params = new url.URLSearchParams(queryParams);
+
     try {
       const filesArray: FileType[] = [];
 
-      const nextArray: FileType[] = await axios.get(`${backUrl}/files`, {
-        params: {
-          where: { tags: pid! },
-          orderBy: 'createdAt, desc',
-          limit: maxItems,
-          cursor: lastVisible,
-        },
-      });
+      const nextArray: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
 
       for (const file of nextArray) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+
         filesArray.push({
-          fileId: file.fileId,
-          name: file.name,
-          fileUrl: `${cloudFrontUrl}/${file.name}`,
-          pseudonym: file.pseudonym,
-          profilePhoto: file.profilePhoto,
-          time: getDate(router.locale!, file.updatedAt! || file.createdAt!, date),
+          fileId,
+          name,
+          shortDescription,
+          pseudonym,
+          profilePhoto,
+          fileUrl: `${cloudFrontUrl}/${name}`,
+          authorId,
+          time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -97,11 +107,13 @@ export default function Drawings() {
     }
   };
 
-  useCurrentUser('/');
-
   useEffect(() => {
     !!pid && downloadDrawings();
   }, [pid]);
+
+  if (useCurrentUser('/signin')) {
+    return null;
+  }
 
   return (
     <>
@@ -113,9 +125,25 @@ export default function Drawings() {
 
       <Wrapper>
         {userDrawings.length > 0 ? (
-          userDrawings.map(({ fileUrl, time, pseudonym, tags, fileId }: FileType, index) => (
-            <Article key={index} fileUrl={fileUrl} authorName={pseudonym!} tags={tags} fileId={fileId} time={time} />
-          ))
+          userDrawings.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+              index,
+            ) => (
+              <Article
+                key={index}
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={pseudonym!}
+                profilePhoto={profilePhoto}
+                authorId={authorId}
+                time={time}
+              />
+            ),
+          )
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.files} />
         )}

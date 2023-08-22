@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import url from 'url';
 
 import { PostType } from 'types/global.types';
 
@@ -16,10 +17,7 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './Posts.module.scss';
 
-type GroupsPropsType = {
-  name: string;
-  groupId: string;
-};
+type GroupsPropsType = { name: string; groupId: string };
 
 export const Posts = ({ name, groupId }: GroupsPropsType) => {
   const [postsArray, setPostsArray] = useState<PostType[]>([]);
@@ -32,35 +30,54 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
   const maxItems = 30;
 
   const firstPosts = async () => {
+    const queryParams = {
+      orderBy: 'createdAt, desc',
+      where: groupId,
+      limit: maxItems.toString(),
+    };
+
+    const params = new url.URLSearchParams(queryParams);
+
     try {
       const postArray: PostType[] = [];
 
-      const posts: PostType[] = await axios.get(`${backUrl}/groups-posts`, {
-        params: {
-          where: { groupId },
-          orderBy: 'createdAt',
-          limit: maxItems,
-        },
-      });
+      const posts: PostType[] = await axios.get(`${backUrl}/posts/all?${params}`);
 
       for (const post of posts) {
+        const {
+          title,
+          content,
+          pseudonym,
+          profilePhoto,
+          likes,
+          liked,
+          shared,
+          commented,
+          groupId,
+          authorId,
+          postId,
+          createdAt,
+          updatedAt,
+        } = post;
+
         postArray.push({
-          groupsPostsId: post.groupsPostsId,
-          postId: post.postId!,
-          groupId: post.groupId,
-          title: post.title,
-          content: post.content,
-          likes: post.likes,
-          liked: post.liked,
-          date: getDate(locale!, post.updatedAt! || post.createdAt!, dataDateObject),
+          title,
+          content,
+          pseudonym,
+          profilePhoto,
+          likes,
+          liked,
+          shared,
+          commented,
+          groupId,
+          authorId,
+          postId,
+          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
           name,
-          pseudonym: post.pseudonym,
-          authorId: post.authorId,
-          profilePhoto: post.profilePhoto,
         });
       }
 
-      setLastVisible(postArray[postArray.length - 1].postId);
+      setLastVisible(postArray[postArray.length - 1].postId!);
       setPostsArray(postArray);
     } catch (e) {
       console.error(e);
@@ -72,37 +89,56 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
   }, [name, locale]);
 
   const nextPosts = async () => {
+    const queryParamsWithCursor = {
+      orderBy: 'createdAt, desc',
+      where: groupId,
+      limit: maxItems.toString(),
+      cursor: lastVisible,
+    };
+    const paramsWithCursor = new url.URLSearchParams(queryParamsWithCursor);
+
     try {
       const nextArray: PostType[] = [];
 
-      const posts: PostType[] = await axios.get(`${backUrl}/groups-posts`, {
-        params: {
-          where: { groupId },
-          orderBy: 'createdAt',
-          limit: maxItems,
-          cursor: lastVisible,
-        },
-      });
+      const posts: PostType[] = await axios.get(`${backUrl}/posts/all?${paramsWithCursor}`);
+
       for (const post of posts) {
+        const {
+          title,
+          content,
+          pseudonym,
+          profilePhoto,
+          likes,
+          liked,
+          shared,
+          commented,
+          groupId,
+          authorId,
+          postId,
+          createdAt,
+          updatedAt,
+        } = post;
+
         nextArray.push({
-          groupsPostsId: post.groupsPostsId,
-          postId: post.postId!,
-          groupId: post.groupId,
-          title: post.title,
-          content: post.content,
-          likes: post.likes,
-          liked: post.liked,
-          date: getDate(locale!, post.updatedAt! || post.createdAt!, dataDateObject),
+          title,
+          content,
+          pseudonym,
+          profilePhoto,
+          likes,
+          liked,
+          shared,
+          commented,
+          groupId,
+          authorId,
+          postId,
+          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
           name,
-          pseudonym: post.pseudonym,
-          authorId: post.authorId,
-          profilePhoto: post.profilePhoto,
         });
       }
 
-      nextArray.length === maxItems && setLastVisible(nextArray[nextArray.length - 1].postId);
-      setI(++i);
+      nextArray.length === maxItems && setLastVisible(nextArray[nextArray.length - 1].postId!);
       const newArray = postsArray.concat(nextArray);
+      setI(++i);
       setPostsArray(newArray);
     } catch (e) {
       console.error(e);
@@ -115,31 +151,36 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
         postsArray.map(
           (
             {
-              pseudonym,
               title,
-              date,
-              content: description,
-              postId,
-              name,
-              authorId,
+              content,
+              pseudonym,
+              profilePhoto,
               likes,
               liked,
-              profilePhoto,
+              shared,
+              commented,
+              groupId,
+              authorId,
+              postId,
+              date,
             }: PostType,
             index,
           ) => (
             <Post
               key={index}
-              pseudonym={pseudonym}
               title={title}
+              content={content}
+              pseudonym={pseudonym}
+              profilePhoto={profilePhoto}
+              likes={likes}
+              liked={liked}
+              shared={shared}
+              commented={commented}
               date={date}
-              content={description}
               name={name}
               postId={postId}
               authorId={authorId}
-              likes={likes}
-              liked={liked}
-              profilePhoto={profilePhoto}
+              groupId={groupId}
             />
           ),
         )
