@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import url from 'url';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { GroupType } from 'types/global.types';
 
@@ -13,9 +14,14 @@ import { Tile } from 'components/molecules/GroupTile/Tile';
 
 import styles from './index.module.scss';
 
+type GroupListType = {
+  name: string;
+  fileUrl: string;
+};
+
 export default function List() {
-  const [listArray, setListArray] = useState<GroupType[]>([]);
-  const [lastVisible, setLastVisible] = useState<GroupType>();
+  const [listArray, setListArray] = useState<GroupListType[]>([]);
+  const [lastVisible, setLastVisible] = useState('');
   let [i, setI] = useState(1);
 
   const data = useHookSWR();
@@ -23,22 +29,22 @@ export default function List() {
   const maxItems = 30;
 
   const getGroupsList = async () => {
-    const groups: GroupType[] = await axios.get(`${backUrl}/groups`, {
+    const groups: GroupType[] = await axios.get(`${backUrl}/groups/all`, {
       params: {
         sortBy: 'name, DESC',
         limit: maxItems,
       },
     });
 
-    const groupArray: GroupType[] = [];
+    const groupArray: GroupListType[] = [];
 
-    for (const group of groups) {
+    for (const _group of groups) {
       groupArray.push({
-        name: group.name,
-        logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        name: _group.name!,
+        fileUrl: `${cloudFrontUrl}/${_group.name}` || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
       });
     }
-    groupArray.length === maxItems && setLastVisible(groupArray[groupArray.length - 1]);
+    groupArray.length === maxItems && setLastVisible(groupArray[groupArray.length - 1].name);
     setListArray(groupArray);
   };
 
@@ -47,7 +53,7 @@ export default function List() {
   }, [loading]);
 
   const nextGroupsList = async () => {
-    const groups: GroupType[] = await axios.get(`${backUrl}/groups`, {
+    const groups: GroupListType[] = await axios.get(`${backUrl}/groups/all`, {
       params: {
         sortBy: 'name, DESC',
         limit: maxItems,
@@ -55,17 +61,17 @@ export default function List() {
       },
     });
 
-    const groupArray: GroupType[] = [];
+    const groupArray: GroupListType[] = [];
 
-    for (const group of groups) {
+    for (const _group of groups) {
       groupArray.push({
-        name: group.name,
-        logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        name: _group.name!,
+        fileUrl: `${cloudFrontUrl}/${_group.name}` || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
       });
     }
 
     setListArray(listArray.concat(...groupArray));
-    setLastVisible(groupArray[groupArray.length - 1]);
+    setLastVisible(groupArray[groupArray.length - 1].name);
     setI(++i);
   };
 
@@ -79,8 +85,8 @@ export default function List() {
         <h2 className={styles.title}>{data?.Groups?.list?.title}</h2>
         <div className={styles.list}>
           {listArray.length > 0 ? (
-            listArray.map(({ name: nameGroup, logoUrl }, index) => (
-              <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
+            listArray.map(({ name, fileUrl }, index) => (
+              <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={fileUrl} />
             ))
           ) : (
             <p>{data?.Groups?.noGroups}</p>
