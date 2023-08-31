@@ -17,8 +17,8 @@ export const Providers = () => {
   const signInWithProvider = async (provider: string) => {
     try {
       const authUrl = await getAuthorisationURLWithQueryParamsAndSetState({
-        providerId: provider,
-        authorisationURL: `${process.env.NEXT_PUBLIC_PAGE}/callback/${provider}`,
+        thirdPartyId: provider,
+        frontendRedirectURI: `${process.env.NEXT_PUBLIC_PAGE}/callback/${provider}`,
       });
 
       await push(authUrl);
