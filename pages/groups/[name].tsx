@@ -322,7 +322,7 @@ export default function Groups() {
           </TabPanel>
           {join && (
             <TabPanel padding={zeroPadding}>
-              <Members admin={admin} name={name!} />
+              <Members admin={admin} groupId={groupId} name={name!} />
             </TabPanel>
           )}
           <TabPanel padding={zeroPadding}>

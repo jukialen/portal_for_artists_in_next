@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import axios from 'axios';
+import url from 'url';
 
 import { Avatar, Divider, IconButton, Link } from '@chakra-ui/react';
 
-import { MemberType } from 'types/global.types';
+import { MemberType, Role } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -17,10 +18,11 @@ import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 
 type MembersType = {
   admin: boolean;
+  groupId: string;
   name: string | string[];
 };
 
-export const Members = ({ admin, name }: MembersType) => {
+export const Members = ({ admin, groupId, name }: MembersType) => {
   const [pseudonymAdmin, setPseudonymAdmin] = useState('');
   const [profilePhotoAdmin, setProfilePhotoAdmin] = useState('');
   const [moderatorsArray, setModeratorsArray] = useState<MemberType[]>([]);
@@ -34,30 +36,23 @@ export const Members = ({ admin, name }: MembersType) => {
   const maxItems = 30;
 
   const downloadAdmin = async () => {
-    const admin: MemberType = await axios.get(`${backUrl}/users/members`, {
-      params: {
-        name,
-        role: 'ADMIN',
-      },
-    });
-    setPseudonymAdmin(admin.pseudonym);
-    setProfilePhotoAdmin(admin.profilePhoto!);
+    const admin: MemberType[] = await axios.get(`${backUrl}/groups/members/${groupId}/${Role.ADMIN}`);
+    setPseudonymAdmin(admin[0].pseudonym);
+    setProfilePhotoAdmin(admin[0].profilePhoto!);
   };
 
   useEffect(() => {
-    downloadAdmin();
+    !!name && downloadAdmin();
   }, [name]);
 
   const moderatorsList = async () => {
     try {
       const moderatorArray: MemberType[] = [];
 
-      const moderators: MemberType[] = await axios.get(`${backUrl}/users/members`, {
+      const moderators: MemberType[] = await axios.get(`${backUrl}/groups/members/${groupId}/${Role.MODERATOR}`, {
         params: {
-          orderBy: 'pseudonym, DESC',
+          orderBy: 'pseudonym, desc',
           limit: maxItems,
-          name,
-          role: 'MODERATOR',
         },
       });
 
@@ -80,12 +75,10 @@ export const Members = ({ admin, name }: MembersType) => {
     try {
       const memberArray: MemberType[] = [];
 
-      const users: MemberType[] = await axios.get(`${backUrl}/users/members`, {
+      const users: MemberType[] = await axios.get(`${backUrl}/groups/members/${groupId}/${Role.USER}`, {
         params: {
-          orderBy: 'pseudonym, DESC',
+          orderBy: 'pseudonym, desc',
           limit: maxItems,
-          name,
-          role: 'USER',
         },
       });
 
@@ -116,12 +109,9 @@ export const Members = ({ admin, name }: MembersType) => {
     try {
       const nextModeratorArray: MemberType[] = [];
 
-      const moderators: MemberType[] = await axios.get(`${backUrl}/users/members`, {
+      const moderators: MemberType[] = await axios.get(`${backUrl}/groups/members/${groupId}/${Role.MODERATOR}`, {
         params: {
-          orderBy: 'pseudonym, DESC',
           limit: maxItems,
-          name,
-          role: 'MODERATOR',
           cursor: lastModeratorsVisible,
         },
       });
@@ -147,14 +137,25 @@ export const Members = ({ admin, name }: MembersType) => {
     try {
       const nextMemberArray: MemberType[] = [];
 
-      const users: MemberType[] = await axios.get(`${backUrl}/users/members`, {
+      const users: MemberType[] = await axios.get(`${backUrl}/groups/members/${groupId}/${Role.USER}`, {
         params: {
-          orderBy: 'pseudonym, DESC',
           limit: maxItems,
-          name,
-          role: 'USER',
+          cursor: lastMembersVisible,
         },
       });
+
+      const sort = () => (a: MemberType, b: MemberType) => {
+        const pseudonymA = a.pseudonym;
+        const pseudonymB = b.pseudonym;
+        if (pseudonymA < pseudonymB) {
+          return -1;
+        }
+        if (pseudonymA > pseudonymB) {
+          return 1;
+        }
+
+        return 0;
+      };
 
       for (const user of users) {
         nextMemberArray.push({
@@ -164,7 +165,7 @@ export const Members = ({ admin, name }: MembersType) => {
         });
       }
 
-      const nextArray = membersArray.concat(...nextMemberArray);
+      const nextArray = membersArray.concat(...nextMemberArray).sort(sort());
       setMembersArray(nextArray);
       setMembersLastVisible(nextMemberArray[nextMemberArray.length - 1]);
       setIMembers(iMembers++);
@@ -184,7 +185,7 @@ export const Members = ({ admin, name }: MembersType) => {
       const dataUser = { usersGroupsId, pseudonym, profilePhoto };
 
       if (user) {
-        await axios.patch(`${backUrl}/users-groups/${name}`, {
+        await axios.patch(`${backUrl}/groups/${name}`, {
           data: { role: 'MODERATOR', usersGroupsId },
         });
 
