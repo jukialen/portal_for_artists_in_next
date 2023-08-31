@@ -6,6 +6,10 @@ import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { FileType, UserType } from 'types/global.types';
 
+import { getDate } from 'helpers/getDate';
+
+import { useDateData } from 'hooks/useDateData';
+
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
@@ -16,12 +20,14 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
   const [lastVisible, setLastVisible] = useState<FileType>();
   let [i, setI] = useState(1);
 
+  const { asPath, locale } = useRouter();
+  const dataDateObject = useDateData();
+
   const maxItems = 30;
-  const { asPath } = useRouter();
 
   const downloadFiles = async () => {
     try {
-      const firstPage: FileType[] = await axios.get(`${backUrl}/files`, {
+      const firstPage: FileType[] = await axios.get(`${backUrl}/files/all`, {
         params: {
           where: {
             AND: [
@@ -30,7 +36,7 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
               { tags: 'anime' },
               { tags: 'comics' },
               { tags: 'photograpths' },
-              { ownerFile: id },
+              { authorId: id },
             ],
           },
           limit: maxItems,
@@ -41,11 +47,17 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
       const filesArray: FileType[] = [];
 
       for (const file of firstPage) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+
         filesArray.push({
-          name: file.name,
+          fileId,
+          name,
           fileUrl: `${cloudFrontUrl}/${file.name}`,
-          tags: file.tags,
-          time: file.updatedAt! || file.createdAt!,
+          pseudonym,
+          shortDescription,
+          profilePhoto,
+          authorId,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
       setUserPhotos(filesArray);
@@ -61,7 +73,7 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
 
   const nextElements = async () => {
     try {
-      const nextPage: FileType[] = await axios.get(`${backUrl}/files`, {
+      const nextPage: FileType[] = await axios.get(`${backUrl}/files/all`, {
         params: {
           where: {
             AND: [
@@ -70,7 +82,7 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
               { tags: 'anime' },
               { tags: 'comics' },
               { tags: 'photographs' },
-              { ownerFile: id },
+              { authorId: id },
             ],
           },
           limit: maxItems,
@@ -82,11 +94,17 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
       const nextArray: FileType[] = [];
 
       for (const file of nextPage) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+
         nextArray.push({
-          name: file.name,
+          fileId,
+          name,
           fileUrl: `${cloudFrontUrl}/${file.name}`,
-          tags: file.tags,
-          time: file.updatedAt! || file.createdAt!,
+          pseudonym,
+          shortDescription,
+          profilePhoto,
+          authorId,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -106,9 +124,25 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
       )}
       <Wrapper>
         {userPhotos.length > 0 ? (
-          userPhotos.map(({ name, fileUrl, tags, time }: FileType, index) => (
-            <Article key={index} name={name} fileUrl={fileUrl} tags={tags} authorName={pseudonym} time={time} />
-          ))
+          userPhotos.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+              index,
+            ) => (
+              <Article
+                key={index}
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={pseudonym!}
+                profilePhoto={profilePhoto}
+                authorId={authorId}
+                time={time}
+              />
+            ),
+          )
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.photos} />
         )}

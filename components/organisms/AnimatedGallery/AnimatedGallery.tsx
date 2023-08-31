@@ -6,6 +6,10 @@ import { FileType, UserType } from 'types/global.types';
 
 import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
+import { getDate } from 'helpers/getDate';
+
+import { useDateData } from 'hooks/useDateData';
+
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -16,7 +20,8 @@ export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
   const [lastVisible, setLastVisible] = useState<FileType>();
   let [i, setI] = useState(1);
 
-  const { asPath } = useRouter();
+  const { asPath, locale } = useRouter();
+  const dataDateObject = useDateData();
 
   const maxItems = 30;
 
@@ -35,11 +40,17 @@ export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
       const filesArray: FileType[] = [];
 
       for (const file of firstPage) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+
         filesArray.push({
-          name: file.name,
-          fileUrl: `${cloudFrontUrl}/files`,
-          tags: file.tags,
-          time: file.updatedAt! || file.createdAt!,
+          fileId,
+          name,
+          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          pseudonym,
+          shortDescription,
+          profilePhoto,
+          authorId,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -70,11 +81,17 @@ export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
       const nextArray: FileType[] = [];
 
       for (const file of nextPage) {
+        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+
         nextArray.push({
-          name: file.name,
-          fileUrl: `${cloudFrontUrl}/files`,
-          tags: file.tags,
-          time: file.updatedAt! || file.createdAt!,
+          fileId,
+          name,
+          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          pseudonym,
+          shortDescription,
+          profilePhoto,
+          authorId,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
       const newArray = userAnimatedPhotos.concat(...nextArray);
@@ -94,9 +111,25 @@ export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
 
       <Wrapper>
         {userAnimatedPhotos.length > 0 ? (
-          userAnimatedPhotos.map(({ name, fileUrl, time, tags }: FileType, index) => (
-            <Article key={index} name={name} fileUrl={fileUrl} authorName={pseudonym} time={time} tags={tags} />
-          ))
+          userAnimatedPhotos.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+              index,
+            ) => (
+              <Article
+                key={index}
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={pseudonym!}
+                profilePhoto={profilePhoto}
+                authorId={authorId}
+                time={time}
+              />
+            ),
+          )
         ) : (
           <ZeroFiles text={data?.ZeroFiles?.animations} />
         )}
