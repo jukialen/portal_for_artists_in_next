@@ -28,13 +28,12 @@ export default function Post() {
   const name = split[4];
 
   const simpleUserPost = async () => {
-    const queryParams = {
-      where: `{ name: ${name} }`,
-    };
-    const params = new url.URLSearchParams(queryParams);
-
     try {
-      const file: FileType = await axios.get(`${backUrl}/files?${params}`);
+      const file: FileType = await axios.get(`${backUrl}/files`, {
+        params: {
+          where: { name },
+        },
+      });
       const { fileId, shortDescription, pseudonym, profilePhoto, tags, authorId, createdAt, updatedAt } = file;
 
       setContainer({
@@ -75,7 +74,7 @@ export default function Post() {
             fileUrl={container?.fileUrl!}
             shortDescription={container?.shortDescription!}
             tags={container?.tags!}
-            authorName={pseudonym!}
+            authorName={container?.pseudonym!}
             profilePhoto={container?.profilePhoto!}
             authorId={container?.authorId!}
             time={container?.time!}

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
-import { PostType } from 'types/global.types';
+import { PostsType } from 'types/global.types';
 
 import { backUrl } from 'utilites/constants';
 
@@ -14,7 +14,7 @@ import { useCurrentUser } from 'hooks/useCurrentUser';
 import { Post } from 'components/molecules/Post/Post';
 
 export default function PostFromGroup() {
-  const [postData, setPostData] = useState<PostType>();
+  const [postData, setPostData] = useState<PostsType>();
 
   const { locale, asPath } = useRouter();
 
@@ -24,15 +24,28 @@ export default function PostFromGroup() {
   const containUrl = split.includes('https') || split.includes('http');
 
   const name = decodeURIComponent(split[containUrl ? 4 : 2]);
-  const pseudonym = decodeURIComponent(split[containUrl ? 5 : 3]);
+  //  const pseudonym = decodeURIComponent(split[containUrl ? 5 : 3]);
   const postId = decodeURIComponent(split[containUrl ? 6 : 4]);
 
   const downloadPosts = async () => {
     try {
-      const post: PostType = await axios.get(`${backUrl}/posts/${postId}`);
+      const post: PostsType = await axios.get(`${backUrl}/posts/${postId}`);
 
-      const { title, content, likes, liked, shared, commented, groupId, profilePhoto, createdAt, updatedAt, authorId } =
-        post;
+      const {
+        title,
+        content,
+        pseudonym,
+        profilePhoto,
+        likes,
+        liked,
+        shared,
+        commented,
+        groupId,
+        authorId,
+        createdAt,
+        updatedAt,
+        roleId,
+      } = post;
 
       setPostData({
         title,
@@ -46,6 +59,7 @@ export default function PostFromGroup() {
         pseudonym,
         authorId,
         name,
+        roleId,
         date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
       });
     } catch (e) {
@@ -76,6 +90,7 @@ export default function PostFromGroup() {
       shared={postData!.shared}
       profilePhoto={postData?.profilePhoto}
       groupId={postData!.groupId}
+      roleId={postData!.roleId}
     />
   );
 }
