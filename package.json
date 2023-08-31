@@ -29,7 +29,7 @@
     "react-icons": "^4.3.1",
     "react-web-share": "^1.1.5",
     "sass": "^1.42.1",
-    "supertokens-web-js": "^0.5.0",
+    "supertokens-web-js": "^0.7.3",
     "swr": "^1.0.1",
     "yup": "^0.32.10"
   },
