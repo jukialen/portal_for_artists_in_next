@@ -29,9 +29,8 @@ export default function Drawings() {
   const router = useRouter();
   const { pid } = router.query;
   const data = useHookSWR();
-  const dataDateObject = useDateData();
-
   const maxItems = 30;
+  const dataDateObject = useDateData();
 
   const downloadDrawings = async () => {
     const queryParams = {

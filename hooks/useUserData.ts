@@ -10,27 +10,31 @@ export const useUserData = () => {
   const [userInfo, setUserInfo] = useState<UserType | {}>({});
 
   const getUserData = async () => {
-    if (await Session.doesSessionExist()) {
-      const userId = await Session.getUserId();
-      const accessTokenPayload = await Session.getAccessTokenPayloadSecurely();
+    try {
+      if (await Session.doesSessionExist()) {
+        const userId = await Session.getUserId();
+        const accessTokenPayload = await Session.getAccessTokenPayloadSecurely();
 
-      const data: {
-        data: UserType;
-      } = await axios.get(`${backUrl}/users`, { params: { where: { id: userId } } });
+        const data: {
+          data: UserType;
+        } = await axios.get(`${backUrl}/users`, { params: { where: { id: userId } } });
 
-      const { id, pseudonym, description, profilePhoto, plan, provider } = data.data;
+        const { id, pseudonym, description, profilePhoto, plan, provider } = data.data;
 
-      setUserInfo({
-        id,
-        pseudonym,
-        description,
-        profilePhoto,
-        plan,
-        email: accessTokenPayload.email,
-        provider,
-      });
-    } else {
-      setUserInfo({});
+        setUserInfo({
+          id,
+          pseudonym,
+          description,
+          profilePhoto,
+          plan,
+          email: accessTokenPayload.email,
+          provider,
+        });
+      } else {
+        setUserInfo({});
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 

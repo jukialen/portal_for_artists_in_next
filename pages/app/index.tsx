@@ -36,18 +36,17 @@ export default function App() {
   const maxItems = 10;
 
   const downloadDrawings = async () => {
-    const queryParams = {
-      orderBy: 'name, desc',
-      where: `{
-            AND: [{ tags: ${Tags.realistic} }, { tags: ${Tags.manga} }, { tags: ${Tags.anime} }, { tags: ${Tags.comics} }],
-          }`,
-      limit: maxItems.toString(),
-    };
-    const params = new url.URLSearchParams(queryParams);
-
     try {
       const filesArray: FileType[] = [];
-      const drawings: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
+      const drawings: FileType[] = await axios.get(`${backUrl}/files/all`, {
+        params: {
+          orderBy: 'name, desc',
+          where: {
+            AND: [{ tags: Tags.realistic }, { tags: Tags.manga }, { tags: Tags.anime }, { tags: Tags.comics }],
+          },
+          limit: maxItems,
+        },
+      });
 
       for (const draw of drawings) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = draw;
@@ -72,16 +71,15 @@ export default function App() {
   };
 
   const downloadPhotos = async () => {
-    const queryParams = {
-      orderBy: 'name, desc',
-      where: `{ tags: ${Tags.photographs} }`,
-      limit: maxItems.toString(),
-    };
-    const params = new url.URLSearchParams(queryParams);
-
     try {
       const filesArray: FileType[] = [];
-      const photographs: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
+      const photographs: FileType[] = await axios.get(`${backUrl}/files/all`, {
+        params: {
+          orderBy: 'name, desc',
+          where: { tags: Tags.photographs },
+          limit: maxItems,
+        },
+      });
 
       for (const photo of photographs) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = photo;
@@ -106,16 +104,15 @@ export default function App() {
   };
 
   const downloadAnimations = async () => {
-    const queryParams = {
-      orderBy: 'name, desc',
-      where: `{ tags: ${Tags.animations} }`,
-      limit: maxItems.toString(),
-    };
-    const params = new url.URLSearchParams(queryParams);
-
     try {
       const filesArray: FileType[] = [];
-      const animations: FileType[] = await axios.get(`${backUrl}/files?${params}`);
+      const animations: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          orderBy: 'name, desc',
+          where: { tags: Tags.animations },
+          limit: maxItems,
+        },
+      });
 
       for (const animation of animations) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = animation;
@@ -140,16 +137,15 @@ export default function App() {
   };
 
   const downloadVideos = async () => {
-    const queryParams = {
-      orderBy: 'name, desc',
-      where: `{ tags: ${Tags.videos} }`,
-      limit: maxItems.toString(),
-    };
-    const params = new url.URLSearchParams(queryParams);
-
     try {
       const filesArray: FileType[] = [];
-      const videos: FileType[] = await axios.get(`${backUrl}/files?${params}`);
+      const videos: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          orderBy: 'name, desc',
+          where: { tags: Tags.videos },
+          limit: maxItems,
+        },
+      });
 
       for (const video of videos) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = video;
@@ -174,16 +170,15 @@ export default function App() {
   };
 
   const downloadOthers = async () => {
-    const queryParams = {
-      orderBy: 'name, desc',
-      where: `{ tags: ${Tags.others} }`,
-      limit: maxItems.toString(),
-    };
-    const params = new url.URLSearchParams(queryParams);
-
     try {
       const filesArray: FileType[] = [];
-      const others: FileType[] = await axios.get(`${backUrl}/files?${params}`);
+      const others: FileType[] = await axios.get(`${backUrl}/files`, {
+        params: {
+          orderBy: 'name, desc',
+          where: { tags: Tags.others },
+          limit: maxItems,
+        },
+      });
 
       for (const other of others) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = other;
