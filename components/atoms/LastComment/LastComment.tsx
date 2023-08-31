@@ -2,31 +2,29 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import { Avatar } from '@chakra-ui/react';
 
-import { CommentType } from 'types/global.types';
+import { LastCommentType } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 
+import { NewComments } from 'components/atoms/NewComments/NewComments';
 import { OptionsComments } from 'components/molecules/OptionsComments/OptionsComments';
 
 import styles from './LastComment.module.scss';
 
 export const LastComment = ({
-  author,
-  date,
-  description,
-  nameGroup,
+  lastCommentId,
+  lastComment,
+  pseudonym,
   profilePhoto,
-  userId,
-  subCollection,
-  idPost,
-  idComment,
-  idSubComment,
+  role,
+  roleId,
+  groupRole,
   authorId,
-  likes,
-  liked,
-  refDocLastCom,
-  groupSource,
-}: CommentType) => {
+  subCommentId,
+  fileId,
+  postId,
+  date,
+}: LastCommentType) => {
   const { del } = useContext(DCContext);
 
   return (
@@ -36,28 +34,17 @@ export const LastComment = ({
         <div className={styles.rightSideComment}>
           <div className={styles.topPartComment}>
             <p className={styles.pseudonym}>
-              <Link href={`/user/${author}`}>{author}</Link>
+              <Link href={`/user/${pseudonym}`}>{pseudonym}</Link>
             </p>
             <p className={styles.date}>{date}</p>
           </div>
-          <h2 className={styles.text}>{description}</h2>
+          <h2 className={styles.text}>{lastComment}</h2>
         </div>
       </div>
 
-      <OptionsComments
-        userId={userId}
-        subCollection={subCollection}
-        idPost={idPost}
-        idComment={idComment}
-        idSubComment={idSubComment}
-        authorId={authorId}
-        likes={likes}
-        liked={liked}
-        refDelCom={refDocLastCom!}
-        refDocLastCom={refDocLastCom!}
-        nameGroup={nameGroup}
-        groupSource={groupSource}
-      />
+      <OptionsComments lastCommentId={lastCommentId} roleId={roleId} groupRole={groupRole} authorId={authorId}>
+        <NewComments profilePhoto={profilePhoto} subCommentId={subCommentId} fileId={fileId} postId={postId} />
+      </OptionsComments>
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import url from 'url';
 
 import { backUrl } from 'utilites/constants';
 
@@ -33,33 +32,20 @@ export const Comments = ({ postId }: CommentsType) => {
   const maxItems = 30;
 
   const firstComments = async () => {
-    const queryParams = {
-      orderBy: 'createdAt, desc',
-      where: `{ postId: ${postId}}`,
-      limit: maxItems.toString(),
-    };
-
-    const params = new url.URLSearchParams(queryParams);
-
     try {
-      const firstPage: CommentType[] = await axios.get(`${backUrl}/comments/all?${params}`);
+      const firstPage: CommentType[] = await axios.get(`${backUrl}/comments/all`, {
+        params: {
+          orderBy: 'createdAt, desc',
+          where: { postId },
+          limit: maxItems,
+        },
+      });
 
       const commentArray: CommentType[] = [];
 
       for (const first of firstPage) {
-        const {
-          commentId,
-          comment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          adModRoleId,
-          authorId,
-          groupRole,
-          createdAt,
-          updatedAt,
-        } = first;
+        const { commentId, comment, pseudonym, profilePhoto, role, roleId, authorId, groupRole, createdAt, updatedAt } =
+          first;
 
         commentArray.push({
           commentId,
@@ -68,7 +54,6 @@ export const Comments = ({ postId }: CommentsType) => {
           profilePhoto,
           role,
           roleId,
-          adModRoleId,
           authorId,
           groupRole,
           date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
@@ -87,16 +72,15 @@ export const Comments = ({ postId }: CommentsType) => {
   }, [postId]);
 
   const nextComments = async () => {
-    const queryParamsWithCursor = {
-      orderBy: 'createdAt, desc',
-      where: postId,
-      limit: maxItems.toString(),
-      cursor: lastVisible,
-    };
-    const paramsWithCursor = new url.URLSearchParams(queryParamsWithCursor);
-
     try {
-      const nextPage: CommentType[] = await axios.get(`${backUrl}/comments/all?${paramsWithCursor}`);
+      const nextPage: CommentType[] = await axios.get(`${backUrl}/comments/all`, {
+        params: {
+          orderBy: 'createdAt, desc',
+          where: { postId },
+          limit: maxItems,
+          cursor: lastVisible,
+        },
+      });
 
       const nextCommentArray: CommentType[] = [];
 
@@ -108,11 +92,11 @@ export const Comments = ({ postId }: CommentsType) => {
           profilePhoto,
           role,
           roleId,
-          adModRoleId,
           authorId,
           groupRole,
           createdAt,
           updatedAt,
+          postId,
         } = next;
 
         nextCommentArray.push({
@@ -122,9 +106,9 @@ export const Comments = ({ postId }: CommentsType) => {
           profilePhoto,
           role,
           roleId,
-          adModRoleId,
           authorId,
           groupRole,
+          postId,
           date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
@@ -151,9 +135,9 @@ export const Comments = ({ postId }: CommentsType) => {
               profilePhoto,
               role,
               roleId,
-              adModRoleId,
               authorId,
               groupRole,
+              postId,
               date,
             }: CommentType,
             index,
@@ -167,8 +151,8 @@ export const Comments = ({ postId }: CommentsType) => {
                 role={role}
                 roleId={roleId}
                 groupRole={groupRole}
-                adModRoleId={adModRoleId}
                 authorId={authorId}
+                postId={postId}
                 date={date}
               />
             </DCProvider>

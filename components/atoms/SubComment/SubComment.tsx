@@ -2,24 +2,31 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import { Avatar } from '@chakra-ui/react';
 
-import { CommentType } from 'types/global.types';
+import { SubCommentType } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 
+import { NewComments } from 'components/atoms/NewComments/NewComments';
+import { LastComments } from 'components/molecules/LastComments/LastComments';
 import { OptionsComments } from 'components/molecules/OptionsComments/OptionsComments';
 
 import styles from './SubComment.module.scss';
 
 export const SubComment = ({
-  date,
-  name,
+  subCommentId,
+  commentId,
+  subComment,
   pseudonym,
   profilePhoto,
+  role,
+  roleId,
+  groupRole,
   authorId,
+  fileCommentId,
+  date,
+  fileId,
   postId,
-  commentId,
-  comment,
-}: CommentType) => {
+}: SubCommentType) => {
   const { del } = useContext(DCContext);
 
   return (
@@ -33,22 +40,25 @@ export const SubComment = ({
             </p>
             <p className={styles.date}>{date}</p>
           </div>
-          <h2 className={styles.text}>{comment}</h2>
+          <h2 className={styles.text}>{subComment}</h2>
         </div>
       </div>
 
       <OptionsComments
-        //        userId={userId}
-        postId={postId}
-        commentId={commentId}
-        //        subCommentId={subCommentId}
-        authorId={authorId}
-        //        likes={likes}
-        //        liked={liked}
-        name={name}
-        pseudonym={pseudonym}
-        comment={comment}
-      />
+        subCommentId={subCommentId}
+        commentId={commentId!}
+        roleId={roleId}
+        groupRole={groupRole}
+        authorId={authorId}>
+        <NewComments
+          profilePhoto={profilePhoto}
+          subCommentId={subCommentId}
+          fileCommentId={fileCommentId}
+          fileId={fileId}
+          postId={postId}
+        />
+        <LastComments subCommentId={subCommentId} fileId={fileId} postId={postId} />
+      </OptionsComments>
     </div>
   );
 };

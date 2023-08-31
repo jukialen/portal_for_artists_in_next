@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
-import { CommentType } from 'types/global.types';
+import { LastCommentType } from 'types/global.types';
+import { backUrl } from 'utilites/constants';
 
 import { getDate } from 'helpers/getDate';
 
@@ -12,8 +14,10 @@ import { DCProvider } from 'providers/DeleteCommentProvider';
 import { LastComment } from 'components/atoms/LastComment/LastComment';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
-export const LastComments = ({ userId, postId, commentId, subCommentId, groupSource }: CommentType) => {
-  const [lastCommentsArray, setLastCommentsArray] = useState<CommentType[]>([]);
+type LastCommentsType = { subCommentId: string; fileId?: string; postId?: string };
+
+export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType) => {
+  const [lastCommentsArray, setLastCommentsArray] = useState<LastCommentType[]>([]);
   const [lastVisible, setLastVisible] = useState<string>();
   let [i, setI] = useState(1);
 
@@ -22,55 +26,101 @@ export const LastComments = ({ userId, postId, commentId, subCommentId, groupSou
 
   const maxItems = 5;
 
-  const showingComments = async () => {
+  const firstLastComments = async () => {
     try {
-      //      const firstPage =
+      const lastComments: LastCommentType[] = await axios.get(`${backUrl}/last-comments/all`, {
+        params: {
+          orderBy: 'createdAt, desc',
+          where: { subCommentId },
+          limit: maxItems,
+        },
+      });
 
-      const commentArray: CommentType[] = [];
+      const lastCommentArray: LastCommentType[] = [];
+      for (const _last of lastComments) {
+        const {
+          lastCommentId,
+          lastComment,
+          pseudonym,
+          profilePhoto,
+          role,
+          roleId,
+          groupRole,
+          authorId,
+          subCommentId,
+          createdAt,
+          updatedAt,
+        } = _last;
 
-      //          commentArray.push({
-      //            author: docSnap.data().pseudonym,
-      //            date: getDate(locale!, document.data().date),
-      //            description: document.data().message,
-      //            nameGroup: document.data().nameGroup,
-      //            profilePhoto: docSnap.data().profilePhoto,
-      //            idLastComment: document.id,
-      //            likes: document.data().likes | 0,
-      //            liked: document.data().liked || [],
-      //            authorId: document.data().user,
-      //          });
+        lastCommentArray.push({
+          lastCommentId,
+          lastComment,
+          pseudonym,
+          profilePhoto,
+          role,
+          roleId,
+          groupRole,
+          authorId,
+          subCommentId,
+          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+        });
+      }
 
-      setLastCommentsArray(commentArray);
-      //      commentArray.length === maxItems &&
-      //        setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      setLastCommentsArray(lastCommentArray);
+      lastCommentArray.length === maxItems &&
+        setLastVisible(lastCommentArray[lastCommentArray.length - 1].subCommentId);
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    showingComments();
+    firstLastComments();
   }, []);
 
   const nextShowingComments = async () => {
     try {
-      //      const nextPage =
+      const lastComments: LastCommentType[] = await axios.get(`${backUrl}/last-comments/all`, {
+        params: {
+          orderBy: 'createdAt, desc',
+          where: { subCommentId },
+          limit: maxItems,
+          cursor: lastVisible,
+        },
+      });
 
-      //      setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+      const nextCommentArray: LastCommentType[] = [];
 
-      const nextCommentArray: CommentType[] = [];
+      for (const _last of lastComments) {
+        const {
+          lastCommentId,
+          lastComment,
+          pseudonym,
+          profilePhoto,
+          role,
+          roleId,
+          groupRole,
+          authorId,
+          subCommentId,
+          createdAt,
+          updatedAt,
+        } = _last;
+        nextCommentArray.push({
+          lastCommentId,
+          lastComment,
+          pseudonym,
+          profilePhoto,
+          role,
+          roleId,
+          groupRole,
+          authorId,
+          subCommentId,
+          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+        });
+      }
 
-      //          nextCommentArray.push({
-      //            author: docSnap.data().pseudonym,
-      //            date: getDate(locale!, document.data().date),
-      //            description: document.data().message,
-      //            nameGroup: document.data().nameGroup,
-      //            profilePhoto: docSnap.data().profilePhoto,
-      //            idComment: document.id,
-      //            likes: document.data().likes | 0,
-      //            liked: document.data().liked || [],
-      //            authorId: document.data().user,
-      //          });
+      nextCommentArray.length === maxItems &&
+        setLastVisible(nextCommentArray[nextCommentArray.length - 1].subCommentId);
 
       const nextArray = lastCommentsArray.concat(...nextCommentArray);
       setLastCommentsArray(nextArray);
@@ -85,25 +135,34 @@ export const LastComments = ({ userId, postId, commentId, subCommentId, groupSou
       {lastCommentsArray.length > 0 &&
         lastCommentsArray.map(
           (
-            { author, date, comment, name, profilePhoto, likes, liked, lastCommentId, authorId }: CommentType,
+            {
+              lastCommentId,
+              lastComment,
+              pseudonym,
+              profilePhoto,
+              role,
+              roleId,
+              groupRole,
+              authorId,
+              subCommentId,
+              date,
+            }: LastCommentType,
             index,
           ) => (
             <DCProvider key={index}>
               <LastComment
-                author={author}
-                date={date}
-                comment={comment}
-                name={name}
-                profilePhoto={profilePhoto}
-                authorId={authorId}
-                userId={userId!}
-                postId={postId}
-                commentId={commentId}
-                subCommentId={subCommentId}
-                likes={likes}
-                liked={liked}
                 lastCommentId={lastCommentId}
-                groupSource={groupSource}
+                lastComment={lastComment}
+                pseudonym={pseudonym}
+                profilePhoto={profilePhoto}
+                role={role}
+                roleId={roleId}
+                groupRole={groupRole}
+                authorId={authorId}
+                subCommentId={subCommentId}
+                fileId={fileId}
+                postId={postId}
+                date={date}
               />
             </DCProvider>
           ),

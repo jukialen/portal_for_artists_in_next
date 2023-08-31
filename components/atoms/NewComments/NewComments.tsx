@@ -14,7 +14,15 @@ import styles from './NewComments.module.scss';
 
 type NewCommentType = { comment: string };
 
-export const NewComments = ({ profilePhoto, postId, fileId, fromFile }: NewCommentsType) => {
+export const NewComments = ({
+  profilePhoto,
+  fileId,
+  commentId,
+  subCommentId,
+  roleId,
+  fileCommentId,
+  postId,
+}: NewCommentsType) => {
   const initialValues = { comment: '' };
 
   const data = useHookSWR();
@@ -23,9 +31,22 @@ export const NewComments = ({ profilePhoto, postId, fileId, fromFile }: NewComme
 
   const createNewComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
-      fromFile
+      !!subCommentId &&
+        (await axios.post(`${backUrl}/last-comments`, {
+          lastComment: comment,
+          subCommentId,
+        }));
+      !!(commentId || fileCommentId) &&
+        (await axios.post(`${backUrl}/sub-comments`, {
+          subComment: comment,
+          commentId,
+          fileCommentId,
+          fileId,
+          postId,
+        }));
+      !!fileId
         ? await axios.post(`${backUrl}/files-comments`, { comment, fileId })
-        : await axios.post(`${backUrl}/comments`, { comment, postId });
+        : await axios.post(`${backUrl}/comments`, { comment, roleId });
       resetForm(initialValues);
     } catch (e) {
       console.error(e);

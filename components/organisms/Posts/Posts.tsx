@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import url from 'url';
 
-import { PostType } from 'types/global.types';
+import { PostsType } from 'types/global.types';
 
 import { backUrl } from 'utilites/constants';
 
@@ -20,7 +20,7 @@ import styles from './Posts.module.scss';
 type GroupsPropsType = { name: string; groupId: string };
 
 export const Posts = ({ name, groupId }: GroupsPropsType) => {
-  const [postsArray, setPostsArray] = useState<PostType[]>([]);
+  const [postsArray, setPostsArray] = useState<PostsType[]>([]);
   const [lastVisible, setLastVisible] = useState('');
   let [i, setI] = useState(1);
 
@@ -39,9 +39,9 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
     const params = new url.URLSearchParams(queryParams);
 
     try {
-      const postArray: PostType[] = [];
+      const postArray: PostsType[] = [];
 
-      const posts: PostType[] = await axios.get(`${backUrl}/posts/all?${params}`);
+      const posts: PostsType[] = await axios.get(`${backUrl}/posts/all?${params}`);
 
       for (const post of posts) {
         const {
@@ -58,6 +58,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           postId,
           createdAt,
           updatedAt,
+          roleId,
         } = post;
 
         postArray.push({
@@ -74,6 +75,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           postId,
           date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
           name,
+          roleId,
         });
       }
 
@@ -98,9 +100,9 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
     const paramsWithCursor = new url.URLSearchParams(queryParamsWithCursor);
 
     try {
-      const nextArray: PostType[] = [];
+      const nextArray: PostsType[] = [];
 
-      const posts: PostType[] = await axios.get(`${backUrl}/posts/all?${paramsWithCursor}`);
+      const posts: PostsType[] = await axios.get(`${backUrl}/posts/all?${paramsWithCursor}`);
 
       for (const post of posts) {
         const {
@@ -115,6 +117,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           groupId,
           authorId,
           postId,
+          roleId,
           createdAt,
           updatedAt,
         } = post;
@@ -131,6 +134,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           groupId,
           authorId,
           postId,
+          roleId,
           date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
           name,
         });
@@ -162,8 +166,9 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
               groupId,
               authorId,
               postId,
+              roleId,
               date,
-            }: PostType,
+            }: PostsType,
             index,
           ) => (
             <Post
@@ -179,6 +184,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
               date={date}
               name={name}
               postId={postId}
+              roleId={roleId}
               authorId={authorId}
               groupId={groupId}
             />

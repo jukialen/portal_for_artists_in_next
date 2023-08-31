@@ -5,7 +5,7 @@ import url from 'url';
 
 import { backUrl } from 'utilites/constants';
 
-import { CommentType, FilesCommentsType } from 'types/global.types';
+import { FilesCommentsType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 
@@ -14,7 +14,7 @@ import { useHookSWR } from 'hooks/useHookSWR';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
-import { Comment } from 'components/atoms/Comment/Comment';
+import { FileComment } from 'components/atoms/FileComment/FileComment';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './FilesComments.module.scss';
@@ -33,50 +33,35 @@ export const FilesComments = ({ fileId }: CommentsType) => {
   const maxItems = 30;
 
   const firstComments = async () => {
-    const queryParams = {
-      orderBy: 'createdAt, desc',
-      where: `{ fileId: ${fileId}}`,
-      limit: maxItems.toString(),
-    };
-
-    const params = new url.URLSearchParams(queryParams);
-
     try {
-      const firstPage: FilesCommentsType[] = await axios.get(`${backUrl}/comments/all?${params}`);
+      const firstPage: FilesCommentsType[] = await axios.get(`${backUrl}/files-comments/all`, {
+        params: {
+          orderBy: 'createdAt, desc',
+          where: { fileId: fileId },
+          limit: maxItems,
+        },
+      });
 
       const commentArray: FilesCommentsType[] = [];
 
       for (const first of firstPage) {
-        const {
-          fileId,
-          comment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          adModRoleId,
-          authorId,
-          groupRole,
-          createdAt,
-          updatedAt,
-        } = first;
+        const { id, fileId, comment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = first;
 
         commentArray.push({
+          id,
           fileId,
           comment,
           pseudonym,
           profilePhoto,
           role,
           roleId,
-          adModRoleId,
           authorId,
-          groupRole,
           date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
       setCommentsArray(commentArray);
-      commentArray.length === maxItems && setLastVisible(commentArray[commentArray.length - 1].postId!);
+      commentArray.length === maxItems && setLastVisible(commentArray[commentArray.length - 1].fileId);
     } catch (e) {
       console.error(e);
     }
@@ -101,35 +86,22 @@ export const FilesComments = ({ fileId }: CommentsType) => {
       const nextCommentArray: FilesCommentsType[] = [];
 
       for (const next of nextPage) {
-        const {
+        const { id, fileId, comment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = next;
+
+        nextCommentArray.push({
+          id,
           fileId,
           comment,
           pseudonym,
           profilePhoto,
           role,
           roleId,
-          adModRoleId,
           authorId,
-          groupRole,
-          createdAt,
-          updatedAt,
-        } = next;
-
-        nextCommentArray.push({
-          commentId,
-          comment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          adModRoleId,
-          authorId,
-          groupRole,
           date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
-      nextPage.length === maxItems && setLastVisible(nextCommentArray[nextCommentArray.length - 1].postId!);
+      nextPage.length === maxItems && setLastVisible(nextCommentArray[nextCommentArray.length - 1].fileId);
 
       const nextArray = commentsArray.concat(...nextCommentArray);
       setCommentsArray(nextArray);
@@ -144,30 +116,18 @@ export const FilesComments = ({ fileId }: CommentsType) => {
       {commentsArray.length > 0 ? (
         commentsArray.map(
           (
-            {
-              commentId,
-              comment,
-              pseudonym,
-              profilePhoto,
-              role,
-              roleId,
-              adModRoleId,
-              authorId,
-              groupRole,
-              date,
-            }: CommentType,
+            { id, fileId, comment, pseudonym, profilePhoto, role, roleId, authorId, date }: FilesCommentsType,
             index,
           ) => (
             <DCProvider key={index}>
-              <Comment
-                commentId={commentId}
+              <FileComment
+                id={id}
+                fileId={fileId}
                 comment={comment}
                 pseudonym={pseudonym}
                 profilePhoto={profilePhoto}
                 role={role}
                 roleId={roleId}
-                groupRole={groupRole}
-                adModRoleId={adModRoleId}
                 authorId={authorId}
                 date={date}
               />

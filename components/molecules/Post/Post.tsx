@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import { Avatar, Button, IconButton } from '@chakra-ui/react';
 
-import { PostType } from 'types/global.types';
+import { PostsType } from 'types/global.types';
 
 import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
@@ -32,9 +32,10 @@ export const Post = ({
   groupId,
   authorId,
   postId,
+  roleId,
   date,
   name,
-}: PostType) => {
+}: PostsType) => {
   const [showComments, setShowComments] = useState(false);
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
@@ -88,7 +89,7 @@ export const Post = ({
         {likeCount}
       </p>
       <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-        <NewComments postId={postId} profilePhoto={profilePhoto!} />
+        <NewComments profilePhoto={profilePhoto!} roleId={roleId} />
         <Comments postId={postId!} />
       </article>
     </article>

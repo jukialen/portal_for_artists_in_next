@@ -16,6 +16,8 @@ export enum Tags {
   videos,
   animations,
   others,
+  profile,
+  group,
 }
 
 export enum Role {
@@ -39,15 +41,6 @@ type Time = {
   createdAt?: string;
   updatedAt?: string;
 };
-
-type UserPost = Time &
-  Logo & {
-    pseudonym: string;
-    date?: string;
-    name: string;
-    postId?: string;
-    authorId: string;
-  };
 
 export type DataType = any;
 
@@ -138,8 +131,13 @@ export type MemberType = {
 };
 
 //POSTS
-export type PostType = UserPost &
+export type PostsType = Time &
+  Logo &
   Like & {
+    pseudonym: string;
+    name: string;
+    postId?: string;
+    authorId: string;
     title: string;
     content: string;
     likes: number;
@@ -147,15 +145,20 @@ export type PostType = UserPost &
     shared: number;
     commented: number;
     groupId: string;
+    roleId: string;
+    date?: string;
   };
 
 // COMMENTS
 export type NewCommentsType = {
   profilePhoto: string;
   comment?: string;
-  postId?: string;
   fileId?: string;
-  fromFile?: boolean;
+  fileCommentId?: string;
+  commentId?: string;
+  subCommentId?: string;
+  roleId?: string;
+  postId?: string;
 };
 
 type Comment = Time & {
@@ -171,7 +174,6 @@ export type CommentType = Comment & {
   commentId: string;
   postId?: string;
   comment: string;
-  adModRoleId: string;
   groupRole: Role;
 };
 
@@ -181,29 +183,23 @@ export type FilesCommentsType = Comment & {
   comment: string;
 };
 
-export type CommentsType = Comment & {
-  commentId: string;
-  postId: string;
-  comment: string;
-  adModRoleId: string;
-  groupRole: Role;
-};
-
 export type SubCommentType = Comment & {
   subCommentId: string;
   commentId?: string;
   subComment: string;
   fileCommentId?: string;
-  adModRoleId?: string;
   groupRole?: Role;
+  fileId?: string;
+  postId?: string;
 };
 
-export type LastCommentType = Time & {
+export type LastCommentType = Comment & {
   lastCommentId: string;
   subCommentId: string;
   lastComment: string;
-  adModRoleId?: string;
   groupRole: Role;
+  fileId?: string;
+  postId?: string;
 };
 
 //DATE OBJECT

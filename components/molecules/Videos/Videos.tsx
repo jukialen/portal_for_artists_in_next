@@ -9,7 +9,7 @@ import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
 
 import styles from './Videos.module.scss';
 
-export const Videos = ({ name, fileUrl, authorName, tags, postId }: ArticleVideosType) => {
+export const Videos = ({ name, fileUrl, authorName, tags, fileId, profilePhoto }: ArticleVideosType) => {
   const { pseudonym } = useUserData();
 
   return (
@@ -25,7 +25,7 @@ export const Videos = ({ name, fileUrl, authorName, tags, postId }: ArticleVideo
         and watch it with your favorite video player!
       </video>
 
-      <FileOptions authorName={authorName!} tags={tags!} name={name!} postId={postId} />
+      <FileOptions authorName={authorName!} profilePhoto={profilePhoto} tags={tags!} name={name!} fileId={fileId} />
     </div>
   );
 };

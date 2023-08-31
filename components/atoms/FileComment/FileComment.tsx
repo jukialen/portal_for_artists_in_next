@@ -2,28 +2,27 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import { Avatar } from '@chakra-ui/react';
 
-import { CommentType } from 'types/global.types';
+import { FilesCommentsType } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 
 import { NewComments } from 'components/atoms/NewComments/NewComments';
-import { SubComments } from 'components/molecules/SubComments/SubComments';
 import { OptionsComments } from 'components/molecules/OptionsComments/OptionsComments';
+import { SubComments } from 'components/molecules/SubComments/SubComments';
 
 import styles from './Comment.module.scss';
 
-export const Comment = ({
-  commentId,
+export const FileComment = ({
+  id,
+  fileId,
   comment,
   pseudonym,
   profilePhoto,
   role,
   roleId,
   authorId,
-  groupRole,
-  postId,
   date,
-}: CommentType) => {
+}: FilesCommentsType) => {
   const { del } = useContext(DCContext);
 
   return (
@@ -41,16 +40,15 @@ export const Comment = ({
         </div>
       </div>
       <OptionsComments
-        commentId={commentId}
-        roleId={roleId}
-        groupRole={groupRole}
+        fileId={fileId}
         authorId={authorId}
+        roleId={roleId}
         //        likes={likes}
         //        liked={liked}
         //        name={name}
       >
-        <NewComments profilePhoto={profilePhoto} commentId={commentId} postId={postId} />
-        <SubComments commentId={commentId} postId={postId} />
+        <NewComments profilePhoto={profilePhoto} fileId={fileId} fileCommentId={id} />
+        <SubComments fileCommentId={id} fileId={fileId} />
       </OptionsComments>
     </div>
   );

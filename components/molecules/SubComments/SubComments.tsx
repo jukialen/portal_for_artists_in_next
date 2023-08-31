@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
-import { CommentType } from 'types/global.types';
+import { SubCommentType } from 'types/global.types';
+
+import { backUrl } from 'utilites/constants';
 
 import { getDate } from 'helpers/getDate';
 
@@ -12,8 +15,16 @@ import { DCProvider } from 'providers/DeleteCommentProvider';
 import { SubComment } from 'components/atoms/SubComment/SubComment';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
-export const SubComments = ({ refSubCom, userId, subCollection, idPost, idComment, groupSource }: AuthorType) => {
-  const [subCommentsArray, setSubCommentsArray] = useState<CommentType[]>([]);
+type SubCommentsType = {
+  fileCommentId?: string;
+  commentId?: string;
+  fileId?: string;
+  postId?: string;
+  groupRoledId?: string;
+};
+
+export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCommentsType) => {
+  const [subCommentsArray, setSubCommentsArray] = useState<SubCommentType[]>([]);
   const [lastVisible, setLastVisible] = useState<string>();
   let [i, setI] = useState(1);
 
@@ -22,30 +33,82 @@ export const SubComments = ({ refSubCom, userId, subCollection, idPost, idCommen
 
   const maxItems = 30;
 
-  const showingComments = async () => {
+  const firstComments = async () => {
     try {
-      const commentArray: CommentType[] = [];
+      const commentArray: SubCommentType[] = [];
 
+      const comments: SubCommentType[] = await axios.get(`${backUrl}/sub-comments/all`, {
+        params: {
+          orderBy: 'createdAt, desc',
+          where: !!fileCommentId ? { fileCommentId } : { commentId: commentId },
+          limit: maxItems,
+        },
+      });
+
+      for (const _c of comments) {
+        const { subCommentId, subComment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = _c;
+
+        commentArray.push({
+          subCommentId,
+          subComment,
+          pseudonym,
+          profilePhoto,
+          role,
+          roleId,
+          authorId,
+          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+        });
+      }
       setSubCommentsArray(commentArray);
-      //      commentArray.length === maxItems && setLastVisible();
+      commentArray.length === maxItems &&
+        setLastVisible(
+          fileCommentId
+            ? commentArray[commentArray.length - 1].fileCommentId
+            : commentArray[commentArray.length - 1].commentId,
+        );
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    !!refSubCom && showingComments();
-  }, [refSubCom]);
+    !!commentId && firstComments();
+  }, [commentId]);
 
-  const nextShowingComments = async () => {
+  const nextComments = async () => {
     try {
-      //      setLastVisible();
+      const nextSubCommentsArray: SubCommentType[] = [];
 
-      const nextCommentArray: CommentType[] = [];
+      const comments: SubCommentType[] = await axios.get(`${backUrl}/sub-comments/all`, {
+        params: {
+          orderBy: 'createdAt, desc',
+          where: fileCommentId ? { fileCommentId } : { commentId: commentId },
+          limit: maxItems,
+          cursor: lastVisible!,
+        },
+      });
 
-      const nextArray = subCommentsArray.concat(...nextCommentArray);
+      for (const _c of comments) {
+        const { subCommentId, subComment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = _c;
+
+        nextSubCommentsArray.push({
+          subCommentId,
+          subComment,
+          pseudonym,
+          profilePhoto,
+          role,
+          roleId,
+          authorId,
+          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+        });
+      }
+
+      const nextArray = subCommentsArray.concat(...nextSubCommentsArray);
       setSubCommentsArray(nextArray);
       setI(++i);
+      setLastVisible(
+        fileCommentId ? nextArray[nextArray.length - 1].fileCommentId : nextArray[nextArray.length - 1].commentId,
+      );
     } catch (e) {
       console.error(e);
     }
@@ -56,41 +119,29 @@ export const SubComments = ({ refSubCom, userId, subCollection, idPost, idCommen
       {subCommentsArray.length > 0 &&
         subCommentsArray.map(
           (
-            { author, date, description, nameGroup, profilePhoto, idSubComment, likes, liked, authorId }: CommentType,
+            { subCommentId, subComment, pseudonym, profilePhoto, role, roleId, authorId, date }: SubCommentType,
             index,
           ) => (
             <DCProvider key={index}>
               <SubComment
-                author={author}
-                date={date}
-                description={description}
-                nameGroup={nameGroup}
+                subCommentId={subCommentId}
+                subComment={subComment}
+                pseudonym={pseudonym}
                 profilePhoto={profilePhoto}
-                userId={userId!}
-                subCollection={subCollection}
-                idPost={idPost}
-                idComment={idComment}
-                idSubComment={idSubComment}
-                likes={likes}
-                liked={liked}
+                role={role}
+                roleId={roleId}
                 authorId={authorId}
-                refSubCom={refSubCom}
-                refDocSubCom={
-                  groupSource
-                    ? docSubPostsComments(nameGroup!, idPost!, idComment!, idSubComment!)
-                    : docSubFilesComment(userId!, subCollection!, idPost!, idComment!, idSubComment!)
-                }
-                refLastCom={
-                  groupSource
-                    ? lastPostsComments(nameGroup!, idPost!, idComment!, idSubComment!)
-                    : subLastFilesComments(userId!, subCollection!, idPost!, idComment!, idSubComment!)
-                }
-                groupSource={groupSource}
+                fileCommentId={fileCommentId}
+                fileId={fileId}
+                postId={postId}
+                //                likes={likes}
+                //                liked={liked}
+                date={date}
               />
             </DCProvider>
           ),
         )}
-      {!!lastVisible && subCommentsArray.length === maxItems * i && <MoreButton nextElements={nextShowingComments} />}
+      {!!lastVisible && subCommentsArray.length === maxItems * i && <MoreButton nextElements={nextComments} />}
     </>
   );
 };

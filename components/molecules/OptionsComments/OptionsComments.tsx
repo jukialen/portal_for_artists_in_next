@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -25,38 +25,35 @@ import { useUserData } from 'hooks/useUserData';
 import { ModeContext } from 'providers/ModeProvider';
 import { DCContext } from 'providers/DeleteCommentProvider';
 
-import { NewComments } from 'components/atoms/NewComments/NewComments';
-import { SubComments } from 'components/molecules/SubComments/SubComments';
-import { LastComments } from 'components/molecules/LastComments/LastComments';
-
 import styles from './OptionsComments.module.scss';
 import { AiFillLike, AiOutlineLike, AiOutlineMore } from 'react-icons/ai';
 
 type OptionsType = {
-  postId?: string;
+  fileId?: string;
   commentId?: string;
   subCommentId?: string;
-  lastComment?: string;
-  roleId: string;
-  groupRole: Role;
+  lastCommentId?: string;
+  roleId: string | Role.USER;
+  groupRole?: Role;
   authorId: string;
   liked?: boolean;
   likes?: number;
-  name?: string;
+  children?: ReactNode;
 };
 
 type NewCommentType = { comment: string };
 
 export const OptionsComments = ({
-  postId,
+  fileId,
   commentId,
   subCommentId,
+  lastCommentId,
   roleId,
   groupRole,
   authorId,
   liked,
   likes,
-  name,
+  children,
 }: OptionsType) => {
   const [like, setLike] = useState(false);
   const [moreOptions, setMoreOptions] = useState(false);
@@ -103,7 +100,10 @@ export const OptionsComments = ({
 
   const deleteComment = async () => {
     try {
-      await axios.delete(`${backUrl}/comments/${commentId}/${roleId}/${groupRole}`);
+      !!commentId && (await axios.delete(`${backUrl}/comments/${commentId}/${roleId}/${groupRole}`));
+      !!fileId && (await axios.delete(`${backUrl}/files-comments/${fileId}/${roleId}`));
+      !!subCommentId && (await axios.delete(`${backUrl}/sub-comments/${subCommentId}/${roleId}/${groupRole}`));
+      !!lastCommentId && (await axios.delete(`${backUrl}/last-comments/${lastCommentId}/${roleId}/${groupRole}`));
 
       await changeDel();
       await onClose();
@@ -243,42 +243,13 @@ export const OptionsComments = ({
               </AlertDialog>
             </>
           )}
-          {/*{!!(refDocCom || refDocSubCom) && (*/}
           <Button variant="link" color="blue" className={styles.answer} onClick={openComs}>
             {data?.Comments?.reply}
           </Button>
-          {/*)}*/}
         </div>
       </div>
-      {com && (
-        <>
-          {/*<NewComments*/}
-          {/*  name={groupSource ? nameGroup : subCollection}*/}
-          {/*  // @ts-ignore*/}
-          {/*  refCom={refLastCom! || refSubCom!}*/}
-          {/*/>*/}
-          {/*{!!refDocCom ? (*/}
-          {/*  <SubComments*/}
-          {/*    refSubCom={refSubCom}*/}
-          {/*    userId={userId}*/}
-          {/*    subCollection={subCollection}*/}
-          {/*    idPost={idPost}*/}
-          {/*    idComment={idComment}*/}
-          {/*    groupSource={groupSource}*/}
-          {/*  />*/}
-          {/*) : !!refDocSubCom ? (*/}
-          {/*  <LastComments*/}
-          {/*    userId={userId}*/}
-          {/*    subCollection={subCollection}*/}
-          {/*    idPost={idPost}*/}
-          {/*    idComment={idComment}*/}
-          {/*    idSubComment={idSubComment}*/}
-          {/*    refLastCom={refLastCom!}*/}
-          {/*    groupSource={groupSource}*/}
-          {/*  />*/}
-          {/*) : null}*/}
-        </>
-      )}
+
+      {children && children}
     </>
   );
 };

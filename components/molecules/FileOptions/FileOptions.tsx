@@ -18,8 +18,6 @@ type FileOptionsType = {
   profilePhoto: string;
   tags: Tags;
   name: string;
-  subC?: string;
-  lastC?: string;
 };
 
 export const FileOptions = ({ fileId, authorName, profilePhoto, tags, name }: FileOptionsType) => {
@@ -46,7 +44,7 @@ export const FileOptions = ({ fileId, authorName, profilePhoto, tags, name }: Fi
       </button>
       {open && (
         <>
-          <NewComments profilePhoto={profilePhoto} fileId={fileId} fromFile />
+          <NewComments profilePhoto={profilePhoto} fileId={fileId} />
           <FilesComments fileId={fileId} />
         </>
       )}
