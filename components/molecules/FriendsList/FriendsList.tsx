@@ -90,7 +90,7 @@ export const FriendsList = ({ id }: FriendsListType) => {
       }
       const nextArray = friendsList.concat(...nextFriendArray);
       setFriendsList(nextArray);
-      setLastVisible(friendsId[friendsId.length - 1].usernameId);
+      setLastVisible(nextFriendArray[nextFriendArray.length - 1].usernameId);
       setI(++i);
     } catch (e) {
       console.error(e);
