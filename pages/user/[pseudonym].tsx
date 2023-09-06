@@ -53,42 +53,48 @@ export default function User() {
 
   const downLoadFid = async () => {
     try {
-      const user: UserType = await axios.get(`${backUrl}/users/${pseudonym}`);
+      const user: { data: UserType } = await axios.get(`${backUrl}/users/${pseudonym}`);
 
-      setFid(user.id!);
-      setDescription(user.description!);
-      setFileUrl(`${cloudFrontUrl}/${user.profilePhoto}`);
+      setFid(user.data.id!);
+      setDescription(user.data.description!);
+      setFileUrl(`https://${cloudFrontUrl}/${user.data.profilePhoto}`);
     } catch (e) {
       console.error(e);
     }
   };
 
   const matchingFriend = async () => {
-    const friends: FriendType = await axios.get(`${backUrl}/friends`, {
+    const friends: { data: FriendType } = await axios.get(`${backUrl}/friends/all`, {
       params: {
-        where: {
-          AND: [{ usernameId: id }, { friendId: fid }],
+        queryData: {
+          where: {
+            AND: [{ usernameId: id }, { friendId: fid }],
+          },
         },
       },
     });
 
-    if (!!friends) {
+    if (!!friends.data) {
       setAddF(!addF);
-      setFavorite(friends.favorite!);
-      setIdenFriend(friends.id!);
+      setFavorite(friends.data.favorite!);
+      setIdenFriend(friends.data.id!);
     } else {
       console.error('No such friends!');
     }
   };
 
   const favFriendLength = async () => {
-    const favs: FriendType[] = await axios.get(`${backUrl}/friends`, {
+    const favs: { data: FriendType[] } = await axios.get(`${backUrl}/friends/all`, {
       params: {
-        AND: [{ usernameId: id }, { favorite: true }],
+        queryData: {
+          where: {
+            AND: [{ usernameId: id }, { favorite: true }],
+          },
+        },
       },
     });
 
-    setFavoriteLength(favs.length);
+    setFavoriteLength(favs.data.length);
   };
 
   const addToFriends = async () => {
@@ -135,9 +141,9 @@ export default function User() {
     favFriendLength();
   }, [id]);
 
-  //  if (loading) {
-  //    return null;
-  //  }
+    if (loading) {
+      return null;
+    }
 
   return (
     <>

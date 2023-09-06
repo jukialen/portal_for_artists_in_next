@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import url from 'url';
 
 import { FileType } from 'types/global.types';
 
@@ -33,19 +32,20 @@ export default function Drawings() {
   const dataDateObject = useDateData();
 
   const downloadDrawings = async () => {
-    const queryParams = {
-      orderBy: 'createdAt, desc',
-      where: `{ tags: ${pid} }`,
-      limit: maxItems.toString(),
-    };
-    const params = new url.URLSearchParams(queryParams);
-
     try {
       const filesArray: FileType[] = [];
 
-      const firstPage: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
+      const firstPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
+        params: {
+          queryData: {
+            orderBy: { createdAt: 'desc' },
+            where: { tags: pid },
+            limit: maxItems,
+          },
+        },
+      });
 
-      for (const file of firstPage) {
+      for (const file of firstPage.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
 
         filesArray.push({
@@ -54,7 +54,7 @@ export default function Drawings() {
           shortDescription,
           pseudonym,
           profilePhoto,
-          fileUrl: `${cloudFrontUrl}/${name}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
           time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
         });
@@ -67,22 +67,22 @@ export default function Drawings() {
       console.log('No such drawings!');
     }
   };
-
   const nextElements = async () => {
-    const queryParams = {
-      orderBy: 'createdAt, desc',
-      where: `{ tags: ${pid} }`,
-      limit: maxItems.toString(),
-      cursor: lastVisible!,
-    };
-    const params = new url.URLSearchParams(queryParams);
-
     try {
       const filesArray: FileType[] = [];
 
-      const nextArray: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
+      const nextArray: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
+        params: {
+          queryData: {
+            orderBy: { createdAt: 'desc' },
+            where: { tags: pid },
+            limit: maxItems,
+            cursor: lastVisible,
+          },
+        },
+      });
 
-      for (const file of nextArray) {
+      for (const file of nextArray.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
 
         filesArray.push({
@@ -91,7 +91,7 @@ export default function Drawings() {
           shortDescription,
           pseudonym,
           profilePhoto,
-          fileUrl: `${cloudFrontUrl}/${name}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
           time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
         });

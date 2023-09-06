@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import { io, Socket } from 'socket.io-client';
 import {
   Button,
   Divider,
@@ -28,6 +29,7 @@ import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
+import { useUserData } from 'hooks/useUserData';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
@@ -62,6 +64,7 @@ export default function Groups() {
   const { query, asPath } = useRouter();
   const { name } = query;
   const data = useHookSWR();
+  const { plan } = useUserData();
 
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
@@ -76,19 +79,19 @@ export default function Groups() {
 
   const joinedUsers = async () => {
     try {
-      const groups: GroupType = await axios.get(`${backUrl}/groups/${name}`);
-      setLogo(`${cloudFrontUrl}/${groups.logo}`);
-      setDescription(groups.description!);
-      setRegulation(groups.regulation);
+      const groups: { data: GroupType } = await axios.get(`${backUrl}/groups/${name}`);
+      setLogo(`https://${cloudFrontUrl}/${groups.data.logo}`);
+      setDescription(groups.data.description!);
+      setRegulation(groups.data.regulation);
 
       if (!!groups) {
         setJoin(true);
-        setFavorite(groups.favorited!);
-        setFavoriteLength(groups.favorites!);
-        setAdmin(groups.role === Role.ADMIN);
-        setGroupId(groups.groupId!);
-        setRoleId(groups.roleId!);
-        setUsersGroupsId(groups.usersGroupsId!);
+        setFavorite(groups.data.favorited!);
+        setFavoriteLength(groups.data.favorites!);
+        setAdmin(groups.data.role === 'ADMIN');
+        setGroupId(groups.data.groupId!);
+        setRoleId(groups.data.roleId!);
+        setUsersGroupsId(groups.data.usersGroupsId!);
       } else {
         setJoin(false);
       }
@@ -117,17 +120,13 @@ export default function Groups() {
   const toggleToFavorites = async () => {
     try {
       if (favorite) {
-        await axios.patch(`${backUrl}/groups/${name}`, {
-          favorite: false,
-          groupId,
-          usersGroupsId,
+        await axios.patch(`${backUrl}/groups/${roleId}/favs/${usersGroupsId}`, {
+          favs: false,
         });
         setFavoriteLength(favoriteLength - 1);
       } else {
-        await axios.patch(`${backUrl}/groups/${name}`, {
-          favorite: true,
-          groupId,
-          usersGroupsId,
+        await axios.patch(`${backUrl}/groups/${roleId}/favs/${usersGroupsId}`, {
+          favs: true,
         });
         setFavoriteLength(favoriteLength + 1);
       }
@@ -159,9 +158,9 @@ export default function Groups() {
         }));
     } catch (e) {
       console.error(e);
+      setValuesFields(data?.AnotherForm?.notUploadFile);
     }
   };
-
   if (useCurrentUser('/signin')) {
     return null;
   }

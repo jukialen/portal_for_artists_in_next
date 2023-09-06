@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import url from 'url';
 
 import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
@@ -29,21 +28,26 @@ export default function List() {
   const maxItems = 30;
 
   const getGroupsList = async () => {
-    const groups: GroupType[] = await axios.get(`${backUrl}/groups/all`, {
+    const groups: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
       params: {
-        sortBy: 'name, DESC',
-        limit: maxItems,
+        queryData: {
+          orderBy: { name: 'desc' },
+          limit: maxItems,
+        },
       },
     });
 
     const groupArray: GroupListType[] = [];
 
-    for (const _group of groups) {
+    for (const _group of groups.data) {
       groupArray.push({
         name: _group.name!,
-        fileUrl: `${cloudFrontUrl}/${_group.name}` || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        fileUrl: !!_group.logo
+          ? `https://${cloudFrontUrl}/${_group.logo}`
+          : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
       });
     }
+
     groupArray.length === maxItems && setLastVisible(groupArray[groupArray.length - 1].name);
     setListArray(groupArray);
   };
@@ -53,20 +57,24 @@ export default function List() {
   }, [loading]);
 
   const nextGroupsList = async () => {
-    const groups: GroupListType[] = await axios.get(`${backUrl}/groups/all`, {
+    const groups: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
       params: {
-        sortBy: 'name, DESC',
-        limit: maxItems,
-        cursor: lastVisible,
+        queryData: {
+          orderBy: { name: 'desc' },
+          limit: maxItems,
+          cursor: lastVisible,
+        },
       },
     });
 
     const groupArray: GroupListType[] = [];
 
-    for (const _group of groups) {
+    for (const _group of groups.data) {
       groupArray.push({
         name: _group.name!,
-        fileUrl: `${cloudFrontUrl}/${_group.name}` || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        fileUrl: !!_group.logo
+          ? `https://${cloudFrontUrl}/${_group.logo}`
+          : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
       });
     }
 

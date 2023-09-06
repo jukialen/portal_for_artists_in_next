@@ -3,9 +3,9 @@ import axios from 'axios';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
-import { FriendType, UserType } from 'types/global.types';
+import { FriendType } from 'types/global.types';
 
 import { Tile } from 'components/molecules/GroupTile/Tile';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -17,13 +17,14 @@ type FriendsListType = {
 };
 
 type FriendsListArrayType = {
+  usernameId: string;
   pseudonym: string;
-  profilePhoto: string;
+  fileUrl: string;
 };
 
 export const FriendsList = ({ id }: FriendsListType) => {
   const [friendsList, setFriendsList] = useState<FriendsListArrayType[]>([]);
-  const [lastVisible, setLastVisible] = useState<string | null>(null);
+  const [lastVisible, setLastVisible] = useState<string>();
   let [i, setI] = useState(1);
 
   const data = useHookSWR();
@@ -31,25 +32,29 @@ export const FriendsList = ({ id }: FriendsListType) => {
 
   const firstFriends = async () => {
     try {
-      const friendsId: FriendType[] = await axios.get(`${backUrl}/friends`, {
+      const friendsId: { data: FriendType[] } = await axios.get(`${backUrl}/friends/all`, {
         params: {
-          where: { usernameId: id },
-          orderBy: 'friendId, DESC',
-          limit: maxItems,
+          queryData: {
+            where: { usernameId: id },
+            orderBy: { friendId: 'desc' },
+            limit: maxItems,
+          },
         },
       });
 
       const friendArray: FriendsListArrayType[] = [];
 
-      for (const friend of friendsId) {
-        const friends: UserType = await axios.get(`${backUrl}/users/${friend.friendId}`);
-
-        const { pseudonym, profilePhoto } = friends;
-
-        friendArray.push({ pseudonym, profilePhoto: profilePhoto! });
+      for (const _f of friendsId.data) {
+        friendArray.push({
+          pseudonym: _f.pseudonym,
+          fileUrl: !!_f.profilePhoto
+            ? `https://${cloudFrontUrl}/${_f.profilePhoto}`
+            : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
+          usernameId: _f.usernameId,
+        });
       }
       setFriendsList(friendArray);
-      friendArray.length === maxItems && setLastVisible(friendsId[friendsId.length - 1].usernameId);
+      friendArray.length === maxItems && setLastVisible(friendArray[friendArray.length - 1].usernameId);
     } catch (e) {
       console.error(e);
     }
@@ -61,22 +66,27 @@ export const FriendsList = ({ id }: FriendsListType) => {
 
   const nextFriends = async () => {
     try {
-      const friendsId: FriendType[] = await axios.get(`${backUrl}/friends`, {
+      const friends: { data: FriendType[] } = await axios.get(`${backUrl}/friends/all`, {
         params: {
-          where: { usernameId: id },
-          orderBy: 'friendId, DESC',
-          limit: maxItems,
-          cursor: lastVisible,
+          queryData: {
+            where: { usernameId: id },
+            orderBy: { friendId: 'desc' },
+            limit: maxItems,
+            cursor: lastVisible,
+          },
         },
       });
 
       const nextFriendArray: FriendsListArrayType[] = [];
 
-      for (const friend of friendsId) {
-        const friends: FriendsListArrayType = await axios.get(`${backUrl}/users/${friend.friendId}`);
-        const { pseudonym, profilePhoto } = friends;
-
-        nextFriendArray.push({ pseudonym, profilePhoto });
+      for (const _f of friends.data) {
+        nextFriendArray.push({
+          pseudonym: _f.pseudonym,
+          fileUrl: !!_f.profilePhoto
+            ? `https://${cloudFrontUrl}/${_f.profilePhoto}`
+            : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
+          usernameId: _f.usernameId,
+        });
       }
       const nextArray = friendsList.concat(...nextFriendArray);
       setFriendsList(nextArray);
@@ -92,8 +102,8 @@ export const FriendsList = ({ id }: FriendsListType) => {
       <h2 className={styles.title}>{data?.Nav?.friends}</h2>
       <section className={styles.container__section}>
         {friendsList.length > 0 ? (
-          friendsList.map(({ pseudonym, profilePhoto }, index) => (
-            <Tile key={index} name={pseudonym} link={`/user/${pseudonym}`} logoUrl={profilePhoto} />
+          friendsList.map(({ pseudonym, fileUrl }, index) => (
+            <Tile key={index} name={pseudonym} link={`/user/${pseudonym}`} fileUrl={fileUrl} />
           ))
         ) : (
           <p className={styles.noFriends}>{data?.Friends?.noFriends}</p>

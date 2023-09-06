@@ -37,7 +37,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
     try {
       const commentArray: SubCommentType[] = [];
 
-      const comments: SubCommentType[] = await axios.get(`${backUrl}/sub-comments/all`, {
+      const comments: { data: SubCommentType[] } = await axios.get(`${backUrl}/sub-comments/all`, {
         params: {
           orderBy: 'createdAt, desc',
           where: !!fileCommentId ? { fileCommentId } : { commentId: commentId },
@@ -45,7 +45,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
         },
       });
 
-      for (const _c of comments) {
+      for (const _c of comments.data) {
         const { subCommentId, subComment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = _c;
 
         commentArray.push({
@@ -79,7 +79,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
     try {
       const nextSubCommentsArray: SubCommentType[] = [];
 
-      const comments: SubCommentType[] = await axios.get(`${backUrl}/sub-comments/all`, {
+      const comments: { data: SubCommentType[] } = await axios.get(`${backUrl}/sub-comments/all`, {
         params: {
           orderBy: 'createdAt, desc',
           where: fileCommentId ? { fileCommentId } : { commentId: commentId },
@@ -88,7 +88,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
         },
       });
 
-      for (const _c of comments) {
+      for (const _c of comments.data) {
         const { subCommentId, subComment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = _c;
 
         nextSubCommentsArray.push({

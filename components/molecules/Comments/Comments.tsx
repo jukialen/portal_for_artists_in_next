@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { CommentType } from 'types/global.types';
 
@@ -33,7 +33,7 @@ export const Comments = ({ postId }: CommentsType) => {
 
   const firstComments = async () => {
     try {
-      const firstPage: CommentType[] = await axios.get(`${backUrl}/comments/all`, {
+      const firstPage: { data: CommentType[] } = await axios.get(`${backUrl}/comments/all`, {
         params: {
           orderBy: 'createdAt, desc',
           where: { postId },
@@ -43,7 +43,7 @@ export const Comments = ({ postId }: CommentsType) => {
 
       const commentArray: CommentType[] = [];
 
-      for (const first of firstPage) {
+      for (const first of firstPage.data) {
         const { commentId, comment, pseudonym, profilePhoto, role, roleId, authorId, groupRole, createdAt, updatedAt } =
           first;
 
@@ -51,7 +51,7 @@ export const Comments = ({ postId }: CommentsType) => {
           commentId,
           comment,
           pseudonym,
-          profilePhoto,
+          profilePhoto: `https://${cloudFrontUrl}/${profilePhoto}`,
           role,
           roleId,
           authorId,
@@ -73,7 +73,7 @@ export const Comments = ({ postId }: CommentsType) => {
 
   const nextComments = async () => {
     try {
-      const nextPage: CommentType[] = await axios.get(`${backUrl}/comments/all`, {
+      const nextPage: { data: CommentType[] } = await axios.get(`${backUrl}/comments/all`, {
         params: {
           orderBy: 'createdAt, desc',
           where: { postId },
@@ -84,7 +84,7 @@ export const Comments = ({ postId }: CommentsType) => {
 
       const nextCommentArray: CommentType[] = [];
 
-      for (const next of nextPage) {
+      for (const next of nextPage.data) {
         const {
           commentId,
           comment,
@@ -103,7 +103,7 @@ export const Comments = ({ postId }: CommentsType) => {
           commentId,
           comment,
           pseudonym,
-          profilePhoto,
+          profilePhoto: `https://${cloudFrontUrl}/${profilePhoto}`,
           role,
           roleId,
           authorId,

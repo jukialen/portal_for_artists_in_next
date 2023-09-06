@@ -10,7 +10,7 @@ type TileType = {
   fileUrl: string;
 };
 export const Tile = ({ name, link, fileUrl }: TileType) => {
-  const sizes = 288;
+  const sizes = 256;
 
   return (
     <article className={styles.tile}>

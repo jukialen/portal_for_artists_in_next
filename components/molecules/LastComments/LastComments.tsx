@@ -28,7 +28,7 @@ export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType)
 
   const firstLastComments = async () => {
     try {
-      const lastComments: LastCommentType[] = await axios.get(`${backUrl}/last-comments/all`, {
+      const lastComments: { data: LastCommentType[] } = await axios.get(`${backUrl}/last-comments/all`, {
         params: {
           orderBy: 'createdAt, desc',
           where: { subCommentId },
@@ -37,7 +37,7 @@ export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType)
       });
 
       const lastCommentArray: LastCommentType[] = [];
-      for (const _last of lastComments) {
+      for (const _last of lastComments.data) {
         const {
           lastCommentId,
           lastComment,
@@ -80,7 +80,7 @@ export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType)
 
   const nextShowingComments = async () => {
     try {
-      const lastComments: LastCommentType[] = await axios.get(`${backUrl}/last-comments/all`, {
+      const lastComments: { data: LastCommentType[] } = await axios.get(`${backUrl}/last-comments/all`, {
         params: {
           orderBy: 'createdAt, desc',
           where: { subCommentId },
@@ -91,7 +91,7 @@ export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType)
 
       const nextCommentArray: LastCommentType[] = [];
 
-      for (const _last of lastComments) {
+      for (const _last of lastComments.data) {
         const {
           lastCommentId,
           lastComment,

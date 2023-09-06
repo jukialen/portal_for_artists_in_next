@@ -24,12 +24,11 @@ export default function PostFromGroup() {
   const containUrl = split.includes('https') || split.includes('http');
 
   const name = decodeURIComponent(split[containUrl ? 4 : 2]);
-  //  const pseudonym = decodeURIComponent(split[containUrl ? 5 : 3]);
   const postId = decodeURIComponent(split[containUrl ? 6 : 4]);
 
   const downloadPosts = async () => {
     try {
-      const post: PostsType = await axios.get(`${backUrl}/posts/${postId}`);
+      const post: {data} PostsType = await axios.get(`${backUrl}/posts/${postId}`);
 
       const {
         title,
@@ -55,8 +54,8 @@ export default function PostFromGroup() {
         shared,
         commented,
         groupId,
-        profilePhoto,
         pseudonym,
+        profilePhoto,
         authorId,
         name,
         roleId,
@@ -77,7 +76,7 @@ export default function PostFromGroup() {
 
   return (
     <Post
-      pseudonym={pseudonym}
+      pseudonym={postData!.pseudonym}
       title={postData!.title}
       date={postData!.date}
       content={postData!.content}

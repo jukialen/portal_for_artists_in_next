@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import url from 'url';
 
 import { Skeleton } from '@chakra-ui/react';
 
@@ -38,18 +37,19 @@ export default function Drawings() {
   const maxItems: number = 10;
 
   const downloadDrawings = async () => {
-    const queryParams = {
-      orderBy: 'name, desc',
-      where: `{ tags: ${index} }`,
-      limit: maxItems.toString(),
-    };
-    const params = new url.URLSearchParams(queryParams);
-
     try {
       const filesArray: FileType[] = [];
-      const firstPage: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
+      const firstPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
+        params: {
+          queryData: {
+            orderBy: { name: 'desc' },
+            where: { tags: index },
+            limit: maxItems,
+          },
+        },
+      });
 
-      for (const file of firstPage) {
+      for (const file of firstPage.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
 
         filesArray.push({
@@ -58,7 +58,7 @@ export default function Drawings() {
           shortDescription,
           pseudonym,
           profilePhoto,
-          fileUrl: `${cloudFrontUrl}/${name}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
           time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
         });
@@ -77,34 +77,35 @@ export default function Drawings() {
   }, [index]);
 
   const nextElements = async () => {
-    const queryParamsWithCursor = {
-      orderBy: 'name, desc',
-      where: `{ tags: ${index} }`,
-      limit: maxItems.toString(),
-      cursor: lastVisible!,
-    };
-    const params = new url.URLSearchParams(queryParamsWithCursor);
-
     try {
-      const filesArray: FileType[] = [];
-      const nextArray: FileType[] = await axios.get(`${backUrl}/files/all?${params}`);
+      const nextArray: FileType[] = [];
+      const nextPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
+        params: {
+          queryData: {
+            orderBy: { name: 'desc' },
+            where: { tags: index },
+            limit: maxItems,
+            cursor: lastVisible,
+          },
+        },
+      });
 
-      for (const file of nextArray) {
+      for (const file of nextPage.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
 
-        filesArray.push({
+        nextArray.push({
           fileId,
           name,
           shortDescription,
           pseudonym,
           profilePhoto,
-          fileUrl: `${cloudFrontUrl}/${name}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
           time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
-      setLastVisible(filesArray[filesArray.length - 1].fileId);
+      setLastVisible(nextArray[nextArray.length - 1].fileId);
       const newArray = userDrawings.concat(...nextArray);
       setUserDrawings(newArray);
       setI(++i);

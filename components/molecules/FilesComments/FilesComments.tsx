@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import url from 'url';
 
 import { backUrl } from 'utilites/constants';
 
@@ -34,7 +33,7 @@ export const FilesComments = ({ fileId }: CommentsType) => {
 
   const firstComments = async () => {
     try {
-      const firstPage: FilesCommentsType[] = await axios.get(`${backUrl}/files-comments/all`, {
+      const firstPage: { data: FilesCommentsType[] } = await axios.get(`${backUrl}/files-comments/all`, {
         params: {
           orderBy: 'createdAt, desc',
           where: { fileId: fileId },
@@ -44,7 +43,7 @@ export const FilesComments = ({ fileId }: CommentsType) => {
 
       const commentArray: FilesCommentsType[] = [];
 
-      for (const first of firstPage) {
+      for (const first of firstPage.data) {
         const { id, fileId, comment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = first;
 
         commentArray.push({
@@ -72,20 +71,19 @@ export const FilesComments = ({ fileId }: CommentsType) => {
   }, [fileId]);
 
   const nextComments = async () => {
-    const queryParamsWithCursor = {
-      orderBy: 'createdAt, desc',
-      where: `{ fileId: ${fileId}}`,
-      limit: maxItems.toString(),
-      cursor: lastVisible,
-    };
-    const paramsWithCursor = new url.URLSearchParams(queryParamsWithCursor);
-
     try {
-      const nextPage: FilesCommentsType[] = await axios.get(`${backUrl}/files-comments/all?${paramsWithCursor}`);
+      const nextPage: { data: FilesCommentsType[] } = await axios.get(`${backUrl}/files-comments/all`, {
+        params: {
+          orderBy: 'createdAt, desc',
+          where: { fileId: fileId },
+          limit: maxItems,
+          cursor: lastVisible,
+        },
+      });
 
       const nextCommentArray: FilesCommentsType[] = [];
 
-      for (const next of nextPage) {
+      for (const next of nextPage.data) {
         const { id, fileId, comment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = next;
 
         nextCommentArray.push({

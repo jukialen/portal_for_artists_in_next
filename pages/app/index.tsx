@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import url from 'url';
 
 import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
-import { FileType, Tags } from 'types/global.types';
+import { FileType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 
@@ -38,17 +37,19 @@ export default function App() {
   const downloadDrawings = async () => {
     try {
       const filesArray: FileType[] = [];
-      const drawings: FileType[] = await axios.get(`${backUrl}/files/all`, {
+      const drawings: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
         params: {
-          orderBy: 'name, desc',
-          where: {
-            AND: [{ tags: Tags.realistic }, { tags: Tags.manga }, { tags: Tags.anime }, { tags: Tags.comics }],
+          queryData: {
+            where: {
+              AND: [{ tags: 'realistic' }, { tags: 'manga' }, { tags: 'anime' }, { tags: 'comics' }],
+            },
+            orderBy: { createdAt: 'desc' },
+            limit: maxItems,
           },
-          limit: maxItems,
         },
       });
 
-      for (const draw of drawings) {
+      for (const draw of drawings.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = draw;
 
         filesArray.push({
@@ -57,7 +58,7 @@ export default function App() {
           shortDescription,
           pseudonym,
           profilePhoto,
-          fileUrl: `${cloudFrontUrl}/${name}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
@@ -73,15 +74,17 @@ export default function App() {
   const downloadPhotos = async () => {
     try {
       const filesArray: FileType[] = [];
-      const photographs: FileType[] = await axios.get(`${backUrl}/files/all`, {
+      const photographs: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
         params: {
-          orderBy: 'name, desc',
-          where: { tags: Tags.photographs },
-          limit: maxItems,
+          queryData: {
+            where: { tags: 'photographs' },
+            orderBy: { createdAt: 'desc' },
+            limit: maxItems,
+          },
         },
       });
 
-      for (const photo of photographs) {
+      for (const photo of photographs.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = photo;
 
         filesArray.push({
@@ -90,7 +93,7 @@ export default function App() {
           shortDescription,
           pseudonym,
           profilePhoto,
-          fileUrl: `${cloudFrontUrl}/${name}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
@@ -106,15 +109,17 @@ export default function App() {
   const downloadAnimations = async () => {
     try {
       const filesArray: FileType[] = [];
-      const animations: FileType[] = await axios.get(`${backUrl}/files`, {
+      const animations: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
         params: {
-          orderBy: 'name, desc',
-          where: { tags: Tags.animations },
-          limit: maxItems,
+          queryData: {
+            where: { tags: 'animations' },
+            orderBy: { createdAt: 'desc' },
+            limit: maxItems,
+          },
         },
       });
 
-      for (const animation of animations) {
+      for (const animation of animations.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = animation;
 
         filesArray.push({
@@ -123,7 +128,7 @@ export default function App() {
           shortDescription,
           pseudonym,
           profilePhoto,
-          fileUrl: `${cloudFrontUrl}/${name}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
@@ -139,15 +144,17 @@ export default function App() {
   const downloadVideos = async () => {
     try {
       const filesArray: FileType[] = [];
-      const videos: FileType[] = await axios.get(`${backUrl}/files`, {
+      const videos: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
         params: {
-          orderBy: 'name, desc',
-          where: { tags: Tags.videos },
-          limit: maxItems,
+          queryData: {
+            where: { tags: 'videos' },
+            orderBy: { createdAt: 'desc' },
+            limit: maxItems,
+          },
         },
       });
 
-      for (const video of videos) {
+      for (const video of videos.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = video;
 
         filesArray.push({
@@ -156,7 +163,7 @@ export default function App() {
           shortDescription,
           pseudonym,
           profilePhoto,
-          fileUrl: `${cloudFrontUrl}/${name}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
@@ -172,15 +179,17 @@ export default function App() {
   const downloadOthers = async () => {
     try {
       const filesArray: FileType[] = [];
-      const others: FileType[] = await axios.get(`${backUrl}/files`, {
+      const others: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
         params: {
-          orderBy: 'name, desc',
-          where: { tags: Tags.others },
-          limit: maxItems,
+          queryData: {
+            where: { tags: 'others' },
+            orderBy: { createdAt: 'desc' },
+            limit: maxItems,
+          },
         },
       });
 
-      for (const other of others) {
+      for (const other of others.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = other;
 
         filesArray.push({
@@ -189,7 +198,7 @@ export default function App() {
           shortDescription,
           pseudonym,
           profilePhoto,
-          fileUrl: `${cloudFrontUrl}/${name}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
@@ -218,9 +227,9 @@ export default function App() {
     downloadOthers();
   }, []);
 
-  if (useCurrentUser('/signin')) {
-    return null;
-  }
+  useCurrentUser('/signin');
+  //    return null;
+  //  }
 
   return (
     <>

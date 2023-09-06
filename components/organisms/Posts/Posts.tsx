@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import url from 'url';
 
 import { PostsType } from 'types/global.types';
 
@@ -30,20 +29,20 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
   const maxItems = 30;
 
   const firstPosts = async () => {
-    const queryParams = {
-      orderBy: 'createdAt, desc',
-      where: groupId,
-      limit: maxItems.toString(),
-    };
-
-    const params = new url.URLSearchParams(queryParams);
-
     try {
       const postArray: PostsType[] = [];
 
-      const posts: PostsType[] = await axios.get(`${backUrl}/posts/all?${params}`);
+      const posts: { data: PostsType[] } = await axios.get(`${backUrl}/posts/all`, {
+        params: {
+          queryData: {
+            orderBy: { createdAt: 'desc' },
+            where: { groupId },
+            limit: maxItems,
+          },
+        },
+      });
 
-      for (const post of posts) {
+      for (const post of posts.data) {
         const {
           title,
           content,
@@ -91,20 +90,21 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
   }, [name, locale]);
 
   const nextPosts = async () => {
-    const queryParamsWithCursor = {
-      orderBy: 'createdAt, desc',
-      where: groupId,
-      limit: maxItems.toString(),
-      cursor: lastVisible,
-    };
-    const paramsWithCursor = new url.URLSearchParams(queryParamsWithCursor);
-
     try {
       const nextArray: PostsType[] = [];
 
-      const posts: PostsType[] = await axios.get(`${backUrl}/posts/all?${paramsWithCursor}`);
+      const posts: { data: PostsType[] } = await axios.get(`${backUrl}/posts/all`, {
+        params: {
+          queryData: {
+            orderBy: 'createdAt, desc',
+            where: { groupId },
+            limit: maxItems,
+            cursor: lastVisible,
+          },
+        },
+      });
 
-      for (const post of posts) {
+      for (const post of posts.data) {
         const {
           title,
           content,

@@ -16,7 +16,7 @@ import styles from './index.module.scss';
 
 export default function Account() {
   const data = useHookSWR();
-  const { id, pseudonym } = useUserData();
+  const { id, pseudonym, plan } = useUserData();
 
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
@@ -89,13 +89,13 @@ export default function Account() {
             <GroupUsers id={id!} />
           </TabPanel>
           <TabPanel padding={0} role="tabpanel">
-            <PhotosGallery id={id} data={data} pseudonym={pseudonym!} />
+            <PhotosGallery id={id} data={data} pseudonym={pseudonym!} plan={plan!} />
           </TabPanel>
           <TabPanel padding={0} role="tabpanel">
-            <AnimatedGallery id={id} data={data} pseudonym={pseudonym!} />
+            <AnimatedGallery id={id} data={data} pseudonym={pseudonym!} plan={plan!} />
           </TabPanel>
           <TabPanel padding={0} role="tabpanel">
-            <VideoGallery id={id} data={data} pseudonym={pseudonym!} />
+            <VideoGallery id={id} data={data} pseudonym={pseudonym!} plan={plan!} />
           </TabPanel>
         </TabPanels>
       </Tabs>

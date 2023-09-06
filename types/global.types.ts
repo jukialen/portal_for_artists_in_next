@@ -104,8 +104,9 @@ export type ArticleVideosType = {
 export type FriendType = Time & {
   id?: string;
   usernameId: string;
-  friendId: string;
-  favorite?: boolean;
+  favorite: boolean;
+  pseudonym: string;
+  profilePhoto: string;
   time?: string;
 };
 
@@ -119,7 +120,7 @@ export type GroupType = Time & {
   usersGroupsId: string;
   favorited?: boolean;
   favorites: number;
-  role: Role;
+  role: string;
   roleId: string;
   time?: string;
 };

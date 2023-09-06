@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import Session from 'supertokens-web-js/recipe/session';
 import axios from 'axios';
@@ -8,6 +10,13 @@ import { backUrl } from 'utilites/constants';
 
 export const useUserData = () => {
   const [userInfo, setUserInfo] = useState<UserType | {}>({});
+  const [userId, setUserId] = useState<string>();
+
+  const getUserId = async () => {
+    if (await Session.doesSessionExist()) {
+      setUserId(await Session.getUserId());
+    }
+  };
 
   const getUserData = async () => {
     try {
@@ -17,7 +26,7 @@ export const useUserData = () => {
 
         const data: {
           data: UserType;
-        } = await axios.get(`${backUrl}/users`, { params: { where: { id: userId } } });
+        } = await axios.get(`${backUrl}/users/current/${userId}`);
 
         const { id, pseudonym, description, profilePhoto, plan, provider } = data.data;
 
@@ -39,8 +48,12 @@ export const useUserData = () => {
   };
 
   useEffect(() => {
-    getUserData();
+    getUserId();
   }, []);
+
+  useEffect(() => {
+    getUserData();
+  }, [userId]);
 
   return !!userInfo ? { ...userInfo } : {};
 };

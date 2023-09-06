@@ -16,7 +16,7 @@ import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
 export function UserHeader() {
   const [profileMenu, showProfileMenu] = useState(false);
   const [search, setSearchh] = useState(false);
-  const { push, locale } = useRouter();
+  const { push } = useRouter();
   const { pseudonym, profilePhoto } = useUserData();
   const data = useHookSWR();
 
@@ -45,7 +45,7 @@ export function UserHeader() {
       </Button>
       <div className={styles.buttons}>
         <Button
-          onClick={() => push('/groups')}
+          onClick={() => push('/groups/list')}
           colorScheme="yellow"
           className={styles.menu_buttons}
           aria-label="button for groups">
@@ -83,7 +83,7 @@ export function UserHeader() {
         </Button>
       </div>
       <Button colorScheme="yellow" className={styles.menu_buttons} onClick={toggleProfileMenu}>
-        <Avatar name={pseudonym} src={`${cloudFrontUrl}/${profilePhoto}`} size="sm" />
+        <Avatar name={pseudonym} src={`https://${cloudFrontUrl}/${profilePhoto}`} size="sm" />
         <p>{data?.Nav?.account}</p>
       </Button>
 

@@ -63,7 +63,7 @@ export const Post = ({
   return (
     <article className={styles.container}>
       <div className={styles.avatarWithUsername}>
-        <Avatar src={`${cloudFrontUrl}/${profilePhoto}` || group} />
+        <Avatar src={`https://${cloudFrontUrl}/${profilePhoto}` || group} />
         <div className={styles.username}>
           <Link href={`/user/${pseudonym}`}>{pseudonym}</Link>
           <div className={styles.time}>{date}</div>

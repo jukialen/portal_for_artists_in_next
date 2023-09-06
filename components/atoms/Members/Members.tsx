@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import axios from 'axios';
-import url from 'url';
 
 import { Avatar, Divider, IconButton, Link } from '@chakra-ui/react';
 
-import { MemberType, Role } from 'types/global.types';
+import { MemberType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
+import { sortMembers } from 'helpers/sorting';
+
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { backUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import styles from './Members.module.scss';
 import group from 'public/group.svg';
@@ -36,9 +37,16 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
   const maxItems = 30;
 
   const downloadAdmin = async () => {
-    const admin: MemberType[] = await axios.get(`${backUrl}/groups/members/${groupId}/${Role.ADMIN}`);
-    setPseudonymAdmin(admin[0].pseudonym);
-    setProfilePhotoAdmin(admin[0].profilePhoto!);
+    const admin: { data: MemberType[] } = await axios.get(`${backUrl}/groups/members/${groupId}/ADMIN`, {
+      params: {
+        queryData: {
+          limit: 1,
+        },
+      },
+    });
+
+    setPseudonymAdmin(admin.data[0].pseudonym);
+    setProfilePhotoAdmin(admin.data[0].profilePhoto!);
   };
 
   useEffect(() => {
@@ -49,14 +57,15 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
     try {
       const moderatorArray: MemberType[] = [];
 
-      const moderators: MemberType[] = await axios.get(`${backUrl}/groups/members/${groupId}/${Role.MODERATOR}`, {
+      const moderators: { data: MemberType[] } = await axios.get(`${backUrl}/groups/members/${groupId}/MODERATOR`, {
         params: {
-          orderBy: 'pseudonym, desc',
-          limit: maxItems,
+          queryData: {
+            limit: maxItems,
+          },
         },
       });
 
-      for (const mod of moderators) {
+      for (const mod of moderators.data) {
         moderatorArray.push({
           usersGroupsId: mod.usersGroupsId,
           pseudonym: mod.pseudonym,
@@ -64,7 +73,8 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
         });
       }
 
-      setModeratorsArray(moderatorArray);
+      const firstMods = moderatorArray.sort(sortMembers());
+      setModeratorsArray(firstMods);
       moderatorArray.length === maxItems && setModeratorsLastVisible(moderatorArray[moderatorArray.length - 1]);
     } catch (e) {
       console.error(e);
@@ -75,14 +85,15 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
     try {
       const memberArray: MemberType[] = [];
 
-      const users: MemberType[] = await axios.get(`${backUrl}/groups/members/${groupId}/${Role.USER}`, {
+      const users: { data: MemberType[] } = await axios.get(`${backUrl}/groups/members/${groupId}/USER`, {
         params: {
-          orderBy: 'pseudonym, desc',
-          limit: maxItems,
+          queryData: {
+            limit: maxItems,
+          },
         },
       });
 
-      for (const user of users) {
+      for (const user of users.data) {
         memberArray.push({
           usersGroupsId: user.usersGroupsId,
           pseudonym: user.pseudonym,
@@ -90,7 +101,8 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
         });
       }
 
-      setMembersArray(memberArray);
+      const firstMembers = await memberArray.sort(sortMembers());
+      setMembersArray(firstMembers);
       memberArray.length === maxItems && setMembersLastVisible(memberArray[memberArray.length - 1]);
     } catch (e) {
       console.error(e);
@@ -109,14 +121,16 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
     try {
       const nextModeratorArray: MemberType[] = [];
 
-      const moderators: MemberType[] = await axios.get(`${backUrl}/groups/members/${groupId}/${Role.MODERATOR}`, {
+      const moderators: { data: MemberType[] } = await axios.get(`${backUrl}/groups/members/${groupId}/MODERATOR`, {
         params: {
-          limit: maxItems,
-          cursor: lastModeratorsVisible,
+          queryData: {
+            limit: maxItems,
+            cursor: 'efefe',
+          },
         },
       });
 
-      for (const mod of moderators) {
+      for (const mod of moderators.data) {
         nextModeratorArray.push({
           usersGroupsId: mod.usersGroupsId,
           pseudonym: mod.pseudonym,
@@ -124,7 +138,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
         });
       }
 
-      const nextArray = moderatorsArray.concat(...nextModeratorArray);
+      const nextArray = moderatorsArray.concat(...nextModeratorArray).sort(sortMembers());
       setModeratorsArray(nextArray);
       setModeratorsLastVisible(nextModeratorArray[nextModeratorArray.length - 1]);
       setIModerators(iModerators++);
@@ -137,27 +151,16 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
     try {
       const nextMemberArray: MemberType[] = [];
 
-      const users: MemberType[] = await axios.get(`${backUrl}/groups/members/${groupId}/${Role.USER}`, {
+      const users: { data: MemberType[] } = await axios.get(`${backUrl}/groups/members/${groupId}/USER`, {
         params: {
-          limit: maxItems,
-          cursor: lastMembersVisible,
+          queryData: {
+            limit: maxItems,
+            cursor: 'efefe',
+          },
         },
       });
 
-      const sort = () => (a: MemberType, b: MemberType) => {
-        const pseudonymA = a.pseudonym;
-        const pseudonymB = b.pseudonym;
-        if (pseudonymA < pseudonymB) {
-          return -1;
-        }
-        if (pseudonymA > pseudonymB) {
-          return 1;
-        }
-
-        return 0;
-      };
-
-      for (const user of users) {
+      for (const user of users.data) {
         nextMemberArray.push({
           usersGroupsId: user.usersGroupsId,
           pseudonym: user.pseudonym,
@@ -165,7 +168,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
         });
       }
 
-      const nextArray = membersArray.concat(...nextMemberArray).sort(sort());
+      const nextArray = membersArray.concat(...nextMemberArray).sort(sortMembers());
       setMembersArray(nextArray);
       setMembersLastVisible(nextMemberArray[nextMemberArray.length - 1]);
       setIMembers(iMembers++);
@@ -185,18 +188,14 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
       const dataUser = { usersGroupsId, pseudonym, profilePhoto };
 
       if (user) {
-        await axios.patch(`${backUrl}/groups/${name}`, {
-          data: { role: 'MODERATOR', usersGroupsId },
-        });
+        await axios.patch(`${backUrl}/groups/${name}/MODERATOR`);
 
         const deletedMem = membersArray.splice(index, 1);
         setMembersArray(deletedMem);
         const newModeratorsList = moderatorsArray.concat(dataUser);
         setModeratorsArray(newModeratorsList);
       } else {
-        await axios.patch(`${backUrl}/users-groups/${name}`, {
-          data: { role: 'USER', usersGroupsId },
-        });
+        await axios.patch(`${backUrl}/groups/${name}/USER`);
 
         const deletedMod = moderatorsArray.splice(index, 1);
         setModeratorsArray(deletedMod);
@@ -225,7 +224,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
           <div className={styles.usersButton} key={index}>
-            <Avatar name={pseudonym} src={!!profilePhoto ? profilePhoto : group} />
+            <Avatar name={pseudonym} src={!!profilePhoto ? `https://${cloudFrontUrl}/${profilePhoto}` : group} />
             <NextLink href={`/user/${pseudonym}`} passHref>
               <Link>{pseudonym}</Link>
             </NextLink>
@@ -250,7 +249,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
       {membersArray.length > 0 ? (
         membersArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
           <div className={styles.usersButton} key={index}>
-            <Avatar name={pseudonym} src={!!profilePhoto ? profilePhoto : group} />
+            <Avatar name={pseudonym} src={!!profilePhoto ? `https://${cloudFrontUrl}/${profilePhoto}` : group} />
             <NextLink href={`/user/${pseudonym}`} passHref>
               <Link>{pseudonym}</Link>
             </NextLink>

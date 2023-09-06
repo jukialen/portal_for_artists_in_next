@@ -25,27 +25,30 @@ export const VideoGallery = ({ id, pseudonym, data }: UserType) => {
 
   const maxItems = 30;
 
-  const downloadVideos = async () => {
+  const firstVideos = async () => {
     try {
-      const firstPage: FileType[] = await axios.get(`${backUrl}/files`, {
+      const firstPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
         params: {
-          where: {
-            AND: [{ tags: 'videos' }, { authorId: id }],
+          queryData: {
+            where: {
+              AND: [{ tags: 'videos' }, { authorId: id }],
+            },
+            orderBy: { name: 'desc' },
+            limit: maxItems,
+            cursor: lastVisible,
           },
-          limit: maxItems,
-          sortBy: 'name, DESC',
         },
       });
 
       const filesArray: FileType[] = [];
 
-      for (const file of firstPage) {
+      for (const file of firstPage.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
 
         filesArray.push({
           fileId,
           name,
-          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          fileUrl: `https://${cloudFrontUrl}/${file.name}`,
           pseudonym,
           shortDescription,
           profilePhoto,
@@ -62,31 +65,33 @@ export const VideoGallery = ({ id, pseudonym, data }: UserType) => {
   };
 
   useEffect(() => {
-    !!id && downloadVideos();
+    !!id && firstVideos();
   }, [id]);
 
   const nextElements = async () => {
     try {
-      const nextPage: FileType[] = await axios.get(`${backUrl}/files`, {
+      const nextPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
         params: {
-          where: {
-            AND: [{ tags: 'videos' }, { authorId: id }],
+          queryData: {
+            where: {
+              AND: [{ tags: 'videos' }, { authorId: id }],
+            },
+            orderBy: { name: 'desc' },
+            limit: maxItems,
+            cursor: lastVisible,
           },
-          limit: maxItems,
-          sortBy: 'name, DESC',
-          cursor: lastVisible,
         },
       });
 
       const nextArray: FileType[] = [];
 
-      for (const file of nextPage) {
+      for (const file of nextPage.data) {
         const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
 
         nextArray.push({
           fileId,
           name,
-          fileUrl: `${cloudFrontUrl}/${file.name}`,
+          fileUrl: `https://${cloudFrontUrl}/${file.name}`,
           pseudonym,
           shortDescription,
           profilePhoto,

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import url from 'url';
 
 import { FileType } from 'types/global.types';
 import { backUrl, cloudFrontUrl } from 'utilites/constants';
@@ -29,12 +28,12 @@ export default function Post() {
 
   const simpleUserPost = async () => {
     try {
-      const file: FileType = await axios.get(`${backUrl}/files`, {
+      const file: { data: FileType } = await axios.get(`${backUrl}/files`, {
         params: {
           where: { name },
         },
       });
-      const { fileId, shortDescription, pseudonym, profilePhoto, tags, authorId, createdAt, updatedAt } = file;
+      const { fileId, shortDescription, pseudonym, profilePhoto, tags, authorId, createdAt, updatedAt } = file.data;
 
       setContainer({
         name,
@@ -42,7 +41,7 @@ export default function Post() {
         fileId,
         pseudonym,
         profilePhoto,
-        fileUrl: `${cloudFrontUrl}/${name}`,
+        fileUrl: `https://${cloudFrontUrl}/${name}`,
         shortDescription,
         authorName: pseudonym,
         tags,

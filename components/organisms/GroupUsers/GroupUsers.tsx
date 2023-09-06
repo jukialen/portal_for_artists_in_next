@@ -4,7 +4,7 @@ import { Divider } from '@chakra-ui/react';
 
 import { GroupType } from 'types/global.types';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -18,15 +18,21 @@ type GroupUsersType = {
   id: string;
 };
 
+type GroupUserType = {
+  name: string;
+  logo: string;
+  groupId: string;
+};
+
 export const GroupUsers = ({ id }: GroupUsersType) => {
-  const [adminsArray, setAdminsArray] = useState<GroupType[]>([]);
-  const [lastAdminsVisible, setAdminsLastVisible] = useState<GroupType>();
+  const [adminsArray, setAdminsArray] = useState<GroupUserType[]>([]);
+  const [lastAdminsVisible, setAdminsLastVisible] = useState<string>();
   let [iAdmins, setIAdmins] = useState(1);
-  const [moderatorsArray, setModeratorsArray] = useState<GroupType[]>([]);
-  const [lastModeratorsVisible, setModeratorsLastVisible] = useState<GroupType>();
+  const [moderatorsArray, setModeratorsArray] = useState<GroupUserType[]>([]);
+  const [lastModeratorsVisible, setModeratorsLastVisible] = useState<string>();
   let [iModerators, setIModerators] = useState(1);
-  const [membersArray, setMembersArray] = useState<GroupType[]>([]);
-  const [lastMembersVisible, setMembersLastVisible] = useState<GroupType>();
+  const [membersArray, setMembersArray] = useState<GroupUserType[]>([]);
+  const [lastMembersVisible, setMembersLastVisible] = useState<string>();
   let [iMembers, setIMembers] = useState(1);
 
   const data = useHookSWR();
@@ -34,30 +40,26 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const firstAdminList = async () => {
     try {
-      const groupList: [
-        {
-          name: string;
-          logoUrl: string;
-        },
-      ] = await axios.get(`${backUrl}/groups`, {
+      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/groups/my-groups/ADMIN`, {
         params: {
-          where: { adminId: id },
-          orderBy: 'name, DESC',
-          limit: maxItems,
+          queryData: {
+            limit: maxItems,
+          },
         },
       });
 
-      const adminArray: GroupType[] = [];
+      const adminArray: GroupUserType[] = [];
 
-      for (const group of groupList) {
+      for (const _group of groupList.data) {
         adminArray.push({
-          name: group.name,
-          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          name: _group.name,
+          logo: !!_group.logo ? `https://${cloudFrontUrl}/${_group.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          groupId: _group.groupId,
         });
       }
 
       setAdminsArray(adminArray);
-      adminArray.length === maxItems && setAdminsLastVisible(adminArray[adminArray.length - 1]);
+      adminArray.length === maxItems && setAdminsLastVisible(adminArray[adminArray.length - 1].name);
     } catch (e) {
       console.error(e);
     }
@@ -69,30 +71,26 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const firstModeratorsList = async () => {
     try {
-      const groupList: [
-        {
-          name: string;
-          logoUrl: string;
-        },
-      ] = await axios.get(`${backUrl}/groups`, {
+      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/my-groups/MODERATOR`, {
         params: {
-          where: { moderatorsId: id },
-          orderBy: 'name, DESC',
-          limit: maxItems,
+          queryData: {
+            limit: maxItems,
+          },
         },
       });
 
-      const moderatorArray: GroupType[] = [];
+      const moderatorArray: GroupUserType[] = [];
 
-      for (const group of groupList) {
+      for (const _g of groupList.data) {
         moderatorArray.push({
-          name: group.name,
-          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          name: _g.name,
+          logo: !!_g.logo ? `https://${cloudFrontUrl}/${_g.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          groupId: _g.groupId,
         });
       }
 
       setModeratorsArray(moderatorArray);
-      moderatorArray.length === maxItems && setModeratorsLastVisible(moderatorArray[moderatorArray.length - 1]);
+      moderatorArray.length === maxItems && setModeratorsLastVisible(moderatorArray[moderatorArray.length - 1].groupId);
     } catch (e) {
       console.error(e);
     }
@@ -104,30 +102,26 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const firstMembersList = async () => {
     try {
-      const groupList: [
-        {
-          name: string;
-          logoUrl: string;
-        },
-      ] = await axios.get(`${backUrl}/groups`, {
+      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/my-groups/USER`, {
         params: {
-          where: { usersId: id },
-          orderBy: 'name, DESC',
-          limit: maxItems,
+          queryData: {
+            limit: maxItems,
+          },
         },
       });
 
-      const memberArray: GroupType[] = [];
+      const memberArray: GroupUserType[] = [];
 
-      for (const group of groupList) {
+      for (const _g of groupList.data) {
         memberArray.push({
-          name: group.name,
-          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          name: _g.name,
+          logo: !!_g.logo ? `https://${cloudFrontUrl}/${_g.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          groupId: _g.groupId,
         });
       }
 
       setMembersArray(memberArray);
-      memberArray.length === maxItems && setMembersLastVisible(memberArray[memberArray.length - 1]);
+      memberArray.length === maxItems && setMembersLastVisible(memberArray[memberArray.length - 1].groupId);
     } catch (e) {
       console.error(e);
     }
@@ -139,32 +133,28 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const nextAdminList = async () => {
     try {
-      const groupList: [
-        {
-          name: string;
-          logoUrl: string;
-        },
-      ] = await axios.get(`${backUrl}/groups`, {
+      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/my-groups/ADMIN`, {
         params: {
-          where: { adminId: id },
-          orderBy: 'name, DESC',
-          limit: maxItems,
-          cursor: lastAdminsVisible,
+          queryData: {
+            limit: maxItems,
+            cursor: lastAdminsVisible,
+          },
         },
       });
 
-      const nextAdminArray: GroupType[] = [];
+      const nextAdminArray: GroupUserType[] = [];
 
-      for (const group of groupList) {
+      for (const _g of groupList.data) {
         nextAdminArray.push({
-          name: group.name,
-          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          name: _g.name,
+          logo: !!_g.logo ? `https://${cloudFrontUrl}/${_g.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          groupId: _g.groupId,
         });
       }
 
       const nextArray = adminsArray.concat(...nextAdminArray);
       setAdminsArray(nextArray);
-      setAdminsLastVisible(nextArray[nextArray.length - 1]);
+      setAdminsLastVisible(nextArray[nextArray.length - 1].groupId);
       setIAdmins(iAdmins++);
     } catch (e) {
       console.error(e);
@@ -173,33 +163,29 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const nextModeratorsList = async () => {
     try {
-      const groupList: [
-        {
-          name: string;
-          logoUrl: string;
-        },
-      ] = await axios.get(`${backUrl}/groups`, {
+      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/my-groups/MODERATOR`, {
         params: {
-          where: { moderatorsId: id },
-          orderBy: 'name, DESC',
-          limit: maxItems,
-          cursor: lastModeratorsVisible,
+          queryData: {
+            limit: maxItems,
+            cursor: lastModeratorsVisible,
+          },
         },
       });
 
-      const nextModeratorArray: GroupType[] = [];
+      const nextModeratorArray: GroupUserType[] = [];
 
-      for (const group of groupList) {
+      for (const _g of groupList.data) {
         nextModeratorArray.push({
-          name: group.name,
-          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          name: _g.name,
+          logo: !!_g.logo ? `https://${cloudFrontUrl}/${_g.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          groupId: _g.groupId,
         });
       }
 
       const nextArray = moderatorsArray.concat(...nextModeratorArray);
 
       setModeratorsArray(nextArray);
-      setModeratorsLastVisible(nextArray[nextArray.length - 1]);
+      setModeratorsLastVisible(nextArray[nextArray.length - 1].groupId);
       setIModerators(iModerators++);
     } catch (e) {
       console.error(e);
@@ -208,31 +194,28 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   const nextMembersList = async () => {
     try {
-      const groupList: [
-        {
-          name: string;
-          logoUrl: string;
-        },
-      ] = await axios.get(`${backUrl}/groups`, {
+      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/my-groups/USER`, {
         params: {
-          where: { usersId: id },
-          orderBy: 'name, DESC',
-          limit: maxItems,
-          cursor: lastMembersVisible,
+          queryData: {
+            limit: maxItems,
+            cursor: lastMembersVisible,
+          },
         },
       });
 
-      const nextMemberArray: GroupType[] = [];
+      const nextMemberArray: GroupUserType[] = [];
 
-      for (const group of groupList) {
+      for (const _g of groupList.data) {
         nextMemberArray.push({
-          name: group.name,
-          logoUrl: group.logoUrl || `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          name: _g.name,
+          logo: !!_g.logo ? `https://${cloudFrontUrl}/${_g.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          groupId: _g.groupId,
         });
       }
 
       const nextArray = membersArray.concat(...nextMemberArray);
       setMembersArray(nextArray);
+      setModeratorsLastVisible(nextArray[nextArray.length - 1].groupId);
       setIMembers(iMembers++);
     } catch (e) {
       console.error(e);
@@ -254,8 +237,8 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
       <h2 className={styles.title}>{data?.Account?.groups?.adminTitle}</h2>
       <Divider className={styles.divider} />
       {adminsArray.length > 0 ? (
-        adminsArray.map(({ name: nameGroup, logoUrl }, index) => (
-          <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
+        adminsArray.map(({ name, logo }, index) => (
+          <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
       ) : (
         <p className={styles.noGroups}>{data?.Account?.groups?.noAdmin}</p>
@@ -264,8 +247,8 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
       <h2 className={styles.title}>{data?.Account?.groups?.modsTitle}</h2>
       <Divider className={styles.divider} />
       {moderatorsArray.length > 0 ? (
-        moderatorsArray.map(({ name: nameGroup, logoUrl }, index) => (
-          <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
+        moderatorsArray.map(({ name, logo }, index) => (
+          <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
       ) : (
         <p className={styles.noGroups}>{data?.Account?.groups?.noMods}</p>
@@ -276,8 +259,8 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
       <h2 className={styles.title}>{data?.Account?.groups?.usersTitle}</h2>
       <Divider className={styles.divider} />
       {membersArray.length > 0 ? (
-        membersArray.map(({ name: nameGroup, logoUrl }, index) => (
-          <Tile key={index} name={nameGroup} link={`/groups/${nameGroup}`} logoUrl={logoUrl} />
+        membersArray.map(({ name, logo }, index) => (
+          <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
       ) : (
         <p className={styles.noGroups}>{data?.Account?.groups?.noUsers}</p>
