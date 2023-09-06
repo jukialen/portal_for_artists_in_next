@@ -99,7 +99,7 @@ export const FilesComments = ({ fileId }: CommentsType) => {
         });
       }
 
-      nextPage.length === maxItems && setLastVisible(nextCommentArray[nextCommentArray.length - 1].fileId);
+      nextPage.data.length === maxItems && setLastVisible(nextCommentArray[nextCommentArray.length - 1].fileId);
 
       const nextArray = commentsArray.concat(...nextCommentArray);
       setCommentsArray(nextArray);
