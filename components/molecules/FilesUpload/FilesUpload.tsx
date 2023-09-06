@@ -70,8 +70,6 @@ export const FilesUpload = () => {
 
   const uploadFiles = async ({ tags, shortDescription }: FileDataType, { resetForm }: ResetFormType) => {
     try {
-      console.log(shortDescription);
-
       !file && setRequired(true);
       await axios.post(`${backUrl}/files`, {
         data: { tags, shortDescription },

@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Divider } from '@chakra-ui/react';
 
-import { GroupType } from 'types/global.types';
-
 import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';

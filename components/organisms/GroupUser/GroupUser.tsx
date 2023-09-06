@@ -1,15 +1,15 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {Divider} from '@chakra-ui/react';
+import { Divider } from '@chakra-ui/react';
 
-import {useHookSWR} from 'hooks/useHookSWR';
+import { useHookSWR } from 'hooks/useHookSWR';
 
-import {backUrl, cloudFrontUrl} from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
-import {GroupType} from 'types/global.types';
+import { GroupType } from 'types/global.types';
 
-import {MoreButton} from 'components/atoms/MoreButton/MoreButton';
-import {Tile} from 'components/molecules/GroupTile/Tile';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
+import { Tile } from 'components/molecules/GroupTile/Tile';
 
 import styles from './GroupUser.module.scss';
 
@@ -20,9 +20,9 @@ type GroupUserType = {
 type GroupUsersType = {
   name: string;
   logo: string;
-}
+};
 
-export const GroupUser = ({id}: GroupUserType) => {
+export const GroupUser = ({ id }: GroupUserType) => {
   const [adminsArray, setAdminsArray] = useState<GroupUsersType[]>([]);
   const [lastAdminsVisible, setAdminsLastVisible] = useState<string>();
   let [iAdmins, setIAdmins] = useState(1);
@@ -39,7 +39,7 @@ export const GroupUser = ({id}: GroupUserType) => {
   const firstAdminList = async () => {
     try {
       const admins: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
-        params: {where: {adminId: id}, orderBy: {name: 'desc'}, limit: maxItems},
+        params: { where: { adminId: id }, orderBy: { name: 'desc' }, limit: maxItems },
       });
 
       const adminArray: GroupUsersType[] = [];
@@ -64,20 +64,22 @@ export const GroupUser = ({id}: GroupUserType) => {
 
   const firstModeratorsList = async () => {
     try {
-      const moderators: { data: GroupType[] } = await axios.get(`${backUrl}/groups`, {
-        params: {where: {moderatorsId: id}, orderBy: {name: 'desc'}, limit: maxItems},
+      const moderators: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
+        params: { where: { moderatorsId: id }, orderBy: { name: 'desc' }, limit: maxItems },
       });
       const moderatorArray: GroupUsersType[] = [];
 
       for (const moderator of moderators.data) {
         moderatorArray.push({
           name: moderator.name!,
-          logo: !!moderator.logo ? `https://${cloudFrontUrl}/${moderator.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          logo: !!moderator.logo
+            ? `https://${cloudFrontUrl}/${moderator.logo}`
+            : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
 
       setModeratorsArray(moderatorArray);
-      moderatorArray.length === maxItems && setModeratorsLastVisible(moderatorArray[moderatorArray.length - 1].name;
+      moderatorArray.length === maxItems && setModeratorsLastVisible(moderatorArray[moderatorArray.length - 1].name);
     } catch (e) {
       console.error(e);
     }
@@ -89,8 +91,8 @@ export const GroupUser = ({id}: GroupUserType) => {
 
   const firstMembersList = async () => {
     try {
-      const members: { data: GroupType[] } = await axios.get(`${backUrl}/groups`, {
-        params: {where: {usersId: id}, orderBy: {name: 'desc'}, limit: maxItems},
+      const members: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
+        params: { where: { usersId: id }, orderBy: { name: 'desc' }, limit: maxItems },
       });
 
       const memberArray: GroupUsersType[] = [];
@@ -115,7 +117,7 @@ export const GroupUser = ({id}: GroupUserType) => {
   const nextAdminList = async () => {
     try {
       const admins: { data: GroupType[] } = await axios.get(`${backUrl}/groups`, {
-        params: {where: {adminId: id}, orderBy: {name: 'desc'}, limit: maxItems, cursor: lastAdminsVisible},
+        params: { where: { adminId: id }, orderBy: { name: 'desc' }, limit: maxItems, cursor: lastAdminsVisible },
       });
 
       const nextAdminArray: GroupUsersType[] = [];
@@ -139,7 +141,12 @@ export const GroupUser = ({id}: GroupUserType) => {
   const nextModeratorsList = async () => {
     try {
       const moderators: { data: GroupType[] } = await axios.get(`${backUrl}/groups`, {
-        params: {where: {moderatorsId: id}, orderBy: {name: 'desc'}, limit: maxItems, cursor: lastModeratorsVisible},
+        params: {
+          where: { moderatorsId: id },
+          orderBy: { name: 'desc' },
+          limit: maxItems,
+          cursor: lastModeratorsVisible,
+        },
       });
 
       const nextModeratorArray: GroupUsersType[] = [];
@@ -147,7 +154,9 @@ export const GroupUser = ({id}: GroupUserType) => {
       for (const moderator of moderators.data) {
         nextModeratorArray.push({
           name: moderator.name!,
-          logo: !!moderator.logo ? `https://${cloudFrontUrl}/${moderator.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          logo: !!moderator.logo
+            ? `https://${cloudFrontUrl}/${moderator.logo}`
+            : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
 
@@ -164,7 +173,7 @@ export const GroupUser = ({id}: GroupUserType) => {
   const nextMembersList = async () => {
     try {
       const members: { data: GroupType[] } = await axios.get(`${backUrl}/groups`, {
-        params: {where: {usersId: id}, orderBy: {name: 'desc'}, limit: maxItems, cursor: lastMembersVisible},
+        params: { where: { usersId: id }, orderBy: { name: 'desc' }, limit: maxItems, cursor: lastMembersVisible },
       });
 
       const nextMemberArray: GroupUsersType[] = [];
@@ -188,38 +197,38 @@ export const GroupUser = ({id}: GroupUserType) => {
   return (
     <div className={styles.tilesSection}>
       <h2 className={styles.title}>{data?.groupsUser?.adminTitle}</h2>
-      <Divider className={styles.divider}/>
+      <Divider className={styles.divider} />
       {adminsArray.length > 0 ? (
-        adminsArray.map(({name, logo}, index) => (
-          <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo}/>
+        adminsArray.map(({ name, logo }, index) => (
+          <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
         ))
       ) : (
         <p className={styles.noGroups}>{data?.Account?.groups?.adminTitle}</p>
       )}
-      {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && <MoreButton nextElements={nextAdminList}/>}
+      {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && <MoreButton nextElements={nextAdminList} />}
       <h2 className={styles.title}>{data?.groupsUser?.modsTitle}</h2>
-      <Divider className={styles.divider}/>
+      <Divider className={styles.divider} />
       {moderatorsArray.length > 0 ? (
-        moderatorsArray.map(({name, logo}, index) => (
-          <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo}/>
+        moderatorsArray.map(({ name, logo }, index) => (
+          <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
         ))
       ) : (
         <p className={styles.noGroups}>{data?.Account?.groups?.noMods}</p>
       )}
       {!!lastModeratorsVisible && moderatorsArray.length == maxItems * iModerators && (
-        <MoreButton nextElements={nextModeratorsList}/>
+        <MoreButton nextElements={nextModeratorsList} />
       )}
       <h2 className={styles.title}>{data?.groupsUser?.usersTitle}</h2>
-      <Divider className={styles.divider}/>
+      <Divider className={styles.divider} />
       {membersArray.length > 0 ? (
-        membersArray.map(({name, logo}, index) => (
-          <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo}/>
+        membersArray.map(({ name, logo }, index) => (
+          <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
         ))
       ) : (
         <p className={styles.noGroups}>{data?.Account?.groups?.noUsers}</p>
       )}
       {!!lastMembersVisible && membersArray.length === maxItems * iMembers && (
-        <MoreButton nextElements={nextMembersList}/>
+        <MoreButton nextElements={nextMembersList} />
       )}
     </div>
   );
