@@ -28,7 +28,7 @@ export default function PostFromGroup() {
 
   const downloadPosts = async () => {
     try {
-      const post: {data} PostsType = await axios.get(`${backUrl}/posts/${postId}`);
+      const post: { data: PostsType } = await axios.get(`${backUrl}/posts/${postId}`);
 
       const {
         title,
@@ -44,7 +44,7 @@ export default function PostFromGroup() {
         createdAt,
         updatedAt,
         roleId,
-      } = post;
+      } = post.data;
 
       setPostData({
         title,
