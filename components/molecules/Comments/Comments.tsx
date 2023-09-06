@@ -113,7 +113,7 @@ export const Comments = ({ postId }: CommentsType) => {
         });
       }
 
-      nextPage.length === maxItems && setLastVisible(nextCommentArray[nextCommentArray.length - 1].postId!);
+      nextPage.data.length === maxItems && setLastVisible(nextCommentArray[nextCommentArray.length - 1].postId!);
 
       const nextArray = commentsArray.concat(...nextCommentArray);
       setCommentsArray(nextArray);
