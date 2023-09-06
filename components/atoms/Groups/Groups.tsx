@@ -1,42 +1,48 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import { Button } from '@chakra-ui/react';
 
-import { DataType, GroupType } from 'types/global.types';
+import { DataType } from 'types/global.types';
+
+import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { Links } from 'components/atoms/Links/Links';
 
 import styles from './Groups.module.scss';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 
+type FavGroupsType = {
+  name: string;
+  description: string;
+  logo: string;
+};
 export const Groups = ({ data }: DataType) => {
-  const [groupsArray, setGroupsArray] = useState<GroupType[]>([]);
+  const [groupsArray, setGroupsArray] = useState<FavGroupsType[]>([]);
   const [open, setOpen] = useState(false);
 
   const { locale } = useRouter();
 
   const arrowIcons = '1.5rem';
-
   const changeOpenGroups = () => setOpen(!open);
 
   const groupList = async () => {
     try {
-      const groupList: GroupType[] = [];
+      const groupList: FavGroupsType[] = [];
 
-      //        for (const favorite of favorites) {
-      //
-      //          if (favoriteList.exists()) {
-      //            groupList.push({
-      //              name: favorite,
-      //              logoUrl: !!favoriteList.data().logo
-      //                ? favoriteList.data().logo
-      //                : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-      //            });
-      //          }
-      //        }
+      const favsGroups: { data: FavGroupsType[] } = await axios.get(`${backUrl}/groups/favorites`);
+
+      for (const favorite of favsGroups.data) {
+        groupList.push({
+          name: favorite.name,
+          description: favorite.description,
+          logo: !!favorite.logo
+            ? `https://${cloudFrontUrl}/${favorite.logo}`
+            : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        });
+      }
       setGroupsArray(groupList);
-      //      }
     } catch (e) {
       console.log(e);
     }
