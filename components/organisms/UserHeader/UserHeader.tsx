@@ -28,8 +28,8 @@ export function UserHeader() {
       await Session.signOut();
       toggleProfileMenu();
       return push('/');
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      console.log(e);
     }
   };
 

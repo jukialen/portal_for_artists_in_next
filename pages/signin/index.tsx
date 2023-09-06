@@ -1,16 +1,21 @@
-import { useContext, useState } from 'react';
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import { emailPasswordSignIn } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
+import Session from 'supertokens-web-js/recipe/session';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Divider, IconButton, Input, InputGroup, InputRightElement, Stack } from '@chakra-ui/react';
 
-import { useHookSWR } from 'hooks/useHookSWR';
-import { useUserData } from 'hooks/useUserData';
+import { ResetFormType, UserFormType, UserType } from 'types/global.types';
 
-import { ResetFormType, UserFormType } from 'types/global.types';
+import { useHookSWR } from 'hooks/useHookSWR';
+
+import { backUrl } from 'utilites/constants';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { FormError } from 'components/molecules/FormError/FormError';
@@ -19,6 +24,7 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './index.module.scss';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
 
 const initialValues = {
   email: '',
@@ -27,7 +33,6 @@ const initialValues = {
 
 export default function Login() {
   const { push, asPath } = useRouter();
-  const { pseudonym } = useUserData();
   const [show, setShow] = useState(false);
   const data = useHookSWR();
 
@@ -38,6 +43,9 @@ export default function Login() {
     password: SchemaValidation().password,
   });
 
+  //  if (useCurrentUser('/app')) {
+  //    return push('/app');
+  //  }
   const showPass = () => setShow(!show);
 
   const signIn = async ({ email, password }: UserFormType, { resetForm }: ResetFormType) => {
@@ -56,10 +64,16 @@ export default function Login() {
       } else {
         resetForm(initialValues);
         setValuesFields(data?.NavForm?.statusLogin);
-        if (!!pseudonym) {
-          await push('/app');
-        } else {
-          await push('/new-user');
+        if (await Session.doesSessionExist()) {
+          const userId = await Session.getUserId();
+
+          const data: { data: UserType } = await axios.get(`${backUrl}/users/current/${userId}`);
+
+          if (!!data.data.pseudonym) {
+            await push('/app');
+          } else {
+            await push('/new-user');
+          }
         }
       }
     } catch (e: any) {

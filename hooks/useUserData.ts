@@ -24,9 +24,7 @@ export const useUserData = () => {
         const userId = await Session.getUserId();
         const accessTokenPayload = await Session.getAccessTokenPayloadSecurely();
 
-        const data: {
-          data: UserType;
-        } = await axios.get(`${backUrl}/users/current/${userId}`);
+        const data: { data: UserType } = await axios.get(`${backUrl}/users/current/${userId}`);
 
         const { id, pseudonym, description, profilePhoto, plan, provider } = data.data;
 

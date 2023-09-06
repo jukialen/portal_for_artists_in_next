@@ -13,12 +13,9 @@ export const usePreferMode = () => {
 
   useEffect(() => {
     if (prefer === '') {
-      // @ts-ignore
       setPrefer(prefer_color);
       localStorage.setItem('mode', prefer_color.toString());
     } else {
-      console.log(!!localV);
-      // @ts-ignore
       setPrefer(!!localV);
       localStorage.setItem('mode', localV!.toString());
     }

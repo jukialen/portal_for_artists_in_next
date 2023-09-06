@@ -184,7 +184,7 @@ export default function Setings() {
           </div>
         </div>
 
-        {!id && (
+        {!!id && (
           <>
             <AccountData data={data} />
             <h3>{data?.Nav?.profile}</h3>
