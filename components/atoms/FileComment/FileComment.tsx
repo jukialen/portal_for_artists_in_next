@@ -10,7 +10,7 @@ import { NewComments } from 'components/atoms/NewComments/NewComments';
 import { OptionsComments } from 'components/molecules/OptionsComments/OptionsComments';
 import { SubComments } from 'components/molecules/SubComments/SubComments';
 
-import styles from './Comment.module.scss';
+import styles from './FileComment.module.scss';
 
 export const FileComment = ({
   id,
