@@ -6,12 +6,12 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { Divider, Icon, Switch, Input, Progress, Textarea } from '@chakra-ui/react';
+import { Divider, Icon, Select, Input, Progress, Textarea } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { EventType, ResetFormType } from 'types/global.types';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl, darkMode } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useUserData } from 'hooks/useUserData';
@@ -27,6 +27,7 @@ import { AccountData } from 'components/organisms/AccountData/AccountData';
 import styles from './index.module.scss';
 import { ChevronDownIcon, SunIcon } from '@chakra-ui/icons';
 import { MdLanguage } from 'react-icons/md';
+import { Button } from 'antd';
 
 type ProfileType = {
   newPseudonym: string;
@@ -34,9 +35,10 @@ type ProfileType = {
 };
 
 export default function Setings() {
+  const [mode, setMode] = useState(false);
+  const [isLanguage, setLanguage] = useState(false);
   const { id, description, pseudonym, profilePhoto } = useUserData();
   const { isMode, changeMode } = useContext(ModeContext);
-  const [isLanguage, setLanguage] = useState(false);
   const data = useHookSWR();
   const { asPath, locale } = useRouter();
 
@@ -45,6 +47,13 @@ export default function Setings() {
   const [progressUpload, setProgressUpload] = useState(0);
 
   const showLanguages = () => setLanguage(!isLanguage);
+
+  const showMode = () => setMode(!mode);
+
+  const newMode = (mode: string) => {
+    changeMode(mode);
+    showMode();
+  };
 
   const initialValues = {
     newPseudonym: pseudonym!,
@@ -60,7 +69,6 @@ export default function Setings() {
   const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
-
   const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: ResetFormType) => {
     try {
       const newUserData = axios.patch(`${backUrl}/users/${pseudonym}`, {
@@ -105,7 +113,7 @@ export default function Setings() {
         <div className={styles.flow}>
           <div className={styles.modeContainer}>
             <div>
-              {isMode ? (
+              {isMode === darkMode ? (
                 <SunIcon aria-label="mode icon" className={styles.icon} />
               ) : (
                 <Icon
@@ -124,14 +132,35 @@ export default function Setings() {
               )}
               <p>{data?.Settings?.dark_mode}</p>
             </div>
-            <Switch
-              colorScheme="pink"
-              id="switch-mode"
-              size="lg"
-              className={styles.icon}
-              isChecked={!!isMode}
-              onChange={changeMode}
-            />
+
+            <ul className={styles.mode}>
+              <li
+                className={`${styles.languages__select} ${isMode !== darkMode ? styles.langMenu__value : ''}`}
+                onClick={showMode}>
+                <p className={styles.languages__version}>{isMode?.toLocaleUpperCase()}</p>
+                <ChevronDownIcon />
+              </li>
+
+              <div
+                className={`${styles.language} ${mode && styles.language__active} ${
+                  isMode === darkMode && styles.language__active__dark
+                }`}>
+                <li>
+                  <Button
+                    className={`${styles.languages__version} ${isMode === darkMode && styles.languages__version__dark}`}
+                    onClick={() => newMode('dark')}>
+                    DARK
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    className={`${styles.languages__version} ${isMode === darkMode && styles.languages__version__dark}`}
+                    onClick={() => newMode('light')}>
+                    LIGHT
+                  </Button>
+                </li>
+              </div>
+            </ul>
           </div>
 
           <div className={styles.langMenu}>
@@ -142,7 +171,7 @@ export default function Setings() {
 
             <ul className={styles.languages}>
               <li
-                className={`${styles.languages__select} ${!isMode ? styles.langMenu__value : ''}`}
+                className={`${styles.languages__select} ${isMode !== darkMode ? styles.langMenu__value : ''}`}
                 onClick={showLanguages}>
                 <p className={styles.languages__version}>{locale?.toLocaleUpperCase()}</p>
                 <ChevronDownIcon />
@@ -150,13 +179,13 @@ export default function Setings() {
 
               <div
                 className={`${styles.language} ${isLanguage && styles.language__active} ${
-                  isMode && styles.language__active__dark
+                  isMode === darkMode && styles.language__active__dark
                 }`}>
                 <li>
                   <Link
                     href={asPath}
                     locale="en"
-                    className={`${styles.languages__version} ${isMode && styles.languages__version__dark}`}
+                    className={`${styles.languages__version} ${isMode === darkMode && styles.languages__version__dark}`}
                     onClick={() => setLanguage(!isLanguage)}>
                     EN
                   </Link>
@@ -165,7 +194,7 @@ export default function Setings() {
                   <Link
                     href={asPath}
                     locale="jp"
-                    className={`${styles.languages__version} ${isMode && styles.languages__version__dark}`}
+                    className={`${styles.languages__version} ${isMode === darkMode && styles.languages__version__dark}`}
                     onClick={() => setLanguage(!isLanguage)}>
                     JP
                   </Link>
@@ -174,7 +203,7 @@ export default function Setings() {
                   <Link
                     href={asPath}
                     locale="pl"
-                    className={`${styles.languages__version} ${isMode && styles.languages__version__dark}`}
+                    className={`${styles.languages__version} ${isMode === darkMode && styles.languages__version__dark}`}
                     onClick={() => setLanguage(!isLanguage)}>
                     PL
                   </Link>
@@ -222,7 +251,7 @@ export default function Setings() {
                       placeholder={data?.AnotherForm?.pseudonym}
                       className={`
                   ${!!errors.newPseudonym && touched.newPseudonym ? styles.input__error : styles.input}
-                  ${isMode ? styles.input__dark : ''}
+                  ${isMode === darkMode ? styles.input__dark : ''}
                   `}
                     />
                   </div>
@@ -247,7 +276,7 @@ export default function Setings() {
                     ${
                       !!errors.newDescription && touched.newDescription ? styles.description__error : styles.description
                     }
-                    ${isMode ? styles.description__dark : ''}
+                    ${isMode === darkMode ? styles.description__dark : ''}
                   `}
                     />
                   </div>

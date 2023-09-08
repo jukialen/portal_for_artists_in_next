@@ -1,7 +1,4 @@
-import { createContext, ReactNode } from 'react';
-
-import { useLocalState } from 'hooks/useLocalState';
-import { usePreferMode } from 'hooks/usePreferMode';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 
 type childrenType = {
   children: ReactNode;
@@ -9,14 +6,37 @@ type childrenType = {
 
 export const ModeContext = createContext({
   isMode: '',
-  changeMode: () => {},
+  changeMode: (mode: string) => {},
 });
 
 export const ModeProvider = ({ children }: childrenType) => {
-  const [isMode, setMode] = useLocalState(usePreferMode(), 'mode');
+  const [isMode, setMode] = useState<string>();
 
-  // @ts-ignore
-  const changeMode = () => setMode(!isMode);
+  const defaultTheme = () => {
+    const watchSysTheme = window.matchMedia('(prefers-color-scheme: dark)');
+    const themeLocalStorage = localStorage.getItem('mode');
+    const themeSystem = watchSysTheme.matches ? 'dark' : 'light';
+
+    if (themeLocalStorage !== undefined || null) {
+      return themeLocalStorage ?? themeSystem;
+    }
+  };
+
+  useEffect(() => {
+    if (!isMode) return setMode(defaultTheme());
+    localStorage.setItem('mode', isMode ?? defaultTheme());
+    setMode(isMode ?? defaultTheme());
+  }, [isMode]);
+
+  const changeMode = (mode: string) => {
+    if (mode == 'dark') {
+      setMode('dark');
+      localStorage.setItem('mode', 'dark');
+    } else if (isMode == 'dark') {
+      localStorage.setItem('mode', 'light');
+      setMode('light');
+    }
+  };
 
   return (
     <ModeContext.Provider
