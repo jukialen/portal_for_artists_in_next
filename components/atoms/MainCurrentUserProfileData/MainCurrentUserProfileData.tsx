@@ -20,6 +20,8 @@ import { backUrl, cloudFrontUrl } from 'utilites/constants';
 
 import { DataType, EventType } from 'types/global.types';
 
+import { darkMode } from 'utilites/constants';
+
 import { useUserData } from 'hooks/useUserData';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -32,12 +34,10 @@ import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 
 export const MainCurrentUserProfileData = ({ data }: DataType) => {
   const [valuesFields, setValuesFields] = useState('');
-  const { id, pseudonym, profilePhoto } = useUserData();
+  const { id, pseudonym, description, profilePhoto } = useUserData();
   const [progressUpload, setProgressUpload] = useState<number>(0);
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
-
-  const { description } = useUserData();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isMode } = useContext(ModeContext);
@@ -81,7 +81,7 @@ export const MainCurrentUserProfileData = ({ data }: DataType) => {
         </div>
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
-          <ModalContent backgroundColor={`${isMode ? '#2D3748' : ''}`} color={selectedColor}>
+          <ModalContent backgroundColor={`${isMode === darkMode ? '#2D3748' : ''}`} color={selectedColor}>
             <ModalHeader>Update logo</ModalHeader>
             <ModalCloseButton color={selectedColor} borderColor="transparent" />
             <ModalBody>

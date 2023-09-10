@@ -17,7 +17,7 @@ import {
 
 import { ResetFormType, Role } from 'types/global.types';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl, darkMode } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useUserData } from 'hooks/useUserData';
@@ -180,8 +180,11 @@ export const OptionsComments = ({
 
               <AlertDialog isOpen={openEdit} leastDestructiveRef={cancelEditRef} onClose={onCloseEdit}>
                 <AlertDialogOverlay>
-                  <AlertDialogContent m="auto" backgroundColor={`${isMode ? '#2D3748' : '#f7f7f7'}`}>
-                    <AlertDialogHeader fontSize="lg" fontWeight="bold" color={`${isMode ? '#f7f7f7' : '#2D3748'}`}>
+                  <AlertDialogContent m="auto" backgroundColor={`${isMode === darkMode ? '#2D3748' : '#f7f7f7'}`}>
+                    <AlertDialogHeader
+                      fontSize="lg"
+                      fontWeight="bold"
+                      color={`${isMode === darkMode ? '#f7f7f7' : '#2D3748'}`}>
                       {data?.Comments?.updateTitle}
                     </AlertDialogHeader>
 

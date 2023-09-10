@@ -22,7 +22,7 @@ import { ModeContext } from 'providers/ModeProvider';
 
 import { Tags, EventType, ResetFormType } from 'types/global.types';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl, darkMode } from 'utilites/constants';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 
@@ -101,7 +101,7 @@ export const FilesUpload = () => {
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent className={`${isMode ? styles.darkModalContent : ''} ${styles.modelContent}`}>
+        <ModalContent className={`${isMode === darkMode ? styles.darkModalContent : ''} ${styles.modelContent}`}>
           <ModalHeader>New logo</ModalHeader>
           <ModalCloseButton className={styles.closeButton} />
           <ModalBody className={styles.modal}>
@@ -110,7 +110,7 @@ export const FilesUpload = () => {
                 <Form className={styles.adding__files}>
                   <h3 className={styles.title}>{data?.AnotherForm?.fileTitle}</h3>
 
-                  <div className={isMode ? styles.select__dark : styles.select}>
+                  <div className={isMode === darkMode ? styles.select__dark : styles.select}>
                     <Select
                       name="tags"
                       value={values.tags}
@@ -173,7 +173,7 @@ export const FilesUpload = () => {
                         ? styles.shortDescription__error
                         : styles.shortDescription
                     }
-                    ${isMode ? styles.shortDescription__dark : ''}
+                    ${isMode === darkMode ? styles.shortDescription__dark : ''}
                     `}
                   />
 

@@ -1,6 +1,11 @@
 import { useContext, useState } from 'react';
 import { Button, Drawer, DrawerBody, DrawerContent, DrawerOverlay, useDisclosure } from '@chakra-ui/react';
+
+import { darkMode } from 'utilites/constants';
+
 import { useHookSWR } from 'hooks/useHookSWR';
+
+import { ModeContext } from 'providers/ModeProvider';
 
 import { Categories } from 'components/atoms/Categories/Categories';
 import { Groups } from 'components/atoms/Groups/Groups';
@@ -9,7 +14,6 @@ import { Friends } from 'components/atoms/Friends/Friends';
 import styles from './Aside.module.scss';
 import { RightOutlined } from '@ant-design/icons';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-import { ModeContext } from '../../../providers/ModeProvider';
 
 export function Aside() {
   const [open, setOpen] = useState(true);
@@ -23,7 +27,7 @@ export function Aside() {
 
   return (
     <>
-      <aside className={isMode ? styles.aside__dark : styles.aside}>
+      <aside className={isMode === darkMode ? styles.aside__dark : styles.aside}>
         <div className={styles.blur}></div>
 
         <div className={styles.rolling}>

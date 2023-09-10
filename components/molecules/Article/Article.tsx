@@ -1,9 +1,11 @@
 import { useContext } from 'react';
 import Image from 'next/image';
 
-import { ModeContext } from 'providers/ModeProvider';
-
 import { ArticleVideosType } from 'types/global.types';
+
+import { darkMode } from 'utilites/constants';
+
+import { ModeContext } from 'providers/ModeProvider';
 
 import { useUserData } from 'hooks/useUserData';
 import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
@@ -29,7 +31,7 @@ export const Article = ({
     <div className={styles.article}>
       {pseudonym === authorName && <DeletionFile name={name!} />}
       <Image
-        className={isMode ? styles.item : styles.item__dark}
+        className={isMode === darkMode ? styles.item : styles.item__dark}
         src={fileUrl}
         alt={`File ${name} added by ${authorName} in Category: ${tags}`}
         width={img}

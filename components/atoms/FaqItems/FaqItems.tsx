@@ -1,6 +1,8 @@
 import { ReactNode, useContext } from 'react';
 import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
 
+import { darkMode } from 'utilites/constants';
+
 import { ModeContext } from 'providers/ModeProvider';
 
 type FaqItemsType = {
@@ -12,7 +14,7 @@ export const FaqItems = ({ textHead, textBody }: FaqItemsType) => {
   const { isMode } = useContext(ModeContext);
 
   const backgroundColor = 'transparent';
-  const color = isMode ? '#FFD068' : '#2D3748';
+  const color = isMode === darkMode ? '#FFD068' : '#2D3748';
   const borderColor = '#FFD068';
   const m = '2rem 0';
 

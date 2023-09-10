@@ -23,6 +23,8 @@ import {
 
 import { DataType, Plan, ResetFormType, UserFormType } from 'types/global.types';
 
+import { darkMode } from 'utilites/constants';
+
 import { useUserData } from 'hooks/useUserData';
 
 import { backUrl } from 'utilites/constants';
@@ -134,11 +136,11 @@ export const AccountData = ({ data }: DataType) => {
             </PopoverTrigger>
             <Portal>
               <PopoverContent
-                borderColor={isMode ? 'gray.600' : 'gray.100'}
-                className={isMode ? styles.subscription__dark : styles.subscription}>
+                borderColor={isMode === darkMode ? 'gray.600' : 'gray.100'}
+                className={isMode === darkMode ? styles.subscription__dark : styles.subscription}>
                 <PopoverArrow
                   boxShadow={
-                    isMode
+                    isMode === darkMode
                       ? '-1px -1px 1px 0 var(--chakra-colors-gray-600) !important'
                       : '-1px -1px 1px 0 var(--chakra-colors-gray-100) !important'
                   }
@@ -147,7 +149,7 @@ export const AccountData = ({ data }: DataType) => {
                 <PopoverHeader>{data?.Account?.aData?.Premium?.header}</PopoverHeader>
                 <PopoverCloseButton className={styles.closeButton} />
                 <PopoverBody>
-                  <div className={isMode ? styles.selectSub__dark : styles.selectSub}>
+                  <div className={isMode === darkMode ? styles.selectSub__dark : styles.selectSub}>
                     <Formik
                       initialValues={initialPlan}
                       validationSchema={schemaSubscription}
@@ -184,7 +186,7 @@ export const AccountData = ({ data }: DataType) => {
                           <ButtonGroup size="sm" className={styles.buttonContainer}>
                             <Button
                               variant="ghost"
-                              _hover={{ backgroundColor: isMode ? 'gray.600' : 'gray.100' }}
+                              _hover={{ backgroundColor: isMode === darkMode ? 'gray.600' : 'gray.100' }}
                               onClick={onClose}>
                               {data?.cancel}
                             </Button>
@@ -207,7 +209,7 @@ export const AccountData = ({ data }: DataType) => {
         <>
           <Formik initialValues={initialValues} validationSchema={schemaEmail} onSubmit={update__email}>
             {({ values, handleChange, errors, touched }) => (
-              <Form className={`${styles.form} ${!!isMode ? styles.form_dark : ''}`}>
+              <Form className={`${styles.form} ${isMode === darkMode ? styles.form_dark : ''}`}>
                 <h3 className={styles.title}>{data?.NavForm?.email}</h3>
                 <Input
                   name="email"
@@ -228,7 +230,7 @@ export const AccountData = ({ data }: DataType) => {
 
           <Formik initialValues={initialValuesPass} validationSchema={schemaValidation} onSubmit={newPassword}>
             {({ values, handleChange, errors, touched }) => (
-              <Form className={`${styles.form} ${!!isMode ? styles.form_dark : ''}`}>
+              <Form className={`${styles.form} ${isMode === darkMode ? styles.form_dark : ''}`}>
                 <h3 className={styles.title}>{data?.NavForm?.password}</h3>
                 <Input
                   name="oldPassword"

@@ -3,6 +3,8 @@ import { Button } from '@chakra-ui/react';
 import { useHookSWR } from 'hooks/useHookSWR';
 import { MouseEventHandler, useContext } from 'react';
 
+import { darkMode } from 'utilites/constants';
+
 import { ModeContext } from 'providers/ModeProvider';
 
 import styles from './MoreButton.module.scss';
@@ -21,7 +23,7 @@ export const MoreButton = ({ nextElements }: MoreType) => {
       colorScheme="blue"
       width="8rem"
       borderColor="#4F8DFF"
-      _hover={{ backgroundColor: '#4F8DFF', color: `${!isMode ? '#0E2143' : ''}` }}
+      _hover={{ backgroundColor: '#4F8DFF', color: `${isMode !== darkMode ? '#0E2143' : ''}` }}
       onClick={nextElements}>
       {data?.Groups?.list?.more}
     </Button>
