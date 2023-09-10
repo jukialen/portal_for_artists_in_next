@@ -32,7 +32,6 @@ export default function AddingGroup() {
 
   const loading = useCurrentUser('/');
   const data = useHookSWR();
-  const { plan } = useUserData();
 
   const [valuesFields, setValuesFields] = useState<string>('');
   const [logoGroup, setLogoGroup] = useState<File | null>(null);
@@ -82,11 +81,13 @@ export default function AddingGroup() {
             shortDescription: description,
           },
         });
+
         await new Promise((resolve, reject) => {
           socket.once('createGroup', (_data: number) => {
             resolve(_data);
             reject(_data);
             setProgressUpload(_data);
+
             if (_data === 100) {
               setValuesFields(data?.AnotherForm?.uploadFile);
               resetForm(initialValues);
@@ -95,6 +96,7 @@ export default function AddingGroup() {
             }
           });
         });
+      }
     } catch (e) {
       console.log(e);
       setValuesFields(data?.NewUser?.errorSending);
