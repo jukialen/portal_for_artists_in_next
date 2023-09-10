@@ -50,7 +50,7 @@ export default function NewUser() {
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
       if (!!photo) {
-        return axios.post(`${backUrl}/files`, {
+        await axios.post(`${backUrl}/files`, {
           file: photo,
           data: {
             name: photo?.name,
@@ -61,11 +61,14 @@ export default function NewUser() {
             'Content-Type': 'multipart/form-data',
           },
         });
+        await axios.post(`${backUrl}/users`, { userData: { username, pseudonym, profilePhoto: photo?.name } });
+        setValuesFields(data?.NewUser?.successSending);
       }
       await axios.post(`${backUrl}/users`, { userData: { username, pseudonym } });
       setValuesFields(data?.NewUser?.successSending);
       return push('/app');
-    } catch (error) {
+    } catch (e) {
+      console.log(e);
       setValuesFields(data?.NewUser?.errorSending);
     }
   };

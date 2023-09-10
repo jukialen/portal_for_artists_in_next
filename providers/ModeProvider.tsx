@@ -29,10 +29,10 @@ export const ModeProvider = ({ children }: childrenType) => {
   }, [isMode]);
 
   const changeMode = (mode: string) => {
-    if (mode == 'dark') {
+    if (mode === 'dark') {
       setMode('dark');
       localStorage.setItem('mode', 'dark');
-    } else if (isMode == 'dark') {
+    } else {
       localStorage.setItem('mode', 'light');
       setMode('light');
     }

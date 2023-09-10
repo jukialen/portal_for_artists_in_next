@@ -148,14 +148,32 @@ export default function Groups() {
 
   const updateLogo = async () => {
     try {
-      !!newLogo &&
-        !required &&
-        admin &&
-        (await axios.patch(`${backUrl}/groups/${name}`, {
-          logo: newLogo,
-          groupId,
-          usersGroupsId,
-        }));
+      if (!!newLogo && !required && admin) {
+        const socket = io(`${process.env.NEXT_PUBLIC_BACK_URL}/progressbar`);
+
+        socket.connect();
+        socket.emit('updateGroupLogo', {
+          data: {
+            oldName: name!,
+            groupId,
+            file: newLogo,
+            name: logo || '',
+            plan,
+          },
+        });
+
+        new Promise((resolve, reject) => {
+          socket.once('updateGroupLogo', (_data: number) => {
+            resolve(_data);
+            reject(_data);
+            setProgressUpload(_data);
+            _data === 100 && setValuesFields(data?.AnotherForm?.uploadFile);
+            _data === 100 && socket.disconnect();
+          });
+        });
+      } else {
+        console.log('no logo selected');
+      }
     } catch (e) {
       console.error(e);
       setValuesFields(data?.AnotherForm?.notUploadFile);

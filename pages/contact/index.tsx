@@ -9,6 +9,8 @@ import { Button, Input, Select, Textarea, useToast } from '@chakra-ui/react';
 
 import { ResetFormType } from 'types/global.types';
 
+import { darkMode } from 'utilites/constants';
+
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -87,8 +89,8 @@ export default function Contact() {
 
         <Formik initialValues={initialValues} validationSchema={schemaValidation} onSubmit={sendFeedback}>
           {({ values, handleChange, errors, touched }) => (
-            <Form className={isMode ? styles.form__dark : styles.form}>
-              <div className={isMode ? styles.select__dark : styles.select}>
+            <Form className={isMode === darkMode ? styles.form__dark : styles.form}>
+              <div className={isMode === darkMode ? styles.select__dark : styles.select}>
                 <Select
                   name="tags"
                   value={values.tags}

@@ -1,23 +1,26 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { io, Socket } from 'socket.io-client';
 import { Form, Formik } from 'formik';
 import { Button, Input, Progress, Textarea } from '@chakra-ui/react';
 import * as Yup from 'yup';
 
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { EventType, ResetFormType, Tags } from 'types/global.types';
+import { EventType, ResetFormType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
+import { useUserData } from 'hooks/useUserData';
+
+import { backUrl } from 'utilites/constants';
 
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './adding_group.module.scss';
-import axios from 'axios';
-import { backUrl } from '../../utilites/constants';
 
 type AddingGroupType = {
   name: string;
@@ -25,10 +28,11 @@ type AddingGroupType = {
 };
 
 export default function AddingGroup() {
-  const { asPath } = useRouter();
+  const { asPath, push } = useRouter();
 
   const loading = useCurrentUser('/');
   const data = useHookSWR();
+  const { plan } = useUserData();
 
   const [valuesFields, setValuesFields] = useState<string>('');
   const [logoGroup, setLogoGroup] = useState<File | null>(null);
@@ -50,29 +54,47 @@ export default function AddingGroup() {
 
   const createGroup = async ({ name, description }: AddingGroupType, { resetForm }: ResetFormType) => {
     try {
-      const newGroup = async () => {
+      if (!logoGroup) {
         await axios.post(`${backUrl}/groups`, {
-          name,
-          description,
+          data: {
+            name,
+            description,
+          },
         });
         await resetForm(initialValues);
-      };
+        setValuesFields(data?.AnotherForm?.uploadFile);
+      } else {
+        const socket = io(`${process.env.NEXT_PUBLIC_BACK_URL}/progressbar`);
 
-      const newGroupWithLogo = async () => {
-        await axios.post(`${backUrl}/files`, {
-          file: logoGroup,
-          name: logoGroup!.name,
-          tags: Tags.group,
-        });
-
-        await axios.post(`${backUrl}/groups`, {
+        const group: { groupId: string } = await axios.post(`${backUrl}/groups`, {
           name,
           description,
           logo: logoGroup!.name,
         });
-      };
 
-      logoGroup === null ? await newGroup() : newGroupWithLogo();
+        socket.connect();
+        socket.emit('createGroup', {
+          groupId: group.groupId,
+          file: logoGroup,
+          data: {
+            name,
+            tags: 'group',
+            shortDescription: description,
+          },
+        });
+        await new Promise((resolve, reject) => {
+          socket.once('createGroup', (_data: number) => {
+            resolve(_data);
+            reject(_data);
+            setProgressUpload(_data);
+            if (_data === 100) {
+              setValuesFields(data?.AnotherForm?.uploadFile);
+              resetForm(initialValues);
+              socket.disconnect();
+              push(`/${name}`);
+            }
+          });
+        });
     } catch (e) {
       console.log(e);
       setValuesFields(data?.NewUser?.errorSending);
