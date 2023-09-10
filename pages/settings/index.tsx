@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { Divider, Icon, Select, Input, Progress, Textarea } from '@chakra-ui/react';
+import { Divider, Icon, Input, Progress, Textarea } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { EventType, ResetFormType } from 'types/global.types';

@@ -30,8 +30,8 @@ export default function Home() {
   const data = useHookSWR();
 
   useEffect(() => {
-    pseudonym && push('/app');
-  }, []);
+    !!pseudonym && push('/app');
+  }, [pseudonym]);
 
   useEffect(() => {
     try {

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import { DataType, FileType } from 'types/global.types';
@@ -11,10 +10,10 @@ export const ProfileUser = ({ data, pseudonym, description, fileUrl }: FileType 
     <article className={styles.profile}>
       <div className={styles.photo__profile}>
         <Image
-          layout="fill"
           src={fileUrl ? fileUrl : defaultAvatar}
           alt={fileUrl ? data?.userAvatar : data?.defaultAvatar}
           aria-label={fileUrl ? data?.userAvatar : data?.defaultAvatar}
+          fill
           priority
         />
       </div>

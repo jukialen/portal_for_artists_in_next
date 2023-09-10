@@ -64,7 +64,7 @@ export type UserType = Logo &
     description?: string;
     data?: any;
     email?: string;
-    plan: string;
+    plan?: string;
     provider?: boolean;
   };
 

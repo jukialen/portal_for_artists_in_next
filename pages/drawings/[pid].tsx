@@ -98,7 +98,7 @@ export default function Drawings() {
       }
 
       setLastVisible(filesArray[filesArray.length - 1].fileId);
-      const newArray = userDrawings.concat(...nextArray);
+      const newArray = userDrawings.concat(...filesArray);
       setUserDrawings(newArray);
       setI(++i);
     } catch (e) {

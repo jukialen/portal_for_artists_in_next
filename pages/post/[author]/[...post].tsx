@@ -49,7 +49,7 @@ export default function Post() {
       });
     } catch (e) {
       console.error(e);
-      console.log("This file isn't existed or you don't have permision to see.");
+      console.log("This file isn't existed or you don't have permission to see.");
     }
   };
 

@@ -65,7 +65,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   useEffect(() => {
     !!id && firstAdminList();
-  }, []);
+  }, [id]);
 
   const firstModeratorsList = async () => {
     try {
@@ -96,7 +96,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
 
   useEffect(() => {
     !!id && firstModeratorsList();
-  }, []);
+  }, [id]);
 
   const firstMembersList = async () => {
     try {
