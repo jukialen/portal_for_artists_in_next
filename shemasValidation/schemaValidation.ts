@@ -34,6 +34,10 @@ export const SchemaValidation = () => {
 
   const tags = Yup.mixed().oneOf(Object.values(Tags)).required(data?.NavForm?.validateRequired);
 
+  const contactType = Yup.string()
+    .equals([data?.Contact?.suggestion, data?.Contact?.problem], 'nunun')
+    .required(data?.NavForm?.validateRequired);
+
   const groupName = Yup.string()
     .required(data?.NavForm?.validateRequired)
     .min(5, 'Group name is too short.')
@@ -49,6 +53,7 @@ export const SchemaValidation = () => {
     password,
     description,
     tags,
+    contactType,
     groupName,
     shortDescription,
   };

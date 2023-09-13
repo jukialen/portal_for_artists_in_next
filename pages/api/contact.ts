@@ -1,46 +1,44 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
+
 import sgMail from '@sendgrid/mail';
+import axios from 'axios';
 
 sgMail.setApiKey(process.env.SENDGRID_KEY!);
 
+const mailerSend = new MailerSend({
+  apiKey: process.env.NEXT_PUBLIC_MAILERSEND_API_KEY!,
+});
+
 async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
+  const sentFrom = new Sender(process.env.NEXT_PUBLIC_FEEDBACK_EMAIL!, 'Form Pfartists');
+
+  const recipients = [new Recipient(process.env.NEXT_PUBLIC_FEEDBACK_EMAIL!, 'To Pfartists')];
   try {
-    const messageText = req.body.message.split('\n');
+    const messageText: string[] = req.body.message.split('\n').join('\n');
 
-    const messageJs = messageText.map((text: string) => `<p style="margin: 0;">${text}</p>`).join('');
+    const personalisations = [
+      {
+        email: process.env.NEXT_PUBLIC_FEEDBACK_EMAIL!,
+        data: {
+          tags: req.body.tags,
+          message: messageText,
+        },
+      },
+    ];
 
-    const msg = {
-      to: `${process.env.NEXT_PUBLIC_EMAIL_ADDRESS}`,
-      from: `${process.env.NEXT_PUBLIC_EMAIL_ADDRESS}`,
-      subject: `${req?.body?.tags}: ${req?.body?.title}`,
-      html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-      <html lang="en">
-        <head>
-          <meta charset="utf-8">
-          <title>User sent ${req.body.tags}</title>
-          <meta name="description" content="User sent ${req.body.tags}">
-          <meta name="author" content="jukialen">
-          <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
-          <link rel="stylesheet" href="css/styles.css?v=1.0">
-        </head>
-        <body>
-          <div class="container" style="margin-left: 20px;margin-right: 20px;">
-            <div style="font-size: 16px;line-height: 1.6;">
-            ${messageJs}
-            </div>
-          </div>
-        </body>
-      </html>`,
-    };
+    await axios.post(`${process.env.NEXT_PUBLIC_WEBHOOK_URL}`, {
+      text: `*title:* ${req.body.title}\n\n*message:*\n_${messageText}_ \n\n*tag:* ${req.body.tags}`,
+    });
 
-    sgMail
-      .send(msg)
-      .then(() => {
-        console.log('Email sent');
-      })
-      .catch((e) => {
-        console.error('e', e);
-      });
+    const emailParams = new EmailParams()
+      .setFrom(sentFrom)
+      .setTo(recipients)
+      .setSubject(req.body.title)
+      .setPersonalization(personalisations)
+      .setTemplateId(process.env.NEXT_PUBLIC_FEEDBACK_TEMPLATE_ID!);
+
+    await mailerSend.email.send(emailParams);
 
     //  @ts-ignore
   } catch (e: { statusCode: number; message: string }) {

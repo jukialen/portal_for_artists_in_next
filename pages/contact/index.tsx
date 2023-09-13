@@ -43,7 +43,7 @@ export default function Contact() {
   const schemaValidation = Yup.object({
     title: SchemaValidation().description,
     message: SchemaValidation().description,
-    tags: SchemaValidation().tags,
+    tags: SchemaValidation().contactType,
   });
 
   const sendFeedback = async ({ title, message, tags }: ContactType, { resetForm }: ResetFormType) => {
@@ -52,6 +52,10 @@ export default function Contact() {
       title,
       message,
     });
+
+    console.log(message);
+    console.log(message.split('\n').join(''));
+    console.log(message.split('\n'));
 
     messages.status === 200
       ? toast({
