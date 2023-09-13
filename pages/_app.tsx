@@ -8,6 +8,7 @@ import Session from 'supertokens-web-js/recipe/session';
 import { Layout } from 'layout/Layout';
 
 import { ModeProvider } from 'providers/ModeProvider';
+import { MenuProvider } from 'providers/MenuProvider';
 
 import 'styles/darkLightMode.scss';
 import './_app.scss';
@@ -30,9 +31,11 @@ if (typeof window !== 'undefined') {
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <ModeProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <MenuProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </MenuProvider>
     </ModeProvider>
   );
 }

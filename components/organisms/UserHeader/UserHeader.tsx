@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Session from 'supertokens-web-js/recipe/session';
@@ -8,6 +8,8 @@ import { useUserData } from 'hooks/useUserData';
 import { useHookSWR } from 'hooks/useHookSWR';
 
 import { cloudFrontUrl } from 'utilites/constants';
+
+import { MenuContext } from 'providers/MenuProvider';
 
 import styles from './UserHeader.module.scss';
 import { SearchIcon } from '@chakra-ui/icons';
@@ -19,7 +21,7 @@ export function UserHeader() {
   const { push } = useRouter();
   const { pseudonym, profilePhoto } = useUserData();
   const data = useHookSWR();
-
+  const { changeMenu } = useContext(MenuContext);
   const toggleSearch = () => setSearchh(!search);
   const toggleProfileMenu = () => showProfileMenu(!profileMenu);
 
@@ -27,7 +29,8 @@ export function UserHeader() {
     try {
       await Session.signOut();
       toggleProfileMenu();
-      return push('/');
+      changeMenu('false');
+      await push('/');
     } catch (e) {
       console.log(e);
     }

@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { emailPasswordSignIn } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
-import Session from 'supertokens-web-js/recipe/session';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -17,6 +16,8 @@ import { useHookSWR } from 'hooks/useHookSWR';
 
 import { backUrl } from 'utilites/constants';
 
+import { MenuContext } from 'providers/MenuProvider';
+
 import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { FormError } from 'components/molecules/FormError/FormError';
 import { Providers } from 'components/molecules/Providers/Providers';
@@ -24,7 +25,6 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './index.module.scss';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { useCurrentUser } from '../../hooks/useCurrentUser';
 
 const initialValues = {
   email: '',
@@ -35,6 +35,8 @@ export default function Login() {
   const { push, asPath } = useRouter();
   const [show, setShow] = useState(false);
   const data = useHookSWR();
+
+  const { changeMenu } = useContext(MenuContext);
 
   const [valuesFields, setValuesFields] = useState('');
 
@@ -57,6 +59,7 @@ export default function Login() {
         ],
       });
 
+      console.log(res);
       if (res.status === 'FIELD_ERROR') {
         res.formFields.forEach((formField) => setValuesFields(formField.error));
       } else if (res.status === 'WRONG_CREDENTIALS_ERROR') {
@@ -64,19 +67,18 @@ export default function Login() {
       } else {
         resetForm(initialValues);
         setValuesFields(data?.NavForm?.statusLogin);
-        if (await Session.doesSessionExist()) {
-          const userId = await Session.getUserId();
 
-          const data: { data: UserType } = await axios.get(`${backUrl}/users/current/${userId}`);
+        const _data: { data: UserType } = await axios.get(`${backUrl}/users/current/${res.user.id}`);
 
-          if (!!data.data.pseudonym) {
-            await push('/app');
-          } else {
-            await push('/new-user');
-          }
+        if (!!_data.data.pseudonym) {
+          changeMenu('true');
+          await push('/app');
+        } else {
+          await push('/new-user');
         }
       }
     } catch (e: any) {
+      console.error(e);
       setValuesFields(e.isSuperTokensGeneralError === true ? e.message : data?.error);
     }
   };

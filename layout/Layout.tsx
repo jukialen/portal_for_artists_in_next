@@ -1,7 +1,5 @@
-import { ReactNode, useContext } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
-
-import { useUserData } from 'hooks/useUserData';
 
 import { darkMode } from 'utilites/constants';
 
@@ -10,6 +8,7 @@ import { Header } from 'components/organisms/Header/Header';
 import { Aside } from 'components/organisms/Aside/Aside';
 
 import { ModeContext } from 'providers/ModeProvider';
+import { MenuContext } from 'providers/MenuProvider';
 
 import { UserHeader } from 'components/organisms/UserHeader/UserHeader';
 
@@ -21,17 +20,16 @@ type ChildrenType = {
 
 export const Layout = ({ children }: ChildrenType) => {
   const { isMode } = useContext(ModeContext);
-
-  const { pseudonym } = useUserData();
+  const { isMenu } = useContext(MenuContext);
 
   return (
     <ChakraProvider resetCSS={false}>
       <div className={`${styles.whole__page} ${isMode === darkMode ? 'dark' : ''}`}>
-        {!!pseudonym ? <UserHeader /> : <Header />}
+        {isMenu === 'true' ? <UserHeader /> : <Header />}
         <div className={styles.container}>
-          {!!pseudonym && <Aside />}
+          {isMenu === 'true' && <Aside />}
           <main
-            className={`${!!pseudonym ? styles.user__container : styles.main__container} ${
+            className={`${isMenu === 'true' ? styles.user__container : styles.main__container} ${
               isMode === darkMode ? 'main__container--dark' : ''
             }`}>
             <section className={styles.workspace}>{children}</section>
