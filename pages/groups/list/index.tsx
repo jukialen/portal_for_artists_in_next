@@ -24,6 +24,7 @@ export default function List() {
   let [i, setI] = useState(1);
 
   const data = useHookSWR();
+  const loading = useCurrentUser('/signin');
   const maxItems = 30;
 
   const getGroupsList = async () => {
@@ -82,7 +83,7 @@ export default function List() {
     setI(++i);
   };
 
-  if (useCurrentUser('/signin')) {
+  if (loading) {
     return null;
   }
 
