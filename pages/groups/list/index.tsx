@@ -24,7 +24,7 @@ export default function List() {
   let [i, setI] = useState(1);
 
   const data = useHookSWR();
-  const loading = useCurrentUser('/');
+  const loading = useCurrentUser('/signin');
   const maxItems = 30;
 
   const getGroupsList = async () => {
@@ -101,11 +101,9 @@ export default function List() {
           )}
         </div>
       </div>
-      {!!lastVisible && listArray.length === maxItems * i ? (
-        <MoreButton nextElements={nextGroupsList} />
-      ) : (
-        <p className={styles.noALl}>{data?.Groups?.list?.all}</p>
-      )}
+      {!!lastVisible && listArray.length === maxItems * i && <MoreButton nextElements={nextGroupsList} />}
+
+      {!lastVisible && listArray.length >= maxItems * i && <p className={styles.noALl}>{data?.Groups?.list?.all}</p>}
     </section>
   );
 }
