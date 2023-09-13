@@ -12,7 +12,6 @@ import { EventType, ResetFormType } from 'types/global.types';
 
 import { useHookSWR } from 'hooks/useHookSWR';
 import { useCurrentUser } from 'hooks/useCurrentUser';
-import { useUserData } from 'hooks/useUserData';
 
 import { backUrl } from 'utilites/constants';
 
@@ -30,7 +29,6 @@ type AddingGroupType = {
 export default function AddingGroup() {
   const { asPath, push } = useRouter();
 
-  const loading = useCurrentUser('/');
   const data = useHookSWR();
 
   const [valuesFields, setValuesFields] = useState<string>('');
@@ -103,7 +101,7 @@ export default function AddingGroup() {
     }
   };
 
-  if (loading) {
+  if (useCurrentUser('/signin')) {
     return null;
   }
   return (

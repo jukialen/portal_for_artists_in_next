@@ -23,7 +23,9 @@ export default function Account() {
   const activeColor = '#82FF82';
   const borderColor = '#4F8DFF';
 
-  useCurrentUser('/signin');
+  if (useCurrentUser('/signin')) {
+    return null;
+  }
 
   return (
     <>

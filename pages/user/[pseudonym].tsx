@@ -35,8 +35,6 @@ export default function User() {
   const { asPath, push } = useRouter();
   const { id } = useUserData();
 
-  const loading = useCurrentUser('/signin');
-
   const pseudonym = decodeURIComponent(asPath.split('/')[2]);
   const contentList = [
     data?.Account?.aMenu?.gallery,
@@ -141,9 +139,9 @@ export default function User() {
     favFriendLength();
   }, [id]);
 
-    if (loading) {
-      return null;
-    }
+  if (useCurrentUser('/signin')) {
+    return null;
+  }
 
   return (
     <>

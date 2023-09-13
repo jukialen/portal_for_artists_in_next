@@ -227,9 +227,9 @@ export default function App() {
     downloadOthers();
   }, []);
 
-  useCurrentUser('/signin');
-  //    return null;
-  //  }
+  if (useCurrentUser('/signin')) {
+    return null;
+  }
 
   return (
     <>

@@ -30,7 +30,6 @@ export default function NewUser() {
   const [progressUpload, setProgressUpload] = useState<number>(0);
 
   const { push, asPath } = useRouter();
-  const loading = useCurrentUser('/');
   const data = useHookSWR();
 
   const initialValues = {
@@ -73,7 +72,7 @@ export default function NewUser() {
     }
   };
 
-  if (loading) {
+  if (useCurrentUser('/signin')) {
     return null;
   }
 
