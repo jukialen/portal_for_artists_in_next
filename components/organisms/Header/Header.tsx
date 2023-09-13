@@ -20,7 +20,7 @@ export function Header() {
     <header className={styles.header}>
       <h1 className={styles.title}>
         <Link href="/">
-          <Image src="/pfartists.png" width={58} height={58} alt="Pfartists logo" quality={100} />
+          <Image src="/pfartists.png" width={58} height={58} alt="Pfartists logo" quality={100} priority />
         </Link>
       </h1>
       <div className={styles.desktop_nav}>
