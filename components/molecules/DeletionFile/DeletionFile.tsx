@@ -1,9 +1,11 @@
+'use client'
+
 import { useRef, useState } from 'react';
 import axios from 'axios';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl } from 'constants/links';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+import { useUserData } from "hooks/useUserData";
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
@@ -19,39 +21,43 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
+import { useI18n, useScopedI18n } from "../../../locales/client";
 
 type DeletionFileType = {
   name: string;
+  authorName: string;
 };
 
-export const DeletionFile = ({ name }: DeletionFileType) => {
+export const DeletionFile = ({ name, authorName }: DeletionFileType) => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState<string>('');
   const [del, setDel] = useState(false);
 
+  const t = useI18n();
+  const tDeletionFile = useScopedI18n('DeletionFile');
   const cancelRef = useRef(null);
 
   const onClose = () => setIsOpen(false);
-
-  const data = useHookSWR();
+  
+  const userData = useUserData();
 
   const deleteFile = async () => {
     try {
-      await onClose();
-      await setDeleting(!deleting);
-      await setValues(data?.DeletionFile?.deleting);
+      onClose();
+      setDeleting(!deleting);
+      setValues(tDeletionFile('deleting'));
       await axios.delete(`${backUrl}/files/${name}`);
-      await setValues(data?.DeletionFile?.deleted);
-      await setDeleting(!deleting);
+      setValues(tDeletionFile('deleted'));
+      setDeleting(!deleting);
     } catch (e) {
       console.error(e);
-      setValues(data?.error);
+      setValues(t('error'));
     }
   };
 
   return (
-    <>
+    userData?.pseudonym === authorName && <>
       <IconButton
         icon={del ? <ChevronUpIcon /> : <ChevronDownIcon />}
         width="3rem"
@@ -71,7 +77,7 @@ export const DeletionFile = ({ name }: DeletionFileType) => {
       <div className={`${styles.container} ${del ? styles.container__active : ''}`}>
         <Button
           isLoading={deleting}
-          loadingText={data?.DeletionFile?.loadingText}
+          loadingText={tDeletionFile('loadingText')}
           size="md"
           leftIcon={<DeleteIcon />}
           colorScheme="red"
@@ -80,7 +86,7 @@ export const DeletionFile = ({ name }: DeletionFileType) => {
           m="1rem .5rem"
           cursor="pointer"
           onClick={() => setIsOpen(true)}>
-          {data?.DeletionFile?.deletionButton}
+          {tDeletionFile('deletionButton')}
         </Button>
         <div className={styles.alert}>{!!values && <Alerts valueFields={values} />}</div>
       </div>
@@ -88,17 +94,17 @@ export const DeletionFile = ({ name }: DeletionFileType) => {
         <AlertDialogOverlay>
           <AlertDialogContent m="auto">
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {data?.DeletionFile?.title}
+              {tDeletionFile('title')}
             </AlertDialogHeader>
 
-            <AlertDialogBody>{data?.DeletionFile?.question}</AlertDialogBody>
+            <AlertDialogBody>{tDeletionFile('question')}</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} borderColor="gray.100" onClick={onClose}>
-                {data?.DeletionFile?.cancelButton}
+                {tDeletionFile('cancelButton')}
               </Button>
               <Button colorScheme="red" borderColor="red.500" onClick={deleteFile} ml={3}>
-                {data?.DeletionFile?.deleteButton}
+                {tDeletionFile('deleteButton')}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

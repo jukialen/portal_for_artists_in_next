@@ -1,0 +1,21 @@
+.plans,
+.plans__user {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  margin: auto;
+}
+
+@media (min-width: 1024px) {
+  .plans {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 1420px) {
+  .plans {
+    width: 78%;
+    margin: auto;
+  }
+}

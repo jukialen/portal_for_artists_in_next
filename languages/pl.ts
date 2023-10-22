@@ -1,0 +1,384 @@
+export default {
+  title: "Portal dla artystów",
+  Nav: {
+    signIn: "Zaloguj",
+    signUp: "Zarejestruj",
+    signOut: "Wyloguj",
+    account: "Konto",
+    home: "Dom",
+    groups: "Grupy",
+    friends: "Przyjaciele",
+    search: "Szukaj",
+    profile: "Profil"
+  },
+  NavForm: {
+    setErrorMessageCreate: "Nie mogliśmy Cię zarejestrować.",
+    theSameEmail: "Konto z takim adresem e-mail już istnieje. Proszę się zalogować.",
+    unVerified: "Niezweryfikowany e-mail.",
+    wrongLoginData: "Kombinacja hasła e-mail jest nieprawidłowa.",
+    statusLogin: "Zostałaś/eś zalogowana/y",
+    notExist: "Użytkownik nie istnieje.",
+    validateRequired: "Wymagane",
+    validateUsernameFl: "Pierwsza litera musi być duża.",
+    validateUsernameHKik: "Imię przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji",
+    validateUsernameNum: "Imię nie może zawierać cyfr",
+    validateUsernameMin: "Imię jest za krótkie.",
+    validatePseudonymNum: "Pseudonym musi mieć conajmniej 1 cyfrę.",
+    validatePseudonymSpec: "Pseudonym musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-＃？！＄％＆＊ー",
+    validatePseudonymHKik: "Pseudonym przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji",
+    validatePseudonymMin: "Pseudonym jest za krótkie.",
+    validatePseudonymMax: "Pseudonym jest za długi. Maksymalnie musi mieć 15 znaków.",
+    validateEmail: "Niepoprawny adres e-mail.",
+    validatePasswordNum: "Hasło jest za krótkie. Musi mieć minimum 9 znaków.",
+    validatePasswordOl: "Hasło musi zawierać conajmniej jedną dużą literę.",
+    validatePasswordHKik: "Hasło przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji.",
+    validatePasswordOn: "Hasło musi mieć conajmniej 1 cyfrę.",
+    validatePasswordSpec: "Hasło musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-",
+    titleOfRegistration: "Witamy w Pfartists!",
+    titleOfLogin: "Zaloguj!",
+    email: "E-mail",
+    password: "Hasło",
+    createSubmit: "Zarejestruj",
+    loginSubmit: "Zaloguj",
+    loadingRegistration: "Rejestruję cię...",
+    successInfoRegistration: "Gratulacje! Zostałeś zarejestrowany. Sprawdź skrzynkę mailową i potwierdź e-mail, aby móc się zalogować.",
+    forgottenPasswordLink: "Zapomniałam/em hasła",
+    providerTitleRegistration: "Lub zarejestruj się za pomocą:",
+    providerTitleLogin: "Lub zaloguj się za pomocą:",
+    acceptInfoOne: "Rejestrując się, zgadzasz się z naszymi ",
+    acceptInfoTwo: "Warunkami Świadczenia Usług",
+    acceptInfoThree: " i ",
+    acceptInfoFour: "Polityką Prywatności",
+    dot: ".",
+    changeToCreate: "Masz już konto? ",
+    changeToLogin: "Nie masz jeszcze konta? "
+  },
+  Aside: {
+    category: "Kategorie",
+    drawings: "Rysunki",
+    realistic: "Realistyczne",
+    manga: "Manga",
+    anime: "Anime",
+    comics: "Komiksy",
+    photographs: "Fotografie",
+    animations: "Animacje",
+    videos: "Filmy",
+    others: "Inne",
+    friends: "Ulubieni znajomi",
+    groups: "Ulubione grupy",
+    addingGroup: "Dodaj grupę",
+    photos: "Zdjęcia"
+  },
+  Footer: {
+    termsOfUse: "Warunki korzystania",
+    privacyPolice: "Polityka prywatności",
+    contact: "Kontakt",
+    faq: "FAQ",
+    plans: "Plany",
+    changeLanguage: "Język"
+  },
+  App: {
+    lastDrawings: "Ostatnie rysunki",
+    lastPhotos: "Ostatnie zdjęcia",
+    lastOthers: "Ostatnie inne",
+    lastAnimations: "Ostatnie animacje",
+    lastVideos: "Ostatnie filmy"
+  },
+  Account: {
+    aMenu: {
+      general: "Ogólne",
+      gallery: "Galeria",
+      profile: "Profil",
+      friends: "Przyjaciele",
+      groups: "Moje grupy"
+    },
+    aData: {
+      subscription: "Subskrypcja",
+      currentPlan: "Aktualny plan",
+      changeButton: "Zmień",
+      actualEmail: "Aktualny e-mail",
+      changeEmail: "Zmień adres e-mail",
+      currentPassword: "Wpisz aktualne hasło",
+      oldPassword: "Wpisz stare hasło",
+      newPassword: "Wpisz nowe hasło",
+      againNewPassword: "Powtórz nowe hasło",
+      changePassword: "Zmień hasło",
+      Premium: {
+        header: "Zmień subskrypcję",
+        select__error: "Nie wybrałaś/eś planu.",
+        body: "Aby dowiedzieć się o planach, kliknij ten ",
+        bodyLink: "link",
+        bodyDot: ".",
+        update: "Aktualizuj"
+      }
+    },
+    gallery: {
+      userPhotosTitle: "Twoje zdjęcia i rysunki",
+      userLikedPhotos: "Polubione zdjęcia i rysunki",
+      userVideosTitle: "Twoje filmy",
+      userLikedVideos: "Polubione filmy",
+      userAnimationsTitle: "Twoje animacje",
+      userLikedAnimations: "Polubione animacje"
+    },
+    profile: {
+      aboutMe: "O mnie",
+      ariaLabelButton: "Aktualizacja pseudonimu i opisu użytkownika",
+      save: "Zapisz",
+      successSending: "Profile zaktualizowany",
+      errorSending: "Profil nie został zaktualizowany.",
+      defaultAvatar: "domyślny avatar",
+      userAvatar: "avatar"
+    },
+    groups: {
+      adminTitle: "Grupy, które stworzyłaś/eś",
+      noAdmin: "Nie stworzyłaś/eś jeszcze żadnej grupy.",
+      modsTitle: "Grupy, którymi zarządzasz",
+      noMods: "Obecnie nie jesteś moderatorem żadnej grupy.",
+      usersTitle: "Grupy, do których dołączyłaś/eś",
+      noUsers: "Nie dołączyłaś/eś jeszcze do żadnej grupy."
+    }
+  },
+  Main: {
+    title: "Witaj artysto!",
+    firstQuestion: "Szukasz serwisu, który będzie dedykowany tobie?",
+    secondQuestion: "Szukasz serwisu, który sprawdzi się jako graficzny pamiętnik? A może chcesz pochwalić się swoimi artystycznymi dziełami?",
+    firstAnswer: "Dobrze trafiłeś! Jest to serwis dedykowany takim osobom jak ty.",
+    secondAnswer: "Od niedzielnych artystów po ludzi tworzących swoje wirtualne podręczne portfolio.",
+    containerFirstQuestion: "Krótki film? Jakiś Gif? Rysunek? Obraz? Zdjęcie?",
+    containerFirstAnswer: "Nie ma problemu! Wysyłasz na serwer i już!",
+    containerSecondQuestion: "Chcesz zobaczyć co inni robią?",
+    containerSecondAnswer: "Kliknij w nick i przeglądaj.",
+    containerThirdQuestion: "Chcesz zobaczyć co jest na topie?",
+    containerThirdAnswer: "Już to masz na głównej stronie. Wystarczy się zalogować!",
+    containerFourthQuestion: "Chcesz zobaczyć co ostatnio polubiłeś/aś?",
+    containerFourthAnswer: "Wystarczy się zalogować i już masz to!",
+    containerFifthQuestion: "Design?",
+    containerFifthAnswer: "Oczywiście minimalistyczny! Twoje ma być na wierzchu, nie nasze. Dzięki temu wszystko jest też czytelniejsze.",
+    containerSixthQuestion: "Nie lubisz jasnej strony?",
+    containerSixthAnswer: "No to cyk i masz tryb ciemny!",
+    containerSeventhQuestion: "Chcesz znaleźć coś o określonym typie?",
+    containerSeventhAnswer: "Wybierz tag. A może sam coś dodałeś/aś i chcesz by łatwiej ludzie znaleźli? Dodaj tag.",
+    containerEighthQuestion: "Szukasz ludzi o podobnym upodobaniach?",
+    containerEighthAnswer: "Wybierz grupę lub, jeszcze lepiej sam/a ją stwórz!",
+    containerNinthQuestion: "Masz tutaj artystycznych przyjaciół?",
+    containerNinthAnswer: "Zawsze masz ich pod ręką. Szybko, więc wiesz czym się ostatnio pochwalili."
+  },
+  NewUser: {
+    title: "Dodaj swoje imię i pseudonim",
+    name: "Imię",
+    ariaLabelButton: "wysyłanie pierwszych danych",
+    successSending: "Profil został zaktualizowany",
+    errorSending: "Profil nie został zaktualizowany."
+  },
+  AnotherForm: {
+    pseudonym: "Pseudonim",
+    profilePhoto: "Zdjęcie profilowe",
+    description: "Opis",
+    fileTitle: "Dodaj plik",
+    tags: "Tagi",
+    file: "Plik",
+    send: "Wyślij",
+    uploadFile: "Plik został wysłany.",
+    notUploadFile: "Plik nie został wysłany."
+  },
+  AddingGroup: {
+    title: "Stwórz grupę",
+    name: "Nazwa grupy"
+  },
+  Groups: {
+    join: "Dołącz",
+    joined: "Dołączyłeś/aś",
+    favorite: {
+      addedToFav: "Ulubiona",
+      addToFavorite: "Dodaj do ulubionych",
+      maxFav: "Możesz dodać do 5 grup.",
+      maximumAchieved: "Już masz 5 ulubionych grup."
+    },
+    menu: {
+      members: "Członkowie"
+    },
+    addingPost: {
+      add: "Dodaj post",
+      addTitPlaceholder: "Tytuł",
+      addTitAria: "Dodanie tytułu dla nowego postu",
+      addDescription: "Opis",
+      addDesAria: "Dodanie opisu dla nowego postu"
+    },
+    list: {
+      title: "Lista grup",
+      more: "Więcej",
+      all: "To już wszystkie grupy."
+    },
+    noGroups: "Brak ulubionych grup",
+    noPermission: "Aby zobaczyć posty musisz dołączyć do grupy."
+  },
+  Friends: {
+    add: "Dodaj do znajomych",
+    added: "Znajomy",
+    addFav: "Dodaj do ulubionych",
+    addedFav: "Ulubiony",
+    max: "Możesz dodać do 5 znajomych.",
+    addedMax: "Dodałeś/aś już 5 znajomych.",
+    noFriends: "Brak znajomych",
+    noFavFriends: "Brak ulubionych"
+  },
+  groupsUser: {
+    adminTitle: "Grupy, które użytkownik stworzył",
+    noAdmin: "Nie stworzył/a jeszcze żadnej grupy",
+    modsTitle: "Grupy którymi zarządza",
+    noMods: "Obecnie nie jest moderatorem żadnej grupy.",
+    usersTitle: "Grupy do których dołączył/a",
+    noUsers: "Nie dołączył/a jeszcze do żadnej grupy."
+  },
+  Posts: {
+    likeAria: "lubić",
+    likedAria: "polubione",
+    noPosts: "Brak postów"
+  },
+  Members: {
+    admin: "Admin",
+    moderators: "Moderatorzy",
+    modsAria: "Removing a moderator",
+    noMods: "Brak moderatorów",
+    anotherMembers: "Członkowie",
+    noMembers: "Brak członków",
+    addModAria: "Dodaj moderatora"
+  },
+  Description: {
+    textPlaceholder: "nowy opis grupy",
+    textAria: "pole dla nowego opisu grupy",
+    submit: "Zaktualizuj",
+    iconButton: "menu admina dla opisu"
+  },
+  Comments: {
+    comments: "Komentarze",
+    reply: "Odpowiedź",
+    newComPlaceholder: "Napisz nowy komentarz",
+    newComAria: "Dodanie oipsu dla nowego commentarza",
+    newComButton: "Dodaj komentarz",
+    noComments: "Brak komentarzy",
+    updateTitle: "Edycja komentarza",
+    updateButton: "Zaktualizuj",
+    deleteCommentTitle: "Usuń komentarz?"
+  },
+  Regulations: {
+    regulation: "Regulamin",
+    noRegulation: "Brak regulaminu"
+  },
+  ZeroFiles: {
+    drawings: "Brak rysunków.",
+    photos: "Brak zdjęć.",
+    others: "Brak Inne.",
+    animations: "Brak animacji.",
+    videos: "Brak filmów.",
+    files: "Brak plików."
+  },
+  Forgotten: {
+    title: "Zapomniałeś/aś hasła?",
+    subtitle: "Wpisz adres e-mail.",
+    buttonAria: "przycisk do resetowania hasła",
+    success: "Sprawdź swoją skrzynkę mailową."
+  },
+  ResetPassword: {
+    wrongValues: "Pola nie mają tej samej wartości.",
+    success: "Resetowanie hasła zakończone sukcesem!",
+    failed: "Resetowanie hasła nie powiodło się. Proszę spróbować ponownie."
+  },
+  PasswordAccount: {
+    differentPasswords: "Hasła nie są takie same",
+    buttonAria: "przycisk do aktualizacji hasła",
+    success: "Hasło zostało zaktualizowane"
+  },
+  DeletionFile: {
+    loadingText: "Usuwanie",
+    deletionButton: "Usuń",
+    title: "Usunięcie pliku",
+    question: "Jesteś pewien? Po wykonaniu tej czynności nie można jej cofnąć.",
+    cancelButton: "Cofnij",
+    deleteButton: "Usuń",
+    deleting: "Usuwanie pliku.",
+    deleted: "Usunięto plik"
+  },
+  DeletionPost: {
+    title: "Usunięcie pliku",
+    deleting: "Usuwanie postu.",
+    deleted: "Usunięto post."
+  },
+  Contact: {
+    title: "Witaj! Cieszę się, że chcesz się ze mną skontaktować.",
+    subTitleFirst: "Jeżeli chcesz przekazać opinię lub problem, wyślij formularz. Dzięki tym wiadomościom pomagasz mi ulepszyć serwis.",
+    toFAQ: "Możesz również sprawdzić ",
+    toFAQHere: "Często Zadawane Pytania",
+    dot: ".",
+    chooseTitle: "Wybierz temat",
+    suggestion: "Sugestia",
+    problem: "Problem",
+    success: "E-mail został wysłany. Dziękuję za wiadomość. Najszybciej jak to będzie możliwe zajmę się problemem lub rozpatrzę sugestię.",
+    fail: "E-mail nie został wysłany. Sprawdź połączenie z internetem.",
+    titleInput: "Tytuł",
+    message: "Wiadomość",
+    ariaSend: "przycisk do wysłania e-maila"
+  },
+  FAQ: {
+    head1: "Czy korzystanie z serwisu jest darmowe?",
+    body1: "Tak. Z serwisu można korzystać za darmo. Jednak aby skorzystać z dodatkowych korzyści, należy wykupić plan PREMIUM lub GOLD.",
+    head2: "Jakie korzyści dają plany PREMIUM i GOLD?",
+    body2: "Plany PREMIUM i GOLD zapewniają wsparcie klienta (priorytetowe - GOLD) oraz mniejsze limity wielkości plików. Więcej o planach możesz dowiedzieć się ",
+    body2Link: "tutaj",
+    body2dot: ".",
+    head3: "Czy plan PREMIUM/GOLD jest potrzebny do korzystania z serwisu?",
+    body3: "Nie jest potrzebny. Możesz korzystać z serwisu z planem FREE.",
+    head4: "Jak mogę usunąć konto?",
+    body4: "Wystarczy, że na dole strony w pierwszej zakladce podstrony konta klikniesz w przycisk 'Usuń' i zatwierdzisz wybór. Po zatwierdzeniu rozpoczyna się usuwanie wszystkich twoich danych."
+  },
+  DeletionAccount: {
+    button: "Usuń",
+    title: "Usuń konto",
+    body: "Jesteś pewien/pewna? Nie będziesz mógł/mogła tego cofnić.",
+    cancel: "Cofnij",
+    deletionAccount: "Usuwanie konta"
+  },
+  Plans: {
+    title: "Pfartists plany",
+    subTitle: "Wybierz plan który jest najlepszy dla ciebie",
+    period: "/MIESIĘCZNIE",
+    grLength: "Nielimitowana ilość plików graficznych*",
+    animLength: "Nielimitowana ilość animacji*",
+    vidLength: "Nielimitowana ilość filmów*",
+    grAnimSize: "Pliki graficzne i animacje do 1 MB",
+    grAnimSizeP: "Pliki graficzne i animacje do 3MB",
+    grAnimSizeG: "Pliki graficzne i animacje do 5MB",
+    vidSize: "Filmy do 15MB",
+    vidSizeP: "Filmy do 50MB",
+    vidSizeG: "Filmy do 200MB",
+    noAds: "brak reklam",
+    support: "Wsparcie klienta**",
+    pSupport: "Priorytetowe wsparcie klienta***",
+    choosePlan: "Wybierz plan",
+    formats: "* wspierane formaty: ",
+    supInfo: "** kontakt przez e-mail w ciągu 4 dni roboczych",
+    pSupInfo: "*** kontakt przez emailw ciągu 2 dni roboczych. Dodatkowo dostęp do grupy na Slacku"
+  },
+  EmailVerification: {
+    sendedSuccess: "Proszę sprawdzić swoją skrzynkę e-mailową i kliknąć w link w nim zawarty.",
+    expired: "Kod weryfikacyjny wygasł lub jest nieważny. Proszę kliknąć przycisk, aby ponownie wysłać nowy link weryfikacyjny e-mailem.",
+    verified: "Zweryfikowałeś swój e-mail."
+  },
+  Settings: {
+    title: "Ustawienia",
+    appearance: "Wygląd",
+    dark_mode: "Ciemny motyw"
+  },
+  Date: {
+    second: "sek. temu",
+    minute: "min. temu",
+    hour: "godz. temu",
+    day: "dni temu",
+    yearDateSeparator: "."
+  },
+  unknownError: "Ups! Coś poszło nie tak.",
+  error: "Spróbuj ponownie lub sprawdź połączenie z internetem",
+  edit: "Edytuj",
+  cancel: "Anuluj",
+  chooseTag: "Wybierz tag"
+} as const

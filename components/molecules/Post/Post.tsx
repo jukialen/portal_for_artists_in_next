@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@chakra-ui/next-js';
 import axios from 'axios';
 
 import { Avatar, Button, IconButton } from '@chakra-ui/react';
 
 import { PostsType } from 'types/global.types';
 
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+
 import { useUserData } from 'hooks/useUserData';
 
 import { DeletePost } from 'components/atoms/DeletionPost/DeletionPost';
@@ -41,7 +41,7 @@ export const Post = ({
   let [likeCount, setLikeCount] = useState(likes);
 
   const { id } = useUserData();
-  const data = useHookSWR();
+
 
   const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${pseudonym}/${postId}`;
 
@@ -74,14 +74,14 @@ export const Post = ({
       <div className={styles.description}>{content}</div>
       <div className={styles.options}>
         <IconButton
-          aria-label={like ? data?.Posts?.likedAria : data?.Posts?.likeAria}
+          aria-label={like ? language?.Posts?.likedAria : language?.Posts?.likeAria}
           colorScheme="teal"
           icon={like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
           className={styles.likes}
           onClick={addLike}
         />
         <Button colorScheme="blue" onClick={showingComments} className={styles.commentsButton} variant="ghost">
-          {data?.Comments?.comments}
+          {language?.Comments?.comments}
         </Button>
         <SharingButton shareUrl={link} authorName={pseudonym} name={name} />
       </div>

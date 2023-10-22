@@ -1,13 +1,7 @@
-import { useContext } from 'react';
 import Image from 'next/image';
 
 import { ArticleVideosType } from 'types/global.types';
 
-import { darkMode } from 'utilites/constants';
-
-import { ModeContext } from 'providers/ModeProvider';
-
-import { useUserData } from 'hooks/useUserData';
 import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
 import { DeletionFile } from 'components/molecules/DeletionFile/DeletionFile';
 
@@ -23,15 +17,13 @@ export const Article = ({
   tags,
   time,
 }: ArticleVideosType) => {
-  const { isMode } = useContext(ModeContext);
-  const { pseudonym } = useUserData();
   let img = 600;
 
   return (
     <div className={styles.article}>
-      {pseudonym === authorName && <DeletionFile name={name!} />}
+      <DeletionFile name={name!} authorName={authorName} />
       <Image
-        className={isMode === darkMode ? styles.item : styles.item__dark}
+        className={styles.item}
         src={fileUrl}
         alt={`File ${name} added by ${authorName} in Category: ${tags}`}
         width={img}

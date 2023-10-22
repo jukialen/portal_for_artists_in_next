@@ -1,8 +1,10 @@
-import { useRouter } from 'next/router';
+'use client'
+
+import { useRouter } from 'next/navigation';
 import { getAuthorisationURLWithQueryParamsAndSetState } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
 import { Icon, useToast } from '@chakra-ui/react';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+import { useI18n } from "locales/client";
 
 import styles from './Providers.module.scss';
 import { FaDiscord, FaSpotify } from 'react-icons/fa';
@@ -10,9 +12,11 @@ import { RiGoogleFill, RiLineFill } from 'react-icons/ri';
 
 export const Providers = () => {
   const { push } = useRouter();
-
+  
+  const t = useI18n();
+  
   const toast = useToast();
-  const data = useHookSWR();
+
 
   const signInWithProvider = async (provider: string) => {
     try {
@@ -21,11 +25,11 @@ export const Providers = () => {
         frontendRedirectURI: `${process.env.NEXT_PUBLIC_PAGE}/callback/${provider}`,
       });
 
-      await push(authUrl);
+      push(authUrl);
     } catch (e: any) {
       console.error('e', e);
       toast({
-        description: e.isSuperTokensGeneralError === true ? e.message : data?.unknownError,
+        description: e.isSuperTokensGeneralError === true ? e.message : t('unknownError'),
         status: 'error',
         variant: 'subtle',
         duration: 9000,

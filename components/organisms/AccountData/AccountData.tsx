@@ -1,6 +1,8 @@
+'use client';
+
 import { useContext, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { Link } from '@chakra-ui/next-js';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -20,14 +22,15 @@ import {
   Select,
   useDisclosure,
 } from '@chakra-ui/react';
+import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
-import { DataType, Plan, ResetFormType, UserFormType } from 'types/global.types';
+import { Plan, ResetFormType, UserFormType } from 'types/global.types';
 
-import { darkMode } from 'utilites/constants';
+import { darkMode } from 'constants/links';
 
 import { useUserData } from 'hooks/useUserData';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl } from 'constants/links';
 
 import { ModeContext } from 'providers/ModeProvider';
 
@@ -56,12 +59,16 @@ type SubscriptionType = {
   newPlan: string;
 };
 
-export const AccountData = ({ data }: DataType) => {
-  const { id, pseudonym, plan, email, provider } = useUserData();
+export const AccountData = () => {
+  const userData = useUserData();
+
+  const locale = useCurrentLocale();
+  const t = useI18n();
+  const tAccount = useScopedI18n('Account');
 
   const [valuesFields, setValuesFields] = useState('');
   const [valuesFieldsPass, setValuesFieldsPass] = useState('');
-  const [subscriptionPlan, setSubscriptionPlan] = useState<Plan | string>(plan! || 'FREE');
+  const [subscriptionPlan, setSubscriptionPlan] = useState<Plan | string>(userData?.plan || 'FREE');
   const { onOpen, onClose, isOpen } = useDisclosure();
 
   const { isMode } = useContext(ModeContext);
@@ -83,12 +90,12 @@ export const AccountData = ({ data }: DataType) => {
   const update__email = async ({ email }: UserFormType, { resetForm }: ResetFormType) => {
     try {
       resetForm(initialValues);
-      await axios.patch(`${backUrl}/auth/change-email`, { user_id: id, newEmail: email });
-      setValuesFields(data?.Forgotten?.success);
-      await push('/');
+      await axios.patch(`${backUrl}/auth/change-email`, { user_id: userData?.id, newEmail: email });
+      setValuesFields(t('Forgotten.success'));
+      push(`${locale}/`);
     } catch (e) {
       console.error(e);
-      setValuesFields(data?.error);
+      setValuesFields(t('error'));
     }
   };
 
@@ -98,25 +105,25 @@ export const AccountData = ({ data }: DataType) => {
   ) => {
     try {
       if (newPassword !== repeatNewPassword) {
-        setValuesFieldsPass(data?.PasswordAccount?.differentPasswords);
+        setValuesFieldsPass(t('PasswordAccount.differentPasswords'));
         return;
       }
 
       await axios.post(`${backUrl}/auth/change-password`, { oldPassword, newPassword });
       resetForm(initialValues);
-      setValuesFieldsPass(data?.PasswordAccount?.success);
+      setValuesFieldsPass(t('PasswordAccount.success'));
     } catch (e) {
       console.error(e);
-      setValuesFieldsPass(data?.error);
+      setValuesFieldsPass(t('error'));
     }
   };
 
   const changeSubscription = async ({ newPlan }: SubscriptionType, { resetForm }: ResetFormType) => {
     try {
-      await axios.patch(`${backUrl}/users/${pseudonym}`, { plan: newPlan });
-      await setSubscriptionPlan(newPlan);
+      await axios.patch(`${backUrl}/users/${userData?.pseudonym}`, { plan: newPlan });
+      setSubscriptionPlan(newPlan);
       await resetForm(initialPlan);
-      await onClose();
+      onClose();
     } catch (e) {
       console.error(e);
     }
@@ -125,13 +132,13 @@ export const AccountData = ({ data }: DataType) => {
   return (
     <article id="account__data" className={styles.account__data}>
       <div className={styles.form}>
-        <h3 className={styles.title}>{data?.Account?.aData?.subscription}</h3>
+        <h3 className={styles.title}>{tAccount('aData.subscription')}</h3>
         <div className={styles.flow}>
           <div className={styles.subscription}>{subscriptionPlan}</div>
           <Popover isLazy isOpen={isOpen} onClose={onClose} onOpen={onOpen}>
             <PopoverTrigger>
-              <Button className={`${styles.button} ${styles.planButton}`} aria-label="Change subscription">
-                {data?.Account?.aData?.changeButton}
+              <Button className={`button ${styles.planButton}`} aria-label="Change subscription">
+                {tAccount('aData.changeButton')}
               </Button>
             </PopoverTrigger>
             <Portal>
@@ -141,12 +148,12 @@ export const AccountData = ({ data }: DataType) => {
                 <PopoverArrow
                   boxShadow={
                     isMode === darkMode
-                      ? '-1px -1px 1px 0 var(--chakra-colors-gray-600) !important'
-                      : '-1px -1px 1px 0 var(--chakra-colors-gray-100) !important'
+                      ? '-1px -1px 1px 0 var(--chakra-colors-gray-600)'
+                      : '-1px -1px 1px 0 var(--chakra-colors-gray-100)'
                   }
                   className={styles.arrow}
                 />
-                <PopoverHeader>{data?.Account?.aData?.Premium?.header}</PopoverHeader>
+                <PopoverHeader>{tAccount('aData.Premium.header')}</PopoverHeader>
                 <PopoverCloseButton className={styles.closeButton} />
                 <PopoverBody>
                   <div className={isMode === darkMode ? styles.selectSub__dark : styles.selectSub}>
@@ -163,7 +170,7 @@ export const AccountData = ({ data }: DataType) => {
                             focusBorderColor={touched.newPlan && !!errors.newPlan ? 'red.500' : 'blue.500'}
                             className={touched.newPlan && !!errors.newPlan ? styles.req__error : ''}>
                             <option role="option" value="">
-                              {data?.Plans?.choosePlan}
+                              {t('Plans.choosePlan')}
                             </option>
                             <option role="option" value="FREE">
                               FREE
@@ -176,22 +183,27 @@ export const AccountData = ({ data }: DataType) => {
                             </option>
                           </Select>
                           {touched.newPlan && !!errors.newPlan && (
-                            <p className={styles.selectSub__error}>{data?.Account?.aData?.Premium?.select__error}</p>
+                            <p className={styles.selectSub__error}>{tAccount('aData.Premium.select__error')}</p>
                           )}
                           <p className={styles.message}>
-                            {data?.Account?.aData?.Premium?.body}
-                            <Link href="/plans">{data?.Account?.aData?.Premium?.bodyLink}</Link>
-                            {data?.Account?.aData?.Premium?.bodyDot}
+                            {tAccount('aData.Premium.body')}
+                            <Link href={`${locale}/plans`}>{tAccount('aData.Premium.bodyLink')}</Link>
+                            {tAccount('aData.Premium.bodyDot')}
                           </p>
-                          <ButtonGroup size="sm" className={styles.buttonContainer}>
+                          <ButtonGroup
+                            size="sm"
+                            className={`${styles.buttonContainer} ${
+                              isMode === darkMode ? styles.buttonContainer__dark : ''
+                            }`}>
                             <Button
                               variant="ghost"
-                              _hover={{ backgroundColor: isMode === darkMode ? 'gray.600' : 'gray.100' }}
+                              className={`${isMode === darkMode ? styles.buttonContainer__dark : ''}`}
+                              _hover={{ backgroundColor: isMode === darkMode ? 'gray.600' : 'gray.300' }}
                               onClick={onClose}>
-                              {data?.cancel}
+                              {t('cancel')}
                             </Button>
                             <Button type="submit" colorScheme="blue">
-                              {data?.Account?.aData?.Premium?.update}
+                              {tAccount('aData.Premium.update')}
                             </Button>
                           </ButtonGroup>
                         </Form>
@@ -205,23 +217,23 @@ export const AccountData = ({ data }: DataType) => {
         </div>
       </div>
 
-      {!provider && (
+      {!userData?.provider && (
         <>
           <Formik initialValues={initialValues} validationSchema={schemaEmail} onSubmit={update__email}>
             {({ values, handleChange, errors, touched }) => (
               <Form className={`${styles.form} ${isMode === darkMode ? styles.form_dark : ''}`}>
-                <h3 className={styles.title}>{data?.NavForm?.email}</h3>
+                <h3 className={styles.title}>{t('NavForm.email')}</h3>
                 <Input
                   name="email"
                   type="email"
                   value={values.email}
                   onChange={handleChange}
-                  placeholder={email}
+                  placeholder={userData?.email}
                   className={touched.email && !!errors.email ? styles.input__error : styles.input}
                 />
                 <FormError nameError="email" />
                 <button className={`${styles.button} button`} type="submit" aria-label="E-mail address change">
-                  {data?.Account?.aData?.changeEmail}
+                  {tAccount('aData.changeEmail')}
                 </button>
                 {!!valuesFields && <Alerts valueFields={valuesFields} />}
               </Form>
@@ -231,13 +243,13 @@ export const AccountData = ({ data }: DataType) => {
           <Formik initialValues={initialValuesPass} validationSchema={schemaValidation} onSubmit={newPassword}>
             {({ values, handleChange, errors, touched }) => (
               <Form className={`${styles.form} ${isMode === darkMode ? styles.form_dark : ''}`}>
-                <h3 className={styles.title}>{data?.NavForm?.password}</h3>
+                <h3 className={styles.title}>{t('NavForm.password')}</h3>
                 <Input
                   name="oldPassword"
                   type="password"
                   value={values.oldPassword}
                   onChange={handleChange}
-                  placeholder={data?.Account?.aData?.oldPassword}
+                  placeholder={tAccount('aData.oldPassword')}
                   className={touched.oldPassword && !!errors.oldPassword ? styles.input__error : styles.input}
                 />
                 <FormError nameError="oldPassword" />
@@ -246,7 +258,7 @@ export const AccountData = ({ data }: DataType) => {
                   type="password"
                   value={values.newPassword}
                   onChange={handleChange}
-                  placeholder={data?.Account?.aData?.newPassword}
+                  placeholder={tAccount('aData.newPassword')}
                   className={touched.newPassword && !!errors.newPassword ? styles.input__error : styles.input}
                 />
                 <FormError nameError="newPassword" />
@@ -255,17 +267,14 @@ export const AccountData = ({ data }: DataType) => {
                   type="password"
                   value={values.repeatNewPassword}
                   onChange={handleChange}
-                  placeholder={data?.Account?.aData?.againNewPassword}
+                  placeholder={tAccount('aData.againNewPassword')}
                   className={
                     touched.repeatNewPassword && !!errors.repeatNewPassword ? styles.input__error : styles.input
                   }
                 />
                 <FormError nameError="repeatNewPassword" />
-                <button
-                  className={`${styles.button} button`}
-                  type="submit"
-                  aria-label={data?.PasswordAccount?.buttonAria}>
-                  {data?.Account?.aData?.changePassword}
+                <button className="button" type="submit" aria-label={t('PasswordAccount.buttonAria')}>
+                  {tAccount('aData.changePassword')}
                 </button>
 
                 {!!valuesFieldsPass && <Alerts valueFields={valuesFieldsPass} />}

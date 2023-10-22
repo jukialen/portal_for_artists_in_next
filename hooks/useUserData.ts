@@ -2,56 +2,38 @@
 
 import { useEffect, useState } from 'react';
 import Session from 'supertokens-web-js/recipe/session';
-import axios from 'axios';
 
 import { UserType } from 'types/global.types';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl } from 'constants/links';
 
 export const useUserData = () => {
-  const [userInfo, setUserInfo] = useState<UserType | {}>({});
-  const [userId, setUserId] = useState<string>();
-
-  const getUserId = async () => {
-    if (await Session.doesSessionExist()) {
-      setUserId(await Session.getUserId());
-    }
-  };
+  const [userInfo, setUserInfo] = useState<UserType>();
 
   const getUserData = async () => {
-    try {
-      if (await Session.doesSessionExist()) {
-        const userId = await Session.getUserId();
-        const accessTokenPayload = await Session.getAccessTokenPayloadSecurely();
+    if (await Session.doesSessionExist()) {
+      const userId = await Session.getUserId();
 
-        const data: { data: UserType } = await axios.get(`${backUrl}/users/current/${userId}`);
-
-        const { id, pseudonym, description, profilePhoto, plan, provider } = data.data;
-
-        setUserInfo({
-          id,
-          pseudonym,
-          description,
-          profilePhoto,
-          plan,
-          email: accessTokenPayload.email,
-          provider,
-        });
-      } else {
-        setUserInfo({});
-      }
-    } catch (e) {
-      console.error(e);
+      const data: UserType = await fetch(`${backUrl}/users/current/${userId}`)
+        .then((e) => e.json())
+        .catch((e) => console.log('e u', e));
+      
+      setUserInfo({
+        id: userId,
+        pseudonym: data.pseudonym!,
+        description: data.description,
+        profilePhoto: data.profilePhoto,
+        plan: data.plan,
+        provider: data.provider,
+      });
+    } else {
+      console.error('not user');
     }
   };
 
   useEffect(() => {
-    getUserId();
+    getUserData()
   }, []);
 
-  useEffect(() => {
-    getUserData();
-  }, [userId]);
-
-  return !!userInfo ? { ...userInfo } : {};
+  return userInfo;
 };

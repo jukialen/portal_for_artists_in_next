@@ -1,0 +1,55 @@
+@use 'styles/variables' as *;
+
+.form {
+	display: flex;
+	flex-direction: column;
+	max-width: 20rem;
+	margin: -2rem auto 0;
+
+	.title {
+		margin: 2.5rem auto .5rem;
+		text-align: center;
+		font-size: 1.8rem;
+	}
+
+	.inputForm,
+	.inputForm__error {
+		display: block;
+		width: 17rem;
+		max-width: 90%;
+		margin: 1rem auto 0.5rem;
+		border-color: $third__color;
+		color: $dark__background__light__color;
+
+		&::placeholder {
+			color: rgba(45, 55, 72, 0.81);
+		}
+	}
+
+	.showingPass {
+		height: 85%;
+		top: 1rem;
+		right: 1.3rem;
+		color: $dark__background__light__color;
+		background-color: $another__color;
+		border-color: $primary__color;
+	}
+
+	.inputForm {
+		border-color: $third__color;
+
+		&:hover {
+			border-color: rgba(79, 141, 255, 0.7);
+		}
+
+		&__error {
+			border-color: $required__color;
+		}
+	}
+
+	.submit__button {
+		width: 10rem;
+		margin: 1.5rem auto 0;
+		color: $dark__background__light__color;
+	}
+}

@@ -1,27 +1,28 @@
+'use client'
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 import { FileType, UserType } from 'types/global.types';
 
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
 import { getDate } from 'helpers/getDate';
 
-import { useDateData } from 'hooks/useDateData';
+import { dateData } from 'helpers/dateData';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
 
-export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
-  const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
-  const [lastVisible, setLastVisible] = useState<FileType>();
-  let [i, setI] = useState(1);
+export const AnimatedGallery = ({ id, pseudonym, language }: UserType) => {
+  // const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
+  // const [lastVisible, setLastVisible] = useState<FileType>();
+  // let [i, setI] = useState(1);
 
-  const { asPath, locale } = useRouter();
-  const dataDateObject = useDateData();
+  // const { pathname, locale } = useRouter();
+  // const dataDateObject = dateData();
 
   const maxItems = 30;
 
@@ -52,7 +53,7 @@ export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
           shortDescription,
           profilePhoto,
           authorId,
-          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          time: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
 
@@ -95,7 +96,7 @@ export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
           shortDescription,
           profilePhoto,
           authorId,
-          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          time: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
       const newArray = userAnimatedPhotos.concat(...nextArray);
@@ -109,8 +110,8 @@ export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
 
   return (
     <article>
-      {decodeURIComponent(asPath) === `/account/${pseudonym}` && (
-        <h2 className="title">{data?.Account?.gallery?.userAnimationsTitle}</h2>
+      {decodeURIComponent(pathname) === `/account/${pseudonym}` && (
+        <h2 className="title">{language?.Account?.gallery?.userAnimationsTitle}</h2>
       )}
 
       <Wrapper>
@@ -135,7 +136,7 @@ export const AnimatedGallery = ({ id, pseudonym, data }: UserType) => {
             ),
           )
         ) : (
-          <ZeroFiles text={data?.ZeroFiles?.animations} />
+          <ZeroFiles text={language?.ZeroFiles?.animations} />
         )}
 
         {!!lastVisible && userAnimatedPhotos.length === maxItems * i && <MoreButton nextElements={nextElements} />}

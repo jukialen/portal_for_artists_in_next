@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 import { PostsType } from 'types/global.types';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl } from 'constants/links';
 
-import { useDateData } from 'hooks/useDateData';
-import { useHookSWR } from 'hooks/useHookSWR';
+import { dateData } from 'helpers/dateData';
+
 
 import { getDate } from 'helpers/getDate';
 
@@ -24,8 +24,8 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
   let [i, setI] = useState(1);
 
   const { locale } = useRouter();
-  const dataDateObject = useDateData();
-  const data = useHookSWR();
+  const dataDateObject = dateData();
+
   const maxItems = 30;
 
   const firstPosts = async () => {
@@ -72,7 +72,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           groupId,
           authorId,
           postId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
           name,
           roleId,
         });
@@ -135,7 +135,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           authorId,
           postId,
           roleId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
           name,
         });
       }
@@ -191,7 +191,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           ),
         )
       ) : (
-        <p className={styles.noPosts}>{data?.Posts.noPosts}</p>
+        <p className={styles.noPosts}>{language?.Posts.noPosts}</p>
       )}
 
       {!!lastVisible && postsArray.length === maxItems * i && <MoreButton nextElements={nextPosts} />}

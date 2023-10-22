@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 import { SubCommentType } from 'types/global.types';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl } from 'constants/links';
 
 import { getDate } from 'helpers/getDate';
 
-import { useDateData } from 'hooks/useDateData';
+import { dateData } from 'helpers/dateData';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -29,7 +29,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
   let [i, setI] = useState(1);
 
   const { locale } = useRouter();
-  const dataDateObject = useDateData();
+  const dataDateObject = dateData();
 
   const maxItems = 30;
 
@@ -56,7 +56,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
           role,
           roleId,
           authorId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
       setSubCommentsArray(commentArray);
@@ -99,7 +99,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
           role,
           roleId,
           authorId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
 

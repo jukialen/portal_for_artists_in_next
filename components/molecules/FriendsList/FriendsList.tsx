@@ -1,13 +1,13 @@
+'use client'
+
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import { useHookSWR } from 'hooks/useHookSWR';
-
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
 import { FriendType } from 'types/global.types';
 
-import { Tile } from 'components/molecules/GroupTile/Tile';
+import { Tile } from 'components/atoms/Tile/Tile';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './FriendsList.module.scss';
@@ -27,7 +27,7 @@ export const FriendsList = ({ id }: FriendsListType) => {
   const [lastVisible, setLastVisible] = useState<string>();
   let [i, setI] = useState(1);
 
-  const data = useHookSWR();
+
   const maxItems = 30;
 
   const firstFriends = async () => {
@@ -99,14 +99,14 @@ export const FriendsList = ({ id }: FriendsListType) => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>{data?.Nav?.friends}</h2>
+      <h2 className={styles.title}>{language?.Nav?.friends}</h2>
       <section className={styles.container__section}>
         {friendsList.length > 0 ? (
           friendsList.map(({ pseudonym, fileUrl }, index) => (
             <Tile key={index} name={pseudonym} link={`/user/${pseudonym}`} fileUrl={fileUrl} />
           ))
         ) : (
-          <p className={styles.noFriends}>{data?.Friends?.noFriends}</p>
+          <p className={styles.noFriends}>{language?.Friends?.noFriends}</p>
         )}
       </section>
       {!!lastVisible && friendsList.length === maxItems * i && <MoreButton nextElements={nextFriends} />}

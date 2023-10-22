@@ -11,9 +11,9 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 
-import { useHookSWR } from 'hooks/useHookSWR';
 
-import { backUrl } from 'utilites/constants';
+
+import { backUrl } from 'constants/links';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
@@ -34,19 +34,19 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
   const onClose = () => setIsOpen(false);
   const [del, setDel] = useState(false);
 
-  const data = useHookSWR();
+
 
   const deletePost = async () => {
     try {
       await onClose();
       await setDeleting(!deleting);
-      await setValues(data?.DeletionPost?.deleting);
+      await setValues(language?.DeletionPost?.deleting);
       await axios.delete(`${backUrl}/posts/${postId}${groupId}`);
-      await setValues(data?.DeletionPost?.deleted);
+      await setValues(language?.DeletionPost?.deleted);
       await setDeleting(!deleting);
     } catch (e) {
       console.error(e);
-      setValues(data?.error);
+      setValues(language?.error);
     }
   };
 
@@ -66,12 +66,12 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
       <div className={`${styles.container} ${del ? styles.container__active : ''}`}>
         <Button
           isLoading={deleting}
-          loadingText={data?.DeletionFile?.loadingText}
+          loadingText={language?.DeletionFile?.loadingText}
           leftIcon={<DeleteIcon />}
           colorScheme="red"
           borderColor="red.500"
           onClick={() => setIsOpen(true)}>
-          {data?.DeletionFile?.deletionButton}
+          {language?.DeletionFile?.deletionButton}
         </Button>
         <div className={styles.alert}>{!!values && <Alerts valueFields={values} />}</div>
       </div>
@@ -79,17 +79,17 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
         <AlertDialogOverlay>
           <AlertDialogContent m="auto">
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {data?.DeletionPost?.title}
+              {language?.DeletionPost?.title}
             </AlertDialogHeader>
 
-            <AlertDialogBody>{data?.DeletionFile?.question}</AlertDialogBody>
+            <AlertDialogBody>{language?.DeletionFile?.question}</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} borderColor="gray.100" onClick={onClose}>
-                {data?.DeletionFile?.cancelButton}
+                {language?.DeletionFile?.cancelButton}
               </Button>
               <Button colorScheme="red" borderColor="red.500" onClick={deletePost} ml={3}>
-                {data?.DeletionFile?.deleteButton}
+                {language?.DeletionFile?.deleteButton}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

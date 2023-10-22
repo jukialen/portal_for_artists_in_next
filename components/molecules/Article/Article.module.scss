@@ -12,12 +12,7 @@
 
   .item {
     object-fit: contain;
-    background-color: #313b4c;
-  }
-
-  .item__dark {
-    object-fit: contain;
-    background-color: $dark__color__light__back;
+    background-color: transparent;
   }
 
   .shortDescription {

@@ -1,39 +1,42 @@
-'use client';
+'use client'
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter, usePathname } from 'next/navigation';
 
-export const usePreferLanguage = () => {
-  const { locale, replace, asPath } = useRouter();
+import { LangType } from 'types/global.types';
+
+export const usePreferLanguage = (langLocale: string) => {
+  const { replace } = useRouter();
+  const pathname = usePathname()
 
   const localst = typeof window !== 'undefined' && localStorage.getItem('lang');
 
-  const refresh = async (loc: string) => {
-    console.log(`${process.env.NEXT_PUBLIC_PAGE}${loc === 'en' ? '' : `/${loc}`}${asPath}`);
-    return replace(`/${loc === 'en' ? '' : loc}${asPath}`);
+  const refresh = async (langLocale: string) => {
+    console.log(`${process.env.NEXT_PUBLIC_PAGE}${langLocale === 'en' ? '' : `/${langLocale}`}${pathname}`);
+    return replace(`/${langLocale === 'en' ? '' : langLocale}${pathname}`);
   };
 
-  const [lang, setLang] = useState(locale!);
+  const [lang, setLang] = useState(langLocale);
 
   useEffect(() => {
     if (localst === null) {
-      switch (locale) {
+      switch (langLocale) {
         case 'jp':
           localStorage.setItem('lang', 'jp');
           setLang('jp');
           //          refresh('jp');
           break;
         case 'pl':
-          localStorage.setItem('lang', locale);
-          setLang(locale!);
+          localStorage.setItem('lang', langLocale);
+          setLang(langLocale!);
           //          refresh('pl');
-          //          replace(`pl${asPath}`);
+          //          replace(`pl${pathname}`);
           break;
         default:
-          localStorage.setItem('lang', locale!);
-          setLang(locale!);
+          localStorage.setItem('lang', langLocale!);
+          setLang(langLocale!);
           //          refresh('en');
-          //          replace(asPath);
+          //          replace(pathname);
           break;
       }
     } else {

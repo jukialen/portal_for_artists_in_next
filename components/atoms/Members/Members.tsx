@@ -6,12 +6,12 @@ import { Avatar, Divider, IconButton, Link } from '@chakra-ui/react';
 
 import { MemberType } from 'types/global.types';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+
 
 import { sortMembers } from 'helpers/sorting';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
 import styles from './Members.module.scss';
 import group from 'public/group.svg';
@@ -33,7 +33,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
   const [lastMembersVisible, setMembersLastVisible] = useState<MemberType>();
   let [iMembers, setIMembers] = useState(1);
 
-  const data = useHookSWR();
+
   const maxItems = 30;
 
   const downloadAdmin = async () => {
@@ -210,7 +210,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
   return (
     <>
       <h2>Members list</h2>
-      <p className={styles.roles}>{data?.Members?.admin}</p>
+      <p className={styles.roles}>{language?.Members?.admin}</p>
       <Divider orientation="horizontal" />
 
       <div className={styles.usersButton}>
@@ -219,7 +219,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
           <Link>{pseudonymAdmin}</Link>
         </NextLink>
       </div>
-      <p className={styles.roles}>{data?.Members?.moderators}</p>
+      <p className={styles.roles}>{language?.Members?.moderators}</p>
       <Divider orientation="horizontal" />
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
@@ -231,7 +231,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
             {admin && (
               <IconButton
                 type="submit"
-                aria-label={data?.Members?.modsAria}
+                aria-label={language?.Members?.modsAria}
                 icon={<MinusIcon />}
                 onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, false)}
               />
@@ -239,12 +239,12 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
           </div>
         ))
       ) : (
-        <p>{data?.Members?.noMods}</p>
+        <p>{language?.Members?.noMods}</p>
       )}
       {!!lastModeratorsVisible && moderatorsArray.length === maxItems * iModerators && (
         <MoreButton nextElements={nextModeratorsList} />
       )}
-      <p className={styles.roles}>{data?.Members?.anotherMembers}</p>
+      <p className={styles.roles}>{language?.Members?.anotherMembers}</p>
       <Divider orientation="horizontal" />
       {membersArray.length > 0 ? (
         membersArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
@@ -256,7 +256,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
             {admin && (
               <IconButton
                 type="submit"
-                aria-label={data?.Members?.addModAria}
+                aria-label={language?.Members?.addModAria}
                 icon={<AddIcon />}
                 onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, true)}
               />
@@ -264,7 +264,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
           </div>
         ))
       ) : (
-        <p>{data?.Members?.noMembers}</p>
+        <p>{language?.Members?.noMembers}</p>
       )}
       {!!lastMembersVisible && membersArray.length === maxItems * iMembers && (
         <MoreButton nextElements={nextMembersList} />

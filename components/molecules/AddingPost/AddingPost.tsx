@@ -7,9 +7,9 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { ResetFormType } from 'types/global.types';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl } from 'constants/links';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+
 
 import { FormError } from 'components/molecules/FormError/FormError';
 
@@ -22,7 +22,7 @@ type NewPostType = { title: string; content: string };
 export const AddingPost = ({ groupId }: AddingPostType) => {
   const [showForm, setShowForm] = useState(false);
 
-  const data = useHookSWR();
+
 
   const initialValues = { title: '', content: '' };
 
@@ -47,7 +47,7 @@ export const AddingPost = ({ groupId }: AddingPostType) => {
   return (
     <>
       <button className={styles.showForm} onClick={() => setShowForm(!showForm)}>
-        {data?.Groups?.addingPost?.add}
+        {language?.Groups?.addingPost?.add}
       </button>
 
       <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={createNewPost}>
@@ -58,8 +58,8 @@ export const AddingPost = ({ groupId }: AddingPostType) => {
               name="title"
               value={values.title}
               onChange={handleChange}
-              placeholder={data?.Groups?.addingPost?.addTitPlaceholder}
-              aria-label={data?.Groups?.addingPost?.addTitAria}
+              placeholder={language?.Groups?.addingPost?.addTitPlaceholder}
+              aria-label={language?.Groups?.addingPost?.addTitAria}
               className={touched.title && !!errors.title ? styles.title__error : styles.title}
             />
 
@@ -71,15 +71,15 @@ export const AddingPost = ({ groupId }: AddingPostType) => {
               value={values.content}
               onChange={handleChange}
               resize="vertical"
-              placeholder={data?.Groups?.addingPost?.addDescription}
-              aria-label={data?.Groups?.addingPost?.addDesAria}
+              placeholder={language?.Groups?.addingPost?.addDescription}
+              aria-label={language?.Groups?.addingPost?.addDesAria}
               className={!!errors.content && touched.content ? styles.description__error : styles.description}
             />
 
             <FormError nameError="content" />
 
             <Button type="submit" colorScheme="blue.800" className={styles.addingButton}>
-              {data?.Groups?.addingPost?.add}
+              {language?.Groups?.addingPost?.add}
             </Button>
           </Form>
         )}

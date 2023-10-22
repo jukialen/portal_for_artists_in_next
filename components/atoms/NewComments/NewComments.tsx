@@ -4,11 +4,11 @@ import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { backUrl } from 'utilites/constants';
+import { backUrl } from 'constants/links';
+
+import { useScopedI18n } from 'locales/client';
 
 import { ResetFormType, NewCommentsType } from 'types/global.types';
-
-import { useHookSWR } from 'hooks/useHookSWR';
 
 import styles from './NewComments.module.scss';
 
@@ -25,7 +25,7 @@ export const NewComments = ({
 }: NewCommentsType) => {
   const initialValues = { comment: '' };
 
-  const data = useHookSWR();
+  const tComments = useScopedI18n('Comments');
 
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
 
@@ -65,15 +65,15 @@ export const NewComments = ({
               id="comment"
               value={values.comment}
               onChange={handleChange}
-              placeholder={data?.Comments?.newComPlaceholder}
-              aria-label={data?.Comments?.newComAria}
+              placeholder={tComments('newComPlaceholder')}
+              aria-label={tComments('newComAria')}
               isRequired
               className={styles.text}
             />
           </div>
 
           <Button type="submit" colorScheme="blue" display="flex" className={styles.addingButton}>
-            {data?.Comments?.newComButton}
+            {tComments('newComButton')}
           </Button>
 
           <ErrorMessage name="comment" />

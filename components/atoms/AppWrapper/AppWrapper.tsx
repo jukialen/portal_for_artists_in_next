@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import { ReactNode } from "react";
 
 import styles from './AppWrapper.module.scss';
 
-export const AppWrapper: FC = ({ children }) => {
+export const AppWrapper = ({ children }: { children: ReactNode}) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.carousel}>

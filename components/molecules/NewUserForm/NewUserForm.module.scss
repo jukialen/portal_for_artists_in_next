@@ -1,0 +1,46 @@
+@use 'styles/variables' as *;
+
+.first__data {
+  min-height: 73vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .title {
+    margin-bottom: 2rem;
+  }
+
+  .inputForm,
+  .inputForm__error {
+    width: 17rem;
+    margin: 0.5rem auto 1.2rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 1rem;
+    color: $third__color;
+
+    &::file-selector-button {
+      height: 98%;
+      padding: 0 0.5rem;
+      font-weight: bold;
+      border: thin solid transparent;
+      border-radius: 0.5rem;
+      background-color: $third__color;
+      color: $dark__background__light__color;
+    }
+  }
+
+  .inputForm {
+    border-color: $third__color;
+  }
+
+  .inputForm__error {
+    border-color: $required__color;
+  }
+
+  .submit__button {
+    width: 11rem;
+    font-size: 1rem;
+    margin: 0.8rem auto;
+  }
+}

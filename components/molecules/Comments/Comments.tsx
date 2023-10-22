@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
 import { CommentType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 
-import { useDateData } from 'hooks/useDateData';
-import { useHookSWR } from 'hooks/useHookSWR';
+import { dateData } from 'helpers/dateData';
+
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -26,8 +26,8 @@ export const Comments = ({ postId }: CommentsType) => {
   let [i, setI] = useState(1);
 
   const { locale } = useRouter();
-  const data = useHookSWR();
-  const dataDateObject = useDateData();
+
+  const dataDateObject = dateData();
 
   const maxItems = 30;
 
@@ -56,7 +56,7 @@ export const Comments = ({ postId }: CommentsType) => {
           roleId,
           authorId,
           groupRole,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
 
@@ -109,7 +109,7 @@ export const Comments = ({ postId }: CommentsType) => {
           authorId,
           groupRole,
           postId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
 
@@ -159,7 +159,7 @@ export const Comments = ({ postId }: CommentsType) => {
           ),
         )
       ) : (
-        <p className={styles.noComments}>{data?.Comments?.noComments}</p>
+        <p className={styles.noComments}>{language?.Comments?.noComments}</p>
       )}
       {!!lastVisible && commentsArray.length === maxItems * i && <MoreButton nextElements={nextComments} />}
     </>

@@ -1,0 +1,58 @@
+@use 'styles/variables' as *;
+
+.forgotten {
+  width: 30rem;
+  max-width: 94vw;
+  height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  margin: -3rem auto 0;
+
+  .borderContainer {
+    padding: 4rem 9% 3rem;
+    box-shadow: 0 0 1.4rem $third__color;
+    border-radius: 2rem;
+
+    .title {
+      font-size: 1.5rem;
+    }
+
+    hr {
+      margin: 1rem auto;
+    }
+
+    .subTitle {
+      margin: 2rem auto;
+      font-size: 1.3rem;
+    }
+
+    .inputForm, .inputForm__error {
+      width: 17rem;
+      max-width: 90%;
+      display: block;
+      margin: 1rem auto 1.5rem;
+      color: $third__color;
+    }
+
+    .inputForm {
+      border-color: $third__color;
+    }
+
+    .inputForm__error {
+      border-color: $required__color;
+    }
+
+    .submit__button {
+      //width: fit-content;
+      //height: 2.5rem;
+      //margin: 1rem auto;
+      //border-radius: 0.5rem;
+      //font-weight: bold;
+      //background-color: rgba(0, 0, 0, 0);
+      //border: 0.1rem solid $secondary__color;
+    }
+  }
+
+}
