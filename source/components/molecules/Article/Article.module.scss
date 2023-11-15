@@ -1,0 +1,27 @@
+@use '../../../styles/variables' as *;
+
+.article {
+  max-width: 98%;
+  justify-self: center;
+  margin: 1rem auto;
+  padding: 0.5rem 0;
+  position: relative;
+  border: .1rem solid $third__color;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.5rem 0.1rem $third__color;
+
+  .item {
+    object-fit: contain;
+    background-color: #313b4c;
+  }
+
+  .item__dark {
+    object-fit: contain;
+    background-color: $dark__color__light__back;
+  }
+
+  .shortDescription {
+    width: inherit;
+    margin: .5rem 0;
+  }
+}

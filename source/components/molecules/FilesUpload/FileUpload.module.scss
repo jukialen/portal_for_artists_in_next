@@ -1,0 +1,135 @@
+@use '../../../styles/variables' as *;
+
+.updateLogo {
+  margin: 2rem 1rem 0;
+  border-color: transparent;
+  display: flex;
+  justify-self: flex-start;
+}
+
+section.darkModalContent {
+  background-color: $dark__background__light__color;
+
+  .closeButton:hover {
+    color: $link__dark__active;
+  }
+}
+
+section.modelContent {
+  color: $primary__color;
+
+  .closeButton {
+    border-color: transparent;
+    color: $primary__color;
+
+    &:hover {
+      color: $link__hover;
+    }
+  }
+}
+
+.adding__files {
+  max-width: 99vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.5rem auto 3.5rem;
+
+  .title {
+    margin-bottom: 1rem;
+  }
+
+  .select, .select__dark {
+    width: 100vw;
+    max-width: 22.5rem;
+    color: $third__color;
+
+    .tags, .tags__error {
+      margin: .5rem auto;
+      padding: .5rem 1rem;
+      color: $dark__background__light__color;
+      border-color: $third__color;
+      border-radius: 1rem;
+
+      &__error {
+        margin: .5rem auto;
+        border-color: $required__color;
+      }
+
+      option {
+        background-color: $dark__color__light__back;
+      }
+    }
+
+    &__dark {
+      .tags, .tags__error {
+        color: $dark__color__light__back;
+        background-color: $dark__background__light__color;
+
+        &__error {
+          border-color: $required__color;
+        }
+
+        option {
+          color: inherit;
+          background-color: inherit;
+        }
+      }
+    }
+  }
+
+  .shortDescription {
+    padding: .45rem 1rem;
+    max-width: 90%;
+    height: 2.5rem;
+    margin: 0.5rem;
+    border-color: $third__color;
+    border-radius: 1rem;
+
+    &__dark {
+      color: $dark__color__light__back;
+    }
+
+    &__error {
+      border-color: $required__color;
+    }
+  }
+
+  .input, .input__error {
+    max-width: 22.5rem;
+    margin: 0.7rem auto;
+    padding: .5rem 1rem;
+    border-color: $third__color;
+    border-radius: 1rem;
+
+    &__error {
+      border-color: $required__color;
+    }
+  }
+
+  .error {
+    width: 100%;
+    max-width: 16rem;
+    font-size: 1.1rem;
+    color: $required__color;
+  }
+
+  .button {
+    width: 12rem;
+    margin: 1.5rem auto 1rem;
+  }
+
+  .progressbar {
+    width: 100vw;
+    max-width: 22.5rem;
+    margin: 1.5rem auto;
+  }
+
+  .buttons {
+    width: 100%;
+    margin: 2.7rem 1.1rem -3rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+}

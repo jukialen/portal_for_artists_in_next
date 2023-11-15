@@ -1,0 +1,83 @@
+@use '../../../styles/variables' as *;
+
+.form, .form__dark {
+	width: 100%;
+	max-width: 29rem;
+	padding: 0 1rem;
+
+	select.tags, input, textarea {
+		&:hover {
+			border-color: rgba(79, 141, 255, .5);
+		}
+	}
+
+	input::placeholder, textarea::placeholder {
+		color: $third__color;
+	}
+
+	input, textarea, button {
+		margin: 1rem 0;
+		border-color: $third__color;
+	}
+
+	.select, .select__dark {
+		margin: 1rem 0;
+		color: $third__color;
+
+		.tags, .tags__error {
+			font-size: 1rem;
+			color: $third__color;
+			border-color: $third__color;
+
+			&__error {
+				border-color: $required__color;
+			}
+
+			option {
+				background-color: $dark__color__light__back;
+			}
+		}
+
+		&__dark {
+			.tags, .tags__error {
+				font-size: 1rem;
+				border-color: $third__color;
+				color: $third__color;
+				background-color: $dark__background__light__color;
+
+				&__error {
+					border-color: $required__color;
+				}
+
+				option {
+					color: inherit;
+					background-color: inherit;
+				}
+			}
+		}
+	}
+
+	.titleInput__error, .message_error {
+		border-color: $required__color;
+	}
+
+	.button {
+		width: 6rem;
+		padding: .5rem 0;
+		border-radius: 0.5rem;
+		background-color: transparent;
+		cursor: pointer;
+		margin-left: .25rem;
+
+		&:hover {
+			background-color: $third__color;
+			color: $dark__color__light__back;
+		}
+	}
+}
+
+.form__dark {
+	input, textarea, button {
+		color: $third__color;
+	}
+}
