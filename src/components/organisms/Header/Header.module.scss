@@ -1,0 +1,81 @@
+@use '../../../styles/variables' as *;
+
+.header {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 5rem 1fr auto;
+  background-color: $primary__color;
+  z-index: 9999;
+  padding: .2rem 0;
+
+  .title a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .desktop_nav {
+    display: none;
+  }
+
+  .menu_buttons {
+    width: 5.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: .2rem;
+    font-size: .85rem;
+    justify-self: end;
+    margin: auto .5rem auto .1rem;
+    padding: .2rem;
+    background: inherit;
+    border: none;
+    color: black;
+    cursor: pointer;
+
+    svg {
+      width: 2.2rem;
+      height: 2.2rem;
+      color: black;
+    }
+  }
+
+  .withLogo {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto 1rem;
+    font-size: .85rem;
+    border-color: transparent;
+    background-color: transparent;
+
+    span, p {
+      display: flex;
+      margin: auto;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .header {
+    top: 0;
+    bottom: unset;
+    display: grid;
+
+    #settings_button {
+      display: none;
+    }
+
+    .desktop_nav {
+      height: inherit;
+      display: flex;
+      justify-self: end;
+      align-items: center;
+    }
+  }
+}

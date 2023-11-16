@@ -1,0 +1,33 @@
+@use 'les' as *;
+
+.dark {
+  background-color: $dark__background__light__color;
+
+  button {
+    color: $dark__color__light__back;
+  }
+}
+
+.main__container--dark {
+  color: $dark__color__light__back;
+
+  a {
+    color: $dark__color__light__back;
+
+    &:visited {
+      color: $third__color;
+    }
+
+    &:focus {
+      color: $link__dark__focus;
+    }
+
+    &:hover {
+      color: $link__dark__hover;
+    }
+
+    &:active {
+      color: $link__dark__active;
+    }
+  }
+}

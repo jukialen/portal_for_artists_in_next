@@ -1,0 +1,50 @@
+@use '../../../styles/variables' as *;
+
+.settings {
+  width: 90vw;
+  margin: -3rem auto 5rem;
+  min-height: 87.1vh;
+
+  &_title {
+    font-size: 2.4rem;
+    margin-bottom: 3rem;
+  }
+
+  h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    color: $third__color;
+  }
+
+  .flow {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 1.4rem;
+  }
+
+  footer {
+    margin: 2rem auto 2rem;
+
+    .links {
+      width: 100%;
+      margin: 1rem 0;
+      padding: 0;
+      text-align: left;
+      font-size: 1rem;
+      border-color: transparent;
+    }
+  }
+
+  @media (min-width: 768px) {
+    max-width: 31rem;
+    margin-top: 3rem;
+  }
+
+  @media (min-width: 1250px) {
+    max-width: 35rem;
+  }
+}
