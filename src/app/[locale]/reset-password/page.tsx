@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
-import { getI18n, getScopedI18n } from "src/locales/server";
+import { getI18n, getScopedI18n } from "locales/server";
 
-import { ResetPasswordForm } from 'src/components/molecules/ResetPasswordForm/ResetPasswordForm';
+import { ResetPasswordForm } from 'components/molecules/ResetPasswordForm/ResetPasswordForm';
 
 export const metadata: Metadata = HeadCom('The site for resetting password.');
 

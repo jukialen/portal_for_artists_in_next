@@ -1,29 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
-<<<<<<< Updated upstream:components/molecules/Comments/Comments.tsx
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
-=======
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
->>>>>>> Stashed changes:source/components/molecules/Comments/Comments.tsx
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
-import { CommentType } from 'src/types/global.types';
+import { CommentType } from 'types/global.types';
 
-import { getDate } from 'src/helpers/getDate';
+import { getDate } from 'helpers/getDate';
 
-<<<<<<< Updated upstream:components/molecules/Comments/Comments.tsx
-import { useDateData } from 'hooks/useDateData';
-import { useHookSWR } from 'hooks/useHookSWR';
-=======
-import { dateData } from 'src/helpers/dateData';
+import { dateData } from 'helpers/dateData';
 
->>>>>>> Stashed changes:source/components/molecules/Comments/Comments.tsx
 
-import { DCProvider } from 'src/providers/DeleteCommentProvider';
+import { DCProvider } from 'providers/DeleteCommentProvider';
 
-import { Comment } from 'src/components/atoms/Comment/Comment';
-import { MoreButton } from 'src/components/atoms/MoreButton/MoreButton';
+import { Comment } from 'components/atoms/Comment/Comment';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './Comments.module.scss';
 
@@ -35,8 +26,8 @@ export const Comments = ({ postId }: CommentsType) => {
   let [i, setI] = useState(1);
 
   const { locale } = useRouter();
-  const data = useHookSWR();
-  const dataDateObject = useDateData();
+
+  const dataDateObject = dateData();
 
   const maxItems = 30;
 
@@ -65,7 +56,7 @@ export const Comments = ({ postId }: CommentsType) => {
           roleId,
           authorId,
           groupRole,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
 
@@ -118,7 +109,7 @@ export const Comments = ({ postId }: CommentsType) => {
           authorId,
           groupRole,
           postId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
 
@@ -168,7 +159,7 @@ export const Comments = ({ postId }: CommentsType) => {
           ),
         )
       ) : (
-        <p className={styles.noComments}>{data?.Comments?.noComments}</p>
+        <p className={styles.noComments}>{language?.Comments?.noComments}</p>
       )}
       {!!lastVisible && commentsArray.length === maxItems * i && <MoreButton nextElements={nextComments} />}
     </>

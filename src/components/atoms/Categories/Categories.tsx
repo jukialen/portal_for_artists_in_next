@@ -1,30 +1,25 @@
 import { useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@chakra-ui/next-js';
 import Image from 'next/image';
-<<<<<<< Updated upstream:components/atoms/Categories/Categories.tsx
-import { useRouter } from 'next/router';
-
-import { DataType } from 'types/global.types';
-=======
 import { usePathname } from 'next/navigation';
-import { useScopedI18n } from 'src/locales/client';
->>>>>>> Stashed changes:source/components/atoms/Categories/Categories.tsx
+import { useScopedI18n } from 'locales/client';
 
 import styles from './Categories.module.scss';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-import realistic from 'source/public/realistic.jpg';
-import manga from 'source/public/manga.jpg';
-import anime from 'source/public/anime.jpg';
-import comics from 'source/public/comics.jpg';
-import photograph from 'source/public/photograph.jpg';
-import animations from 'source/public/animations.jpg';
-import videos from 'source/public/videos.jpg';
-import others from 'source/public/others.jpg';
+import realistic from 'public/realistic.jpg';
+import manga from 'public/manga.jpg';
+import anime from 'public/anime.jpg';
+import comics from 'public/comics.jpg';
+import photograph from 'public/photograph.jpg';
+import animations from 'public/animations.jpg';
+import videos from 'public/videos.jpg';
+import others from 'public/others.jpg';
 
-export const Categories = ({ data }: DataType) => {
-  const { asPath } = useRouter();
-
+export const Categories = () => {
+  const pathname = usePathname()
   const [arrowIcon, setArrowIcon] = useState(false);
+
+  const tAside = useScopedI18n('Aside');
 
   const changeOpenCategories = () => setArrowIcon(!arrowIcon);
 
@@ -34,8 +29,8 @@ export const Categories = ({ data }: DataType) => {
   return (
     <ol className={styles.categories}>
       <li className={styles.shadow}>
-        <Link href={asPath} className={styles.withIcon} onClick={changeOpenCategories}>
-          <p>{data?.Aside?.drawings}</p>
+        <Link href={pathname!} className={styles.withIcon} onClick={changeOpenCategories}>
+          <p>{tAside('drawings')}</p>
           {arrowIcon ? (
             <TriangleUpIcon w={arrowIcons} h={arrowIcons} />
           ) : (
@@ -45,23 +40,23 @@ export const Categories = ({ data }: DataType) => {
 
         <ol className={arrowIcon ? '' : styles.hiddenElement}>
           <Link href="/drawings/realistic" className={styles.containerImgLink}>
-            <Image src={realistic} height={icons} width={icons} alt={data?.Aside?.realistic} />
-            <p className={styles.link}>{data?.Aside?.realistic}</p>
+            <Image src={realistic} height={icons} width={icons} alt={tAside('realistic')} />
+            <p className={styles.link}>{tAside('realistic')}</p>
           </Link>
           <Link href="/drawings/manga" className={styles.containerImgLink}>
-            <Image src={manga} height={icons} width={icons} alt={data?.Aside?.manga} />
-            <p className={styles.link}>{data?.Aside?.manga}</p>
+            <Image src={manga} height={icons} width={icons} alt={tAside('manga')} />
+            <p className={styles.link}>{tAside('manga')}</p>
           </Link>
           <Link href="https://www.freepik.com/vectors/poster" className={styles.source}>
             Poster vector created by gstudioimagen1 - www.freepik.com
           </Link>
           <Link href="/drawings/anime" className={styles.containerImgLink}>
-            <Image src={anime} height={icons} width={icons} alt={data?.Aside?.anime} />
-            <p className={styles.link}>{data?.Aside?.anime}</p>
+            <Image src={anime} height={icons} width={icons} alt={tAside('anime')} />
+            <p className={styles.link}>{tAside('anime')}</p>
           </Link>
           <Link href="/drawings/comics" className={styles.containerImgLink}>
-            <Image src={comics} height={icons} width={icons} alt={data?.Aside?.comics} />
-            <p className={styles.link}>{data?.Aside?.comics}</p>
+            <Image src={comics} height={icons} width={icons} alt={tAside('comics')} />
+            <p className={styles.link}>{tAside('comics')}</p>
           </Link>
         </ol>
       </li>
@@ -71,36 +66,36 @@ export const Categories = ({ data }: DataType) => {
           src={photograph}
           height={icons}
           width={icons}
-          alt={`${data?.Aside?.photographs} Photo by Rirri on Unsplash`}
+          alt={`${tAside('photographs')} Photo by Rirri on Unsplash`}
         />
-        <p className={styles.link}>{data?.Aside?.photographs}</p>
+        <p className={styles.link}>{tAside('photographs')}</p>
       </Link>
       <Link href="/animations" className={styles.containerImgLink}>
         <Image
           src={animations}
           height={icons}
           width={icons}
-          alt={`${data?.Aside?.photographs} Photo by Sebastian Svenson on Unsplash`}
+          alt={`${tAside('photographs')} Photo by Sebastian Svenson on Unsplash`}
         />
-        <p className={styles.link}>{data?.Aside?.animations}</p>
+        <p className={styles.link}>{tAside('animations')}</p>
       </Link>
       <Link href="/videos" className={styles.containerImgLink}>
         <Image
           src={videos}
           height={icons}
           width={icons}
-          alt={`${data?.Aside?.photographs} Photo by Jakob Owens on Unsplash`}
+          alt={`${tAside('photographs')} Photo by Jakob Owens on Unsplash`}
         />
-        <p className={styles.link}>{data?.Aside?.videos}</p>
+        <p className={styles.link}>{tAside('videos')}</p>
       </Link>
       <Link href="/others" className={styles.containerImgLink}>
         <Image
           src={others}
           height={icons}
           width={icons}
-          alt={`${data?.Aside?.photographs} Photo by Yong Chuan Tan on Unsplash`}
+          alt={`${tAside('photographs')} Photo by Yong Chuan Tan on Unsplash`}
         />
-        <p className={styles.link}>{data?.Aside?.others}</p>
+        <p className={styles.link}>{tAside('others')}</p>
       </Link>
     </ol>
   );

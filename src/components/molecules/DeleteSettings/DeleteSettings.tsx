@@ -2,9 +2,9 @@
 
 import { Divider } from '@chakra-ui/react';
 
-import { useUserData } from 'src/hooks/useUserData';
+import { useUserData } from 'hooks/useUserData';
 
-import { DeleteAccount } from 'src/components/atoms/DeleteAccount/DeleteAccount';
+import { DeleteAccount } from 'components/atoms/DeleteAccount/DeleteAccount';
 
 export const DeleteSettings = () => {
   const userData = useUserData();

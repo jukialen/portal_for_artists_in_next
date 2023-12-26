@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 import { setStaticParamsLocale } from "next-international/server";
 
-import { getScopedI18n } from "src/locales/server";
+import { getScopedI18n } from "locales/server";
 
-import { HeadCom } from "src/constants/HeadCom";
+import { HeadCom } from "constants/HeadCom";
 
-import { GroupList } from "src/components/molecules/GroupList/GroupList";
+import { GroupList } from "components/molecules/GroupList/GroupList";
 
 export const metadata: Metadata = HeadCom('List of all groups');
 

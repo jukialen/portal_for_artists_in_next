@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import { FilesCommentsType } from "src/types/global.types";
+import { FilesCommentsType } from "types/global.types";
 
-import { backUrl } from "src/constants/links";
+import { backUrl } from "constants/links";
 
-import { getDate } from "src/helpers/getDate";
+import { getDate } from "helpers/getDate";
 
-import { DCProvider } from "src/providers/DeleteCommentProvider";
+import { DCProvider } from "providers/DeleteCommentProvider";
 
-import { FileComment } from "src/components/atoms/FileComment/FileComment";
-import { MoreButton } from "src/components/atoms/MoreButton/MoreButton";
+import { FileComment } from "components/atoms/FileComment/FileComment";
+import { MoreButton } from "components/atoms/MoreButton/MoreButton";
 
 import styles from "./FilesCommentsClient.module.scss";
 

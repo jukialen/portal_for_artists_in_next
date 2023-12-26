@@ -2,10 +2,10 @@
 
 import { ReactElement, ReactNode, useContext } from 'react';
 
-import { darkMode } from 'src/constants/links';
+import { darkMode } from 'constants/links';
 
-import { ModeContext } from 'src/providers/ModeProvider';
-import { MenuContext } from 'src/providers/MenuProvider';
+import { ModeContext } from 'providers/ModeProvider';
+import { MenuContext } from 'providers/MenuProvider';
 
 import styles from './SkeletonRootLayout.module.scss';
 

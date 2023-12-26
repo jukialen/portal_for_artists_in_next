@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 
-import { useUserData } from "src/hooks/useUserData";
+import { useUserData } from "hooks/useUserData";
 
 import styles from './PlanWrapper.module.scss';
 

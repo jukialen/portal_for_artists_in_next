@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
+import { useUserData } from '../hooks/useUserData';
 
 type childrenType = {
   children: ReactNode;
@@ -12,13 +13,19 @@ export const MenuContext = createContext({
 });
 
 export const MenuProvider = ({ children }: childrenType) => {
-  const [isMenu, setMenu] = useState((typeof window !== 'undefined' && localStorage.getItem('login')) || 'false');
+  const userData = useUserData();
+  const [isMenu, setMenu] = useState(!!userData ? 'true' : 'false');
 
-  console.log('isMenu', isMenu);
+  useEffect(() => {
+    !localStorage.getItem('login')!
+      ? localStorage.setItem('login', !!userData ? 'true' : 'false')
+      : localStorage.getItem('login');
+    setMenu(localStorage.getItem('login')!);
+  }, [userData]);
 
   const changeMenu = (menu: string) => {
     setMenu(menu);
-    localStorage.setItem('login', `${menu}`);
+    localStorage.setItem('login', menu);
   };
 
   return (

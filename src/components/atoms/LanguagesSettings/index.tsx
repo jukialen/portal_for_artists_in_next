@@ -3,12 +3,12 @@
 import { useContext, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 
-import { darkMode } from 'src/constants/links';
-import { LangType } from 'src/types/global.types';
+import { darkMode } from 'constants/links';
+import { LangType } from 'types/global.types';
 
-import { useChangeLocale, useCurrentLocale, useI18n } from "src/locales/client";
+import { useChangeLocale, useCurrentLocale, useI18n } from "locales/client";
 
-import { ModeContext } from 'src/providers/ModeProvider';
+import { ModeContext } from 'providers/ModeProvider';
 
 import styles from './LanguagesSettings.module.scss';
 import { ChevronDownIcon } from '@chakra-ui/icons';

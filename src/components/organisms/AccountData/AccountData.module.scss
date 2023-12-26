@@ -27,7 +27,6 @@
       align-items: center;
       justify-content: space-between;
       font-size: 1.4rem;
-
     }
 
     .input, .input__error {
@@ -49,18 +48,8 @@
       border-color: $required__color;
     }
 
-    button.planButton {
+    .planButton {
       margin: unset;
-    }
-
-    .button {
-      width: fit-content;
-      height: 2.5rem;
-      margin: 1rem auto;
-      border-radius: .5rem;
-      font-weight: bold;
-      background-color: transparent;
-      border: .1rem solid $secondary__color;
     }
   }
 
@@ -72,6 +61,10 @@
 section.subscription, section.subscription__dark {
   max-width: inherit;
   right: 1rem;
+
+  header {
+    border-bottom: transparent;
+  }
 
   .closeButton {
     border-color: transparent;
@@ -143,6 +136,9 @@ section.subscription, section.subscription__dark {
     justify-content: flex-end;
     margin-bottom: -.5rem;
 
+    &__dark {
+      color: $dark__color__light__back ;
+    }
     button {
       border-color: transparent;
     }

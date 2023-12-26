@@ -2,7 +2,7 @@ import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'src/shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -15,22 +15,15 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 
-import { ResetFormType, Role } from 'src/types/global.types';
+import { ResetFormType, Role } from 'types/global.types';
 
-<<<<<<< Updated upstream:components/molecules/OptionsComments/OptionsComments.tsx
-import { backUrl, darkMode } from 'utilites/constants';
+import { backUrl, darkMode } from 'constants/links';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+
 import { useUserData } from 'hooks/useUserData';
-=======
-import { backUrl, darkMode } from 'src/constants/links';
 
-
-import { useUserData } from 'src/hooks/useUserData';
->>>>>>> Stashed changes:source/components/molecules/OptionsComments/OptionsComments.tsx
-
-import { ModeContext } from 'src/providers/ModeProvider';
-import { DCContext } from 'src/providers/DeleteCommentProvider';
+import { ModeContext } from 'providers/ModeProvider';
+import { DCContext } from 'providers/DeleteCommentProvider';
 
 import styles from './OptionsComments.module.scss';
 import { AiFillLike, AiOutlineLike, AiOutlineMore } from 'react-icons/ai';
@@ -73,7 +66,7 @@ export const OptionsComments = ({
   const cancelRef = useRef(null);
   const cancelEditRef = useRef(null);
 
-  const data = useHookSWR();
+
   const { id } = useUserData();
 
   const initialValues = { comment: '' };
@@ -133,7 +126,7 @@ export const OptionsComments = ({
       <div className={styles.options}>
         <div className={styles.likesContainer}>
           <IconButton
-            aria-label={like ? data?.Posts?.likedAria : data?.Posts?.likeAria}
+            aria-label={like ? language?.Posts?.likedAria : language?.Posts?.likeAria}
             colorScheme="blue"
             icon={like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
             className={styles.likes}
@@ -157,10 +150,10 @@ export const OptionsComments = ({
               {moreOptions && (
                 <div className={styles.more}>
                   <Button variant="ghost" colorScheme="red" className={styles.delete} onClick={() => setOpen(!open)}>
-                    {data?.DeletionFile?.deleteButton}
+                    {language?.DeletionFile?.deleteButton}
                   </Button>
                   <Button variant="link" className={styles.edit} onClick={() => setOpenEdit(!openEdit)}>
-                    {data?.edit}
+                    {language?.edit}
                   </Button>
                 </div>
               )}
@@ -168,17 +161,17 @@ export const OptionsComments = ({
                 <AlertDialogOverlay>
                   <AlertDialogContent m="auto">
                     <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                      {data?.Comments?.deleteCommentTitle}
+                      {language?.Comments?.deleteCommentTitle}
                     </AlertDialogHeader>
 
-                    <AlertDialogBody>{data?.DeletionFile?.question}</AlertDialogBody>
+                    <AlertDialogBody>{language?.DeletionFile?.question}</AlertDialogBody>
 
                     <AlertDialogFooter>
                       <Button ref={cancelRef} borderColor="gray.100" onClick={onClose}>
-                        {data?.DeletionFile?.cancelButton}
+                        {language?.DeletionFile?.cancelButton}
                       </Button>
                       <Button colorScheme="red" borderColor="red.500" onClick={deleteComment} ml={3}>
-                        {data?.DeletionFile?.deleteButton}
+                        {language?.DeletionFile?.deleteButton}
                       </Button>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -192,7 +185,7 @@ export const OptionsComments = ({
                       fontSize="lg"
                       fontWeight="bold"
                       color={`${isMode === darkMode ? '#f7f7f7' : '#2D3748'}`}>
-                      {data?.Comments?.updateTitle}
+                      {language?.Comments?.updateTitle}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
@@ -210,8 +203,8 @@ export const OptionsComments = ({
                                 id="comment"
                                 value={values.comment}
                                 onChange={handleChange}
-                                placeholder={data?.Comments?.newComPlaceholder}
-                                aria-label={data?.Comments?.newComAria}
+                                placeholder={language?.Comments?.newComPlaceholder}
+                                aria-label={language?.Comments?.newComAria}
                                 isRequired
                                 color="#4F8DFF"
                               />
@@ -231,7 +224,7 @@ export const OptionsComments = ({
                                 backgroundColor="#4F8DFF"
                                 borderColor="#4F8DFF"
                                 cursor="pointer">
-                                {data?.Comments?.updateButton}
+                                {language?.Comments?.updateButton}
                               </Button>
 
                               <Button
@@ -240,7 +233,7 @@ export const OptionsComments = ({
                                 borderColor="gray.300"
                                 onClick={onCloseEdit}
                                 cursor="pointer">
-                                {data?.DeletionFile?.cancelButton}
+                                {language?.DeletionFile?.cancelButton}
                               </Button>
                             </div>
                             <ErrorMessage name="comment" />
@@ -254,7 +247,7 @@ export const OptionsComments = ({
             </>
           )}
           <Button variant="link" color="blue" className={styles.answer} onClick={openComs}>
-            {data?.Comments?.reply}
+            {language?.Comments?.reply}
           </Button>
         </div>
       </div>

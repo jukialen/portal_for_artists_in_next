@@ -1,11 +1,11 @@
 'use client'
 
 import Link from "next/link";
-import { useScopedI18n } from "src/locales/client";
+import { useScopedI18n } from "locales/client";
 
-import { useUserData } from "src/hooks/useUserData";
+import { useUserData } from "hooks/useUserData";
 
-import { ContactForm } from "src/components/atoms/ContactForm/ContactForm";
+import { ContactForm } from "components/atoms/ContactForm/ContactForm";
 
 import styles from './ContactContainer.module.scss';
 

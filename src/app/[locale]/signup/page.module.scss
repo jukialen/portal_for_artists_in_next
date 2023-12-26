@@ -14,72 +14,24 @@
   color: $dark__background__light__color;
   background-color: $primary__color;
 
-  form {
-    display: flex;
-    flex-direction: column;
-    max-width: 20rem;
-    margin: -2rem auto 0;
+  .dividerWithText {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    justify-content: center;
+    align-items: center;
+    column-gap: 1rem;
+    padding: 0 2rem;
 
-    .title {
-      margin: 2.5rem auto .5rem;
-      text-align: center;
-      font-size: 1.8rem;
-    }
-
-    .inputForm,
-    .inputForm__error {
-      display: block;
-      width: 17rem;
-      max-width: 90%;
-      margin: 1rem auto 0.5rem;
-      border-color: $third__color;
-      color: $dark__background__light__color;
-
-      &::placeholder {
-        color: rgba(45, 55, 72, 0.81);
-      }
-    }
-
-    .showingPass {
-      height: 85%;
-      top: 1rem;
-      right: 1.3rem;
-      color: $dark__background__light__color;
-      background-color: $another__color;
-      border-color: $primary__color;
-    }
-
-    .inputForm {
-      border-color: $third__color;
-
-      &:hover {
-        border-color: rgba(79, 141, 255, 0.7);
-      }
-
-      &__error {
-        border-color: $required__color;
-      }
-    }
-
-    .submit__button {
-      width: 10rem;
-      margin: 1.5rem auto 0rem;
+    .provider__title {
+      display: inline-block;
+      font-size: 1rem;
       color: $dark__background__light__color;
     }
-  }
-}
 
-.dividerWIthText {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  justify-content: center;
-  align-items: center;
-  column-gap: 1rem;
-  padding: 0 2rem;
-
-  .provider__title {
-    display: inline-block;
-    font-size: 1rem;
+    hr {
+      width: 100%;
+      border: 1px solid $secondary__color;
+    }
   }
 }
 
@@ -91,7 +43,6 @@
   }
 }
 
-
 .create__account .chakraAlert > div {
   position: absolute;
   bottom: 4rem;
@@ -102,23 +53,25 @@
 .acceptInfo {
   margin: 0 auto;
   padding: 0 2rem;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 @media (min-width: 786px) {
-  .dividerWIthText, .acceptInfo {
+  .dividerWithText,
+  .acceptInfo {
     width: 25rem;
     margin: 0 auto;
   }
 
   .acceptInfo {
-    padding: .2rem 0;
+    padding: 0.2rem 0;
     text-align: center;
   }
 }
 
 @media (min-width: 1600px) {
-  .create__account:before, .create__account:after {
+  .create__account:before,
+  .create__account:after {
     content: '';
     width: calc(50vw - 12rem);
     max-width: 640px;

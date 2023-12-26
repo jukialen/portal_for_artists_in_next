@@ -42,7 +42,9 @@ type Time = {
   updatedAt?: string;
 };
 
-export type DataType = any;
+export type LangType = 'en' | 'pl' | 'jp';
+
+export type LanguageType = any;
 
 //FORMS & CONTROLLERS ELEMENTS
 export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
@@ -62,7 +64,7 @@ export type UserType = Logo &
     id?: string;
     pseudonym: string;
     description?: string;
-    data?: any;
+    language?: any;
     email?: string;
     plan?: string;
     provider?: boolean;

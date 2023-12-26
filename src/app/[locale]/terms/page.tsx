@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
-import { getI18n } from 'src/locales/server';
+import { getI18n } from 'locales/server';
 
 import styles from './page.module.scss';
 

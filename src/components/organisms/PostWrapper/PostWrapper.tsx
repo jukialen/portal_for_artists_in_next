@@ -1,39 +1,18 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import axios from 'axios';
-<<<<<<<< Updated upstream:pages/groups/[name]/[...post].tsx
-
 import { PostsType } from 'types/global.types';
+import { backUrl } from 'constants/links';
 
-import { backUrl } from 'utilites/constants';
-========
-import { PostsType } from 'src/types/global.types';
-import { backUrl } from 'src/constants/links';
->>>>>>>> Stashed changes:source/components/organisms/PostWrapper/PostWrapper.tsx
-
-import { getDate } from 'src/helpers/getDate';
-
-<<<<<<<< Updated upstream:pages/groups/[name]/[...post].tsx
-import { useDateData } from 'hooks/useDateData';
-import { useCurrentUser } from 'hooks/useCurrentUser';
+import { getDate } from 'helpers/getDate';
 
 import { Post } from 'components/molecules/Post/Post';
-========
-import { Post } from 'src/components/molecules/Post/Post';
->>>>>>>> Stashed changes:source/components/organisms/PostWrapper/PostWrapper.tsx
 
-export default function PostFromGroup() {
+type DataDateType = { second: string; minute: string; hour: string; day: string; yearDateSeparator: string };
+type PostWrapperType = { locale: string; name: string; postId: string; dataDateObject: DataDateType };
+export const PostWrapper = ({ locale, name, postId, dataDateObject }: PostWrapperType) => {
   const [postData, setPostData] = useState<PostsType>();
-
-  const { locale, asPath } = useRouter();
-
-  const dataDateObject = useDateData();
-
-  const split = asPath.split('/');
-  const containUrl = split.includes('https') || split.includes('http');
-
-  const name = decodeURIComponent(split[containUrl ? 4 : 2]);
-  const postId = decodeURIComponent(split[containUrl ? 6 : 4]);
 
   const downloadPosts = async () => {
     try {
@@ -79,10 +58,6 @@ export default function PostFromGroup() {
     !!(name && postId) && downloadPosts();
   }, [locale, name, postId]);
 
-  if (useCurrentUser('/signin')) {
-    return null;
-  }
-
   return (
     <Post
       pseudonym={postData!.pseudonym}
@@ -101,4 +76,4 @@ export default function PostFromGroup() {
       roleId={postData!.roleId}
     />
   );
-}
+};

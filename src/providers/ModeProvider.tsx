@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, ReactNode, useEffect, useState } from 'react';
 
 type childrenType = {
@@ -41,8 +43,7 @@ export const ModeProvider = ({ children }: childrenType) => {
   return (
     <ModeContext.Provider
       value={{
-        // @ts-ignore
-        isMode,
+        isMode: isMode!,
         changeMode,
       }}>
       {children}

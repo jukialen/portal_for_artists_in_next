@@ -2,14 +2,14 @@
 
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
-import { useUserData } from 'src/hooks/useUserData';
+import { useUserData } from 'hooks/useUserData';
 
-import { FriendsList } from 'src/components/molecules/FriendsList/FriendsList';
-import { GroupUsers } from 'src/components/organisms/GroupUsers/GroupUsers';
-import { PhotosGallery } from 'src/components/organisms/PhotosGallery/PhotosGallery';
-import { AnimatedGallery } from 'src/components/organisms/AnimatedGallery/AnimatedGallery';
-import { VideoGallery } from 'src/components/organisms/VideoGallery/VideoGallery';
-import { ClientPortalWrapper } from 'src/components/atoms/ClientPortalWrapper/ClientPortalWrapper';
+import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
+import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
+import { PhotosGallery } from 'components/organisms/PhotosGallery/PhotosGallery';
+import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
+import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
+import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 
 import styles from './DashboardTabs.module.scss';
 

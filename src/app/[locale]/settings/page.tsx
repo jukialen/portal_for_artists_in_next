@@ -2,17 +2,17 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { checkinSession } from 'src/helpers/components/checkingSession';
-import { SessionAuthForNextJS } from 'src/helpers/components/sessionAuthForNextJS';
+import { checkinSession } from 'helpers/components/checkingSession';
+import { SessionAuthForNextJS } from 'helpers/components/sessionAuthForNextJS';
 
-import { getI18n, getScopedI18n } from 'src/locales/server';
+import { getI18n, getScopedI18n } from 'locales/server';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
-import { LanguagesSettings } from 'src/components/atoms/LanguagesSettings';
-import { ModeContainer } from 'src/components/atoms/ModeContainer';
-import { DeleteSettings } from 'src/components/molecules/DeleteSettings/DeleteSettings';
-import { UserPartOfSettings } from 'src/components/organisms/UserPartOfSettings/UserPartOfSettings';
+import { LanguagesSettings } from 'components/atoms/LanguagesSettings';
+import { ModeContainer } from 'components/atoms/ModeContainer';
+import { DeleteSettings } from 'components/molecules/DeleteSettings/DeleteSettings';
+import { UserPartOfSettings } from 'components/organisms/UserPartOfSettings/UserPartOfSettings';
 
 import styles from './page.module.scss';
 
@@ -23,7 +23,7 @@ export default async function Settings({ params: { locale } }: { params: { local
   const t = await getI18n();
   const tSettings = await getScopedI18n('Settings');
 
-  await checkinSession(locale);
+  await checkinSession();
 
   return (
     <SessionAuthForNextJS>

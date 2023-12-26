@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
-import { getI18n } from 'src/locales/server';
+import { getI18n } from 'locales/server';
 
-import { dateData } from 'src/helpers/dateData';
+import { dateData } from 'helpers/dateData';
 
-import { Wrapper } from 'src/components/atoms/Wrapper/Wrapper';
-import { DrawingsWrapper } from 'src/components/molecules/DrawingsWrapper/DrawingsWrapper';
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+import { DrawingsWrapper } from 'components/molecules/DrawingsWrapper/DrawingsWrapper';
 
 import styles from './page.module.scss';
 

@@ -1,7 +1,7 @@
-import { FileType } from 'src/types/global.types';
+import { FileType } from 'types/global.types';
 
-import { Article } from 'src/components/molecules/Article/Article';
-import { Videos } from 'src/components/molecules/Videos/Videos';
+import { Article } from 'components/molecules/Article/Article';
+import { Videos } from 'components/molecules/Videos/Videos';
 
 export const AppTop10s = ({data, type}: { data: FileType[], type: 'videos' | 'other'}) => {
   return data.map(

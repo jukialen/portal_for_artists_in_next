@@ -1,45 +1,31 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import axios from 'axios';
 
-import { FileType } from 'src/types/global.types';
+import { FileType } from 'types/global.types';
 
-<<<<<<<< Updated upstream:pages/drawings/[pid].tsx
+import { backUrl, cloudFrontUrl } from 'constants/links';
+
 import { getDate } from 'helpers/getDate';
 
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
-
-import { useCurrentUser } from 'hooks/useCurrentUser';
-import { useDateData } from 'hooks/useDateData';
-import { useHookSWR } from 'hooks/useHookSWR';
-
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
-import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
-========
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
 
-import { getDate } from 'src/helpers/getDate';
+type DrawingsWrapperType = {
+  locale: string;
+  pid: string;
+  dataDateObject: { second: string; minute: string; hour: string; day: string; yearDateSeparator: string };
+  noDrawings: string;
+};
 
-import { ZeroFiles } from 'src/components/atoms/ZeroFiles/ZeroFiles';
-import { MoreButton } from 'src/components/atoms/MoreButton/MoreButton';
-import { Article } from 'src/components/molecules/Article/Article';
->>>>>>>> Stashed changes:source/components/molecules/DrawingsWrapper/DrawingsWrapper.tsx
-
-import styles from './index.module.scss';
-
-export default function Drawings() {
+export const DrawingsWrapper = ({ locale, pid, dataDateObject, noDrawings }: DrawingsWrapperType) => {
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
   const [lastVisible, setLastVisible] = useState<string>();
   let [i, setI] = useState(1);
 
-  const router = useRouter();
-  const { pid } = router.query;
-  const data = useHookSWR();
   const maxItems = 30;
-  const dataDateObject = useDateData();
 
   const downloadDrawings = async () => {
     try {
@@ -66,7 +52,7 @@ export default function Drawings() {
           profilePhoto,
           fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
-          time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -77,6 +63,7 @@ export default function Drawings() {
       console.log('No such drawings!');
     }
   };
+  
   const nextElements = async () => {
     try {
       const filesArray: FileType[] = [];
@@ -103,7 +90,7 @@ export default function Drawings() {
           profilePhoto,
           fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
-          time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -120,45 +107,33 @@ export default function Drawings() {
     !!pid && downloadDrawings();
   }, [pid]);
 
-  if (useCurrentUser('/signin')) {
-    return null;
-  }
-
   return (
     <>
-      <HeadCom path={router.asPath} content="Sites with drawings and photos." />
+      {userDrawings.length > 0 ? (
+        userDrawings.map(
+          (
+            { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+            index,
+          ) => (
+            <Article
+              key={index}
+              fileId={fileId!}
+              name={name!}
+              fileUrl={fileUrl}
+              shortDescription={shortDescription!}
+              tags={tags!}
+              authorName={pseudonym!}
+              profilePhoto={profilePhoto}
+              authorId={authorId}
+              time={time}
+            />
+          ),
+        )
+      ) : (
+        <ZeroFiles text={noDrawings} />
+      )}
 
-      <em className={styles.title}>
-        {data?.Aside?.category}: {pid}
-      </em>
-
-      <Wrapper>
-        {userDrawings.length > 0 ? (
-          userDrawings.map(
-            (
-              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
-              index,
-            ) => (
-              <Article
-                key={index}
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorName={pseudonym!}
-                profilePhoto={profilePhoto}
-                authorId={authorId}
-                time={time}
-              />
-            ),
-          )
-        ) : (
-          <ZeroFiles text={data?.ZeroFiles?.files} />
-        )}
-
-        {!!lastVisible && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
-      </Wrapper>
+      {!!lastVisible && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
     </>
   );
-}
+};

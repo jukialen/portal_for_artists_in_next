@@ -1,27 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
-<<<<<<< Updated upstream:components/molecules/LastComments/LastComments.tsx
 import { LastCommentType } from 'types/global.types';
-import { backUrl } from 'utilites/constants';
-=======
-import { LastCommentType } from 'src/types/global.types';
-import { backUrl } from 'src/constants/links';
->>>>>>> Stashed changes:source/components/molecules/LastComments/LastComments.tsx
+import { backUrl } from 'constants/links';
 
-import { getDate } from 'src/helpers/getDate';
+import { getDate } from 'helpers/getDate';
 
-<<<<<<< Updated upstream:components/molecules/LastComments/LastComments.tsx
-import { useDateData } from 'hooks/useDateData';
-=======
-import { dateData } from 'src/helpers/dateData';
->>>>>>> Stashed changes:source/components/molecules/LastComments/LastComments.tsx
+import { dateData } from 'helpers/dateData';
 
-import { DCProvider } from 'src/providers/DeleteCommentProvider';
+import { DCProvider } from 'providers/DeleteCommentProvider';
 
-import { LastComment } from 'src/components/atoms/LastComment/LastComment';
-import { MoreButton } from 'src/components/atoms/MoreButton/MoreButton';
+import { LastComment } from 'components/atoms/LastComment/LastComment';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 type LastCommentsType = { subCommentId: string; fileId?: string; postId?: string };
 
@@ -31,7 +22,7 @@ export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType)
   let [i, setI] = useState(1);
 
   const { locale } = useRouter();
-  const dataDateObject = useDateData();
+  const dataDateObject = dateData();
 
   const maxItems = 5;
 
@@ -71,7 +62,7 @@ export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType)
           groupRole,
           authorId,
           subCommentId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
 
@@ -124,7 +115,7 @@ export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType)
           groupRole,
           authorId,
           subCommentId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
 

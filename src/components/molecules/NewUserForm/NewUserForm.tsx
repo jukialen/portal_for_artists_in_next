@@ -6,16 +6,16 @@ import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Input, Progress } from '@chakra-ui/react';
-import { SchemaValidation } from 'src/shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { EventType } from 'src/types/global.types';
+import { EventType } from 'types/global.types';
 
-import { backUrl } from 'src/constants/links';
+import { backUrl } from 'constants/links';
 
-import { MenuContext } from "src/providers/MenuProvider";
+import { MenuContext } from "providers/MenuProvider";
 
-import { Alerts } from 'src/components/atoms/Alerts/Alerts';
-import { FormError } from 'src/components/molecules/FormError/FormError';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './NewUserForm.module.scss';
 

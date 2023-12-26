@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 import { setStaticParamsLocale } from "next-international/dist/app/server";
 
-import { HeadCom } from "src/constants/HeadCom";
+import { HeadCom } from "constants/HeadCom";
 
-import { getScopedI18n } from "src/locales/server";
+import { getScopedI18n } from "locales/server";
 
-import { NewUserForm } from "src/components/molecules/NewUserForm/NewUserForm";
+import { NewUserForm } from "components/molecules/NewUserForm/NewUserForm";
 
 export const metadata: Metadata = HeadCom('Site for new user');
 

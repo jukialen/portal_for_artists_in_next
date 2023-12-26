@@ -2,12 +2,12 @@ import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 import Link from 'next/link';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
-import { getI18n, getScopedI18n } from 'src/locales/server';
+import { getI18n, getScopedI18n } from 'locales/server';
 
-import { PlanBlock } from 'src/components/molecules/PlanBlock/PlanBlock';
-import { PlanWrapper } from "src/components/organisms/PlanWrapper/PlanWrapper";
+import { PlanBlock } from 'components/molecules/PlanBlock/PlanBlock';
+import { PlanWrapper } from "components/organisms/PlanWrapper/PlanWrapper";
 
 import styles from './page.module.scss';
 

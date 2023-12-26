@@ -1,22 +1,22 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { HeadCom } from 'src/constants/HeadCom';
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
+import { HeadCom } from 'constants/HeadCom';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
-import { getScopedI18n } from 'src/locales/server';
+import { getScopedI18n } from 'locales/server';
 
-import { FileType } from 'src/types/global.types';
+import { FileType } from 'types/global.types';
 
-import { getDate } from 'src/helpers/getDate';
-import { get } from 'src/helpers/methods';
+import { getDate } from 'helpers/getDate';
+import { get } from 'helpers/methods';
 
-import { dateData } from 'src/helpers/dateData';
+import { dateData } from 'helpers/dateData';
 
-import { AppWrapper } from 'src/components/atoms/AppWrapper/AppWrapper';
-import { ZeroFiles } from 'src/components/atoms/ZeroFiles/ZeroFiles';
-import { AppTop10s } from 'src/components/molecules/AppTop10s/AppTop10s';
-import { SkeletonRootLayout } from 'src/components/organisms/SkeletonRootLayout/SkeletonRootLayout';
+import { AppWrapper } from 'components/atoms/AppWrapper/AppWrapper';
+import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
+import { AppTop10s } from 'components/molecules/AppTop10s/AppTop10s';
+import { SkeletonRootLayout } from 'components/organisms/SkeletonRootLayout/SkeletonRootLayout';
 
 import styles from './page.module.scss';
 

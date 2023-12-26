@@ -1,20 +1,18 @@
+'use client'
+
 import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { Link } from '@chakra-ui/next-js';
 
-import { Tags } from 'src/types/global.types';
+import { Tags } from 'types/global.types';
 
-<<<<<<< Updated upstream:components/molecules/FileOptions/FileOptions.tsx
-import { useHookSWR } from 'hooks/useHookSWR';
-=======
-import { useCurrentLocale, useScopedI18n } from "src/locales/client";
->>>>>>> Stashed changes:source/components/molecules/FileOptions/FileOptions.tsx
+import { useCurrentLocale, useScopedI18n } from "locales/client";
 
-import { NewComments } from 'src/components/atoms/NewComments/NewComments';
-import { SharingButton } from 'src/components/atoms/SharingButton/SharingButton';
-import { FilesComments } from 'src/components/molecules/FilesComments/FilesComments';
+import { NewComments } from 'components/atoms/NewComments/NewComments';
+import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
+import { FilesComments } from 'components/molecules/FilesComments/FilesComments';
 
 import styles from './FileOptions.module.scss';
+import { ClientPortalWrapper } from "../../atoms/ClientPortalWrapper/ClientPortalWrapper";
 
 type FileOptionsType = {
   fileId: string;
@@ -26,10 +24,9 @@ type FileOptionsType = {
 
 export const FileOptions = ({ fileId, authorName, profilePhoto, tags, name }: FileOptionsType) => {
   const [open, setOpen] = useState(false);
-  const { locale } = useRouter();
-
-  const data = useHookSWR();
-
+  const locale = useCurrentLocale();
+  
+  const tComments = useScopedI18n('Comments');
   const showOpenComments = () => setOpen(!open);
 
   const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/post/${authorName}/${tags}/${name}`;
@@ -44,12 +41,14 @@ export const FileOptions = ({ fileId, authorName, profilePhoto, tags, name }: Fi
         <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} />
       </div>
       <button className={styles.comments} onClick={showOpenComments}>
-        {data?.Comments?.comments}
+        {tComments('comments')}
       </button>
       {open && (
         <>
           <NewComments profilePhoto={profilePhoto} fileId={fileId} />
-          <FilesComments fileId={fileId} />
+          {/*<ClientPortalWrapper>*/}
+            {/*<FilesComments fileId={fileId} />*/}
+          {/*</ClientPortalWrapper>*/}
         </>
       )}
     </div>

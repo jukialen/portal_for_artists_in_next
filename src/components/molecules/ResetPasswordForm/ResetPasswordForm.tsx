@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import { submitNewPassword } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'src/shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Divider, Input } from '@chakra-ui/react';
 
-import { FormError } from 'src/components/molecules/FormError/FormError';
-import { Alerts } from 'src/components/atoms/Alerts/Alerts';
+import { FormError } from 'components/molecules/FormError/FormError';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './ResetPasswordForm.module.scss';
 

@@ -2,11 +2,11 @@ import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 import { usePathname } from 'next/navigation';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
-import { dateData } from 'src/helpers/dateData';
+import { dateData } from 'helpers/dateData';
 
-import { PostWrapper } from 'src/components/organisms/PostWrapper/PostWrapper';
+import { PostWrapper } from 'components/organisms/PostWrapper/PostWrapper';
 
 export async function generateMetadata({ locale, post }: { locale: string; post: string }): Promise<Metadata> {
   const split = post.split('/');

@@ -1,15 +1,30 @@
+<<<<<<<< HEAD:src/components/organisms/Aside/Aside.tsx
+<<<<<<< Updated upstream:components/organisms/Aside/Aside.tsx
+import { useContext, useState } from 'react';
+import { Button, Drawer, DrawerBody, DrawerContent, DrawerOverlay, useDisclosure } from '@chakra-ui/react';
+
+import { darkMode } from 'utilites/constants';
+=======
+import { getScopedI18n } from "src/locales/server";
+
+import { AsideWrapper } from "src/components/molecules/AsideWrapper/AsideWrapper";
+>>>>>>> Stashed changes:source/components/organisms/Aside/Aside.tsx
+
+import { useHookSWR } from 'hooks/useHookSWR';
+========
 'use client';
 
 import { useContext, useState } from 'react';
 import { Button, Drawer, DrawerBody, DrawerContent, DrawerOverlay, useDisclosure } from '@chakra-ui/react';
 
-import { darkMode } from 'src/constants/links';
+import { darkMode } from 'constants/links';
+>>>>>>>> changing-to-app-dir:src/components/molecules/AsideWrapper/AsideWrapper.tsx
 
-import { ModeContext } from 'src/providers/ModeProvider';
+import { ModeContext } from 'providers/ModeProvider';
 
-import { Categories } from 'src/components/atoms/Categories/Categories';
-import { Groups } from 'src/components/atoms/Groups/Groups';
-import { Friends } from 'src/components/atoms/Friends/Friends';
+import { Categories } from 'components/atoms/Categories/Categories';
+import { Groups } from 'components/atoms/Groups/Groups';
+import { Friends } from 'components/atoms/Friends/Friends';
 
 import styles from './Aside.module.scss';
 import { RightOutlined } from '@ant-design/icons';

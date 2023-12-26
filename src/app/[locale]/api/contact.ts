@@ -1,10 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
 
-import sgMail from '@sendgrid/mail';
 import axios from 'axios';
-
-sgMail.setApiKey(process.env.SENDGRID_KEY!);
 
 const mailerSend = new MailerSend({
   apiKey: process.env.NEXT_PUBLIC_MAILERSEND_API_KEY!,
@@ -15,7 +12,7 @@ async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
 
   const recipients = [new Recipient(process.env.NEXT_PUBLIC_FEEDBACK_EMAIL!, 'To Pfartists')];
   try {
-    const messageText: string[] = req.body.message.split('\n').join('\n');
+    const messageText: string[] = req.body.message.split('\n');
 
     const personalisations = [
       {
@@ -27,9 +24,9 @@ async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
       },
     ];
 
-    await axios.post(`${process.env.NEXT_PUBLIC_WEBHOOK_URL}`, {
-      text: `*title:* ${req.body.title}\n\n*message:*\n_${messageText}_ \n\n*tag:* ${req.body.tags}`,
-    });
+//    await axios.post(`${process.env.NEXT_PUBLIC_WEBHOOK_URL}`, {
+//      text: `*title:* ${req.body.title}\n\n*message:*\n_${messageText}_ \n\n*tag:* ${req.body.tags}`,
+//    });
 
     const emailParams = new EmailParams()
       .setFrom(sentFrom)
@@ -38,14 +35,14 @@ async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
       .setPersonalization(personalisations)
       .setTemplateId(process.env.NEXT_PUBLIC_FEEDBACK_TEMPLATE_ID!);
 
+    console.log('personalisations', personalisations[0].data);
+    console.log('emailParams', emailParams);
     await mailerSend.email.send(emailParams);
 
-    //  @ts-ignore
-  } catch (e: { statusCode: number; message: string }) {
-    return res.status(e.statusCode || 500).json({ error: e.message });
+    return res.status(200).json({ error: '' });
+  } catch (e) {
+    return res.status(500).json({ error: JSON.stringify(e) });
   }
-
-  return res.status(200).json({ error: '' });
 }
 
 export default sendEmail;

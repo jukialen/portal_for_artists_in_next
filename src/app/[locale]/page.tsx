@@ -1,121 +1,62 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { Metadata } from 'next';
 import Image from 'next/image';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/dist/ScrollTrigger';
+import { setStaticParamsLocale } from 'next-international/server';
 
-<<<<<<<< Updated upstream:pages/index.tsx
-import { useHookSWR } from 'hooks/useHookSWR';
-import { useUserData } from 'hooks/useUserData';
+import { getScopedI18n } from 'locales/server';
 
-import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
-
-import styles from './index.module.scss';
-import dark_mode from '../../../public/dark_mode.png';
-import light_mode from '../../../public/light_mode.png';
-import friends from '../../../public/friends.png';
-import categories from '../../../public/categories.png';
-import groups from '../../../public/groups.png';
-import diary from '../../../public/diary.jpg';
-import artist from '../../../public/artist.jpg';
-import searchingService from '../../../public/searching.jpg';
-import upload from '../../../public/upload.png';
-import authorButton from '../../../public/authorButton.png';
-import top from '../../../public/top.jpg';
-import minimalism from '../../../public/minimalism.png';
-import likes from '../../../public/likes.png';
-========
-import { getScopedI18n } from 'src/locales/server';
-
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
 import styles from './page.module.scss';
-import dark_mode from 'source/public/dark_mode.png';
-import light_mode from 'source/public/light_mode.png';
-import friends from 'source/public/friends.png';
-import categories from 'source/public/categories.png';
-import groups from 'source/public/groups.png';
-import diary from 'source/public/diary.jpg';
-import artist from 'source/public/artist.jpg';
-import searchingService from 'source/public/searching.jpg';
-import upload from 'source/public/upload.png';
-import authorButton from 'source/public/authorButton.png';
-import top from 'source/public/top.jpg';
-import minimalism from 'source/public/minimalism.png';
-import likes from 'source/public/likes.png';
->>>>>>>> Stashed changes:source/app/[locale]/page.tsx
+import dark_mode from 'public/dark_mode.png';
+import light_mode from 'public/light_mode.png';
+import friends from 'public/friends.png';
+import categories from 'public/categories.png';
+import groups from 'public/groups.png';
+import diary from 'public/diary.jpg';
+import artist from 'public/artist.jpg';
+import searchingService from 'public/searching.jpg';
+import upload from 'public/upload.png';
+import authorButton from 'public/authorButton.png';
+import top from 'public/top.jpg';
+import minimalism from 'public/minimalism.png';
+import likes from 'public/likes.png';
 
-export default function Home() {
-  const { asPath, push } = useRouter();
-  const { pseudonym } = useUserData();
-  const data = useHookSWR();
+export const metadata: Metadata = HeadCom('Main site.');
 
-  useEffect(() => {
-    !!pseudonym && push('/app');
-  }, [pseudonym]);
-
-  useEffect(() => {
-    try {
-      gsap.registerPlugin(ScrollTrigger);
-
-      const sections = document.querySelectorAll('article');
-      return sections.forEach((section: HTMLElement) => {
-        gsap.fromTo(
-          section.children,
-          { y: '+=250', opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: 0.2,
-            duration: 1.2,
-            ease: 'easeOut',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 80%',
-              end: '80% 80%',
-              scrub: 3,
-            },
-          },
-        );
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-
+export default async function Home({ params: { locale } }: { params: { locale: string } }) {
+  setStaticParamsLocale(locale);
+  
+  const t = await getScopedI18n('Main');
   const width = 450;
   const height = 320;
   const quality = 100;
-
+ 
   return (
     <>
-      <HeadCom path={asPath} content="Main site." />
-
       <div className={styles.group__element}>
-        <h2 className={styles.title}>{data?.Main?.title}</h2>
+        <h2 className={styles.title}>{t('title')}</h2>
 
         <div className={styles.question}>
-          <h2>{data?.Main?.firstQuestion}</h2>
+          <h2>{t('firstQuestion')}</h2>
           <Image src={searchingService} width={width} height={height} alt="image for first question" />
         </div>
 
         <div className={styles.question}>
-          <h2>{data?.Main?.secondQuestion}</h2>
+          <h2>{t('secondQuestion')}</h2>
           <Image src={diary} width={width} height={height} alt="image for second question" />
         </div>
 
         <div className={styles.question}>
           <h3>
-            {data?.Main?.firstAnswer} {data?.Main?.secondAnswer}
+            {t('firstAnswer')} {t('secondAnswer')}
           </h3>
           <Image src={artist} width={width} height={height} alt="image for answer" />
         </div>
       </div>
-
       <article className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>{data?.Main?.containerFirstQuestion}</h4>
-          <p className={styles.answer}>{data?.Main?.containerFirstAnswer}</p>
+          <h4 className={styles.question}>{t('containerFirstQuestion')}</h4>
+          <p className={styles.answer}>{t('containerFirstAnswer')}</p>
         </div>
 
         <Image
@@ -128,12 +69,11 @@ export default function Home() {
           quality={quality}
         />
       </article>
-
       <article className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>{data?.Main?.containerSecondQuestion}</h4>
+          <h4 className={styles.question}>{t('containerSecondQuestion')}</h4>
 
-          <p className={styles.answer}>{data?.Main?.containerSecondAnswer}</p>
+          <p className={styles.answer}>{t('containerSecondAnswer')}</p>
         </div>
 
         <Image
@@ -146,12 +86,11 @@ export default function Home() {
           quality={quality}
         />
       </article>
-
       <article className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>{data?.Main?.containerThirdQuestion}</h4>
+          <h4 className={styles.question}>{t('containerThirdQuestion')}</h4>
 
-          <p className={styles.answer}>{data?.Main?.containerThirdAnswer}</p>
+          <p className={styles.answer}>{t('containerThirdAnswer')}</p>
         </div>
 
         <Image
@@ -164,15 +103,14 @@ export default function Home() {
           quality={quality}
         />
       </article>
-
       <article className={styles.main__container}>
         <div className={styles.container}>
           <h4 className={styles.question}>
-            {data?.Main?.containerFourthQuestion}
+            {t('containerFourthQuestion')}
             <br />
           </h4>
 
-          <p className={styles.answer}>{data?.Main?.containerFourthAnswer}</p>
+          <p className={styles.answer}>{t('containerFourthAnswer')}</p>
         </div>
 
         <Image
@@ -185,12 +123,11 @@ export default function Home() {
           quality={quality}
         />
       </article>
-
       <article className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>{data?.Main?.containerFifthQuestion}</h4>
+          <h4 className={styles.question}>{t('containerFifthQuestion')}</h4>
 
-          <p className={styles.answer}>{data?.Main?.containerFifthAnswer}</p>
+          <p className={styles.answer}>{t('containerFifthAnswer')}</p>
         </div>
 
         <Image
@@ -203,12 +140,11 @@ export default function Home() {
           quality={quality}
         />
       </article>
-
       <article className={styles.main__container__mode}>
         <div className={styles.container}>
-          <h4 className={styles.question}>{data?.Main?.containerSixthQuestion}</h4>
+          <h4 className={styles.question}>{t('containerSixthQuestion')}</h4>
 
-          <p className={styles.answer}>{data?.Main?.containerSixthAnswer}</p>
+          <p className={styles.answer}>{t('containerSixthAnswer')}</p>
         </div>
 
         <div className={styles.image}>
@@ -225,12 +161,11 @@ export default function Home() {
           </div>
         </div>
       </article>
-
       <article className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>{data?.Main?.containerSeventhQuestion}</h4>
+          <h4 className={styles.question}>{t('containerSeventhQuestion')}</h4>
 
-          <p className={styles.answer}>{data?.Main?.containerSeventhAnswer}</p>
+          <p className={styles.answer}>{t('containerSeventhAnswer')}</p>
         </div>
 
         <Image
@@ -243,12 +178,11 @@ export default function Home() {
           quality={quality}
         />
       </article>
-
       <article className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>{data?.Main?.containerEighthQuestion}</h4>
+          <h4 className={styles.question}>{t('containerEighthQuestion')}</h4>
 
-          <p className={styles.answer}>{data?.Main?.containerEighthAnswer}</p>
+          <p className={styles.answer}>{t('containerEighthAnswer')}</p>
         </div>
 
         <Image
@@ -261,12 +195,11 @@ export default function Home() {
           quality={quality}
         />
       </article>
-
       <article className={styles.main__container}>
         <div className={styles.container}>
-          <h4 className={styles.question}>{data?.Main?.containerNinthQuestion}</h4>
+          <h4 className={styles.question}>{t('containerNinthQuestion')}</h4>
 
-          <p className={styles.answer}>{data?.Main?.containerNinthAnswer}</p>
+          <p className={styles.answer}>{t('containerNinthAnswer')}</p>
         </div>
 
         <Image

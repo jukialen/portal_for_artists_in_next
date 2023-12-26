@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Button, Icon } from '@chakra-ui/react';
 
-import styles from 'source/components/organisms/Header/Header.module.scss';
+import styles from 'components/organisms/Header/Header.module.scss';
 import { BiLogInCircle } from 'react-icons/bi';
 import { MdOutlineSettings } from 'react-icons/md';
 

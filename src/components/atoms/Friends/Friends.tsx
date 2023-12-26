@@ -1,26 +1,17 @@
+'use client'
+
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { Link } from '@chakra-ui/next-js';
 import axios from 'axios';
 
-<<<<<<< Updated upstream:components/atoms/Friends/Friends.tsx
-import { useHookSWR } from 'hooks/useHookSWR';
 import { useUserData } from 'hooks/useUserData';
 
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
 import styles from './Friends.module.scss';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-=======
-import { useUserData } from 'src/hooks/useUserData';
-
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
-
-import styles from './Friends.module.scss';
-import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-import { useCurrentLocale, useI18n, useScopedI18n } from "src/locales/client";
->>>>>>> Stashed changes:source/components/atoms/Friends/Friends.tsx
+import { useCurrentLocale, useI18n, useScopedI18n } from "locales/client";
 
 type FriendsListArrayType = {
   pseudonym: string;
@@ -32,9 +23,11 @@ export const Friends = () => {
   const [favoriteFriendArray, setFavoriteFriendArray] = useState<FriendsListArrayType[]>([]);
   const [open, setOpen] = useState(false);
 
-  const data = useHookSWR();
-  const { locale } = useRouter();
-  const { id } = useUserData();
+  const t = useI18n();
+  const tAside = useScopedI18n('Aside');
+  const locale = useCurrentLocale();
+  
+  const userData = useUserData();
 
   const arrowIcons = '1.5rem';
   const maxItems = 5;
@@ -47,7 +40,7 @@ export const Friends = () => {
       params: {
         queryData: {
           where: {
-            AND: [{ usernameId: id }, { favorite: true }],
+            AND: [{ usernameId: userData?.id }, { favorite: true }],
           },
           orderBy: { friendId: 'desc' },
           limit: maxItems,
@@ -69,13 +62,13 @@ export const Friends = () => {
   };
 
   useEffect(() => {
-    !!id && downloadFavoriteFriendsList();
-  }, [id]);
+    !!userData?.id && downloadFavoriteFriendsList();
+  }, [userData?.id]);
 
   return (
     <div className={styles.friends}>
       <h3 className={styles.title} onClick={changeOpenFriends}>
-        <p className={locale === 'jp' ? styles.title__jp : styles.title__others}>{data?.Aside?.friends}</p>
+        <p className={locale === 'jp' ? styles.title__jp : styles.title__others}>{tAside('friends')}</p>
         {open ? <TriangleUpIcon w={arrowIcons} h={arrowIcons} /> : <TriangleDownIcon w={arrowIcons} h={arrowIcons} />}
       </h3>
 
@@ -90,7 +83,7 @@ export const Friends = () => {
             </Link>
           ))
         ) : (
-          <p className={styles.noFavFriends}>{data?.Friends?.noFavFriends}</p>
+          <p className={styles.noFavFriends}>{t('Friends.noFavFriends')}</p>
         )}
       </div>
     </div>

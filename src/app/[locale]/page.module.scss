@@ -20,7 +20,8 @@
     margin: 1rem auto 2rem;
     font-size: 1.2rem;
 
-    h2, h3 {
+    h2,
+    h3 {
       width: 27rem;
       max-width: 86vw;
       margin: 1rem 2rem;
@@ -35,7 +36,8 @@
 
   @media (min-width: 890px) and (max-width: 1370px) {
     .question {
-      h2, h3 {
+      h2,
+      h3 {
         width: 23rem;
         margin: 1rem 2rem 1rem 0;
       }
@@ -43,7 +45,8 @@
   }
 }
 
-.main__container, .main__container__mode {
+.main__container,
+.main__container__mode {
   width: inherit;
   display: flex;
   flex-direction: column;
@@ -86,15 +89,15 @@
       flex-direction: column;
     }
   }
-
 }
 
 .main__container:last-of-type {
-  margin-bottom: 7rem;
+  margin-bottom: 12.5rem;
 }
 
 @media (min-width: 824px) {
-  .main__container, .main__container__mode {
+  .main__container,
+  .main__container__mode {
     font-size: 1.4rem;
   }
 }
@@ -127,4 +130,3 @@
     }
   }
 }
-

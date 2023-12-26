@@ -4,16 +4,16 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
 
-import { dateData } from 'src/helpers/dateData';
+import { dateData } from 'helpers/dateData';
 
-import { FileType } from 'src/types/global.types';
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
+import { FileType } from 'types/global.types';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
-import { getDate } from 'src/helpers/getDate';
+import { getDate } from 'helpers/getDate';
 
-import { Wrapper } from 'src/components/atoms/Wrapper/Wrapper';
-import { Article } from 'src/components/molecules/Article/Article';
-import { Videos } from 'src/components/molecules/Videos/Videos';
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+import { Article } from 'components/molecules/Article/Article';
+import { Videos } from 'components/molecules/Videos/Videos';
 
 export const AuthorPost = ({ locale }: { locale: string }) => {
   const [container, setContainer] = useState<FileType>();

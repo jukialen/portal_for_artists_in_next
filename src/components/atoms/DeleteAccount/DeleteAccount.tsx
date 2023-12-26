@@ -1,5 +1,7 @@
+'use client';
+
 import { useRef, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import {
   AlertDialog,
@@ -12,72 +14,66 @@ import {
   useToast,
 } from '@chakra-ui/react';
 
-<<<<<<< Updated upstream:components/atoms/DeleteAccount/DeleteAccount.tsx
-import { useHookSWR } from 'hooks/useHookSWR';
+import { backUrl } from 'constants/links';
 
-import { backUrl } from 'utilites/constants';
-=======
-import { backUrl } from 'src/constants/links';
+import { useCurrentLocale, useI18n, useScopedI18n } from "locales/client";
 
-import { useCurrentLocale, useI18n, useScopedI18n } from "src/locales/client";
+import { useUserData } from 'hooks/useUserData';
 
-import { useUserData } from 'src/hooks/useUserData';
->>>>>>> Stashed changes:source/components/atoms/DeleteAccount/DeleteAccount.tsx
-
-import { Alerts } from 'src/components/atoms/Alerts/Alerts';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './DeleteAccount.module.scss';
 import { DeleteIcon } from '@chakra-ui/icons';
 
-type DeletionPropsType = {
-  pseudonym: string;
-};
-
-export const DeleteAccount = ({ pseudonym }: DeletionPropsType) => {
+export const DeleteAccount = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState('');
   const cancelRef = useRef(null);
   const toast = useToast();
 
-  const { push } = useRouter();
-  const data = useHookSWR();
+  const userData = useUserData();
+  
+  const locale = useCurrentLocale();
+  const t = useI18n();
+  const tContact = useScopedI18n('Contact');
+  const tDeletionAccount = useScopedI18n('DeletionAccount');
 
+  const { push } = useRouter();
   const onClose = () => setIsOpen(false);
 
   const deletionUser = async () => {
     try {
-      await onClose();
-      await setDeleting(!deleting);
-      await setValues(data?.DeletionAccount?.deletionAccount);
-      const res = await axios.delete(`${backUrl}/users/${pseudonym}`);
-      await setValues('');
+      onClose();
+      setDeleting(!deleting);
+      setValues(tDeletionAccount('deletionAccount'));
+      const res = await axios.delete(`${backUrl}/users/${userData?.pseudonym}`);
+      setValues('');
 
       res.status === 200
         ? toast({
-            description: data?.Contact?.success,
+            description: tContact('success'),
             status: 'success',
             variant: 'subtle',
             duration: 9000,
           })
         : toast({
-            description: data?.Contact?.fail,
+            description: tContact('fail'),
             status: 'error',
             variant: 'subtle',
             duration: 9000,
           });
 
-      await setDeleting(!deleting);
-      await push('/');
+      setDeleting(!deleting);
+      push(`${locale}/`);
     } catch (e) {
-      setValues(data?.error);
+      setValues(t('error'));
       console.error(e);
     }
   };
 
   return (
     <div className={styles.deleteDiv}>
-      {/*<h3>Do you want to delete your account?</h3>*/}
       <Button
         isLoading={deleting}
         loadingText="Deleting"
@@ -89,24 +85,24 @@ export const DeleteAccount = ({ pseudonym }: DeletionPropsType) => {
         w={145}
         m={4}
         onClick={() => setIsOpen(true)}>
-        {`${data?.DeletionAccount?.button} account`}
+        {`${tDeletionAccount('button')} account`}
       </Button>
 
       <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
         <AlertDialogOverlay>
           <AlertDialogContent m="auto">
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {data?.DeletionAccount?.title}
+              {tDeletionAccount('title')}
             </AlertDialogHeader>
 
-            <AlertDialogBody>{data?.DeletionAccount?.body}</AlertDialogBody>
+            <AlertDialogBody>{tDeletionAccount('body')}</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} borderColor="gray.100" onClick={onClose}>
-                {data?.DeletionAccount?.cancel}
+                {tDeletionAccount('cancel')}
               </Button>
               <Button colorScheme="red" borderColor="red.500" onClick={deletionUser} ml={3}>
-                {data?.DeletionAccount?.button}
+                {tDeletionAccount('button')}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

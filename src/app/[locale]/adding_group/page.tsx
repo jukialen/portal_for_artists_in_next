@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
-import { getI18n, getScopedI18n } from 'src/locales/server';
+import { getI18n, getScopedI18n } from 'locales/server';
 
-import { AddingGroupForm } from 'src/components/molecules/AddingGroupForm/AddingGroupForm';
+import { AddingGroupForm } from 'components/molecules/AddingGroupForm/AddingGroupForm';
 
 export const metadata: Metadata = HeadCom("User's adding some group");
 

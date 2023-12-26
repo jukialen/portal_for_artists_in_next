@@ -4,19 +4,14 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Divider, IconButton, Textarea } from '@chakra-ui/react';
 
-import { ResetFormType } from 'src/types/global.types';
+import { ResetFormType } from 'types/global.types';
 
-<<<<<<< Updated upstream:components/molecules/DescriptionSection/DescriptionSection.tsx
-import { backUrl } from 'utilites/constants';
-=======
-import { backUrl } from 'src/constants/links';
+import { backUrl } from 'constants/links';
 
->>>>>>> Stashed changes:source/components/molecules/DescriptionSection/DescriptionSection.tsx
 
-import { useHookSWR } from 'hooks/useHookSWR';
 
-import { SchemaValidation } from 'src/shemasValidation/schemaValidation';
-import { FormError } from 'src/components/molecules/FormError/FormError';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './DescriptionSection.module.scss';
 import { EditIcon } from '@chakra-ui/icons';
@@ -42,7 +37,7 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
   const [openForm, setOpenForm] = useState(false);
   const [openUpRegulations, setOpenUpRegulations] = useState(false);
 
-  const data = useHookSWR();
+
 
   const initialValuesDes = { newDescription: description };
 
@@ -51,7 +46,7 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
   });
 
   const getRegulation = async () => {
-    setRegul(regulation === '' ? regulation.split('\n').join('\n') : data?.Regulations?.noRegulation);
+    setRegul(regulation === '' ? regulation.split('\n').join('\n') : language?.Regulations?.noRegulation);
   };
 
   useEffect(() => {
@@ -90,7 +85,7 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
 
   return (
     <section className={styles.container}>
-      <h2 className={styles.title}>{data?.AnotherForm?.description}</h2>
+      <h2 className={styles.title}>{language?.AnotherForm?.description}</h2>
 
       <Divider />
       <div className={styles.field}>
@@ -106,8 +101,8 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
                   value={values.newDescription}
                   onChange={handleChange}
                   resize="vertical"
-                  placeholder={data?.Description?.textPlaceholder}
-                  aria-label={data?.Description?.textAria}
+                  placeholder={language?.Description?.textPlaceholder}
+                  aria-label={language?.Description?.textAria}
                   className={
                     !!errors.newDescription && touched.newDescription ? styles.updateField__error : styles.updateField
                   }
@@ -116,7 +111,7 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
                 <FormError nameError="newDescription" />
 
                 <Button type="submit" colorScheme="blue" className={styles.addingButton}>
-                  {data?.Description?.submit}
+                  {language?.Description?.submit}
                 </Button>
               </Form>
             )}
@@ -126,13 +121,13 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
           <IconButton
             icon={<EditIcon />}
             className={styles.changeButton}
-            aria-label={data?.Description?.iconButton}
+            aria-label={language?.Description?.iconButton}
             onClick={() => setOpenForm(!openForm)}
           />
         )}
       </div>
 
-      <h2 className={styles.title}>{data?.Regulations?.regulation}</h2>
+      <h2 className={styles.title}>{language?.Regulations?.regulation}</h2>
       <Divider />
       <div className={styles.field}>
         {!openUpRegulations ? (
@@ -149,8 +144,8 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
                   value={values.newRegulation}
                   onChange={handleChange}
                   resize="vertical"
-                  placeholder={data?.Description?.textPlaceholder}
-                  aria-label={data?.Description?.textAria}
+                  placeholder={language?.Description?.textPlaceholder}
+                  aria-label={language?.Description?.textAria}
                   className={
                     !!errors.newRegulation && touched.newRegulation ? styles.updateField__error : styles.updateField
                   }
@@ -159,7 +154,7 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
                 <FormError nameError="newRegulation" />
 
                 <Button type="submit" colorScheme="blue" className={styles.addingButton}>
-                  {data?.Description?.submit}
+                  {language?.Description?.submit}
                 </Button>
               </Form>
             )}
@@ -169,7 +164,7 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
           <IconButton
             icon={<EditIcon />}
             className={styles.changeButton}
-            aria-label={data?.Description?.iconButton}
+            aria-label={language?.Description?.iconButton}
             onClick={() => setOpenUpRegulations(!openUpRegulations)}
           />
         )}

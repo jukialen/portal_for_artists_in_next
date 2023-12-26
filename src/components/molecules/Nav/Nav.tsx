@@ -1,22 +1,25 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-
-import { useHookSWR } from 'hooks/useHookSWR';
 
 import styles from './Nav.module.scss';
 
-export const Nav = () => {
-  const { locale } = useRouter();
-  const data = useHookSWR();
+type HeadersType = {
+  headers: {
+    title: string;
+    signIn: string;
+    signUp: string;
+  };
+  locale: string
+};
 
+export const Nav = ({ headers, locale }: HeadersType) => {
   return (
     <nav className={`${styles.nav} ${locale === 'jp' ? styles.nav__jp : ''}`}>
       <ul className={styles.list}>
         <li className={styles.menu}>
-          <Link href="/signin">{data?.Nav?.signIn}</Link>
+          <Link href={`/${locale}/signin`}>{headers.signIn}</Link>
         </li>
         <li className={styles.menu}>
-          <Link href="/signup">{data?.Nav?.signUp}</Link>
+          <Link href={`/${locale}/signup`}>{headers.signUp}</Link>
         </li>
       </ul>
     </nav>

@@ -6,20 +6,20 @@ import axios from 'axios';
 import { emailPasswordSignIn } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'src/shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { IconButton, Input, InputGroup, InputRightElement, Stack } from '@chakra-ui/react';
 
-import { useI18n, useScopedI18n } from 'src/locales/client';
+import { useI18n, useScopedI18n } from 'locales/client';
 
-import { ResetFormType, UserFormType, UserType } from 'src/types/global.types';
+import { ResetFormType, UserFormType, UserType } from 'types/global.types';
 
-import { backUrl } from 'src/constants/links';
-import { initialValuesForSignInUp } from 'src/constants/objects';
+import { backUrl } from 'constants/links';
+import { initialValuesForSignInUp } from 'constants/objects';
 
-import { MenuContext } from 'src/providers/MenuProvider';
+import { MenuContext } from 'providers/MenuProvider';
 
-import { Alerts } from 'src/components/atoms/Alerts/Alerts';
-import { FormError } from 'src/components/molecules/FormError/FormError';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './FormSignIn.module.scss';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';

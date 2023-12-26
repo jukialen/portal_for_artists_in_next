@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useContext } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
@@ -16,33 +18,30 @@ import {
   Button,
 } from '@chakra-ui/react';
 
-<<<<<<< Updated upstream:components/atoms/MainCurrentUserProfileData/MainCurrentUserProfileData.tsx
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl, darkMode } from 'constants/links';
+import { EventType } from 'types/global.types';
 
-import { DataType, EventType } from 'types/global.types';
+import { useUserData } from 'hooks/useUserData';
 
-import { darkMode } from 'utilites/constants';
-=======
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
-
-import { EventType } from 'src/types/global.types';
-
-import { darkMode } from 'src/constants/links';
->>>>>>> Stashed changes:source/components/atoms/MainCurrentUserProfileData/MainCurrentUserProfileData.tsx
-
-import { useUserData } from 'src/hooks/useUserData';
-
-import { ModeContext } from 'src/providers/ModeProvider';
-
-import { Alerts } from 'src/components/atoms/Alerts/Alerts';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 
 import styles from './MainCurrentUserProfileData.module.scss';
 import { MdCameraEnhance } from 'react-icons/md';
-import { FilesUpload } from 'src/components/molecules/FilesUpload/FilesUpload';
+import { ModeContext } from 'providers/ModeProvider';
 
-export const MainCurrentUserProfileData = ({ data }: DataType) => {
+export const MainCurrentUserProfileData = ({
+  tCurrPrPhoto,
+}: {
+  tCurrPrPhoto: {
+    validateRequired: string;
+    uploadFile: string;
+    cancelButton: string;
+    submit: string;
+  };
+}) => {
   const [valuesFields, setValuesFields] = useState('');
-  const { id, pseudonym, description, profilePhoto } = useUserData();
+  const userData = useUserData();
   const [progressUpload, setProgressUpload] = useState<number>(0);
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
@@ -66,7 +65,7 @@ export const MainCurrentUserProfileData = ({ data }: DataType) => {
     try {
       !!newLogo &&
         !required &&
-        (await axios.patch(`${backUrl}/users/${pseudonym}`, {
+        (await axios.patch(`${backUrl}/users/${userData?.pseudonym}`, {
           profilePhoto: newLogo,
         }));
     } catch (e) {
@@ -78,7 +77,11 @@ export const MainCurrentUserProfileData = ({ data }: DataType) => {
     <article className={styles.mainData}>
       <div className={styles.logoPseu}>
         <div className={styles.logo}>
-          <Image src={`https://${cloudFrontUrl}/${profilePhoto}`} fill alt={`${profilePhoto} logo`} />
+          <Image
+            src={`https://${cloudFrontUrl}/${userData?.profilePhoto}`}
+            fill
+            alt={`${userData?.profilePhoto} logo`}
+          />
           <IconButton
             aria-label="update group logo"
             icon={<MdCameraEnhance />}
@@ -104,7 +107,7 @@ export const MainCurrentUserProfileData = ({ data }: DataType) => {
                 borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
               />
 
-              <p style={{ color: '#bd0000' }}>{!newLogo && required && data?.NavForm?.validateRequired}</p>
+              <p style={{ color: '#bd0000' }}>{!newLogo && required && tCurrPrPhoto.validateRequired}</p>
               {!!newLogo && (
                 <img
                   src={`${process.env.NEXT_PUBLIC_PAGE}/${newLogo.name}`}
@@ -120,7 +123,7 @@ export const MainCurrentUserProfileData = ({ data }: DataType) => {
                 />
               )}
 
-              {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) && (
+              {progressUpload >= 1 && !(valuesFields === `${tCurrPrPhoto.uploadFile}`) && (
                 <Progress
                   value={progressUpload}
                   colorScheme="green"
@@ -139,20 +142,17 @@ export const MainCurrentUserProfileData = ({ data }: DataType) => {
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="blue" borderColor="transparent" mr={3} onClick={onClose}>
-                {data?.DeletionFile?.cancelButton}
+                {tCurrPrPhoto.cancelButton}
               </Button>
               <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
-                {data?.Description?.submit}
+                {tCurrPrPhoto.submit}
               </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
-        <h1 className={styles.name}>{pseudonym || 'anarchymen'}</h1>
+        <h1 className={styles.name}>{userData?.pseudonym}</h1>
       </div>
-      <div className={styles.description}>
-        {description ||
-          "I'm a visual artist who creates paintings, drawings, and sculptures. I'm inspired by the natural world and the human experience. I'm passionate about using my art to communicate my ideas and emotions. I'm always looking for new ways to express myself creatively."}
-      </div>
+      <div className={styles.description}>{userData?.description}</div>
       <FilesUpload />
     </article>
   );

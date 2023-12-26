@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 import { setStaticParamsLocale } from "next-international/server";
 
-import { HeadCom } from "src/constants/HeadCom";
+import { HeadCom } from "constants/HeadCom";
 
-import { FormForgotten } from "src/components/atoms/FormForgotten/FormForgotten";
+import { FormForgotten } from "components/atoms/FormForgotten/FormForgotten";
 
 export const metadata: Metadata = HeadCom('The site for resetting password.');
 

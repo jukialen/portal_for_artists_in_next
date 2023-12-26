@@ -1,35 +1,28 @@
+'use client'
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import axios from 'axios';
 
-<<<<<<< Updated upstream:components/organisms/PhotosGallery/PhotosGallery.tsx
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
-=======
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
->>>>>>> Stashed changes:source/components/organisms/PhotosGallery/PhotosGallery.tsx
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
-import { FileType, UserType } from 'src/types/global.types';
+import { FileType, UserType } from 'types/global.types';
 
-import { getDate } from 'src/helpers/getDate';
+import { getDate } from 'helpers/getDate';
 
-<<<<<<< Updated upstream:components/organisms/PhotosGallery/PhotosGallery.tsx
-import { useDateData } from 'hooks/useDateData';
-=======
-import { dateData } from 'src/helpers/dateData';
->>>>>>> Stashed changes:source/components/organisms/PhotosGallery/PhotosGallery.tsx
+import { dateData } from 'helpers/dateData';
 
-import { Wrapper } from 'src/components/atoms/Wrapper/Wrapper';
-import { MoreButton } from 'src/components/atoms/MoreButton/MoreButton';
-import { ZeroFiles } from 'src/components/atoms/ZeroFiles/ZeroFiles';
-import { Article } from 'src/components/molecules/Article/Article';
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
+import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
+import { Article } from 'components/molecules/Article/Article';
 
-export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
+export const PhotosGallery = ({ id, pseudonym,language }: UserType) => {
   const [userPhotos, setUserPhotos] = useState<FileType[]>([]);
   const [lastVisible, setLastVisible] = useState<FileType>();
   let [i, setI] = useState(1);
 
-  const { asPath, locale } = useRouter();
-  const dataDateObject = useDateData();
+  const pathname = usePathname();
+  const dataDateObject = dateData();
 
   const maxItems = 30;
 
@@ -67,7 +60,7 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
           shortDescription,
           profilePhoto,
           authorId,
-          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          time: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
       setUserPhotos(filesArray);
@@ -116,7 +109,7 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
           shortDescription,
           profilePhoto,
           authorId,
-          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          time: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
 
@@ -131,8 +124,8 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
 
   return (
     <article>
-      {decodeURIComponent(asPath) === `/account/${pseudonym}` && (
-        <h2 className="title">{data?.Account?.gallery?.userPhotosTitle}</h2>
+      {decodeURIComponent(pathname!) === `/account/${pseudonym}` && (
+        <h2 className="title">{language?.Account?.gallery?.userPhotosTitle}</h2>
       )}
       <Wrapper>
         {userPhotos.length > 0 ? (
@@ -156,7 +149,7 @@ export const PhotosGallery = ({ id, pseudonym, data }: UserType) => {
             ),
           )
         ) : (
-          <ZeroFiles text={data?.ZeroFiles?.photos} />
+          <ZeroFiles text={language?.ZeroFiles?.photos} />
         )}
 
         {!!lastVisible && userPhotos.length === maxItems * i && <MoreButton nextElements={nextElements} />}

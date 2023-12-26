@@ -4,12 +4,12 @@ import { getSSRSession } from "../sessionUtils";
 import { SessionAuthForNextJS } from "./sessionAuthForNextJS";
 import { TryRefreshComponent } from "./tryRefreshClientComponent";
 
-export const checkinSession = async ({locale} : { locale: string }) => {
+export const checkinSession = async () => {
   const { session, hasToken, hasInvalidClaims } = await getSSRSession();
 
   if (!session) {
     if (!hasToken) {
-      return redirect(`${locale}/signin`);
+      return redirect('/signin');
     }
     
     if (hasInvalidClaims) {

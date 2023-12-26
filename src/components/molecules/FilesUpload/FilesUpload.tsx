@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext, useState } from 'react';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
@@ -16,22 +18,16 @@ import {
   Select,
   Textarea,
 } from '@chakra-ui/react';
-import { SchemaValidation } from 'src/shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { ModeContext } from 'src/providers/ModeProvider';
+import { ModeContext } from 'providers/ModeProvider';
 
-import { Tags, EventType, ResetFormType } from 'src/types/global.types';
+import { Tags, EventType, ResetFormType } from 'types/global.types';
 
-<<<<<<< Updated upstream:components/molecules/FilesUpload/FilesUpload.tsx
-import { backUrl, darkMode } from 'utilites/constants';
+import { backUrl, darkMode } from 'constants/links';
 
-import { useHookSWR } from 'hooks/useHookSWR';
-=======
-import { backUrl, darkMode } from 'src/constants/links';
->>>>>>> Stashed changes:source/components/molecules/FilesUpload/FilesUpload.tsx
-
-import { FormError } from 'src/components/molecules/FormError/FormError';
-import { Alerts } from 'src/components/atoms/Alerts/Alerts';
+import { FormError } from 'components/molecules/FormError/FormError';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './FileUpload.module.scss';
 import { MdUploadFile } from 'react-icons/md';
@@ -53,7 +49,7 @@ export const FilesUpload = () => {
   const [required, setRequired] = useState(false);
 
   const { isMode } = useContext(ModeContext);
-  const data = useHookSWR();
+
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -82,13 +78,13 @@ export const FilesUpload = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setValuesFields(`${data?.AnotherForm?.uploadFile}`);
+      setValuesFields(`${language?.AnotherForm?.uploadFile}`);
       setFile(null);
       setRequired(false);
       resetForm(initialValues);
     } catch (e) {
       console.error(e);
-      setValuesFields(`${data?.AnotherForm?.notUploadFile}`);
+      setValuesFields(`${language?.AnotherForm?.notUploadFile}`);
     }
   };
 
@@ -112,7 +108,7 @@ export const FilesUpload = () => {
             <Formik initialValues={initialValues} validationSchema={schemaFile} onSubmit={uploadFiles}>
               {({ values, handleChange, errors, touched }) => (
                 <Form className={styles.adding__files}>
-                  <h3 className={styles.title}>{data?.AnotherForm?.fileTitle}</h3>
+                  <h3 className={styles.title}>{language?.AnotherForm?.fileTitle}</h3>
 
                   <div className={isMode === darkMode ? styles.select__dark : styles.select}>
                     <Select
@@ -123,31 +119,31 @@ export const FilesUpload = () => {
                       backgroundColor="#red"
                       aria-required>
                       <option role="option" value="">
-                        {data?.chooseTag}
+                        {language?.chooseTag}
                       </option>
                       <option role="option" value="realistic">
-                        {data?.Aside?.realistic}
+                        {language?.Aside?.realistic}
                       </option>
                       <option role="option" value="manga">
-                        {data?.Aside?.manga}
+                        {language?.Aside?.manga}
                       </option>
                       <option role="option" value="anime">
-                        {data?.Aside?.anime}
+                        {language?.Aside?.anime}
                       </option>
                       <option role="option" value="comics">
-                        {data?.Aside?.comics}
+                        {language?.Aside?.comics}
                       </option>
                       <option role="option" value="photographs">
-                        {data?.Aside?.photographs}
+                        {language?.Aside?.photographs}
                       </option>
                       <option role="option" value="videos">
-                        {data?.Aside?.videos}
+                        {language?.Aside?.videos}
                       </option>
                       <option role="option" value="animations">
-                        {data?.Aside?.animations}
+                        {language?.Aside?.animations}
                       </option>
                       <option role="option" value="others">
-                        {data?.Aside?.others}
+                        {language?.Aside?.others}
                       </option>
                     </Select>
                   </div>
@@ -159,12 +155,12 @@ export const FilesUpload = () => {
                     type="file"
                     accept=".jpg, .jpeg, .png, .webp, .avif, .gif, .mp4, .webm"
                     onChange={handleChangeFile}
-                    placeholder={data?.AnotherForm?.file}
+                    placeholder={language?.AnotherForm?.file}
                     focusBorderColor="transparent"
                     className={!file && required ? styles.input__error : styles.input}
                   />
 
-                  <p className={styles.error}>{!file && required && data?.NavForm?.validateRequired}</p>
+                  <p className={styles.error}>{!file && required && language?.NavForm?.validateRequired}</p>
 
                   <Textarea
                     name="shortDescription"
@@ -187,7 +183,7 @@ export const FilesUpload = () => {
                     </div>
                   )}
 
-                  {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) && (
+                  {progressUpload >= 1 && !(valuesFields === `${language?.AnotherForm?.uploadFile}`) && (
                     <Progress
                       value={progressUpload}
                       colorScheme="green"
@@ -205,10 +201,10 @@ export const FilesUpload = () => {
 
                   <div className={styles.buttons}>
                     <Button type="submit" colorScheme="blue" borderColor="transparent" mr={3} onClick={onClose}>
-                      {data?.DeletionFile?.cancelButton}
+                      {language?.DeletionFile?.cancelButton}
                     </Button>
                     <Button type="submit" colorScheme="yellow" borderColor="transparent">
-                      {data?.Description?.submit}
+                      {language?.Description?.submit}
                     </Button>
                   </div>
                 </Form>

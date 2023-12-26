@@ -1,30 +1,23 @@
 import { useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@chakra-ui/next-js';
 import axios from 'axios';
 
 import { Avatar, Button, IconButton } from '@chakra-ui/react';
 
-import { PostsType } from 'src/types/global.types';
+import { PostsType } from 'types/global.types';
 
-<<<<<<< Updated upstream:components/molecules/Post/Post.tsx
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
-import { useHookSWR } from 'hooks/useHookSWR';
+
 import { useUserData } from 'hooks/useUserData';
-=======
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
 
-
-import { useUserData } from 'src/hooks/useUserData';
->>>>>>> Stashed changes:source/components/molecules/Post/Post.tsx
-
-import { DeletePost } from 'src/components/atoms/DeletionPost/DeletionPost';
-import { NewComments } from 'src/components/atoms/NewComments/NewComments';
-import { SharingButton } from 'src/components/atoms/SharingButton/SharingButton';
-import { Comments } from 'src/components/molecules/Comments/Comments';
+import { DeletePost } from 'components/atoms/DeletionPost/DeletionPost';
+import { NewComments } from 'components/atoms/NewComments/NewComments';
+import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
+import { Comments } from 'components/molecules/Comments/Comments';
 
 import styles from './Post.module.scss';
-import group from 'source/public/group.svg';
+import group from 'public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 export const Post = ({
@@ -48,7 +41,7 @@ export const Post = ({
   let [likeCount, setLikeCount] = useState(likes);
 
   const { id } = useUserData();
-  const data = useHookSWR();
+
 
   const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${pseudonym}/${postId}`;
 
@@ -81,14 +74,14 @@ export const Post = ({
       <div className={styles.description}>{content}</div>
       <div className={styles.options}>
         <IconButton
-          aria-label={like ? data?.Posts?.likedAria : data?.Posts?.likeAria}
+          aria-label={like ? language?.Posts?.likedAria : language?.Posts?.likeAria}
           colorScheme="teal"
           icon={like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
           className={styles.likes}
           onClick={addLike}
         />
         <Button colorScheme="blue" onClick={showingComments} className={styles.commentsButton} variant="ghost">
-          {data?.Comments?.comments}
+          {language?.Comments?.comments}
         </Button>
         <SharingButton shareUrl={link} authorName={pseudonym} name={name} />
       </div>

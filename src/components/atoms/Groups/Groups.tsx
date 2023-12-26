@@ -1,36 +1,30 @@
+'use client'
+
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { Link } from '@chakra-ui/next-js';
 import axios from 'axios';
 import { Button } from '@chakra-ui/react';
 
-<<<<<<< Updated upstream:components/atoms/Groups/Groups.tsx
-import { DataType } from 'types/global.types';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
-=======
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
->>>>>>> Stashed changes:source/components/atoms/Groups/Groups.tsx
-
-import { Links } from 'src/components/atoms/Links/Links';
+import { Links } from 'components/atoms/Links/Links';
 
 import styles from './Groups.module.scss';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-<<<<<<< Updated upstream:components/atoms/Groups/Groups.tsx
-=======
-import { useCurrentLocale, useI18n, useScopedI18n } from "source/locales/client";
->>>>>>> Stashed changes:source/components/atoms/Groups/Groups.tsx
+import { useCurrentLocale, useI18n, useScopedI18n } from "locales/client";
 
 type FavGroupsType = {
   name: string;
   description: string;
   logo: string;
 };
-export const Groups = ({ data }: DataType) => {
+export const Groups =  () => {
   const [groupsArray, setGroupsArray] = useState<FavGroupsType[]>([]);
   const [open, setOpen] = useState(false);
 
-  const { locale } = useRouter();
+  const locale = useCurrentLocale();
+  const t = useI18n();
+  const tAside = useScopedI18n('Aside');
 
   const arrowIcons = '1.5rem';
   const changeOpenGroups = () => setOpen(!open);
@@ -63,7 +57,7 @@ export const Groups = ({ data }: DataType) => {
   return (
     <div className={styles.groups}>
       <h3 className={styles.title} onClick={changeOpenGroups}>
-        <p className={locale === 'jp' ? styles.title__jp : ''}>{data?.Aside?.groups}</p>
+        <p className={locale === 'jp' ? styles.title__jp : ''}>{tAside('groups')}</p>
         {open ? <TriangleUpIcon w={arrowIcons} h={arrowIcons} /> : <TriangleDownIcon w={arrowIcons} h={arrowIcons} />}
       </h3>
 
@@ -78,7 +72,7 @@ export const Groups = ({ data }: DataType) => {
             </div>
           ))
         ) : (
-          <p className={styles.no__groups}>{data?.Groups?.noGroups}</p>
+          <p className={styles.no__groups}>{t('Groups.noGroups')}</p>
         )}
         <Button colorScheme="orange" borderColor="transparent" className={styles.listButton} variant="ghost">
           <Link href="/groups/list" aria-label="all group link">

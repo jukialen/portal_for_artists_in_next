@@ -3,20 +3,20 @@
 import { useContext } from 'react';
 import axios from 'axios';
 import { Button, Input, Select, Textarea, useToast } from '@chakra-ui/react';
-import { SchemaValidation } from 'src/shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import * as Yup from 'yup';
 
-import { useI18n, useScopedI18n } from 'src/locales/client';
+import { useI18n, useScopedI18n } from 'locales/client';
 
-import { ResetFormType } from 'src/types/global.types';
+import { ResetFormType } from 'types/global.types';
 
 import { Form, Formik } from 'formik';
 
-import { initialValuesForContact } from 'src/constants/objects';
-import { darkMode } from 'src/constants/links';
+import { initialValuesForContact } from 'constants/objects';
+import { darkMode } from 'constants/links';
 
-import { ModeContext } from 'src/providers/ModeProvider';
-import { FormError } from 'src/components/molecules/FormError/FormError';
+import { ModeContext } from 'providers/ModeProvider';
+import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './ContactForm.module.scss';
 

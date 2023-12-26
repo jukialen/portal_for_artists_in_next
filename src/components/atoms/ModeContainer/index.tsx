@@ -3,11 +3,11 @@
 import { useContext, useState } from 'react';
 import { Button, Icon } from '@chakra-ui/react';
 
-import { darkMode } from 'src/constants/links';
+import { darkMode } from 'constants/links';
 
-import { ModeContext } from 'src/providers/ModeProvider';
+import { ModeContext } from 'providers/ModeProvider';
 
-import { useScopedI18n } from 'src/locales/client';
+import { useScopedI18n } from 'locales/client';
 
 import styles from './ModeContainer.module.scss';
 import { ChevronDownIcon, SunIcon } from '@chakra-ui/icons';

@@ -1,22 +1,22 @@
 import { ReactNode } from 'react';
 import Script from 'next/script';
-import SuperTokensWebJs from 'supertokens-web-js';
+import SuperTokens from 'supertokens-web-js';
 import ThirdPartyEmailPasswordWebJs from 'supertokens-web-js/recipe/thirdpartyemailpassword';
 import EmailVerification from 'supertokens-web-js/recipe/emailverification';
 import Session from 'supertokens-web-js/recipe/session';
 
-import { getStaticParams } from 'src/locales/server';
+import { getStaticParams } from 'locales/server';
 
-import { GlobalProvider } from 'src/providers/GlobalProvider';
+import { GlobalProvider } from 'providers/GlobalProvider';
 
-import { UserHeader } from 'src/components/organisms/UserHeader/UserHeader';
-import { Header } from 'src/components/organisms/Header/Header';
-import { Aside } from 'src/components/organisms/Aside/Aside';
-import { SkeletonRootLayout } from 'src/components/organisms/SkeletonRootLayout/SkeletonRootLayout';
+import { UserHeader } from 'components/organisms/UserHeader/UserHeader';
+import { Header } from 'components/organisms/Header/Header';
+import { Aside } from 'components/organisms/Aside/Aside';
+import { SkeletonRootLayout } from 'components/organisms/SkeletonRootLayout/SkeletonRootLayout';
 
-import 'src/styles/reset.scss';
-import 'src/styles/global.scss';
-import 'src/styles/darkLightMode.scss';
+import 'styles/reset.scss';
+import 'styles/global.scss';
+import 'styles/darkLightMode.scss';
 
 type ChildrenType = {
   children: ReactNode;
@@ -37,7 +37,7 @@ export default async function RootLayout({ children, params }: ChildrenType) {
   };
 
   if (typeof window !== 'undefined') {
-    SuperTokensWebJs.init({
+    SuperTokens.init({
       appInfo: {
         appName: process.env.NEXT_PUBLIC_APP_NAME!,
         apiDomain: process.env.NEXT_PUBLIC_API_DOMAIN!,
@@ -59,9 +59,10 @@ export default async function RootLayout({ children, params }: ChildrenType) {
             __html: `<iframe src='https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js' height="0" width="0" style="display: none; visibility: hidden;"></iframe>`,
           }}
         />
-          <GlobalProvider locale={params.locale}>
-            <SkeletonRootLayout userMenuComponents={userMenuComponents}>{children}</SkeletonRootLayout>
-          </GlobalProvider>
+
+        <GlobalProvider locale={params.locale}>
+          <SkeletonRootLayout userMenuComponents={userMenuComponents}>{children}</SkeletonRootLayout>
+        </GlobalProvider>
       </body>
     </html>
   );

@@ -1,27 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
-import { SubCommentType } from 'src/types/global.types';
+import { SubCommentType } from 'types/global.types';
 
-<<<<<<< Updated upstream:components/molecules/SubComments/SubComments.tsx
-import { backUrl } from 'utilites/constants';
-=======
-import { backUrl } from 'src/constants/links';
->>>>>>> Stashed changes:source/components/molecules/SubComments/SubComments.tsx
+import { backUrl } from 'constants/links';
 
-import { getDate } from 'src/helpers/getDate';
+import { getDate } from 'helpers/getDate';
 
-<<<<<<< Updated upstream:components/molecules/SubComments/SubComments.tsx
-import { useDateData } from 'hooks/useDateData';
-=======
-import { dateData } from 'src/helpers/dateData';
->>>>>>> Stashed changes:source/components/molecules/SubComments/SubComments.tsx
+import { dateData } from 'helpers/dateData';
 
-import { DCProvider } from 'src/providers/DeleteCommentProvider';
+import { DCProvider } from 'providers/DeleteCommentProvider';
 
-import { SubComment } from 'src/components/atoms/SubComment/SubComment';
-import { MoreButton } from 'src/components/atoms/MoreButton/MoreButton';
+import { SubComment } from 'components/atoms/SubComment/SubComment';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 type SubCommentsType = {
   fileCommentId?: string;
@@ -37,7 +29,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
   let [i, setI] = useState(1);
 
   const { locale } = useRouter();
-  const dataDateObject = useDateData();
+  const dataDateObject = dateData();
 
   const maxItems = 30;
 
@@ -64,7 +56,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
           role,
           roleId,
           authorId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
       setSubCommentsArray(commentArray);
@@ -107,7 +99,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
           role,
           roleId,
           authorId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         });
       }
 

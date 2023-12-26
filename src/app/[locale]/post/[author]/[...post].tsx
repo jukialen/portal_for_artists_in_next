@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
-import { AuthorPost } from 'src/components/organisms/AuthorPost/AuthorPost';
+import { AuthorPost } from 'components/organisms/AuthorPost/AuthorPost';
 
 export async function generateMetadata({ post }: { post: string }): Promise<Metadata> {
   const pseudonym = decodeURIComponent(post.split('/')[2]);

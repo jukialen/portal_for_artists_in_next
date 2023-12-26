@@ -1,24 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
-import { PostsType } from 'src/types/global.types';
+import { PostsType } from 'types/global.types';
 
-<<<<<<< Updated upstream:components/organisms/Posts/Posts.tsx
-import { backUrl } from 'utilites/constants';
-=======
-import { backUrl } from 'src/constants/links';
+import { backUrl } from 'constants/links';
 
-import { dateData } from 'src/helpers/dateData';
->>>>>>> Stashed changes:source/components/organisms/Posts/Posts.tsx
+import { dateData } from 'helpers/dateData';
 
-import { useDateData } from 'hooks/useDateData';
-import { useHookSWR } from 'hooks/useHookSWR';
 
-import { getDate } from 'src/helpers/getDate';
+import { getDate } from 'helpers/getDate';
 
-import { Post } from 'src/components/molecules/Post/Post';
-import { MoreButton } from 'src/components/atoms/MoreButton/MoreButton';
+import { Post } from 'components/molecules/Post/Post';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './Posts.module.scss';
 
@@ -30,8 +24,8 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
   let [i, setI] = useState(1);
 
   const { locale } = useRouter();
-  const dataDateObject = useDateData();
-  const data = useHookSWR();
+  const dataDateObject = dateData();
+
   const maxItems = 30;
 
   const firstPosts = async () => {
@@ -78,7 +72,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           groupId,
           authorId,
           postId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
           name,
           roleId,
         });
@@ -141,7 +135,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           authorId,
           postId,
           roleId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
           name,
         });
       }
@@ -197,7 +191,7 @@ export const Posts = ({ name, groupId }: GroupsPropsType) => {
           ),
         )
       ) : (
-        <p className={styles.noPosts}>{data?.Posts.noPosts}</p>
+        <p className={styles.noPosts}>{language?.Posts.noPosts}</p>
       )}
 
       {!!lastVisible && postsArray.length === maxItems * i && <MoreButton nextElements={nextPosts} />}

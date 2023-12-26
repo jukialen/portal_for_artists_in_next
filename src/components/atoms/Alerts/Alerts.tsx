@@ -1,48 +1,47 @@
-import { useHookSWR } from 'hooks/useHookSWR';
+
 
 import { Alert, AlertIcon } from '@chakra-ui/react';
+import { useI18n } from "../../../locales/client";
 
 type AlertsType = {
   valueFields: string;
 };
 
 export const Alerts = ({ valueFields }: AlertsType) => {
-  const data = useHookSWR();
-
+  const t = useI18n();
   const switchAlert = (valueFields: string) => {
     let status: string;
 
     switch (valueFields) {
-      case data?.ResetPassword?.success:
-      case data?.NewUser?.successSending:
-      case data?.DeletionPost?.deleted:
-      case data?.DeletionFile?.deleted:
-      case data?.NavForm?.statusLogin:
-      case data?.NavForm?.successInfoRegistration:
-      case data?.PasswordAccount?.success:
-      case data?.Forgotten?.success:
-      case data?.AnotherForm?.uploadFile:
-      case data?.Account?.profile?.successSending:
+      case t('ResetPassword.success'):
+      case t('NewUser.successSending'):
+      case t('DeletionPost.deleted'):
+      case t('DeletionFile.deleted'):
+      case t('NavForm.statusLogin'):
+      case t('NavForm.successInfoRegistration'):
+      case t('PasswordAccount.success'):
+      case t('Forgotten.success'):
+      case t('AnotherForm.uploadFile'):
+      case t('Account.profile.successSending'):
         return (status = 'success');
-      case data?.DeletionAccount?.deletionProfilePhoto:
-      case data?.DeletionAccount?.deletionAccount:
-      case data?.DeletionPost?.deleting:
-      case data?.DeletionFile?.deleting:
+      case t('DeletionAccount.deletionAccount'):
+      case t('DeletionPost.deleting'):
+      case t('DeletionFile.deleting'):
         return (status = 'info');
-      case data?.NavForm?.unVerified:
-      case data?.PasswordAccount?.differentPasswords:
+      case t('NavForm.unVerified'):
+      case t('PasswordAccount.differentPasswords'):
         return (status = 'warning');
       case 'Nie usunięto pliku.':
-      case data?.NavForm?.notExist:
-      case data?.NavForm?.theSameEmail:
-      case data?.AnotherForm?.notUploadFile:
-      case data?.ResetPassword?.failed:
-      case data?.NewUser?.errorSending:
-      case data?.EmailVerification?.expired:
-      case data?.unknownError:
-      case data?.ResetPassword?.wrongValues:
-      case data?.NavForm?.wrongLoginData:
-      case data?.error:
+      case t('NavForm.notExist'):
+      case t('NavForm.theSameEmail'):
+      case t('AnotherForm.notUploadFile'):
+      case t('ResetPassword.failed'):
+      case t('NewUser.errorSending'):
+      case t('EmailVerification.expired'):
+      case t('unknownError'):
+      case t('ResetPassword.wrongValues'):
+      case t('NavForm.wrongLoginData'):
+      case t('error'):
         return (status = 'error');
       default:
         return (status = 'warning');
@@ -53,36 +52,35 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let color: string;
 
     switch (valueFields) {
-      case data?.ResetPassword?.success:
-      case data?.NewUser?.successSending:
-      case data?.DeletionPost?.deleted:
-      case data?.DeletionFile?.deleted:
-      case data?.NavForm?.statusLogin:
-      case data?.NavForm?.successInfoRegistration:
-      case data?.PasswordAccount?.success:
-      case data?.Forgotten?.success:
-      case data?.AnotherForm?.uploadFile:
-      case data?.Account?.profile?.successSending:
+      case t('ResetPassword.success'):
+      case t('NewUser.successSending'):
+      case t('DeletionPost.deleted'):
+      case t('DeletionFile.deleted'):
+      case t('NavForm.statusLogin'):
+      case t('NavForm.successInfoRegistration'):
+      case t('PasswordAccount.success'):
+      case t('Forgotten.success'):
+      case t('AnotherForm.uploadFile'):
+      case t('Account.profile.successSending'):
         return (color = 'green');
-      case data?.DeletionAccount?.deletionProfilePhoto:
-      case data?.DeletionAccount?.deletionAccount:
-      case data?.DeletionPost?.deleting:
-      case data?.DeletionFile?.deleting:
+      case t('DeletionAccount.deletionAccount'):
+      case t('DeletionPost.deleting'):
+      case t('DeletionFile.deleting'):
         return (color = 'blue');
-      case data?.NavForm?.unVerified:
-      case data?.PasswordAccount?.differentPasswords:
+      case t('NavForm.unVerified'):
+      case t('PasswordAccount.differentPasswords'):
         return (color = 'yellow');
       case 'Nie usunięto pliku.':
-      case data?.NavForm?.notExist:
-      case data?.NavForm?.theSameEmail:
-      case data?.AnotherForm?.notUploadFile:
-      case data?.ResetPassword?.failed:
-      case data?.NewUser?.errorSending:
-      case data?.EmailVerification?.expired:
-      case data?.unknownError:
-      case data?.ResetPassword?.wrongValues:
-      case data?.NavForm?.wrongLoginData:
-      case data?.error:
+      case t('NavForm.notExist'):
+      case t('NavForm.theSameEmail'):
+      case t('AnotherForm.notUploadFile'):
+      case t('ResetPassword.failed'):
+      case t('NewUser.errorSending'):
+      case t('EmailVerification.expired'):
+      case t('unknownError'):
+      case t('ResetPassword.wrongValues'):
+      case t('NavForm.wrongLoginData'):
+      case t('error'):
         return (color = 'red');
       default:
         return (color = 'yellow');

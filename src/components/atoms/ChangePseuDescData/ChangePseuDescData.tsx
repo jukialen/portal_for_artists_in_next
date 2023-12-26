@@ -3,20 +3,20 @@
 import { useContext, useState } from 'react';
 import { Input, Progress, Textarea } from '@chakra-ui/react';
 import axios from 'axios';
-import { backUrl, darkMode } from 'src/constants/links';
+import { backUrl, darkMode } from 'constants/links';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'src/shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { useUserData } from 'src/hooks/useUserData';
+import { useUserData } from 'hooks/useUserData';
 
-import { useI18n, useScopedI18n } from 'src/locales/client';
-import { EventType, ResetFormType } from 'src/types/global.types';
+import { useI18n, useScopedI18n } from 'locales/client';
+import { EventType, ResetFormType } from 'types/global.types';
 
-import { ModeContext } from 'src/providers/ModeProvider';
+import { ModeContext } from 'providers/ModeProvider';
 
-import { Alerts } from 'src/components/atoms/Alerts/Alerts';
-import { FormError } from 'src/components/molecules/FormError/FormError';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { FormError } from 'components/molecules/FormError/FormError';
 
 import styles from './ChangePseuDescData.module.scss';
 

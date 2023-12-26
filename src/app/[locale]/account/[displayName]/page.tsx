@@ -1,16 +1,16 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { getI18n, getScopedI18n } from 'src/locales/server';
-import { HeadCom } from 'src/constants/HeadCom';
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
+import { getI18n, getScopedI18n } from 'locales/server';
+import { HeadCom } from 'constants/HeadCom';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
-import { FriendType } from 'src/types/global.types';
+import { FriendType } from 'types/global.types';
 
-import { get, getOnes } from 'src/helpers/methods';
+import { get, getOnes } from 'helpers/methods';
 
-import { DashboardTabs } from "src/components/organisms/DashboardTabs/DashboardTabs";
-import { MainCurrentUserProfileData } from 'src/components/atoms/MainCurrentUserProfileData/MainCurrentUserProfileData';
+import { DashboardTabs } from "components/organisms/DashboardTabs/DashboardTabs";
+import { MainCurrentUserProfileData } from 'components/atoms/MainCurrentUserProfileData/MainCurrentUserProfileData';
 
 type FriendsListArrayType = {
   usernameId: string;

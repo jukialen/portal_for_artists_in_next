@@ -7,12 +7,12 @@ import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider } from '@chakra-ui/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import { I18nProviderClient } from 'src/locales/client';
+import { I18nProviderClient } from 'locales/client';
 
-import { ModeProvider } from 'src/providers/ModeProvider';
-import { MenuProvider } from 'src/providers/MenuProvider';
+import { ModeProvider } from 'providers/ModeProvider';
+import { MenuProvider } from 'providers/MenuProvider';
 
-import { AffixButton } from 'src/components/molecules/AffixButton/AffixButton';
+import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
 
 type ChildrenType = {
   children: ReactNode;

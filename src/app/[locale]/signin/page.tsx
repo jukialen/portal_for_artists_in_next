@@ -2,12 +2,12 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-import { getI18n, getScopedI18n } from 'src/locales/server';
+import { getI18n, getScopedI18n } from 'locales/server';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
-import { Providers } from 'src/components/molecules/Providers/Providers';
-import { FormSignIn } from 'src/components/atoms/FormSignIn/FormSignIn';
+import { Providers } from 'components/molecules/Providers/Providers';
+import { FormSignIn } from 'components/atoms/FormSignIn/FormSignIn';
 
 import styles from './page.module.scss';
 

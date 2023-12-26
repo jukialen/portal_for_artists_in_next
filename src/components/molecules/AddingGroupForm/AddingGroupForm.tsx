@@ -1,19 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { useUserData } from 'src/hooks/useUserData';
+import { useUserData } from 'hooks/useUserData';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'src/shemasValidation/schemaValidation';
-import { EventType, ResetFormType } from 'src/types/global.types';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { EventType, ResetFormType } from 'types/global.types';
 import axios from 'axios';
-import { backUrl } from 'src/constants/links';
+import { backUrl } from 'constants/links';
 import Session from 'supertokens-web-js/recipe/session';
 import { io, Socket } from 'socket.io-client';
 import { Form, Formik } from 'formik';
 import styles from '*.module.scss';
 import { Button, Input, Progress, Textarea } from '@chakra-ui/react';
-import { FormError } from 'src/components/molecules/FormError/FormError';
-import { Alerts } from 'src/components/atoms/Alerts/Alerts';
+import { FormError } from 'components/molecules/FormError/FormError';
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 type AddingGroupType = {
   name: string;

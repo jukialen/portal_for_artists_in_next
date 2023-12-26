@@ -1,38 +1,34 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-<<<<<<<< Updated upstream:pages/groups/list/index.tsx
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
-
+import { backUrl, cloudFrontUrl } from 'constants/links';
 import { GroupType } from 'types/global.types';
 
-import { useHookSWR } from 'hooks/useHookSWR';
-import { useCurrentUser } from 'hooks/useCurrentUser';
-========
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
-import { GroupType } from 'src/types/global.types';
-
-import { MoreButton } from 'src/components/atoms/MoreButton/MoreButton';
-import { Tile } from 'src/components/atoms/Tile/Tile';
->>>>>>>> Stashed changes:source/components/molecules/GroupList/GroupList.tsx
-
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { Tile } from 'components/molecules/GroupTile/Tile';
+import { Tile } from 'components/atoms/Tile/Tile';
 
-import styles from './index.module.scss';
+import styles from './GroupList.module.scss';
 
 type GroupListType = {
   name: string;
   fileUrl: string;
 };
 
-export default function List() {
+type GroupsType = {
+  list: {
+    title: string,
+    all: string
+  },
+  noGroups: string,
+};
+
+export const GroupList = ({ locale, Groups }: { locale: string, Groups: GroupsType }) => {
   const [listArray, setListArray] = useState<GroupListType[]>([]);
   const [lastVisible, setLastVisible] = useState('');
   let [i, setI] = useState(1);
 
-  const data = useHookSWR();
-  const loading = useCurrentUser('/signin');
   const maxItems = 30;
 
   const getGroupsList = async () => {
@@ -61,8 +57,8 @@ export default function List() {
   };
 
   useEffect(() => {
-    !loading && getGroupsList();
-  }, [loading]);
+     getGroupsList();
+  }, []);
 
   const nextGroupsList = async () => {
     const groups: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
@@ -91,27 +87,25 @@ export default function List() {
     setI(++i);
   };
 
-  if (loading) {
-    return null;
-  }
-
   return (
     <section className={styles.container}>
       <div className={styles.container__section}>
-        <h2 className={styles.title}>{data?.Groups?.list?.title}</h2>
+        <h2 className={styles.title}>{Groups.list.title}</h2>
         <div className={styles.list}>
           {listArray.length > 0 ? (
             listArray.map(({ name, fileUrl }, index) => (
-              <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={fileUrl} />
+              <Tile key={index} name={name} link={`/${locale}/groups/${name}`} fileUrl={fileUrl} />
             ))
           ) : (
-            <p>{data?.Groups?.noGroups}</p>
+            <p>{Groups.noGroups}</p>
           )}
         </div>
       </div>
       {!!lastVisible && listArray.length === maxItems * i && <MoreButton nextElements={nextGroupsList} />}
 
-      {!lastVisible && listArray.length >= maxItems * i && <p className={styles.noALl}>{data?.Groups?.list?.all}</p>}
+      {!lastVisible && listArray.length >= maxItems * i && (
+        <p className={styles.noALl}>{Groups.list.all}</p>
+      )}
     </section>
   );
-}
+};

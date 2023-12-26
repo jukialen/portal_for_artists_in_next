@@ -11,9 +11,10 @@
     margin-bottom: 2rem;
   }
 
-  .field, .field__error {
+  .field,
+  .field__error {
     width: 20rem;
-    margin: .5rem auto;
+    margin: 0.5rem auto;
     color: $third__color;
   }
 
@@ -23,19 +24,19 @@
 
   .input {
     width: 20rem;
-    padding: .3rem;
+    padding: 0.3rem;
     border-color: transparent;
   }
 
   .submit__button {
     width: 11rem;
     font-size: 1rem;
-    margin: .8rem auto;
+    margin: 0.8rem auto;
     background-color: transparent;
     border-radius: 2rem;
 
     &:hover {
-      opacity: .8;
+      opacity: 0.8;
     }
   }
 }

@@ -2,13 +2,13 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
-import { getI18n, getScopedI18n } from 'src/locales/server';
+import { getI18n, getScopedI18n } from 'locales/server';
 
-import { Providers } from 'src/components/molecules/Providers/Providers';
+import { Providers } from 'components/molecules/Providers/Providers';
 
-import { FormSignUp } from 'src/components/atoms/FormSignUp/FormSignUp';
+import { FormSignUp } from 'components/atoms/FormSignUp/FormSignUp';
 
 import styles from './page.module.scss';
 

@@ -19,6 +19,10 @@
       font-size: 1.5rem;
     }
 
+    hr {
+      margin: 1rem auto;
+    }
+
     .subTitle {
       margin: 2rem auto;
       font-size: 1.3rem;
@@ -41,9 +45,13 @@
     }
 
     .submit__button {
-      width: 7rem;
-      margin: 1rem auto;
-      padding: .5rem;
+      //width: fit-content;
+      //height: 2.5rem;
+      //margin: 1rem auto;
+      //border-radius: 0.5rem;
+      //font-weight: bold;
+      //background-color: rgba(0, 0, 0, 0);
+      //border: 0.1rem solid $secondary__color;
     }
   }
 

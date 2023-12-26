@@ -24,36 +24,9 @@
       margin: 0 auto;
     }
 
-    .ant-collapse-header,
-    .answers__faq {
-      max-width: 38rem;
-      padding: 0.5rem;
-      font-size: 1.6rem;
-      color: $dark__background__light__color;
-      cursor: pointer;
-    }
-
-    .ant-collapse-header {
-      display: inline-flex;
-      flex-wrap: nowrap;
-      margin: 2rem 5% 1rem;
-      padding: 1rem 1.5rem;
-      border-radius: 2rem;
-      color: $dark__background__light__color;
-      border: 0.2rem inset $dark__color__light__back;
-    }
-
     .answers__faq {
       margin: 1rem auto 2rem;
       line-height: 1.6;
-    }
-
-    @media (min-width: 1000px) {
-      .ant-collapse-header,
-      .answers__faq {
-        max-width: 48rem;
-        font-size: 2rem;
-      }
     }
   }
 

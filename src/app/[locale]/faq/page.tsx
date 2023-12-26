@@ -2,12 +2,12 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { FaqItems } from 'src/components/atoms/FaqItems/FaqItems';
-import { AccordionWrapper } from 'src/components/molecules/AccordionWrapper/AccordionWrapper';
+import { FaqItems } from 'components/atoms/FaqItems/FaqItems';
+import { AccordionWrapper } from 'components/molecules/AccordionWrapper/AccordionWrapper';
 
-import { getI18n, getScopedI18n } from 'src/locales/server';
+import { getI18n, getScopedI18n } from 'locales/server';
 
-import { HeadCom } from 'src/constants/HeadCom';
+import { HeadCom } from 'constants/HeadCom';
 
 import styles from './page.module.scss';
 

@@ -1,25 +1,16 @@
+'use client'
+
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Divider } from '@chakra-ui/react';
 
-<<<<<<< Updated upstream:components/organisms/GroupUsers/GroupUsers.tsx
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
-=======
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
->>>>>>> Stashed changes:source/components/organisms/GroupUsers/GroupUsers.tsx
 
-import { useHookSWR } from 'hooks/useHookSWR';
 
-<<<<<<< Updated upstream:components/organisms/GroupUsers/GroupUsers.tsx
 import { Links } from 'components/atoms/Links/Links';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { Tile } from 'components/molecules/GroupTile/Tile';
-=======
-import { Links } from 'src/components/atoms/Links/Links';
-import { MoreButton } from 'src/components/atoms/MoreButton/MoreButton';
-import { Tile } from 'src/components/atoms/Tile/Tile';
->>>>>>> Stashed changes:source/components/organisms/GroupUsers/GroupUsers.tsx
+import { Tile } from 'components/atoms/Tile/Tile';
 
 import styles from './GroupUsers.module.scss';
 
@@ -44,7 +35,7 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
   const [lastMembersVisible, setMembersLastVisible] = useState<string>();
   let [iMembers, setIMembers] = useState(1);
 
-  const data = useHookSWR();
+
   const maxItems = 30;
 
   const firstAdminList = async () => {
@@ -234,45 +225,45 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
   return (
     <div className={styles.tilesSection}>
       <section className={styles.sectionTitleNewGroup}>
-        <h2>{data?.Nav?.groups}</h2>
+        <h2>{language?.Nav?.groups}</h2>
         <Links
           hrefLink="/adding_group"
           classLink={`${styles.sectionTitleNewGroup__button} button`}
-          aria-label={data?.Aside?.addingGroup}>
-          {data?.Aside?.addingGroup}
+          aria-label={language?.Aside?.addingGroup}>
+          {language?.Aside?.addingGroup}
         </Links>
       </section>
 
-      <h2 className={styles.title}>{data?.Account?.groups?.adminTitle}</h2>
+      <h2 className={styles.title}>{language?.Account?.groups?.adminTitle}</h2>
       <Divider className={styles.divider} />
       {adminsArray.length > 0 ? (
         adminsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
       ) : (
-        <p className={styles.noGroups}>{data?.Account?.groups?.noAdmin}</p>
+        <p className={styles.noGroups}>{language?.Account?.groups?.noAdmin}</p>
       )}
       {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && <MoreButton nextElements={nextAdminList} />}
-      <h2 className={styles.title}>{data?.Account?.groups?.modsTitle}</h2>
+      <h2 className={styles.title}>{language?.Account?.groups?.modsTitle}</h2>
       <Divider className={styles.divider} />
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
       ) : (
-        <p className={styles.noGroups}>{data?.Account?.groups?.noMods}</p>
+        <p className={styles.noGroups}>{language?.Account?.groups?.noMods}</p>
       )}
       {!!lastModeratorsVisible && moderatorsArray.length == maxItems * iModerators && (
         <MoreButton nextElements={nextModeratorsList} />
       )}
-      <h2 className={styles.title}>{data?.Account?.groups?.usersTitle}</h2>
+      <h2 className={styles.title}>{language?.Account?.groups?.usersTitle}</h2>
       <Divider className={styles.divider} />
       {membersArray.length > 0 ? (
         membersArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
       ) : (
-        <p className={styles.noGroups}>{data?.Account?.groups?.noUsers}</p>
+        <p className={styles.noGroups}>{language?.Account?.groups?.noUsers}</p>
       )}
       {!!lastMembersVisible && membersArray.length === maxItems * iMembers && (
         <MoreButton nextElements={nextMembersList} />

@@ -1,3 +1,5 @@
+'use client'
+
 import { MouseEventHandler, useState } from 'react';
 import { Affix, Button } from 'antd';
 

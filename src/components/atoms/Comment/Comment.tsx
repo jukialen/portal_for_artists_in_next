@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import Link from 'next/link';
+import { Link } from '@chakra-ui/next-js';
 import { Avatar } from '@chakra-ui/react';
 
 import { CommentType } from 'src/types/global.types';

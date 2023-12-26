@@ -52,11 +52,10 @@
 }
 
 .buttons {
-  width: 36.5rem;
   max-width: 100vw;
   display: flex;
   flex-wrap: wrap;
-  margin: 0 auto;
+  margin: 2rem auto .5rem;
 
   div {
     display: flex;
@@ -88,6 +87,22 @@
     border-color: $third__color;
     cursor: pointer;
   }
+}
+
+.adminButtons {
+  width: 42.5rem;
+  max-width: 100vw;
+  display: flex;
+  margin: 2rem auto .5rem;
+
+  button {
+    margin-left: 2rem;
+    border-color: transparent;
+  }
+}
+
+section .hr {
+  width: calc(42.5rem - 2rem);
 }
 
 .tabs {

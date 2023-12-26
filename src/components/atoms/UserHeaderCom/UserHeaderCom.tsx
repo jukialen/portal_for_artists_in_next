@@ -1,16 +1,25 @@
+<<<<<<<< HEAD:src/components/organisms/UserHeader/UserHeader.tsx
+<<<<<<< Updated upstream:components/organisms/UserHeader/UserHeader.tsx
+========
 'use client';
 
+>>>>>>>> changing-to-app-dir:src/components/atoms/UserHeaderCom/UserHeaderCom.tsx
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Session from 'supertokens-web-js/recipe/session';
 import { Link } from '@chakra-ui/next-js';
 import { Avatar, Icon, Button, Input, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
 
-import { cloudFrontUrl } from 'src/constants/links';
+import { cloudFrontUrl } from 'constants/links';
 
-import { useUserData } from 'src/hooks/useUserData';
+import { useUserData } from 'hooks/useUserData';
 
-import { MenuContext } from 'src/providers/MenuProvider';
+import { MenuContext } from 'providers/MenuProvider';
+=======
+import { getI18n, getScopedI18n } from 'src/locales/server';
+
+import { UserHeaderCom } from 'src/components/atoms/UserHeaderCom/UserHeaderCom';
+>>>>>>> Stashed changes:source/components/organisms/UserHeader/UserHeader.tsx
 
 import styles from './UserHeaderCom.module.scss';
 import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';

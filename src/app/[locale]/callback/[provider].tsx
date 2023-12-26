@@ -1,18 +1,17 @@
+'use client'
+
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { thirdPartySignInAndUp } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
 import { useToast } from '@chakra-ui/react';
 
-<<<<<<<< Updated upstream:pages/callback/[provider].tsx
-import { useHookSWR } from 'hooks/useHookSWR';
-========
-import { useI18n } from "src/locales/client";
->>>>>>>> Stashed changes:source/app/[locale]/callback/[provider].tsx
+import { useI18n } from "locales/client";
 
 export default function BackToApp() {
   const { push } = useRouter();
 
-  const data = useHookSWR();
+  const t = useI18n();
+
   const toast = useToast();
 
   const handleProviderCallback = async () => {
@@ -26,7 +25,8 @@ export default function BackToApp() {
           variant: 'subtle',
           duration: 9000,
         });
-        !response.createdNewUser && (await push('/app'));
+        
+        !response.createdNewRecipeUser && push('/app');
       } else {
         toast({
           description: 'No email provided by social login. Please use another form of login',
@@ -34,16 +34,16 @@ export default function BackToApp() {
           variant: 'subtle',
           duration: 9000,
         });
-        await push('/');
+        return  push('/');
       }
     } catch (e: any) {
       toast({
-        description: e.isSuperTokensGeneralError === true ? e.message : data?.unknownError,
+        description: e.isSuperTokensGeneralError === true ? e.message : t('unknownError'),
         status: 'error',
         variant: 'subtle',
         duration: 9000,
       });
-      await push('/');
+      return  push('/');
     }
   };
 

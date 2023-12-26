@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client';
 import {
@@ -23,39 +23,29 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { EventType, GroupType, Role } from 'src/types/global.types';
+import { EventType, GroupType, Role } from 'types/global.types';
 
-<<<<<<<< Updated upstream:pages/groups/[name].tsx
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
-import { useHookSWR } from 'hooks/useHookSWR';
-import { useCurrentUser } from 'hooks/useCurrentUser';
 import { useUserData } from 'hooks/useUserData';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
-import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
+
 import { AddingPost } from 'components/molecules/AddingPost/AddingPost';
 import { Members } from 'components/atoms/Members/Members';
 import { DescriptionSection } from 'components/molecules/DescriptionSection/DescriptionSection';
 import { Posts } from 'components/organisms/Posts/Posts';
-========
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
 
-import { useUserData } from 'src/hooks/useUserData';
-
-import { Alerts } from 'src/components/atoms/Alerts/Alerts';
-
-import { AddingPost } from 'src/components/molecules/AddingPost/AddingPost';
-import { Members } from 'src/components/atoms/Members/Members';
-import { DescriptionSection } from 'src/components/molecules/DescriptionSection/DescriptionSection';
-import { Posts } from 'src/components/organisms/Posts/Posts';
->>>>>>>> Stashed changes:source/app/[locale]/groups/[name].tsx
-
-import styles from './index.module.scss';
+import styles from './page.module.scss';
 import { CheckIcon, SmallAddIcon } from '@chakra-ui/icons';
 import { MdCameraEnhance } from 'react-icons/md';
+import { Metadata } from "next";
+import { HeadCom } from "../../../constants/HeadCom";
 
-export default function Groups() {
+export async function generateMetadata({ name }: { name: string }): Promise<Metadata> {
+  return { ...HeadCom(`${name} group website`) };
+}
+export default function Groups({ params: { locale, name } }: { params: { locale: string, name: string } }) {
   const [admin, setAdmin] = useState(false);
   const [description, setDescription] = useState('');
   const [logo, setLogo] = useState('');
@@ -74,10 +64,9 @@ export default function Groups() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { query, asPath } = useRouter();
-  const { name } = query;
-  const data = useHookSWR();
-  const { plan } = useUserData();
+  const { push } = useRouter();
+
+  const userData = useUserData();
 
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
@@ -171,35 +160,57 @@ export default function Groups() {
             groupId,
             file: newLogo,
             name: logo || '',
-            plan,
+            plan: userData?.plan,
+            //        clientId: socket.id,
           },
         });
 
+        //        function (socket: Socket) {
         new Promise((resolve, reject) => {
           socket.once('updateGroupLogo', (_data: number) => {
             resolve(_data);
             reject(_data);
             setProgressUpload(_data);
-            _data === 100 && setValuesFields(data?.AnotherForm?.uploadFile);
+            console.log(resolve(_data));
+            console.log(reject(_data));
+            _data === 100 && setValuesFields(language?.AnotherForm?.uploadFile);
             _data === 100 && socket.disconnect();
           });
         });
       } else {
         console.log('no logo selected');
       }
+      //        };
+
+      //            !!newLogo &&
+      //              !required &&
+      //              admin &&
+      //        (await axios.patch(`${backUrl}/groups/${name}/${groupId}/${socket.id}`, {
+      //          file: newLogo,
+      //          name: logo || '',
+      //          clientId: socket.id,
+      //        }));
+
+      //      socket.on('updateGroupLogo', (_data: number) => {
+      //        if (_data === 100) {
+      //          setProgressUpload(_data);
+      //          setValuesFields(language?.AnotherForm?.uploadFile);
+      //          socket.disconnect();
+      //        }
+      //        socket.on('reconnet', () => {})
+      //      });
     } catch (e) {
       console.error(e);
-      setValuesFields(data?.AnotherForm?.notUploadFile);
+      setValuesFields(language?.AnotherForm?.notUploadFile);
     }
   };
-  if (useCurrentUser('/signin')) {
-    return null;
-  }
 
+  const removeGroup = async  () => {
+    await axios.delete(`${backUrl}/groups/${name!}/${groupId}/${roleId}`);
+    await push('/app');
+  }
   return (
     <>
-      <HeadCom path={asPath} content={`"${name}" group website`} />
-
       <article className={styles.mainContainer}>
         <div className={styles.logo}>
           <img src={logo} alt={`${name} logo`} />
@@ -229,7 +240,7 @@ export default function Groups() {
                 borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
               />
 
-              <p style={{ color: '#bd0000' }}>{!newLogo && required && data?.NavForm?.validateRequired}</p>
+              <p style={{ color: '#bd0000' }}>{!newLogo && required && language?.NavForm?.validateRequired}</p>
               {!!newLogo && (
                 <img
                   src={`${process.env.NEXT_PUBLIC_PAGE}/${newLogo.name}`}
@@ -245,7 +256,7 @@ export default function Groups() {
                 />
               )}
 
-              {progressUpload >= 1 && !(valuesFields === `${data?.AnotherForm?.uploadFile}`) && (
+              {progressUpload >= 1 && !(valuesFields === `${language?.AnotherForm?.uploadFile}`) && (
                 <Progress
                   value={progressUpload}
                   colorScheme="green"
@@ -264,10 +275,10 @@ export default function Groups() {
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="blue" borderColor="transparent" mr={3} onClick={onClose}>
-                {data?.DeletionFile?.cancelButton}
+                {language?.DeletionFile?.cancelButton}
               </Button>
               <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
-                {data?.Description?.submit}
+                {language?.Description?.submit}
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -275,7 +286,7 @@ export default function Groups() {
         <h2 className={styles.nameGroup}>{name}</h2>
       </article>
 
-      {!admin && (
+      {!admin ? (
         <div className={styles.buttons}>
           <Button
             leftIcon={join ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
@@ -284,7 +295,7 @@ export default function Groups() {
             onClick={toggleToGroup}
             variant={join ? 'outline' : 'solid'}
             className={styles.button}>
-            {join ? data?.Groups?.joined : data?.Groups?.join}
+              {join ? language?.Groups?.joined : language?.Groups?.join}
           </Button>
 
           {join && (
@@ -297,17 +308,19 @@ export default function Groups() {
                 onClick={toggleToFavorites}
                 variant={favorite ? 'solid' : 'outline'}
                 className={`${styles.button} ${styles.favoriteButton}`}>
-                {favorite ? data?.Groups?.favorite?.addedToFav : data?.Groups?.favorite?.addToFavorite}
+                  {favorite ? language?.Groups?.favorite?.addedToFav : language?.Groups?.favorite?.addToFavorite}
               </Button>
               {!favorite && (
-                <p>{favoriteLength < 5 ? data?.Groups?.favorite?.maxFav : data?.Groups?.favorite?.maximumAchieved}</p>
-              )}
+                <p>{favoriteLength < 5 ? language?.Groups?.favorite?.maxFav : language?.Groups?.favorite?.maximumAchieved}</p>
+                )}
             </div>
           )}
         </div>
-      )}
-
-      {!admin && <Divider orientation="horizontal" />}
+      ) : <div className={styles.adminButtons}>
+            <Button colorScheme="blue" className={styles.button} onClick={removeGroup}>Usuń grupę</Button>
+          </div>
+      }
+    <Divider orientation="horizontal" className={styles.hr} />
 
       <Tabs className={styles.tabs} isLazy lazyBehavior="keepMounted" isFitted variant="unstyled">
         <TabList className={styles.tablist}>
@@ -317,7 +330,7 @@ export default function Groups() {
             _selected={{ borderColor: selectedColor }}
             borderColor={activeColor}
             className={styles.tab}>
-            {decodeURIComponent(data?.Account?.aMenu?.general)}
+            {decodeURIComponent(language?.Account?.aMenu?.general)}
           </Tab>
           {join && (
             <Tab
@@ -326,7 +339,7 @@ export default function Groups() {
               _active={{ borderColor: activeColor }}
               borderColor={activeColor}
               className={styles.tab}>
-              {decodeURIComponent(data?.Groups?.menu?.members)}
+              {decodeURIComponent(language?.Groups?.menu?.members)}
             </Tab>
           )}
           <Tab
@@ -335,7 +348,7 @@ export default function Groups() {
             _active={{ borderColor: activeColor }}
             borderColor={activeColor}
             className={styles.tab}>
-            {decodeURIComponent(data?.AnotherForm?.description)}
+            {decodeURIComponent(language?.AnotherForm?.description)}
           </Tab>
         </TabList>
 
@@ -346,7 +359,7 @@ export default function Groups() {
               {join ? (
                 <Posts name={name!.toString()} groupId={groupId!} />
               ) : (
-                <p className={styles.noPermission}>{data?.Groups?.noPermission}</p>
+                <p className={styles.noPermission}>{language?.Groups?.noPermission}</p>
               )}
             </>
           </TabPanel>

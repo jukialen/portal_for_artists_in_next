@@ -1,27 +1,24 @@
+'use client'
+
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { Button } from '@chakra-ui/react';
 
-<<<<<<< Updated upstream:components/atoms/ChoosePlanPriButton/ChoosePlanPriButton.tsx
-import { useHookSWR } from 'hooks/useHookSWR';
 import { useUserData } from 'hooks/useUserData';
 
-=======
-import { useUserData } from 'src/hooks/useUserData';
+import { useI18n } from 'locales/client';
 
-import { useI18n } from 'src/locales/client';
-
->>>>>>> Stashed changes:source/components/atoms/ChoosePlanPriButton/ChoosePlanPriButton.tsx
 import styles from './ChoosePlanPriButton.module.scss';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
 export const ChoosePlanPriButton = () => {
   const [open, setOpen] = useState(false);
   const { push, replace } = useRouter();
-  const { pseudonym } = useUserData();
-  const data = useHookSWR();
+  const userData = useUserData();
 
-  const changePlan = () => (pseudonym ? replace(`/account/${pseudonym}`) : setOpen(!open));
+  const t = useI18n();
+
+  const changePlan = () => (userData?.pseudonym ? replace(`/account/${userData.pseudonym}`) : setOpen(!open));
 
   return (
     <>
@@ -31,15 +28,15 @@ export const ChoosePlanPriButton = () => {
         rightIcon={<ArrowForwardIcon />}
         className={styles.choosePlan}
         onClick={changePlan}>
-        {data?.Plans?.choosePlan}
+        {t('Plans.choosePlan')}
       </Button>
       <div className={open ? styles.openButton : styles.hideButton}>
         <div className={styles.noUsersPlan}>
           <Button colorScheme="whiteAlpha" onClick={() => push('/signin')}>
-            {data?.Nav?.signIn}
+            {t('Nav.signIn')}
           </Button>
           <Button colorScheme="whiteAlpha" onClick={() => push('/signup')}>
-            {data?.Nav?.signUp}
+            {t('Nav.signUp')}
           </Button>
         </div>
       </div>

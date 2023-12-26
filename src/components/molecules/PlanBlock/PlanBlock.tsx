@@ -1,6 +1,6 @@
-import { getScopedI18n } from "src/locales/server";
+import { getScopedI18n } from "locales/server";
 
-import { ChoosePlanPriButton } from 'src/components/atoms/ChoosePlanPriButton/ChoosePlanPriButton';
+import { ChoosePlanPriButton } from 'components/atoms/ChoosePlanPriButton/ChoosePlanPriButton';
 
 import styles from './PlanBlock.module.scss';
 import { CheckIcon } from '@chakra-ui/icons';

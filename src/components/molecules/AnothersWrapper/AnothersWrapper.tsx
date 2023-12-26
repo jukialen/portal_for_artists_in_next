@@ -1,49 +1,32 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import axios from 'axios';
+'use client';
 
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Skeleton } from '@chakra-ui/react';
 
-import { FileType, Tags } from 'src/types/global.types';
+import { FileType, Tags } from 'types/global.types';
 
-<<<<<<<< Updated upstream:pages/[index].tsx
-import { backUrl, cloudFrontUrl } from 'utilites/constants';
-========
-import { backUrl, cloudFrontUrl } from 'src/constants/links';
->>>>>>>> Stashed changes:source/components/molecules/AnothersWrapper/AnothersWrapper.tsx
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
-import { getDate } from 'src/helpers/getDate';
-
-<<<<<<<< Updated upstream:pages/[index].tsx
-import { useCurrentUser } from 'hooks/useCurrentUser';
-import { useDateData } from 'hooks/useDateData';
-import { useHookSWR } from 'hooks/useHookSWR';
+import { getDate } from 'helpers/getDate';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { HeadCom } from 'components/atoms/HeadCom/HeadCom';
 import { Article } from 'components/molecules/Article/Article';
 import { Videos } from 'components/molecules/Videos/Videos';
-========
-import { MoreButton } from 'src/components/atoms/MoreButton/MoreButton';
-import { ZeroFiles } from 'src/components/atoms/ZeroFiles/ZeroFiles';
-import { Article } from 'src/components/molecules/Article/Article';
-import { Videos } from 'src/components/molecules/Videos/Videos';
->>>>>>>> Stashed changes:source/components/molecules/AnothersWrapper/AnothersWrapper.tsx
 
-import styles from './categories_index.module.scss';
+type AnothersWrapperType = {
+  locale: string;
+  index: string;
+  dataDateObject: { second: string; minute: string; hour: string; day: string; yearDateSeparator: string };
+  noVideos: string;
+};
 
-export default function Drawings() {
+export const AnothersWrapper = ({ locale, index, dataDateObject, noVideos }: AnothersWrapperType) => {
   const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [lastVisible, setLastVisible] = useState<string>();
   let [i, setI] = useState(1);
-
-  const data = useHookSWR();
-  const dataDateObject = useDateData();
-  const router = useRouter();
-  const { index } = router.query;
 
   const maxItems: number = 10;
 
@@ -71,7 +54,7 @@ export default function Drawings() {
           profilePhoto,
           fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
-          time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
+          time: getDate(locale, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -112,7 +95,7 @@ export default function Drawings() {
           profilePhoto,
           fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
-          time: getDate(router.locale!, updatedAt! || createdAt!, dataDateObject),
+          time: getDate(locale, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
@@ -125,59 +108,47 @@ export default function Drawings() {
     }
   };
 
-  if (useCurrentUser('/signin')) {
-    return null;
-  }
-
   return (
-    <article className={styles.categories__index__in__account}>
-      <HeadCom path={router.asPath} content={`Subpage with ${index}`} />
-
-      <em className={styles.title}>
-        {data?.Aside?.category}: {index}
-      </em>
-
-      <Wrapper>
-        {userDrawings.length > 0 ? (
-          userDrawings.map(
-            (
-              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
-              keyIndex,
-            ) => (
-              <Skeleton isLoaded={loadingFiles} key={keyIndex}>
-                {tags === Tags.videos ? (
-                  <Videos
-                    fileId={fileId!}
-                    name={name!}
-                    fileUrl={fileUrl}
-                    shortDescription={shortDescription!}
-                    tags={tags!}
-                    authorName={pseudonym!}
-                    profilePhoto={profilePhoto}
-                    authorId={authorId}
-                    time={time}
-                  />
-                ) : (
-                  <Article
-                    fileId={fileId!}
-                    name={name!}
-                    fileUrl={fileUrl}
-                    shortDescription={shortDescription!}
-                    tags={tags!}
-                    authorName={pseudonym!}
-                    profilePhoto={profilePhoto}
-                    authorId={authorId}
-                    time={time}
-                  />
-                )}
-              </Skeleton>
-            ),
-          )
-        ) : (
-          <ZeroFiles text={data?.ZeroFiles?.videos} />
-        )}
-        {!!lastVisible && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
-      </Wrapper>
-    </article>
+    <>
+      {userDrawings.length > 0 ? (
+        userDrawings.map(
+          (
+            { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+            index,
+          ) => (
+            <Skeleton isLoaded={loadingFiles} key={index}>
+              {tags === Tags.videos ? (
+                <Videos
+                  fileId={fileId!}
+                  name={name!}
+                  fileUrl={fileUrl}
+                  shortDescription={shortDescription!}
+                  tags={tags}
+                  authorName={pseudonym!}
+                  profilePhoto={profilePhoto}
+                  authorId={authorId}
+                  time={time}
+                />
+              ) : (
+                <Article
+                  fileId={fileId!}
+                  name={name!}
+                  fileUrl={fileUrl}
+                  shortDescription={shortDescription!}
+                  tags={tags!}
+                  authorName={pseudonym!}
+                  profilePhoto={profilePhoto}
+                  authorId={authorId}
+                  time={time}
+                />
+              )}
+            </Skeleton>
+          ),
+        )
+      ) : (
+        <ZeroFiles text={noVideos} />
+      )}
+      {!!lastVisible && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+    </>
   );
-}
+};

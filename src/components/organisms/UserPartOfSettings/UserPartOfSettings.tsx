@@ -1,11 +1,11 @@
 'use client';
 
-import { useI18n } from 'src/locales/client';
+import { useI18n } from 'locales/client';
 
-import { useUserData } from 'src/hooks/useUserData';
+import { useUserData } from 'hooks/useUserData';
 
-import { ChangePseuDescData } from 'src/components/atoms/ChangePseuDescData/ChangePseuDescData';
-import { AccountData } from 'src/components/organisms/AccountData/AccountData';
+import { ChangePseuDescData } from 'components/atoms/ChangePseuDescData/ChangePseuDescData';
+import { AccountData } from 'components/organisms/AccountData/AccountData';
 
 export const UserPartOfSettings = () => {
   const userData = useUserData();

@@ -1,4 +1,4 @@
-import { getScopedI18n } from 'src/locales/server'
+import { getScopedI18n } from 'locales/server'
 
 export const dateData = async () => {
   const t = await getScopedI18n('Date');
