@@ -1,10 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { redirect } from "next/navigation";
 import { Form, Formik } from 'formik';
 import { IconButton, Input, InputGroup, InputRightElement, Stack } from '@chakra-ui/react';
-import { doesEmailExist, emailPasswordSignUp } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
-import { sendVerificationEmail } from 'supertokens-web-js/recipe/emailverification';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
@@ -15,19 +14,22 @@ import { ResetFormType, UserFormType } from 'types/global.types';
 import { initialValuesForSignInUp } from 'constants/objects';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
-import { FormError } from 'components/molecules/FormError/FormError';
+import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './FormSignUp.module.scss';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-export const FormSignUp = () => {
+export const FormSignUp = ({ locale }: { locale: string }) => {
+  const supabase = createClientComponentClient();
+  
   const t = useI18n();
   const tNavForm = useScopedI18n('NavForm');
 
   const [isLoading, setIsLoading] = useState(false);
   const [valuesFields, setValuesFields] = useState('');
   const [show, setShow] = useState(false);
-
+  
   const showPass = () => setShow(!show);
 
   const schemaValidation = Yup.object({
@@ -38,44 +40,56 @@ export const FormSignUp = () => {
   const registration = async ({ email, password }: UserFormType, { resetForm }: ResetFormType) => {
     try {
       setIsLoading(true);
-      const exist = await doesEmailExist({ email });
+      // const exist = await doesEmailExist({ email });
 
-      if (exist.doesExist) {
-        setValuesFields(tNavForm('theSameEmail'));
-        resetForm(initialValuesForSignInUp);
-        setIsLoading(false);
-        return null;
-      }
-
-      const response = await emailPasswordSignUp({
-        formFields: [
-          { id: 'email', value: email! },
-          { id: 'password', value: password! },
-        ],
+      // if (exist.doesExist) {
+      //   setValuesFields(tNavForm('theSameEmail'));
+      
+        // return null;
+      // }
+      
+      console.log('lo', location.origin)
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password: password!,
+        options: {
+          emailRedirectTo: `${location.origin}/${locale}/auth/callback`
+        }
       });
 
-      if (response.status === 'FIELD_ERROR') {
-        response.formFields.forEach((formField: { id: string; error: string }) => {
-          setValuesFields(formField.error === tNavForm('theSameEmail') ? tNavForm('theSameEmail') : formField.error);
-          return null;
-        });
-      } else {
-        const res = await sendVerificationEmail();
+      // await supabase
 
-        if (res.status === 'EMAIL_ALREADY_VERIFIED_ERROR') {
-          resetForm(initialValuesForSignInUp);
-          setIsLoading(false);
-          return null;
-        } else {
-          resetForm(initialValuesForSignInUp);
-          setValuesFields(tNavForm('successInfoRegistration'));
-          setIsLoading(false);
-          return null;
-        }
-      }
+      console.log('d', data);
+      console.log('e', error);
+      // setValuesFields(error?.message === 'Error sending confirmation mail' ? "Nieprawidłowy adress email. Nie można wysłać potwierdzenia emaila" : t('error'));
+      
+      data.user && setValuesFields(tNavForm('successInfoRegistration'));
+      !!error && setValuesFields(error?.message)
+      //   resetForm(initialValuesForSignInUp);
+      setIsLoading(false);
+      
+      // if (response.status === 'FIELD_ERROR') {
+      //   response.formFields.forEach((formField: { id: string; error: string }) => {
+      //     setValuesFields(formField.error === tNavForm('theSameEmail') ? tNavForm('theSameEmail') : formField.error);
+      //     return null;
+      //   });
+      // } else {
+      //   // const res = await sendVerificationEmail();
+      //
+      //   if (res.status === 'EMAIL_ALREADY_VERIFIED_ERROR') {
+      //     resetForm(initialValuesForSignInUp);
+      //     setIsLoading(false);
+      //     return null;
+      //   } else {
+      //     resetForm(initialValuesForSignInUp);
+      //     setValuesFields(tNavForm('successInfoRegistration'));
+      //     setIsLoading(false);
+      //     return null;
+      //   }
+      // }
     } catch (e: any) {
-      console.error('e', e);
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : t('error'));
+      console.error('e2', e);
+      // setValuesFields(e.msg === 'Error sending confirmation mail' ? "Nieprawidłowy adress email. Nie można wysłać potwierdzenia emaila" : t('error'));
       setIsLoading(!isLoading);
     }
   };

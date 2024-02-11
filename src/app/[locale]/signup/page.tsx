@@ -2,11 +2,13 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { setStaticParamsLocale } from 'next-international/server';
 
+import { LangType } from "types/global.types";
+
 import { HeadCom } from 'constants/HeadCom';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { Providers } from 'components/molecules/Providers/Providers';
+import { Providers } from 'components/atoms/Providers/Providers';
 
 import { FormSignUp } from 'components/atoms/FormSignUp/FormSignUp';
 
@@ -14,7 +16,7 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Sign up site');
 
-export default async function Registration({ params: { locale } }: { params: { locale: string } }) {
+export default async function Registration({ params: { locale } }: { params: { locale: LangType } }) {
   setStaticParamsLocale(locale);
 
   const t = await getI18n();
@@ -23,7 +25,7 @@ export default async function Registration({ params: { locale } }: { params: { l
   return (
     <>
       <div className={styles.create__account}>
-        <FormSignUp />
+        <FormSignUp locale={locale} />
 
         <div className={styles.dividerWithText}>
           <hr />
@@ -31,7 +33,7 @@ export default async function Registration({ params: { locale } }: { params: { l
           <hr />
         </div>
 
-        <Providers />
+        <Providers locale={locale} />
 
         <p className={styles.acceptInfo}>
           {tNavForm('acceptInfoOne')}

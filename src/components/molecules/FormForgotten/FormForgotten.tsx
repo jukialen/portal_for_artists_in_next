@@ -1,25 +1,27 @@
 'use client';
 
 import { useState } from 'react';
-import { sendPasswordResetEmail } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Divider, Input } from '@chakra-ui/react';
 
-import { ResetFormType, UserFormType } from 'types/global.types';
+import { LangType, ResetFormType, UserFormType } from 'types/global.types';
 
 import { useI18n } from 'locales/client';
 
-import { FormError } from 'components/molecules/FormError/FormError';
+import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './FormForgotten.module.scss';
 
-export const FormForgotten = () => {
+export const FormForgotten = ({ locale }: { locale: LangType }) => {
   const [valuesFields, setValuesFields] = useState('');
 
   const t = useI18n();
+
+  const supabase = createClientComponentClient();
 
   const initialValues = {
     email: '',
@@ -29,20 +31,23 @@ export const FormForgotten = () => {
     email: SchemaValidation().email,
   });
 
+  console.log("t('Forgotten.success')", t('Forgotten.success'));
   const reset__password = async ({ email }: UserFormType, { resetForm }: ResetFormType) => {
     try {
-      const response = await sendPasswordResetEmail({ formFields: [{ id: 'email', value: email! }] });
-      if (response.status === 'FIELD_ERROR') {
-        response.formFields.forEach((formField) => {
-          formField.id === 'email' && setValuesFields(formField.error);
-        });
-      } else {
-        resetForm(initialValues);
-        setValuesFields(t('Forgotten.success'));
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${process.env.NEXT_PUBLIC_PAGE}/${locale}/new-password`,
+      });
+
+      console.log('resetEmailData', data);
+      console.log('resetEmailEr', error);
+      if (error?.status === 200) {
+        setValuesFields(error?.message!);
       }
+      resetForm(initialValues);
+      setValuesFields(t('Forgotten.success'));
     } catch (e: any) {
       console.error(e);
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : t('unknownError'));
+      setValuesFields(t('unknownError'));
       setValuesFields(t('error'));
     }
   };

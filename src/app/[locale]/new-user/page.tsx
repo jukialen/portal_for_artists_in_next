@@ -1,9 +1,13 @@
 import { Metadata } from "next";
-import { setStaticParamsLocale } from "next-international/dist/app/server";
+import { cookies } from "next/headers";
+import { createRouteHandlerClient, createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { setStaticParamsLocale } from "next-international/server";
 
 import { HeadCom } from "constants/HeadCom";
 
 import { getScopedI18n } from "locales/server";
+
+import { serverSupabase } from "helpers/creatingSupabase";
 
 import { NewUserForm } from "components/molecules/NewUserForm/NewUserForm";
 
@@ -14,7 +18,7 @@ export default async function NewUser({ params: { locale } }: { params: { locale
   
   const tAnotherForm = await getScopedI18n('AnotherForm');
   const tNewUser = await getScopedI18n('NewUser');
-
+  
   const newUserTranslate = {
     title: tNewUser('title'),
     username: tNewUser('name'),
@@ -27,5 +31,7 @@ export default async function NewUser({ params: { locale } }: { params: { locale
     errorSending: tNewUser('errorSending'),
   };
 
-  return <NewUserForm newUserTranslate={newUserTranslate} locale={locale} />
+  const userDataAuth = await supabase.auth.getUser();
+  
+  return <NewUserForm newUserTranslate={newUserTranslate} locale={locale} userDataAuth={userDataAuth} />
 }

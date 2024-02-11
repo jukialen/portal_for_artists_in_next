@@ -4,21 +4,22 @@ import Link from 'next/link';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
+import { LangType } from "types/global.types";
+
 import { HeadCom } from 'constants/HeadCom';
 
-import { Providers } from 'components/molecules/Providers/Providers';
+import { Providers } from 'components/atoms/Providers/Providers';
 import { FormSignIn } from 'components/atoms/FormSignIn/FormSignIn';
 
 import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Sign in site');
 
-export default async function Login({ params: { locale } }: { params: { locale: string } }) {
+export default async function Login({ params: { locale } }: { params: { locale: LangType } }) {
   setStaticParamsLocale(locale);
-  
   const t = await getI18n();
   const tNavForm = await getScopedI18n('NavForm');
-
+  
   return (
     <>
       <div className={styles.login}>
@@ -34,7 +35,7 @@ export default async function Login({ params: { locale } }: { params: { locale: 
           <hr />
         </div>
 
-        <Providers />
+        <Providers locale={locale} />
 
         <p className={styles.changeForm}>
           {tNavForm('changeToLogin')}

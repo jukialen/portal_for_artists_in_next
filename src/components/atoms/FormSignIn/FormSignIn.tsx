@@ -1,9 +1,7 @@
 'use client';
 
 import { useContext, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
-import { emailPasswordSignIn } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
+import { redirect, useRouter } from "next/navigation";
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -16,20 +14,20 @@ import { ResetFormType, UserFormType, UserType } from 'types/global.types';
 import { backUrl } from 'constants/links';
 import { initialValuesForSignInUp } from 'constants/objects';
 
-import { MenuContext } from 'providers/MenuProvider';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
-import { FormError } from 'components/molecules/FormError/FormError';
+import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './FormSignIn.module.scss';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export const FormSignIn = ({ locale }: { locale: string }) => {
   const [show, setShow] = useState(false);
   const [valuesFields, setValuesFields] = useState('');
-  const { changeMenu } = useContext(MenuContext);
 
-  const t = useI18n();
+  const { push } = useRouter();
+
   const tNavForm = useScopedI18n('NavForm');
 
   const schemaValidation = Yup.object({
@@ -37,42 +35,32 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
     password: SchemaValidation().password,
   });
 
-  const { push } = useRouter();
   const showPass = () => setShow(!show);
 
   const signIn = async ({ email, password }: UserFormType, { resetForm }: ResetFormType) => {
-    try {
-      const res = await emailPasswordSignIn({
-        formFields: [
-          { id: 'email', value: email! },
-          { id: 'password', value: password! },
-        ],
-      });
+      const supabase = createClientComponentClient();
 
-      if (res.status === 'FIELD_ERROR') {
-        res.formFields.forEach((formField) => setValuesFields(formField.error));
-      } else if (res.status === 'WRONG_CREDENTIALS_ERROR') {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password: password! });
+
+      if (!!error && error.status !== 200) {
         setValuesFields(tNavForm('wrongLoginData'));
       } else {
         resetForm(initialValuesForSignInUp);
         setValuesFields(tNavForm('statusLogin'));
-        
-        if (res.status === "OK") {
-          const _data: { data: UserType } = await axios.get(`${backUrl}/users/current/${res.user.id}`);
-          
-          if (!!_data.data.pseudonym) {
-            changeMenu('true');
-            push(`/${locale}/app`);
-          } else {
-            push(`/${locale}/new-user`);
-          }
 
+        const { data: dataUser, error: eUsers } = await supabase
+          .from('Users')
+          .select('*')
+          .eq('id', data.session?.user.id);
+        
+
+        if (dataUser?.length !== 0) {
+          localStorage.setItem('menu', 'true');
+          push(`/${locale}/app`);
+        } else {
+          push(`/${locale}/new-user`);
         }
       }
-    } catch (e: any) {
-      console.error(e);
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : t('error'));
-    }
   };
 
   return (

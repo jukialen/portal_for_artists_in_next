@@ -1,35 +1,34 @@
-'use client'
+'use client';
 
-import { useRouter } from 'next/navigation';
-import { getAuthorisationURLWithQueryParamsAndSetState } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
+import { permanentRedirect } from 'next/navigation';
 import { Icon, useToast } from '@chakra-ui/react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { useI18n } from "locales/client";
+import { LangType } from 'types/global.types';
+import { Provider } from '@supabase/gotrue-js';
+
+import { useI18n } from 'locales/client';
 
 import styles from './Providers.module.scss';
 import { FaDiscord, FaSpotify } from 'react-icons/fa';
-import { RiGoogleFill, RiLineFill } from 'react-icons/ri';
+import { RiGoogleFill } from 'react-icons/ri';
 
-export const Providers = () => {
-  const { push } = useRouter();
-  
+export const Providers = ({ locale }: { locale: LangType }) => {
+  const supabase = createClientComponentClient();
+
   const t = useI18n();
-  
+
   const toast = useToast();
 
-
-  const signInWithProvider = async (provider: string) => {
+  const signInWithProvider = async (provider: Provider) => {
     try {
-      const authUrl = await getAuthorisationURLWithQueryParamsAndSetState({
-        thirdPartyId: provider,
-        frontendRedirectURI: `${process.env.NEXT_PUBLIC_PAGE}/callback/${provider}`,
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
       });
-
-      push(authUrl);
+      permanentRedirect(`/${locale}/app`);
     } catch (e: any) {
-      console.error('e', e);
       toast({
-        description: e.isSuperTokensGeneralError === true ? e.message : t('unknownError'),
+        description: t('unknownError'),
         status: 'error',
         variant: 'subtle',
         duration: 9000,
@@ -60,13 +59,6 @@ export const Providers = () => {
         aria-label="discord provider"
         onClick={() => signInWithProvider('discord')}>
         <Icon as={FaDiscord} className={styles.svg} />
-      </button>
-      <button
-        className={styles.button}
-        type="submit"
-        aria-label="line provider"
-        onClick={() => signInWithProvider('line')}>
-        <Icon as={RiLineFill} className={styles.svg} />
       </button>
     </div>
   );

@@ -2,16 +2,16 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { submitNewPassword } from 'supertokens-web-js/recipe/thirdpartyemailpassword';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Divider, Input } from '@chakra-ui/react';
 
-import { FormError } from 'components/molecules/FormError/FormError';
+import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './ResetPasswordForm.module.scss';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 type ResetPasswordType = {
   newPassword: string;
@@ -20,34 +20,36 @@ type ResetPasswordType = {
 
 type ResetPassTrType = {
   reset: {
-    wrongValues: string,
-    failed: string,
-    success: string,
-    unknownError: string,
-    title: string,
-    subtitle: string,
-    newPassword: string,
-    againNewPassword: string,
-    buttonAria: string,
-    changePassword: string,
-  },
-  locale: string
-}
+    wrongValues: string;
+    failed: string;
+    success: string;
+    unknownError: string;
+    title: string;
+    subtitle: string;
+    newPassword: string;
+    againNewPassword: string;
+    buttonAria: string;
+    changePassword: string;
+  };
+  locale: string;
+};
 
-export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType ) => {
+export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType) => {
   const [valuesFields, setValuesFields] = useState<string>('');
-  
+
   const { push } = useRouter();
-  
+
   const initialValues = {
     newPassword: '',
     repeatPassword: '',
   };
-  
+
   const schemaValidation = Yup.object({
     newPassword: SchemaValidation().password,
     repeatPassword: SchemaValidation().password,
   });
+
+  const supabase = createClientComponentClient();
 
   const newPasswordEntered = async ({ newPassword, repeatPassword }: ResetPasswordType) => {
     try {
@@ -55,21 +57,27 @@ export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType ) => {
         setValuesFields(reset.wrongValues);
         return null;
       } else {
-        const response = await submitNewPassword({ formFields: [{ id: 'password', value: newPassword }] });
+        const { data, error } = await supabase.auth.updateUser(
+          {
+            password: newPassword,
+          },
+          { emailRedirectTo: `${process.env.NEXT_PUBLIC_PAGE}/signin` },
+        );
 
-        if (response.status === 'FIELD_ERROR') {
-          response.formFields.forEach((formField) => formField.id === 'password' && setValuesFields(formField.error));
-        } else if (response.status === 'RESET_PASSWORD_INVALID_TOKEN_ERROR') {
+        if (error?.status !== 200) {
+          console.log(error?.message!);
           setValuesFields(reset.failed);
-          push(`${locale}/`);
+        // } else if (response.status === 'RESET_PASSWORD_INVALID_TOKEN_ERROR') {
+        //   setValuesFields(reset.failed);
+        //   setTimeout(() => push(`${locale}/`), 1000);
         } else {
           setValuesFields(reset.success);
-          push(`${locale}/`);
+          setTimeout(() => push(`${locale}/`), 1000);
         }
       }
     } catch (e: any) {
       console.error(e);
-      setValuesFields(e.isSuperTokensGeneralError === true ? e.message : reset.unknownError);
+      setValuesFields(reset.unknownError);
     }
   };
 
@@ -103,10 +111,7 @@ export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType ) => {
 
             <FormError nameError="repeatPassword" />
 
-            <button
-              type="submit"
-              className={`button ${styles.submit__button}`}
-              aria-label={reset.buttonAria}>
+            <button type="submit" className={`button ${styles.submit__button}`} aria-label={reset.buttonAria}>
               {reset.changePassword}
             </button>
 
