@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { getI18n } from "locales/server";
 
 import { HeaderButtons } from "components/atoms/HeaderButtons/HeaderButtons";
-import { Nav } from 'components/molecules/Nav/Nav';
+import { Nav } from 'components/atoms/Nav/Nav';
 
 import styles from './Header.module.scss';
 

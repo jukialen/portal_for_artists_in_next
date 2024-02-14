@@ -1,4 +1,4 @@
-@use '../../../styles/variables' as *;
+@use 'styles/variables' as *;
 
 .title a {
 	display: flex;
@@ -6,6 +6,7 @@
 	align-items: center;
 	cursor: pointer;
 }
+
 
 .menu_buttons {
 	width: 20%;
@@ -17,7 +18,6 @@
 	font-size: .85rem;
 	border-color: transparent;
 	background-color: transparent;
-	color: black;
 	cursor: pointer;
 
 	svg {
@@ -32,6 +32,10 @@
 	p {
 		display: flex;
 		margin: auto 0;
+	}
+
+	svg, p {
+		color: rgb(0, 0, 0);
 	}
 }
 

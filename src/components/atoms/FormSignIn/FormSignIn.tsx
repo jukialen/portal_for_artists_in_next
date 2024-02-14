@@ -1,19 +1,17 @@
 'use client';
 
-import { useContext, useState } from 'react';
-import { redirect, useRouter } from "next/navigation";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { IconButton, Input, InputGroup, InputRightElement, Stack } from '@chakra-ui/react';
 
-import { useI18n, useScopedI18n } from 'locales/client';
+import { useScopedI18n } from 'locales/client';
 
-import { ResetFormType, UserFormType, UserType } from 'types/global.types';
+import { ResetFormType, UserFormType } from 'types/global.types';
 
-import { backUrl } from 'constants/links';
 import { initialValuesForSignInUp } from 'constants/objects';
-
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
@@ -26,7 +24,7 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
   const [show, setShow] = useState(false);
   const [valuesFields, setValuesFields] = useState('');
 
-  const { push } = useRouter();
+  const { push, refresh } = useRouter();
 
   const tNavForm = useScopedI18n('NavForm');
 
@@ -38,29 +36,28 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
   const showPass = () => setShow(!show);
 
   const signIn = async ({ email, password }: UserFormType, { resetForm }: ResetFormType) => {
-      const supabase = createClientComponentClient();
+    const supabase = createClientComponentClient();
 
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password: password! });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: password! });
+    
+    if (!!error && error.status !== 200) {
+      setValuesFields(tNavForm('wrongLoginData'));
+    } else {
+      resetForm(initialValuesForSignInUp);
+      setValuesFields(tNavForm('statusLogin'));
 
-      if (!!error && error.status !== 200) {
-        setValuesFields(tNavForm('wrongLoginData'));
+      const { data: dataUser } = await supabase
+        .from('Users')
+        .select('*')
+        .eq('id', data.session?.user.id);
+
+      if (dataUser?.length !== 0) {
+        localStorage.setItem('menu', 'true');
+        localStorage.getItem('menu') === 'true' && refresh();
       } else {
-        resetForm(initialValuesForSignInUp);
-        setValuesFields(tNavForm('statusLogin'));
-
-        const { data: dataUser, error: eUsers } = await supabase
-          .from('Users')
-          .select('*')
-          .eq('id', data.session?.user.id);
-        
-
-        if (dataUser?.length !== 0) {
-          localStorage.setItem('menu', 'true');
-          push(`/${locale}/app`);
-        } else {
-          push(`/${locale}/new-user`);
-        }
+        push(`/${locale}/new-user`);
       }
+    }
   };
 
   return (

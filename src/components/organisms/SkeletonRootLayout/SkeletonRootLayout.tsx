@@ -1,41 +1,77 @@
 'use client';
 
 import { ReactElement, ReactNode, useContext } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 
 import { darkMode } from 'constants/links';
+import { LangType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
-import { MenuContext } from 'providers/MenuProvider';
 
 import styles from './SkeletonRootLayout.module.scss';
 
 type ChildrenType = {
   children: ReactNode;
+  session: boolean;
   userMenuComponents: { userHeader: ReactElement; header: ReactElement; aside: ReactElement };
+  locale: LangType;
 };
 
-export const SkeletonRootLayout = ({ children, userMenuComponents }: ChildrenType) => {
-  const { isMenu } = useContext(MenuContext);
+export const SkeletonRootLayout = ({ children, session, userMenuComponents, locale }: ChildrenType) => {
   const { isMode } = useContext(ModeContext);
 
-  const userHeader = (): ReactElement => {
-    return isMenu === 'true' ? userMenuComponents.userHeader : userMenuComponents.header;
-  };
+  const { push } = useRouter();
+
+  const pathname = usePathname();
+
+  if (
+    !session &&
+    !(
+      pathname === `/${locale}/terms` ||
+      pathname === `/${locale}/privacy` ||
+      pathname === `/${locale}/faq` ||
+      pathname === `/${locale}/contact` ||
+      pathname === `/${locale}/` ||
+      pathname === `/${locale}/signin` ||
+      pathname === `/${locale}/signup` ||
+      pathname === `/${locale}/forgotten` ||
+      pathname === `/${locale}/settings` ||
+      pathname === `/${locale}/plans` ||
+      pathname === `/${locale}/new-password`
+    )
+  ) {
+    push(`/${locale}/`);
+  }
   
-  // if (useCurrentUser(locale)) {
-  //   return null;
-  // }
+  if (
+    session &&
+    (
+      pathname === `/${locale}/terms` ||
+      pathname === `/${locale}/privacy` ||
+      pathname === `/${locale}/faq` ||
+      pathname === `/${locale}/contact` ||
+      pathname === `/${locale}/` ||
+      pathname === `/${locale}/signin` ||
+      pathname === `/${locale}/signup` ||
+      pathname === `/${locale}/forgotten` ||
+      pathname === `/${locale}/settings` ||
+      pathname === `/${locale}/plans` ||
+      pathname === `/${locale}/new-password`
+    )
+  ) {
+    push(`/${locale}/app`);
+  }
 
   return (
     <div className={`${styles.whole__page} ${isMode === darkMode ? 'dark' : ''}`}>
-      {userHeader()}
+      {session ? userMenuComponents.userHeader : userMenuComponents.header}
 
       <div className={styles.container}>
-        {isMenu === 'true' && userMenuComponents.aside}
+        {session && userMenuComponents.aside}
 
         <main
           className={`
-              ${isMenu === 'true' ? styles.user__container : styles.main__container}
+              ${session ? styles.user__container : styles.main__container}
               ${isMode === darkMode ? 'main__container--dark' : ''}
             `}>
           <section className={styles.workspace}>{children}</section>

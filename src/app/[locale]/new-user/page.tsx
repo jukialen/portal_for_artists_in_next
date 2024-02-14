@@ -19,6 +19,7 @@ export default async function NewUser({ params: { locale } }: { params: { locale
   const tAnotherForm = await getScopedI18n('AnotherForm');
   const tNewUser = await getScopedI18n('NewUser');
   
+  const supabase = await serverSupabase();
   const newUserTranslate = {
     title: tNewUser('title'),
     username: tNewUser('name'),

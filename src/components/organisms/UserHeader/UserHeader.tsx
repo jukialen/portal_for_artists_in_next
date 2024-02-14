@@ -2,6 +2,8 @@ import { getI18n, getScopedI18n } from 'locales/server';
 
 import { UserHeaderCom } from 'components/atoms/UserHeaderCom/UserHeaderCom';
 
+import { getUserData } from "helpers/getUserData";
+
 import styles from './UserHeader.module.scss';
 
 export async function UserHeader({ locale }: { locale: string }) {
@@ -20,10 +22,12 @@ export async function UserHeader({ locale }: { locale: string }) {
     signIn: tNav('signIn'),
     signup: tNav('signUp'),
   };
-
+  
+  const userData = await getUserData();
+  
   return (
     <header className={styles.header}>
-      <UserHeaderCom headers={UserHeaderTranslate} locale={locale} />
+      <UserHeaderCom headers={UserHeaderTranslate} locale={locale} userData={userData!} />
     </header>
   );
 }

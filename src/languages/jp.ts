@@ -279,6 +279,12 @@ export default {
    buttonAria: "button to reset the button",
    success: "Check your mailbox."
   },
+  NewPassword: {
+    title: 'パスワードの更新',
+    subtitle: '新しいパスワードを入力してください。',
+    buttonAria: '新しいパスワードを送信するボタン',
+    success: 'パスワードを変更した。',
+  },
  ResetPassword: {
    wrongValues: "価値観は同じではありません。",
    success: "パスワードのリセットに成功しました！",

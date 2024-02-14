@@ -1,18 +1,17 @@
 'use client';
 
 import { ReactNode, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import gsap from 'gsap';
 import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider } from '@chakra-ui/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import { I18nProviderClient } from 'locales/client';
+import { useCurrentLocale, I18nProviderClient } from 'locales/client';
 
 import { ModeProvider } from 'providers/ModeProvider';
-import { MenuProvider } from 'providers/MenuProvider';
 
-import { AffixButton } from 'components/molecules/AffixButton/AffixButton';
+import { AffixButton } from 'components/atoms/AffixButton/AffixButton';
 
 type ChildrenType = {
   children: ReactNode;
@@ -21,9 +20,11 @@ type ChildrenType = {
 
 export const GlobalProvider = ({ children, locale }: ChildrenType) => {
   const pathname = usePathname();
-
+  const router = useRouter();
   const homePage = pathname === `/${locale}`;
-
+  
+  locale === '/' && router.replace(`/${useCurrentLocale}`);
+  
   useEffect(() => {
     if (homePage) {
       gsap.registerPlugin(ScrollTrigger);
@@ -50,16 +51,14 @@ export const GlobalProvider = ({ children, locale }: ChildrenType) => {
       });
     }
   }, [homePage, pathname]);
-  
+
   return (
     <CacheProvider>
       <ChakraProvider>
         <I18nProviderClient>
           <ModeProvider>
-            <MenuProvider>
-              {children}
-              <AffixButton />
-            </MenuProvider>
+            {children}
+            <AffixButton />
           </ModeProvider>
         </I18nProviderClient>
       </ChakraProvider>

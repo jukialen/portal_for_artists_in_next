@@ -279,6 +279,12 @@ export default {
     buttonAria: "button to reset the button",
     success: "Check your mailbox."
   },
+  NewPassword: {
+    title: 'Update password',
+    subtitle: 'Write new password.',
+    buttonAria: 'Button for sending a new password',
+    success: 'You changed your password',
+  },
   ResetPassword: {
     wrongValues: "Values aren't the same.",
     success: "Password reset successful!",

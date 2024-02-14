@@ -1,29 +1,18 @@
-<<<<<<<< HEAD:src/components/organisms/UserHeader/UserHeader.tsx
-<<<<<<< Updated upstream:components/organisms/UserHeader/UserHeader.tsx
-========
-'use client';
+'use client'
 
->>>>>>>> changing-to-app-dir:src/components/atoms/UserHeaderCom/UserHeaderCom.tsx
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Session from 'supertokens-web-js/recipe/session';
 import { Link } from '@chakra-ui/next-js';
 import { Avatar, Icon, Button, Input, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
 
 import { cloudFrontUrl } from 'constants/links';
 
-import { useUserData } from 'hooks/useUserData';
-
-import { MenuContext } from 'providers/MenuProvider';
-=======
-import { getI18n, getScopedI18n } from 'src/locales/server';
-
-import { UserHeaderCom } from 'src/components/atoms/UserHeaderCom/UserHeaderCom';
->>>>>>> Stashed changes:source/components/organisms/UserHeader/UserHeader.tsx
+import { UserType } from "types/global.types";
 
 import styles from './UserHeaderCom.module.scss';
 import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
 import { SearchIcon } from '@chakra-ui/icons';
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 type HeadersType = {
   headers: {
@@ -39,30 +28,37 @@ type HeadersType = {
     signup: string;
   },
   locale: string;
+  userData: UserType,
 };
 
-export const UserHeaderCom = ({ headers, locale }: HeadersType) => {
-  const { changeMenu } = useContext(MenuContext);
+export const UserHeaderCom = ({ headers, locale, userData }: HeadersType) => {
   const [profileMenu, showProfileMenu] = useState(false);
   const [search, setSearch] = useState(false);
-  const { push } = useRouter();
-  const userData = useUserData();
+  const { push, refresh } = useRouter();
   
+  const supabase = createClientComponentClient();
+  console.log('userData', userData)
   const toggleSearch = () => setSearch(!search);
   const toggleProfileMenu = () => showProfileMenu(!profileMenu);
 
   const sign__out = async () => {
     try {
-      await Session.signOut();
+      
+      const { error } = await supabase.auth.signOut();
+      console.log('sign out error', error);
+      // await fetch('/auth/signout', { method: 'POST' })
+      localStorage.setItem('menu', 'false');
       toggleProfileMenu();
-      changeMenu('false');
-      push(`/${locale}/`);
+      refresh();
+      // push(`/${locale}/`);
     } catch (e) {
       console.log(e);
     }
   };
 
   console.log('userData', userData)
+  console.log('profileMenu', profileMenu)
+  
   return (
     <>
       <Button
@@ -140,11 +136,13 @@ export const UserHeaderCom = ({ headers, locale }: HeadersType) => {
           </Link>
         </li>
         <li>
-          <Button colorScheme="yellow" onClick={sign__out}>
-            {headers.signOut}
-          </Button>
+          {/*<form action="/auth/signout" method="post">*/}
+            <Button colorScheme="yellow" onClick={sign__out} type="submit">
+              {headers.signOut}
+            </Button>
+          {/*</form>*/}
         </li>
       </ul>
     </>
-  );
+);
 };

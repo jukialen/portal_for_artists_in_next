@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 import Script from 'next/script';
-import SuperTokens from 'supertokens-web-js';
-import ThirdPartyEmailPasswordWebJs from 'supertokens-web-js/recipe/thirdpartyemailpassword';
-import EmailVerification from 'supertokens-web-js/recipe/emailverification';
-import Session from 'supertokens-web-js/recipe/session';
 
 import { getStaticParams } from 'locales/server';
+import { getSession } from "helpers/getSession";
+
+import { LangType } from "types/global.types";
+import { GTM_ID } from 'constants/links';
 
 import { GlobalProvider } from 'providers/GlobalProvider';
 
@@ -20,14 +20,12 @@ import 'styles/darkLightMode.scss';
 
 type ChildrenType = {
   children: ReactNode;
-  params: { locale: string };
+  params: { locale: LangType };
 };
 
 export function generateStaticParams() {
   return getStaticParams();
 }
-
-const GTM_ID = process.env.NEXT_PUBLIC_G_TAG;
 
 export default async function RootLayout({ children, params }: ChildrenType) {
   const userMenuComponents = {
@@ -36,17 +34,8 @@ export default async function RootLayout({ children, params }: ChildrenType) {
     aside: <Aside />,
   };
 
-  if (typeof window !== 'undefined') {
-    SuperTokens.init({
-      appInfo: {
-        appName: process.env.NEXT_PUBLIC_APP_NAME!,
-        apiDomain: process.env.NEXT_PUBLIC_API_DOMAIN!,
-        apiBasePath: '/auth',
-      },
-      recipeList: [ThirdPartyEmailPasswordWebJs.init(), EmailVerification.init(), Session.init()],
-    });
-  }
-
+  const session = await getSession();
+  
   return (
     <html lang={params.locale}>
       {process.env.NODE_ENV === 'production' && (
@@ -61,7 +50,7 @@ export default async function RootLayout({ children, params }: ChildrenType) {
         />
 
         <GlobalProvider locale={params.locale}>
-          <SkeletonRootLayout userMenuComponents={userMenuComponents}>{children}</SkeletonRootLayout>
+          <SkeletonRootLayout session={session} userMenuComponents={userMenuComponents} locale={params.locale}>{children}</SkeletonRootLayout>
         </GlobalProvider>
       </body>
     </html>
