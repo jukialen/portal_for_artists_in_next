@@ -64,10 +64,10 @@ export type UserType = Logo &
     id?: string;
     pseudonym: string;
     description?: string;
-    language?: any;
-    email?: string;
-    plan?: string;
-    provider?: boolean;
+    profilePhoto?: string;
+    email: string;
+    plan: 'FREE' | 'PREMIUM' | 'GOLD';
+    provider?: 'email' | 'google' | 'discord' | 'spotify';
   };
 
 export type UserFormType = {
@@ -100,6 +100,7 @@ export type ArticleVideosType = {
   tags: Tags;
   authorId: string;
   time: string;
+  pseudonym: string;
 };
 
 //FRIENDS
