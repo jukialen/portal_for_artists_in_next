@@ -7,23 +7,24 @@ import { getScopedI18n } from 'locales/server';
 import { HeadCom } from 'constants/HeadCom';
 
 import styles from './page.module.scss';
-import dark_mode from 'public/dark_mode.png';
-import light_mode from 'public/light_mode.png';
-import friends from 'public/friends.png';
-import categories from 'public/categories.png';
-import groups from 'public/groups.png';
-import diary from 'public/diary.jpg';
-import artist from 'public/artist.jpg';
-import searchingService from 'public/searching.jpg';
-import upload from 'public/upload.png';
-import authorButton from 'public/authorButton.png';
-import top from 'public/top.jpg';
-import minimalism from 'public/minimalism.png';
-import likes from 'public/likes.png';
+import dark_mode from '../../../public/dark_mode.png';
+import light_mode from '../../../public/light_mode.png';
+import friends from '../../../public/friends.png';
+import categories from '../../../public/categories.png';
+import groups from '../../../public/groups.png';
+import diary from '../../../public/diary.jpg';
+import artist from '../../../public/artist.jpg';
+import searchingService from '../../../public/searching.jpg';
+import upload from '../../../public/upload.png';
+import authorButton from '../../../public/authorButton.png';
+import top from '../../../public/top.jpg';
+import minimalism from '../../../public/minimalism.png';
+import likes from '../../../public/likes.png';
+import { LangType } from "../../types/global.types";
 
 export const metadata: Metadata = HeadCom('Main site.');
 
-export default async function Home({ params: { locale } }: { params: { locale: string } }) {
+export default async function Home({ params: { locale } }: { params: { locale: LangType } }) {
   setStaticParamsLocale(locale);
   
   const t = await getScopedI18n('Main');
