@@ -1,4 +1,4 @@
-import { DateObjectType } from 'src/types/global.types';
+import { DateObjectType } from 'types/global.types';
 
 export const getDate = (locale: string, dateField: string, dataDateObject: DateObjectType) => {
   const today = new Date(parseInt(dateField));

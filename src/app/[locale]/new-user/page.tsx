@@ -1,24 +1,23 @@
-import { Metadata } from "next";
-import { cookies } from "next/headers";
-import { createRouteHandlerClient, createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { setStaticParamsLocale } from "next-international/server";
+import { Metadata } from 'next';
+import { setStaticParamsLocale } from 'next-international/server';
 
-import { HeadCom } from "constants/HeadCom";
+import { HeadCom } from 'constants/HeadCom';
+import { LangType } from 'types/global.types';
 
-import { getScopedI18n } from "locales/server";
+import { getScopedI18n } from 'locales/server';
 
-import { serverSupabase } from "helpers/creatingSupabase";
+import { serverSupabase } from 'helpers/creatingSupabase';
 
-import { NewUserForm } from "components/molecules/NewUserForm/NewUserForm";
+import { NewUserForm } from 'components/molecules/NewUserForm/NewUserForm';
 
 export const metadata: Metadata = HeadCom('Site for new user');
 
-export default async function NewUser({ params: { locale } }: { params: { locale: string } }) {
+export default async function NewUser({ params: { locale } }: { params: { locale: LangType } }) {
   setStaticParamsLocale(locale);
-  
+
   const tAnotherForm = await getScopedI18n('AnotherForm');
   const tNewUser = await getScopedI18n('NewUser');
-  
+
   const supabase = await serverSupabase();
   const newUserTranslate = {
     title: tNewUser('title'),
@@ -33,6 +32,6 @@ export default async function NewUser({ params: { locale } }: { params: { locale
   };
 
   const userDataAuth = await supabase.auth.getUser();
-  
-  return <NewUserForm newUserTranslate={newUserTranslate} locale={locale} userDataAuth={userDataAuth} />
+
+  return <NewUserForm newUserTranslate={newUserTranslate} locale={locale} userDataAuth={userDataAuth} />;
 }

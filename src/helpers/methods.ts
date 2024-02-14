@@ -14,7 +14,7 @@ export const get = async (url: string, params: { queryData: QueryParamsType }) =
   const testParams = JSON.stringify(params);
   
   const res = await fetch(new URL(`${url}/?${testParams})}`), {
-    headers: { Cookie: cookies().toString() },
+    headers: { Cookie: cookies.toString() },
   });
 
   if (!res.ok) {

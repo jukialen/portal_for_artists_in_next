@@ -1,23 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { getI18n } from "locales/server";
+import { getI18n } from 'locales/server';
 
-import { HeaderButtons } from "components/atoms/HeaderButtons/HeaderButtons";
+import { HeaderButtons } from 'components/atoms/HeaderButtons/HeaderButtons';
 import { Nav } from 'components/atoms/Nav/Nav';
 
 import styles from './Header.module.scss';
 
 export const Header = async ({ locale }: { locale: string }) => {
-
   const t = await getI18n();
-  
+
   const headers = {
     title: t('Settings.title'),
     signIn: t('Nav.signIn'),
     signUp: t('Nav.signUp'),
   };
-  
+
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>
@@ -32,4 +31,4 @@ export const Header = async ({ locale }: { locale: string }) => {
       <HeaderButtons headers={headers} locale={locale} />
     </header>
   );
-}
+};

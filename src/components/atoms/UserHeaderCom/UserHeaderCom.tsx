@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,12 +7,12 @@ import { Avatar, Icon, Button, Input, InputGroup, InputRightElement, IconButton 
 
 import { cloudFrontUrl } from 'constants/links';
 
-import { UserType } from "types/global.types";
+import { UserType } from 'types/global.types';
 
 import styles from './UserHeaderCom.module.scss';
 import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
 import { SearchIcon } from '@chakra-ui/icons';
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 type HeadersType = {
   headers: {
@@ -26,39 +26,32 @@ type HeadersType = {
     signOut: string;
     signIn: string;
     signup: string;
-  },
+  };
   locale: string;
-  userData: UserType,
+  userData: UserType;
 };
 
 export const UserHeaderCom = ({ headers, locale, userData }: HeadersType) => {
   const [profileMenu, showProfileMenu] = useState(false);
   const [search, setSearch] = useState(false);
   const { push, refresh } = useRouter();
-  
+
   const supabase = createClientComponentClient();
-  console.log('userData', userData)
+
   const toggleSearch = () => setSearch(!search);
   const toggleProfileMenu = () => showProfileMenu(!profileMenu);
 
   const sign__out = async () => {
     try {
-      
-      const { error } = await supabase.auth.signOut();
-      console.log('sign out error', error);
-      // await fetch('/auth/signout', { method: 'POST' })
+      await supabase.auth.signOut();
       localStorage.setItem('menu', 'false');
       toggleProfileMenu();
       refresh();
-      // push(`/${locale}/`);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
-  console.log('userData', userData)
-  console.log('profileMenu', profileMenu)
-  
   return (
     <>
       <Button
@@ -136,13 +129,11 @@ export const UserHeaderCom = ({ headers, locale, userData }: HeadersType) => {
           </Link>
         </li>
         <li>
-          {/*<form action="/auth/signout" method="post">*/}
-            <Button colorScheme="yellow" onClick={sign__out} type="submit">
-              {headers.signOut}
-            </Button>
-          {/*</form>*/}
+          <Button colorScheme="yellow" onClick={sign__out} type="submit">
+            {headers.signOut}
+          </Button>
         </li>
       </ul>
     </>
-);
+  );
 };
