@@ -44,6 +44,8 @@ type Time = {
 
 export type LangType = 'en' | 'pl' | 'jp';
 
+export type IndexType = 'photographs' | 'videos' | 'animations';
+
 export type LanguageType = any;
 
 //FORMS & CONTROLLERS ELEMENTS
@@ -53,11 +55,20 @@ export type ResetFormType = {
   resetForm: any;
 };
 
-//USERS
 export type PlanType = {
   newPlan?: Plan;
 };
 
+//DATE OBJECT
+export type DateObjectType = {
+  second: string;
+  minute: string;
+  hour: string;
+  day: string;
+  yearDateSeparator: string;
+};
+
+//USERS
 export type UserType = Logo &
   PlanType &
   Time & {
@@ -113,6 +124,14 @@ export type FriendType = Time & {
   time?: string;
 };
 
+export  type FriendsListType = {
+  fileUrl: string;
+  pseudonym: string;
+  plan: string;
+  favorite: boolean;
+  createdAt: string;
+};
+
 //GROUPS
 export type GroupType = Time & {
   groupId?: string;
@@ -152,6 +171,28 @@ export type PostsType = Time &
     roleId: string;
     date?: string;
   };
+
+//GALLERY
+export type GalleryType = {
+  id: string;
+  author: string;
+  dataDateObject: DateObjectType;
+  locale: LangType;
+  firstGraphics?: FileType[];
+  firstAnimations?: FileType[];
+  firstVideos?: FileType[];
+  firstFriendsList?: FriendsListType[];
+  tDash?: { friends: string; groups: string; photos: string; animations: string; videos: string };
+  tGallery?: {
+    userPhotosTitle: string;
+    userAnimationsTitle: string;
+    userVideosTitle: string;
+    noPhotos: string;
+    noAnimations: string;
+    noVideos: string;
+  };
+  tFriends?: { friends: string; noFriends: string };
+}
 
 // COMMENTS
 export type NewCommentsType = {
@@ -204,13 +245,4 @@ export type LastCommentType = Comment & {
   groupRole: Role;
   fileId?: string;
   postId?: string;
-};
-
-//DATE OBJECT
-export type DateObjectType = {
-  second: string;
-  minute: string;
-  hour: string;
-  day: string;
-  yearDateSeparator: string;
 };
