@@ -9,9 +9,7 @@ import { ResetFormType } from 'types/global.types';
 
 import { backUrl } from 'constants/links';
 
-
-
-import { FormError } from 'components/molecules/FormError/FormError';
+import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './AddingPost.module.scss';
 
@@ -21,8 +19,6 @@ type NewPostType = { title: string; content: string };
 
 export const AddingPost = ({ groupId }: AddingPostType) => {
   const [showForm, setShowForm] = useState(false);
-
-
 
   const initialValues = { title: '', content: '' };
 
