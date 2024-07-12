@@ -1,7 +1,7 @@
 
 
 import { Alert, AlertIcon } from '@chakra-ui/react';
-import { useI18n } from "../../../locales/client";
+import { useI18n } from "locales/client";
 
 type AlertsType = {
   valueFields: string;
@@ -13,6 +13,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let status: string;
 
     switch (valueFields) {
+      case t('NewPassword.success'):
       case t('ResetPassword.success'):
       case t('NewUser.successSending'):
       case t('DeletionPost.deleted'):
@@ -52,6 +53,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let color: string;
 
     switch (valueFields) {
+      case t('NewPassword.success'):
       case t('ResetPassword.success'):
       case t('NewUser.successSending'):
       case t('DeletionPost.deleted'):
