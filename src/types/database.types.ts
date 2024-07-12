@@ -9,52 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      _LikedToUsers: {
-        Row: {
-          A: string
-          B: string
-        }
-        Insert: {
-          A: string
-          B: string
-        }
-        Update: {
-          A?: string
-          B?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "_LikedToUsers_A_fkey"
-            columns: ["A"]
-            isOneToOne: false
-            referencedRelation: "Liked"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      _RolesToUsersGroups: {
-        Row: {
-          A: string
-          B: string
-        }
-        Insert: {
-          A: string
-          B: string
-        }
-        Update: {
-          A?: string
-          B?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "_RolesToUsersGroups_B_fkey"
-            columns: ["B"]
-            isOneToOne: false
-            referencedRelation: "UsersGroups"
-            referencedColumns: ["usersGroupsId"]
-          }
-        ]
-      }
       Comments: {
         Row: {
           adModRoleId: string
@@ -64,17 +18,17 @@ export type Database = {
           createdAt: string
           postId: string
           roleId: string
-          updatedAt: string
+          updatedAt: string | null
         }
         Insert: {
           adModRoleId: string
-          authorId?: string
+          authorId: string
           comment: string
-          commentId: string
+          commentId?: string
           createdAt?: string
           postId: string
           roleId: string
-          updatedAt: string
+          updatedAt?: string | null
         }
         Update: {
           adModRoleId?: string
@@ -84,18 +38,32 @@ export type Database = {
           createdAt?: string
           postId?: string
           roleId?: string
-          updatedAt?: string
+          updatedAt?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "Comments_postId_fkey"
+            foreignKeyName: "public_Comments_adModRoleId_fkey"
+            columns: ["adModRoleId"]
+            isOneToOne: false
+            referencedRelation: "Roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_Comments_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_Comments_postId_fkey"
             columns: ["postId"]
             isOneToOne: false
             referencedRelation: "Posts"
             referencedColumns: ["postId"]
           },
           {
-            foreignKeyName: "Comments_roleId_fkey"
+            foreignKeyName: "public_Comments_roleId_fkey"
             columns: ["roleId"]
             isOneToOne: false
             referencedRelation: "Roles"
@@ -113,18 +81,18 @@ export type Database = {
           profileType: boolean
           shortDescription: string | null
           tags: Database["public"]["Enums"]["Tags"]
-          updatedAt: string
+          updatedAt: string | null
         }
         Insert: {
           authorId?: string | null
           createdAt?: string
-          fileId: string
+          fileId?: string
           groupId?: string | null
           name: string
           profileType?: boolean
           shortDescription?: string | null
           tags: Database["public"]["Enums"]["Tags"]
-          updatedAt: string
+          updatedAt?: string | null
         }
         Update: {
           authorId?: string | null
@@ -135,29 +103,22 @@ export type Database = {
           profileType?: boolean
           shortDescription?: string | null
           tags?: Database["public"]["Enums"]["Tags"]
-          updatedAt?: string
+          updatedAt?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "Files_name_fkey"
-            columns: ["name"]
-            isOneToOne: false
-            referencedRelation: "Friends_View"
-            referencedColumns: ["profilePhoto"]
-          },
-          {
-            foreignKeyName: "Files_name_fkey"
-            columns: ["name"]
+            foreignKeyName: "public_Files_authorId_fkey"
+            columns: ["authorId"]
             isOneToOne: false
             referencedRelation: "Users"
-            referencedColumns: ["profilePhoto"]
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "logo"
-            columns: ["name"]
+            foreignKeyName: "public_Files_groupId_fkey"
+            columns: ["groupId"]
             isOneToOne: false
             referencedRelation: "Groups"
-            referencedColumns: ["logo"]
+            referencedColumns: ["groupId"]
           }
         ]
       }
@@ -169,16 +130,16 @@ export type Database = {
           fileId: string
           id: string
           roleId: string
-          updatedAt: string
+          updatedAt: string | null
         }
         Insert: {
           authorId: string
           comment: string
           createdAt?: string
           fileId: string
-          id: string
+          id?: string
           roleId: string
-          updatedAt: string
+          updatedAt?: string | null
         }
         Update: {
           authorId?: string
@@ -187,18 +148,25 @@ export type Database = {
           fileId?: string
           id?: string
           roleId?: string
-          updatedAt?: string
+          updatedAt?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "FilesComments_fileId_fkey"
+            foreignKeyName: "public_FilesComments_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_FilesComments_fileId_fkey"
             columns: ["fileId"]
             isOneToOne: false
             referencedRelation: "Files"
             referencedColumns: ["fileId"]
           },
           {
-            foreignKeyName: "FilesComments_roleId_fkey"
+            foreignKeyName: "public_FilesComments_roleId_fkey"
             columns: ["roleId"]
             isOneToOne: false
             referencedRelation: "Roles"
@@ -212,23 +180,23 @@ export type Database = {
           favorite: boolean
           friendId: string
           id: string
-          updatedAt: string
+          updatedAt: string | null
           usernameId: string
         }
         Insert: {
           createdAt?: string
           favorite?: boolean
-          friendId?: string
+          friendId: string
           id: string
-          updatedAt: string
-          usernameId?: string
+          updatedAt?: string | null
+          usernameId: string
         }
         Update: {
           createdAt?: string
           favorite?: boolean
           friendId?: string
           id?: string
-          updatedAt?: string
+          updatedAt?: string | null
           usernameId?: string
         }
         Relationships: [
@@ -257,17 +225,17 @@ export type Database = {
           logo: string | null
           name: string
           regulation: string | null
-          updatedAt: string
+          updatedAt: string | null
         }
         Insert: {
           adminId: string
           createdAt?: string
           description: string
-          groupId: string
+          groupId?: string
           logo?: string | null
           name: string
           regulation?: string | null
-          updatedAt: string
+          updatedAt?: string | null
         }
         Update: {
           adminId?: string
@@ -277,7 +245,7 @@ export type Database = {
           logo?: string | null
           name?: string
           regulation?: string | null
-          updatedAt?: string
+          updatedAt?: string | null
         }
         Relationships: []
       }
@@ -290,17 +258,17 @@ export type Database = {
           lastCommentId: string
           roleId: string
           subCommentId: string
-          updatedAt: string
+          updatedAt: string | null
         }
         Insert: {
           adModRoleId?: string | null
           authorId: string
           createdAt?: string
           lastComment: string
-          lastCommentId: string
+          lastCommentId?: string
           roleId: string
           subCommentId: string
-          updatedAt: string
+          updatedAt?: string | null
         }
         Update: {
           adModRoleId?: string | null
@@ -310,18 +278,32 @@ export type Database = {
           lastCommentId?: string
           roleId?: string
           subCommentId?: string
-          updatedAt?: string
+          updatedAt?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "LastComments_roleId_fkey"
+            foreignKeyName: "public_LastComments_adModRoleId_fkey"
+            columns: ["adModRoleId"]
+            isOneToOne: false
+            referencedRelation: "Roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_LastComments_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_LastComments_roleId_fkey"
             columns: ["roleId"]
             isOneToOne: false
             referencedRelation: "Roles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "LastComments_subCommentId_fkey"
+            foreignKeyName: "public_LastComments_subCommentId_fkey"
             columns: ["subCommentId"]
             isOneToOne: false
             referencedRelation: "SubComments"
@@ -331,27 +313,37 @@ export type Database = {
       }
       Liked: {
         Row: {
+          fileId: string | null
           id: string
           postId: string
           userId: string
         }
         Insert: {
-          id: string
+          fileId?: string | null
+          id?: string
           postId: string
           userId: string
         }
         Update: {
+          fileId?: string | null
           id?: string
           postId?: string
           userId?: string
         }
         Relationships: [
           {
-            foreignKeyName: "Liked_postId_fkey"
-            columns: ["postId"]
+            foreignKeyName: "public_Liked_fileId_fkey"
+            columns: ["fileId"]
             isOneToOne: false
-            referencedRelation: "Posts"
-            referencedColumns: ["postId"]
+            referencedRelation: "Files"
+            referencedColumns: ["fileId"]
+          },
+          {
+            foreignKeyName: "public_Liked_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -364,21 +356,21 @@ export type Database = {
           groupId: string
           likes: number
           postId: string
-          roleId: string | null
+          roleId: string
           shared: number
           title: string
           updatedAt: string
         }
         Insert: {
           authorId: string
-          commented?: number
+          commented: number
           content: string
           createdAt?: string
           groupId: string
-          likes?: number
-          postId: string
-          roleId?: string | null
-          shared?: number
+          likes: number
+          postId?: string
+          roleId: string
+          shared: number
           title: string
           updatedAt: string
         }
@@ -390,21 +382,28 @@ export type Database = {
           groupId?: string
           likes?: number
           postId?: string
-          roleId?: string | null
+          roleId?: string
           shared?: number
           title?: string
           updatedAt?: string
         }
         Relationships: [
           {
-            foreignKeyName: "Posts_groupId_fkey"
+            foreignKeyName: "public_Posts_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_Posts_groupId_fkey"
             columns: ["groupId"]
             isOneToOne: false
             referencedRelation: "Groups"
             referencedColumns: ["groupId"]
           },
           {
-            foreignKeyName: "Posts_roleId_fkey"
+            foreignKeyName: "public_Posts_roleId_fkey"
             columns: ["roleId"]
             isOneToOne: false
             referencedRelation: "Roles"
@@ -414,6 +413,7 @@ export type Database = {
       }
       Roles: {
         Row: {
+          commentId: string | null
           fileId: string | null
           groupId: string | null
           id: string
@@ -422,14 +422,16 @@ export type Database = {
           userId: string
         }
         Insert: {
+          commentId?: string | null
           fileId?: string | null
           groupId?: string | null
-          id: string
+          id?: string
           postId?: string | null
           role?: Database["public"]["Enums"]["Role"]
           userId: string
         }
         Update: {
+          commentId?: string | null
           fileId?: string | null
           groupId?: string | null
           id?: string
@@ -449,7 +451,7 @@ export type Database = {
           roleId: string
           subComment: string
           subCommentId: string
-          updatedAt: string
+          updatedAt: string | null
         }
         Insert: {
           adModRoleId?: string | null
@@ -459,8 +461,8 @@ export type Database = {
           fileCommentId?: string | null
           roleId: string
           subComment: string
-          subCommentId: string
-          updatedAt: string
+          subCommentId?: string
+          updatedAt?: string | null
         }
         Update: {
           adModRoleId?: string | null
@@ -471,25 +473,39 @@ export type Database = {
           roleId?: string
           subComment?: string
           subCommentId?: string
-          updatedAt?: string
+          updatedAt?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "SubComments_commentId_fkey"
-            columns: ["commentId"]
+            foreignKeyName: "public_SubComments_adModRoleId_fkey"
+            columns: ["adModRoleId"]
             isOneToOne: false
+            referencedRelation: "Roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_SubComments_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_SubComments_commentId_fkey"
+            columns: ["commentId"]
+            isOneToOne: true
             referencedRelation: "Comments"
             referencedColumns: ["commentId"]
           },
           {
-            foreignKeyName: "SubComments_fileCommentId_fkey"
+            foreignKeyName: "public_SubComments_fileCommentId_fkey"
             columns: ["fileCommentId"]
             isOneToOne: false
             referencedRelation: "FilesComments"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "SubComments_roleId_fkey"
+            foreignKeyName: "public_SubComments_roleId_fkey"
             columns: ["roleId"]
             isOneToOne: false
             referencedRelation: "Roles"
@@ -499,6 +515,7 @@ export type Database = {
       }
       Users: {
         Row: {
+          createdAt: string | null
           description: string | null
           email: string | null
           id: string
@@ -510,6 +527,7 @@ export type Database = {
           username: string | null
         }
         Insert: {
+          createdAt?: string | null
           description?: string | null
           email?: string | null
           id: string
@@ -521,6 +539,7 @@ export type Database = {
           username?: string | null
         }
         Update: {
+          createdAt?: string | null
           description?: string | null
           email?: string | null
           id?: string
@@ -531,7 +550,15 @@ export type Database = {
           updatedAt?: string | null
           username?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_Users_profilePhoto_fkey"
+            columns: ["profilePhoto"]
+            isOneToOne: false
+            referencedRelation: "Files"
+            referencedColumns: ["name"]
+          }
+        ]
       }
       UsersGroups: {
         Row: {
@@ -540,7 +567,7 @@ export type Database = {
           groupId: string
           name: string
           roleId: string
-          updatedAt: string
+          updatedAt: string | null
           userId: string
           usersGroupsId: string
         }
@@ -550,9 +577,9 @@ export type Database = {
           groupId: string
           name: string
           roleId: string
-          updatedAt: string
+          updatedAt?: string | null
           userId: string
-          usersGroupsId: string
+          usersGroupsId?: string
         }
         Update: {
           createdAt?: string
@@ -560,40 +587,44 @@ export type Database = {
           groupId?: string
           name?: string
           roleId?: string
-          updatedAt?: string
+          updatedAt?: string | null
           userId?: string
           usersGroupsId?: string
         }
         Relationships: [
           {
-            foreignKeyName: "UsersGroups_groupId_fkey"
+            foreignKeyName: "public_UsersGroups_groupId_fkey"
             columns: ["groupId"]
             isOneToOne: false
             referencedRelation: "Groups"
             referencedColumns: ["groupId"]
           },
           {
-            foreignKeyName: "UsersGroups_roleId_fkey"
+            foreignKeyName: "public_UsersGroups_name_fkey"
+            columns: ["name"]
+            isOneToOne: false
+            referencedRelation: "Groups"
+            referencedColumns: ["name"]
+          },
+          {
+            foreignKeyName: "public_UsersGroups_roleId_fkey"
             columns: ["roleId"]
             isOneToOne: false
             referencedRelation: "Roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_UsersGroups_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "Users"
             referencedColumns: ["id"]
           }
         ]
       }
     }
     Views: {
-      Friends_View: {
-        Row: {
-          createdAt: string | null
-          favorite: boolean | null
-          plan: Database["public"]["Enums"]["Plan"] | null
-          profilePhoto: string | null
-          pseudonym: string | null
-          updatedAt: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       [_ in never]: never
