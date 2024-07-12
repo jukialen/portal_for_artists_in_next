@@ -6,14 +6,14 @@ import { useScopedI18n } from 'locales/client';
 
 import styles from './Categories.module.scss';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-import realistic from 'public/realistic.jpg';
-import manga from 'public/manga.jpg';
-import anime from 'public/anime.jpg';
-import comics from 'public/comics.jpg';
-import photograph from 'public/photograph.jpg';
-import animations from 'public/animations.jpg';
-import videos from 'public/videos.jpg';
-import others from 'public/others.jpg';
+import realistic from '../../../../public/realistic.jpg';
+import manga from '../../../../public/manga.jpg';
+import anime from '../../../../public/anime.jpg';
+import comics from '../../../../public/comics.jpg';
+import photograph from '../../../../public/photograph.jpg';
+import animations from '../../../../public/animations.jpg';
+import videos from '../../../../public/videos.jpg';
+import others from '../../../../public/others.jpg';
 
 export const Categories = () => {
   const pathname = usePathname()

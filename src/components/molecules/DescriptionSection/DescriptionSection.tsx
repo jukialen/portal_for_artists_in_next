@@ -2,16 +2,14 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Button, Divider, IconButton, Textarea } from '@chakra-ui/react';
 
 import { ResetFormType } from 'types/global.types';
 
 import { backUrl } from 'constants/links';
 
-
-
-import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { FormError } from 'components/molecules/FormError/FormError';
+import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './DescriptionSection.module.scss';
 import { EditIcon } from '@chakra-ui/icons';

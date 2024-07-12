@@ -26,7 +26,7 @@ import { Tags, EventType, ResetFormType } from 'types/global.types';
 
 import { backUrl, darkMode } from 'constants/links';
 
-import { FormError } from 'components/molecules/FormError/FormError';
+import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './FileUpload.module.scss';

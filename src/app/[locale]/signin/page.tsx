@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { LangType } from "types/global.types";
+import { LangType } from 'types/global.types';
 
 import { HeadCom } from 'constants/HeadCom';
 
@@ -19,7 +19,7 @@ export default async function Login({ params: { locale } }: { params: { locale: 
   setStaticParamsLocale(locale);
   const t = await getI18n();
   const tNavForm = await getScopedI18n('NavForm');
-  
+
   return (
     <>
       <div className={styles.login}>

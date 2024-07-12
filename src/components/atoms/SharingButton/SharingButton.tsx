@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { IconButton } from '@chakra-ui/react';
 
-import { Tags } from 'src/types/global.types';
+import { Tags } from 'types/global.types';
 
 import styles from './SharingButton.module.scss';
 import { AiOutlineShareAlt } from 'react-icons/ai';

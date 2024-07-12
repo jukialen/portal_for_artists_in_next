@@ -16,7 +16,7 @@ import { initialValuesForContact } from 'constants/objects';
 import { darkMode } from 'constants/links';
 
 import { ModeContext } from 'providers/ModeProvider';
-import { FormError } from 'components/molecules/FormError/FormError';
+import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './ContactForm.module.scss';
 

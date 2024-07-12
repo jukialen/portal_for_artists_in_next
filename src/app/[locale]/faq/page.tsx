@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { FaqItems } from 'components/atoms/FaqItems/FaqItems';
-import { AccordionWrapper } from 'components/molecules/AccordionWrapper/AccordionWrapper';
+import { AccordionWrapper } from 'components/atoms/AccordionWrapper/AccordionWrapper';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 

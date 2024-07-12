@@ -1,4 +1,4 @@
-import { MemberType } from 'src/types/global.types';
+import { MemberType } from 'types/global.types';
 
 export const sortMembers = () => (a: MemberType, b: MemberType) => {
   const pseudonymA = a.pseudonym;

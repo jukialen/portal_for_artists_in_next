@@ -22,9 +22,10 @@ export const Providers = ({ locale }: { locale: LangType }) => {
 
   const signInWithProvider = async (provider: Provider) => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      await supabase.auth.signInWithOAuth({
         provider: provider,
       });
+      
       permanentRedirect(`/${locale}/app`);
     } catch (e: any) {
       toast({
