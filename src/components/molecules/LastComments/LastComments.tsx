@@ -1,74 +1,39 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
 
 import { LastCommentType } from 'types/global.types';
 import { backUrl } from 'constants/links';
-
-import { getDate } from 'helpers/getDate';
-
-import { dateData } from 'helpers/dateData';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
 import { LastComment } from 'components/atoms/LastComment/LastComment';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
-type LastCommentsType = { subCommentId: string; fileId?: string; postId?: string };
+type LastCommentsType = { subCommentId: string; fileId?: string; };
 
-export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType) => {
+export const LastComments = ({ subCommentId, fileId }: LastCommentsType) => {
   const [lastCommentsArray, setLastCommentsArray] = useState<LastCommentType[]>([]);
-  const [lastVisible, setLastVisible] = useState<string>();
+  const [lastVisible, setLastVisible] = useState<string | null>(null);
   let [i, setI] = useState(1);
-
-  const { locale } = useRouter();
-  const dataDateObject = dateData();
-
+  
   const maxItems = 5;
+  
+  const params = encodeURI(
+    JSON.stringify({
+      commentId: subCommentId || fileId,
+      where: !!subCommentId ? 'subCommentId' : 'fileId',
+      maxItems,
+      cursor: lastVisible,
+    }),
+  );
 
   const firstLastComments = async () => {
     try {
-      const lastComments: { data: LastCommentType[] } = await axios.get(`${backUrl}/last-comments/all`, {
-        params: {
-          orderBy: 'createdAt, desc',
-          where: { subCommentId },
-          limit: maxItems,
-        },
-      });
+      const firstPage: LastCommentType[] = await fetch(`${backUrl}/api/last-comments?${params}`, { method: 'GET' }).then(
+        (data) => data.json(),
+      );
 
-      const lastCommentArray: LastCommentType[] = [];
-      for (const _last of lastComments.data) {
-        const {
-          lastCommentId,
-          lastComment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          groupRole,
-          authorId,
-          subCommentId,
-          createdAt,
-          updatedAt,
-        } = _last;
-
-        lastCommentArray.push({
-          lastCommentId,
-          lastComment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          groupRole,
-          authorId,
-          subCommentId,
-          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
-        });
-      }
-
-      setLastCommentsArray(lastCommentArray);
-      lastCommentArray.length === maxItems &&
-        setLastVisible(lastCommentArray[lastCommentArray.length - 1].subCommentId);
+      setLastCommentsArray(firstPage);
+      firstPage.length === maxItems && setLastVisible(firstPage[firstPage.length - 1].createdAt!);
     } catch (e) {
       console.error(e);
     }
@@ -80,49 +45,14 @@ export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType)
 
   const nextShowingComments = async () => {
     try {
-      const lastComments: { data: LastCommentType[] } = await axios.get(`${backUrl}/last-comments/all`, {
-        params: {
-          orderBy: 'createdAt, desc',
-          where: { subCommentId },
-          limit: maxItems,
-          cursor: lastVisible,
-        },
-      });
+      const lastComments: LastCommentType[] = await fetch(`${backUrl}/api/last-comments?${params}`, {
+        method: 'GET',
+      }).then((data) => data.json());
+      
+      lastComments.length === maxItems &&
+        setLastVisible(lastComments[lastComments.length - 1].createdAt!);
 
-      const nextCommentArray: LastCommentType[] = [];
-
-      for (const _last of lastComments.data) {
-        const {
-          lastCommentId,
-          lastComment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          groupRole,
-          authorId,
-          subCommentId,
-          createdAt,
-          updatedAt,
-        } = _last;
-        nextCommentArray.push({
-          lastCommentId,
-          lastComment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          groupRole,
-          authorId,
-          subCommentId,
-          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
-        });
-      }
-
-      nextCommentArray.length === maxItems &&
-        setLastVisible(nextCommentArray[nextCommentArray.length - 1].subCommentId);
-
-      const nextArray = lastCommentsArray.concat(...nextCommentArray);
+      const nextArray = lastCommentsArray.concat(...lastComments);
       setLastCommentsArray(nextArray);
       setI(++i);
     } catch (e) {
@@ -137,15 +67,16 @@ export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType)
           (
             {
               lastCommentId,
+              subCommentId,
               lastComment,
-              pseudonym,
-              profilePhoto,
+              authorName,
+              authorProfilePhoto,
+              authorId,
               role,
               roleId,
               groupRole,
-              authorId,
-              subCommentId,
               date,
+              profilePhoto,
             }: LastCommentType,
             index,
           ) => (
@@ -153,16 +84,15 @@ export const LastComments = ({ subCommentId, fileId, postId }: LastCommentsType)
               <LastComment
                 lastCommentId={lastCommentId}
                 lastComment={lastComment}
-                pseudonym={pseudonym}
-                profilePhoto={profilePhoto}
+                authorName={authorName}
                 role={role}
                 roleId={roleId}
                 groupRole={groupRole}
                 authorId={authorId}
                 subCommentId={subCommentId}
-                fileId={fileId}
-                postId={postId}
                 date={date}
+                authorProfilePhoto={authorProfilePhoto}
+                profilePhoto={profilePhoto}
               />
             </DCProvider>
           ),

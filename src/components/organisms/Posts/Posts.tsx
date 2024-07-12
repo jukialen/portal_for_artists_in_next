@@ -1,200 +1,82 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
+'use client';
 
-import { PostsType } from 'types/global.types';
+import { useState } from 'react';
 
-import { backUrl } from 'constants/links';
+import { cloudFrontUrl } from 'constants/links';
+import { LangType, PostsType } from 'types/global.types';
 
 import { dateData } from 'helpers/dateData';
-
-
 import { getDate } from 'helpers/getDate';
 
 import { Post } from 'components/molecules/Post/Post';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './Posts.module.scss';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-type GroupsPropsType = { name: string; groupId: string };
+type GroupsPropsType = { groupId: string; locale: LangType; userId: string; pseudonym: string };
 
-export const Posts = ({ name, groupId }: GroupsPropsType) => {
+export const Posts = ({ groupId, locale, userId, pseudonym }: GroupsPropsType) => {
   const [postsArray, setPostsArray] = useState<PostsType[]>([]);
   const [lastVisible, setLastVisible] = useState('');
   let [i, setI] = useState(1);
 
-  const { locale } = useRouter();
   const dataDateObject = dateData();
 
   const maxItems = 30;
 
-  const firstPosts = async () => {
-    try {
-      const postArray: PostsType[] = [];
+  const supabase = createClientComponentClient();
+  const nextPosts = async (locale: LangType, groupId: string) => {
+    let nextArray: PostsType[] = [];
 
-      const posts: { data: PostsType[] } = await axios.get(`${backUrl}/posts/all`, {
-        params: {
-          queryData: {
-            orderBy: { createdAt: 'desc' },
-            where: { groupId },
-            limit: maxItems,
-          },
-        },
+    const { data } = await supabase
+      .from('Posts')
+      .select('*, Users (pseudonym, profilePhoto), Roles (id)')
+      .eq('groupId', groupId)
+      .order('createdAt', { ascending: false })
+      .lt('createdAt', lastVisible)
+      .limit(maxItems);
+
+    for (const post of data!) {
+      const { title, content, likes, shared, commented, authorId, groupId, createdAt, updatedAt, Users, Roles } = post;
+
+      const { data } = await supabase.from('Liked').select('id').match({ postId: postId, userId: authorId }).single();
+
+      postsArray.push({
+        authorName: Users?.pseudonym!,
+        authorProfilePhoto: `https://${cloudFrontUrl}/${Users?.profilePhoto!}`,
+        liked: !!data?.id,
+        postId,
+        title,
+        content,
+        likes,
+        shared,
+        commented,
+        authorId,
+        groupId,
+        roleId: Roles?.id!,
+        date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
       });
-
-      for (const post of posts.data) {
-        const {
-          title,
-          content,
-          pseudonym,
-          profilePhoto,
-          likes,
-          liked,
-          shared,
-          commented,
-          groupId,
-          authorId,
-          postId,
-          createdAt,
-          updatedAt,
-          roleId,
-        } = post;
-
-        postArray.push({
-          title,
-          content,
-          pseudonym,
-          profilePhoto,
-          likes,
-          liked,
-          shared,
-          commented,
-          groupId,
-          authorId,
-          postId,
-          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
-          name,
-          roleId,
-        });
-      }
-
-      setLastVisible(postArray[postArray.length - 1].postId!);
-      setPostsArray(postArray);
-    } catch (e) {
-      console.error(e);
     }
-  };
-
-  useEffect(() => {
-    !!name && firstPosts();
-  }, [name, locale]);
-
-  const nextPosts = async () => {
-    try {
-      const nextArray: PostsType[] = [];
-
-      const posts: { data: PostsType[] } = await axios.get(`${backUrl}/posts/all`, {
-        params: {
-          queryData: {
-            orderBy: 'createdAt, desc',
-            where: { groupId },
-            limit: maxItems,
-            cursor: lastVisible,
-          },
-        },
-      });
-
-      for (const post of posts.data) {
-        const {
-          title,
-          content,
-          pseudonym,
-          profilePhoto,
-          likes,
-          liked,
-          shared,
-          commented,
-          groupId,
-          authorId,
-          postId,
-          roleId,
-          createdAt,
-          updatedAt,
-        } = post;
-
-        nextArray.push({
-          title,
-          content,
-          pseudonym,
-          profilePhoto,
-          likes,
-          liked,
-          shared,
-          commented,
-          groupId,
-          authorId,
-          postId,
-          roleId,
-          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
-          name,
-        });
-      }
-
-      nextArray.length === maxItems && setLastVisible(nextArray[nextArray.length - 1].postId!);
-      const newArray = postsArray.concat(nextArray);
-      setI(++i);
-      setPostsArray(newArray);
-    } catch (e) {
-      console.error(e);
-    }
+    nextArray.length === maxItems && setLastVisible(nextArray[nextArray.length - 1].createdAt!);
+    const newArray = postsArray.concat(nextArray);
+    setI(++i);
+    setPostsArray(newArray);
   };
 
   return (
     <section className={styles.posts}>
       {postsArray.length > 0 ? (
-        postsArray.map(
-          (
-            {
-              title,
-              content,
-              pseudonym,
-              profilePhoto,
-              likes,
-              liked,
-              shared,
-              commented,
-              groupId,
-              authorId,
-              postId,
-              roleId,
-              date,
-            }: PostsType,
-            index,
-          ) => (
-            <Post
-              key={index}
-              title={title}
-              content={content}
-              pseudonym={pseudonym}
-              profilePhoto={profilePhoto}
-              likes={likes}
-              liked={liked}
-              shared={shared}
-              commented={commented}
-              date={date}
-              name={name}
-              postId={postId}
-              roleId={roleId}
-              authorId={authorId}
-              groupId={groupId}
-            />
-          ),
-        )
+        postsArray.map((post: PostsType, index) => (
+          <Post key={index} userId={userId} pseudonym={pseudonym} postOnGroup={post!} />
+        ))
       ) : (
         <p className={styles.noPosts}>{language?.Posts.noPosts}</p>
       )}
 
-      {!!lastVisible && postsArray.length === maxItems * i && <MoreButton nextElements={nextPosts} />}
+      {!!lastVisible && postsArray.length === maxItems * i && (
+        <MoreButton nextElements={() => nextPosts(locale, groupId)} />
+      )}
     </section>
   );
 };

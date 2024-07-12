@@ -1,14 +1,21 @@
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { setStaticParamsLocale } from 'next-international/server';
-import { usePathname } from 'next/navigation';
+import { notFound, usePathname } from 'next/navigation';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
+import { cloudFrontUrl } from 'constants/links';
 import { HeadCom } from 'constants/HeadCom';
+import { DateObjectType, LangType, PostsType } from 'types/global.types';
+import { Database } from 'types/database.types';
 
 import { dateData } from 'helpers/dateData';
+import { getDate } from 'helpers/getDate';
+import { getUserData } from 'helpers/getUserData';
 
-import { PostWrapper } from 'components/organisms/PostWrapper/PostWrapper';
+import { Post } from 'components/molecules/Post/Post';
 
-export async function generateMetadata({ locale, post }: { locale: string; post: string }): Promise<Metadata> {
+export async function generateMetadata({ post }: { post: string }): Promise<Metadata> {
   const split = post.split('/');
   const containUrl = split.includes('https') || split.includes('http');
 
@@ -17,8 +24,56 @@ export async function generateMetadata({ locale, post }: { locale: string; post:
   return { ...HeadCom(`${name} user post subpage`) };
 }
 
-export default async function PostFromGroup({ params: { locale } }: { params: { locale: string } }) {
+const supabase = createServerComponentClient<Database>({ cookies });
+const post = async (locale: LangType, postId: string, name: string, dataDateObject: DateObjectType) => {
+  let postsArray: PostsType = {
+    authorId: '',
+    authorName: '',
+    authorProfilePhoto: '',
+    commented: 0,
+    content: '',
+    groupId: '',
+    liked: false,
+    likes: 0,
+    roleId: '',
+    shared: 0,
+    title: '',
+  };
+
+  const { data } = await supabase
+    .from('Posts')
+    .select('*, Users (pseudonym, profilePhoto), Roles (id)')
+    .match({ postId: postId, title: name })
+    .order('createdAt', { ascending: false });
+
+  for (const post of data!) {
+    const { title, content, likes, shared, commented, authorId, groupId, createdAt, updatedAt, Users, Roles } =
+      post;
+
+    const { data } = await supabase.from('Liked').select('id').match({ postId: postId, userId: authorId });
+    postsArray = {
+      authorName: Users?.pseudonym!,
+      authorProfilePhoto: `https://${cloudFrontUrl}/${Users?.profilePhoto!}`,
+      liked: !!data?.[0].id,
+      postId,
+      title,
+      content,
+      likes,
+      shared,
+      commented,
+      authorId,
+      groupId,
+      roleId: Roles?.id!,
+      date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+    };
+  }
+  return postsArray;
+};
+
+export default async function PostFromGroup({ locale }: { locale: LangType }) {
   setStaticParamsLocale(locale);
+
+  const userData = await getUserData();
 
   const pathname = usePathname();
 
@@ -30,5 +85,9 @@ export default async function PostFromGroup({ params: { locale } }: { params: { 
   const name = decodeURIComponent(split[containUrl ? 4 : 2]);
   const postId = decodeURIComponent(split[containUrl ? 6 : 4]);
 
-  return <PostWrapper locale={locale} name={name} postId={postId} dataDateObject={dataDateObject} />;
+  const postOnGroup = await post(locale, postId, name, dataDateObject);
+
+  if (!postOnGroup) return notFound();
+
+  return <Post userId={userData?.id!} pseudonym={userData?.pseudonym!} postOnGroup={postOnGroup!} />;
 }

@@ -5,13 +5,14 @@ import Image from 'next/image';
 import { Link } from '@chakra-ui/next-js';
 import axios from 'axios';
 
-import { useUserData } from 'hooks/useUserData';
+import { useCurrentLocale, useI18n, useScopedI18n } from "locales/client";
 
 import { backUrl, cloudFrontUrl } from 'constants/links';
 
+import { UserType } from "types/global.types";
+
 import styles from './Friends.module.scss';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-import { useCurrentLocale, useI18n, useScopedI18n } from "locales/client";
 
 type FriendsListArrayType = {
   pseudonym: string;
@@ -19,7 +20,7 @@ type FriendsListArrayType = {
   favorites: number;
 };
 
-export const Friends = () => {
+export const Friends = ({ userData } : { userData: UserType }) => {
   const [favoriteFriendArray, setFavoriteFriendArray] = useState<FriendsListArrayType[]>([]);
   const [open, setOpen] = useState(false);
 
@@ -27,8 +28,6 @@ export const Friends = () => {
   const tAside = useScopedI18n('Aside');
   const locale = useCurrentLocale();
   
-  const userData = useUserData();
-
   const arrowIcons = '1.5rem';
   const maxItems = 5;
   const changeOpenFriends = () => setOpen(!open);
@@ -40,7 +39,7 @@ export const Friends = () => {
       params: {
         queryData: {
           where: {
-            AND: [{ usernameId: userData?.id }, { favorite: true }],
+            AND: [{ usernameId: userData.id }, { favorite: true }],
           },
           orderBy: { friendId: 'desc' },
           limit: maxItems,

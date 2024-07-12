@@ -1,151 +1,110 @@
-// 'use client'
+'use client';
 
-// import { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import axios from 'axios';
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
-import { FileType, UserType } from 'types/global.types';
+import { DateObjectType, FileType, GalleryType, LangType } from 'types/global.types';
 
-import { backUrl, cloudFrontUrl } from 'constants/links';
+import { cloudFrontUrl } from 'constants/links';
 
 import { getDate } from 'helpers/getDate';
-
-import { dateData } from 'helpers/dateData';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Videos } from 'components/molecules/Videos/Videos';
-// import { cookies } from "next/headers";
+import { selectFiles } from 'constants/selects';
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-export const VideoGallery = ({ id, pseudonym, language }: UserType) => {
-  // const [userVideos, setUserVideos] = useState<FileType[]>([]);
-  // const [lastVisible, setLastVisible] = useState<FileType>();
-  // let [i, setI] = useState(1);
+export const VideoGallery = ({ id, author, tGallery, locale, dataDateObject, firstVideos }: GalleryType) => {
+  const [userVideos, setUserVideos] = useState(firstVideos!);
+  const [lastVisible, setLastVisible] = useState<FileType>();
+  let [i, setI] = useState(1);
 
-  const pathname = usePathname()
-  // const { locale } = useRouter();
-  // const dataDateObject = dateData();
+  const pathname = usePathname();
 
-  // console.log('cookie', cookies().toString())
   const maxItems = 30;
 
-  // const firstVideos = async () => {
-  //   try {
-  //     const firstPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
-  //       params: {
-  //         queryData: {
-  //           where: {
-  //             AND: [{ tags: 'videos' }, { authorId: id }],
-  //           },
-  //           orderBy: { name: 'desc' },
-  //           limit: maxItems,
-  //           cursor: lastVisible,
-  //         },
-  //       },
-  //     });
-  //
-  //     const filesArray: FileType[] = [];
-  //
-  //     for (const file of firstPage.data) {
-  //       const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
-  //
-  //       filesArray.push({
-  //         fileId,
-  //         name,
-  //         fileUrl: `https://${cloudFrontUrl}/${file.name}`,
-  //         pseudonym,
-  //         shortDescription,
-  //         profilePhoto,
-  //         authorId,
-  //         time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-  //       });
-  //     }
-  //
-  //     setUserVideos(filesArray);
-  //     filesArray.length === maxItems && setLastVisible(filesArray[filesArray.length - 1]);
-  //   } catch (e) {
-  //     console.log('No such document!', e);
-  //   }
-  // };
-  //
-  // useEffect(() => {
-  //   !!id && firstVideos();
-  // }, [id]);
+  const supabase = createClientComponentClient();
+  const nextElements = async (locale: LangType, maxItems: number, authorId: string, dataDateObject: DateObjectType) => {
+    try {
+      const filesArray: FileType[] = [];
 
-  // const nextElements = async () => {
-  //   try {
-  //     const nextPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
-  //       params: {
-  //         queryData: {
-  //           where: {
-  //             AND: [{ tags: 'videos' }, { authorId: id }],
-  //           },
-  //           orderBy: { name: 'desc' },
-  //           limit: maxItems,
-  //           cursor: lastVisible,
-  //         },
-  //       },
-  //     });
-  //
-  //     const nextArray: FileType[] = [];
-  //
-  //     for (const file of nextPage.data) {
-  //       const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
-  //
-  //       nextArray.push({
-  //         fileId,
-  //         name,
-  //         fileUrl: `https://${cloudFrontUrl}/${file.name}`,
-  //         pseudonym,
-  //         shortDescription,
-  //         profilePhoto,
-  //         authorId,
-  //         time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-  //       });
-  //     }
-  //
-  //     const newArray = userVideos.concat(...nextArray);
-  //     setUserVideos(newArray);
-  //     setI(++i);
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
+      const { data } = await supabase
+        .from('files')
+        .select(selectFiles)
+        .eq('authorId', id)
+        .eq('tags', 'videos')
+        .order('createdAt', { ascending: false })
+        .limit(maxItems);
+
+      if (data?.length === 0) return filesArray;
+
+      for (const file of data!) {
+        const { fileId, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
+
+        filesArray.push({
+          fileId,
+          name,
+          shortDescription,
+          pseudonym: Users[0].pseudonym!,
+          profilePhoto: `https://${cloudFrontUrl}/${Users[0].profilePhoto!}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
+          authorId,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          createdAt,
+          updatedAt,
+        });
+      }
+      return filesArray;
+    } catch (e) {
+      console.error('no your videos', e);
+    }
+  };
 
   return (
     <article>
-      {decodeURIComponent(pathname!) === `/account/${pseudonym}` && (
-        <h2 className="title">{language?.Account?.gallery?.userVideosTitle}</h2>
-      )}
+      {decodeURIComponent(pathname!) === `/account/${author}` && <h2 className="title">{tGallery?.userVideosTitle}</h2>}
 
-      {/*<Wrapper>*/}
-      {/*  {userVideos.length > 0 ? (*/}
-      {/*    userVideos.map(*/}
-      {/*      (*/}
-      {/*        { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,*/}
-      {/*        index,*/}
-      {/*      ) => (*/}
-      {/*        <Videos*/}
-      {/*          key={index}*/}
-      {/*          fileId={fileId!}*/}
-      {/*          name={name!}*/}
-      {/*          fileUrl={fileUrl}*/}
-      {/*          shortDescription={shortDescription!}*/}
-      {/*          tags={tags!}*/}
-      {/*          authorName={pseudonym!}*/}
-      {/*          profilePhoto={profilePhoto}*/}
-      {/*          authorId={authorId}*/}
-      {/*          time={time}*/}
-      {/*        />*/}
-      {/*      ),*/}
-      {/*    )*/}
-      {/*  ) : (*/}
-      {/*    <ZeroFiles text={language?.ZeroFiles?.videos} />*/}
-      {/*  )}*/}
-      
-      {/*  {!!lastVisible && userVideos.length === maxItems * i && <MoreButton nextElements={nextElements} />}*/}
-      {/*</Wrapper>*/}
+      <Wrapper>
+        {userVideos.length > 0 ? (
+          userVideos.map(
+            (
+              {
+                fileId,
+                name,
+                fileUrl,
+                shortDescription,
+                tags,
+                authorId,
+                authorName,
+                pseudonym,
+                profilePhoto,
+                time,
+              }: FileType,
+              index,
+            ) => (
+              <Videos
+                key={index}
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorId={authorId}
+                authorName={authorName!}
+                profilePhoto={profilePhoto}
+                pseudonym={pseudonym!}
+                time={time}
+              />
+            ),
+          )
+        ) : (
+          <ZeroFiles text={tGallery?.noVideos!} />
+        )}
+
+        {!!lastVisible && userVideos.length === maxItems * i && <MoreButton nextElements={() => nextElements(locale, maxItems, id, dataDateObject)} />}
+      </Wrapper>
     </article>
   );
 };

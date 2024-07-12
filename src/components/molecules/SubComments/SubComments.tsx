@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 import { SubCommentType } from 'types/global.types';
 
-import { backUrl } from 'constants/links';
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
 import { getDate } from 'helpers/getDate';
 
@@ -28,44 +27,24 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
   const [lastVisible, setLastVisible] = useState<string>();
   let [i, setI] = useState(1);
 
-  const { locale } = useRouter();
   const dataDateObject = dateData();
 
   const maxItems = 30;
 
+  const params = encodeURI(JSON.stringify({
+    fileCommentId,
+    commentId,
+    maxItems,
+    cursor: lastVisible,
+  }))
   const firstComments = async () => {
     try {
-      const commentArray: SubCommentType[] = [];
+      const comments: SubCommentType[] = await fetch(`${backUrl}/api/sub-comments/${params}`, {
+        method: 'GET',
+      }).then(c => c.json());
 
-      const comments: { data: SubCommentType[] } = await axios.get(`${backUrl}/sub-comments/all`, {
-        params: {
-          orderBy: 'createdAt, desc',
-          where: !!fileCommentId ? { fileCommentId } : { commentId: commentId },
-          limit: maxItems,
-        },
-      });
-
-      for (const _c of comments.data) {
-        const { subCommentId, subComment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = _c;
-
-        commentArray.push({
-          subCommentId,
-          subComment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          authorId,
-          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
-        });
-      }
-      setSubCommentsArray(commentArray);
-      commentArray.length === maxItems &&
-        setLastVisible(
-          fileCommentId
-            ? commentArray[commentArray.length - 1].fileCommentId
-            : commentArray[commentArray.length - 1].commentId,
-        );
+      setSubCommentsArray(comments);
+      comments.length === maxItems && setLastVisible(comments[comments.length - 1].createdAt);
     } catch (e) {
       console.error(e);
     }

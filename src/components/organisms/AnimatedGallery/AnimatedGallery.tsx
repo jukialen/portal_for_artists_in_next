@@ -1,146 +1,105 @@
-'use client'
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
+'use client';
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { FileType, UserType } from 'types/global.types';
-
-import { backUrl, cloudFrontUrl } from 'constants/links';
+import { cloudFrontUrl } from 'constants/links';
+import { selectFiles } from 'constants/selects';
+import { Database } from 'types/database.types';
+import { FileType, GalleryType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
-
-import { dateData } from 'helpers/dateData';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
+import { ClientPortalWrapper } from '../../atoms/ClientPortalWrapper/ClientPortalWrapper';
 
-export const AnimatedGallery = ({ id, pseudonym, language }: UserType) => {
-  // const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>([]);
-  // const [lastVisible, setLastVisible] = useState<FileType>();
-  // let [i, setI] = useState(1);
+export const AnimatedGallery = ({ id, author, tGallery, locale, dataDateObject, firstAnimations }: GalleryType) => {
+  const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>(firstAnimations!);
+  const [lastVisible, setLastVisible] = useState<string | null>();
+  let [i, setI] = useState(1);
 
-  // const { pathname, locale } = useRouter();
-  // const dataDateObject = dateData();
-
+  const pathname = usePathname();
   const maxItems = 30;
+  const supabase = createClientComponentClient<Database>();
 
-  const downloadAnimations = async () => {
+  const nextElements = async () => {
     try {
-      const firstPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
-        params: {
-          queryData: {
-            where: {
-              AND: [{ tags: 'animations' }, { ownerFile: id }],
-            },
-            orderBy: { name: 'desc' },
-            limit: maxItems,
-          },
-        },
-      });
+      const nextArray: FileType[] = [];
 
-      const filesArray: FileType[] = [];
+      const { data } = await supabase
+        .from('files')
+        .select(selectFiles)
+        .eq('authorId', id)
+        .eq('tags', 'animations')
+        .order('createdAt', { ascending: false })
+        .lt('createdAt', lastVisible)
+        .limit(maxItems);
 
-      for (const file of firstPage.data) {
-        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+      if (data?.length === 0) return userAnimatedPhotos;
 
-        filesArray.push({
+      for (const file of data!) {
+        const { fileId, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
+
+        nextArray.push({
           fileId,
           name,
-          fileUrl: `https://${cloudFrontUrl}/${file.name}`,
-          pseudonym,
           shortDescription,
-          profilePhoto,
+          pseudonym: Users[0].pseudonym!,
+          profilePhoto: `https://${cloudFrontUrl}/${Users[0].profilePhoto!}`,
+          fileUrl: `https://${cloudFrontUrl}/${name}`,
           authorId,
-          time: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
-      setUserAnimatedPhotos(filesArray);
-      filesArray.length === maxItems && setLastVisible(filesArray[filesArray.length - 1]);
+      const newArray = userAnimatedPhotos.concat(...nextArray);
+      nextArray.length === maxItems && setLastVisible(nextArray[nextArray.length - 1].createdAt);
+      setUserAnimatedPhotos(newArray);
+      setI(++i);
     } catch (e) {
       console.log('No such document!', e);
     }
   };
 
-  useEffect(() => {
-    !!id && downloadAnimations();
-  }, [id]);
-
-  const nextElements = async () => {
-    try {
-      const nextPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
-        params: {
-          queryData: {
-            where: {
-              AND: [{ tags: 'animations' }, { ownerFile: id }],
-            },
-            orderBy: { name: 'desc' },
-            limit: maxItems,
-            cursor: lastVisible,
-          },
-        },
-      });
-
-      const nextArray: FileType[] = [];
-
-      for (const file of nextPage.data) {
-        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
-
-        nextArray.push({
-          fileId,
-          name,
-          fileUrl: `https://${cloudFrontUrl}/${file.name}`,
-          pseudonym,
-          shortDescription,
-          profilePhoto,
-          authorId,
-          time: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
-        });
-      }
-      const newArray = userAnimatedPhotos.concat(...nextArray);
-      setLastVisible(newArray[newArray.length - 1]);
-      setUserAnimatedPhotos(newArray);
-      setI(++i);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   return (
     <article>
-      {decodeURIComponent(pathname) === `/account/${pseudonym}` && (
-        <h2 className="title">{language?.Account?.gallery?.userAnimationsTitle}</h2>
+      {decodeURIComponent(pathname) === `/account/${author}` && (
+        <h2 className="title">{tGallery?.userAnimationsTitle}</h2>
       )}
 
-      <Wrapper>
-        {userAnimatedPhotos.length > 0 ? (
-          userAnimatedPhotos.map(
-            (
-              { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
-              index,
-            ) => (
-              <Article
-                key={index}
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorName={pseudonym!}
-                profilePhoto={profilePhoto}
-                authorId={authorId}
-                time={time}
-              />
-            ),
-          )
-        ) : (
-          <ZeroFiles text={language?.ZeroFiles?.animations} />
-        )}
+      <ClientPortalWrapper>
+        <Wrapper>
+          {userAnimatedPhotos.length > 0 ? (
+            userAnimatedPhotos.map(
+              (
+                { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+                index,
+              ) => (
+                <Article
+                  key={index}
+                  fileId={fileId!}
+                  name={name!}
+                  fileUrl={fileUrl}
+                  shortDescription={shortDescription!}
+                  tags={tags!}
+                  authorName={pseudonym!}
+                  profilePhoto={profilePhoto}
+                  authorId={authorId}
+                  time={time}
+                  pseudonym={pseudonym!}
+                />
+              ),
+            )
+          ) : (
+            <ZeroFiles text={tGallery?.noAnimations!} />
+          )}
 
-        {!!lastVisible && userAnimatedPhotos.length === maxItems * i && <MoreButton nextElements={nextElements} />}
-      </Wrapper>
+          {!!lastVisible && userAnimatedPhotos.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+        </Wrapper>
+      </ClientPortalWrapper>
     </article>
   );
 };

@@ -1,131 +1,83 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from 'react';
 
-import { FilesCommentsType } from "types/global.types";
+import { backUrl } from 'constants/links';
+import { DateObjectType, FilesCommentsType } from 'types/global.types';
 
-import { backUrl } from "constants/links";
+import { DCProvider } from 'providers/DeleteCommentProvider';
 
-import { getDate } from "helpers/getDate";
+import { FileComment } from 'components/atoms/FileComment/FileComment';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
-import { DCProvider } from "providers/DeleteCommentProvider";
-
-import { FileComment } from "components/atoms/FileComment/FileComment";
-import { MoreButton } from "components/atoms/MoreButton/MoreButton";
-
-import styles from "./FilesCommentsClient.module.scss";
+import styles from './FilesCommentsClient.module.scss';
 
 type FilesCommentsClientType = {
+  filesFilesComments: FilesCommentsType[];
   fileId: string;
-  dataDateObject: {second: string, minute: string, hour: string, day: string, yearDateSeparator: string};
-  locale: string;
+  dataDateObject: DateObjectType;
   noComments: string;
-}
-export const FilesCommentsClient = ({ fileId, dataDateObject, locale, noComments }: FilesCommentsClientType) => {
-  const [commentsArray, setCommentsArray] = useState<FilesCommentsType[]>([]);
+  pseudonym: string;
+  profilePhoto: string;
+};
+export const FilesCommentsClient = ({
+  filesFilesComments,
+  fileId,
+  noComments,
+  pseudonym,
+  profilePhoto,
+}: FilesCommentsClientType) => {
+  const [commentsArray, setCommentsArray] = useState<FilesCommentsType[]>(filesFilesComments);
   const [lastVisible, setLastVisible] = useState('');
   let [i, setI] = useState(1);
-  
+
   const maxItems = 30;
-  
-  const firstComments = async () => {
-    try {
-      const firstPage: { data: FilesCommentsType[] } = await axios.get(`${backUrl}/files-comments/all`, {
-        params: {
-          orderBy: 'createdAt, desc',
-          where: { fileId: fileId },
-          limit: maxItems,
-        },
-      });
-      
-      const commentArray: FilesCommentsType[] = [];
-      
-      for (const first of firstPage.data) {
-        const { id, fileId, comment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = first;
-        
-        commentArray.push({
-          id,
-          fileId,
-          comment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          authorId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-        });
-      }
-      
-      setCommentsArray(commentArray);
-      commentArray.length === maxItems && setLastVisible(commentArray[commentArray.length - 1].fileId);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  
-  useEffect(() => {
-    !!fileId && firstComments();
-  }, [fileId]);
-  
+
   const nextComments = async () => {
     try {
-      const nextPage: { data: FilesCommentsType[] } = await axios.get(`${backUrl}/files-comments/all`, {
-        params: {
-          orderBy: 'createdAt, desc',
-          where: { fileId },
-          limit: maxItems,
-          cursor: lastVisible,
-        },
-      });
-      
-      const nextCommentArray: FilesCommentsType[] = [];
-      
-      for (const next of nextPage.data) {
-        const { id, fileId, comment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = next;
-        
-        nextCommentArray.push({
-          id,
+      const params = encodeURI(
+        JSON.stringify({
           fileId,
-          comment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          authorId,
-          date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-        });
-      }
+          maxItems,
+          cursor: lastVisible,
+        }),
+      );
+
+      const nextPage: FilesCommentsType[] = await fetch(`${backUrl}/files-comments?${params}`, {
+        method: 'GET',
+      }).then((data) => data.json());
       
-      nextPage.data.length === maxItems && setLastVisible(nextCommentArray[nextCommentArray.length - 1].fileId);
-      
-      const nextArray = commentsArray.concat(...nextCommentArray);
+      nextPage.length === maxItems && setLastVisible(nextPage[nextPage.length - 1].createdAt!);
+
+      const nextArray = commentsArray.concat(...nextPage);
       setCommentsArray(nextArray);
       setI(++i);
     } catch (e) {
       console.error(e);
     }
   };
-  
+
   return (
     <>
       {commentsArray.length > 0 ? (
         commentsArray.map(
           (
-            { id, fileId, comment, pseudonym, profilePhoto, role, roleId, authorId, date }: FilesCommentsType,
+            { fileCommentId, fileId, comment, authorName, authorProfilePhoto, role, roleId, authorId, date }: FilesCommentsType,
             index,
           ) => (
             <DCProvider key={index}>
               <FileComment
-                id={id}
+                fileCommentId={fileCommentId}
                 fileId={fileId}
                 comment={comment}
-                pseudonym={pseudonym}
-                profilePhoto={profilePhoto}
+                authorName={authorName}
+                authorProfilePhoto={authorProfilePhoto}
                 role={role}
                 roleId={roleId}
                 authorId={authorId}
                 date={date}
+                pseudonym={pseudonym}
+                profilePhoto={profilePhoto}
               />
             </DCProvider>
           ),
@@ -136,4 +88,4 @@ export const FilesCommentsClient = ({ fileId, dataDateObject, locale, noComments
       {!!lastVisible && commentsArray.length === maxItems * i && <MoreButton nextElements={nextComments} />}
     </>
   );
-}
+};
