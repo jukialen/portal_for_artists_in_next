@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Avatar, Button, Textarea } from '@chakra-ui/react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -31,24 +30,85 @@ export const NewComments = ({
 
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
 
+  const updateCommentId = async (roleId: string, commentId: string) =>
+    await fetch(`${backUrl}/api/roles`, {
+      method: 'PATCH',
+      body: JSON.stringify({ roleId, commentId }),
+    }).then((r) => r.json());
+
   const createNewComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
-      !!subCommentId &&
-        (await axios.post(`${backUrl}/last-comments`, {
-          lastComment: comment,
-          subCommentId,
-        }));
-      !!(commentId || fileCommentId) &&
-        (await axios.post(`${backUrl}/sub-comments`, {
-          subComment: comment,
-          commentId,
-          fileCommentId,
+      const { id: roleId }: { id: string } = await fetch(`${backUrl}/api/roles`, {
+        method: 'POST',
+        body: JSON.stringify({
           fileId,
           postId,
-        }));
-      !!fileId
-        ? await axios.post(`${backUrl}/files-comments`, { comment, fileId })
-        : await axios.post(`${backUrl}/comments`, { comment, roleId });
+          groupId,
+          userId: authorId,
+        }),
+      }).then((t) => t.json());
+
+      if (!!subCommentId) {
+        const { roleId: subRoleId, lastCommentId }: { roleId: string; lastCommentId: string } = await fetch(
+          `${backUrl}/api/last-comments`,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              lastComment: comment,
+              subCommentId,
+              adModRoleId,
+              roleId,
+              authorId,
+            }),
+          },
+        ).then((s) => s.json());
+        await updateCommentId(subRoleId, lastCommentId);
+      }
+      if (!!(commentId || fileCommentId)) {
+        const { roleId: comFileComId, subCommentId: subComId }: { roleId: string; subCommentId: string } = await fetch(
+          `${backUrl}/api/sub-comments`,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              subComment: comment,
+              commentId,
+              fileCommentId,
+              fileId,
+              postId,
+              adModRoleId,
+              roleId,
+              authorId,
+            }),
+          },
+        ).then((cf) => cf.json());
+        await updateCommentId(comFileComId, subComId!);
+      }
+      if (!!fileId) {
+        const { roleId: fileRoleId, fileCommentId: fileComId }: { roleId: string; fileCommentId: string } = await fetch(
+          `${backUrl}/api/files-comments`,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              authorId,
+              comment,
+              fileId,
+              roleId,
+            }),
+          },
+        ).then((f) => f.json());
+        await updateCommentId(fileRoleId, fileComId);
+      } else {
+        const { roleId: comRoleId, fileCommentId: comId }: { roleId: string; fileCommentId: string } = await fetch(
+          `${backUrl}/api/comments`,
+          {
+            method: 'POST',
+            body: JSON.stringify({ authorId, comment, roleId, postId, adModRoleId }),
+          },
+        ).then((c) => c.json());
+
+        await updateCommentId(comRoleId, comId);
+      }
+
       resetForm(initialValues);
     } catch (e) {
       console.error(e);
