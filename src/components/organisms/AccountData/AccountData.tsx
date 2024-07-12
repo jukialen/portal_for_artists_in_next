@@ -24,7 +24,7 @@ import {
 } from '@chakra-ui/react';
 import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
-import { Plan, ResetFormType, UserFormType, UserType } from "types/global.types";
+import { NewPlanType, ResetFormType, UserFormType, UserType } from "types/global.types";
 
 import { darkMode } from 'constants/links';
 
@@ -39,7 +39,8 @@ import styles from './AccountData.module.scss';
 
 const initialValues = { email: '' };
 
-const initialPlan = { newPlan: '' };
+// @ts-ignore
+const initialPlan: NewPlanType | string | number | readonly string[] | undefined = { newPlan: '' };
 
 const initialValuesPass = {
   oldPassword: '',
@@ -54,8 +55,10 @@ type ResetPassword = {
 };
 
 type SubscriptionType = {
-  newPlan: string;
+  newPlan: NewPlanType;
 };
+
+type PlanType =  NewPlanType | 'FREE' | "PREMIUM" | "GOLD";
 
 export const AccountData = ({ userData }: { userData: UserType }) => {
   const locale = useCurrentLocale();
@@ -64,7 +67,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
 
   const [valuesFields, setValuesFields] = useState('');
   const [valuesFieldsPass, setValuesFieldsPass] = useState('');
-  const [subscriptionPlan, setSubscriptionPlan] = useState<Plan | string>(userData?.plan || 'FREE');
+  const [subscriptionPlan, setSubscriptionPlan] = useState<PlanType>(userData?.plan || 'FREE' );
   const { onOpen, onClose, isOpen } = useDisclosure();
 
   const { isMode } = useContext(ModeContext);
@@ -130,7 +133,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
       <div className={styles.form}>
         <h3 className={styles.title}>{tAccount('aData.subscription')}</h3>
         <div className={styles.flow}>
-          <div className={styles.subscription}>{subscriptionPlan}</div>
+          <div className={styles.subscription}>{subscriptionPlan.toString()}</div>
           <Popover isLazy isOpen={isOpen} onClose={onClose} onOpen={onOpen}>
             <PopoverTrigger>
               <Button className={`button ${styles.planButton}`} aria-label="Change subscription">
@@ -154,6 +157,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                 <PopoverBody>
                   <div className={isMode === darkMode ? styles.selectSub__dark : styles.selectSub}>
                     <Formik
+                      // @ts-ignore
                       initialValues={initialPlan}
                       validationSchema={schemaSubscription}
                       onSubmit={changeSubscription}>
@@ -161,6 +165,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                         <Form>
                           <Select
                             name="newPlan"
+                            // @ts-ignore
                             value={values.newPlan}
                             onChange={handleChange}
                             focusBorderColor={touched.newPlan && !!errors.newPlan ? 'red.500' : 'blue.500'}
