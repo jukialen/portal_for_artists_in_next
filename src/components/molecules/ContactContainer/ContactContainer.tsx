@@ -3,16 +3,15 @@
 import Link from "next/link";
 import { useScopedI18n } from "locales/client";
 
-import { useUserData } from "hooks/useUserData";
+import { UserType } from "types/global.types";
 
 import { ContactForm } from "components/atoms/ContactForm/ContactForm";
 
 import styles from './ContactContainer.module.scss';
 
-type ContactContainerType = { locale: string }
-export const ContactContainer = ({ locale }: ContactContainerType) => {
+type ContactContainerType = { locale: string, userData: UserType }
+export const ContactContainer = ({ locale, userData }: ContactContainerType) => {
   const tContact = useScopedI18n('Contact');
-  const userData = useUserData();
   
   return (
     <div className={userData?.pseudonym ? styles.site__without__footer : styles.site}>

@@ -1,15 +1,15 @@
+'use client'
+
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
-import { backUrl, cloudFrontUrl } from 'constants/links';
+import { useCurrentLocale, useScopedI18n } from "locales/client";
 
 import { CommentType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
-
 import { dateData } from 'helpers/dateData';
-
+import { backUrl, cloudFrontUrl } from 'constants/links';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -25,8 +25,9 @@ export const Comments = ({ postId }: CommentsType) => {
   const [lastVisible, setLastVisible] = useState('');
   let [i, setI] = useState(1);
 
-  const { locale } = useRouter();
-
+  const locale = useCurrentLocale();
+  const tComments = useScopedI18n('Comments');
+  
   const dataDateObject = dateData();
 
   const maxItems = 30;
@@ -44,14 +45,14 @@ export const Comments = ({ postId }: CommentsType) => {
       const commentArray: CommentType[] = [];
 
       for (const first of firstPage.data) {
-        const { commentId, comment, pseudonym, profilePhoto, role, roleId, authorId, groupRole, createdAt, updatedAt } =
+        const { commentId, comment, Users, role, roleId, authorId, groupRole, createdAt, updatedAt } =
           first;
 
         commentArray.push({
           commentId,
           comment,
-          pseudonym,
-          profilePhoto: `https://${cloudFrontUrl}/${profilePhoto}`,
+          authorName: Users[0].pseudonym!,
+          authorProfilePhoto: `https://${cloudFrontUrl}/${Users[0].profilePhoto!}`,
           role,
           roleId,
           authorId,
@@ -88,8 +89,8 @@ export const Comments = ({ postId }: CommentsType) => {
         const {
           commentId,
           comment,
-          pseudonym,
-          profilePhoto,
+          authorName,
+          authorProfilePhoto,
           role,
           roleId,
           authorId,
@@ -102,8 +103,8 @@ export const Comments = ({ postId }: CommentsType) => {
         nextCommentArray.push({
           commentId,
           comment,
-          pseudonym,
-          profilePhoto: `https://${cloudFrontUrl}/${profilePhoto}`,
+          authorName,
+          authorProfilePhoto: `https://${cloudFrontUrl}/${authorProfilePhoto}`,
           role,
           roleId,
           authorId,
@@ -131,8 +132,8 @@ export const Comments = ({ postId }: CommentsType) => {
             {
               commentId,
               comment,
-              pseudonym,
-              profilePhoto,
+              authorName,
+              authorProfilePhoto,
               role,
               roleId,
               authorId,
@@ -146,8 +147,8 @@ export const Comments = ({ postId }: CommentsType) => {
               <Comment
                 commentId={commentId}
                 comment={comment}
-                pseudonym={pseudonym}
-                profilePhoto={profilePhoto}
+                authorName={authorName}
+                authorProfilePhoto={authorProfilePhoto}
                 role={role}
                 roleId={roleId}
                 groupRole={groupRole}
@@ -159,7 +160,7 @@ export const Comments = ({ postId }: CommentsType) => {
           ),
         )
       ) : (
-        <p className={styles.noComments}>{language?.Comments?.noComments}</p>
+        <p className={styles.noComments}>{tComments('noComments')}</p>
       )}
       {!!lastVisible && commentsArray.length === maxItems * i && <MoreButton nextElements={nextComments} />}
     </>

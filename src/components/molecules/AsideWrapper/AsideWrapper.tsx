@@ -1,24 +1,11 @@
-<<<<<<<< HEAD:src/components/organisms/Aside/Aside.tsx
-<<<<<<< Updated upstream:components/organisms/Aside/Aside.tsx
-import { useContext, useState } from 'react';
-import { Button, Drawer, DrawerBody, DrawerContent, DrawerOverlay, useDisclosure } from '@chakra-ui/react';
-
-import { darkMode } from 'utilites/constants';
-=======
-import { getScopedI18n } from "src/locales/server";
-
-import { AsideWrapper } from "src/components/molecules/AsideWrapper/AsideWrapper";
->>>>>>> Stashed changes:source/components/organisms/Aside/Aside.tsx
-
-import { useHookSWR } from 'hooks/useHookSWR';
-========
 'use client';
 
 import { useContext, useState } from 'react';
 import { Button, Drawer, DrawerBody, DrawerContent, DrawerOverlay, useDisclosure } from '@chakra-ui/react';
 
 import { darkMode } from 'constants/links';
->>>>>>>> changing-to-app-dir:src/components/molecules/AsideWrapper/AsideWrapper.tsx
+
+import { UserType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
 
@@ -30,7 +17,7 @@ import styles from './Aside.module.scss';
 import { RightOutlined } from '@ant-design/icons';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 
-export const AsideWrapper = ({ asideCategory }: { asideCategory: string }) => {
+export const AsideWrapper = ({ asideCategory, userData }: { asideCategory: string; userData: UserType }) => {
   const [open, setOpen] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isMode } = useContext(ModeContext);
@@ -60,7 +47,7 @@ export const AsideWrapper = ({ asideCategory }: { asideCategory: string }) => {
 
           <Groups />
 
-          <Friends />
+          <Friends userData={userData} />
         </div>
       </aside>
 
@@ -92,7 +79,7 @@ export const AsideWrapper = ({ asideCategory }: { asideCategory: string }) => {
 
               <Groups />
 
-              <Friends />
+              <Friends userData={userData} />
             </div>
 
             <Button
