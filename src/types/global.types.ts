@@ -1,40 +1,10 @@
 import { ChangeEvent } from 'react';
-
-//ENUMS
-export enum Plan {
-  FREE,
-  PREMIUM,
-  GOLD,
-}
-
-export enum Tags {
-  realistic,
-  manga,
-  anime,
-  comics,
-  photographs,
-  videos,
-  animations,
-  others,
-  profile,
-  group,
-}
-
-export enum Role {
-  ADMIN,
-  MODERATOR,
-  USER,
-  AUTHOR,
-}
+import { Database } from './database.types';
 
 //GENERAL
 type Like = {
   likes: number;
   liked: boolean;
-};
-
-type Logo = {
-  profilePhoto?: string;
 };
 
 type Time = {
@@ -46,8 +16,6 @@ export type LangType = 'en' | 'pl' | 'jp';
 
 export type IndexType = 'photographs' | 'videos' | 'animations';
 
-export type LanguageType = any;
-
 //FORMS & CONTROLLERS ELEMENTS
 export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
 
@@ -56,7 +24,7 @@ export type ResetFormType = {
 };
 
 export type PlanType = {
-  newPlan?: Plan;
+  newPlan?: Database['public']['Enums']['Plan'];
 };
 
 //DATE OBJECT
@@ -69,16 +37,15 @@ export type DateObjectType = {
 };
 
 //USERS
-export type UserType = Logo &
-  PlanType &
+export type UserType = PlanType &
   Time & {
     id?: string;
     pseudonym: string;
     description?: string;
     profilePhoto?: string;
     email: string;
-    plan: 'FREE' | 'PREMIUM' | 'GOLD';
-    provider?: 'email' | 'google' | 'discord' | 'spotify';
+    plan: Database['public']['Enums']['Plan'];
+    provider?: Database['public']['Enums']['Provider'];
   };
 
 export type UserFormType = {
@@ -86,12 +53,20 @@ export type UserFormType = {
   password?: string;
 };
 
-//FiLES
+//PROFILE
+export type ProfileType = {
+  language: any;
+  pseudonym: string;
+  description: string;
+  fileUrl: string;
+};
+
+//FILES
 export type FileType = Time & {
   fileId?: string;
   name?: string;
   shortDescription?: string;
-  tags?: Tags;
+  tags?: Database['public']['Enums']['Tags'];
   pseudonym?: string;
   profilePhoto: string;
   authorName?: string;
@@ -108,7 +83,7 @@ export type ArticleVideosType = {
   shortDescription: string;
   authorName: string;
   profilePhoto: string;
-  tags: Tags;
+  tags: Database['public']['Enums']['Tags'];
   authorId: string;
   time: string;
   pseudonym: string;
@@ -124,7 +99,7 @@ export type FriendType = Time & {
   time?: string;
 };
 
-export  type FriendsListType = {
+export type FriendsListType = {
   fileUrl: string;
   pseudonym: string;
   plan: string;
@@ -155,10 +130,9 @@ export type MemberType = {
 
 //POSTS
 export type PostsType = Time &
-  Logo &
   Like & {
-    pseudonym: string;
-    name: string;
+    authorName: string;
+    authorProfilePhoto: string;
     postId?: string;
     authorId: string;
     title: string;
@@ -192,57 +166,67 @@ export type GalleryType = {
     noVideos: string;
   };
   tFriends?: { friends: string; noFriends: string };
-}
+};
 
 // COMMENTS
+type Comment = Time & {
+  authorId: string;
+  profilePhoto?: string;
+  roleId?: string;
+  role: Database['public']['Enums']['Role'];
+  groupRole?: Database['public']['Enums']['Role'];
+  date?: string;
+  pseudonym?: string;
+  adModRoleId?: string;
+};
+
 export type NewCommentsType = {
+  authorId: string;
   profilePhoto: string;
+  author: boolean;
+  adModRoleId?: string;
+  roleId?: string;
   comment?: string;
   fileId?: string;
+  postId?: string;
+  groupId?: string;
   fileCommentId?: string;
   commentId?: string;
   subCommentId?: string;
-  roleId?: string;
-  postId?: string;
-};
-
-type Comment = Time & {
-  authorId: string;
-  pseudonym: string;
-  profilePhoto: string;
-  role: Role;
-  roleId: string;
-  date?: string;
 };
 
 export type CommentType = Comment & {
+  authorName: string;
+  authorProfilePhoto: string;
   commentId: string;
-  postId?: string;
   comment: string;
-  groupRole: Role;
+  groupRole: Database['public']['Enums']['Role'];
+  postId?: string;
 };
 
 export type FilesCommentsType = Comment & {
-  id: string;
+  authorName: string;
+  authorProfilePhoto: string;
+  fileCommentId: string;
   fileId: string;
   comment: string;
 };
 
 export type SubCommentType = Comment & {
+  authorName: string;
+  authorProfilePhoto: string;
   subCommentId: string;
-  commentId?: string;
   subComment: string;
+  commentId?: string;
   fileCommentId?: string;
-  groupRole?: Role;
   fileId?: string;
   postId?: string;
 };
 
 export type LastCommentType = Comment & {
+  authorName: string;
+  authorProfilePhoto: string;
   lastCommentId: string;
   subCommentId: string;
   lastComment: string;
-  groupRole: Role;
-  fileId?: string;
-  postId?: string;
 };
