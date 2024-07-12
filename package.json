@@ -42,6 +42,7 @@
     "react-web-share": "^2.0.2",
     "sass": "^1.67.0",
     "socket.io-client": "^4.7.2",
+    "supabase": "^1.183.5",
     "yup": "^1.2.0"
   },
   "devDependencies": {
