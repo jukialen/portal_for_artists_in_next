@@ -23,7 +23,7 @@ export type ResetFormType = {
   resetForm: any;
 };
 
-export type PlanType = {
+export type NewPlanType = {
   newPlan?: Database['public']['Enums']['Plan'];
 };
 
@@ -37,7 +37,7 @@ export type DateObjectType = {
 };
 
 //USERS
-export type UserType = PlanType &
+export type UserType = NewPlanType &
   Time & {
     id?: string;
     pseudonym: string;
@@ -53,7 +53,7 @@ export type UserFormType = {
   password?: string;
 };
 
-//PROFILE
+//PRPLAOFILE
 export type ProfileType = {
   language: any;
   pseudonym: string;
