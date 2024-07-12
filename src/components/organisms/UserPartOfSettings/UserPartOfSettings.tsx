@@ -1,24 +1,21 @@
-'use client';
+import { getI18n } from 'locales/server';
 
-import { useI18n } from 'locales/client';
-
-import { useUserData } from 'hooks/useUserData';
+import { getUserData } from 'helpers/getUserData';
 
 import { ChangePseuDescData } from 'components/atoms/ChangePseuDescData/ChangePseuDescData';
 import { AccountData } from 'components/organisms/AccountData/AccountData';
 
-export const UserPartOfSettings = () => {
-  const userData = useUserData();
-
-  const t = useI18n();
-
-  console.log('id', userData);
+export const UserPartOfSettings = async () => {
+  const userData = await getUserData();
+  const t = await getI18n();
+  
+  console.log('userData', userData);
   
   return !!userData?.id ? (
     <>
-      <AccountData />
+      <AccountData userData={userData!} />
       <h3>{t('Nav.profile')}</h3>
-      <ChangePseuDescData />
+      <ChangePseuDescData userData={userData!} />
     </>
   ) : (
     <></>

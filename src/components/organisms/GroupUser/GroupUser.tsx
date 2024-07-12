@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Divider } from '@chakra-ui/react';
 
-
-
 import { backUrl, cloudFrontUrl } from 'constants/links';
 
 import { GroupType } from 'types/global.types';
@@ -15,6 +13,14 @@ import styles from './GroupUser.module.scss';
 
 type GroupUserType = {
   id: string;
+  tGroupsUser: {
+    adminTitle: string;
+    modsTitle: string;
+    usersTitle: string;
+    accountAdminTitle: string;
+    accountNoMods: string;
+    accountNoUsers: string;
+  };
 };
 
 type GroupUsersType = {
@@ -22,7 +28,7 @@ type GroupUsersType = {
   logo: string;
 };
 
-export const GroupUser = ({ id }: GroupUserType) => {
+export const GroupUser = ({ id, tGroupsUser }: GroupUserType) => {
   const [adminsArray, setAdminsArray] = useState<GroupUsersType[]>([]);
   const [lastAdminsVisible, setAdminsLastVisible] = useState<string>();
   let [iAdmins, setIAdmins] = useState(1);
@@ -32,7 +38,6 @@ export const GroupUser = ({ id }: GroupUserType) => {
   const [membersArray, setMembersArray] = useState<GroupUsersType[]>([]);
   const [lastMembersVisible, setMembersLastVisible] = useState<string>();
   let [iMembers, setIMembers] = useState(1);
-
 
   const maxItems = 30;
 
@@ -196,36 +201,36 @@ export const GroupUser = ({ id }: GroupUserType) => {
 
   return (
     <div className={styles.tilesSection}>
-      <h2 className={styles.title}>{language?.groupsUser?.adminTitle}</h2>
+      <h2 className={styles.title}>{tGroupsUser.adminTitle}</h2>
       <Divider className={styles.divider} />
       {adminsArray.length > 0 ? (
         adminsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
         ))
       ) : (
-        <p className={styles.noGroups}>{language?.Account?.groups?.adminTitle}</p>
+        <p className={styles.noGroups}>{tGroupsUser.accountAdminTitle}</p>
       )}
       {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && <MoreButton nextElements={nextAdminList} />}
-      <h2 className={styles.title}>{language?.groupsUser?.modsTitle}</h2>
+      <h2 className={styles.title}>{tGroupsUser.modsTitle}</h2>
       <Divider className={styles.divider} />
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
         ))
       ) : (
-        <p className={styles.noGroups}>{language?.Account?.groups?.noMods}</p>
+        <p className={styles.noGroups}>{tGroupsUser.accountNoMods}</p>
       )}
       {!!lastModeratorsVisible && moderatorsArray.length == maxItems * iModerators && (
         <MoreButton nextElements={nextModeratorsList} />
       )}
-      <h2 className={styles.title}>{language?.groupsUser?.usersTitle}</h2>
+      <h2 className={styles.title}>{tGroupsUser.usersTitle}</h2>
       <Divider className={styles.divider} />
       {membersArray.length > 0 ? (
         membersArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
         ))
       ) : (
-        <p className={styles.noGroups}>{language?.Account?.groups?.noUsers}</p>
+        <p className={styles.noGroups}>{tGroupsUser.accountNoUsers}</p>
       )}
       {!!lastMembersVisible && membersArray.length === maxItems * iMembers && (
         <MoreButton nextElements={nextMembersList} />

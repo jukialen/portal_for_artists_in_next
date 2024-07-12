@@ -1,18 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { useUserData } from 'hooks/useUserData';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { EventType, ResetFormType } from 'types/global.types';
+import { EventType, ResetFormType, UserType } from "types/global.types";
 import axios from 'axios';
 import { backUrl } from 'constants/links';
-import Session from 'supertokens-web-js/recipe/session';
 import { io, Socket } from 'socket.io-client';
 import { Form, Formik } from 'formik';
 import styles from '*.module.scss';
 import { Button, Input, Progress, Textarea } from '@chakra-ui/react';
-import { FormError } from 'components/molecules/FormError/FormError';
+import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 type AddingGroupType = {
@@ -30,11 +28,11 @@ type AddingGroupTr = {
     uploadFile: string;
     ariaLabelButton: string;
     error: string;
-  };
+  },
+  userData: UserType,
 };
 
-export const AddingGroupForm = ({ tr }: AddingGroupTr) => {
-  const userData = useUserData();
+export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
 
   const [valuesFields, setValuesFields] = useState<string>('');
   const [logoGroup, setLogoGroup] = useState<File | null>(null);

@@ -6,16 +6,17 @@ import axios from 'axios';
 
 import { dateData } from 'helpers/dateData';
 
-import { FileType } from 'types/global.types';
+import { FileType, LangType } from "types/global.types";
 import { backUrl, cloudFrontUrl } from 'constants/links';
 
 import { getDate } from 'helpers/getDate';
 
+import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { Article } from 'components/molecules/Article/Article';
 import { Videos } from 'components/molecules/Videos/Videos';
 
-export const AuthorPost = ({ locale }: { locale: string }) => {
+export const AuthorPost = ({ locale }: { locale: LangType }) => {
   const [container, setContainer] = useState<FileType>();
   const dataDateObject = dateData();
 
@@ -58,32 +59,36 @@ export const AuthorPost = ({ locale }: { locale: string }) => {
   }, [pathname]);
 
   return (
-    <Wrapper>
-      {tag === 'videos' ? (
-        <Videos
-          fileId={container?.fileId!}
-          name={name!}
-          fileUrl={container?.fileUrl!}
-          shortDescription={container?.shortDescription!}
-          tags={container?.tags!}
-          authorName={container?.pseudonym!}
-          profilePhoto={container?.profilePhoto!}
-          authorId={container?.authorId!}
-          time={container?.time!}
-        />
-      ) : (
-        <Article
-          fileId={container?.fileId!}
-          name={name!}
-          fileUrl={container?.fileUrl!}
-          shortDescription={container?.shortDescription!}
-          tags={container?.tags!}
-          authorName={pseudonym!}
-          profilePhoto={container?.profilePhoto!}
-          authorId={container?.authorId!}
-          time={container?.time!}
-        />
-      )}
-    </Wrapper>
+    <ClientPortalWrapper>
+      <Wrapper>
+        {tag === 'videos' ? (
+          <Videos
+            fileId={container?.fileId!}
+            name={name!}
+            fileUrl={container?.fileUrl!}
+            shortDescription={container?.shortDescription!}
+            tags={container?.tags!}
+            authorName={container?.pseudonym!}
+            profilePhoto={container?.profilePhoto!}
+            authorId={container?.authorId!}
+            time={container?.time!}
+            pseudonym={container?.authorName!}
+          />
+        ) : (
+          <Article
+            fileId={container?.fileId!}
+            name={name!}
+            fileUrl={container?.fileUrl!}
+            shortDescription={container?.shortDescription!}
+            tags={container?.tags!}
+            authorName={container?.authorName!}
+            profilePhoto={container?.profilePhoto!}
+            authorId={container?.authorId!}
+            time={container?.time!}
+            pseudonym={pseudonym}
+          />
+        )}
+      </Wrapper>
+    </ClientPortalWrapper>
   );
 };

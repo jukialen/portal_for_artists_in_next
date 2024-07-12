@@ -24,18 +24,16 @@ import {
 } from '@chakra-ui/react';
 import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
-import { Plan, ResetFormType, UserFormType } from 'types/global.types';
+import { Plan, ResetFormType, UserFormType, UserType } from "types/global.types";
 
 import { darkMode } from 'constants/links';
-
-import { useUserData } from 'hooks/useUserData';
 
 import { backUrl } from 'constants/links';
 
 import { ModeContext } from 'providers/ModeProvider';
 
-import { FormError } from 'components/molecules/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './AccountData.module.scss';
 
@@ -59,9 +57,7 @@ type SubscriptionType = {
   newPlan: string;
 };
 
-export const AccountData = () => {
-  const userData = useUserData();
-
+export const AccountData = ({ userData }: { userData: UserType }) => {
   const locale = useCurrentLocale();
   const t = useI18n();
   const tAccount = useScopedI18n('Account');
@@ -217,7 +213,7 @@ export const AccountData = () => {
         </div>
       </div>
 
-      {!userData?.provider && (
+      {userData?.provider === 'email' && (
         <>
           <Formik initialValues={initialValues} validationSchema={schemaEmail} onSubmit={update__email}>
             {({ values, handleChange, errors, touched }) => (

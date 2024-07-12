@@ -1,9 +1,12 @@
-import { getScopedI18n } from "locales/server";
+import { getScopedI18n } from 'locales/server';
 
-import { AsideWrapper } from "components/molecules/AsideWrapper/AsideWrapper";
+import { AsideWrapper } from 'components/molecules/AsideWrapper/AsideWrapper';
 
-export  async function Aside() {
+import { getUserData } from 'helpers/getUserData';
+
+export async function Aside() {
   const tAside = await getScopedI18n('Aside');
-  
-  return <AsideWrapper asideCategory={tAside('category')} />
+  const userData = await getUserData();
+
+  return <AsideWrapper asideCategory={tAside('category')} userData={userData!} />;
 }

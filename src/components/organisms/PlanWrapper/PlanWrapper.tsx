@@ -2,12 +2,12 @@
 
 import { ReactNode } from 'react';
 
-import { useUserData } from "hooks/useUserData";
+import { getUserData } from "helpers/getUserData";
 
 import styles from './PlanWrapper.module.scss';
 
 export const PlanWrapper = ({ children }: { children: ReactNode }) => {
-  const userData = useUserData();
+  const userData = getUserData();
   
   return <div className={userData?.pseudonym ? styles.plans__user : styles.plans}>{children}</div>;
 };

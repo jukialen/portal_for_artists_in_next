@@ -19,19 +19,19 @@ import {
 } from '@chakra-ui/react';
 
 import { backUrl, cloudFrontUrl, darkMode } from 'constants/links';
-import { EventType } from 'types/global.types';
+import { EventType, UserType } from 'types/global.types';
 
-import { useUserData } from 'hooks/useUserData';
+import { ModeContext } from 'providers/ModeProvider';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 
 import styles from './MainCurrentUserProfileData.module.scss';
 import { MdCameraEnhance } from 'react-icons/md';
-import { ModeContext } from 'providers/ModeProvider';
 
 export const MainCurrentUserProfileData = ({
   tCurrPrPhoto,
+  userData,
 }: {
   tCurrPrPhoto: {
     validateRequired: string;
@@ -39,9 +39,9 @@ export const MainCurrentUserProfileData = ({
     cancelButton: string;
     submit: string;
   };
+  userData: UserType;
 }) => {
   const [valuesFields, setValuesFields] = useState('');
-  const userData = useUserData();
   const [progressUpload, setProgressUpload] = useState<number>(0);
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);

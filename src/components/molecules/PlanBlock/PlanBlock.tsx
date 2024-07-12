@@ -1,5 +1,7 @@
 import { getScopedI18n } from "locales/server";
 
+import { getUserData } from 'helpers/getUserData';
+
 import { ChoosePlanPriButton } from 'components/atoms/ChoosePlanPriButton/ChoosePlanPriButton';
 
 import styles from './PlanBlock.module.scss';
@@ -31,6 +33,8 @@ export const PlanBlock = async ({
   support,
 }: PlanBlockType) => {
   const tPlans = await getScopedI18n('Plans');
+  
+  const userData = await getUserData();
   
   return (
     <div className={styles.box}>
@@ -74,7 +78,7 @@ export const PlanBlock = async ({
         </ul>
       </div>
       <div className={support === tPlans('pSupport') || !support ? styles.choosePlan : styles.chooseSecondPlan}>
-        <ChoosePlanPriButton />
+        <ChoosePlanPriButton userData={userData!} />
       </div>
     </div>
   );

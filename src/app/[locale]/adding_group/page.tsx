@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 
+import { getUserData } from 'helpers/getUserData';
+
 import { HeadCom } from 'constants/HeadCom';
 
 import { getI18n, getScopedI18n } from 'locales/server';
@@ -11,7 +13,9 @@ export const metadata: Metadata = HeadCom("User's adding some group");
 
 export default async function AddingGroup({ params: { locale } }: { params: { locale: string } }) {
   setStaticParamsLocale(locale);
-
+  
+  const userData = await getUserData();
+  
   const t = await getI18n();
   const tAddingGroup = await getScopedI18n('AddingGroup');
   const tAnotherForm = await getScopedI18n('AnotherForm');
@@ -26,5 +30,5 @@ export default async function AddingGroup({ params: { locale } }: { params: { lo
     ariaLabelButton: t('NewUser.ariaLabelButton'),
     error: t('error'),
   };
-  return <AddingGroupForm tr={AddingGroupTr} />;
+  return <AddingGroupForm tr={AddingGroupTr} userData={userData!} />;
 }

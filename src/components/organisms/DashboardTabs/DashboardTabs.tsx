@@ -2,7 +2,7 @@
 
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
-import { useUserData } from 'hooks/useUserData';
+import {  GalleryType } from "types/global.types";
 
 import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
 import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
@@ -14,14 +14,18 @@ import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/Client
 import styles from './DashboardTabs.module.scss';
 
 export const DashboardTabs = ({
+  id,
+  author,
+  dataDateObject,
   locale,
   tDash,
-}: {
-  locale: string;
-  tDash: { friends: string; groups: string; photos: string; animations: string; videos: string };
-}) => {
-  const userData = useUserData();
-
+  tGallery,
+  tFriends,
+  firstGraphics,
+  firstVideos,
+  firstAnimations,
+  firstFriendsList,
+}: GalleryType) => {
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
   const activeColor = '#82FF82';
@@ -38,7 +42,7 @@ export const DashboardTabs = ({
               _active={{ borderColor: activeColor }}
               borderColor={borderColor}
               role="tab">
-              {tDash.friends}
+              {tDash?.friends}
             </Tab>
             <Tab
               _selected={{ borderColor: selectedColor }}
@@ -46,16 +50,7 @@ export const DashboardTabs = ({
               _active={{ borderColor: activeColor }}
               borderColor={borderColor}
               role="tab">
-              {tDash.groups}
-            </Tab>
-            <Tab
-              className={styles.tabForPanels}
-              _selected={{ borderColor: selectedColor }}
-              _hover={{ borderColor: hoverColor }}
-              _active={{ borderColor: activeColor }}
-              borderColor={borderColor}
-              role="tab">
-              {tDash.photos}
+              {tDash?.groups}
             </Tab>
             <Tab
               className={styles.tabForPanels}
@@ -64,7 +59,7 @@ export const DashboardTabs = ({
               _active={{ borderColor: activeColor }}
               borderColor={borderColor}
               role="tab">
-              {tDash.animations}
+              {tDash?.photos}
             </Tab>
             <Tab
               className={styles.tabForPanels}
@@ -73,7 +68,16 @@ export const DashboardTabs = ({
               _active={{ borderColor: activeColor }}
               borderColor={borderColor}
               role="tab">
-              {tDash.videos}
+              {tDash?.animations}
+            </Tab>
+            <Tab
+              className={styles.tabForPanels}
+              _selected={{ borderColor: selectedColor }}
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              borderColor={borderColor}
+              role="tab">
+              {tDash?.videos}
             </Tab>
           </div>
         </div>
@@ -81,34 +85,45 @@ export const DashboardTabs = ({
 
       <TabPanels className={styles.tabPanels}>
         <TabPanel className={styles.tabPanel} role="tabpanel">
-          <FriendsList id={userData?.id!} />
+          <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} />
         </TabPanel>
         <TabPanel className={styles.tabPanel} role="tabpanel">
-          <GroupUsers id={userData?.id!} />
+          <GroupUsers id={id!} />
         </TabPanel>
         <TabPanel padding={0} role="tabpanel">
           <ClientPortalWrapper>
             <PhotosGallery
-              id={userData?.id}
-              language={locale}
-              pseudonym={userData?.pseudonym!}
-              plan={userData?.plan!}
+              id={id}
+              author={author}
+              locale={locale}
+              tGallery={tGallery}
+              dataDateObject={dataDateObject}
+              firstGraphics={firstGraphics}
             />
           </ClientPortalWrapper>
         </TabPanel>
         <TabPanel padding={0} role="tabpanel">
           <ClientPortalWrapper>
             <AnimatedGallery
-              id={userData?.id}
-              language={locale}
-              pseudonym={userData?.pseudonym!}
-              plan={userData?.plan!}
+              id={id}
+              author={author}
+              locale={locale}
+              tGallery={tGallery}
+              dataDateObject={dataDateObject}
+              firstAnimations={firstAnimations}
             />
           </ClientPortalWrapper>
         </TabPanel>
         <TabPanel padding={0} role="tabpanel">
           <ClientPortalWrapper>
-            <VideoGallery id={userData?.id} language={locale} pseudonym={userData?.pseudonym!} plan={userData?.plan!} />
+            <VideoGallery
+              id={id!}
+              author={author!}
+              locale={locale}
+              tGallery={tGallery!}
+              dataDateObject={dataDateObject}
+              firstVideos={firstVideos}
+            />
           </ClientPortalWrapper>
         </TabPanel>
       </TabPanels>

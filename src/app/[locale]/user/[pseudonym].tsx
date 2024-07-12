@@ -1,12 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 import axios from 'axios';
 import { Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { backUrl, cloudFrontUrl } from 'constants/links';
+import { HeadCom } from 'constants/HeadCom';
 
-import { FriendType, UserType } from 'types/global.types';
+import { getI18n, getScopedI18n } from 'locales/server';
+
+import { dateData } from 'helpers/dateData';
+
+import { FriendType, LangType, UserType } from 'types/global.types';
 
 import { ProfileUser } from 'components/atoms/ProfileUser/ProfileUser';
 import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
@@ -17,35 +21,56 @@ import { GroupUser } from 'components/organisms/GroupUser/GroupUser';
 
 import styles from './page.module.scss';
 import { CheckIcon, SmallAddIcon } from '@chakra-ui/icons';
-import { Metadata, ResolvingMetadata } from 'next';
-import { HeadCom } from 'constants/HeadCom';
-import { getScopedI18n } from 'locales/server';
 
 export async function generateMetadata({
-  params: { locale, pseudonym },
+  params: { pseudonym },
 }: {
-  params: { locale: string; pseudonym: string };
+  params: { pseudonym: string };
 }): Promise<Metadata> {
   return { ...HeadCom(`${pseudonym} site`) };
 }
 export default async function User({
   params: { locale, pseudonym },
 }: {
-  params: { locale: string; pseudonym: string };
+  params: { locale: LangType; pseudonym: string };
 }) {
   setStaticParamsLocale(locale);
 
+  const dataDateObject = await dateData();
   const tAccountaMenu = await getScopedI18n('Account.aMenu');
   const tAside = await getScopedI18n('Aside');
+  const t = await getI18n();
 
   // const pseudonym = decodeURIComponent(pathname.split('/')[2]);
+  const tFriends = {
+    friends: t('Nav.friends'),
+    noFriends: t('Friends.noFriends'),
+  };
+
+  const tGroupsUser = {
+    adminTitle: t('groupsUser.adminTitle'),
+    modsTitle: t('groupsUser.modsTitle'),
+    usersTitle: t('groupsUser.usersTitle'),
+    accountAdminTitle: t('Account.groups.adminTitle'),
+    accountNoMods: t('Account.groups.noMods'),
+    accountNoUsers: t('Account.groups.noUsers'),
+  };
+
+  const tGallery = {
+    userPhotosTitle: t('Account.gallery.userPhotosTitle'),
+    userAnimationsTitle: t('Account.gallery.userAnimationsTitle'),
+    userVideosTitle: t('Account.gallery.userVideosTitle'),
+    noPhotos: t('ZeroFiles.photos'),
+    noAnimations: t('ZeroFiles.animations'),
+    noVideos: t('ZeroFiles.videos'),
+  };
+
   const contentList = [
     tAccountaMenu('gallery'),
     tAccountaMenu('profile'),
     tAccountaMenu('friends'),
     tAccountaMenu('groups'),
   ];
-
   const fileTabList = [tAside('photos'), tAside('animations'), tAside('videos')];
 
   const selectedColor = '#FFD068';
@@ -219,25 +244,46 @@ export default async function User({
               </TabList>
               <TabPanels className={styles.tabPanels}>
                 <TabPanel className={styles.tabPanel} role="tabpanel">
-                  <PhotosGallery id={id} language={language} pseudonym={pseudonym} />
+                  <PhotosGallery
+                    id={id}
+                    tGallery={tGallery}
+                    pseudonym={pseudonym}
+                    dataDateObject={dataDateObject}
+                    locale={locale}
+                    plan={plan}
+                  />
                 </TabPanel>
                 <TabPanel className={styles.tabPanel} role="tabpanel">
-                  <AnimatedGallery id={id} language={language} pseudonym={pseudonym!} />
+                  <AnimatedGallery
+                    id={id}
+                    tGallery={tGallery}
+                    pseudonym={pseudonym!}
+                    dataDateObject={dataDateObject}
+                    locale={locale}
+                    plan={plan}
+                  />
                 </TabPanel>
                 <TabPanel className={styles.tabPanel} role="tabpanel">
-                  <VideoGallery id={id} language={language} pseudonym={pseudonym!} />
+                  <VideoGallery
+                    id={id}
+                    tGallery={tGallery}
+                    pseudonym={pseudonym!}
+                    plan={plan}
+                    dataDateObject={dataDateObject}
+                    locale={locale}
+                  />
                 </TabPanel>
               </TabPanels>
             </Tabs>
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
-            <ProfileUser language={language} pseudonym={pseudonym} fileUrl={fileUrl} description={description} />
+            <ProfileUser language={t} pseudonym={pseudonym} fileUrl={fileUrl} description={description} />
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
-            <FriendsList id={fid} />
+            <FriendsList id={fid} tFriends={tFriends} />
           </TabPanel>
           <TabPanel className={styles.tabPanel} role="tabpanel">
-            <GroupUser id={fid} />
+            <GroupUser id={fid} tGroupsUser={tGroupsUser} />
           </TabPanel>
         </TabPanels>
       </Tabs>

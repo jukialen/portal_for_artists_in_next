@@ -15,13 +15,15 @@ import styles from './NewComments.module.scss';
 type NewCommentType = { comment: string };
 
 export const NewComments = ({
-  profilePhoto,
   fileId,
+  groupId,
+  authorId,
+  postId,
   commentId,
   subCommentId,
-  roleId,
   fileCommentId,
-  postId,
+  adModRoleId,
+  profilePhoto,
 }: NewCommentsType) => {
   const initialValues = { comment: '' };
 

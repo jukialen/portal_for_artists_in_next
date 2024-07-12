@@ -1,26 +1,25 @@
 import { useContext } from 'react';
 import { Link } from '@chakra-ui/next-js';
-import { Avatar } from '@chakra-ui/react';
+import { Avatar, Badge } from '@chakra-ui/react';
 
-import { CommentType } from 'src/types/global.types';
+import { CommentType } from 'types/global.types';
 
-import { DCContext } from 'src/providers/DeleteCommentProvider';
+import { DCContext } from 'providers/DeleteCommentProvider';
 
-import { NewComments } from 'src/components/atoms/NewComments/NewComments';
-import { SubComments } from 'src/components/molecules/SubComments/SubComments';
-import { OptionsComments } from 'src/components/molecules/OptionsComments/OptionsComments';
+import { NewComments } from 'components/atoms/NewComments/NewComments';
+import { SubComments } from 'components/molecules/SubComments/SubComments';
+import { OptionsComments } from 'components/molecules/OptionsComments/OptionsComments';
 
 import styles from './Comment.module.scss';
 
 export const Comment = ({
   commentId,
   comment,
-  pseudonym,
-  profilePhoto,
+  authorName,
+  authorProfilePhoto,
   role,
   roleId,
   authorId,
-  groupRole,
   postId,
   date,
 }: CommentType) => {
@@ -29,11 +28,14 @@ export const Comment = ({
   return (
     <div className={del ? styles.container__deleted : styles.container}>
       <div className={styles.comment}>
-        <Avatar src={profilePhoto} className={styles.avatar} />
+        <Avatar src={authorProfilePhoto} className={styles.avatar} />
+        <Badge ml="1" fontSize=".8rem" colorScheme="blue">
+          role
+        </Badge>
         <div className={styles.rightSideComment}>
           <div className={styles.topPartComment}>
             <p className={styles.pseudonym}>
-              <Link href={`/user/${pseudonym}`}>{pseudonym}</Link>
+              <Link href={`/user/${authorName}`}>{authorName}</Link>
             </p>
             <p className={styles.date}>{date}</p>
           </div>
@@ -43,13 +45,18 @@ export const Comment = ({
       <OptionsComments
         commentId={commentId}
         roleId={roleId}
-        groupRole={groupRole}
         authorId={authorId}
-        //        likes={likes}
-        //        liked={liked}
-        //        name={name}
+        role={role}
+       userId={authorId}
       >
-        <NewComments profilePhoto={profilePhoto} commentId={commentId} postId={postId} />
+        <NewComments
+          profilePhoto={authorProfilePhoto}
+          commentId={commentId}
+          postId={postId}
+          authorId={authorId}
+          author={pseudonym === authorName}
+          adModRoleId={adModRoleId}
+        />
         <SubComments commentId={commentId} postId={postId} />
       </OptionsComments>
     </div>

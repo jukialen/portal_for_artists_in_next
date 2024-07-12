@@ -2,8 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { checkinSession } from 'helpers/components/checkingSession';
-import { SessionAuthForNextJS } from 'helpers/components/sessionAuthForNextJS';
+import { getUserData } from "helpers/getUserData";
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
@@ -22,11 +21,10 @@ export default async function Settings({ params: { locale } }: { params: { local
   setStaticParamsLocale(locale);
   const t = await getI18n();
   const tSettings = await getScopedI18n('Settings');
-
-  await checkinSession();
-
+  
+  const userData = await getUserData();
+  
   return (
-    <SessionAuthForNextJS>
       <div className={styles.settings}>
         <h2 className={styles.settings_title}>{t('title')}</h2>
 
@@ -58,8 +56,7 @@ export default async function Settings({ params: { locale } }: { params: { local
           </button>
         </footer>
 
-        <DeleteSettings />
+        <DeleteSettings userData={userData!} />
       </div>
-    </SessionAuthForNextJS>
   );
 }

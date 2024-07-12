@@ -12,6 +12,7 @@ import { getDate } from 'helpers/getDate';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
+import { ClientPortalWrapper } from '../../atoms/ClientPortalWrapper/ClientPortalWrapper';
 
 type DrawingsWrapperType = {
   locale: string;
@@ -63,7 +64,7 @@ export const DrawingsWrapper = ({ locale, pid, dataDateObject, noDrawings }: Dra
       console.log('No such drawings!');
     }
   };
-  
+
   const nextElements = async () => {
     try {
       const filesArray: FileType[] = [];
@@ -115,18 +116,20 @@ export const DrawingsWrapper = ({ locale, pid, dataDateObject, noDrawings }: Dra
             { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
             index,
           ) => (
-            <Article
-              key={index}
-              fileId={fileId!}
-              name={name!}
-              fileUrl={fileUrl}
-              shortDescription={shortDescription!}
-              tags={tags!}
-              authorName={pseudonym!}
-              profilePhoto={profilePhoto}
-              authorId={authorId}
-              time={time}
-            />
+            <ClientPortalWrapper key={index}>
+              <Article
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={pseudonym!}
+                profilePhoto={profilePhoto}
+                authorId={authorId}
+                time={time}
+                pseudonym={pseudonym!}
+              />
+            </ClientPortalWrapper>
           ),
         )
       ) : (

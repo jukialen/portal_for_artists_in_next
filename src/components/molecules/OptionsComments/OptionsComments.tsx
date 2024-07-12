@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { ErrorMessage, Form, Formik } from 'formik';
@@ -19,9 +21,6 @@ import { ResetFormType, Role } from 'types/global.types';
 
 import { backUrl, darkMode } from 'constants/links';
 
-
-import { useUserData } from 'hooks/useUserData';
-
 import { ModeContext } from 'providers/ModeProvider';
 import { DCContext } from 'providers/DeleteCommentProvider';
 
@@ -34,10 +33,12 @@ type OptionsType = {
   subCommentId?: string;
   lastCommentId?: string;
   roleId: string | Role.USER;
-  groupRole?: Role;
+  postId?: string;
   authorId: string;
+  userId: string;
   liked?: boolean;
   likes?: number;
+  role: Role;
   children?: ReactNode;
 };
 
@@ -49,10 +50,12 @@ export const OptionsComments = ({
   subCommentId,
   lastCommentId,
   roleId,
-  groupRole,
+  postId,
   authorId,
+  userId,
   liked,
   likes,
+  role,
   children,
 }: OptionsType) => {
   const [like, setLike] = useState(false);
@@ -65,9 +68,6 @@ export const OptionsComments = ({
   const [openEdit, setOpenEdit] = useState(false);
   const cancelRef = useRef(null);
   const cancelEditRef = useRef(null);
-
-
-  const { id } = useUserData();
 
   const initialValues = { comment: '' };
 
@@ -99,14 +99,50 @@ export const OptionsComments = ({
   };
 
   const deleteComment = async () => {
-    try {
-      !!commentId && (await axios.delete(`${backUrl}/comments/${commentId}/${roleId}/${groupRole}`));
-      !!fileId && (await axios.delete(`${backUrl}/files-comments/${fileId}/${roleId}`));
-      !!subCommentId && (await axios.delete(`${backUrl}/sub-comments/${subCommentId}/${roleId}/${groupRole}`));
-      !!lastCommentId && (await axios.delete(`${backUrl}/last-comments/${lastCommentId}/${roleId}/${groupRole}`));
+    const fileParams = encodeURI(
+      JSON.stringify({
+        fileCommentId: fileId,
+        where: 'fileId',
+        roleId,
+        userId: authorId,
+      }),
+    );
+    const params = encodeURI(
+      JSON.stringify({
+        commentId,
+        where: 'commentId',
+        roleId,
+        userId: authorId,
+        postId,
+      }),
+    );
+    const subParams = encodeURI(
+      JSON.stringify({
+        commentId: subCommentId,
+        where: 'subCommentId',
+        roleId,
+        userId: authorId,
+        postId,
+      }),
+    );
+    const lastParams = encodeURI(
+      JSON.stringify({
+        commentId: lastCommentId,
+        where: 'postId',
+        postId,
+        userId: authorId,
+        roleId,
+      }),
+    );
 
-      await changeDel();
-      await onClose();
+    try {
+      !!commentId && (await axios.delete(`${backUrl}/comments/${params}`));
+      !!fileId && (await axios.delete(`${backUrl}/api/files-comments/${fileParams}`));
+      !!subCommentId && (await axios.delete(`${backUrl}/api/sub-comments/${subParams}`));
+      !!lastCommentId && (await axios.delete(`${backUrl}/api/last-comments/${lastParams}`));
+
+      changeDel();
+      onClose();
     } catch (e) {
       console.error(e);
     }
@@ -136,7 +172,7 @@ export const OptionsComments = ({
         </div>
 
         <div className={styles.buttons}>
-          {authorId === id && (
+          {authorId === userId && (
             <>
               <IconButton
                 variant="outline"
@@ -252,7 +288,7 @@ export const OptionsComments = ({
         </div>
       </div>
 
-      {children && children}
+      {!!children && children}
     </>
   );
 };

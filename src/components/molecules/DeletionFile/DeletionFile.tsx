@@ -1,15 +1,7 @@
-'use client'
+'use client';
 
 import { useRef, useState } from 'react';
 import axios from 'axios';
-
-import { backUrl } from 'constants/links';
-
-import { useUserData } from "hooks/useUserData";
-
-import { Alerts } from 'components/atoms/Alerts/Alerts';
-
-import styles from './DeletionFile.module.scss';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -20,15 +12,18 @@ import {
   Button,
   IconButton,
 } from '@chakra-ui/react';
+
+import { useI18n, useScopedI18n } from 'locales/client';
+
+import { backUrl } from 'constants/links';
+
+import { Alerts } from 'components/atoms/Alerts/Alerts';
+
+import styles from './DeletionFile.module.scss';
+
 import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
-import { useI18n, useScopedI18n } from "../../../locales/client";
 
-type DeletionFileType = {
-  name: string;
-  authorName: string;
-};
-
-export const DeletionFile = ({ name, authorName }: DeletionFileType) => {
+export const DeletionFile = ({ name }: { name: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState<string>('');
@@ -39,8 +34,6 @@ export const DeletionFile = ({ name, authorName }: DeletionFileType) => {
   const cancelRef = useRef(null);
 
   const onClose = () => setIsOpen(false);
-  
-  const userData = useUserData();
 
   const deleteFile = async () => {
     try {
@@ -57,7 +50,7 @@ export const DeletionFile = ({ name, authorName }: DeletionFileType) => {
   };
 
   return (
-    userData?.pseudonym === authorName && <>
+    <>
       <IconButton
         icon={del ? <ChevronUpIcon /> : <ChevronDownIcon />}
         width="3rem"

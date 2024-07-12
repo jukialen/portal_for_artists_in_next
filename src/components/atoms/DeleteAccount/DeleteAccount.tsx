@@ -18,27 +18,26 @@ import { backUrl } from 'constants/links';
 
 import { useCurrentLocale, useI18n, useScopedI18n } from "locales/client";
 
-import { useUserData } from 'hooks/useUserData';
-
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './DeleteAccount.module.scss';
 import { DeleteIcon } from '@chakra-ui/icons';
+import { UserType } from "types/global.types";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-export const DeleteAccount = () => {
+export const DeleteAccount = ({ userData }: { userData: UserType }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState('');
   const cancelRef = useRef(null);
   const toast = useToast();
-
-  const userData = useUserData();
   
   const locale = useCurrentLocale();
   const t = useI18n();
   const tContact = useScopedI18n('Contact');
   const tDeletionAccount = useScopedI18n('DeletionAccount');
 
+  const supabase = createClientComponentClient();
   const { push } = useRouter();
   const onClose = () => setIsOpen(false);
 
@@ -47,10 +46,12 @@ export const DeleteAccount = () => {
       onClose();
       setDeleting(!deleting);
       setValues(tDeletionAccount('deletionAccount'));
-      const res = await axios.delete(`${backUrl}/users/${userData?.pseudonym}`);
+      // const res = await axios.delete(`${backUrl}/users/${userData?.pseudonym}`);
+      
+      const { data, error } = await supabase.auth.admin.deleteUser(userData?.id!);
       setValues('');
 
-      res.status === 200
+      !!data.user
         ? toast({
             description: tContact('success'),
             status: 'success',

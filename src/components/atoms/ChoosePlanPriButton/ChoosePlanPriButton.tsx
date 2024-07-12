@@ -4,21 +4,20 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@chakra-ui/react';
 
-import { useUserData } from 'hooks/useUserData';
+import { UserType } from "types/global.types";
 
 import { useI18n } from 'locales/client';
 
 import styles from './ChoosePlanPriButton.module.scss';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
-export const ChoosePlanPriButton = () => {
+export const ChoosePlanPriButton = ({ userData }: { userData: UserType }) => {
   const [open, setOpen] = useState(false);
   const { push, replace } = useRouter();
-  const userData = useUserData();
 
   const t = useI18n();
 
-  const changePlan = () => (userData?.pseudonym ? replace(`/account/${userData.pseudonym}`) : setOpen(!open));
+  const changePlan = () => (userData.pseudonym ? replace(`/account/${userData.pseudonym}`) : setOpen(!open));
 
   return (
     <>

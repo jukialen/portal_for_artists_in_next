@@ -1,15 +1,13 @@
+'use client';
+
 import { useState } from 'react';
 import { Link } from '@chakra-ui/next-js';
-import axios from 'axios';
 
 import { Avatar, Button, IconButton } from '@chakra-ui/react';
 
 import { PostsType } from 'types/global.types';
 
 import { backUrl, cloudFrontUrl } from 'constants/links';
-
-
-import { useUserData } from 'hooks/useUserData';
 
 import { DeletePost } from 'components/atoms/DeletionPost/DeletionPost';
 import { NewComments } from 'components/atoms/NewComments/NewComments';
@@ -21,29 +19,35 @@ import group from 'public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 export const Post = ({
-  title,
-  content,
+  userId,
   pseudonym,
-  profilePhoto,
-  likes,
-  liked,
-  shared,
-  commented,
-  groupId,
-  authorId,
-  postId,
-  roleId,
-  date,
-  name,
-}: PostsType) => {
+  postOnGroup,
+}: {
+  userId: string,
+  pseudonym: string,
+  postOnGroup: PostsType,
+}) => {
+  const {
+    postId,
+    title,
+    content,
+    likes,
+    shared,
+    commented,
+    authorId,
+    groupId,
+    date,
+    liked,
+    authorName,
+    authorProfilePhoto,
+    roleId,
+  } = postOnGroup;
+
   const [showComments, setShowComments] = useState(false);
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
 
-  const { id } = useUserData();
-
-
-  const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${pseudonym}/${postId}`;
+  const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${authorName}/${postId}`;
 
   const showingComments = () => setShowComments(!showComments);
 
@@ -63,12 +67,12 @@ export const Post = ({
   return (
     <article className={styles.container}>
       <div className={styles.avatarWithUsername}>
-        <Avatar src={`https://${cloudFrontUrl}/${profilePhoto}` || group} />
+        <Avatar src={`https://${cloudFrontUrl}/${authorProfilePhoto}` || group} />
         <div className={styles.username}>
-          <Link href={`/user/${pseudonym}`}>{pseudonym}</Link>
+          <Link href={`/user/${authorName}`}>{authorName}</Link>
           <div className={styles.time}>{date}</div>
         </div>
-        {id === authorId && <DeletePost postId={postId!} groupId={groupId} />}
+        {userId === authorId && <DeletePost postId={postId!} groupId={groupId} />}
       </div>
       <div className={styles.titlePost}>{title}</div>
       <div className={styles.description}>{content}</div>
@@ -83,13 +87,20 @@ export const Post = ({
         <Button colorScheme="blue" onClick={showingComments} className={styles.commentsButton} variant="ghost">
           {language?.Comments?.comments}
         </Button>
-        <SharingButton shareUrl={link} authorName={pseudonym} name={name} />
+        <SharingButton shareUrl={link} authorName={authorName} name={title} />
       </div>
       <p className={styles.likesCount} style={{ marginLeft: likeCount < 10 ? '.8rem' : '.5rem' }}>
         {likeCount}
       </p>
       <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-        <NewComments profilePhoto={profilePhoto!} roleId={roleId} />
+        <NewComments
+          profilePhoto={authorProfilePhoto!}
+          roleId={roleId}
+          authorId={authorId}
+          groupId={groupId}
+          author={authorName === pseudonym}
+          postId={postId}
+        />
         <Comments postId={postId!} />
       </article>
     </article>

@@ -8,15 +8,13 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-import { useUserData } from 'hooks/useUserData';
-
 import { useI18n, useScopedI18n } from 'locales/client';
-import { EventType, ResetFormType } from 'types/global.types';
+import { EventType, ResetFormType, UserType } from "types/global.types";
 
 import { ModeContext } from 'providers/ModeProvider';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
-import { FormError } from 'components/molecules/FormError/FormError';
+import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './ChangePseuDescData.module.scss';
 
@@ -25,8 +23,7 @@ type ProfileType = {
   newDescription: string;
 };
 
-export const ChangePseuDescData = () => {
-  const userData = useUserData();
+export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
 
   const { isMode } = useContext(ModeContext);
   const [valuesFields, setValuesFields] = useState('');

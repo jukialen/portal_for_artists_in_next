@@ -1,11 +1,11 @@
 import Image from 'next/image';
 
-import { LanguageType, FileType } from 'types/global.types';
+import { ProfileType } from 'types/global.types';
 
 import styles from './page.module.scss';
 import defaultAvatar from 'public/defaultAvatar.png';
 
-export const ProfileUser = ({ language, pseudonym, description, fileUrl }: FileType | LanguageType) => {
+export const ProfileUser = ({ language, pseudonym, description, fileUrl }: ProfileType) => {
   return (
     <article className={styles.profile}>
       <div className={styles.photo__profile}>

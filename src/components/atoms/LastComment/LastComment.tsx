@@ -2,12 +2,12 @@ import { useContext } from 'react';
 import { Link } from '@chakra-ui/next-js';
 import { Avatar } from '@chakra-ui/react';
 
-import { LastCommentType } from 'src/types/global.types';
+import { LastCommentType } from 'types/global.types';
 
-import { DCContext } from 'src/providers/DeleteCommentProvider';
+import { DCContext } from 'providers/DeleteCommentProvider';
 
-import { NewComments } from 'src/components/atoms/NewComments/NewComments';
-import { OptionsComments } from 'src/components/molecules/OptionsComments/OptionsComments';
+import { NewComments } from 'components/atoms/NewComments/NewComments';
+import { OptionsComments } from 'components/molecules/OptionsComments/OptionsComments';
 
 import styles from './LastComment.module.scss';
 
@@ -16,13 +16,11 @@ export const LastComment = ({
   lastComment,
   pseudonym,
   profilePhoto,
-  role,
+  authorName,
   roleId,
   groupRole,
   authorId,
   subCommentId,
-  fileId,
-  postId,
   date,
 }: LastCommentType) => {
   const { del } = useContext(DCContext);
@@ -43,7 +41,12 @@ export const LastComment = ({
       </div>
 
       <OptionsComments lastCommentId={lastCommentId} roleId={roleId} groupRole={groupRole} authorId={authorId}>
-        <NewComments profilePhoto={profilePhoto} subCommentId={subCommentId} fileId={fileId} postId={postId} />
+        <NewComments
+          profilePhoto={profilePhoto!}
+          subCommentId={subCommentId}
+          authorId={authorId}
+          author={pseudonym === authorName}
+        />
       </OptionsComments>
     </div>
   );
