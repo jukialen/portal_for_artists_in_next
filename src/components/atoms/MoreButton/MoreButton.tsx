@@ -1,3 +1,5 @@
+'use client'
+
 import { MouseEventHandler, useContext } from 'react';
 import { Button } from '@chakra-ui/react';
 

@@ -217,18 +217,18 @@ export default async function App({ params: { locale } }: { params: { locale: La
     <>
       <h2 className={styles.top__among__users}>{tApp('lastDrawings')}</h2>
       <AppWrapper>
-        {drawings!.length > 0 ? <AppTop10s data={drawings!} type="other" /> : <ZeroFiles text={tZero('drawings')} />}
+        {drawings!.length > 0 ? <AppTop10s data={drawings!} type="others" /> : <ZeroFiles text={tZero('drawings')} />}
       </AppWrapper>
 
       <h2 className={styles.top__among__users}>{tApp('lastPhotos')}</h2>
       <AppWrapper>
-        {photos!.length > 0 ? <AppTop10s data={photos!} type="other" /> : <ZeroFiles text={tZero('photos')} />}
+        {photos!.length > 0 ? <AppTop10s data={photos!} type="others" /> : <ZeroFiles text={tZero('photos')} />}
       </AppWrapper>
 
       <h2 className={styles.top__among__users}>{tApp('lastAnimations')}</h2>
       <AppWrapper>
         {downloadAnimations!.length > 0 ? (
-          <AppTop10s data={downloadAnimations!} type="other" />
+          <AppTop10s data={downloadAnimations!} type="others" />
         ) : (
           <ZeroFiles text={tZero('animations')} />
         )}
@@ -241,7 +241,7 @@ export default async function App({ params: { locale } }: { params: { locale: La
 
       <h2 className={styles.top__among__users}>{tApp('lastOthers')}</h2>
       <AppWrapper>
-        {others!.length > 0 ? <AppTop10s data={others!} type="other" /> : <ZeroFiles text={tZero('others')} />}
+        {others!.length > 0 ? <AppTop10s data={others!} type="others" /> : <ZeroFiles text={tZero('others')} />}
       </AppWrapper>
     </>
   );
