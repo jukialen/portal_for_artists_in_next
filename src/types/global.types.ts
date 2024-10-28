@@ -53,7 +53,7 @@ export type UserFormType = {
   password?: string;
 };
 
-//PRPLAOFILE
+//PROFILE
 export type ProfileType = {
   language: any;
   pseudonym: string;
@@ -122,10 +122,53 @@ export type GroupType = Time & {
   time?: string;
 };
 
+export type GroupListType = {
+  name: string;
+  fileUrl: string;
+};
+
 export type MemberType = {
   usersGroupsId?: string;
   pseudonym: string;
   profilePhoto: string;
+};
+
+export type JoinUser = {
+  logo: string;
+  description: string;
+  regulation: string;
+  join: boolean;
+  favorite: boolean;
+  favoriteLength: number;
+  admin: boolean;
+  groupId: string;
+  roleId: string;
+  usersGroupsId: string;
+};
+
+export type nameGroupTranslatedType = {
+  updateLogo?: {
+    upload: string;
+    notUpload: string;
+    validateRequired: string;
+    cancelButton: string;
+    submit: string;
+  },
+  joinedUser?: {
+    join: string,
+    joined: string,
+    addedToFav: string,
+    addToFav: string,
+    addToFavorite: string,
+    maxFav: string,
+    maximumAchieved: string
+  },
+  groupSections?: {
+    general: string,
+    members: string,
+    description: string,
+    noPermission: string
+  }
 };
 
 //POSTS
