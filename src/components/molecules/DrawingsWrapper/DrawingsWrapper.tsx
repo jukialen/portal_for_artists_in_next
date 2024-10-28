@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
-import { FileType } from 'types/global.types';
+import { DateObjectType, FileType, LangType } from "types/global.types";
 
 import { backUrl, cloudFrontUrl } from 'constants/links';
 
@@ -12,59 +12,26 @@ import { getDate } from 'helpers/getDate';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
-import { ClientPortalWrapper } from '../../atoms/ClientPortalWrapper/ClientPortalWrapper';
+import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 
 type DrawingsWrapperType = {
-  locale: string;
+  locale: LangType;
   pid: string;
-  dataDateObject: { second: string; minute: string; hour: string; day: string; yearDateSeparator: string };
+  dataDateObject: DateObjectType;
   noDrawings: string;
+  filesDrawings: FileType[] | undefined;
 };
 
-export const DrawingsWrapper = ({ locale, pid, dataDateObject, noDrawings }: DrawingsWrapperType) => {
-  const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
-  const [lastVisible, setLastVisible] = useState<string>();
+export const DrawingsWrapper =  async ({ locale, pid, dataDateObject, noDrawings, filesDrawings }: DrawingsWrapperType) => {
+  const [userDrawings, setUserDrawings] = useState<FileType[] | undefined>(filesDrawings);
+  const [lastVisible, setLastVisible] = useState<string | null>(null);
   let [i, setI] = useState(1);
 
   const maxItems = 30;
-
-  const downloadDrawings = async () => {
-    try {
-      const filesArray: FileType[] = [];
-
-      const firstPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
-        params: {
-          queryData: {
-            orderBy: { createdAt: 'desc' },
-            where: { tags: pid },
-            limit: maxItems,
-          },
-        },
-      });
-
-      for (const file of firstPage.data) {
-        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
-
-        filesArray.push({
-          fileId,
-          name,
-          shortDescription,
-          pseudonym,
-          profilePhoto,
-          fileUrl: `https://${cloudFrontUrl}/${name}`,
-          authorId,
-          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-        });
-      }
-
-      setUserDrawings(filesArray);
-      filesArray.length === maxItems && setLastVisible(filesArray[filesArray.length - 1].fileId);
-    } catch (e) {
-      console.error(e);
-      console.log('No such drawings!');
-    }
-  };
-
+  
+  
+  !!userDrawings && userDrawings.length === maxItems && setLastVisible(userDrawings[userDrawings.length - 1].fileId!);
+  
   const nextElements = async () => {
     try {
       const filesArray: FileType[] = [];
@@ -95,8 +62,8 @@ export const DrawingsWrapper = ({ locale, pid, dataDateObject, noDrawings }: Dra
         });
       }
 
-      setLastVisible(filesArray[filesArray.length - 1].fileId);
-      const newArray = userDrawings.concat(...filesArray);
+      setLastVisible(filesArray[filesArray.length - 1].fileId!);
+      const newArray = filesDrawings!.concat(...filesArray);
       setUserDrawings(newArray);
       setI(++i);
     } catch (e) {
@@ -104,13 +71,9 @@ export const DrawingsWrapper = ({ locale, pid, dataDateObject, noDrawings }: Dra
     }
   };
 
-  useEffect(() => {
-    !!pid && downloadDrawings();
-  }, [pid]);
-
   return (
     <>
-      {userDrawings.length > 0 ? (
+      {!!userDrawings && userDrawings.length > 0 ? (
         userDrawings.map(
           (
             { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
@@ -136,7 +99,7 @@ export const DrawingsWrapper = ({ locale, pid, dataDateObject, noDrawings }: Dra
         <ZeroFiles text={noDrawings} />
       )}
 
-      {!!lastVisible && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+      {!!lastVisible && !!userDrawings && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
     </>
   );
 };
