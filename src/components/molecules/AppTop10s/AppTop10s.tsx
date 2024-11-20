@@ -6,7 +6,7 @@ import { Article } from 'components/molecules/Article/Article';
 import { Videos } from 'components/molecules/Videos/Videos';
 import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 
-export const AppTop10s = async ({ data, type }: { data: FileType[]; type: 'videos' | 'other' }) => {
+export const AppTop10s = async ({ data, type }: { data: FileType[]; type: 'videos' | 'others' }) => {
   const userData = await getUserData();
 
   return data.map(
