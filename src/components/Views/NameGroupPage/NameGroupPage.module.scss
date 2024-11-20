@@ -1,0 +1,86 @@
+@use '../../../styles/variables' as *;
+
+.adminButtons {
+	width: 42.5rem;
+	max-width: 100vw;
+	display: flex;
+	margin: 2rem auto .5rem;
+
+	button {
+		margin-left: 2rem;
+		border-color: transparent;
+	}
+}
+
+.buttons {
+	max-width: 100vw;
+	display: flex;
+	flex-wrap: wrap;
+	margin: 2rem auto .5rem;
+
+	div {
+		display: flex;
+		flex-direction: column;
+
+		p {
+			margin-left: 2rem;
+			font-size: .9rem;
+		}
+
+		@media (min-width: 518px) {
+			.favoriteButton {
+				margin: .5rem;
+			}
+
+			p {
+				margin: auto .5rem;
+			}
+		}
+
+		@media (min-width: 852px) {
+			flex-direction: row;
+		}
+	}
+
+	.button {
+		max-width: fit-content;
+		margin: .5rem 2rem;
+		border-color: $third__color;
+		cursor: pointer;
+	}
+}
+
+
+section .hr {
+	width: calc(42.5rem - 2rem);
+}
+
+.tabs {
+	align-self: center;
+	justify-self: center;
+	width: 42.5rem;
+	max-width: 100vw;
+	margin: 0 auto;
+	gap: 2rem;
+
+	.tablist {
+		padding: 2rem 0;
+		flex-wrap: wrap;
+
+		.tab {
+			height: 2.5rem;
+			font-size: 1rem;
+			margin: .75rem 1rem;
+			border-radius: 0 1rem/3rem;
+			background-color: transparent;
+		}
+	}
+
+	.noPermission {
+		display: flex;
+		justify-content: center;
+		margin: 2rem auto;
+		font-size: 1.2rem;
+		text-align: center;
+	}
+}

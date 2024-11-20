@@ -210,7 +210,8 @@ export default {
       all: "These are already all groups."
     },
     noGroups: "No favorite group",
-    noPermission: "In order to can see a posts, you need to join to the group."
+    noPermission: "In order to can see a posts, you need to join to the group.",
+    deleteGroup: "Delete Group"
   },
   Friends: {
     add: "Add to friends",

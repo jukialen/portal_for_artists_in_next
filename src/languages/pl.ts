@@ -214,6 +214,7 @@ export default {
     },
     noGroups: 'Brak ulubionych grup',
     noPermission: 'Aby zobaczyć posty musisz dołączyć do grupy.',
+    deleteGroup: "Usuń grupę"
   },
   Friends: {
     add: 'Dodaj do znajomych',

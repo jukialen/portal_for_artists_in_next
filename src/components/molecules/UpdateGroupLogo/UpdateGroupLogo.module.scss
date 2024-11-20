@@ -1,0 +1,22 @@
+@use '../../../styles/variables' as *;
+
+.updateLogo {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 2.8rem;
+	height: 2.8rem;
+	margin: 0 .5rem;
+	font-size: 1.4rem;
+	border: .1rem solid $primary__color;
+	border-radius: .75rem;
+	background-color: $primary__color;
+	color: black;
+	cursor: pointer;
+}
+
+.modal {
+	background-color: $dark__background__light__color !important;
+	color: $primary__color !important;
+	margin: auto;
+}

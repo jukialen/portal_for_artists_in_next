@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { Link } from '@chakra-ui/next-js';
-
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Avatar, Button, IconButton } from '@chakra-ui/react';
 
+import { Database } from 'types/database.types';
 import { PostsType } from 'types/global.types';
+import { cloudFrontUrl } from 'constants/links';
 
-import { backUrl, cloudFrontUrl } from 'constants/links';
+import { useI18n } from 'locales/client';
 
 import { DeletePost } from 'components/atoms/DeletionPost/DeletionPost';
 import { NewComments } from 'components/atoms/NewComments/NewComments';
@@ -21,11 +23,13 @@ import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 export const Post = ({
   userId,
   pseudonym,
+  name,
   postOnGroup,
 }: {
-  userId: string,
-  pseudonym: string,
-  postOnGroup: PostsType,
+  userId: string;
+  pseudonym: string;
+  name: string;
+  postOnGroup: PostsType;
 }) => {
   const {
     postId,
@@ -41,6 +45,7 @@ export const Post = ({
     authorName,
     authorProfilePhoto,
     roleId,
+    idLiked,
   } = postOnGroup;
 
   const [showComments, setShowComments] = useState(false);
@@ -48,21 +53,33 @@ export const Post = ({
   let [likeCount, setLikeCount] = useState(likes);
 
   const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${authorName}/${postId}`;
+  const supabase = createClientComponentClient<Database>();
 
   const showingComments = () => setShowComments(!showComments);
 
   const addLike = async () => {
-    const addLike = likeCount + 1;
-    const subtractLike = likeCount - 1;
-
     if (like) {
-      await axios.patch(`${backUrl}/posts/${title}`, { id, likes: addLike });
+      const { error } = await supabase.from('Liked').delete().eq('id', idLiked!);
+
+      if (!!error) {
+        console.error(`Error: ${error?.message} with status ${error?.code}`);
+      } else {
+        setLike(false);
+        setLikeCount(likeCount - 1);
+      }
     } else {
-      await axios.patch(`${backUrl}/posts/${title}`, { id, likes: subtractLike });
+      const { error } = await supabase.from('Liked').insert([{ postId, userId: authorId }]);
+
+      if (!!error) {
+        console.error(`Error: ${error?.message} with status ${error?.code}`);
+      } else {
+        setLike(true);
+        setLikeCount(likeCount + 1);
+      }
     }
-    setLikeCount(like ? addLike : subtractLike);
-    setLike(!like);
   };
+
+  const t = useI18n();
 
   return (
     <article className={styles.container}>
@@ -78,14 +95,14 @@ export const Post = ({
       <div className={styles.description}>{content}</div>
       <div className={styles.options}>
         <IconButton
-          aria-label={like ? language?.Posts?.likedAria : language?.Posts?.likeAria}
+          aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
           colorScheme="teal"
           icon={like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
           className={styles.likes}
           onClick={addLike}
         />
         <Button colorScheme="blue" onClick={showingComments} className={styles.commentsButton} variant="ghost">
-          {language?.Comments?.comments}
+          {t('Comments.comments')}
         </Button>
         <SharingButton shareUrl={link} authorName={authorName} name={title} />
       </div>

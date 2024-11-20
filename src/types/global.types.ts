@@ -131,6 +131,7 @@ export type MemberType = {
   usersGroupsId?: string;
   pseudonym: string;
   profilePhoto: string;
+  role: Database['public']['Enums']['Role']
 };
 
 export type JoinUser = {
@@ -167,8 +168,27 @@ export type nameGroupTranslatedType = {
     general: string,
     members: string,
     description: string,
-    noPermission: string
-  }
+    noPermission: string,
+    deleteGroup: string,
+  },
+  members?: {
+    admin: string,
+    moderators: string,
+    modsAria: string,
+    noMods: string,
+    anotherMembers: string,
+    addModAria: string,
+    noMembers: string
+  },
+  posts?: {
+    add: string;
+    addTitPlaceholder: string;
+    addTitAria: string;
+    addDescription: string;
+    addDesAria: string;
+  },
+  error?: string;
+  noRegulation?: string;
 };
 
 //POSTS
@@ -187,6 +207,7 @@ export type PostsType = Time &
     groupId: string;
     roleId: string;
     date?: string;
+    idLiked: string;
   };
 
 //GALLERY

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Input, Textarea } from '@chakra-ui/react';
@@ -7,20 +7,34 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { ResetFormType } from 'types/global.types';
 
-import { backUrl } from 'constants/links';
-
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './AddingPost.module.scss';
 
-type AddingPostType = { groupId: string };
+type AddingPostType = {
+  groupId: string;
+  translatedPost: {
+    add: string;
+    addTitPlaceholder: string;
+    addTitAria: string;
+    addDescription: string;
+    addDesAria: string;
+  };
+  errorTr: string;
+  authorId: string;
+  roleId: string;
+};
 
 type NewPostType = { title: string; content: string };
 
-export const AddingPost = ({ groupId }: AddingPostType) => {
+export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr }: AddingPostType) => {
   const [showForm, setShowForm] = useState(false);
+  const [valueFields, setValueFields] = useState('');
 
   const initialValues = { title: '', content: '' };
+
+  const supabase = createClientComponentClient();
 
   const schemaNew = Yup.object({
     post: SchemaValidation().description,
@@ -28,22 +42,29 @@ export const AddingPost = ({ groupId }: AddingPostType) => {
   });
 
   const createNewPost = async ({ title, content }: NewPostType, { resetForm }: ResetFormType) => {
+    const { data, error } = await supabase
+      .from('Posts')
+      .insert([{ title, content, groupId, authorId, roleId }])
+      .select('title')
+      .limit(1)
+      .single();
     try {
-      await axios.post(`${backUrl}/posts`, {
-        title,
-        content,
-        groupId,
-      });
-      resetForm(initialValues);
+      if (!!data) {
+        resetForm(initialValues);
+      } else {
+        console.error(`Post creation error: ${error?.message} with code: ${error?.code}`);
+        setValueFields(`Post creation error: ${error?.message} with code: ${error?.code}`);
+      }
     } catch (e) {
       console.error(e);
+      setValueFields(errorTr);
     }
   };
 
   return (
     <>
       <button className={styles.showForm} onClick={() => setShowForm(!showForm)}>
-        {language?.Groups?.addingPost?.add}
+        {translatedPost.add}
       </button>
 
       <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={createNewPost}>
@@ -54,8 +75,8 @@ export const AddingPost = ({ groupId }: AddingPostType) => {
               name="title"
               value={values.title}
               onChange={handleChange}
-              placeholder={language?.Groups?.addingPost?.addTitPlaceholder}
-              aria-label={language?.Groups?.addingPost?.addTitAria}
+              placeholder={translatedPost.addTitPlaceholder}
+              aria-label={translatedPost.addTitAria}
               className={touched.title && !!errors.title ? styles.title__error : styles.title}
             />
 
@@ -67,16 +88,18 @@ export const AddingPost = ({ groupId }: AddingPostType) => {
               value={values.content}
               onChange={handleChange}
               resize="vertical"
-              placeholder={language?.Groups?.addingPost?.addDescription}
-              aria-label={language?.Groups?.addingPost?.addDesAria}
+              placeholder={translatedPost.addDescription}
+              aria-label={translatedPost.addDesAria}
               className={!!errors.content && touched.content ? styles.description__error : styles.description}
             />
 
             <FormError nameError="content" />
 
             <Button type="submit" colorScheme="blue.800" className={styles.addingButton}>
-              {language?.Groups?.addingPost?.add}
+              {translatedPost.add}
             </Button>
+
+            {!!valueFields && <Alerts valueFields={valueFields} />}
           </Form>
         )}
       </Formik>

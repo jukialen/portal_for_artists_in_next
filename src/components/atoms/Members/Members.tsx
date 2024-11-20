@@ -1,17 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import NextLink from 'next/link';
-import axios from 'axios';
-
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Avatar, Divider, IconButton, Link } from '@chakra-ui/react';
 
-import { MemberType } from 'types/global.types';
-
-
+import { cloudFrontUrl } from 'constants/links';
+import { MemberType, nameGroupTranslatedType, UserType } from 'types/global.types';
 
 import { sortMembers } from 'helpers/sorting';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { backUrl, cloudFrontUrl } from 'constants/links';
 
 import styles from './Members.module.scss';
 import group from 'public/group.svg';
@@ -21,123 +18,61 @@ type MembersType = {
   admin: boolean;
   groupId: string;
   name: string | string[];
+  usersGroupsId: string;
+  members: MemberType[];
+  translated: nameGroupTranslatedType;
+  userData: UserType;
 };
 
-export const Members = ({ admin, groupId, name }: MembersType) => {
-  const [pseudonymAdmin, setPseudonymAdmin] = useState('');
-  const [profilePhotoAdmin, setProfilePhotoAdmin] = useState('');
-  const [moderatorsArray, setModeratorsArray] = useState<MemberType[]>([]);
-  const [lastModeratorsVisible, setModeratorsLastVisible] = useState<MemberType>();
-  let [iModerators, setIModerators] = useState(1);
-  const [membersArray, setMembersArray] = useState<MemberType[]>([]);
-  const [lastMembersVisible, setMembersLastVisible] = useState<MemberType>();
-  let [iMembers, setIMembers] = useState(1);
+const supabase = createClientComponentClient();
 
-
+export const Members = ({ admin, groupId, name, usersGroupsId, members, translated, userData }: MembersType) => {
   const maxItems = 30;
 
-  const downloadAdmin = async () => {
-    const admin: { data: MemberType[] } = await axios.get(`${backUrl}/groups/members/${groupId}/ADMIN`, {
-      params: {
-        queryData: {
-          limit: 1,
-        },
-      },
-    });
+  members.sort(sortMembers());
 
-    setPseudonymAdmin(admin.data[0].pseudonym);
-    setProfilePhotoAdmin(admin.data[0].profilePhoto!);
-  };
+  const adminData = members.filter((e) => e.role === 'ADMIN')[0];
+  const pseudonymAdmin = adminData.pseudonym;
+  const profilePhotoAdmin = adminData.profilePhoto!;
 
-  useEffect(() => {
-    !!name && downloadAdmin();
-  }, [name]);
+  const modList = members.filter((e) => e.role === 'MODERATOR');
 
-  const moderatorsList = async () => {
-    try {
-      const moderatorArray: MemberType[] = [];
-
-      const moderators: { data: MemberType[] } = await axios.get(`${backUrl}/groups/members/${groupId}/MODERATOR`, {
-        params: {
-          queryData: {
-            limit: maxItems,
-          },
-        },
-      });
-
-      for (const mod of moderators.data) {
-        moderatorArray.push({
-          usersGroupsId: mod.usersGroupsId,
-          pseudonym: mod.pseudonym,
-          profilePhoto: mod.profilePhoto!,
-        });
-      }
-
-      const firstMods = moderatorArray.sort(sortMembers());
-      setModeratorsArray(firstMods);
-      moderatorArray.length === maxItems && setModeratorsLastVisible(moderatorArray[moderatorArray.length - 1]);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const membersList = async () => {
-    try {
-      const memberArray: MemberType[] = [];
-
-      const users: { data: MemberType[] } = await axios.get(`${backUrl}/groups/members/${groupId}/USER`, {
-        params: {
-          queryData: {
-            limit: maxItems,
-          },
-        },
-      });
-
-      for (const user of users.data) {
-        memberArray.push({
-          usersGroupsId: user.usersGroupsId,
-          pseudonym: user.pseudonym,
-          profilePhoto: user.profilePhoto!,
-        });
-      }
-
-      const firstMembers = await memberArray.sort(sortMembers());
-      setMembersArray(firstMembers);
-      memberArray.length === maxItems && setMembersLastVisible(memberArray[memberArray.length - 1]);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !!name && membersList();
-  }, [name]);
-
-  useEffect(() => {
-    !!name && moderatorsList();
-  }, [name]);
+  const [moderatorsArray, setModeratorsArray] = useState<MemberType[]>(modList || []);
+  const [lastModeratorsVisible, setModeratorsLastVisible] = useState<MemberType | null>(
+    modList.length === maxItems ? modList[modList.length - 1] : null,
+  );
+  let [iModerators, setIModerators] = useState(1);
+  const [membersArray, setMembersArray] = useState<MemberType[]>(members);
+  const [lastMembersVisible, setMembersLastVisible] = useState<MemberType | null>(
+    members.length === maxItems ? members[members.length - 1] : null,
+  );
+  let [iMembers, setIMembers] = useState(1);
 
   const nextModeratorsList = async () => {
+    const nextModeratorArray: MemberType[] = [];
+
+    const { data } = await supabase
+      .from('Groups')
+      .select(
+        `
+      Users (pseudonym, profilePhoto),
+      Roles (role)
+     `,
+      )
+      .eq('name', name)
+      .gt('created_at', lastModeratorsVisible)
+      .order('created_at', { ascending: false })
+      .limit(30);
+
     try {
-      const nextModeratorArray: MemberType[] = [];
-
-      const moderators: { data: MemberType[] } = await axios.get(`${backUrl}/groups/members/${groupId}/MODERATOR`, {
-        params: {
-          queryData: {
-            limit: maxItems,
-            cursor: 'efefe',
-          },
-        },
-      });
-
-      for (const mod of moderators.data) {
+      for (const mod of data!) {
         nextModeratorArray.push({
-          usersGroupsId: mod.usersGroupsId,
-          pseudonym: mod.pseudonym,
-          profilePhoto: mod.profilePhoto!,
+          usersGroupsId,
+          pseudonym: mod.Users[0].pseudonym,
+          profilePhoto: mod.Users[0].profilePhoto,
+          role: mod.Roles[0].role,
         });
       }
-
       const nextArray = moderatorsArray.concat(...nextModeratorArray).sort(sortMembers());
       setModeratorsArray(nextArray);
       setModeratorsLastVisible(nextModeratorArray[nextModeratorArray.length - 1]);
@@ -148,23 +83,28 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
   };
 
   const nextMembersList = async () => {
+    const nextMemberArray: MemberType[] = [];
+
+    const { data } = await supabase
+      .from('Groups')
+      .select(
+        `
+        Users (pseudonym, profilePhoto),
+        Roles (role)
+       `,
+      )
+      .eq('name', name)
+      .gt('created_at', lastMembersVisible)
+      .order('created_at', { ascending: false })
+      .limit(30);
+
     try {
-      const nextMemberArray: MemberType[] = [];
-
-      const users: { data: MemberType[] } = await axios.get(`${backUrl}/groups/members/${groupId}/USER`, {
-        params: {
-          queryData: {
-            limit: maxItems,
-            cursor: 'efefe',
-          },
-        },
-      });
-
-      for (const user of users.data) {
+      for (const mod of data!) {
         nextMemberArray.push({
-          usersGroupsId: user.usersGroupsId,
-          pseudonym: user.pseudonym,
-          profilePhoto: user.profilePhoto!,
+          usersGroupsId,
+          pseudonym: mod.Users[0].pseudonym,
+          profilePhoto: mod.Users[0].profilePhoto,
+          role: mod.Roles[0].role,
         });
       }
 
@@ -185,22 +125,47 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
     user: boolean,
   ) => {
     try {
-      const dataUser = { usersGroupsId, pseudonym, profilePhoto };
-
       if (user) {
-        await axios.patch(`${backUrl}/groups/${name}/MODERATOR`);
+        const { data, error } = await supabase
+          .from('UsersGroups')
+          .delete()
+          .eq('usersGroupsId', usersGroupsId)
+          .select('roleId')
+          .limit(1)
+          .single();
 
-        const deletedMem = membersArray.splice(index, 1);
-        setMembersArray(deletedMem);
-        const newModeratorsList = moderatorsArray.concat(dataUser);
-        setModeratorsArray(newModeratorsList);
+        if (!!data) {
+          await supabase.from('Roles').delete().eq('id', data.roleId);
+          const newMembersList = membersArray.concat({ usersGroupsId, pseudonym, profilePhoto, role: 'USER' });
+          setMembersArray(newMembersList);
+          const newModeratorsList = moderatorsArray.splice(index, 1);
+          setModeratorsArray(newModeratorsList);
+        } else {
+          console.error('Moderator addition error: ', error);
+        }
       } else {
-        await axios.patch(`${backUrl}/groups/${name}/USER`);
+        const { data, error } = await supabase
+          .from('Roles')
+          .insert([
+            {
+              groupId,
+              userId: userData.id,
+              role: 'MODERATOR',
+            },
+          ])
+          .select('id, role')
+          .limit(1)
+          .single();
 
-        const deletedMod = moderatorsArray.splice(index, 1);
-        setModeratorsArray(deletedMod);
-        const newMember = membersArray.concat(dataUser);
-        setMembersArray(newMember);
+        if (!!data) {
+          const newMod = { pseudonym, profilePhoto, usersGroupsId, role: data?.role };
+          const newMods = moderatorsArray.concat(newMod);
+          setModeratorsArray(newMods);
+          const delMember = membersArray.splice(index, 1);
+          setMembersArray(delMember);
+        } else {
+          console.error('Role addition error: ', error);
+        }
       }
     } catch (e) {
       console.error(e);
@@ -210,7 +175,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
   return (
     <>
       <h2>Members list</h2>
-      <p className={styles.roles}>{language?.Members?.admin}</p>
+      <p className={styles.roles}>{translated.members?.admin}</p>
       <Divider orientation="horizontal" />
 
       <div className={styles.usersButton}>
@@ -219,7 +184,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
           <Link>{pseudonymAdmin}</Link>
         </NextLink>
       </div>
-      <p className={styles.roles}>{language?.Members?.moderators}</p>
+      <p className={styles.roles}>{translated.members?.moderators}</p>
       <Divider orientation="horizontal" />
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
@@ -231,7 +196,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
             {admin && (
               <IconButton
                 type="submit"
-                aria-label={language?.Members?.modsAria}
+                aria-label={translated.members?.modsAria!}
                 icon={<MinusIcon />}
                 onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, false)}
               />
@@ -239,12 +204,12 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
           </div>
         ))
       ) : (
-        <p>{language?.Members?.noMods}</p>
+        <p>{translated.members?.noMods}</p>
       )}
       {!!lastModeratorsVisible && moderatorsArray.length === maxItems * iModerators && (
         <MoreButton nextElements={nextModeratorsList} />
       )}
-      <p className={styles.roles}>{language?.Members?.anotherMembers}</p>
+      <p className={styles.roles}>{translated.members?.anotherMembers}</p>
       <Divider orientation="horizontal" />
       {membersArray.length > 0 ? (
         membersArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
@@ -256,7 +221,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
             {admin && (
               <IconButton
                 type="submit"
-                aria-label={language?.Members?.addModAria}
+                aria-label={translated.members?.addModAria!}
                 icon={<AddIcon />}
                 onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, true)}
               />
@@ -264,7 +229,7 @@ export const Members = ({ admin, groupId, name }: MembersType) => {
           </div>
         ))
       ) : (
-        <p>{language?.Members?.noMembers}</p>
+        <p>{translated.members?.noMembers}</p>
       )}
       {!!lastMembersVisible && membersArray.length === maxItems * iMembers && (
         <MoreButton nextElements={nextMembersList} />

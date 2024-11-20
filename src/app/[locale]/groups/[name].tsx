@@ -1,384 +1,263 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
-import { io, Socket } from 'socket.io-client';
-import {
-  Button,
-  Divider,
-  IconButton,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Progress,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Metadata } from 'next';
+import { cookies } from 'next/headers';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { EventType, GroupType, Role } from 'types/global.types';
+import { cloudFrontUrl } from 'constants/links';
+import { HeadCom } from 'constants/HeadCom';
+import { Database } from 'types/database.types';
+import { DateObjectType, LangType, MemberType, PostsType } from 'types/global.types';
 
-import { backUrl, cloudFrontUrl } from 'constants/links';
+import { getUserData } from 'helpers/getUserData';
+import { getI18n, getScopedI18n } from 'locales/server';
 
-import { useUserData } from 'hooks/useUserData';
-
-import { Alerts } from 'components/atoms/Alerts/Alerts';
-
-import { AddingPost } from 'components/molecules/AddingPost/AddingPost';
-import { Members } from 'components/atoms/Members/Members';
-import { DescriptionSection } from 'components/molecules/DescriptionSection/DescriptionSection';
-import { Posts } from 'components/organisms/Posts/Posts';
+import { UpdateGroupLogo } from 'components/molecules/UpdateGroupLogo/UpdateGroupLogo';
+import { NameGroupPage } from 'components/Views/NameGroupPage/NameGroupPage';
 
 import styles from './page.module.scss';
-import { CheckIcon, SmallAddIcon } from '@chakra-ui/icons';
-import { MdCameraEnhance } from 'react-icons/md';
-import { Metadata } from "next";
-import { HeadCom } from "../../../constants/HeadCom";
+import { getDate } from '../../../helpers/getDate';
+import { dateData } from '../../../helpers/dateData';
+
+type JoinUser = {
+  logo: string;
+  description: string;
+  regulation: string;
+  join: boolean;
+  favorite: boolean;
+  favoriteLength: number;
+  admin: boolean;
+  groupId: string;
+  roleId: string;
+  usersGroupsId: string;
+};
+
+const supabase = createServerComponentClient<Database>({ cookies });
+
+const emptyObject: JoinUser = {
+  logo: '',
+  description: '',
+  regulation: '',
+  join: false,
+  favorite: false,
+  favoriteLength: 0,
+  admin: false,
+  groupId: '',
+  roleId: '',
+  usersGroupsId: '',
+};
+
+async function joinedUser(name: string, stringError: string): Promise<JoinUser> {
+  const myUser = await getUserData();
+
+  const userGroupData = await supabase
+    .from('UsersGroups')
+    .select(
+      `
+      groupId, roleId, favorite, usersGroupsId,
+      Groups ( logo, name, description, regulation, adminId),
+      Roles (role)
+     `,
+    )
+    .eq('name', name)
+    .eq('userId', myUser?.id!)
+    .limit(1)
+    .single();
+
+  const favoriteLengthGroups = await supabase
+    .from('UsersGroups')
+    .select('favorite')
+    .eq('userId', myUser?.id!)
+    .eq('favorite', true);
+
+  try {
+    if (!!userGroupData.data) {
+      const { groupId, usersGroupsId, roleId, favorite, Groups, Roles } = userGroupData.data;
+
+      const joinedUser = !!userGroupData;
+
+      return {
+        logo: `https://${cloudFrontUrl}/${Groups?.logo}`,
+        description: Groups?.description!,
+        regulation: Groups?.regulation!,
+        join: joinedUser,
+        favorite,
+        favoriteLength: favoriteLengthGroups.count!,
+        admin: joinedUser ? Roles!.role === 'ADMIN' : false,
+        groupId: joinedUser ? groupId! : '',
+        roleId: joinedUser ? roleId : '',
+        usersGroupsId: joinedUser ? usersGroupsId : '',
+      };
+    } else {
+      return emptyObject;
+    }
+  } catch (e) {
+    console.error(stringError);
+
+    return emptyObject;
+  }
+}
+
+async function members(usersGroupsId: string, name: string, stringError: string): Promise<MemberType[]> {
+  const usersGroupData = await supabase
+    .from('Groups')
+    .select(
+      `
+      Users (pseudonym, profilePhoto),
+      Roles (role)
+     `,
+    )
+    .eq('name', name)
+    .limit(30);
+
+  const usersInGroup: MemberType[] = [];
+
+  try {
+    if (!!usersGroupData.data) {
+      for (const user of usersGroupData.data) {
+        const { Users, Roles } = user;
+
+        usersInGroup.push({
+          usersGroupsId,
+          pseudonym: Users[0].pseudonym!,
+          profilePhoto: Users[0].profilePhoto!,
+          role: Roles[0].role,
+        });
+      }
+
+      return usersInGroup;
+    } else {
+      return [{ usersGroupsId, pseudonym: '', profilePhoto: '', role: 'USER' }];
+    }
+  } catch (e) {
+    console.error(stringError);
+
+    return [{ usersGroupsId, pseudonym: '', profilePhoto: '', role: 'USER' }];
+  }
+}
+
+async function getFirstPosts(groupId: string, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
+  const postsArray: PostsType[] = [];
+
+  const { data, error } = await supabase
+    .from('Posts')
+    .select('*, Users (pseudonym, profilePhoto), Roles (id)')
+    .eq('groupId', groupId)
+    .order('createdAt', { ascending: false })
+    .limit(maxItems);
+
+  if(!!error) {
+    console.error(error);
+    return;
+  } else {
+    for (const post of data!) {
+      const { title, content, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
+      
+      const { data: lData, count } = await supabase.from('Liked').select('id, userId').match({ postId, authorId });
+      
+      const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
+      
+      postsArray.push({
+        authorName: Users?.pseudonym!,
+        authorProfilePhoto: `https://${cloudFrontUrl}/${Users?.profilePhoto!}`,
+        liked: indexCurrentUser >= 0,
+        postId,
+        title,
+        content,
+        likes: count || 0,
+        shared,
+        commented,
+        authorId,
+        groupId,
+        roleId: Roles?.id!,
+        date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+        idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
+      });
+    }
+    return postsArray;
+
+  }
+}
 
 export async function generateMetadata({ name }: { name: string }): Promise<Metadata> {
   return { ...HeadCom(`${name} group website`) };
 }
-export default function Groups({ params: { locale, name } }: { params: { locale: string, name: string } }) {
-  const [admin, setAdmin] = useState(false);
-  const [description, setDescription] = useState('');
-  const [logo, setLogo] = useState('');
-  const [join, setJoin] = useState(false);
-  const [favorite, setFavorite] = useState(false);
-  const [favoriteLength, setFavoriteLength] = useState(0);
-  const [usersGroupsId, setUsersGroupsId] = useState<string | null>(null);
-  const [roleId, setRoleId] = useState('');
-  const [groupId, setGroupId] = useState('');
-  const [regulation, setRegulation] = useState('');
 
-  const [required, setRequired] = useState(false);
-  const [newLogo, setNewLogo] = useState<File | null>(null);
-  const [valuesFields, setValuesFields] = useState<string>('');
-  const [progressUpload, setProgressUpload] = useState<number>(0);
+export default async function Groups({ params: { locale, name } }: { params: { locale: LangType; name: string } }) {
+  const tAnotherForm = await getScopedI18n('AnotherForm');
+  const tOther = await getI18n();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const translated = {
+    updateLogo: {
+      upload: tAnotherForm('uploadFile'),
+      notUpload: tAnotherForm('notUploadFile'),
+      validateRequired: tOther('NavForm.validateRequired'),
+      cancelButton: tOther('DeletionFile.cancelButton'),
+      submit: tOther('Description.submit'),
+    },
+    joinedUser: {
+      join: tOther('Groups.join'),
+      joined: tOther('Groups.joined'),
+      addedToFav: tOther('Groups.favorite.addedToFav'),
+      addToFav: tOther('Groups.favorite.addedToFav'),
+      addToFavorite: tOther('Groups.favorite.addToFavorite'),
+      maxFav: tOther('Groups.favorite.maxFav'),
+      maximumAchieved: tOther('Groups.favorite.maximumAchieved'),
+    },
+    groupSections: {
+      general: tOther('Account.aMenu.general'),
+      members: tOther('Groups.menu.members'),
+      description: tAnotherForm('description'),
+      noPermission: tOther('Groups.noPermission'),
+      deleteGroup: tOther('Groups.deleteGroup'),
+    },
+    members: {
+      admin: tOther('Members.admin'),
+      moderators: tOther('Members.moderators'),
+      modsAria: tOther('Members.modsAria'),
+      noMods: tOther('Members.noMods'),
+      anotherMembers: tOther('Members.anotherMembers'),
+      addModAria: tOther('Members.addModAria'),
+      noMembers: tOther('Members.noMembers'),
+    },
+    posts: {
+      add: tOther('Groups.addingPost.add'),
+      addTitPlaceholder: tOther('Groups.addingPost.addTitAria'),
+      addTitAria: tOther('Groups.addingPost.addTitAria'),
+      addDescription: tOther('Groups.addingPost.addDescription'),
+      addDesAria: tOther('Groups.addingPost.addDesAria'),
+    },
+    error: tOther('error'),
+    noRegulation: tOther('Regulations.noRegulation')
+  };
 
-  const { push } = useRouter();
-
-  const userData = useUserData();
+  const userData = await getUserData();
+  const dataDateObject = dateData();
 
   const selectedColor = '#FFD068';
-  const hoverColor = '#FF5CAE';
-  const activeColor = '#4F8DFF';
-  const checkIcon = '1rem';
-  const smallIcon = '1.5rem';
-  const zeroPadding = 0;
 
-  const addingToGroup = { background: activeColor, color: '#000' };
+  const joined = await joinedUser(name, tOther('unknownError'));
+  const membersGroups = await members(joined.usersGroupsId, name, tOther('unknownError'));
+  const firstPosts = await getFirstPosts(joined.groupId, 30, locale, await dataDateObject);
 
-  const addingToGroupOutline = { background: 'transparent', color: activeColor };
-
-  const joinedUsers = async () => {
-    try {
-      const groups: { data: GroupType } = await axios.get(`${backUrl}/groups/${name}`);
-      setLogo(`https://${cloudFrontUrl}/${groups.data.logo}`);
-      setDescription(groups.data.description!);
-      setRegulation(groups.data.regulation);
-
-      if (!!groups) {
-        setJoin(true);
-        setFavorite(groups.data.favorited!);
-        setFavoriteLength(groups.data.favorites!);
-        setAdmin(groups.data.role === 'ADMIN');
-        setGroupId(groups.data.groupId!);
-        setRoleId(groups.data.roleId!);
-        setUsersGroupsId(groups.data.usersGroupsId!);
-      } else {
-        setJoin(false);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !!name && joinedUsers();
-  }, [name]);
-
-  const toggleToGroup = async () => {
-    try {
-      if (join) {
-        await axios.post(`${backUrl}/groups/join`, { name, groupId });
-      } else {
-        await axios.delete(`${backUrl}/groups/unjoin/${usersGroupsId}`);
-      }
-      setJoin(!join);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const toggleToFavorites = async () => {
-    try {
-      if (favorite) {
-        await axios.patch(`${backUrl}/groups/${roleId}/favs/${usersGroupsId}`, {
-          favs: false,
-        });
-        setFavoriteLength(favoriteLength - 1);
-      } else {
-        await axios.patch(`${backUrl}/groups/${roleId}/favs/${usersGroupsId}`, {
-          favs: true,
-        });
-        setFavoriteLength(favoriteLength + 1);
-      }
-      setFavorite(!favorite);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const changeFile = (e: EventType) => {
-    if (e.target.files?.[0]) {
-      setNewLogo(e.target.files[0]);
-      setRequired(false);
-    } else {
-      setNewLogo(null);
-      setRequired(true);
-    }
-  };
-
-  const updateLogo = async () => {
-    try {
-      if (!!newLogo && !required && admin) {
-        const socket = io(`${process.env.NEXT_PUBLIC_BACK_URL}/progressbar`);
-
-        socket.connect();
-        socket.emit('updateGroupLogo', {
-          data: {
-            oldName: name!,
-            groupId,
-            file: newLogo,
-            name: logo || '',
-            plan: userData?.plan,
-            //        clientId: socket.id,
-          },
-        });
-
-        //        function (socket: Socket) {
-        new Promise((resolve, reject) => {
-          socket.once('updateGroupLogo', (_data: number) => {
-            resolve(_data);
-            reject(_data);
-            setProgressUpload(_data);
-            console.log(resolve(_data));
-            console.log(reject(_data));
-            _data === 100 && setValuesFields(language?.AnotherForm?.uploadFile);
-            _data === 100 && socket.disconnect();
-          });
-        });
-      } else {
-        console.log('no logo selected');
-      }
-      //        };
-
-      //            !!newLogo &&
-      //              !required &&
-      //              admin &&
-      //        (await axios.patch(`${backUrl}/groups/${name}/${groupId}/${socket.id}`, {
-      //          file: newLogo,
-      //          name: logo || '',
-      //          clientId: socket.id,
-      //        }));
-
-      //      socket.on('updateGroupLogo', (_data: number) => {
-      //        if (_data === 100) {
-      //          setProgressUpload(_data);
-      //          setValuesFields(language?.AnotherForm?.uploadFile);
-      //          socket.disconnect();
-      //        }
-      //        socket.on('reconnet', () => {})
-      //      });
-    } catch (e) {
-      console.error(e);
-      setValuesFields(language?.AnotherForm?.notUploadFile);
-    }
-  };
-
-  const removeGroup = async  () => {
-    await axios.delete(`${backUrl}/groups/${name!}/${groupId}/${roleId}`);
-    await push('/app');
-  }
   return (
     <>
       <article className={styles.mainContainer}>
         <div className={styles.logo}>
-          <img src={logo} alt={`${name} logo`} />
-          {admin && (
-            <IconButton
-              aria-label="update group logo"
-              icon={<MdCameraEnhance />}
-              colorScheme="yellow"
-              className={styles.updateLogo}
-              onClick={onOpen}
-            />
+          {joined.admin && (
+            <UpdateGroupLogo logo={joined.logo} name={name} selectedColor={selectedColor} translated={translated} />
           )}
         </div>
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalOverlay />
-          <ModalContent backgroundColor="#2D3748" color={selectedColor} className={styles.modal}>
-            <ModalHeader className={styles.header}>Update logo</ModalHeader>
-            <ModalCloseButton color={selectedColor} borderColor="transparent" fontSize="md" />
-            <ModalBody className={styles.modal}>
-              <Input
-                type="file"
-                name="newLogo"
-                id="newLogo"
-                padding=".35rem 1rem"
-                margin=".5rem auto 1.5rem"
-                onChange={changeFile}
-                borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
-              />
-
-              <p style={{ color: '#bd0000' }}>{!newLogo && required && language?.NavForm?.validateRequired}</p>
-              {!!newLogo && (
-                <img
-                  src={`${process.env.NEXT_PUBLIC_PAGE}/${newLogo.name}`}
-                  alt="preview new logo"
-                  width={192}
-                  height={192}
-                  style={{
-                    margin: '1rem auto',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    borderRadius: '1rem',
-                  }}
-                />
-              )}
-
-              {progressUpload >= 1 && !(valuesFields === `${language?.AnotherForm?.uploadFile}`) && (
-                <Progress
-                  value={progressUpload}
-                  colorScheme="green"
-                  isAnimated
-                  hasStripe
-                  min={0}
-                  max={100}
-                  w={280}
-                  bg="blue.400"
-                  m="1.5rem auto"
-                  size="md"
-                />
-              )}
-
-              {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-            </ModalBody>
-            <ModalFooter>
-              <Button colorScheme="blue" borderColor="transparent" mr={3} onClick={onClose}>
-                {language?.DeletionFile?.cancelButton}
-              </Button>
-              <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
-                {language?.Description?.submit}
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
         <h2 className={styles.nameGroup}>{name}</h2>
+        <NameGroupPage
+          name={name}
+          userData={userData!}
+          locale={locale}
+          joined={joined}
+          usersGroupsId={joined.usersGroupsId}
+          members={membersGroups}
+          translated={translated}
+          firstPosts={firstPosts}
+        />
       </article>
-
-      {!admin ? (
-        <div className={styles.buttons}>
-          <Button
-            leftIcon={join ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
-            style={join ? addingToGroupOutline : addingToGroup}
-            colorScheme="blue"
-            onClick={toggleToGroup}
-            variant={join ? 'outline' : 'solid'}
-            className={styles.button}>
-              {join ? language?.Groups?.joined : language?.Groups?.join}
-          </Button>
-
-          {join && (
-            <div>
-              <Button
-                leftIcon={favorite ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
-                style={favorite ? addingToGroupOutline : addingToGroup}
-                colorScheme="blue"
-                disabled={!favorite && favoriteLength === 5}
-                onClick={toggleToFavorites}
-                variant={favorite ? 'solid' : 'outline'}
-                className={`${styles.button} ${styles.favoriteButton}`}>
-                  {favorite ? language?.Groups?.favorite?.addedToFav : language?.Groups?.favorite?.addToFavorite}
-              </Button>
-              {!favorite && (
-                <p>{favoriteLength < 5 ? language?.Groups?.favorite?.maxFav : language?.Groups?.favorite?.maximumAchieved}</p>
-                )}
-            </div>
-          )}
-        </div>
-      ) : <div className={styles.adminButtons}>
-            <Button colorScheme="blue" className={styles.button} onClick={removeGroup}>Usuń grupę</Button>
-          </div>
-      }
-    <Divider orientation="horizontal" className={styles.hr} />
-
-      <Tabs className={styles.tabs} isLazy lazyBehavior="keepMounted" isFitted variant="unstyled">
-        <TabList className={styles.tablist}>
-          <Tab
-            _hover={{ borderColor: hoverColor }}
-            _active={{ borderColor: activeColor }}
-            _selected={{ borderColor: selectedColor }}
-            borderColor={activeColor}
-            className={styles.tab}>
-            {decodeURIComponent(language?.Account?.aMenu?.general)}
-          </Tab>
-          {join && (
-            <Tab
-              _selected={{ borderColor: selectedColor }}
-              _hover={{ borderColor: hoverColor }}
-              _active={{ borderColor: activeColor }}
-              borderColor={activeColor}
-              className={styles.tab}>
-              {decodeURIComponent(language?.Groups?.menu?.members)}
-            </Tab>
-          )}
-          <Tab
-            _selected={{ borderColor: selectedColor }}
-            _hover={{ borderColor: hoverColor }}
-            _active={{ borderColor: activeColor }}
-            borderColor={activeColor}
-            className={styles.tab}>
-            {decodeURIComponent(language?.AnotherForm?.description)}
-          </Tab>
-        </TabList>
-
-        <TabPanels padding={zeroPadding}>
-          <TabPanel padding={zeroPadding}>
-            <>
-              {join && <AddingPost groupId={groupId!} />}
-              {join ? (
-                <Posts name={name!.toString()} groupId={groupId!} />
-              ) : (
-                <p className={styles.noPermission}>{language?.Groups?.noPermission}</p>
-              )}
-            </>
-          </TabPanel>
-          {join && (
-            <TabPanel padding={zeroPadding}>
-              <Members admin={admin} groupId={groupId} name={name!} />
-            </TabPanel>
-          )}
-          <TabPanel padding={zeroPadding}>
-            <DescriptionSection
-              description={description}
-              regulation={regulation}
-              admin={admin}
-              name={name}
-              usersGroupsId={usersGroupsId!}
-            />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
     </>
   );
 }

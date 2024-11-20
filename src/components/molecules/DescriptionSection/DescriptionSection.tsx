@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Button, Divider, IconButton, Textarea } from '@chakra-ui/react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { ResetFormType } from 'types/global.types';
 
-import { backUrl } from 'constants/links';
+import { useI18n, useScopedI18n } from 'locales/client';
 
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './DescriptionSection.module.scss';
@@ -18,8 +19,7 @@ type DescriptionSectionType = {
   description: string;
   regulation: string;
   admin: boolean;
-  name?: string | string[];
-  usersGroupsId: string;
+  groupId: string;
 };
 
 type NewDescType = {
@@ -30,65 +30,73 @@ type NewRegulationType = {
   newRegulation: string;
 };
 
-export const DescriptionSection = ({ description, regulation, admin, name, usersGroupsId }: DescriptionSectionType) => {
+export const DescriptionSection = ({ description, regulation, admin, groupId }: DescriptionSectionType) => {
+  const tRegulation = useScopedI18n('Regulations');
+  const tDescription = useScopedI18n('Description');
+  const t = useI18n();
+
   const [regul, setRegul] = useState(regulation);
-  const [openForm, setOpenForm] = useState(false);
-  const [openUpRegulations, setOpenUpRegulations] = useState(false);
+  const [descrip, setDescrip] = useState(description);
+  const [openDescriptionForm, setOpenDescriptionForm] = useState(false);
+  const [openUpRegulation, setOpenUpRegulation] = useState(false);
+  const [valuesFields, setValuesFields] = useState('');
 
+  const supabase = createClientComponentClient();
 
-
-  const initialValuesDes = { newDescription: description };
+  const initialValuesDes = { newDescription: descrip };
+  const initialValuesReg = { newRegulation: regul };
 
   const schemaNewDes = Yup.object({
     newDescription: SchemaValidation().description,
   });
 
-  const getRegulation = async () => {
-    setRegul(regulation === '' ? regulation.split('\n').join('\n') : language?.Regulations?.noRegulation);
-  };
-
-  useEffect(() => {
-    !!name && getRegulation();
-  }, [name]);
-
-  const updateDescription = async ({ newDescription }: NewDescType, { resetForm }: ResetFormType) => {
-    try {
-      await axios.patch(`${backUrl}/groups/${name}`, {
-        data: { description: newDescription, usersGroupsId },
-      });
-      resetForm(initialValuesDes);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const initialValuesReg = {
-    newRegulation: regul,
-  };
-
   const schemaNewReg = Yup.object({
     newRegulation: SchemaValidation().description,
   });
 
-  const updateRegulations = async ({ newRegulation }: NewRegulationType, { resetForm }: ResetFormType) => {
-    try {
-      await axios.patch(`${backUrl}/groups/${name}`, {
-        data: { regulation: newRegulation, usersGroupsId },
-      });
+  const updateDescription = async ({ newDescription }: NewDescType, { resetForm }: ResetFormType) => {
+    const { status, statusText, data, error } = await supabase
+      .from('Groups')
+      .update([{ description: newDescription }])
+      .eq('groupId', groupId)
+      .select('description')
+      .limit(1)
+      .single();
+    if (status === 200 || 204) {
       resetForm(initialValuesReg);
-    } catch (e) {
-      console.error(e);
+      setDescrip(data?.description);
+    } else {
+      console.error(`statusText: ${statusText} \n Error: ${error}`);
+      setValuesFields(`${t('unknownError')}. \n Error: ${error}`);
+    }
+  };
+
+  const updateRegulations = async ({ newRegulation }: NewRegulationType, { resetForm }: ResetFormType) => {
+    const { status, statusText, data, error } = await supabase
+      .from('Groups')
+      .update([{ regulation: newRegulation }])
+      .eq('groupId', groupId)
+      .select('regulation')
+      .limit(1)
+      .single();
+
+    if (status === 200 || 204) {
+      resetForm(initialValuesReg);
+      setRegul(data?.regulation);
+    } else {
+      console.error(`statusText: ${statusText} \n Error: ${error}`);
+      setValuesFields(`${t('unknownError')}. \n Error: ${error}`);
     }
   };
 
   return (
     <section className={styles.container}>
-      <h2 className={styles.title}>{language?.AnotherForm?.description}</h2>
+      <h2 className={styles.title}>{t('AnotherForm.description')}</h2>
 
       <Divider />
       <div className={styles.field}>
-        {!openForm ? (
-          <p className={styles.items}>{description}</p>
+        {!openDescriptionForm ? (
+          <p className={styles.items}>{descrip}</p>
         ) : (
           <Formik initialValues={initialValuesDes} validationSchema={schemaNewDes} onSubmit={updateDescription}>
             {({ values, handleChange, errors, touched }) => (
@@ -99,8 +107,8 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
                   value={values.newDescription}
                   onChange={handleChange}
                   resize="vertical"
-                  placeholder={language?.Description?.textPlaceholder}
-                  aria-label={language?.Description?.textAria}
+                  placeholder={tDescription('textPlaceholder')}
+                  aria-label={tDescription('textAria')}
                   className={
                     !!errors.newDescription && touched.newDescription ? styles.updateField__error : styles.updateField
                   }
@@ -109,8 +117,10 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
                 <FormError nameError="newDescription" />
 
                 <Button type="submit" colorScheme="blue" className={styles.addingButton}>
-                  {language?.Description?.submit}
+                  {tDescription('submit')}
                 </Button>
+
+                {!!valuesFields && <Alerts valueFields={valuesFields} />}
               </Form>
             )}
           </Formik>
@@ -119,16 +129,16 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
           <IconButton
             icon={<EditIcon />}
             className={styles.changeButton}
-            aria-label={language?.Description?.iconButton}
-            onClick={() => setOpenForm(!openForm)}
+            aria-label={tDescription('iconButton')}
+            onClick={() => setOpenDescriptionForm(!openDescriptionForm)}
           />
         )}
       </div>
 
-      <h2 className={styles.title}>{language?.Regulations?.regulation}</h2>
+      <h2 className={styles.title}>{tRegulation('regulation')}</h2>
       <Divider />
       <div className={styles.field}>
-        {!openUpRegulations ? (
+        {!openUpRegulation ? (
           <div className={styles.items}>
             <p className={!!regul ? styles.regulations__item : styles.regulations__no__item}>{regul}</p>
           </div>
@@ -142,8 +152,8 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
                   value={values.newRegulation}
                   onChange={handleChange}
                   resize="vertical"
-                  placeholder={language?.Description?.textPlaceholder}
-                  aria-label={language?.Description?.textAria}
+                  placeholder={tDescription('textPlaceholder')}
+                  aria-label={tDescription('textAria')}
                   className={
                     !!errors.newRegulation && touched.newRegulation ? styles.updateField__error : styles.updateField
                   }
@@ -152,8 +162,10 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
                 <FormError nameError="newRegulation" />
 
                 <Button type="submit" colorScheme="blue" className={styles.addingButton}>
-                  {language?.Description?.submit}
+                  {tDescription('submit')}
                 </Button>
+
+                {!!valuesFields && <Alerts valueFields={valuesFields} />}
               </Form>
             )}
           </Formik>
@@ -162,8 +174,8 @@ export const DescriptionSection = ({ description, regulation, admin, name, users
           <IconButton
             icon={<EditIcon />}
             className={styles.changeButton}
-            aria-label={language?.Description?.iconButton}
-            onClick={() => setOpenUpRegulations(!openUpRegulations)}
+            aria-label={tDescription('iconButton')}
+            onClick={() => setOpenUpRegulation(!openUpRegulation)}
           />
         )}
       </div>

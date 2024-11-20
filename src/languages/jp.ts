@@ -210,8 +210,9 @@ export default {
      all: "これがもう皆あります。"
     },
    noGroups: "愛用の団体がありません",
-   noPermission: "追加が見られる様に、この団体が付けないと行けない。"
-  },
+   noPermission: "追加が見られる様に、この団体が付けないと行けない。",
+   deleteGroup: "グループは消します"
+ },
  Friends: {
    add: "友達まで付け加える",
    added: "友達",
