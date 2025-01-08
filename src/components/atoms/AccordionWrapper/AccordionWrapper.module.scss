@@ -1,0 +1,11 @@
+@use 'src/styles/variables' as *;
+
+.accordionButton div svg {
+	text-align: inherit;
+	background-color: $primary__color;
+	border-radius: 1rem;
+
+	&:hover {
+		background-color: $primary__color;
+	}
+}
