@@ -12,6 +12,8 @@ type Time = {
   updatedAt?: string;
 };
 
+export type Tags = Database['public']['Enums']['Tags'];
+
 export type LangType = 'en' | 'pl' | 'jp';
 
 export type IndexType = 'photographs' | 'videos' | 'animations';
@@ -131,7 +133,7 @@ export type MemberType = {
   usersGroupsId?: string;
   pseudonym: string;
   profilePhoto: string;
-  role: Database['public']['Enums']['Role']
+  role: Database['public']['Enums']['Role'];
 };
 
 export type JoinUser = {
@@ -154,39 +156,39 @@ export type nameGroupTranslatedType = {
     validateRequired: string;
     cancelButton: string;
     submit: string;
-  },
+  };
   joinedUser?: {
-    join: string,
-    joined: string,
-    addedToFav: string,
-    addToFav: string,
-    addToFavorite: string,
-    maxFav: string,
-    maximumAchieved: string
-  },
+    join: string;
+    joined: string;
+    addedToFav: string;
+    addToFav: string;
+    addToFavorite: string;
+    maxFav: string;
+    maximumAchieved: string;
+  };
   groupSections?: {
-    general: string,
-    members: string,
-    description: string,
-    noPermission: string,
-    deleteGroup: string,
-  },
+    general: string;
+    members: string;
+    description: string;
+    noPermission: string;
+    deleteGroup: string;
+  };
   members?: {
-    admin: string,
-    moderators: string,
-    modsAria: string,
-    noMods: string,
-    anotherMembers: string,
-    addModAria: string,
-    noMembers: string
-  },
+    admin: string;
+    moderators: string;
+    modsAria: string;
+    noMods: string;
+    anotherMembers: string;
+    addModAria: string;
+    noMembers: string;
+  };
   posts?: {
     add: string;
     addTitPlaceholder: string;
     addTitAria: string;
     addDescription: string;
     addDesAria: string;
-  },
+  };
   error?: string;
   noRegulation?: string;
 };
