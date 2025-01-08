@@ -212,7 +212,7 @@ export type Database = {
           createdAt?: string
           favorite?: boolean
           friendId: string
-          id: string
+          id?: string
           updatedAt?: string | null
           usernameId: string
         }
@@ -549,38 +549,38 @@ export type Database = {
         Row: {
           createdAt: string | null
           description: string | null
-          email: string | null
+          email: string
           id: string
           plan: Database["public"]["Enums"]["Plan"]
           profilePhoto: string | null
           provider: Database["public"]["Enums"]["Provider"] | null
-          pseudonym: string | null
+          pseudonym: string
           updatedAt: string | null
-          username: string | null
+          username: string
         }
         Insert: {
           createdAt?: string | null
           description?: string | null
-          email?: string | null
-          id: string
-          plan?: Database["public"]["Enums"]["Plan"]
-          profilePhoto?: string | null
-          provider?: Database["public"]["Enums"]["Provider"] | null
-          pseudonym?: string | null
-          updatedAt?: string | null
-          username?: string | null
-        }
-        Update: {
-          createdAt?: string | null
-          description?: string | null
-          email?: string | null
+          email: string
           id?: string
           plan?: Database["public"]["Enums"]["Plan"]
           profilePhoto?: string | null
           provider?: Database["public"]["Enums"]["Provider"] | null
-          pseudonym?: string | null
+          pseudonym: string
           updatedAt?: string | null
-          username?: string | null
+          username: string
+        }
+        Update: {
+          createdAt?: string | null
+          description?: string | null
+          email?: string
+          id?: string
+          plan?: Database["public"]["Enums"]["Plan"]
+          profilePhoto?: string | null
+          provider?: Database["public"]["Enums"]["Provider"] | null
+          pseudonym?: string
+          updatedAt?: string | null
+          username?: string
         }
         Relationships: [
           {
