@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { Tags } from 'types/global.types';
+import { TagConstants } from 'constants/values';
 
 export const SchemaValidation = () => {
   const t = useI18n();
@@ -34,7 +34,7 @@ export const SchemaValidation = () => {
 
   const description = Yup.string().required(ts('validateRequired'));
 
-  const tags = Yup.mixed().oneOf(Object.values(Tags)).required(ts('validateRequired'));
+  const tags = Yup.mixed().oneOf(TagConstants).required(ts('validateRequired'));
 
   const contactType = Yup.string()
     .equals(
