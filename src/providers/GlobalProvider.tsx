@@ -3,8 +3,7 @@
 import { ReactNode, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import gsap from 'gsap';
-import { CacheProvider } from '@chakra-ui/next-js';
-import { ChakraProvider } from '@chakra-ui/react';
+
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import { useCurrentLocale, I18nProviderClient } from 'locales/client';
@@ -53,15 +52,11 @@ export const GlobalProvider = ({ children, locale }: ChildrenType) => {
   }, [homePage, pathname]);
 
   return (
-    <CacheProvider>
-      <ChakraProvider>
         <I18nProviderClient>
           <ModeProvider>
             {children}
             <AffixButton />
           </ModeProvider>
         </I18nProviderClient>
-      </ChakraProvider>
-    </CacheProvider>
   );
 };

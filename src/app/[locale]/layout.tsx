@@ -1,13 +1,15 @@
 import { ReactNode } from 'react';
 import Script from 'next/script';
+import { cookies } from 'next/headers';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { getStaticParams } from 'locales/server';
-import { getSession } from "helpers/getSession";
 
-import { LangType } from "types/global.types";
+import { LangType } from 'types/global.types';
 import { GTM_ID } from 'constants/links';
 
 import { GlobalProvider } from 'providers/GlobalProvider';
+import { Provider } from 'components/ui/provider';
 
 import { UserHeader } from 'components/organisms/UserHeader/UserHeader';
 import { Header } from 'components/organisms/Header/Header';
@@ -28,16 +30,21 @@ export function generateStaticParams() {
 }
 
 export default async function RootLayout({ children, params }: ChildrenType) {
+  const locale = params.locale;
+  const supabase = createServerComponentClient({ cookies });
+
   const userMenuComponents = {
-    userHeader: <UserHeader locale={params.locale} />,
-    header: <Header locale={params.locale} />,
+    userHeader: <UserHeader locale={locale} />,
+    header: <Header locale={locale} />,
     aside: <Aside />,
   };
 
-  const session = await getSession();
-  
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   return (
-    <html lang={params.locale}>
+    <html lang={locale} suppressHydrationWarning>
       {process.env.NODE_ENV === 'production' && (
         <Script src={`https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js`} strategy="beforeInteractive" />
       )}
@@ -49,9 +56,13 @@ export default async function RootLayout({ children, params }: ChildrenType) {
           }}
         />
 
-        <GlobalProvider locale={params.locale}>
-          <SkeletonRootLayout session={session} userMenuComponents={userMenuComponents} locale={params.locale}>{children}</SkeletonRootLayout>
-        </GlobalProvider>
+        <Provider>
+          <GlobalProvider locale={locale}>
+            <SkeletonRootLayout session={!!session} userMenuComponents={userMenuComponents} locale={locale}>
+              {children}
+            </SkeletonRootLayout>
+          </GlobalProvider>
+        </Provider>
       </body>
     </html>
   );
