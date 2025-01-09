@@ -1,11 +1,11 @@
 'use client';
 
 import { useContext, useState } from 'react';
-import { Button, Drawer, DrawerBody, DrawerContent, DrawerOverlay, useDisclosure } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
+import { DrawerBackdrop, DrawerBody, DrawerContent, DrawerRoot } from 'components/ui/drawer';
 
 import { darkMode } from 'constants/links';
-
-import { UserType } from 'types/global.types';
+import { FriendsListArrayType, GroupsType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
 
@@ -15,11 +15,20 @@ import { Friends } from 'components/atoms/Friends/Friends';
 
 import styles from './Aside.module.scss';
 import { RightOutlined } from '@ant-design/icons';
-import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
+import { RxTriangleDown, RxTriangleUp } from 'react-icons/rx';
 
-export const AsideWrapper = ({ asideCategory, userData }: { asideCategory: string; userData: UserType }) => {
+export const AsideWrapper = ({
+  asideCategory,
+  friendsAsideList,
+  groupsAsideList,
+}: {
+  asideCategory: string;
+  friendsAsideList: FriendsListArrayType[];
+  groupsAsideList: GroupsType[];
+}) => {
   const [open, setOpen] = useState(true);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [openDr, setOpenDr] = useState(false);
   const { isMode } = useContext(ModeContext);
 
   const arrowIcons = '1.5rem';
@@ -35,9 +44,9 @@ export const AsideWrapper = ({ asideCategory, userData }: { asideCategory: strin
           <h3 className={`${styles.h3} ${!open ? styles.afterHidden : ''}`} onClick={showCategories}>
             <p>{asideCategory}</p>
             {open ? (
-              <TriangleUpIcon w={arrowIcons} h={arrowIcons} />
+              <RxTriangleUp width={arrowIcons} height={arrowIcons} />
             ) : (
-              <TriangleDownIcon w={arrowIcons} h={arrowIcons} />
+              <RxTriangleDown width={arrowIcons} height={arrowIcons} />
             )}
           </h3>
 
@@ -45,20 +54,20 @@ export const AsideWrapper = ({ asideCategory, userData }: { asideCategory: strin
             <Categories />
           </div>
 
-          <Groups />
+          <Groups groupsAsideList={groupsAsideList} />
 
-          <Friends userData={userData} />
+          <Friends friendsAsideList={friendsAsideList} />
         </div>
       </aside>
 
-      {!isOpen && (
-        <button className={styles.aside__right} aria-label="left menu button" onClick={onOpen}>
+      {!openDr && (
+        <button className={styles.aside__right} aria-label="left menu button" onClick={() => setOpenDr(!openDr)}>
           <RightOutlined />
         </button>
       )}
 
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
+      <DrawerRoot placement="start" oopen={openDr} onClick={() => setOpenDr(!openDr)}>
+        <DrawerBackdrop />
         <DrawerContent style={{ width: undefined }} className={styles.drawer}>
           <DrawerBody className={styles.aside}>
             <div className={styles.blur}></div>
@@ -67,9 +76,9 @@ export const AsideWrapper = ({ asideCategory, userData }: { asideCategory: strin
               <h3 className={`${!open ? styles.afterHidden : ''} ${styles.h3}`} onClick={showCategories}>
                 <p>{asideCategory}</p>
                 {open ? (
-                  <TriangleUpIcon w={arrowIcons} h={arrowIcons} />
+                  <RxTriangleUp width={arrowIcons} height={arrowIcons} />
                 ) : (
-                  <TriangleDownIcon w={arrowIcons} h={arrowIcons} />
+                  <RxTriangleDown width={arrowIcons} height={arrowIcons} />
                 )}
               </h3>
 
@@ -77,21 +86,21 @@ export const AsideWrapper = ({ asideCategory, userData }: { asideCategory: strin
                 <Categories />
               </div>
 
-              <Groups />
+              <Groups groupsAsideList={groupsAsideList!} />
 
-              <Friends userData={userData} />
+              <Friends friendsAsideList={friendsAsideList!} />
             </div>
 
             <Button
               colorScheme="pink"
               className={styles.drawer__right}
               aria-label="right menu button"
-              onClick={onClose}>
+              onClick={() => setOpenDr(false)}>
               <RightOutlined />
             </Button>
           </DrawerBody>
         </DrawerContent>
-      </Drawer>
+      </DrawerRoot>
     </>
   );
 };

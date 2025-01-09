@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Link } from '@chakra-ui/next-js';
+import Link from 'next/link'
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useScopedI18n } from 'locales/client';
 
 import styles from './Categories.module.scss';
-import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
+import { RxTriangleDown, RxTriangleUp } from "react-icons/rx";
 import realistic from '../../../../public/realistic.jpg';
 import manga from '../../../../public/manga.jpg';
 import anime from '../../../../public/anime.jpg';
@@ -32,9 +32,9 @@ export const Categories = () => {
         <Link href={pathname!} className={styles.withIcon} onClick={changeOpenCategories}>
           <p>{tAside('drawings')}</p>
           {arrowIcon ? (
-            <TriangleUpIcon w={arrowIcons} h={arrowIcons} />
+            <RxTriangleUp width={arrowIcons} height={arrowIcons} />
           ) : (
-            <TriangleDownIcon w={arrowIcons} h={arrowIcons} />
+            <RxTriangleDown width={arrowIcons} height={arrowIcons} />
           )}
         </Link>
 
