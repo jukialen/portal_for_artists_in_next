@@ -101,6 +101,12 @@ export type FriendType = Time & {
   time?: string;
 };
 
+export type FriendsListArrayType = {
+  pseudonym: string;
+  profilePhoto: string;
+  favorites: number;
+};
+
 export type FriendsListType = {
   fileUrl: string;
   pseudonym: string;
@@ -122,6 +128,12 @@ export type GroupType = Time & {
   role: string;
   roleId: string;
   time?: string;
+};
+
+export type GroupsType = {
+  name: string;
+  description: string;
+  logo: string;
 };
 
 export type GroupListType = {
