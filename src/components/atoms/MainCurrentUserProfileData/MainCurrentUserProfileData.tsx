@@ -1,24 +1,25 @@
 'use client';
 
 import { useState, useContext } from 'react';
-import axios from 'axios';
 import Image from 'next/image';
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Button, Input } from "@chakra-ui/react";
 import {
-  IconButton,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Progress,
-  useDisclosure,
-  Button,
-} from '@chakra-ui/react';
+  DialogActionTrigger,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from 'components/ui/dialog';
 
-import { backUrl, cloudFrontUrl, darkMode } from 'constants/links';
+import { useScopedI18n } from "locales/client";
+
+import { cloudFrontUrl, darkMode } from 'constants/links';
+import { Database } from "types/database.types";
 import { EventType, UserType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -42,15 +43,17 @@ export const MainCurrentUserProfileData = ({
   userData: UserType;
 }) => {
   const [valuesFields, setValuesFields] = useState('');
-  const [progressUpload, setProgressUpload] = useState<number>(0);
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [open, setOpen] = useState(false);
+  
   const { isMode } = useContext(ModeContext);
-
+  
+  const supabase = createClientComponentClient<Database>();
+  
   const selectedColor = '#FFD068';
-
+  
+  const tAnotherForm = useScopedI18n('AnotherForm');
   const changeFile = (e: EventType) => {
     if (e.target.files?.[0]) {
       setNewLogo(e.target.files[0]);
@@ -63,13 +66,21 @@ export const MainCurrentUserProfileData = ({
 
   const updateLogo = async () => {
     try {
-      !!newLogo &&
-        !required &&
-        (await axios.patch(`${backUrl}/users/${userData?.pseudonym}`, {
-          profilePhoto: newLogo,
-        }));
+      if (!!newLogo && !required) {
+        const { data, error } = await supabase.storage.from('logos').upload(`/${userData?.id!}`, newLogo, {
+          upsert: !!userData?.profilePhoto });
+        
+        if (!!error) console.error(error);
+        
+        const { error: er } = await supabase.from('Users').update({ profilePhoto: data?.path})
+        
+        if (!!er) console.error(er);
+        
+        setValuesFields(tAnotherForm('uploadFile'));
+      }
     } catch (e) {
       console.error(e);
+      setValuesFields(tAnotherForm('notUploadFile'));
     }
   };
 
@@ -82,74 +93,63 @@ export const MainCurrentUserProfileData = ({
             fill
             alt={`${userData?.profilePhoto} logo`}
           />
-          <IconButton
-            aria-label="update group logo"
-            icon={<MdCameraEnhance />}
-            colorScheme="yellow"
-            className={styles.updateLogo}
-            onClick={onOpen}
-          />
+          <DialogRoot lazyMount open={open} onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean); }) => setOpen(e.open)}>
+            <DialogTrigger asChild>
+              <Button
+                aria-label="update group logo"
+                colorScheme="yellow"
+                className={styles.updateLogo}
+                onClick={() => setOpen(true)}
+              >
+                <MdCameraEnhance />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader backgroundColor={`${isMode === darkMode ? '#2D3748' : ''}`} color={selectedColor}>
+                <DialogTitle>Update logo</DialogTitle>
+              </DialogHeader>
+              
+              <DialogBody>
+                <Input
+                  type="file"
+                  name="newLogo"
+                  id="newLogo"
+                  padding=".5rem 1rem"
+                  margin=".5rem auto 1.5rem"
+                  borderRadius="1rem"
+                  onChange={changeFile}
+                  borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
+                />
+                
+                <p style={{ color: '#bd0000' }}>{!newLogo && required && tCurrPrPhoto.validateRequired}</p>
+                {!!newLogo && (
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_PAGE}/${newLogo.name}`}
+                    alt="preview new logo"
+                    width={192}
+                    height={192}
+                    style={{
+                      margin: '1rem auto',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      borderRadius: '1rem',
+                    }}
+                  />
+                )}
+                {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+              </DialogBody>
+              <DialogFooter>
+                <DialogActionTrigger colorScheme="blue" borderColor="transparent"  mr={3}>
+                  {tCurrPrPhoto.cancelButton}
+                </DialogActionTrigger>
+                <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
+                  {tCurrPrPhoto.submit}
+                </Button>
+              </DialogFooter>
+              <DialogCloseTrigger color={selectedColor} borderColor="transparent" />
+            </DialogContent>
+          </DialogRoot>
         </div>
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalOverlay />
-          <ModalContent backgroundColor={`${isMode === darkMode ? '#2D3748' : ''}`} color={selectedColor}>
-            <ModalHeader>Update logo</ModalHeader>
-            <ModalCloseButton color={selectedColor} borderColor="transparent" />
-            <ModalBody>
-              <Input
-                type="file"
-                name="newLogo"
-                id="newLogo"
-                padding=".5rem 1rem"
-                margin=".5rem auto 1.5rem"
-                borderRadius="1rem"
-                onChange={changeFile}
-                borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
-              />
-
-              <p style={{ color: '#bd0000' }}>{!newLogo && required && tCurrPrPhoto.validateRequired}</p>
-              {!!newLogo && (
-                <img
-                  src={`${process.env.NEXT_PUBLIC_PAGE}/${newLogo.name}`}
-                  alt="preview new logo"
-                  width={192}
-                  height={192}
-                  style={{
-                    margin: '1rem auto',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    borderRadius: '1rem',
-                  }}
-                />
-              )}
-
-              {progressUpload >= 1 && !(valuesFields === `${tCurrPrPhoto.uploadFile}`) && (
-                <Progress
-                  value={progressUpload}
-                  colorScheme="green"
-                  isAnimated
-                  hasStripe
-                  min={0}
-                  max={100}
-                  w={280}
-                  bg="blue.400"
-                  m="1.5rem auto"
-                  size="md"
-                />
-              )}
-
-              {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-            </ModalBody>
-            <ModalFooter>
-              <Button colorScheme="blue" borderColor="transparent" mr={3} onClick={onClose}>
-                {tCurrPrPhoto.cancelButton}
-              </Button>
-              <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
-                {tCurrPrPhoto.submit}
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
         <h1 className={styles.name}>{userData?.pseudonym}</h1>
       </div>
       <div className={styles.description}>{userData?.description}</div>
