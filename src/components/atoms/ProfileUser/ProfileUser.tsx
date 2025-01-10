@@ -19,7 +19,7 @@ export const ProfileUser = ({ language, pseudonym, description, fileUrl }: Profi
       </div>
       <div className={styles.publicContainer}>
         <label className={`${styles.title} ${styles.firstTitle}`} htmlFor="pseudonym__user">
-          {language?.AnotherForm?.pseudonym}
+          {language.pseudonym}
         </label>
         <div id="pseudonym__user" className={styles.input}>
           {pseudonym}
@@ -27,7 +27,7 @@ export const ProfileUser = ({ language, pseudonym, description, fileUrl }: Profi
       </div>
       <div className={styles.publicContainer}>
         <label className={styles.title} htmlFor="about__user">
-          {language?.Account?.profile?.aboutMe}
+          {language.aboutMe}
         </label>
         <div id="about__user" className={styles.description}>
           {description}

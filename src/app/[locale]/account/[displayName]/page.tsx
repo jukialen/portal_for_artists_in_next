@@ -1,165 +1,20 @@
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { setStaticParamsLocale } from 'next-international/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-
-import { getUserData } from 'helpers/getUserData';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { cloudFrontUrl } from 'constants/links';
-import { selectFiles } from 'constants/selects';
+import { LangType } from 'types/global.types';
 
-import { DateObjectType, FileType, FriendsListType, LangType } from 'types/global.types';
-import { Database } from 'types/database.types';
-
+import { getUserData } from 'helpers/getUserData';
 import { dateData } from 'helpers/dateData';
-import { getDate } from 'helpers/getDate';
+import { animations, graphics, videos } from 'utils/files';
+import { getFirstFriends } from 'utils/friends';
 
 import { DashboardTabs } from 'components/organisms/DashboardTabs/DashboardTabs';
 import { MainCurrentUserProfileData } from 'components/atoms/MainCurrentUserProfileData/MainCurrentUserProfileData';
 
-const supabase = createServerComponentClient<Database>({ cookies });
-
 export const metadata: Metadata = HeadCom('Account portal site.');
-
-const graphics = async (locale: LangType, maxItems: number, authorId: string, dataDateObject: DateObjectType) => {
-  try {
-    const filesArray: FileType[] = [];
-
-    const { data } = await supabase
-      .from('files')
-      .select(selectFiles)
-      .eq('authorId', authorId)
-      .in('tags', ['realistic', 'manga', 'anime', 'comics', 'photographs'])
-      .order('createdAt', { ascending: false })
-      .limit(maxItems);
-
-    if (data?.length === 0) return filesArray;
-
-    for (const file of data!) {
-      const { fileId, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
-
-      filesArray.push({
-        fileId,
-        name,
-        shortDescription,
-        pseudonym: Users[0].pseudonym!,
-        profilePhoto: `https://${cloudFrontUrl}/${Users[0].profilePhoto!}`,
-        fileUrl: `https://${cloudFrontUrl}/${name}`,
-        authorId,
-        time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-        createdAt,
-        updatedAt,
-      });
-    }
-    return filesArray;
-  } catch (e) {
-    console.error('no your videos', e);
-  }
-};
-const animations = async (locale: LangType, maxItems: number, authorId: string, dataDateObject: DateObjectType) => {
-  try {
-    const filesArray: FileType[] = [];
-
-    const { data } = await supabase
-      .from('files')
-      .select(selectFiles)
-      .eq('authorId', authorId)
-      .eq('tags', 'animations')
-      .order('createdAt', { ascending: false })
-      .limit(maxItems);
-
-    if (data?.length === 0) return filesArray;
-
-    for (const file of data!) {
-      const { fileId, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
-
-      filesArray.push({
-        fileId,
-        name,
-        shortDescription,
-        pseudonym: Users[0].pseudonym!,
-        profilePhoto: `https://${cloudFrontUrl}/${Users[0].profilePhoto!}`,
-        fileUrl: `https://${cloudFrontUrl}/${name}`,
-        authorId,
-        time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-        createdAt,
-        updatedAt,
-      });
-    }
-    return filesArray;
-  } catch (e) {
-    console.error('no your videos', e);
-  }
-};
-const videos = async (locale: LangType, maxItems: number, authorId: string, dataDateObject: DateObjectType) => {
-  try {
-    const filesArray: FileType[] = [];
-
-    const { data } = await supabase
-      .from('files')
-      .select(selectFiles)
-      .eq('authorId', authorId)
-      .eq('tags', 'videos')
-      .order('createdAt', { ascending: false })
-      .limit(maxItems);
-
-    if (data?.length === 0) return filesArray;
-
-    for (const file of data!) {
-      const { fileId, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
-
-      filesArray.push({
-        fileId,
-        name,
-        shortDescription,
-        pseudonym: Users[0].pseudonym!,
-        profilePhoto: `https://${cloudFrontUrl}/${Users[0].profilePhoto!}`,
-        fileUrl: `https://${cloudFrontUrl}/${name}`,
-        authorId,
-        time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-        createdAt,
-        updatedAt,
-      });
-    }
-    return filesArray;
-  } catch (e) {
-    console.error('no your videos', e);
-  }
-};
-const getFirstFriends = async (dataDateObject: DateObjectType, id: string, locale: LangType, maxItems: number) => {
-  try {
-    const { data } = await supabase
-      .from('Friends_View')
-      .select('favorite, createdAt, updatedAt, pseudonym, profilePhoto, plan')
-      .eq('usernameId', id)
-      .order('createdAt', { ascending: false })
-      .limit(maxItems);
-
-    const friendArray: FriendsListType[] = [];
-
-    if (data?.length === 0) return friendArray;
-
-    for (const _f of data!) {
-      const {} = _f;
-      friendArray.push({
-        favorite: _f.favorite!,
-        pseudonym: _f.pseudonym!,
-        fileUrl: !!_f.profilePhoto
-          ? `https://${cloudFrontUrl}/${_f.profilePhoto}`
-          : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
-        plan: _f.plan!,
-        createdAt: getDate(locale, _f.createdAt!, dataDateObject),
-      });
-    }
-
-    return friendArray;
-  } catch (e) {
-    console.error(e);
-  }
-};
 
 export default async function Account({ params: { locale } }: { params: { locale: LangType } }) {
   setStaticParamsLocale(locale);
@@ -172,7 +27,7 @@ export default async function Account({ params: { locale } }: { params: { locale
   const dataDateObject = await dateData();
 
   const userData = await getUserData();
-  
+
   const tMain = {
     validateRequired: t('NavForm.validateRequired'),
     uploadFile: t('AnotherForm.uploadFile'),

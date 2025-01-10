@@ -57,7 +57,7 @@ export type UserFormType = {
 
 //PROFILE
 export type ProfileType = {
-  language: any;
+  language: { userAvatar: string; defaultAvatar: string; pseudonym: string; aboutMe: string };
   pseudonym: string;
   description: string;
   fileUrl: string;
@@ -146,6 +146,11 @@ export type MemberType = {
   pseudonym: string;
   profilePhoto: string;
   role: Database['public']['Enums']['Role'];
+};
+
+export type GroupUsersType = {
+  name: string;
+  logo: string;
 };
 
 export type JoinUser = {

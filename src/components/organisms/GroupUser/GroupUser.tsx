@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Divider } from '@chakra-ui/react';
+import { useState } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Separator } from '@chakra-ui/react';
 
-import { backUrl, cloudFrontUrl } from 'constants/links';
-
-import { GroupType } from 'types/global.types';
+import { cloudFrontUrl } from 'constants/links';
+import { Database } from 'types/database.types';
+import { GroupUsersType } from 'types/global.types';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/atoms/Tile/Tile';
@@ -13,6 +13,9 @@ import styles from './GroupUser.module.scss';
 
 type GroupUserType = {
   id: string;
+  firstAdminArray: GroupUsersType[];
+  firstModsArray: GroupUsersType[];
+  firstMembersArray: GroupUsersType[];
   tGroupsUser: {
     adminTitle: string;
     modsTitle: string;
@@ -23,116 +26,41 @@ type GroupUserType = {
   };
 };
 
-type GroupUsersType = {
-  name: string;
-  logo: string;
-};
-
-export const GroupUser = ({ id, tGroupsUser }: GroupUserType) => {
-  const [adminsArray, setAdminsArray] = useState<GroupUsersType[]>([]);
-  const [lastAdminsVisible, setAdminsLastVisible] = useState<string>();
+export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArray, tGroupsUser }: GroupUserType) => {
+  const [adminsArray, setAdminsArray] = useState<GroupUsersType[]>(firstAdminArray);
+  const [lastAdminsVisible, setAdminsLastVisible] = useState(firstAdminArray[firstAdminArray.length - 1].name);
   let [iAdmins, setIAdmins] = useState(1);
-  const [moderatorsArray, setModeratorsArray] = useState<GroupUsersType[]>([]);
-  const [lastModeratorsVisible, setModeratorsLastVisible] = useState<string>();
+  const [moderatorsArray, setModeratorsArray] = useState<GroupUsersType[]>(firstModsArray);
+  const [lastModeratorsVisible, setModeratorsLastVisible] = useState(firstModsArray[firstModsArray.length - 1].name);
   let [iModerators, setIModerators] = useState(1);
-  const [membersArray, setMembersArray] = useState<GroupUsersType[]>([]);
-  const [lastMembersVisible, setMembersLastVisible] = useState<string>();
+  const [membersArray, setMembersArray] = useState<GroupUsersType[]>(firstMembersArray);
+  const [lastMembersVisible, setMembersLastVisible] = useState(firstMembersArray[firstMembersArray.length - 1].name);
   let [iMembers, setIMembers] = useState(1);
 
   const maxItems = 30;
 
-  const firstAdminList = async () => {
-    try {
-      const admins: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
-        params: { where: { adminId: id }, orderBy: { name: 'desc' }, limit: maxItems },
-      });
-
-      const adminArray: GroupUsersType[] = [];
-
-      for (const admin of admins.data) {
-        adminArray.push({
-          name: admin.name!,
-          logo: !!admin.logo ? `https://${cloudFrontUrl}/${admin.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-        });
-      }
-
-      setAdminsArray(adminArray);
-      adminArray.length === maxItems && setAdminsLastVisible(adminArray[adminArray.length - 1].name);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !!id && firstAdminList();
-  }, [id]);
-
-  const firstModeratorsList = async () => {
-    try {
-      const moderators: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
-        params: { where: { moderatorsId: id }, orderBy: { name: 'desc' }, limit: maxItems },
-      });
-      const moderatorArray: GroupUsersType[] = [];
-
-      for (const moderator of moderators.data) {
-        moderatorArray.push({
-          name: moderator.name!,
-          logo: !!moderator.logo
-            ? `https://${cloudFrontUrl}/${moderator.logo}`
-            : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-        });
-      }
-
-      setModeratorsArray(moderatorArray);
-      moderatorArray.length === maxItems && setModeratorsLastVisible(moderatorArray[moderatorArray.length - 1].name);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !!id && firstModeratorsList();
-  }, [id]);
-
-  const firstMembersList = async () => {
-    try {
-      const members: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
-        params: { where: { usersId: id }, orderBy: { name: 'desc' }, limit: maxItems },
-      });
-
-      const memberArray: GroupUsersType[] = [];
-
-      for (const member of members.data) {
-        memberArray.push({
-          name: member.name!,
-          logo: !!member.logo ? `https://${cloudFrontUrl}/${member.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-        });
-      }
-      setMembersArray(memberArray);
-      memberArray.length === maxItems && setMembersLastVisible(memberArray[memberArray.length - 1].name);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !!id && firstMembersList();
-  }, [id]);
-
+  const supabase = createClientComponentClient<Database>();
+  
   const nextAdminList = async () => {
-    try {
-      const admins: { data: GroupType[] } = await axios.get(`${backUrl}/groups`, {
-        params: { where: { adminId: id }, orderBy: { name: 'desc' }, limit: maxItems, cursor: lastAdminsVisible },
-      });
-
       const nextAdminArray: GroupUsersType[] = [];
-
-      for (const admin of admins.data) {
-        nextAdminArray.push({
-          name: admin.name!,
-          logo: !!admin.logo ? `https://${cloudFrontUrl}/${admin.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-        });
-      }
+      
+      const { data, error } = await supabase
+      .from('Groups')
+      .select('name, logo')
+      .eq('adminId', id)
+      .order('name', { ascending: true })
+      .gt('name', lastAdminsVisible)
+      .limit(maxItems);
+      
+      try {
+        if (!data || data.length === 0 || error) console.error(error);
+        
+        for (const admin of data!) {
+          nextAdminArray.push({
+            name: admin.name!,
+            logo: !!admin.logo ? `https://${cloudFrontUrl}/${admin.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          });
+        }
 
       const nextArray = adminsArray.concat(...nextAdminArray);
       setAdminsArray(nextArray);
@@ -144,23 +72,24 @@ export const GroupUser = ({ id, tGroupsUser }: GroupUserType) => {
   };
 
   const nextModeratorsList = async () => {
+    const nextModeratorArray: GroupUsersType[] = [];
+    
+    const { data, error } = await supabase
+    .from('UsersGroups')
+    .select('name, Groups (logo)')
+    .eq('userId', id)
+    .order('name', { ascending: true })
+    .gt('name', lastModeratorsVisible)
+    .limit(maxItems);
+    
     try {
-      const moderators: { data: GroupType[] } = await axios.get(`${backUrl}/groups`, {
-        params: {
-          where: { moderatorsId: id },
-          orderBy: { name: 'desc' },
-          limit: maxItems,
-          cursor: lastModeratorsVisible,
-        },
-      });
-
-      const nextModeratorArray: GroupUsersType[] = [];
-
-      for (const moderator of moderators.data) {
+      if (!data || data.length === 0 || error) console.error(error);
+      
+      for (const mod of data!) {
         nextModeratorArray.push({
-          name: moderator.name!,
-          logo: !!moderator.logo
-            ? `https://${cloudFrontUrl}/${moderator.logo}`
+          name: mod.name!,
+          logo: !!mod.Groups?.logo
+            ? `https://${cloudFrontUrl}/${mod.Groups.logo}`
             : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
@@ -176,17 +105,25 @@ export const GroupUser = ({ id, tGroupsUser }: GroupUserType) => {
   };
 
   const nextMembersList = async () => {
+    const nextMemberArray: GroupUsersType[] = [];
+    
+    const { data, error } = await supabase
+    .from('UsersGroups')
+    .select('name, Groups (logo)')
+    .eq('userId', id)
+    .order('name', { ascending: true })
+    .gt('name', lastMembersVisible)
+    .limit(maxItems);
+    
     try {
-      const members: { data: GroupType[] } = await axios.get(`${backUrl}/groups`, {
-        params: { where: { usersId: id }, orderBy: { name: 'desc' }, limit: maxItems, cursor: lastMembersVisible },
-      });
-
-      const nextMemberArray: GroupUsersType[] = [];
-
-      for (const member of members.data) {
+      if (!data || data.length === 0 || error) console.error(error);
+      
+      for (const mod of data!) {
         nextMemberArray.push({
-          name: member.name!,
-          logo: !!member.logo ? `https://${cloudFrontUrl}/${member.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          name: mod.name!,
+          logo: !!mod.Groups?.logo
+            ? `https://${cloudFrontUrl}/${mod.Groups.logo}`
+            : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
 
@@ -202,7 +139,7 @@ export const GroupUser = ({ id, tGroupsUser }: GroupUserType) => {
   return (
     <div className={styles.tilesSection}>
       <h2 className={styles.title}>{tGroupsUser.adminTitle}</h2>
-      <Divider className={styles.divider} />
+      <Separator className={styles.divider} />
       {adminsArray.length > 0 ? (
         adminsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
@@ -212,7 +149,7 @@ export const GroupUser = ({ id, tGroupsUser }: GroupUserType) => {
       )}
       {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && <MoreButton nextElements={nextAdminList} />}
       <h2 className={styles.title}>{tGroupsUser.modsTitle}</h2>
-      <Divider className={styles.divider} />
+      <Separator className={styles.divider} />
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
@@ -224,7 +161,7 @@ export const GroupUser = ({ id, tGroupsUser }: GroupUserType) => {
         <MoreButton nextElements={nextModeratorsList} />
       )}
       <h2 className={styles.title}>{tGroupsUser.usersTitle}</h2>
-      <Divider className={styles.divider} />
+      <Separator className={styles.divider} />
       {membersArray.length > 0 ? (
         membersArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />

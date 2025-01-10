@@ -20,7 +20,7 @@ type FriendsListComponentType = {
 
 export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListComponentType) => {
   const [friendsList, setFriendsList] = useState<FriendsListType[]>(firstFriendsList);
-  const [lastVisible, setLastVisible] = useState<string | null>();
+  const [lastVisible, setLastVisible] = useState<string | null>(firstFriendsList.length > 0 ? firstFriendsList[firstFriendsList.length - 1].createdAt : null);
   let [i, setI] = useState(1);
 
   const supabase = createClientComponentClient<Database>();
