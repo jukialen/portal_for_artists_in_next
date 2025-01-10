@@ -1,8 +1,8 @@
 'use client';
 
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Tabs } from '@chakra-ui/react';
 
-import {  GalleryType } from "types/global.types";
+import { GalleryType } from 'types/global.types';
 
 import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
 import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
@@ -31,66 +31,37 @@ export const DashboardTabs = ({
   const activeColor = '#82FF82';
   const borderColor = '#4F8DFF';
 
+  const fileTabList = [tDash?.friends, tDash?.groups, tDash?.photos, tDash?.animations, tDash?.videos];
+
   return (
-    <Tabs className={styles.tabsMenu} size="sm" isLazy lazyBehavior="keepMounted" isFitted variant="unstyled">
-      <TabList className={styles.topTabList} role="tablist">
+    <Tabs.Root className={styles.tabsMenu} size="sm" isLazy lazyMount isFitted variant="subtle">
+      <Tabs.List className={styles.topTabList} role="tablist">
         <div className={styles.account__menu}>
           <div className={styles.content}>
-            <Tab
-              _selected={{ borderColor: selectedColor }}
-              _hover={{ borderColor: hoverColor }}
-              _active={{ borderColor: activeColor }}
-              borderColor={borderColor}
-              role="tab">
-              {tDash?.friends}
-            </Tab>
-            <Tab
-              _selected={{ borderColor: selectedColor }}
-              _hover={{ borderColor: hoverColor }}
-              _active={{ borderColor: activeColor }}
-              borderColor={borderColor}
-              role="tab">
-              {tDash?.groups}
-            </Tab>
-            <Tab
-              className={styles.tabForPanels}
-              _selected={{ borderColor: selectedColor }}
-              _hover={{ borderColor: hoverColor }}
-              _active={{ borderColor: activeColor }}
-              borderColor={borderColor}
-              role="tab">
-              {tDash?.photos}
-            </Tab>
-            <Tab
-              className={styles.tabForPanels}
-              _selected={{ borderColor: selectedColor }}
-              _hover={{ borderColor: hoverColor }}
-              _active={{ borderColor: activeColor }}
-              borderColor={borderColor}
-              role="tab">
-              {tDash?.animations}
-            </Tab>
-            <Tab
-              className={styles.tabForPanels}
-              _selected={{ borderColor: selectedColor }}
-              _hover={{ borderColor: hoverColor }}
-              _active={{ borderColor: activeColor }}
-              borderColor={borderColor}
-              role="tab">
-              {tDash?.videos}
-            </Tab>
+            {fileTabList.map((tab, index) => (
+              <Tabs.Trigger
+                key={index}
+                className={styles.tabForPanels}
+                _selected={{ borderColor: selectedColor }}
+                _hover={{ borderColor: hoverColor }}
+                _active={{ borderColor: activeColor }}
+                borderColor={borderColor}
+                role="tab">
+                {tab}
+              </Tabs.Trigger>
+            ))}
           </div>
         </div>
-      </TabList>
+      </Tabs.List>
 
-      <TabPanels className={styles.tabPanels}>
-        <TabPanel className={styles.tabPanel} role="tabpanel">
+      <div className={styles.tabContents}>
+        <Tabs.Content className={styles.tabContent} role="tabcontent">
           <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} />
-        </TabPanel>
-        <TabPanel className={styles.tabPanel} role="tabpanel">
+        </Tabs.Content>
+        <Tabs.Content className={styles.tabContent} role="tabcontent">
           <GroupUsers id={id!} />
-        </TabPanel>
-        <TabPanel padding={0} role="tabpanel">
+        </Tabs.Content>
+        <Tabs.Content padding={0} role="tabcontent">
           <ClientPortalWrapper>
             <PhotosGallery
               id={id}
@@ -101,8 +72,8 @@ export const DashboardTabs = ({
               firstGraphics={firstGraphics}
             />
           </ClientPortalWrapper>
-        </TabPanel>
-        <TabPanel padding={0} role="tabpanel">
+        </Tabs.Content>
+        <Tabs.Content padding={0} role="tabcontent">
           <ClientPortalWrapper>
             <AnimatedGallery
               id={id}
@@ -113,8 +84,8 @@ export const DashboardTabs = ({
               firstAnimations={firstAnimations}
             />
           </ClientPortalWrapper>
-        </TabPanel>
-        <TabPanel padding={0} role="tabpanel">
+        </Tabs.Content>
+        <Tabs.Content padding={0} role="tabcontent">
           <ClientPortalWrapper>
             <VideoGallery
               id={id!}
@@ -125,8 +96,8 @@ export const DashboardTabs = ({
               firstVideos={firstVideos}
             />
           </ClientPortalWrapper>
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
+        </Tabs.Content>
+      </div>
+    </Tabs.Root>
   );
 };

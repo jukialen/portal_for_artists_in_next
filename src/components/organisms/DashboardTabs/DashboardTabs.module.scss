@@ -81,7 +81,7 @@
     }
   }
 
-  .tabPanels {
+  .tabContents {
     margin: 2rem auto;
 
     div {
@@ -113,10 +113,10 @@
           }
         }
 
-        .tabPanels {
+        .tabContents {
           padding: 0;
 
-          .tabPanel {
+          .tabContent {
             padding: 0;
           }
         }
