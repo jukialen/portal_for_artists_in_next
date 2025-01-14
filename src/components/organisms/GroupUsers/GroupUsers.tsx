@@ -1,12 +1,14 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Divider } from '@chakra-ui/react';
+import { useState } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Separator } from '@chakra-ui/react';
 
-import { backUrl, cloudFrontUrl } from 'constants/links';
+import { Database } from 'types/database.types';
 
+import { roles } from 'utils/groups';
 
+import { useI18n, useScopedI18n } from "locales/client";
 
 import { Links } from 'components/atoms/Links/Links';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -16,6 +18,8 @@ import styles from './GroupUsers.module.scss';
 
 type GroupUsersType = {
   id: string;
+  firstAdminList: GroupUserType[];
+  firstModsUsersList: { members: GroupUserType[]; moderators: GroupUserType[] };
 };
 
 type GroupUserType = {
@@ -24,198 +28,144 @@ type GroupUserType = {
   groupId: string;
 };
 
-export const GroupUsers = ({ id }: GroupUsersType) => {
-  const [adminsArray, setAdminsArray] = useState<GroupUserType[]>([]);
-  const [lastAdminsVisible, setAdminsLastVisible] = useState<string>();
-  let [iAdmins, setIAdmins] = useState(1);
-  const [moderatorsArray, setModeratorsArray] = useState<GroupUserType[]>([]);
-  const [lastModeratorsVisible, setModeratorsLastVisible] = useState<string>();
-  let [iModerators, setIModerators] = useState(1);
-  const [membersArray, setMembersArray] = useState<GroupUserType[]>([]);
-  const [lastMembersVisible, setMembersLastVisible] = useState<string>();
-  let [iMembers, setIMembers] = useState(1);
-
-
+export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUsersType) => {
   const maxItems = 30;
 
-  const firstAdminList = async () => {
-    try {
-      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/groups/my-groups/ADMIN`, {
-        params: {
-          queryData: {
-            limit: maxItems,
-          },
-        },
-      });
+  const [adminsArray, setAdminsArray] = useState<GroupUserType[]>(firstAdminList!);
+  const [lastAdminsVisible, setAdminsLastVisible] = useState(
+    firstAdminList.length === maxItems ? firstAdminList[firstAdminList.length - 1].name : '',
+  );
+  let [iAdmins, setIAdmins] = useState(1);
+  const [moderatorsArray, setModeratorsArray] = useState<GroupUserType[]>(firstModsUsersList.moderators);
+  const [lastModeratorsVisible, setModeratorsLastVisible] = useState(
+    firstModsUsersList.moderators.length === maxItems
+      ? firstModsUsersList.moderators[firstModsUsersList.moderators.length - 1].name
+      : '',
+  );
+  let [iModerators, setIModerators] = useState(1);
+  const [membersArray, setMembersArray] = useState<GroupUserType[]>(firstModsUsersList.members);
+  const [lastMembersVisible, setMembersLastVisible] = useState(
+    firstModsUsersList.members.length === maxItems
+      ? firstModsUsersList.members[firstModsUsersList.members.length - 1].name
+      : '',
+  );
+  let [iMembers, setIMembers] = useState(1);
 
-      const adminArray: GroupUserType[] = [];
-
-      for (const _group of groupList.data) {
-        adminArray.push({
-          name: _group.name,
-          logo: !!_group.logo ? `https://${cloudFrontUrl}/${_group.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          groupId: _group.groupId,
-        });
-      }
-
-      setAdminsArray(adminArray);
-      adminArray.length === maxItems && setAdminsLastVisible(adminArray[adminArray.length - 1].name);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !!id && firstAdminList();
-  }, [id]);
-
-  const firstModeratorsList = async () => {
-    try {
-      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/my-groups/MODERATOR`, {
-        params: {
-          queryData: {
-            limit: maxItems,
-          },
-        },
-      });
-
-      const moderatorArray: GroupUserType[] = [];
-
-      for (const _g of groupList.data) {
-        moderatorArray.push({
-          name: _g.name,
-          logo: !!_g.logo ? `https://${cloudFrontUrl}/${_g.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          groupId: _g.groupId,
-        });
-      }
-
-      setModeratorsArray(moderatorArray);
-      moderatorArray.length === maxItems && setModeratorsLastVisible(moderatorArray[moderatorArray.length - 1].groupId);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !!id && firstModeratorsList();
-  }, [id]);
-
-  const firstMembersList = async () => {
-    try {
-      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/my-groups/USER`, {
-        params: {
-          queryData: {
-            limit: maxItems,
-          },
-        },
-      });
-
-      const memberArray: GroupUserType[] = [];
-
-      for (const _g of groupList.data) {
-        memberArray.push({
-          name: _g.name,
-          logo: !!_g.logo ? `https://${cloudFrontUrl}/${_g.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          groupId: _g.groupId,
-        });
-      }
-
-      setMembersArray(memberArray);
-      memberArray.length === maxItems && setMembersLastVisible(memberArray[memberArray.length - 1].groupId);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  useEffect(() => {
-    !!id && firstMembersList();
-  }, [id]);
+  const tAccount = useScopedI18n('Account.groups');
+  const tAside = useScopedI18n('Aside');
+  const t = useI18n();
+  
+  const supabase = createClientComponentClient<Database>();
 
   const nextAdminList = async () => {
+    const nextAdminArray: GroupUserType[] = [];
+
     try {
-      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/my-groups/ADMIN`, {
-        params: {
-          queryData: {
-            limit: maxItems,
-            cursor: lastAdminsVisible,
-          },
-        },
-      });
+      const { data, error } = await supabase
+        .from('Groups')
+        .select('name, logo, groupId')
+        .eq('adminId', id)
+        .order('name', { ascending: true })
+        .gt('name', lastAdminsVisible)
+        .limit(maxItems);
 
-      const nextAdminArray: GroupUserType[] = [];
+      if (data?.length === 0 || !!error) {
+        console.error(error);
+        return;
+      }
 
-      for (const _g of groupList.data) {
+      for (const _group of data!) {
         nextAdminArray.push({
-          name: _g.name,
-          logo: !!_g.logo ? `https://${cloudFrontUrl}/${_g.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          groupId: _g.groupId,
+          name: _group.name,
+          logo: !!_group.logo ? _group.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          groupId: _group.groupId,
         });
       }
 
       const nextArray = adminsArray.concat(...nextAdminArray);
       setAdminsArray(nextArray);
-      setAdminsLastVisible(nextArray[nextArray.length - 1].groupId);
-      setIAdmins(iAdmins++);
+
+      if (nextArray.length === maxItems * iAdmins) {
+        setAdminsLastVisible(nextArray[nextArray.length - 1].groupId);
+        setIAdmins(iAdmins++);
+      }
     } catch (e) {
       console.error(e);
     }
   };
 
   const nextModeratorsList = async () => {
+    const nextModeratorArray: GroupUserType[] = [];
+
     try {
-      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/my-groups/MODERATOR`, {
-        params: {
-          queryData: {
-            limit: maxItems,
-            cursor: lastModeratorsVisible,
-          },
-        },
-      });
+      const { data, error } = await supabase
+        .from('UsersGroups')
+        .select('name, Groups (logo), groupId, roleId')
+        .eq('userId', id)
+        .order('name', { ascending: true })
+        .gt('name', lastModeratorsVisible)
+        .limit(maxItems);
 
-      const nextModeratorArray: GroupUserType[] = [];
+      if (data?.length === 0 || !!error) {
+        console.error(error);
+        return;
+      }
 
-      for (const _g of groupList.data) {
-        nextModeratorArray.push({
-          name: _g.name,
-          logo: !!_g.logo ? `https://${cloudFrontUrl}/${_g.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          groupId: _g.groupId,
-        });
+      for (const d of data) {
+        const role = await roles(d.roleId, id);
+        if (role == 'MODERATOR') {
+          nextModeratorArray.push({
+            name: d.name,
+            logo: !!d.Groups?.logo ? d.Groups?.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+            groupId: d.groupId,
+          });
+        }
       }
 
       const nextArray = moderatorsArray.concat(...nextModeratorArray);
 
       setModeratorsArray(nextArray);
-      setModeratorsLastVisible(nextArray[nextArray.length - 1].groupId);
-      setIModerators(iModerators++);
+      if (nextArray.length === maxItems * iModerators) {
+        setModeratorsLastVisible(nextArray[nextArray.length - 1].groupId);
+        setIModerators(iModerators++);
+      }
     } catch (e) {
       console.error(e);
     }
   };
 
   const nextMembersList = async () => {
+    const nextMemberArray: GroupUserType[] = [];
+
     try {
-      const groupList: { data: GroupUserType[] } = await axios.get(`${backUrl}/my-groups/USER`, {
-        params: {
-          queryData: {
-            limit: maxItems,
-            cursor: lastMembersVisible,
-          },
-        },
-      });
-
-      const nextMemberArray: GroupUserType[] = [];
-
-      for (const _g of groupList.data) {
-        nextMemberArray.push({
-          name: _g.name,
-          logo: !!_g.logo ? `https://${cloudFrontUrl}/${_g.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          groupId: _g.groupId,
-        });
+      const { data, error } = await supabase
+      .from('UsersGroups')
+      .select('name, Groups (logo), groupId, roleId')
+      .eq('userId', id)
+      .order('name', { ascending: true })
+      .gt('name', lastMembersVisible)
+      .limit(maxItems);
+      
+      if (data?.length === 0 || !!error) {
+        console.error(error);
+        return;
       }
+      
+      for (const d of data) {
+        const role = await roles(d.roleId, id);
+        if (role == 'USER') {
+          nextMemberArray.push({
+            name: d.name,
+            logo: !!d.Groups?.logo ? d.Groups?.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+            groupId: d.groupId,
+          });
+        }
+      }
+
 
       const nextArray = membersArray.concat(...nextMemberArray);
       setMembersArray(nextArray);
-      setModeratorsLastVisible(nextArray[nextArray.length - 1].groupId);
+      setMembersLastVisible(nextArray[nextArray.length - 1].groupId);
       setIMembers(iMembers++);
     } catch (e) {
       console.error(e);
@@ -225,45 +175,45 @@ export const GroupUsers = ({ id }: GroupUsersType) => {
   return (
     <div className={styles.tilesSection}>
       <section className={styles.sectionTitleNewGroup}>
-        <h2>{language?.Nav?.groups}</h2>
+        <h2>{t('Nav.groups')}</h2>
         <Links
           hrefLink="/adding_group"
           classLink={`${styles.sectionTitleNewGroup__button} button`}
-          aria-label={language?.Aside?.addingGroup}>
-          {language?.Aside?.addingGroup}
+          aria-label={tAside('addingGroup')}>
+          {tAside('addingGroup')}
         </Links>
       </section>
 
-      <h2 className={styles.title}>{language?.Account?.groups?.adminTitle}</h2>
-      <Divider className={styles.divider} />
+      <h2 className={styles.title}>{tAccount('adminTitle')}</h2>
+      <Separator className={styles.divider} />
       {adminsArray.length > 0 ? (
         adminsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
       ) : (
-        <p className={styles.noGroups}>{language?.Account?.groups?.noAdmin}</p>
+        <p className={styles.noGroups}>{tAccount('noAdmin')}</p>
       )}
       {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && <MoreButton nextElements={nextAdminList} />}
-      <h2 className={styles.title}>{language?.Account?.groups?.modsTitle}</h2>
-      <Divider className={styles.divider} />
+      <h2 className={styles.title}>{tAccount('modsTitle')}</h2>
+      <Separator className={styles.divider} />
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
       ) : (
-        <p className={styles.noGroups}>{language?.Account?.groups?.noMods}</p>
+        <p className={styles.noGroups}>{tAccount('noMods')}</p>
       )}
       {!!lastModeratorsVisible && moderatorsArray.length == maxItems * iModerators && (
         <MoreButton nextElements={nextModeratorsList} />
       )}
-      <h2 className={styles.title}>{language?.Account?.groups?.usersTitle}</h2>
-      <Divider className={styles.divider} />
+      <h2 className={styles.title}>{tAccount('usersTitle')}</h2>
+      <Separator className={styles.divider} />
       {membersArray.length > 0 ? (
         membersArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
       ) : (
-        <p className={styles.noGroups}>{language?.Account?.groups?.noUsers}</p>
+        <p className={styles.noGroups}>{tAccount('noUsers')}</p>
       )}
       {!!lastMembersVisible && membersArray.length === maxItems * iMembers && (
         <MoreButton nextElements={nextMembersList} />

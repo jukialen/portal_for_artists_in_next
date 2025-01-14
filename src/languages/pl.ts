@@ -214,7 +214,7 @@ export default {
     },
     noGroups: 'Brak ulubionych grup',
     noPermission: 'Aby zobaczyć posty musisz dołączyć do grupy.',
-    deleteGroup: "Usuń grupę"
+    deleteGroup: 'Usuń grupę',
   },
   Friends: {
     add: 'Dodaj do znajomych',
@@ -397,4 +397,5 @@ export default {
   edit: 'Edytuj',
   cancel: 'Anuluj',
   chooseTag: 'Wybierz tag',
+  newFile: 'Nowy plik',
 } as const;

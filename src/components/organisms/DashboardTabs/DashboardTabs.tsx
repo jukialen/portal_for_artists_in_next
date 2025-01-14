@@ -25,6 +25,8 @@ export const DashboardTabs = ({
   firstVideos,
   firstAnimations,
   firstFriendsList,
+  firstAdminList,
+  firstModsUsersList,
 }: GalleryType) => {
   const selectedColor = '#FFD068';
   const hoverColor = '#FF5CAE';
@@ -59,7 +61,7 @@ export const DashboardTabs = ({
           <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} />
         </Tabs.Content>
         <Tabs.Content className={styles.tabContent} role="tabcontent">
-          <GroupUsers id={id!} />
+          <GroupUsers id={id!} firstAdminList={firstAdminList!} firstModsUsersList={firstModsUsersList!} />
         </Tabs.Content>
         <Tabs.Content padding={0} role="tabcontent">
           <ClientPortalWrapper>

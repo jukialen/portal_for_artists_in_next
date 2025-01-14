@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { cloudFrontUrl } from 'constants/links';
-import { FriendsListType } from "types/global.types";
-import { Database } from "types/database.types";
+import { FriendsListType } from 'types/global.types';
+import { Database } from 'types/database.types';
 
 import { Tile } from 'components/atoms/Tile/Tile';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -20,35 +19,34 @@ type FriendsListComponentType = {
 
 export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListComponentType) => {
   const [friendsList, setFriendsList] = useState<FriendsListType[]>(firstFriendsList);
-  const [lastVisible, setLastVisible] = useState<string | null>(firstFriendsList.length > 0 ? firstFriendsList[firstFriendsList.length - 1].createdAt : null);
+  const [lastVisible, setLastVisible] = useState<string | null>(
+    firstFriendsList.length > 0 ? firstFriendsList[firstFriendsList.length - 1].createdAt : null,
+  );
   let [i, setI] = useState(1);
 
   const supabase = createClientComponentClient<Database>();
   const maxItems = 30;
-  
+
   const nextFriends = async () => {
     try {
       const nextArray: FriendsListType[] = [];
-      
+
       const { data } = await supabase
-      .from('Friends_View')
-      .select('favorite, createdAt, updatedAt, pseudonym, profilePhoto, plan')
-      .eq('usernameId', id)
-      .order('createdAt', { ascending: false })
-      .lt('createdAt', lastVisible)
-      .limit(maxItems);
-      
-      
+        .from('Friends_View')
+        .select('favorite, createdAt, updatedAt, pseudonym, profilePhoto, plan')
+        .eq('usernameId', id)
+        .order('createdAt', { ascending: false })
+        .lt('createdAt', lastVisible)
+        .limit(maxItems);
+
       if (data?.length === 0) return friendsList;
-      
+
       for (const _f of data!) {
         const {} = _f;
         nextArray.push({
           favorite: _f.favorite!,
           pseudonym: _f.pseudonym!,
-          fileUrl: !!_f.profilePhoto
-            ? `https://${cloudFrontUrl}/${_f.profilePhoto}`
-            : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
+          fileUrl: !!_f.profilePhoto ? _f.profilePhoto : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
           plan: _f.plan!,
           createdAt: _f.createdAt!,
         });
@@ -56,7 +54,7 @@ export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListCompo
       const newArray = friendsList.concat(...nextArray);
       setFriendsList(newArray);
       setLastVisible(data?.length === 0 ? null : nextArray[nextArray.length - 1].createdAt!);
-      data?.length !== 0  && setI(++i);
+      data?.length !== 0 && setI(++i);
     } catch (e) {
       console.error(e);
     }

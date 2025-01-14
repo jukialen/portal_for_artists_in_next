@@ -125,7 +125,7 @@ export type GroupType = Time & {
   usersGroupsId: string;
   favorited?: boolean;
   favorites: number;
-  role: string;
+  role: Database['public']['Enums']['Role'];
   roleId: string;
   time?: string;
 };
@@ -139,6 +139,12 @@ export type GroupsType = {
 export type GroupListType = {
   name: string;
   fileUrl: string;
+};
+
+export type GroupUserType = {
+  name: string;
+  logo: string;
+  groupId: string;
 };
 
 export type MemberType = {
@@ -239,6 +245,11 @@ export type GalleryType = {
   firstAnimations?: FileType[];
   firstVideos?: FileType[];
   firstFriendsList?: FriendsListType[];
+  firstAdminList?: GroupUserType[];
+  firstModsUsersList?: {
+    members: GroupUserType[];
+    moderators: GroupUserType[];
+  }
   tDash?: { friends: string; groups: string; photos: string; animations: string; videos: string };
   tGallery?: {
     userPhotosTitle: string;

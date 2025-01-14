@@ -31,16 +31,16 @@ import styles from './MainCurrentUserProfileData.module.scss';
 import { MdCameraEnhance } from 'react-icons/md';
 
 export const MainCurrentUserProfileData = ({
-  tCurrPrPhoto,
   userData,
+  tCurrPrPhoto,
 }: {
+  userData: UserType;
   tCurrPrPhoto: {
     validateRequired: string;
     uploadFile: string;
     cancelButton: string;
     submit: string;
   };
-  userData: UserType;
 }) => {
   const [valuesFields, setValuesFields] = useState('');
   const [required, setRequired] = useState(false);
@@ -54,6 +54,7 @@ export const MainCurrentUserProfileData = ({
   const selectedColor = '#FFD068';
   
   const tAnotherForm = useScopedI18n('AnotherForm');
+  
   const changeFile = (e: EventType) => {
     if (e.target.files?.[0]) {
       setNewLogo(e.target.files[0]);
@@ -63,7 +64,6 @@ export const MainCurrentUserProfileData = ({
       setRequired(true);
     }
   };
-
   const updateLogo = async () => {
     try {
       if (!!newLogo && !required) {
