@@ -16,7 +16,6 @@ export const Videos = async ({
   authorId,
   tags,
   fileId,
-  profilePhoto,
   pseudonym,
 }: ArticleVideosType) => {
   const locale = getCurrentLocale();
@@ -40,7 +39,7 @@ export const Videos = async ({
       <FileOptions
         fileId={fileId}
         authorName={authorName!}
-        profilePhoto={profilePhoto}
+        fileUrl={fileUrl}
         tags={tags!}
         name={name!}
         dataDateObject={dataDateObject}

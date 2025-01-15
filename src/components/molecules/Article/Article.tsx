@@ -49,6 +49,7 @@ export const Article = async ({
         authorName={authorName!}
         authorId={authorId}
         pseudonym={pseudonym!}
+        fileUrl={fileUrl}
         profilePhoto={profilePhoto}
         tags={tags!}
         name={name!}

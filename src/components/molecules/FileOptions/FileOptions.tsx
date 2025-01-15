@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Link } from '@chakra-ui/next-js';
+import Link from 'next/link'
 
 import { DateObjectType, LangType, Tags } from 'types/global.types';
 
@@ -18,6 +18,7 @@ type FileOptionsType = {
   pseudonym: string;
   profilePhoto: string;
   authorId: string;
+  fileUrl: string;
   tags: Tags;
   name: string;
   dataDateObject: DateObjectType;
@@ -45,7 +46,7 @@ export const FileOptions = ({
     <div className={styles.options}>
       <div className={styles.bottomPanel}>
         <div className={styles.author__name}>
-          <Link href={`${locale === 'en' ? '/' : `/${locale}/`}user/${authorName}`}>{authorName}</Link>
+          <Link href={`/${locale}/user/${authorName}`}>{authorName}</Link>
         </div>
 
         <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} />
@@ -56,10 +57,10 @@ export const FileOptions = ({
       {open && (
         <>
           <NewComments
-            profilePhoto={profilePhoto}
             fileId={fileId}
             authorId={authorId}
             author={authorName === pseudonym}
+            profilePhoto={profilePhoto}
           />
           <ClientPortalWrapper>
             <FilesComments fileId={fileId} />

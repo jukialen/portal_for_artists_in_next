@@ -29,15 +29,15 @@ export const SharingButton = ({ shareUrl, authorName, tags, name }: SharingType)
   return (
     <div className={styles.share}>
       <IconButton
-        icon={<AiOutlineShareAlt />}
         variant="solid"
         colorScheme="teal"
         aria-label="share button"
         border="1px solid transparent"
         fontSize="20px"
         cursor="pointer"
-        onClick={showShare}
-      />
+        onClick={showShare}>
+        <AiOutlineShareAlt />
+      </IconButton>
 
       <div className={`${styles.share__options} ${share ? styles.share__options__active : ''}`}>
         <div className={styles.icon}>

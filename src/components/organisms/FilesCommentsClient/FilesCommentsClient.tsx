@@ -18,14 +18,12 @@ type FilesCommentsClientType = {
   dataDateObject: DateObjectType;
   noComments: string;
   pseudonym: string;
-  profilePhoto: string;
 };
 export const FilesCommentsClient = ({
   filesFilesComments,
   fileId,
   noComments,
   pseudonym,
-  profilePhoto,
 }: FilesCommentsClientType) => {
   const [commentsArray, setCommentsArray] = useState<FilesCommentsType[]>(filesFilesComments);
   const [lastVisible, setLastVisible] = useState('');
@@ -77,7 +75,6 @@ export const FilesCommentsClient = ({
                 authorId={authorId}
                 date={date}
                 pseudonym={pseudonym}
-                profilePhoto={profilePhoto}
               />
             </DCProvider>
           ),

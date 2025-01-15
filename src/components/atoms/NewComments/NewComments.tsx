@@ -1,7 +1,8 @@
-import { Avatar, Button, Textarea } from '@chakra-ui/react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { Button, Textarea } from '@chakra-ui/react';
+import { Avatar } from "components/ui/avatar";
 
 import { backUrl } from 'constants/links';
 
@@ -22,7 +23,7 @@ export const NewComments = ({
   subCommentId,
   fileCommentId,
   adModRoleId,
-  profilePhoto,
+  profilePhoto
 }: NewCommentsType) => {
   const initialValues = { comment: '' };
 
@@ -129,7 +130,7 @@ export const NewComments = ({
               onChange={handleChange}
               placeholder={tComments('newComPlaceholder')}
               aria-label={tComments('newComAria')}
-              isRequired
+              required
               className={styles.text}
             />
           </div>
