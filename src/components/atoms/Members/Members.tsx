@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import NextLink from 'next/link';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Avatar, Divider, IconButton, Link } from '@chakra-ui/react';
+import { Separator, IconButton, Link } from '@chakra-ui/react';
+import { Avatar } from 'components/ui/avatar';
 
-import { cloudFrontUrl } from 'constants/links';
 import { MemberType, nameGroupTranslatedType, UserType } from 'types/global.types';
 
 import { sortMembers } from 'helpers/sorting';
@@ -12,7 +12,7 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './Members.module.scss';
 import group from 'public/group.svg';
-import { AddIcon, MinusIcon } from '@chakra-ui/icons';
+import { LuPlus, LuMinus } from 'react-icons/lu';
 
 type MembersType = {
   admin: boolean;
@@ -176,7 +176,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
     <>
       <h2>Members list</h2>
       <p className={styles.roles}>{translated.members?.admin}</p>
-      <Divider orientation="horizontal" />
+      <Separator orientation="horizontal" />
 
       <div className={styles.usersButton}>
         <Avatar name={pseudonymAdmin} src={profilePhotoAdmin} />
@@ -185,11 +185,11 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
         </NextLink>
       </div>
       <p className={styles.roles}>{translated.members?.moderators}</p>
-      <Divider orientation="horizontal" />
+      <Separator orientation="horizontal" />
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
           <div className={styles.usersButton} key={index}>
-            <Avatar name={pseudonym} src={!!profilePhoto ? `https://${cloudFrontUrl}/${profilePhoto}` : group} />
+            <Avatar name={pseudonym} src={!!profilePhoto ? profilePhoto : group} />
             <NextLink href={`/user/${pseudonym}`} passHref>
               <Link>{pseudonym}</Link>
             </NextLink>
@@ -197,9 +197,9 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
               <IconButton
                 type="submit"
                 aria-label={translated.members?.modsAria!}
-                icon={<MinusIcon />}
-                onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, false)}
-              />
+                onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, false)}>
+                <LuMinus />
+              </IconButton>
             )}
           </div>
         ))
@@ -210,11 +210,11 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
         <MoreButton nextElements={nextModeratorsList} />
       )}
       <p className={styles.roles}>{translated.members?.anotherMembers}</p>
-      <Divider orientation="horizontal" />
+      <Separator orientation="horizontal" />
       {membersArray.length > 0 ? (
         membersArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
           <div className={styles.usersButton} key={index}>
-            <Avatar name={pseudonym} src={!!profilePhoto ? `https://${cloudFrontUrl}/${profilePhoto}` : group} />
+            <Avatar name={pseudonym} src={!!profilePhoto ? profilePhoto : group} />
             <NextLink href={`/user/${pseudonym}`} passHref>
               <Link>{pseudonym}</Link>
             </NextLink>
@@ -222,9 +222,9 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
               <IconButton
                 type="submit"
                 aria-label={translated.members?.addModAria!}
-                icon={<AddIcon />}
-                onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, true)}
-              />
+                onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, true)}>
+                <LuPlus />
+              </IconButton>
             )}
           </div>
         ))

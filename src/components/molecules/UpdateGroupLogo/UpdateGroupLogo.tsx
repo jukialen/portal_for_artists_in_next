@@ -6,15 +6,18 @@ import {
   Button,
   IconButton,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
 } from '@chakra-ui/react';
+import {
+  DialogActionTrigger,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from 'components/ui/dialog';
 
 import { EventType, nameGroupTranslatedType } from 'types/global.types';
 
@@ -34,10 +37,9 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
-
+  const[open, setOpen] = useState(false);
+  
   const supabase = createClientComponentClient();
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const changeFile = (e: EventType) => {
     if (e.target.files?.[0]) {
@@ -73,19 +75,22 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
   return (
     <>
       <img src={logo} alt={`${name} logo`} />
-      <IconButton
-        aria-label="update group logo"
-        icon={<MdCameraEnhance />}
-        colorScheme="yellow"
-        className={styles.updateLogo}
-        onClick={onOpen}
-      />
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent backgroundColor="#2D3748" color={selectedColor} className={styles.modal}>
-          <ModalHeader>Update logo</ModalHeader>
-          <ModalCloseButton color={selectedColor} borderColor="transparent" fontSize="md" />
-          <ModalBody className={styles.modal}>
+      
+      <DialogRoot lazyMount open={open} onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
+        <DialogTrigger asChild>
+          <IconButton
+            aria-label="update group logo"
+            colorScheme="yellow"
+            className={styles.updateLogo}
+            onClick={() => setOpen(true)}
+          >
+            <MdCameraEnhance />
+            </IconButton>
+        </DialogTrigger>
+        <DialogContent backgroundColor="#2D3748" color={selectedColor} className={styles.modal}>
+          <DialogHeader><DialogTitle>logo</DialogTitle></DialogHeader>
+          
+          <DialogBody className={styles.modal}>
             <Input
               type="file"
               name="newLogo"
@@ -113,17 +118,18 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
             )}
 
             {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" borderColor="transparent" mr={3} onClick={onClose}>
+          </DialogBody>
+          <DialogFooter>
+            <DialogActionTrigger colorScheme="blue" borderColor="transparent" mr={3}>
               {translated!.updateLogo!.cancelButton}
-            </Button>
+            </DialogActionTrigger>
             <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
               {translated!.updateLogo!.submit}
             </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </DialogFooter>
+          <DialogCloseTrigger color={selectedColor} borderColor="transparent" fontSize="md" />
+        </DialogContent>
+      </DialogRoot>
     </>
   );
 };

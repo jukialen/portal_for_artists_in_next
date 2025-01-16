@@ -93,7 +93,7 @@ export const MainCurrentUserProfileData = ({
             fill
             alt={`${userData?.profilePhoto} logo`}
           />
-          <DialogRoot lazyMount open={open} onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean); }) => setOpen(e.open)}>
+          <DialogRoot lazyMount open={open} onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
             <DialogTrigger asChild>
               <Button
                 aria-label="update group logo"

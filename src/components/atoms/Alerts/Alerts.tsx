@@ -1,7 +1,6 @@
+import { useI18n } from 'locales/client';
 
-
-import { Alert, AlertIcon } from '@chakra-ui/react';
-import { useI18n } from "locales/client";
+import { Alert } from 'components/ui/alert';
 
 type AlertsType = {
   valueFields: string;
@@ -97,9 +96,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       margin="1rem auto"
       width="17.5rem"
       status={switchAlert(valueFields)}
-      variant="left-accent"
       fontSize="md">
-      <AlertIcon />
       {valueFields}
     </Alert>
   );

@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Link } from '@chakra-ui/next-js';
+import Link from 'next/link';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Avatar, Button, IconButton } from '@chakra-ui/react';
+import { Button, IconButton } from '@chakra-ui/react';
+import { Avatar } from 'components/ui/avatar';
 
 import { Database } from 'types/database.types';
 import { PostsType } from 'types/global.types';
-import { cloudFrontUrl } from 'constants/links';
 
 import { useI18n } from 'locales/client';
 
@@ -22,13 +22,13 @@ import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 export const Post = ({
   userId,
-  pseudonym,
   name,
+  profilePhoto,
   postOnGroup,
 }: {
   userId: string;
-  pseudonym: string;
   name: string;
+  profilePhoto: string;
   postOnGroup: PostsType;
 }) => {
   const {
@@ -84,7 +84,7 @@ export const Post = ({
   return (
     <article className={styles.container}>
       <div className={styles.avatarWithUsername}>
-        <Avatar src={`https://${cloudFrontUrl}/${authorProfilePhoto}` || group} />
+        <Avatar src={authorProfilePhoto || group} />
         <div className={styles.username}>
           <Link href={`/user/${authorName}`}>{authorName}</Link>
           <div className={styles.time}>{date}</div>
@@ -97,26 +97,29 @@ export const Post = ({
         <IconButton
           aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
           colorScheme="teal"
-          icon={like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
           className={styles.likes}
-          onClick={addLike}
-        />
+          onClick={addLike}>
+          {like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
+        </IconButton>
         <Button colorScheme="blue" onClick={showingComments} className={styles.commentsButton} variant="ghost">
           {t('Comments.comments')}
         </Button>
         <SharingButton shareUrl={link} authorName={authorName} name={title} />
       </div>
-      <p className={styles.likesCount} style={{ marginLeft: likeCount < 10 ? '.8rem' : '.5rem' }}>
-        {likeCount}
-      </p>
+      <div className={styles.likesShComs}>
+        <p>{likeCount}</p>
+        <p>SHared: {shared}</p>
+        <p>
+          {commented} {commented === 1 ? 'comment' : 'comments'}
+        </p>
+      </div>
       <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
         <NewComments
-          profilePhoto={authorProfilePhoto!}
-          roleId={roleId}
           authorId={authorId}
           groupId={groupId}
-          author={authorName === pseudonym}
           postId={postId}
+          profilePhoto={profilePhoto}
+          roleId={roleId}
         />
         <Comments postId={postId!} />
       </article>

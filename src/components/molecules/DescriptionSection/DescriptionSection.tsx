@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Button, Divider, IconButton, Textarea } from '@chakra-ui/react';
+import { Button, Separator, IconButton, Textarea } from '@chakra-ui/react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { ResetFormType } from 'types/global.types';
@@ -13,7 +13,7 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './DescriptionSection.module.scss';
-import { EditIcon } from '@chakra-ui/icons';
+import { BiEdit } from 'react-icons/bi';
 
 type DescriptionSectionType = {
   description: string;
@@ -93,7 +93,7 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
     <section className={styles.container}>
       <h2 className={styles.title}>{t('AnotherForm.description')}</h2>
 
-      <Divider />
+      <Separator />
       <div className={styles.field}>
         {!openDescriptionForm ? (
           <p className={styles.items}>{descrip}</p>
@@ -127,16 +127,16 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
         )}
         {admin && (
           <IconButton
-            icon={<EditIcon />}
             className={styles.changeButton}
             aria-label={tDescription('iconButton')}
-            onClick={() => setOpenDescriptionForm(!openDescriptionForm)}
-          />
+            onClick={() => setOpenDescriptionForm(!openDescriptionForm)}>
+            <BiEdit />
+          </IconButton>
         )}
       </div>
 
       <h2 className={styles.title}>{tRegulation('regulation')}</h2>
-      <Divider />
+      <Separator />
       <div className={styles.field}>
         {!openUpRegulation ? (
           <div className={styles.items}>
@@ -172,11 +172,11 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
         )}
         {admin && (
           <IconButton
-            icon={<EditIcon />}
             className={styles.changeButton}
             aria-label={tDescription('iconButton')}
-            onClick={() => setOpenUpRegulation(!openUpRegulation)}
-          />
+            onClick={() => setOpenUpRegulation(!openUpRegulation)}>
+            <BiEdit />
+          </IconButton>
         )}
       </div>
     </section>

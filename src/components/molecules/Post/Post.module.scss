@@ -5,34 +5,33 @@
   max-width: 42.5rem;
   margin: 1.5rem auto;
   padding: 1rem;
-  border: .3rem solid transparent;
+  border: 0.3rem solid transparent;
   border-radius: 2rem;
-  box-shadow: 0 0 1rem .1rem $third__color;
+  box-shadow: 0 0 1rem 0.1rem $third__color;
   position: relative;
-
 
   .avatarWithUsername {
     display: grid;
     grid-template-columns: 3rem 1fr auto;
     align-items: center;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
 
     .username {
       display: flex;
       flex-direction: column;
       font-size: 1.2rem;
-      margin-left: .7rem;
+      margin-left: 0.7rem;
 
       .time {
-        font-size: .8rem;
-        margin: .25rem 0;
+        font-size: 0.8rem;
+        margin: 0.25rem 0;
       }
     }
   }
 
   .titlePost {
     font-size: 1.5rem;
-    padding-left: .5rem;
+    padding-left: 0.5rem;
   }
 
   .description {
@@ -59,26 +58,22 @@
       font-size: 1.2rem;
       border-color: transparent;
       cursor: pointer;
-      opacity: .8;
+      opacity: 0.8;
 
       &:hover {
         background-color: $third__color;
         color: #000;
       }
     }
-
   }
 
-  .likesCount {
+  .likesShComs {
     display: grid;
-    grid-template-columns: 30% 1fr;
+    grid-template-columns: repeat(3, 1fr);
     justify-content: center;
     color: $third__color;
-    margin-left: .5rem;
-
-    p:first-child {
-      margin: auto;
-    }
+    margin: 0.5rem;
+    padding: .5rem 0;
   }
 
   .commentsSection {
