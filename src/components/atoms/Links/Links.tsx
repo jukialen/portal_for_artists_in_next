@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Link } from '@chakra-ui/next-js';
+import Link from 'next/link'
 
 type LinksType = {
   idInput?: string;
