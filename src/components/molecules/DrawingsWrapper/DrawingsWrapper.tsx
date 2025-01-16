@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
-
-import { DateObjectType, FileType, LangType } from "types/global.types";
-
-import { backUrl, cloudFrontUrl } from 'constants/links';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { DateObjectType, FileType, LangType, Tags } from "types/global.types";
 
 import { getDate } from 'helpers/getDate';
+
+import { selectFiles } from 'constants/selects';
+import { Database } from 'types/database.types';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -16,48 +16,56 @@ import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/Client
 
 type DrawingsWrapperType = {
   locale: LangType;
-  pid: string;
+  pid: Tags;
+  pseudonym: string;
   dataDateObject: DateObjectType;
   noDrawings: string;
   filesDrawings: FileType[] | undefined;
 };
 
-export const DrawingsWrapper =  async ({ locale, pid, dataDateObject, noDrawings, filesDrawings }: DrawingsWrapperType) => {
+export const DrawingsWrapper = ({
+  locale,
+  pid,
+  pseudonym,
+  dataDateObject,
+  noDrawings,
+  filesDrawings,
+}: DrawingsWrapperType) => {
   const [userDrawings, setUserDrawings] = useState<FileType[] | undefined>(filesDrawings);
   const [lastVisible, setLastVisible] = useState<string | null>(null);
   let [i, setI] = useState(1);
 
   const maxItems = 30;
-  
-  
+
+  const supabase = createClientComponentClient<Database>();
+
   !!userDrawings && userDrawings.length === maxItems && setLastVisible(userDrawings[userDrawings.length - 1].fileId!);
-  
+
   const nextElements = async () => {
     try {
       const filesArray: FileType[] = [];
 
-      const nextArray: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
-        params: {
-          queryData: {
-            orderBy: { createdAt: 'desc' },
-            where: { tags: pid },
-            limit: maxItems,
-            cursor: lastVisible,
-          },
-        },
-      });
+      const { data, error } = await supabase
+        .from('Files')
+        .select(selectFiles)
+        .eq('tags', pid)
+        .order('createdAt', { ascending: false })
+        .limit(maxItems);
 
-      for (const file of nextArray.data) {
-        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+      if (data?.length === 0 || !!error) return filesArray;
+
+      for (const file of data) {
+        const { fileId, name, shortDescription, Users, tags, fileUrl, authorId, createdAt, updatedAt } = file;
 
         filesArray.push({
           fileId,
           name,
-          shortDescription,
-          pseudonym,
-          profilePhoto,
-          fileUrl: `https://${cloudFrontUrl}/${name}`,
-          authorId,
+          shortDescription: shortDescription!,
+          authorName: Users?.pseudonym!,
+          authorProfilePhoto: Users?.profilePhoto!,
+          fileUrl,
+          authorId: authorId!,
+          tags,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
@@ -76,7 +84,7 @@ export const DrawingsWrapper =  async ({ locale, pid, dataDateObject, noDrawings
       {!!userDrawings && userDrawings.length > 0 ? (
         userDrawings.map(
           (
-            { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
+            { fileId, name, fileUrl, shortDescription, tags, authorName, authorProfilePhoto, authorId, time }: FileType,
             index,
           ) => (
             <ClientPortalWrapper key={index}>
@@ -86,11 +94,11 @@ export const DrawingsWrapper =  async ({ locale, pid, dataDateObject, noDrawings
                 fileUrl={fileUrl}
                 shortDescription={shortDescription!}
                 tags={tags!}
-                authorName={pseudonym!}
-                profilePhoto={profilePhoto}
+                authorName={authorName!}
                 authorId={authorId}
+                authorBool={authorName === pseudonym!}
+                profilePhoto={authorProfilePhoto!}
                 time={time}
-                pseudonym={pseudonym!}
               />
             </ClientPortalWrapper>
           ),
@@ -99,7 +107,9 @@ export const DrawingsWrapper =  async ({ locale, pid, dataDateObject, noDrawings
         <ZeroFiles text={noDrawings} />
       )}
 
-      {!!lastVisible && !!userDrawings && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+      {!!lastVisible && !!userDrawings && userDrawings.length === maxItems * i && (
+        <MoreButton nextElements={nextElements} />
+      )}
     </>
   );
 };

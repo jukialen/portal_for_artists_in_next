@@ -18,7 +18,7 @@ export const graphics = async (
   try {
     const filesArray: FileType[] = [];
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('Files')
       .select(selectFiles)
       .eq('authorId', authorId)
@@ -26,7 +26,7 @@ export const graphics = async (
       .order('createdAt', { ascending: false })
       .limit(maxItems);
 
-    if (data?.length === 0) return filesArray;
+    if (data?.length === 0 || !!error) return filesArray;
 
     for (const file of data!) {
       const { fileId, name, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
@@ -60,7 +60,7 @@ export const videosAnimations = async (
   try {
     const filesArray: FileType[] = [];
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('Files')
       .select(selectFiles)
       .eq('authorId', authorId)
@@ -68,7 +68,7 @@ export const videosAnimations = async (
       .order('createdAt', { ascending: false })
       .limit(maxItems);
 
-    if (data?.length === 0) return filesArray;
+    if (data?.length === 0 || !!error) return filesArray;
 
     for (const file of data!) {
       const { fileId, name, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;

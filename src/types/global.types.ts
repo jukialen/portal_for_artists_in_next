@@ -71,7 +71,7 @@ export type FileType = Time & {
   tags?: Database['public']['Enums']['Tags'];
   pseudonym?: string;
   authorProfilePhoto?: string;
-  authorName?: string;
+  authorName: string;
   profileType?: boolean;
   authorId: string;
   fileUrl: string;

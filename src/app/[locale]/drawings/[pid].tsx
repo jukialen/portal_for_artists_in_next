@@ -1,15 +1,19 @@
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { setStaticParamsLocale } from 'next-international/server';
-import axios from 'axios';
 
 import { HeadCom } from 'constants/HeadCom';
-import { backUrl, cloudFrontUrl } from 'constants/links';
-import { DateObjectType, FileType, LangType } from 'types/global.types';
+import { cloudFrontUrl } from 'constants/links';
+import { selectFiles } from 'constants/selects';
+import { Database } from 'types/database.types';
+import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
+import { getUserData } from 'helpers/getUserData';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { DrawingsWrapper } from 'components/molecules/DrawingsWrapper/DrawingsWrapper';
@@ -18,31 +22,31 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Sites with drawings and photos.');
 
+const supabase = createServerComponentClient<Database>({ cookies });
+
 async function getFirstDrawings(pid: string, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
   try {
     const filesArray: FileType[] = [];
 
-    const firstPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
-      params: {
-        queryData: {
-          orderBy: { createdAt: 'desc' },
-          where: { tags: pid },
-          limit: maxItems,
-        },
-      },
-    });
+    const { data, error } = await supabase
+      .from('Files')
+      .select(selectFiles)
+      .eq('tags', pid)
+      .order('createdAt', { ascending: false })
+      .limit(maxItems);
 
-    for (const file of firstPage.data) {
-      const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+    if (data?.length === 0 || !!error) return filesArray;
+
+    for (const file of data) {
+      const { fileId, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
 
       filesArray.push({
         fileId,
         name,
-        shortDescription,
-        pseudonym,
-        profilePhoto,
+        shortDescription: shortDescription!,
+        authorName: Users?.pseudonym!,
         fileUrl: `https://${cloudFrontUrl}/${name}`,
-        authorId,
+        authorId: authorId!,
         time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
       });
     }
@@ -54,7 +58,7 @@ async function getFirstDrawings(pid: string, maxItems: number, locale: LangType,
   }
 }
 
-export default async function Drawings({ params: { locale, pid } }: { params: { locale: LangType; pid: string } }) {
+export default async function Drawings({ params: { locale, pid } }: { params: { locale: LangType; pid: Tags } }) {
   setStaticParamsLocale(locale);
 
   const t = await getI18n();
@@ -64,10 +68,11 @@ export default async function Drawings({ params: { locale, pid } }: { params: { 
     noDrawings: t('ZeroFiles.files'),
   };
 
+  const user = await getUserData();
   const dataDateObject = await dateData();
 
   const drawings = await getFirstDrawings(pid, 30, locale, dataDateObject);
-  
+
   return (
     <>
       <em className={styles.title}>
@@ -78,6 +83,7 @@ export default async function Drawings({ params: { locale, pid } }: { params: { 
         <DrawingsWrapper
           locale={locale}
           pid={pid}
+          pseudonym={user?.pseudonym!}
           dataDateObject={dataDateObject}
           noDrawings={tDrawingsCategories.noDrawings}
           filesDrawings={drawings}
