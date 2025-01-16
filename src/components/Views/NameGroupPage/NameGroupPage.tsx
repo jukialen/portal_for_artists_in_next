@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Button, Divider, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Button, Separator, Tabs } from '@chakra-ui/react';
 
 import { Database } from 'types/database.types';
 import { JoinUser, LangType, MemberType, nameGroupTranslatedType, PostsType, UserType } from 'types/global.types';
@@ -15,7 +15,7 @@ import { DescriptionSection } from 'components/molecules/DescriptionSection/Desc
 import { Posts } from 'components/organisms/Posts/Posts';
 
 import styles from './NameGroupPage.module.scss';
-import { CheckIcon, SmallAddIcon } from '@chakra-ui/icons';
+import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 
 export const NameGroupPage = ({
   name,
@@ -56,10 +56,14 @@ export const NameGroupPage = ({
   const checkIcon = '1rem';
   const smallIcon = '1.5rem';
   const zeroPadding = 0;
-
   const addingToGroup = { background: activeColor, color: '#000' };
-
   const addingToGroupOutline = { background: 'transparent', color: activeColor };
+
+  const contentList = [
+    translated.groupSections?.general,
+    translated.groupSections?.members,
+    translated.groupSections?.description,
+  ];
 
   const toggleToGroup = async () => {
     try {
@@ -104,7 +108,6 @@ export const NameGroupPage = ({
       console.error(e);
     }
   };
-
   const toggleToFavorites = async () => {
     try {
       if (favorite) {
@@ -143,7 +146,6 @@ export const NameGroupPage = ({
       console.error(e);
     }
   };
-
   const removeGroup = async () => {
     const { error } = await supabase.from('Groups').delete().eq('groupId', groupId).eq('name', name);
 
@@ -169,25 +171,25 @@ export const NameGroupPage = ({
       ) : (
         <div className={styles.buttons}>
           <Button
-            leftIcon={join ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
             style={join ? addingToGroupOutline : addingToGroup}
             colorScheme="blue"
             onClick={toggleToGroup}
             variant={join ? 'outline' : 'solid'}
             className={styles.button}>
+            {join ? <IoMdCheckmark size={checkIcon} /> : <IoMdAdd size={smallIcon} />}
             {join ? translated.joinedUser?.joined : translated.joinedUser?.join}
           </Button>
 
           {join && (
             <div>
               <Button
-                leftIcon={favorite ? <CheckIcon boxSize={checkIcon} /> : <SmallAddIcon boxSize={smallIcon} />}
                 style={favorite ? addingToGroupOutline : addingToGroup}
                 colorScheme="blue"
                 disabled={!favorite && favoriteLength === 5}
                 onClick={toggleToFavorites}
                 variant={favorite ? 'solid' : 'outline'}
                 className={`${styles.button} ${styles.favoriteButton}`}>
+                {favorite ? <IoMdCheckmark size={checkIcon} /> : <IoMdAdd size={smallIcon} />}
                 {favorite ? translated.joinedUser?.addedToFav : translated.joinedUser?.addToFavorite}
               </Button>
               {!favorite && (
@@ -197,40 +199,60 @@ export const NameGroupPage = ({
           )}
         </div>
       )}
-      <Divider orientation="horizontal" className={styles.hr} />
+      <Separator orientation="horizontal" className={styles.hr} />
 
-      <Tabs className={styles.tabs} isLazy lazyBehavior="keepMounted" isFitted variant="unstyled">
-        <TabList className={styles.tablist}>
-          <Tab
-            _hover={{ borderColor: hoverColor }}
-            _active={{ borderColor: activeColor }}
-            _selected={{ borderColor: selectedColor }}
-            borderColor={activeColor}
-            className={styles.tab}>
-            {translated.groupSections?.general}
-          </Tab>
-          {join && (
-            <Tab
-              _selected={{ borderColor: selectedColor }}
+      <Tabs.Root className={styles.tabs} lazyMount isFitted variant="subtle">
+        <Tabs.List className={styles.tablist} role="tablist">
+          {contentList.map((content, index) => (
+            <Tabs.Trigger
+              key={index}
               _hover={{ borderColor: hoverColor }}
               _active={{ borderColor: activeColor }}
+              _selected={{ borderColor: selectedColor }}
               borderColor={activeColor}
-              className={styles.tab}>
-              {translated.groupSections?.members}
-            </Tab>
-          )}
-          <Tab
-            _selected={{ borderColor: selectedColor }}
+              className={styles.tab}
+              role="tab"
+              value={content}>
+              {content}
+            </Tabs.Trigger>
+          ))}
+          <Tabs.Trigger
             _hover={{ borderColor: hoverColor }}
             _active={{ borderColor: activeColor }}
+            _selected={{ borderColor: selectedColor }}
             borderColor={activeColor}
-            className={styles.tab}>
-            {translated.groupSections?.description}
-          </Tab>
-        </TabList>
+            className={styles.tab}
+            role="tab"
+            value={contentList[0]}>
+            {contentList[0]}
+          </Tabs.Trigger>
+          {join && (
+            <Tabs.Trigger
+              _hover={{ borderColor: hoverColor }}
+              _active={{ borderColor: activeColor }}
+              _selected={{ borderColor: selectedColor }}
+              borderColor={activeColor}
+              className={styles.tab}
+              role="tab"
+              value={contentList[1]}>
+              {contentList[1]}
+            </Tabs.Trigger>
+          )}
+          <Tabs.Trigger
+            _hover={{ borderColor: hoverColor }}
+            _active={{ borderColor: activeColor }}
+            _selected={{ borderColor: selectedColor }}
+            borderColor={activeColor}
+            className={styles.tab}
+            role="tab"
+            value={contentList[2]}>
+            {contentList[2]}
+          </Tabs.Trigger>
+          <Tabs.Indicator rounded="l2" />
+        </Tabs.List>
 
-        <TabPanels padding={zeroPadding}>
-          <TabPanel padding={zeroPadding}>
+        <Tabs.List padding={zeroPadding}>
+          <Tabs.Content padding={zeroPadding}>
             <>
               {join && (
                 <AddingPost
@@ -245,7 +267,7 @@ export const NameGroupPage = ({
                 <Posts
                   groupId={joined.groupId!}
                   locale={locale}
-                  pseudonym={userData?.pseudonym!}
+                  profilePhoto={userData?.profilePhoto!}
                   userId={userData?.id!}
                   name={name}
                   firstPosts={firstPosts}
@@ -254,9 +276,9 @@ export const NameGroupPage = ({
                 <p className={styles.noPermission}>{translated.groupSections?.noPermission}</p>
               )}
             </>
-          </TabPanel>
+          </Tabs.Content>
           {join && (
-            <TabPanel padding={zeroPadding}>
+            <Tabs.Content padding={zeroPadding}>
               <Members
                 admin={joined.admin}
                 groupId={groupId}
@@ -266,18 +288,18 @@ export const NameGroupPage = ({
                 translated={translated}
                 userData={userData}
               />
-            </TabPanel>
+            </Tabs.Content>
           )}
-          <TabPanel padding={zeroPadding}>
+          <Tabs.Content padding={zeroPadding}>
             <DescriptionSection
               description={description}
               regulation={regulation}
               admin={joined.admin}
               groupId={groupId!}
             />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+          </Tabs.Content>
+        </Tabs.List>
+      </Tabs.Root>
     </>
   );
 };
