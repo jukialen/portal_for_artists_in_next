@@ -70,7 +70,7 @@ export type FileType = Time & {
   shortDescription?: string;
   tags?: Database['public']['Enums']['Tags'];
   pseudonym?: string;
-  profilePhoto: string;
+  authorProfilePhoto?: string;
   authorName?: string;
   profileType?: boolean;
   authorId: string;
@@ -84,11 +84,11 @@ export type ArticleVideosType = {
   fileUrl: string;
   shortDescription: string;
   authorName: string;
+  authorBool: boolean,
   profilePhoto: string;
   tags: Database['public']['Enums']['Tags'];
   authorId: string;
   time: string;
-  pseudonym: string;
 };
 
 //FRIENDS
@@ -221,6 +221,7 @@ export type PostsType = Time &
   Like & {
     authorName: string;
     authorProfilePhoto: string;
+    fileUrl: string;
     postId?: string;
     authorId: string;
     title: string;
@@ -238,6 +239,8 @@ export type PostsType = Time &
 //GALLERY
 export type GalleryType = {
   id: string;
+  pseudonym?: string;
+  profilePhoto: string;
   author: string;
   dataDateObject: DateObjectType;
   locale: LangType;
@@ -265,7 +268,7 @@ export type GalleryType = {
 // COMMENTS
 type Comment = Time & {
   authorId: string;
-  profilePhoto?: string;
+  fileUrl?: string;
   roleId?: string;
   role: Database['public']['Enums']['Role'];
   groupRole?: Database['public']['Enums']['Role'];
@@ -277,7 +280,6 @@ type Comment = Time & {
 export type NewCommentsType = {
   authorId: string;
   profilePhoto: string;
-  author: boolean;
   adModRoleId?: string;
   roleId?: string;
   comment?: string;

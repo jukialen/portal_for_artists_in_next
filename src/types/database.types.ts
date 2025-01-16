@@ -101,6 +101,7 @@ export type Database = {
           authorId: string | null
           createdAt: string
           fileId: string
+          fileUrl: string
           groupId: string | null
           name: string
           profileType: boolean
@@ -112,6 +113,7 @@ export type Database = {
           authorId?: string | null
           createdAt?: string
           fileId?: string
+          fileUrl: string
           groupId?: string | null
           name: string
           profileType?: boolean
@@ -123,6 +125,7 @@ export type Database = {
           authorId?: string | null
           createdAt?: string
           fileId?: string
+          fileUrl?: string
           groupId?: string | null
           name?: string
           profileType?: boolean
@@ -385,6 +388,7 @@ export type Database = {
           commented: number
           content: string
           createdAt: string
+          fileUrl: string
           groupId: string
           likes: number
           postId: string
@@ -398,6 +402,7 @@ export type Database = {
           commented: number
           content: string
           createdAt?: string
+          fileUrl: string
           groupId: string
           likes: number
           postId?: string
@@ -411,6 +416,7 @@ export type Database = {
           commented?: number
           content?: string
           createdAt?: string
+          fileUrl?: string
           groupId?: string
           likes?: number
           postId?: string

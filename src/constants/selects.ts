@@ -1,2 +1,2 @@
 export const selectFiles =
-  'fileId, name, shortDescription, authorId, createdAt, updatedAt, Users (pseudonym, profilePhoto, id)';
+  'fileId, name, tags, shortDescription, authorId, fileUrl, createdAt, updatedAt, Users (pseudonym, profilePhoto)';

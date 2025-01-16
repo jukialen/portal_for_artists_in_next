@@ -15,7 +15,6 @@ import styles from './FileOptions.module.scss';
 type FileOptionsType = {
   fileId: string;
   authorName: string;
-  pseudonym: string;
   profilePhoto: string;
   authorId: string;
   fileUrl: string;
@@ -29,7 +28,6 @@ type FileOptionsType = {
 export const FileOptions = ({
   fileId,
   authorName,
-  pseudonym,
   profilePhoto,
   tags,
   name,
@@ -59,7 +57,6 @@ export const FileOptions = ({
           <NewComments
             fileId={fileId}
             authorId={authorId}
-            author={authorName === pseudonym}
             profilePhoto={profilePhoto}
           />
           <ClientPortalWrapper>

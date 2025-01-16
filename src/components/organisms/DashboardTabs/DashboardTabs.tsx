@@ -16,6 +16,7 @@ import styles from './DashboardTabs.module.scss';
 export const DashboardTabs = ({
   id,
   author,
+  profilePhoto,
   dataDateObject,
   locale,
   tDash,
@@ -67,6 +68,7 @@ export const DashboardTabs = ({
           <ClientPortalWrapper>
             <PhotosGallery
               id={id}
+              profilePhoto={profilePhoto}
               author={author}
               locale={locale}
               tGallery={tGallery}
@@ -79,6 +81,7 @@ export const DashboardTabs = ({
           <ClientPortalWrapper>
             <AnimatedGallery
               id={id}
+              profilePhoto={profilePhoto}
               author={author}
               locale={locale}
               tGallery={tGallery}
@@ -91,6 +94,7 @@ export const DashboardTabs = ({
           <ClientPortalWrapper>
             <VideoGallery
               id={id!}
+              profilePhoto={profilePhoto}
               author={author!}
               locale={locale}
               tGallery={tGallery!}

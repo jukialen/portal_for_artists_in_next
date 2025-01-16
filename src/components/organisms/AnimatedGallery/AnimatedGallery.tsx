@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { cloudFrontUrl } from 'constants/links';
 import { selectFiles } from 'constants/selects';
 import { Database } from 'types/database.types';
 import { FileType, GalleryType } from 'types/global.types';
@@ -16,7 +15,16 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
 import { ClientPortalWrapper } from '../../atoms/ClientPortalWrapper/ClientPortalWrapper';
 
-export const AnimatedGallery = ({ id, author, tGallery, locale, dataDateObject, firstAnimations }: GalleryType) => {
+export const AnimatedGallery = ({
+  id,
+  author,
+  pseudonym,
+  profilePhoto,
+  tGallery,
+  locale,
+  dataDateObject,
+  firstAnimations,
+}: GalleryType) => {
   const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>(firstAnimations!);
   const [lastVisible, setLastVisible] = useState<string | null>();
   let [i, setI] = useState(1);
@@ -30,7 +38,7 @@ export const AnimatedGallery = ({ id, author, tGallery, locale, dataDateObject, 
       const nextArray: FileType[] = [];
 
       const { data } = await supabase
-        .from('files')
+        .from('Files')
         .select(selectFiles)
         .eq('authorId', id)
         .eq('tags', 'animations')
@@ -41,17 +49,17 @@ export const AnimatedGallery = ({ id, author, tGallery, locale, dataDateObject, 
       if (data?.length === 0) return userAnimatedPhotos;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
+        const { fileId, name, tags, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
 
         nextArray.push({
           fileId,
           name,
-          shortDescription,
-          pseudonym: Users[0].pseudonym!,
-          profilePhoto: `https://${cloudFrontUrl}/${Users[0].profilePhoto!}`,
-          fileUrl: `https://${cloudFrontUrl}/${name}`,
-          authorId,
+          shortDescription: shortDescription!,
+          pseudonym: Users?.pseudonym!,
+          fileUrl,
+          authorId: authorId!,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          tags,
         });
       }
 
@@ -74,10 +82,7 @@ export const AnimatedGallery = ({ id, author, tGallery, locale, dataDateObject, 
         <Wrapper>
           {userAnimatedPhotos.length > 0 ? (
             userAnimatedPhotos.map(
-              (
-                { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
-                index,
-              ) => (
+              ({ fileId, name, fileUrl, shortDescription, tags, authorId, time }: FileType, index) => (
                 <Article
                   key={index}
                   fileId={fileId!}
@@ -86,10 +91,10 @@ export const AnimatedGallery = ({ id, author, tGallery, locale, dataDateObject, 
                   shortDescription={shortDescription!}
                   tags={tags!}
                   authorName={pseudonym!}
-                  profilePhoto={profilePhoto}
                   authorId={authorId}
+                  authorBool={author === pseudonym!}
+                  profilePhoto={profilePhoto!}
                   time={time}
-                  pseudonym={pseudonym!}
                 />
               ),
             )

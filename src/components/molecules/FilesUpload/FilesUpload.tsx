@@ -81,8 +81,17 @@ export const FilesUpload = () => {
         setRequired(true);
         return;
       }
-      if (file.size < 6291456) {
-        const { error } = await supabase.storage.from('logos').upload(`/${userData?.id!}`, file);
+      if (
+        file.size < 6291456 &&
+        (file.type === 'image/jpg' ||
+          file.type === 'image/jpeg' ||
+          file.type === 'image/png' ||
+          file.type === ' image/webp' ||
+          file.type === 'image/avif' ||
+          file.type === 'video/mp4' ||
+          file.type === 'video/webm')
+      ) {
+        const { data, error } = await supabase.storage.from('logos').upload(`/${userData?.id!}`, file);
 
         if (!!error) console.error(error);
 
@@ -92,28 +101,35 @@ export const FilesUpload = () => {
             shortDescription,
             authorId: userData?.id!,
             tags,
+            fileUrl: data?.path!,
           },
         ]);
 
         if (!!er) console.error(er);
-      } else if (file.size > 6291456) {
+      } else if (
+        file.size > 6291456 &&
+        (file.type === 'image/jpg' ||
+          file.type === 'image/jpeg' ||
+          file.type === 'image/png' ||
+          file.type === ' image/webp' ||
+          file.type === 'image/avif' ||
+          file.type === 'video/mp4' ||
+          file.type === 'video/webm')
+      ) {
         return new Promise<void>(async (resolve, reject) => {
           let upload = new tus.Upload(file, {
             endpoint: `https://${projectId}.supabase.co/storage/v1/upload/resumable`,
             retryDelays: [0, 3000, 5000, 10000, 20000],
-            headers: {
-              authorization: `Bearer ${access_token}`,
-              'x-upsert': 'true', // optionally set upsert to true to overwrite existing files
-            },
+            headers: { authorization: `Bearer ${access_token}` },
             uploadDataDuringCreation: true,
-            removeFingerprintOnSuccess: true, // Important if you want to allow re-uploading the same file https://github.com/tus/tus-js-client/blob/main/docs/api.md#removefingerprintonsuccess
+            removeFingerprintOnSuccess: true,
             metadata: {
               bucketName: bucketName,
               objectName: file.name,
               contentType: 'image/jpg, image/jpeg, image/png, image/webp, image/avif, video/mp4, video/webm',
               cacheControl: '3600',
             },
-            chunkSize: 6 * 1024 * 1024, // NOTE: it must be set to 6MB (for now) do not change it
+            chunkSize: 6 * 1024 * 1024,
             onError: function (error) {
               console.error('Failed because: ' + error);
               setValuesFields(tAnotherForm('notUploadFile'));
@@ -124,10 +140,23 @@ export const FilesUpload = () => {
               console.log(bytesUploaded, bytesTotal, percentage + '%');
               setProgressUpload(parseInt(percentage));
             },
-            onSuccess: function () {
+            onSuccess: async function () {
               console.log('Download %s from %s', file.name, upload.url);
               setProgressUpload(100);
               setValuesFields(tAnotherForm('uploadFile'));
+
+              if (progressUpload === 100) {
+                const { error } = await supabase.from('Files').insert([
+                  {
+                    name: Date.now() + '/' + userData?.id! + '/' + file!.name!,
+                    shortDescription,
+                    authorId: userData?.id!,
+                    tags,
+                    fileUrl: upload.url!,
+                  },
+                ]);
+                if (!!error) console.error(error);
+              }
               resolve();
             },
           });

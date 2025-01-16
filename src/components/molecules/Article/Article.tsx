@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { getCurrentLocale, getScopedI18n } from 'locales/server';
+import { Tag } from "components/ui/tag";
 
 import { dateData } from 'helpers/dateData';
 
@@ -16,11 +17,11 @@ export const Article = async ({
   fileUrl,
   authorName,
   authorId,
-  pseudonym,
+  authorBool,
   profilePhoto,
   shortDescription,
   tags,
-  time,
+  time
 }: ArticleVideosType) => {
   let img = 600;
   const locale = getCurrentLocale();
@@ -29,7 +30,7 @@ export const Article = async ({
 
   return (
     <div className={styles.article}>
-      {authorName === pseudonym && <DeletionFile name={name!} />}
+      {authorBool && <DeletionFile name={name!} />}
       
       <Image
         className={styles.item}
@@ -43,12 +44,12 @@ export const Article = async ({
       <div className={styles.time}>{time}</div>
 
       <div className={styles.shortDescription}>{shortDescription}</div>
-
+      <Tag variant='subtle' color='blue'>{tags}</Tag>
+      
       <FileOptions
         fileId={fileId}
         authorName={authorName!}
         authorId={authorId}
-        pseudonym={pseudonym!}
         fileUrl={fileUrl}
         profilePhoto={profilePhoto}
         tags={tags!}

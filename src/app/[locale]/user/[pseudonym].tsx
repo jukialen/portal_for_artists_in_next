@@ -13,7 +13,7 @@ import { getI18n, getScopedI18n } from 'locales/server';
 
 import { dateData } from 'helpers/dateData';
 import { getUserData } from 'helpers/getUserData';
-import { animations, graphics, videos } from 'utils/files';
+import { graphics, tags, videosAnimations } from 'utils/files';
 import { getFirstFriends } from 'utils/friends';
 
 import { FriendsButtons } from 'components/atoms/FriendsButtons/FriendsButtons';
@@ -200,8 +200,8 @@ export default async function User({
   const modGroups = await getModGroups(user?.id!, maxItems);
   const membersGroups = await getMembersGroups(user?.id!, maxItems);
   const firstGraphics = await graphics(locale, maxItems, user?.pseudonym!, dataDateObject);
-  const firstAnimations = await animations(locale, maxItems, user?.pseudonym!, dataDateObject);
-  const firstVideos = await videos(locale, maxItems, user?.pseudonym!, dataDateObject);
+  const firstAnimations = await videosAnimations(tags[0], locale, maxItems, user?.pseudonym!, dataDateObject);
+  const firstVideos = await videosAnimations(tags[1], locale, maxItems, user?.pseudonym!, dataDateObject);
 
   const favLength = (): number => {
     let favs = 0;
@@ -268,7 +268,9 @@ export default async function User({
               <PhotosGallery
                 id={user?.id!}
                 locale={locale}
-                author={user?.pseudonym!}
+                pseudonym={user?.pseudonym!}
+                profilePhoto={user?.profilePhoto!}
+                author={pseudonymName}
                 firstGraphics={firstGraphics}
                 tGallery={tGallery}
                 dataDateObject={dataDateObject}
@@ -278,7 +280,9 @@ export default async function User({
               <AnimatedGallery
                 id={user?.id!}
                 locale={locale}
-                author={user?.pseudonym!}
+                pseudonym={user?.pseudonym!}
+                profilePhoto={user?.profilePhoto!}
+                author={pseudonymName}
                 firstAnimations={firstAnimations}
                 tGallery={tGallery}
                 dataDateObject={dataDateObject}
@@ -288,7 +292,9 @@ export default async function User({
               <VideoGallery
                 id={user?.id!}
                 locale={locale}
-                author={user?.pseudonym!}
+                pseudonym={user?.pseudonym!}
+                profilePhoto={user?.profilePhoto!}
+                author={pseudonymName}
                 firstVideos={firstVideos}
                 tGallery={tGallery}
                 dataDateObject={dataDateObject}

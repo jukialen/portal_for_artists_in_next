@@ -8,8 +8,9 @@ import { LangType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
 import { dateData } from 'helpers/dateData';
-import { animations, graphics, videos } from 'utils/files';
+import { graphics, tags, videosAnimations } from 'utils/files';
 import { getFirstFriends } from 'utils/friends';
+import { adminList, modsUsersList } from 'utils/groups';
 
 import { DashboardTabs } from 'components/organisms/DashboardTabs/DashboardTabs';
 import { MainCurrentUserProfileData } from 'components/atoms/MainCurrentUserProfileData/MainCurrentUserProfileData';
@@ -58,16 +59,18 @@ export default async function Account({ params: { locale } }: { params: { locale
   };
 
   const firstGraphics = await graphics(locale, maxItems, userData?.id!, dataDateObject);
-  const firstAnimations = await animations(locale, maxItems, userData?.id!, dataDateObject);
-  const firstVideos = await videos(locale, maxItems, userData?.id!, dataDateObject);
+  const firstAnimations = await videosAnimations(tags[0], locale, maxItems, userData?.id!, dataDateObject);
+  const firstVideos = await videosAnimations(tags[1], locale, maxItems, userData?.id!, dataDateObject);
   const firstFriendsList = await getFirstFriends(dataDateObject, userData?.id!, locale, maxItems);
-
+  const firstAdminList = await adminList(maxItems);
+  const firstModsUsersList = await modsUsersList(maxItems);
   return (
     <>
       <MainCurrentUserProfileData tCurrPrPhoto={tMain} userData={userData!} />
       <DashboardTabs
         id={userData?.id!}
         author={userData?.pseudonym!}
+        profilePhoto={userData?.profilePhoto!}
         dataDateObject={dataDateObject}
         locale={locale}
         tDash={tDash}
@@ -77,6 +80,8 @@ export default async function Account({ params: { locale } }: { params: { locale
         firstVideos={firstVideos!}
         firstAnimations={firstAnimations!}
         firstFriendsList={firstFriendsList!}
+        firstAdminList={firstAdminList}
+        firstModsUsersList={firstModsUsersList!}
       />
     </>
   );

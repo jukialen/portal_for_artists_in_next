@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { cloudFrontUrl } from 'constants/links';
 import { selectFiles } from 'constants/selects';
 import { FileType, GalleryType } from 'types/global.types';
 
@@ -15,8 +14,18 @@ import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Article } from 'components/molecules/Article/Article';
+import { Database } from '../../../types/database.types';
 
-export const PhotosGallery = ({ id, author, tGallery, locale, dataDateObject, firstGraphics }: GalleryType) => {
+export const PhotosGallery = ({
+  id,
+  author,
+  pseudonym,
+  profilePhoto,
+  tGallery,
+  locale,
+  dataDateObject,
+  firstGraphics,
+}: GalleryType) => {
   const [userPhotos, setUserPhotos] = useState<FileType[]>(firstGraphics!);
   const [lastVisible, setLastVisible] = useState(
     firstGraphics!.length > 0 ? firstGraphics![firstGraphics!.length - 1].fileId! : null,
@@ -24,7 +33,7 @@ export const PhotosGallery = ({ id, author, tGallery, locale, dataDateObject, fi
   let [i, setI] = useState(1);
 
   const pathname = usePathname();
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
   const maxItems = 30;
 
   const nextElements = async () => {
@@ -32,7 +41,7 @@ export const PhotosGallery = ({ id, author, tGallery, locale, dataDateObject, fi
       const nextArray: FileType[] = [];
 
       const { data } = await supabase
-        .from('files')
+        .from('Files')
         .select(selectFiles)
         .eq('authorId', id)
         .in('tags', ['realistic', 'manga', 'anime', 'comics', 'photographs'])
@@ -43,17 +52,17 @@ export const PhotosGallery = ({ id, author, tGallery, locale, dataDateObject, fi
       if (data?.length === 0) return userPhotos;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
+        const { fileId, name, tags, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt } = file;
 
         nextArray.push({
           fileId,
           name,
-          shortDescription,
-          pseudonym: Users[0].pseudonym!,
-          profilePhoto: `https://${cloudFrontUrl}/${Users[0].profilePhoto!}`,
-          fileUrl: `https://${cloudFrontUrl}/${name}`,
-          authorId,
+          shortDescription: shortDescription!,
+          fileUrl,
+          authorId: authorId!,
+          authorName: Users?.pseudonym!,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          tags,
         });
       }
 
@@ -72,26 +81,21 @@ export const PhotosGallery = ({ id, author, tGallery, locale, dataDateObject, fi
       <ClientPortalWrapper>
         <Wrapper>
           {userPhotos.length > 0 ? (
-            userPhotos.map(
-              (
-                { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
-                index,
-              ) => (
-                <Article
-                  key={index}
-                  fileId={fileId!}
-                  name={name!}
-                  fileUrl={fileUrl}
-                  shortDescription={shortDescription!}
-                  tags={tags!}
-                  authorName={author!}
-                  profilePhoto={profilePhoto}
-                  authorId={authorId}
-                  time={time}
-                  pseudonym={pseudonym!}
-                />
-              ),
-            )
+            userPhotos.map(({ fileId, name, fileUrl, shortDescription, tags, authorId, time }: FileType, index) => (
+              <Article
+                key={index}
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={author!}
+                authorId={authorId}
+                authorBool={author === pseudonym!}
+                profilePhoto={profilePhoto!}
+                time={time}
+              />
+            ))
           ) : (
             <ZeroFiles text={tGallery?.noPhotos!} />
           )}

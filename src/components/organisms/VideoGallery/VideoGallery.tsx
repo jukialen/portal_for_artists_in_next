@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 
+import { Database } from 'types/database.types';
 import { DateObjectType, FileType, GalleryType, LangType } from 'types/global.types';
-
-import { cloudFrontUrl } from 'constants/links';
 
 import { getDate } from 'helpers/getDate';
 
@@ -14,49 +13,66 @@ import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Videos } from 'components/molecules/Videos/Videos';
 import { selectFiles } from 'constants/selects';
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-export const VideoGallery = ({ id, author, tGallery, locale, dataDateObject, firstVideos }: GalleryType) => {
+export const VideoGallery = ({
+  id,
+  author,
+  pseudonym,
+  profilePhoto,
+  tGallery,
+  locale,
+  dataDateObject,
+  firstVideos,
+}: GalleryType) => {
+  const maxItems = 30;
+
   const [userVideos, setUserVideos] = useState(firstVideos!);
-  const [lastVisible, setLastVisible] = useState<FileType>();
+  const [lastVisible, setLastVisible] = useState(
+    firstVideos?.length === maxItems ? firstVideos[firstVideos!.length - 1].createdAt : '',
+  );
   let [i, setI] = useState(1);
 
   const pathname = usePathname();
+  const supabase = createClientComponentClient<Database>();
 
-  const maxItems = 30;
-
-  const supabase = createClientComponentClient();
-  const nextElements = async (locale: LangType, maxItems: number, authorId: string, dataDateObject: DateObjectType) => {
+  const nextElements = async (locale: LangType, maxItems: number, dataDateObject: DateObjectType) => {
     try {
       const filesArray: FileType[] = [];
 
       const { data } = await supabase
-        .from('files')
+        .from('Files')
         .select(selectFiles)
         .eq('authorId', id)
         .eq('tags', 'videos')
+        .gt('createdAt', lastVisible)
         .order('createdAt', { ascending: false })
         .limit(maxItems);
 
       if (data?.length === 0) return filesArray;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
+        const { fileId, name, tags, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
 
         filesArray.push({
           fileId,
           name,
-          shortDescription,
-          pseudonym: Users[0].pseudonym!,
-          profilePhoto: `https://${cloudFrontUrl}/${Users[0].profilePhoto!}`,
-          fileUrl: `https://${cloudFrontUrl}/${name}`,
-          authorId,
+          shortDescription: shortDescription!,
+          authorName: Users?.pseudonym!,
+          fileUrl,
+          authorId: authorId!,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-          createdAt,
-          updatedAt,
+          tags,
         });
       }
-      return filesArray;
+
+      const nextArray = userVideos.concat([...filesArray]);
+      setUserVideos(nextArray);
+
+      if (nextArray.length === maxItems) {
+        setLastVisible(nextArray[nextArray.length - 1].createdAt);
+        setI(i++);
+      }
     } catch (e) {
       console.error('no your videos', e);
     }
@@ -69,21 +85,7 @@ export const VideoGallery = ({ id, author, tGallery, locale, dataDateObject, fir
       <Wrapper>
         {userVideos.length > 0 ? (
           userVideos.map(
-            (
-              {
-                fileId,
-                name,
-                fileUrl,
-                shortDescription,
-                tags,
-                authorId,
-                authorName,
-                pseudonym,
-                profilePhoto,
-                time,
-              }: FileType,
-              index,
-            ) => (
+            ({ fileId, name, fileUrl, shortDescription, tags, authorId, authorName, time }: FileType, index) => (
               <Videos
                 key={index}
                 fileId={fileId!}
@@ -93,8 +95,8 @@ export const VideoGallery = ({ id, author, tGallery, locale, dataDateObject, fir
                 tags={tags!}
                 authorId={authorId}
                 authorName={authorName!}
-                profilePhoto={profilePhoto}
-                pseudonym={pseudonym!}
+                authorBool={authorName! === pseudonym!}
+                profilePhoto={profilePhoto!}
                 time={time}
               />
             ),
@@ -103,7 +105,9 @@ export const VideoGallery = ({ id, author, tGallery, locale, dataDateObject, fir
           <ZeroFiles text={tGallery?.noVideos!} />
         )}
 
-        {!!lastVisible && userVideos.length === maxItems * i && <MoreButton nextElements={() => nextElements(locale, maxItems, id, dataDateObject)} />}
+        {!!lastVisible && userVideos.length === maxItems * i && (
+          <MoreButton nextElements={() => nextElements(locale, maxItems, dataDateObject)} />
+        )}
       </Wrapper>
     </article>
   );

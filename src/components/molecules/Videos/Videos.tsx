@@ -17,6 +17,7 @@ export const Videos = async ({
   tags,
   fileId,
   pseudonym,
+  profilePhoto,
 }: ArticleVideosType) => {
   const locale = getCurrentLocale();
   const tComments = await getScopedI18n('Comments');
@@ -45,8 +46,9 @@ export const Videos = async ({
         dataDateObject={dataDateObject}
         noComments={tComments('noComments')}
         locale={locale}
-       authorId={authorId}
-       pseudonym={pseudonym}
+        authorId={authorId}
+        pseudonym={pseudonym}
+        profilePhoto={profilePhoto}
       />
     </div>
   );
