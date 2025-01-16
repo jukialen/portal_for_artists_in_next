@@ -9,11 +9,11 @@ import { FileType, GalleryType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 
-import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Article } from 'components/molecules/Article/Article';
-import { ClientPortalWrapper } from '../../atoms/ClientPortalWrapper/ClientPortalWrapper';
 
 export const AnimatedGallery = ({
   id,
@@ -55,7 +55,7 @@ export const AnimatedGallery = ({
           fileId,
           name,
           shortDescription: shortDescription!,
-          pseudonym: Users?.pseudonym!,
+          authorName: Users?.pseudonym!,
           fileUrl,
           authorId: authorId!,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
