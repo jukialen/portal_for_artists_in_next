@@ -1,7 +1,7 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import styles from './GroupTile.module.scss';
-import { Link } from "@chakra-ui/next-js";
 
 type TileType = {
   name: string;

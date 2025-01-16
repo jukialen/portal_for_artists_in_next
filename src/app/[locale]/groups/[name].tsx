@@ -95,7 +95,6 @@ async function joinedUser(name: string, stringError: string): Promise<JoinUser> 
     return emptyObject;
   }
 }
-
 async function members(usersGroupsId: string, name: string, stringError: string): Promise<MemberType[]> {
   const usersGroupData = await supabase
     .from('Groups')
@@ -133,7 +132,6 @@ async function members(usersGroupsId: string, name: string, stringError: string)
     return [{ usersGroupsId, pseudonym: '', profilePhoto: '', role: 'USER' }];
   }
 }
-
 async function getFirstPosts(groupId: string, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
   const postsArray: PostsType[] = [];
 
@@ -149,7 +147,7 @@ async function getFirstPosts(groupId: string, maxItems: number, locale: LangType
     return;
   } else {
     for (const post of data!) {
-      const { title, content, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
+      const { title, content, fileUrl, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
       
       const { data: lData, count } = await supabase.from('Liked').select('id, userId').match({ postId, authorId });
       
@@ -157,7 +155,8 @@ async function getFirstPosts(groupId: string, maxItems: number, locale: LangType
       
       postsArray.push({
         authorName: Users?.pseudonym!,
-        authorProfilePhoto: `https://${cloudFrontUrl}/${Users?.profilePhoto!}`,
+        authorProfilePhoto: Users?.profilePhoto!,
+        fileUrl,
         liked: indexCurrentUser >= 0,
         postId,
         title,

@@ -1,5 +1,4 @@
 export const HeadCom = (content: string) => {
-
   return {
     title: content,
     description: content,
