@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { redirect } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Form, Formik } from 'formik';
-import { IconButton, Input, InputGroup, InputRightElement, Stack } from '@chakra-ui/react';
+import { IconButton, Input, Stack, StackSeparator } from '@chakra-ui/react';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { InputGroup } from 'components/ui/input-group';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -18,7 +19,7 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './FormSignUp.module.scss';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { GrFormView, GrFormViewHide } from 'react-icons/gr';
 
 export const FormSignUp = ({ locale }: { locale: string }) => {
   const supabase = createClientComponentClient();
@@ -41,7 +42,7 @@ export const FormSignUp = ({ locale }: { locale: string }) => {
     try {
       setIsLoading(true);
 
-      const { data } = await supabase.from('Users').select('email').eq('email', email).single();
+      const { data } = await supabase.from('Users').select('email').eq('email', email).limit(1).maybeSingle();
 
       if (!data) {
         await supabase.auth.signUp({
@@ -80,8 +81,14 @@ export const FormSignUp = ({ locale }: { locale: string }) => {
 
           <FormError nameError="email" />
 
-          <Stack spacing={4}>
-            <InputGroup>
+          <Stack separator={<StackSeparator />}>
+            <InputGroup
+              flex="1"
+              endElement={
+                <IconButton className={styles.showingPass} onClick={showPass} aria-label="show and hide password">
+                  {show ? <GrFormView /> : <GrFormViewHide />}
+                </IconButton>
+              }>
               <Input
                 name="password"
                 type={show ? 'text' : 'password'}
@@ -90,14 +97,6 @@ export const FormSignUp = ({ locale }: { locale: string }) => {
                 placeholder={tNavForm('password')}
                 className={touched.password && !!errors.password ? styles.inputForm__error : styles.inputForm}
               />
-              <InputRightElement>
-                <IconButton
-                  className={styles.showingPass}
-                  onClick={showPass}
-                  icon={show ? <ViewIcon /> : <ViewOffIcon />}
-                  aria-label="show and hide password"
-                />
-              </InputRightElement>
             </InputGroup>
           </Stack>
 

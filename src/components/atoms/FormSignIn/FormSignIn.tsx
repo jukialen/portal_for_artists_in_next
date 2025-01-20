@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { IconButton, Input, InputGroup, InputRightElement, Stack } from '@chakra-ui/react';
+import { IconButton, Input, Stack, StackSeparator } from '@chakra-ui/react';
+import { InputGroup } from 'components/ui/input-group';
 
 import { useScopedI18n } from 'locales/client';
 
@@ -17,8 +19,7 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './FormSignIn.module.scss';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { GrFormView, GrFormViewHide } from 'react-icons/gr';
 
 export const FormSignIn = ({ locale }: { locale: string }) => {
   const [show, setShow] = useState(false);
@@ -39,7 +40,7 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
     const supabase = createClientComponentClient();
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password: password! });
-    
+
     if (!!error && error.status !== 200) {
       setValuesFields(tNavForm('wrongLoginData'));
     } else {
@@ -77,8 +78,14 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
 
           <FormError nameError="email" />
 
-          <Stack spacing={4}>
-            <InputGroup>
+          <Stack separator={<StackSeparator />}>
+            <InputGroup
+              flex="1"
+              endElement={
+                <IconButton className={styles.showingPass} onClick={showPass} aria-label="show and hide password">
+                  {show ? <GrFormView /> : <GrFormViewHide />}
+                </IconButton>
+              }>
               <Input
                 name="password"
                 type={show ? 'text' : 'password'}
@@ -87,14 +94,6 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
                 placeholder={tNavForm('password')}
                 className={touched.password && !!errors.password ? styles.inputForm__error : styles.inputForm}
               />
-              <InputRightElement>
-                <IconButton
-                  className={styles.showingPass}
-                  onClick={showPass}
-                  icon={show ? <ViewIcon /> : <ViewOffIcon />}
-                  aria-label="show and hide password"
-                />
-              </InputRightElement>
             </InputGroup>
           </Stack>
 
