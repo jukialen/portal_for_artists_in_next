@@ -27,16 +27,10 @@ export const SkeletonRootLayout = ({ children, session, userMenuComponents, loca
   if (
     !session &&
     !(
-      pathname === `/${locale}/terms` ||
-      pathname === `/${locale}/privacy` ||
-      pathname === `/${locale}/faq` ||
-      pathname === `/${locale}/contact` ||
       pathname === `/${locale}/` ||
       pathname === `/${locale}/signin` ||
       pathname === `/${locale}/signup` ||
       pathname === `/${locale}/forgotten` ||
-      pathname === `/${locale}/settings` ||
-      pathname === `/${locale}/plans` ||
       pathname === `/${locale}/new-password`
     )
   ) {
@@ -46,16 +40,10 @@ export const SkeletonRootLayout = ({ children, session, userMenuComponents, loca
   if (
     session &&
     (
-      pathname === `/${locale}/terms` ||
-      pathname === `/${locale}/privacy` ||
-      pathname === `/${locale}/faq` ||
-      pathname === `/${locale}/contact` ||
       pathname === `/${locale}/` ||
       pathname === `/${locale}/signin` ||
       pathname === `/${locale}/signup` ||
       pathname === `/${locale}/forgotten` ||
-      pathname === `/${locale}/settings` ||
-      pathname === `/${locale}/plans` ||
       pathname === `/${locale}/new-password`
     )
   ) {
