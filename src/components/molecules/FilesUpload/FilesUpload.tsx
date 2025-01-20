@@ -81,6 +81,7 @@ export const FilesUpload = () => {
         setRequired(true);
         return;
       }
+
       if (
         file.size < 6291456 &&
         (file.type === 'image/jpg' ||
@@ -91,7 +92,7 @@ export const FilesUpload = () => {
           file.type === 'video/mp4' ||
           file.type === 'video/webm')
       ) {
-        const { data, error } = await supabase.storage.from('logos').upload(`/${userData?.id!}`, file);
+        const { data, error } = await supabase.storage.from('basic').upload(`/${userData?.id!}`, file);
 
         if (!!error) console.error(error);
 

@@ -142,17 +142,30 @@ async function getFirstPosts(groupId: string, maxItems: number, locale: LangType
     .order('createdAt', { ascending: false })
     .limit(maxItems);
 
-  if(!!error) {
+  if (!!error) {
     console.error(error);
     return;
   } else {
     for (const post of data!) {
-      const { title, content, fileUrl, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
-      
+      const {
+        title,
+        content,
+        fileUrl,
+        shared,
+        commented,
+        authorId,
+        groupId,
+        postId,
+        createdAt,
+        updatedAt,
+        Users,
+        Roles,
+      } = post;
+
       const { data: lData, count } = await supabase.from('Liked').select('id, userId').match({ postId, authorId });
-      
+
       const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
-      
+
       postsArray.push({
         authorName: Users?.pseudonym!,
         authorProfilePhoto: Users?.profilePhoto!,
@@ -172,7 +185,6 @@ async function getFirstPosts(groupId: string, maxItems: number, locale: LangType
       });
     }
     return postsArray;
-
   }
 }
 
@@ -225,7 +237,7 @@ export default async function Groups({ params: { locale, name } }: { params: { l
       addDesAria: tOther('Groups.addingPost.addDesAria'),
     },
     error: tOther('error'),
-    noRegulation: tOther('Regulations.noRegulation')
+    noRegulation: tOther('Regulations.noRegulation'),
   };
 
   const userData = await getUserData();

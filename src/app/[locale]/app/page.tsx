@@ -27,10 +27,45 @@ async function getTop10Drawings(maxItems: number, locale: LangType, dataDateObje
   try {
     const filesArray: FileType[] = [];
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('Files')
       .select(selectFiles)
       .in('tags', ['realistic', 'manga', 'anime', 'comics'])
+      .order('createdAt', { ascending: false })
+      .limit(maxItems);
+
+    if (data?.length === 0 || !!error) {
+      return filesArray;
+    }
+
+    for (const draw of data) {
+      const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt } = draw;
+
+      filesArray.push({
+        fileId,
+        name,
+        shortDescription: shortDescription!,
+        authorName: Users?.pseudonym!,
+        fileUrl,
+        authorId: authorId!,
+        time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+      });
+    }
+
+    return filesArray;
+  } catch (e) {
+    console.error('10drawingsE', e);
+  }
+}
+
+async function getTop10Pavo(maxItems: number, tag: Tags, locale: LangType, dataDateObject: DateObjectType) {
+  try {
+    const filesArray: FileType[] = [];
+
+    const { data } = await supabase
+      .from('Files')
+      .select(selectFiles)
+      .eq('tags', tag)
       .order('createdAt', { ascending: false })
       .limit(maxItems);
 
@@ -46,7 +81,7 @@ async function getTop10Drawings(maxItems: number, locale: LangType, dataDateObje
           fileId,
           name,
           shortDescription: shortDescription!,
-          pseudonym: Users?.pseudonym!,
+          authorName: Users?.pseudonym!,
           fileUrl,
           authorId: authorId!,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
@@ -54,43 +89,6 @@ async function getTop10Drawings(maxItems: number, locale: LangType, dataDateObje
       }
     }
 
-    return filesArray;
-  } catch (e) {
-    console.error('10drawingsE', e);
-  }
-}
-
-async function getTop10Pavo(maxItems: number, tag: Tags, locale: LangType, dataDateObject: DateObjectType) {
-  try {
-    const filesArray: FileType[] = [];
-    
-    const { data } = await supabase
-    .from('Files')
-    .select(selectFiles)
-    .eq('tags', tag)
-    .order('createdAt', { ascending: false })
-    .limit(maxItems);
-    
-    if (data?.length === 0) {
-      return filesArray;
-    }
-    
-    if (!!data && data.length > 0) {
-      for (const draw of data!) {
-        const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt } = draw;
-        
-        filesArray.push({
-          fileId,
-          name,
-          shortDescription: shortDescription!,
-          pseudonym: Users?.pseudonym!,
-          fileUrl,
-          authorId: authorId!,
-          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-        });
-      }
-    }
-    
     return filesArray;
   } catch (e) {
     console.error(`10d${tag}E`, e);
@@ -106,7 +104,7 @@ export default async function App({ params: { locale } }: { params: { locale: La
   const dataDateObject = await dateData();
 
   const maxItems = 10;
-  const tags: Tags[] = ['photographs', 'animations', "videos", 'others'];
+  const tags: Tags[] = ['photographs', 'animations', 'videos', 'others'];
 
   const drawings = await getTop10Drawings(maxItems, locale, dataDateObject);
   const photos = await getTop10Pavo(maxItems, tags[0], locale, dataDateObject);
@@ -118,12 +116,20 @@ export default async function App({ params: { locale } }: { params: { locale: La
     <>
       <h2 className={styles.top__among__users}>{tApp('lastDrawings')}</h2>
       <AppWrapper>
-        {!!drawings && drawings?.length > 0 ? <AppTop10s data={drawings!} type="others" /> : <ZeroFiles text={tZero('drawings')} />}
+        {!!drawings && drawings?.length > 0 ? (
+          <AppTop10s data={drawings!} type="others" />
+        ) : (
+          <ZeroFiles text={tZero('drawings')} />
+        )}
       </AppWrapper>
 
       <h2 className={styles.top__among__users}>{tApp('lastPhotos')}</h2>
       <AppWrapper>
-        {!!photos && photos?.length > 0 ? <AppTop10s data={photos!} type="others" /> : <ZeroFiles text={tZero('photos')} />}
+        {!!photos && photos?.length > 0 ? (
+          <AppTop10s data={photos!} type="others" />
+        ) : (
+          <ZeroFiles text={tZero('photos')} />
+        )}
       </AppWrapper>
 
       <h2 className={styles.top__among__users}>{tApp('lastAnimations')}</h2>
@@ -137,12 +143,20 @@ export default async function App({ params: { locale } }: { params: { locale: La
 
       <h2 className={styles.liked}>{tApp('lastVideos')}</h2>
       <AppWrapper>
-        {!!videos && videos?.length > 0 ? <AppTop10s data={videos!} type="videos" /> : <ZeroFiles text={tZero('videos')} />}
+        {!!videos && videos?.length > 0 ? (
+          <AppTop10s data={videos!} type="videos" />
+        ) : (
+          <ZeroFiles text={tZero('videos')} />
+        )}
       </AppWrapper>
 
       <h2 className={styles.top__among__users}>{tApp('lastOthers')}</h2>
       <AppWrapper>
-        {!!others && others?.length > 0 ? <AppTop10s data={others!} type="others" /> : <ZeroFiles text={tZero('others')} />}
+        {!!others && others?.length > 0 ? (
+          <AppTop10s data={others!} type="others" />
+        ) : (
+          <ZeroFiles text={tZero('others')} />
+        )}
       </AppWrapper>
     </>
   );

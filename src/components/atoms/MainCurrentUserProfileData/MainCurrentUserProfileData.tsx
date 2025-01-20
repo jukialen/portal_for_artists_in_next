@@ -18,7 +18,7 @@ import {
 
 import { useScopedI18n } from "locales/client";
 
-import { cloudFrontUrl, darkMode } from 'constants/links';
+import { darkMode } from 'constants/links';
 import { Database } from "types/database.types";
 import { EventType, UserType } from 'types/global.types';
 
@@ -89,7 +89,7 @@ export const MainCurrentUserProfileData = ({
       <div className={styles.logoPseu}>
         <div className={styles.logo}>
           <Image
-            src={`https://${cloudFrontUrl}/${userData?.profilePhoto}`}
+            src={userData?.profilePhoto!}
             fill
             alt={`${userData?.profilePhoto} logo`}
           />

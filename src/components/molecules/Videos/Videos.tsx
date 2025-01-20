@@ -16,7 +16,7 @@ export const Videos = async ({
   authorId,
   tags,
   fileId,
-  pseudonym,
+  authorBool,
   profilePhoto,
 }: ArticleVideosType) => {
   const locale = getCurrentLocale();
@@ -26,7 +26,7 @@ export const Videos = async ({
 
   return (
     <div className={styles.videos}>
-      {authorName === pseudonym && <DeletionFile name={name!} />}
+      {authorBool && <DeletionFile name={name!} />}
 
       <video preload="metadata" controls className={styles.video} playsInline>
         <source src={fileUrl} />
@@ -47,7 +47,6 @@ export const Videos = async ({
         noComments={tComments('noComments')}
         locale={locale}
         authorId={authorId}
-        pseudonym={pseudonym}
         profilePhoto={profilePhoto}
       />
     </div>
