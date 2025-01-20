@@ -5,7 +5,7 @@ import { getUserData } from 'helpers/getUserData';
 import { ChoosePlanPriButton } from 'components/atoms/ChoosePlanPriButton/ChoosePlanPriButton';
 
 import styles from './PlanBlock.module.scss';
-import { CheckIcon } from '@chakra-ui/icons';
+import { IoMdCheckmark } from 'react-icons/io';
 
 type PlanBlockType = {
   amount: number;
@@ -46,32 +46,32 @@ export const PlanBlock = async ({
       <div className={styles.list}>
         <ul>
           <li>
-            <CheckIcon className={styles.icon} />
+            <IoMdCheckmark className={styles.icon} />
             <p>{grLength}</p>
           </li>
           <li>
-            <CheckIcon className={styles.icon} />
+            <IoMdCheckmark className={styles.icon} />
             <p>{animLength}</p>
           </li>
           <li>
-            <CheckIcon className={styles.icon} />
+            <IoMdCheckmark className={styles.icon} />
             <p>{vidLength}</p>
           </li>
           <li>
-            <CheckIcon className={styles.icon} />
+            <IoMdCheckmark className={styles.icon} />
             <p>{grAnimSize}</p>
           </li>
           <li>
-            <CheckIcon className={styles.icon} />
+            <IoMdCheckmark className={styles.icon} />
             <p>{vidSize}</p>
           </li>
           <li>
-            <CheckIcon className={styles.icon} />
+            <IoMdCheckmark className={styles.icon} />
             <p>{noAds}</p>
           </li>
           {!!support && (
             <li>
-              <CheckIcon className={styles.icon} />
+              <IoMdCheckmark className={styles.icon} />
               <p>{support}</p>
             </li>
           )}

@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 import Link from 'next/link';
 
+import { getUserData } from "helpers/getUserData";
+
 import { HeadCom } from 'constants/HeadCom';
 
 import { getI18n, getScopedI18n } from 'locales/server';
@@ -19,6 +21,8 @@ export default async function Plans({ params: { locale } }: { params: { locale: 
   const t = await getI18n();
   const tPlans = await getScopedI18n('Plans');
 
+  const user = await getUserData();
+  
   const freePlan = {
     plan: 'FREE',
     amount: 0,
@@ -30,7 +34,6 @@ export default async function Plans({ params: { locale } }: { params: { locale: 
     vidSize: tPlans('vidSize'),
     noAds: tPlans('noAds'),
   };
-
   const premiumPlan = {
     plan: 'PREMIUM',
     amount: 10,
@@ -43,7 +46,6 @@ export default async function Plans({ params: { locale } }: { params: { locale: 
     noAds: tPlans('noAds'),
     support: tPlans('support'),
   };
-
   const goldPlan = {
     plan: 'GOLD',
     amount: 20,
@@ -62,7 +64,7 @@ export default async function Plans({ params: { locale } }: { params: { locale: 
       <h2 className={styles.title}>{tPlans('title')}</h2>
       <h3 className={styles.subTitle}>{tPlans('subTitle')}</h3>
       <div className={styles.plansFormats}>
-        <PlanWrapper>
+        <PlanWrapper pseudonym={user?.pseudonym!}>
           <PlanBlock
             amount={freePlan.amount}
             plan={freePlan.plan}
