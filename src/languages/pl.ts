@@ -384,6 +384,10 @@ export default {
     title: 'Ustawienia',
     appearance: 'Wygląd',
     dark_mode: 'Ciemny motyw',
+    Mode: {
+      light: 'JASNY',
+      dark: 'CIEMNY',
+    },
   },
   Date: {
     second: 'sek. temu',

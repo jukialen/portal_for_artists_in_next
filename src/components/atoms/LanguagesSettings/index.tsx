@@ -11,8 +11,8 @@ import { useChangeLocale, useCurrentLocale, useI18n } from "locales/client";
 import { ModeContext } from 'providers/ModeProvider';
 
 import styles from './LanguagesSettings.module.scss';
-import { ChevronDownIcon } from '@chakra-ui/icons';
 import { MdLanguage } from 'react-icons/md';
+import { RxChevronDown } from 'react-icons/rx';
 
 export const LanguagesSettings = () => {
   const { isMode } = useContext(ModeContext);
@@ -43,7 +43,7 @@ export const LanguagesSettings = () => {
           className={`${styles.languages__select} ${isMode === darkMode ? styles.languages__select__dark : ''}`}
           onClick={showLanguages}>
           <p>{locale.toLocaleUpperCase()}</p>
-          <ChevronDownIcon />
+          <RxChevronDown />
         </li>
 
         <div

@@ -10,9 +10,10 @@ import { ModeContext } from 'providers/ModeProvider';
 import { useScopedI18n } from 'locales/client';
 
 import styles from './ModeContainer.module.scss';
-import { ChevronDownIcon, SunIcon } from '@chakra-ui/icons';
+import { LuSun } from 'react-icons/lu';
+import { RxChevronDown } from 'react-icons/rx';
 
-export const ModeContainer = () => {
+export const ModeContainer = ({ light, dark }: { light: string; dark: string }) => {
   const { isMode, changeMode } = useContext(ModeContext);
   const [mode, setMode] = useState(false);
 
@@ -24,12 +25,12 @@ export const ModeContainer = () => {
 
   const tSettings = useScopedI18n('Settings');
 
-  console.log('isMode === darkMode', isMode)
+  console.log('isMode === darkMode', isMode);
   return (
     <div className={styles.modeContainer}>
       <div>
         {isMode === darkMode ? (
-          <SunIcon aria-label="mode icon" className={styles.icon} />
+          <LuSun aria-label="mode icon" className={styles.icon} />
         ) : (
           <Icon
             className={styles.icon}
@@ -53,7 +54,7 @@ export const ModeContainer = () => {
           className={`${styles.colors__select} ${isMode === darkMode ? styles.colors__select__dark : ''}`}
           onClick={showMode}>
           <p className={styles.languages__version}>{isMode?.toLocaleUpperCase()}</p>
-          <ChevronDownIcon />
+          <RxChevronDown />
         </li>
 
         <div

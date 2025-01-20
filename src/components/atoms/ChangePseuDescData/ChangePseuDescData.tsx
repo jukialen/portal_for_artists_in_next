@@ -1,15 +1,17 @@
-'use client'
+'use client';
 
 import { useContext, useState } from 'react';
-import { Input, Progress, Textarea } from '@chakra-ui/react';
-import axios from 'axios';
-import { backUrl, darkMode } from 'constants/links';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { Input, Textarea } from '@chakra-ui/react';
 
 import { useI18n, useScopedI18n } from 'locales/client';
-import { EventType, ResetFormType, UserType } from "types/global.types";
+
+import { darkMode } from 'constants/links';
+import { Database } from 'types/database.types';
+import { EventType, ResetFormType, UserType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
 
@@ -24,12 +26,10 @@ type ProfileType = {
 };
 
 export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
-
   const { isMode } = useContext(ModeContext);
   const [valuesFields, setValuesFields] = useState('');
-  const [photo, setPhoto] = useState<File | string | null>(userData?.profilePhoto || null);
-
-  const [progressUpload, setProgressUpload] = useState(0);
+  const [photo, setPhoto] = useState<File | undefined>();
+  const supabase = createClientComponentClient<Database>();
 
   const t = useI18n();
   const tAnotherForm = useScopedI18n('AnotherForm');
@@ -52,26 +52,40 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
 
   const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: ResetFormType) => {
     try {
-      const newUserData = axios.patch(`${backUrl}/users/${userData?.pseudonym}`, {
-        pseudonym: newPseudonym,
-        description: newDescription,
-      });
+      if (
+        userData?.profilePhoto !== null &&
+        !!photo &&
+        photo.size < 6291456 &&
+        (photo.type === 'image/jpg' ||
+          photo.type === 'image/jpeg' ||
+          photo.type === 'image/png' ||
+          photo.type === ' image/webp' ||
+          photo.type === 'image/avif')
+      ) {
+        const { data: pDatahoto, error } = await supabase.storage.from('profiles').upload('file_path', photo);
 
-      if (userData?.profilePhoto !== null) {
-        await axios.patch(`${backUrl}/files/${userData?.id}`, {
-          data: { file: photo },
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        if (!!error || !pDatahoto) {
+          setValuesFields(t('AnotherForm.notUploadFile'));
+          return;
+        }
 
-        await newUserData;
-
+        const { error: er } = await supabase
+          .from('Users')
+          .update({ pseudonym: newPseudonym, description: newDescription, profilePhoto: pDatahoto?.path! });
         setValuesFields(tAnotherForm('uploadFile'));
-
-        //     setValuesFields(t('AnotherForm.notUploadFile'));
+        if (!!er) {
+          setValuesFields(tAccount('profile.errorSending'));
+          return;
+        }
       } else {
-        return newUserData;
+        const { error: e } = await supabase
+          .from('Users')
+          .update({ pseudonym: newPseudonym, description: newDescription });
+
+        if (!!e) {
+          setValuesFields(tAccount('profile.errorSending'));
+          return;
+        }
       }
 
       resetForm(initialValues);
@@ -152,21 +166,6 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
           <button className={`${styles.button} button`} type="submit" aria-label={tAccount('profile.ariaLabelButton')}>
             {tAccount('profile.save')}
           </button>
-
-          {progressUpload >= 1 && !(valuesFields === `${tAnotherForm('uploadFile')}`) && (
-            <Progress
-              value={progressUpload}
-              colorScheme="green"
-              isAnimated
-              hasStripe
-              min={0}
-              max={100}
-              w={280}
-              bg="blue.400"
-              m="1.5rem auto"
-              size="md"
-            />
-          )}
 
           {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
         </Form>

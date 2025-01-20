@@ -376,6 +376,10 @@ export default {
     title: '設定',
     appearance: '外観',
     dark_mode: '暗いのモード',
+    Mode: {
+      light: '明るい',
+      dark: '暗い',
+    }
   },
   Date: {
     second: '秒',
@@ -389,5 +393,5 @@ export default {
   edit: 'エディト',
   cancel: '取り止める',
   chooseTag: 'タグが選ぶ',
-  newFile: '新しのファイル',
+  newFile: '新しのファイル'
 } as const;

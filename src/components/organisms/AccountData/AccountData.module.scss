@@ -66,10 +66,6 @@ section.subscription, section.subscription__dark {
     border-bottom: transparent;
   }
 
-  .closeButton {
-    border-color: transparent;
-  }
-
   &:focus {
     box-shadow: 0 0 0 3px transparent
   }
@@ -166,10 +162,6 @@ section.subscription {
     color: $dark__background__light__color;
   }
 
-  .closeButton {
-    color: $dark__background__light__color;
-  }
-
   .message, .message a {
     color: $dark__background__light__color;
   }
@@ -187,10 +179,6 @@ section.subscription__dark {
   }
 
   header {
-    color: $dark__color__light__back;
-  }
-
-  .closeButton {
     color: $dark__color__light__back;
   }
 

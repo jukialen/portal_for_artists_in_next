@@ -9,8 +9,6 @@ export const UserPartOfSettings = async () => {
   const userData = await getUserData();
   const t = await getI18n();
   
-  console.log('userData', userData);
-  
   return !!userData?.id ? (
     <>
       <AccountData userData={userData!} />

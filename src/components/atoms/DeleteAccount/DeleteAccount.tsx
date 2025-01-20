@@ -1,70 +1,69 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
-  useToast,
-} from '@chakra-ui/react';
+  DialogActionTrigger,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from 'components/ui/dialog';
+import { Button } from 'components/ui/button';
 
-import { backUrl } from 'constants/links';
+import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
-import { useCurrentLocale, useI18n, useScopedI18n } from "locales/client";
+import { Database } from 'types/database.types';
+import { UserType } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './DeleteAccount.module.scss';
-import { DeleteIcon } from '@chakra-ui/icons';
-import { UserType } from "types/global.types";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { AiTwotoneDelete } from 'react-icons/ai';
 
 export const DeleteAccount = ({ userData }: { userData: UserType }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState('');
-  const cancelRef = useRef(null);
-  const toast = useToast();
-  
   const locale = useCurrentLocale();
   const t = useI18n();
   const tContact = useScopedI18n('Contact');
   const tDeletionAccount = useScopedI18n('DeletionAccount');
 
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
   const { push } = useRouter();
-  const onClose = () => setIsOpen(false);
 
   const deletionUser = async () => {
     try {
-      onClose();
+      setOpen(false);
       setDeleting(!deleting);
       setValues(tDeletionAccount('deletionAccount'));
-      // const res = await axios.delete(`${backUrl}/users/${userData?.pseudonym}`);
-      
+
       const { data, error } = await supabase.auth.admin.deleteUser(userData?.id!);
-      setValues('');
 
-      !!data.user
-        ? toast({
-            description: tContact('success'),
-            status: 'success',
-            variant: 'subtle',
-            duration: 9000,
-          })
-        : toast({
-            description: tContact('fail'),
-            status: 'error',
-            variant: 'subtle',
-            duration: 9000,
-          });
+      if(!data.user || !!error) {
+        setValues(t('error'));
+        return;
+      }
+      
+      setValues(!!data.user || !error ? tContact('success') : tContact('fail'));
 
+      const { data: usData, error: usError } = await supabase
+        .from('Users')
+        .delete({ count: 'estimated' })
+        .eq('id', userData.id!)
+      .select();
+      
+      if (!usData || !!usError ) {
+        setValues(t('error'));
+        return;
+      }
+      
       setDeleting(!deleting);
       push(`${locale}/`);
     } catch (e) {
@@ -75,40 +74,41 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
 
   return (
     <div className={styles.deleteDiv}>
-      <Button
-        isLoading={deleting}
-        loadingText="Deleting"
-        size="md"
-        leftIcon={<DeleteIcon />}
-        variant="ghost"
-        colorScheme="red"
-        borderColor="red.500"
-        w={145}
-        m={4}
-        onClick={() => setIsOpen(true)}>
-        {`${tDeletionAccount('button')} account`}
-      </Button>
+      <DialogRoot
+        lazyMount
+        open={open}
+        onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
+        <DialogTrigger asChild>
+          <Button
+            loading={deleting}
+            loadingText="Deleting"
+            variant="ghost"
+            colorScheme="red"
+            borderColor="red.500"
+            w={145}
+            m={4}>
+            <AiTwotoneDelete />
+            {`${tDeletionAccount('button')} account`}
+          </Button>
+        </DialogTrigger>
+        <DialogContent m="auto">
+          <DialogHeader fontSize="lg" fontWeight="bold">
+            <DialogTitle>{tDeletionAccount('title')}</DialogTitle>
+          </DialogHeader>
 
-      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-        <AlertDialogOverlay>
-          <AlertDialogContent m="auto">
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {tDeletionAccount('title')}
-            </AlertDialogHeader>
+          <DialogBody>{tDeletionAccount('body')}</DialogBody>
 
-            <AlertDialogBody>{tDeletionAccount('body')}</AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} borderColor="gray.100" onClick={onClose}>
-                {tDeletionAccount('cancel')}
-              </Button>
-              <Button colorScheme="red" borderColor="red.500" onClick={deletionUser} ml={3}>
-                {tDeletionAccount('button')}
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+          <DialogFooter>
+            <DialogActionTrigger borderColor="gray.100" asChild>
+              {tDeletionAccount('cancel')}
+            </DialogActionTrigger>
+            <Button colorScheme="red" borderColor="red.500" onClick={deletionUser} ml={3}>
+              {tDeletionAccount('button')}
+            </Button>
+          </DialogFooter>
+          <DialogCloseTrigger />
+        </DialogContent>
+      </DialogRoot>
       {!!values && <Alerts valueFields={values} />}
     </div>
   );

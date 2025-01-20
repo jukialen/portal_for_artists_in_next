@@ -31,7 +31,7 @@ export default async function Settings({ params: { locale } }: { params: { local
         <h3>{tSettings('appearance')}</h3>
 
         <div className={styles.flow}>
-          <ModeContainer />
+          <ModeContainer light={tSettings('Mode.light')} dark={tSettings('Mode.dark')} />
 
           <LanguagesSettings />
         </div>

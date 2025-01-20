@@ -12,6 +12,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let status: string;
 
     switch (valueFields) {
+      case t('Contact.success'):
       case t('NewPassword.success'):
       case t('ResetPassword.success'):
       case t('NewUser.successSending'):
@@ -52,6 +53,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     let color: string;
 
     switch (valueFields) {
+      case t('Contact.success'):
       case t('NewPassword.success'):
       case t('ResetPassword.success'):
       case t('NewUser.successSending'):
@@ -90,14 +92,13 @@ export const Alerts = ({ valueFields }: AlertsType) => {
 
   return (
     <Alert
+      title={valueFields}
+      status={switchAlert(valueFields)}
       colorScheme={switchAlertColor(valueFields)}
       color="blackAlpha.900"
       size="sm"
       margin="1rem auto"
       width="17.5rem"
-      status={switchAlert(valueFields)}
-      fontSize="md">
-      {valueFields}
-    </Alert>
+      fontSize="md" />
   );
 };

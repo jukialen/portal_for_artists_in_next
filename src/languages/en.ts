@@ -383,6 +383,10 @@ export default {
     title: 'Settings',
     appearance: 'Appearance',
     dark_mode: 'Dark mode',
+    Mode: {
+      light: 'LIGHT',
+      dark: 'DARK',
+    },
   },
   Date: {
     second: 's',
