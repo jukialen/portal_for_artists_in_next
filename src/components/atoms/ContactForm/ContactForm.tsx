@@ -1,21 +1,22 @@
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
-import { Button, Input, Select, Textarea, useToast } from '@chakra-ui/react';
-import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { Button, Input, Textarea } from '@chakra-ui/react';
+import { NativeSelectField, NativeSelectRoot } from 'components/ui/native-select';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { ResetFormType } from 'types/global.types';
-
-import { Form, Formik } from 'formik';
-
 import { initialValuesForContact } from 'constants/objects';
 import { darkMode } from 'constants/links';
+import { ResetFormType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
+
+import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './ContactForm.module.scss';
@@ -27,12 +28,12 @@ type ContactType = {
 };
 
 export const ContactForm = () => {
+  const [valuesFields, setValuesFields] = useState<string>('');
+
   const { isMode } = useContext(ModeContext);
 
   const t = useI18n();
   const tContact = useScopedI18n('Contact');
-
-  const toast = useToast();
 
   const schemaValidation = Yup.object({
     title: SchemaValidation().description,
@@ -51,19 +52,7 @@ export const ContactForm = () => {
     console.log(message.split('\n').join(''));
     console.log(message.split('\n'));
 
-    messages.status === 200
-      ? toast({
-          description: tContact('success'),
-          status: 'success',
-          variant: 'subtle',
-          duration: 9000,
-        })
-      : toast({
-          description: tContact('fail'),
-          status: 'error',
-          variant: 'subtle',
-          duration: 9000,
-        });
+    messages.status === 200 ? setValuesFields(tContact('success')) : setValuesFields(tContact('fail'));
 
     await resetForm(initialValuesForContact);
   };
@@ -73,19 +62,18 @@ export const ContactForm = () => {
       {({ values, handleChange, errors, touched }) => (
         <Form className={isMode === darkMode ? styles.form__dark : styles.form}>
           <div className={isMode === darkMode ? styles.select__dark : styles.select}>
-            <Select
-              name="tags"
-              value={values.tags}
+            <NativeSelectRoot
               onChange={handleChange}
-              className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}
-              placeholder={tContact('chooseTitle')}>
-              <option role="option" value={tContact('suggestion')}>
-                {tContact('suggestion')}
-              </option>
-              <option role="option" value={tContact('problem')}>
-                {tContact('problem')}
-              </option>
-            </Select>
+              className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}>
+              <NativeSelectField name="tags" value={values.tags} placeholder={tContact('chooseTitle')}>
+                <option role="option" value={tContact('suggestion')}>
+                  {tContact('suggestion')}
+                </option>
+                <option role="option" value={tContact('problem')}>
+                  {tContact('problem')}
+                </option>
+              </NativeSelectField>
+            </NativeSelectRoot>
           </div>
 
           <FormError nameError="tags" />
@@ -118,6 +106,8 @@ export const ContactForm = () => {
             aria-label={tContact('ariaSend')}>
             {t('AnotherForm.send')}
           </Button>
+
+          {!!valuesFields && <Alerts valueFields={valuesFields} />}
         </Form>
       )}
     </Formik>
