@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@chakra-ui/react';
 
-import { UserType } from "types/global.types";
+import { LangType, UserType } from 'types/global.types';
 
 import { useI18n } from 'locales/client';
 
 import styles from './ChoosePlanPriButton.module.scss';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { IoIosArrowRoundForward } from 'react-icons/io';
 
-export const ChoosePlanPriButton = ({ userData }: { userData: UserType }) => {
+export const ChoosePlanPriButton = ({ locale, userData }: { locale: LangType; userData: UserType }) => {
   const [open, setOpen] = useState(false);
   const { push, replace } = useRouter();
 
@@ -21,20 +21,16 @@ export const ChoosePlanPriButton = ({ userData }: { userData: UserType }) => {
 
   return (
     <>
-      <Button
-        colorScheme="whiteAlpha"
-        iconSpacing={20}
-        rightIcon={<ArrowForwardIcon />}
-        className={styles.choosePlan}
-        onClick={changePlan}>
+      <Button colorScheme="whiteAlpha" className={styles.choosePlan} onClick={changePlan}>
         {t('Plans.choosePlan')}
+        <IoIosArrowRoundForward spacing={20} />
       </Button>
       <div className={open ? styles.openButton : styles.hideButton}>
         <div className={styles.noUsersPlan}>
-          <Button colorScheme="whiteAlpha" onClick={() => push('/signin')}>
+          <Button colorScheme="whiteAlpha" onClick={() => push(`${locale}/signin`)}>
             {t('Nav.signIn')}
           </Button>
-          <Button colorScheme="whiteAlpha" onClick={() => push('/signup')}>
+          <Button colorScheme="whiteAlpha" onClick={() => push(`${locale}/signup`)}>
             {t('Nav.signUp')}
           </Button>
         </div>

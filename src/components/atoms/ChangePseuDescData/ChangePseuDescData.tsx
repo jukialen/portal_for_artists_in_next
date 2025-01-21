@@ -53,7 +53,7 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
   const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: ResetFormType) => {
     try {
       if (
-        userData?.profilePhoto !== null &&
+        userData?.profilePhoto === null &&
         !!photo &&
         photo.size < 6291456 &&
         (photo.type === 'image/jpg' ||
@@ -62,7 +62,7 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
           photo.type === ' image/webp' ||
           photo.type === 'image/avif')
       ) {
-        const { data: pDatahoto, error } = await supabase.storage.from('profiles').upload('file_path', photo);
+        const { data: pDatahoto, error } = await supabase.storage.from('profiles').upload(`/${userData?.id!}`, photo);
 
         if (!!error || !pDatahoto) {
           setValuesFields(t('AnotherForm.notUploadFile'));

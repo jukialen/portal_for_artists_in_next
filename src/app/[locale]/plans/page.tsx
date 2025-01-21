@@ -2,27 +2,28 @@ import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 import Link from 'next/link';
 
-import { getUserData } from "helpers/getUserData";
+import { getUserData } from 'helpers/getUserData';
 
 import { HeadCom } from 'constants/HeadCom';
+import { LangType } from 'types/global.types';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { PlanBlock } from 'components/molecules/PlanBlock/PlanBlock';
-import { PlanWrapper } from "components/organisms/PlanWrapper/PlanWrapper";
+import { PlanWrapper } from 'components/organisms/PlanWrapper/PlanWrapper';
 
 import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Plans site');
 
-export default async function Plans({ params: { locale } }: { params: { locale: string } }) {
+export default async function Plans({ params: { locale } }: { params: { locale: LangType } }) {
   setStaticParamsLocale(locale);
 
   const t = await getI18n();
   const tPlans = await getScopedI18n('Plans');
 
   const user = await getUserData();
-  
+
   const freePlan = {
     plan: 'FREE',
     amount: 0,
@@ -66,6 +67,7 @@ export default async function Plans({ params: { locale } }: { params: { locale: 
       <div className={styles.plansFormats}>
         <PlanWrapper pseudonym={user?.pseudonym!}>
           <PlanBlock
+            locale={locale}
             amount={freePlan.amount}
             plan={freePlan.plan}
             period={freePlan.period}
@@ -77,6 +79,7 @@ export default async function Plans({ params: { locale } }: { params: { locale: 
             noAds={freePlan.noAds}
           />
           <PlanBlock
+            locale={locale}
             amount={premiumPlan.amount}
             plan={premiumPlan.plan}
             period={premiumPlan.period}
@@ -89,6 +92,7 @@ export default async function Plans({ params: { locale } }: { params: { locale: 
             support={premiumPlan.support}
           />
           <PlanBlock
+            locale={locale}
             amount={goldPlan.amount}
             plan={goldPlan.plan}
             period={goldPlan.period}
