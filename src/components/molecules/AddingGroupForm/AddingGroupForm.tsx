@@ -1,17 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { EventType, ResetFormType, UserType } from "types/global.types";
-import axios from 'axios';
-import { backUrl } from 'constants/links';
-import { io, Socket } from 'socket.io-client';
-import { Form, Formik } from 'formik';
-import styles from '*.module.scss';
-import { Button, Input, Progress, Textarea } from '@chakra-ui/react';
+
+import { Button, Input, Textarea } from '@chakra-ui/react';
+
+import { Database } from 'types/database.types';
+import { EventType, ResetFormType, UserType } from 'types/global.types';
+
 import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
+
+import styles from './AddingGroup.module.scss';
 
 type AddingGroupType = {
   name: string;
@@ -26,17 +29,16 @@ type AddingGroupTr = {
     profilePhoto: string;
     send: string;
     uploadFile: string;
+    notUploadFile: string;
     ariaLabelButton: string;
     error: string;
-  },
-  userData: UserType,
+  };
+  userData: UserType;
 };
 
 export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
-
   const [valuesFields, setValuesFields] = useState<string>('');
   const [logoGroup, setLogoGroup] = useState<File | null>(null);
-  const [progressUpload, setProgressUpload] = useState<number>(0);
 
   const initialValues = {
     name: '',
@@ -48,64 +50,61 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
     description: SchemaValidation().description,
   });
 
+  const supabase = createClientComponentClient<Database>();
+
   const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] ? setLogoGroup(e.target.files[0]) : setLogoGroup(null);
   };
 
   const createGroup = async ({ name, description }: AddingGroupType, { resetForm }: ResetFormType) => {
     try {
-      if (!logoGroup) {
-        await axios.post(`${backUrl}/groups`, {
-          data: {
-            name,
-            description,
-          },
-        });
-        await resetForm(initialValues);
-        setValuesFields(tr.uploadFile);
-      } else {
-        const token = await Session.getAccessToken();
-        if (token === undefined) {
-          throw new Error('User is not logged in');
+      if (!!logoGroup) {
+        if (
+          logoGroup.size < 6291456 &&
+          (logoGroup.type === 'image/jpg' ||
+            logoGroup.type === 'image/jpeg' ||
+            logoGroup.type === 'image/png' ||
+            logoGroup.type === ' image/webp' ||
+            logoGroup.type === 'image/avif' ||
+            logoGroup.type === 'video/mp4' ||
+            logoGroup.type === 'video/webm')
+        ) {
+          const { data, error } = await supabase.storage.from('profiles').upload(`/${userData?.id!}`, logoGroup);
+
+          const name = Date.now() + '/' + userData?.id! + '/' + logoGroup!.name!;
+
+          if (!!error) {
+            setValuesFields(tr.notUploadFile);
+            console.error(error);
+            !!data && (await supabase.storage.from('profiles').remove([`/${userData?.id!}`, name]));
+            return;
+          }
+
+          const { error: er } = await supabase.from('Groups').insert([
+            {
+              name,
+              description,
+              adminId: userData?.id!,
+              logo: data?.path!,
+            },
+          ]);
+
+          !!er && setValuesFields(tr.uploadFile);
         }
-        const socket = io(`${process.env.NEXT_PUBLIC_BACK_URL}/progressbar`, {
-          query: { token },
-        });
-
-        console.log('name', name);
-
-        socket.connect();
-        socket.emit('createGroup', {
-          file: logoGroup,
-          data: {
+      } else {
+        const { error } = await supabase.from('Groups').insert([
+          {
             name,
             description,
-            tags: 'group',
-            shortDescription: description,
-            plan: userData?.plan,
+            adminId: userData?.id!,
           },
-        });
+        ]);
 
-        const api = async function (socket: Socket) {
-          await new Promise((resolve, reject) => {
-            console.log(reject);
-
-            socket.once('createGroup', (_data: number) => {
-              const dat = resolve(_data);
-
-              console.log(dat);
-              //              setProgressUpload(_data);
-
-              //              if (_data === 100) {
-              //                setValuesFields(tr.uploadFile);
-              //                resetForm(initialValues);
-              //                socket.close();
-              //                push(`/${name}`);
-              //              }
-            });
-          });
-        };
-        await api(socket);
+        if (!!error) {
+          setValuesFields(tr.error);
+          return;
+        }
+        await resetForm(initialValues);
       }
     } catch (e) {
       console.error(e);
@@ -147,7 +146,6 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
             accept=".jpg, .jpeg, .png, .webp, .avif"
             onChange={handleChangeFile}
             placeholder={tr.profilePhoto}
-            focusBorderColor="transparent"
             className={styles.input}
           />
 
@@ -160,22 +158,7 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
             {tr.send}
           </Button>
 
-          {progressUpload >= 1 && !(valuesFields === `${tr.uploadFile}`) && (
-            <Progress
-              value={progressUpload}
-              colorScheme="green"
-              isAnimated
-              hasStripe
-              min={0}
-              max={100}
-              w={280}
-              bg="blue.400"
-              m="1.5rem auto"
-              size="md"
-            />
-          )}
-
-          {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+          {!!valuesFields && <Alerts valueFields={valuesFields} />}
         </Form>
       )}
     </Formik>
