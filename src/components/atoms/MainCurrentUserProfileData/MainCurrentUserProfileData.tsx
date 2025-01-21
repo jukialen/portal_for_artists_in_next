@@ -67,7 +67,7 @@ export const MainCurrentUserProfileData = ({
   const updateLogo = async () => {
     try {
       if (!!newLogo && !required) {
-        const { data, error } = await supabase.storage.from('logos').upload(`/${userData?.id!}`, newLogo, {
+        const { data, error } = await supabase.storage.from('profiles').upload(`/${userData?.id!}`, newLogo, {
           upsert: !!userData?.profilePhoto });
         
         if (!!error) console.error(error);
