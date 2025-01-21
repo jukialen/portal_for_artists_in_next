@@ -2,16 +2,18 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Divider, Input } from '@chakra-ui/react';
+import { Separator, Input } from '@chakra-ui/react';
+
+import { Database } from "types/database.types";
 
 import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './ResetPasswordForm.module.scss';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 type ResetPasswordType = {
   newPassword: string;
@@ -49,7 +51,7 @@ export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType) => {
     repeatPassword: SchemaValidation().password,
   });
 
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient<Database>();
 
   const newPasswordEntered = async ({ newPassword, repeatPassword }: ResetPasswordType) => {
     try {
@@ -57,19 +59,16 @@ export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType) => {
         setValuesFields(reset.wrongValues);
         return null;
       } else {
-        const { data, error } = await supabase.auth.updateUser(
+        const { error } = await supabase.auth.updateUser(
           {
             password: newPassword,
           },
-          { emailRedirectTo: `${process.env.NEXT_PUBLIC_PAGE}/signin` },
+          { emailRedirectTo: `${process.env.NEXT_PUBLIC_PAGE}/${locale}/signin` },
         );
 
         if (error?.status !== 200) {
           console.log(error?.message!);
           setValuesFields(reset.failed);
-        // } else if (response.status === 'RESET_PASSWORD_INVALID_TOKEN_ERROR') {
-        //   setValuesFields(reset.failed);
-        //   setTimeout(() => push(`${locale}/`), 1000);
         } else {
           setValuesFields(reset.success);
           setTimeout(() => push(`${locale}/`), 1000);
@@ -87,7 +86,7 @@ export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType) => {
         <Form className={styles.reset}>
           <div className={styles.borderContainer}>
             <h2 className={styles.title}>{reset.title}</h2>
-            <Divider />
+            <Separator />
             <h3 className={styles.subtitle}>{reset.subtitle}</h3>
             <Input
               name="newPassword"
