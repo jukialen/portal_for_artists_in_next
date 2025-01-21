@@ -2,21 +2,13 @@ import { ChangeEvent } from 'react';
 import { Database } from './database.types';
 
 //GENERAL
-type Like = {
-  likes: number;
-  liked: boolean;
-};
-
-type Time = {
-  createdAt?: string;
-  updatedAt?: string;
-};
+type Like = { likes: number; liked: boolean };
+type Time = { createdAt?: string; updatedAt?: string };
 
 export type Tags = Database['public']['Enums']['Tags'];
-
 export type LangType = 'en' | 'pl' | 'jp';
-
 export type IndexType = 'photographs' | 'videos' | 'animations';
+export type Provider = Database['public']['Enums']['Provider'];
 
 //FORMS & CONTROLLERS ELEMENTS
 export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
@@ -84,7 +76,7 @@ export type ArticleVideosType = {
   fileUrl: string;
   shortDescription: string;
   authorName: string;
-  authorBool: boolean,
+  authorBool: boolean;
   profilePhoto: string;
   tags: Database['public']['Enums']['Tags'];
   authorId: string;
@@ -252,7 +244,7 @@ export type GalleryType = {
   firstModsUsersList?: {
     members: GroupUserType[];
     moderators: GroupUserType[];
-  }
+  };
   tDash?: { friends: string; groups: string; photos: string; animations: string; videos: string };
   tGallery?: {
     userPhotosTitle: string;
