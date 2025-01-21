@@ -13,9 +13,9 @@ export const metadata: Metadata = HeadCom("User's adding some group");
 
 export default async function AddingGroup({ params: { locale } }: { params: { locale: string } }) {
   setStaticParamsLocale(locale);
-  
+
   const userData = await getUserData();
-  
+
   const t = await getI18n();
   const tAddingGroup = await getScopedI18n('AddingGroup');
   const tAnotherForm = await getScopedI18n('AnotherForm');
@@ -27,6 +27,7 @@ export default async function AddingGroup({ params: { locale } }: { params: { lo
     profilePhoto: tAnotherForm('profilePhoto'),
     send: tAnotherForm('send'),
     uploadFile: tAnotherForm('uploadFile'),
+    notUploadFile: t('AnotherForm.notUploadFile'),
     ariaLabelButton: t('NewUser.ariaLabelButton'),
     error: t('error'),
   };
