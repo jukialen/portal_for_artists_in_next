@@ -2,17 +2,17 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from "axios";
-import { io } from "socket.io-client";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserResponse } from '@supabase/gotrue-js';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { Input, Progress } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { Input } from '@chakra-ui/react';
 
-import { EventType } from 'types/global.types';
-import { Database } from "types/database.types";
+import { convertStringToUnionType } from 'helpers/convertStringToType';
+
+import { EventType, Provider } from 'types/global.types';
+import { Database } from 'types/database.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
@@ -43,7 +43,6 @@ type NewUserType = {
 export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserType) => {
   const [valuesFields, setValuesFields] = useState<string>('');
   const [photo, setPhoto] = useState<File | null>(null);
-  const [progressUpload, setProgressUpload] = useState<number>(0);
 
   const { push } = useRouter();
   const supabase = createClientComponentClient<Database>();
@@ -62,61 +61,66 @@ export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserT
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
 
+  const typeArray: Provider[] = ['email', 'google', 'discord', 'spotify'];
+  const provider = userDataAuth.data.user?.app_metadata.provider!;
+  const prov: Provider | undefined = convertStringToUnionType(provider, typeArray);
+
   const sendingData = async ({ username, pseudonym }: FirstDataType) => {
     try {
       if (!!photo) {
-        await axios.post(`${process.env.NEXT_PUBLIC_PAGE}/api/upload_file`, {
-          file: photo,
-          data: {
-            name: photo?.name,
-            profileType: true,
-            tags: 'profile',
-          },
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        
-        const socket = io(`${process.env.NEXT_PUBLIC_PAGE}/api/upload_file`);
-        
-        socket.connect();
-        socket.on('new-file', (status : number) => {
-          console.log(status);
-        });
-        
-        //        function (socket: Socket) {
-        new Promise((resolve, reject) => {
-          socket.on('new-file', (_data: number) => {
-            resolve(_data);
-            reject(_data);
-            setProgressUpload(_data);
-            console.log(resolve(_data));
-            console.log(reject(_data));
-            _data === 100 && setValuesFields(newUserTranslate.uploadFile);
-            (_data === 100 && socket.connected) && socket.close();
-          });
-        });
-        
-        const { error } = await supabase
-          .from('Users')
-          .insert({
-            id: userDataAuth.data.user?.id,
-            email: userDataAuth.data.user?.email,
-            pseudonym,
-            username,
-            provider: userDataAuth.data.user?.app_metadata.provider,
-          });
-        setValuesFields(newUserTranslate.successSending);
+        if (
+          photo.size < 6291456 &&
+          (photo.type === 'image/jpg' ||
+            photo.type === 'image/jpeg' ||
+            photo.type === 'image/png' ||
+            photo.type === ' image/webp' ||
+            photo.type === 'image/avif' ||
+            photo.type === 'video/mp4' ||
+            photo.type === 'video/webm')
+        ) {
+          const { data, error } = await supabase.storage
+            .from('profiles')
+            .upload(`/${userDataAuth.data.user?.id!}`, photo);
+
+          if (!!error) console.error(error);
+
+          const name = Date.now() + '/' + userDataAuth.data.user?.id! + '/' + photo!.name!;
+          const { error: er } = await supabase.from('Files').insert([
+            {
+              name,
+              shortDescription: photo.name,
+              authorId: userDataAuth.data.user?.id!,
+              tags: 'profile',
+              fileUrl: data?.path!,
+              profileType: true,
+            },
+          ]);
+
+          if (!!er) {
+            setValuesFields(newUserTranslate.errorSending);
+            console.error(er);
+            !!data && (await supabase.storage.from('profiles').remove([`/${userDataAuth.data.user?.id!}`, name]));
+
+            return;
+          }
+        }
+      } else {
+        setValuesFields('wrong file type or size');
       }
-      const { error } = await supabase
-        .from('Users')
-        .insert({
-          id: userDataAuth.data.user?.id,
-          email: userDataAuth.data.user?.email,
+      const { error } = await supabase.from('Users').insert([
+        {
+          id: userDataAuth.data.user?.id!,
+          email: userDataAuth.data.user?.email!,
           pseudonym,
           username,
-          provider: userDataAuth.data.user?.app_metadata.provider,
-        });
+          provider: prov!,
+        },
+      ]);
+
+      if (!!error) {
+        setValuesFields(newUserTranslate.errorSending);
+        return;
+      }
       setValuesFields(newUserTranslate.successSending);
       localStorage.setItem('menu', 'true');
       return push(`/${locale}/app`);
@@ -172,22 +176,7 @@ export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserT
             {newUserTranslate.send}
           </button>
 
-          {progressUpload >= 1 && !(valuesFields === `${newUserTranslate.uploadFile}`) && (
-            <Progress
-              value={progressUpload}
-              colorScheme="green"
-              isAnimated
-              hasStripe
-              min={0}
-              max={100}
-              w={280}
-              bg="blue.400"
-              m="1.5rem auto"
-              size="md"
-            />
-          )}
-
-          {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+          {!!valuesFields && <Alerts valueFields={valuesFields} />}
         </Form>
       )}
     </Formik>
