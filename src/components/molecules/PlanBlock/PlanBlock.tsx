@@ -1,4 +1,5 @@
-import { getScopedI18n } from "locales/server";
+import { getScopedI18n } from 'locales/server';
+import { LangType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
 
@@ -8,6 +9,7 @@ import styles from './PlanBlock.module.scss';
 import { IoMdCheckmark } from 'react-icons/io';
 
 type PlanBlockType = {
+  locale: LangType;
   amount: number;
   plan: string;
   period: string;
@@ -21,6 +23,7 @@ type PlanBlockType = {
 };
 
 export const PlanBlock = async ({
+  locale,
   amount,
   plan,
   grLength,
@@ -33,9 +36,9 @@ export const PlanBlock = async ({
   support,
 }: PlanBlockType) => {
   const tPlans = await getScopedI18n('Plans');
-  
+
   const userData = await getUserData();
-  
+
   return (
     <div className={styles.box}>
       <h3 className={styles.box__title}>{plan}</h3>
@@ -78,7 +81,7 @@ export const PlanBlock = async ({
         </ul>
       </div>
       <div className={support === tPlans('pSupport') || !support ? styles.choosePlan : styles.chooseSecondPlan}>
-        <ChoosePlanPriButton userData={userData!} />
+        <ChoosePlanPriButton locale={locale} userData={userData!} />
       </div>
     </div>
   );
