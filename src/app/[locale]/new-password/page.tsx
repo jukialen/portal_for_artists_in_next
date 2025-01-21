@@ -1,7 +1,5 @@
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { setStaticParamsLocale } from 'next-international/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { getI18n } from 'locales/server';
 
@@ -27,8 +25,7 @@ export default async function NewPassword({ params: { locale } }: { params: { lo
     buttonAria: t('NewPassword.buttonAria'),
     send: t('AnotherForm.send'),
   }
-  const supabase = createServerComponentClient({ cookies });
-
+  
   return <NewPasswordForm translate={translate} />
   
 }

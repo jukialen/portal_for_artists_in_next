@@ -5,7 +5,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { Divider, Input } from '@chakra-ui/react';
+import { Separator, Input } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { ResetFormType } from 'types/global.types';
@@ -63,7 +63,7 @@ export const NewPasswordForm = ({ translate }: { translate: TranslateType }) => 
         <Form className={styles.forgotten}>
           <div className={styles.borderContainer}>
             <h2 className={styles.title}>{translate.title}</h2>
-            <Divider />
+            <Separator />
             <h3 className={styles.subtitle}>{translate.subtitle}</h3>
             <Input
               name="password"
