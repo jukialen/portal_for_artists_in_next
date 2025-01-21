@@ -1,16 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
 import { Skeleton } from '@chakra-ui/react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { FileType, IndexType, LangType, Tags, UserType } from "types/global.types";
+import { selectFiles } from 'constants/selects';
+import { Database } from 'types/database.types';
+import { DateObjectType, FileType, IndexType, LangType } from 'types/global.types';
 
-import { backUrl, cloudFrontUrl } from 'constants/links';
+import { TagConstants } from 'constants/values';
 
 import { getDate } from 'helpers/getDate';
 
-import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Article } from 'components/molecules/Article/Article';
@@ -19,59 +20,68 @@ import { Videos } from 'components/molecules/Videos/Videos';
 type AnothersWrapperType = {
   locale: LangType;
   index: IndexType;
-  dataDateObject: { second: string; minute: string; hour: string; day: string; yearDateSeparator: string };
+  pseudonym: string;
+  profilePhoto: string;
+  dataDateObject: DateObjectType;
   noVideos: string;
   filesArray: FileType[];
-  userData: UserType;
 };
 
 export const AnothersWrapper = ({
   locale,
   index,
+  pseudonym,
+  profilePhoto,
   dataDateObject,
   noVideos,
   filesArray,
-  userData,
 }: AnothersWrapperType) => {
-  const [userDrawings, setUserDrawings] = useState<FileType[]>([]);
+  const [userDrawings, setUserDrawings] = useState<FileType[]>(filesArray);
   const [loadingFiles, setLoadingFiles] = useState(false);
-  const [lastVisible, setLastVisible] = useState<string>();
+  const [lastVisible, setLastVisible] = useState<string>(
+    filesArray.length > 0 ? filesArray[filesArray.length - 1].createdAt! : '',
+  );
   let [i, setI] = useState(1);
 
   const maxItems: number = 10;
 
   const nextElements = async () => {
+    setLoadingFiles(!loadingFiles);
+
     try {
       const nextArray: FileType[] = [];
-      const nextPage: { data: FileType[] } = await axios.get(`${backUrl}/files/all`, {
-        params: {
-          queryData: {
-            orderBy: { name: 'desc' },
-            where: { tags: index },
-            limit: maxItems,
-            cursor: lastVisible,
-          },
-        },
-      });
+      const supabase = createClientComponentClient<Database>();
 
-      for (const file of nextPage.data) {
-        const { fileId, name, shortDescription, pseudonym, profilePhoto, authorId, createdAt, updatedAt } = file;
+      const { data } = await supabase
+        .from('Files')
+        .select(selectFiles)
+        .eq('tags', index)
+        .gt('createdAt', lastVisible)
+        .order('name', { ascending: false })
+        .limit(maxItems);
+
+      if (data?.length === 0) return filesArray;
+
+      for (const draw of data!) {
+        const { fileId, name, fileUrl, tags, shortDescription, Users, authorId, createdAt, updatedAt } = draw;
 
         nextArray.push({
+          authorName: Users?.pseudonym!,
           fileId,
           name,
-          shortDescription,
-          pseudonym,
-          profilePhoto,
-          fileUrl: `https://${cloudFrontUrl}/${name}`,
-          authorId,
-          time: getDate(locale, updatedAt! || createdAt!, dataDateObject),
+          shortDescription: shortDescription!,
+          fileUrl,
+          authorId: authorId!,
+          tags,
+          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         });
       }
 
-      setLastVisible(nextArray[nextArray.length - 1].fileId);
+      nextArray.length === maxItems ? setLastVisible(nextArray[nextArray.length - 1].createdAt!) : setLastVisible('');
+      
       const newArray = filesArray.concat(...nextArray);
       setUserDrawings(newArray);
+      setLoadingFiles(!loadingFiles);
       setI(++i);
     } catch (e) {
       console.error(e);
@@ -80,49 +90,44 @@ export const AnothersWrapper = ({
 
   return (
     <>
-      {filesArray.length > 0 ? (
-        filesArray.map(
-          (
-            { fileId, name, fileUrl, shortDescription, tags, pseudonym, profilePhoto, authorId, time }: FileType,
-            index,
-          ) => (
-            <Skeleton isLoaded={loadingFiles} key={index}>
-              <ClientPortalWrapper>
-                {tags === Tags.videos ? (
-                  <Videos
-                    fileId={fileId!}
-                    name={name!}
-                    fileUrl={fileUrl}
-                    shortDescription={shortDescription!}
-                    tags={tags}
-                    authorName={pseudonym!}
-                    pseudonym={pseudonym!}
-                    profilePhoto={profilePhoto}
-                    authorId={authorId}
-                    time={time}
-                  />
-                ) : (
-                  <Article
-                    fileId={fileId!}
-                    name={name!}
-                    fileUrl={fileUrl}
-                    shortDescription={shortDescription!}
-                    tags={tags!}
-                    authorName={pseudonym!}
-                    authorId={authorId}
-                    pseudonym={pseudonym!}
-                    profilePhoto={profilePhoto}
-                    time={time}
-                  />
-                  )}
-              </ClientPortalWrapper>
+      {userDrawings.length > 0 ? (
+        userDrawings.map(
+          ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time }: FileType, index) => (
+            <Skeleton loading={loadingFiles} variant="shine" key={index}>
+              {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
+                <Videos
+                  fileId={fileId!}
+                  name={name!}
+                  fileUrl={fileUrl}
+                  shortDescription={shortDescription!}
+                  tags={tags}
+                  authorName={authorName!}
+                  authorId={authorId}
+                  authorBool={authorName === pseudonym!}
+                  profilePhoto={profilePhoto}
+                  time={time}
+                />
+              ) : (
+                <Article
+                  fileId={fileId!}
+                  name={name!}
+                  fileUrl={fileUrl}
+                  shortDescription={shortDescription!}
+                  tags={tags!}
+                  authorName={pseudonym!}
+                  authorId={authorId}
+                  authorBool={authorName === pseudonym!}
+                  profilePhoto={profilePhoto}
+                  time={time}
+                />
+              )}
             </Skeleton>
           ),
         )
       ) : (
         <ZeroFiles text={noVideos} />
       )}
-      {!!lastVisible && filesArray.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+      {!!lastVisible && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
     </>
   );
 };
