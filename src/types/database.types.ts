@@ -588,15 +588,7 @@ export type Database = {
           updatedAt?: string | null
           username?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "public_Users_profilePhoto_fkey"
-            columns: ["profilePhoto"]
-            isOneToOne: false
-            referencedRelation: "Files"
-            referencedColumns: ["name"]
-          },
-        ]
+        Relationships: []
       }
       UsersGroups: {
         Row: {
