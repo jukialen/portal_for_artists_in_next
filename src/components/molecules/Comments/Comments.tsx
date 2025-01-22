@@ -1,15 +1,12 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
-import { useCurrentLocale, useScopedI18n } from "locales/client";
+import { useCurrentLocale, useScopedI18n } from 'locales/client';
 
 import { CommentType } from 'types/global.types';
 
-import { getDate } from 'helpers/getDate';
-import { dateData } from 'helpers/dateData';
-import { backUrl, cloudFrontUrl } from 'constants/links';
+import { againComments, firstComments } from 'utils/comments';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -27,103 +24,22 @@ export const Comments = ({ postId }: CommentsType) => {
 
   const locale = useCurrentLocale();
   const tComments = useScopedI18n('Comments');
-  
-  const dataDateObject = dateData();
-
   const maxItems = 30;
 
-  const firstComments = async () => {
-    try {
-      const firstPage: { data: CommentType[] } = await axios.get(`${backUrl}/comments/all`, {
-        params: {
-          orderBy: 'createdAt, desc',
-          where: { postId },
-          limit: maxItems,
-        },
-      });
-
-      const commentArray: CommentType[] = [];
-
-      for (const first of firstPage.data) {
-        const { commentId, comment, Users, role, roleId, authorId, groupRole, createdAt, updatedAt } =
-          first;
-
-        commentArray.push({
-          commentId,
-          comment,
-          authorName: Users[0].pseudonym!,
-          authorProfilePhoto: `https://${cloudFrontUrl}/${Users[0].profilePhoto!}`,
-          role,
-          roleId,
-          authorId,
-          groupRole,
-          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
-        });
-      }
-
-      setCommentsArray(commentArray);
-      commentArray.length === maxItems && setLastVisible(commentArray[commentArray.length - 1].postId!);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   useEffect(() => {
-    !!postId && firstComments();
-  }, [postId]);
+    firstComments(locale, postId, maxItems).then((t) => {
+      setCommentsArray(t!);
+      t!.length === maxItems && setLastVisible(t![t!.length - 1].postId!);
+    });
+  }, []);
 
-  const nextComments = async () => {
-    try {
-      const nextPage: { data: CommentType[] } = await axios.get(`${backUrl}/comments/all`, {
-        params: {
-          orderBy: 'createdAt, desc',
-          where: { postId },
-          limit: maxItems,
-          cursor: lastVisible,
-        },
-      });
-
-      const nextCommentArray: CommentType[] = [];
-
-      for (const next of nextPage.data) {
-        const {
-          commentId,
-          comment,
-          authorName,
-          authorProfilePhoto,
-          role,
-          roleId,
-          authorId,
-          groupRole,
-          createdAt,
-          updatedAt,
-          postId,
-        } = next;
-
-        nextCommentArray.push({
-          commentId,
-          comment,
-          authorName,
-          authorProfilePhoto: `https://${cloudFrontUrl}/${authorProfilePhoto}`,
-          role,
-          roleId,
-          authorId,
-          groupRole,
-          postId,
-          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
-        });
-      }
-
-      nextPage.data.length === maxItems && setLastVisible(nextCommentArray[nextCommentArray.length - 1].postId!);
-
-      const nextArray = commentsArray.concat(...nextCommentArray);
+  const nextComments = () =>
+    againComments(locale, postId, maxItems).then((t) => {
+      const nextArray = commentsArray.concat(...t!);
       setCommentsArray(nextArray);
       setI(++i);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
+      t!.length === maxItems && setLastVisible(t![t!.length - 1].postId!);
+    });
   return (
     <>
       {commentsArray.length > 0 ? (

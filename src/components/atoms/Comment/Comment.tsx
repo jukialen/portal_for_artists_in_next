@@ -1,6 +1,7 @@
 import { useContext } from 'react';
-import { Link } from '@chakra-ui/next-js';
-import { Avatar, Badge } from '@chakra-ui/react';
+import Link from 'next/link'
+import { Badge } from '@chakra-ui/react';
+import { Avatar } from 'components/ui/avatar';
 
 import { CommentType } from 'types/global.types';
 
@@ -54,8 +55,6 @@ export const Comment = ({
           commentId={commentId}
           postId={postId}
           authorId={authorId}
-          author={pseudonym === authorName}
-          adModRoleId={adModRoleId}
         />
         <SubComments commentId={commentId} postId={postId} />
       </OptionsComments>
