@@ -34,7 +34,7 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           <ChakraSlider.Track>
             <ChakraSlider.Range />
           </ChakraSlider.Track>
-          {value?.map((_, index) => (
+          {value?.map((_: unknown, index: React.Key | null | undefined) => (
             <ChakraSlider.Thumb key={index} index={index}>
               <ChakraSlider.HiddenInput />
             </ChakraSlider.Thumb>
