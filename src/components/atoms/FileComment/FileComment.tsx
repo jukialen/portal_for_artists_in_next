@@ -1,8 +1,8 @@
 'use client';
 
 import { useContext } from 'react';
-import { Link } from '@chakra-ui/next-js';
-import { Avatar } from '@chakra-ui/react';
+import Link from 'next/link'
+import { Avatar } from 'components/ui/avatar';
 
 import { FilesCommentsType } from 'types/global.types';
 
@@ -24,8 +24,6 @@ export const FileComment = ({
   roleId,
   role,
   date,
-  pseudonym,
-  profilePhoto,
 }: FilesCommentsType) => {
   const { del } = useContext(DCContext);
 
@@ -47,9 +45,8 @@ export const FileComment = ({
         <NewComments
           fileId={fileId}
           fileCommentId={fileCommentId}
-          author={authorName === pseudonym}
           authorId={authorId}
-          profilePhoto={profilePhoto!}
+          profilePhoto={authorProfilePhoto}
         />
         <SubComments fileCommentId={fileCommentId} fileId={fileId} />
       </OptionsComments>

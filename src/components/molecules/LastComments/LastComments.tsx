@@ -76,7 +76,6 @@ export const LastComments = ({ subCommentId, fileId }: LastCommentsType) => {
               roleId,
               groupRole,
               date,
-              profilePhoto,
             }: LastCommentType,
             index,
           ) => (
@@ -92,7 +91,6 @@ export const LastComments = ({ subCommentId, fileId }: LastCommentsType) => {
                 subCommentId={subCommentId}
                 date={date}
                 authorProfilePhoto={authorProfilePhoto}
-                profilePhoto={profilePhoto}
               />
             </DCProvider>
           ),
