@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
 
-import axios from 'axios';
-
 const mailerSend = new MailerSend({
   apiKey: process.env.NEXT_PUBLIC_MAILERSEND_API_KEY!,
 });
@@ -23,10 +21,6 @@ async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
         },
       },
     ];
-
-//    await axios.post(`${process.env.NEXT_PUBLIC_WEBHOOK_URL}`, {
-//      text: `*title:* ${req.body.title}\n\n*message:*\n_${messageText}_ \n\n*tag:* ${req.body.tags}`,
-//    });
 
     const emailParams = new EmailParams()
       .setFrom(sentFrom)
