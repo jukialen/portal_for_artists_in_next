@@ -26,7 +26,7 @@ export const Videos = async ({
 
   return (
     <div className={styles.videos}>
-      {authorBool && <DeletionFile name={name!} />}
+      {authorBool && <DeletionFile fileId={fileId} />}
 
       <video preload="metadata" controls className={styles.video} playsInline>
         <source src={fileUrl} />

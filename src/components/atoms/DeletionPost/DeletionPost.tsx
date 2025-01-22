@@ -1,24 +1,28 @@
-import { useRef, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { IconButton } from '@chakra-ui/react';
+import { Button } from 'components/ui/button';
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
-  IconButton,
-} from '@chakra-ui/react';
+  DialogActionTrigger,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from 'components/ui/dialog';
 
+import { Database } from 'types/database.types';
 
-
-import { backUrl } from 'constants/links';
+import { useI18n, useScopedI18n } from 'locales/client';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './DeletionPost.module.scss';
-import { ChevronDownIcon, ChevronUpIcon, DeleteIcon } from '@chakra-ui/icons';
+import { RiDeleteBinLine } from 'react-icons/ri';
+import { RxChevronUp, RxChevronDown } from 'react-icons/rx';
 
 type DeletionPostType = {
   postId: string;
@@ -26,75 +30,84 @@ type DeletionPostType = {
 };
 
 export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState('');
-
-  const cancelRef = useRef(null);
-  const onClose = () => setIsOpen(false);
   const [del, setDel] = useState(false);
 
-
+  const t = useI18n();
+  const tDeletionFile = useScopedI18n('DeletionFile');
+  const tDeletionPost = useScopedI18n('DeletionPost');
+  const selectedColor = '#FFD068';
 
   const deletePost = async () => {
+    const supabase = createClientComponentClient<Database>();
+
     try {
-      await onClose();
-      await setDeleting(!deleting);
-      await setValues(language?.DeletionPost?.deleting);
-      await axios.delete(`${backUrl}/posts/${postId}${groupId}`);
-      await setValues(language?.DeletionPost?.deleted);
-      await setDeleting(!deleting);
+      setOpen(false);
+      setDeleting(!deleting);
+      setValues(tDeletionPost('deleting'));
+      const { error } = await supabase.from('Posts').delete().eq('postId', postId).eq('groupId', groupId);
+
+      if (!!error) {
+        setValues('');
+        return;
+      }
+      setValues(tDeletionPost('deleted'));
+      setDeleting(!deleting);
     } catch (e) {
       console.error(e);
-      setValues(language?.error);
+      setValues(t('error'));
     }
   };
 
   return (
     <>
       <IconButton
-        icon={del ? <ChevronUpIcon /> : <ChevronDownIcon />}
         width="3rem"
         height="3rem"
         onClick={() => setDel(!del)}
         className={styles.icon}
         aria-label="menu button for a post"
         fontSize="5xl"
-        variant="link"
-      />
+        variant="outline">
+        {del ? <RxChevronUp /> : <RxChevronDown />}
+      </IconButton>
 
-      <div className={`${styles.container} ${del ? styles.container__active : ''}`}>
-        <Button
-          isLoading={deleting}
-          loadingText={language?.DeletionFile?.loadingText}
-          leftIcon={<DeleteIcon />}
-          colorScheme="red"
-          borderColor="red.500"
-          onClick={() => setIsOpen(true)}>
-          {language?.DeletionFile?.deletionButton}
-        </Button>
-        <div className={styles.alert}>{!!values && <Alerts valueFields={values} />}</div>
-      </div>
-      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-        <AlertDialogOverlay>
-          <AlertDialogContent m="auto">
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {language?.DeletionPost?.title}
-            </AlertDialogHeader>
+      <DialogRoot
+        lazyMount
+        open={open}
+        onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
+        <DialogTrigger>
+          <div className={`${styles.container} ${del ? styles.container__active : ''}`}>
+            <Button
+              loading={deleting}
+              loadingText={tDeletionFile('loadingText')}
+              colorScheme="red"
+              borderColor="red.500"
+              onClick={() => setOpen(true)}>
+              <RiDeleteBinLine />
+              {tDeletionFile('deletionButton')}
+            </Button>
+            <div className={styles.alert}>{!!values && <Alerts valueFields={values} />}</div>
+          </div>
+        </DialogTrigger>
+        <DialogContent m="auto">
+          <DialogHeader fontSize="lg" fontWeight="bold">
+            <DialogTitle>{tDeletionPost('title')}</DialogTitle>
+          </DialogHeader>
 
-            <AlertDialogBody>{language?.DeletionFile?.question}</AlertDialogBody>
+          <DialogBody>{tDeletionFile('question')}</DialogBody>
 
-            <AlertDialogFooter>
-              <Button ref={cancelRef} borderColor="gray.100" onClick={onClose}>
-                {language?.DeletionFile?.cancelButton}
-              </Button>
-              <Button colorScheme="red" borderColor="red.500" onClick={deletePost} ml={3}>
-                {language?.DeletionFile?.deleteButton}
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+          <DialogFooter>
+            <DialogActionTrigger borderColor="gray.100">{tDeletionFile('cancelButton')}</DialogActionTrigger>
+            <Button colorScheme="red" borderColor="red.500" onClick={deletePost} ml={3}>
+              {tDeletionFile('deleteButton')}
+            </Button>
+          </DialogFooter>
+          <DialogCloseTrigger color={selectedColor} borderColor="transparent" />
+        </DialogContent>
+      </DialogRoot>
     </>
   );
 };
