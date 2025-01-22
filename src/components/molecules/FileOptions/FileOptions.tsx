@@ -38,7 +38,7 @@ export const FileOptions = ({
   const [open, setOpen] = useState(false);
   const showOpenComments = () => setOpen(!open);
 
-  const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/post/${authorName}/${tags}/${name}`;
+  const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/shared/${name}${fileId}/${authorName}`;
 
   return (
     <div className={styles.options}>

@@ -1,4 +1,6 @@
-export const TagConstants = [
+import { Tags } from "../types/global.types";
+
+export const TagConstants: Tags[] = [
   'realistic',
   'manga',
   'anime',
