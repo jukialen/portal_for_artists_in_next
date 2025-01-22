@@ -213,7 +213,6 @@ export type PostsType = Time &
   Like & {
     authorName: string;
     authorProfilePhoto: string;
-    fileUrl: string;
     postId?: string;
     authorId: string;
     title: string;

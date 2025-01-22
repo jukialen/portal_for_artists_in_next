@@ -48,7 +48,7 @@ export const Posts = ({ groupId, locale, userId, profilePhoto, name, firstPosts 
       .limit(maxItems);
 
     for (const post of data!) {
-      const { title, content, fileUrl, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
+      const { title, content, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
 
       const { data: lData, count } = await supabase.from('Liked').select('id, userId').match({ postId, authorId });
 
@@ -57,7 +57,6 @@ export const Posts = ({ groupId, locale, userId, profilePhoto, name, firstPosts 
       nextArray.push({
         authorName: Users?.pseudonym!,
         authorProfilePhoto: Users?.profilePhoto!,
-        fileUrl,
         liked: indexCurrentUser >= 0,
         postId,
         title,

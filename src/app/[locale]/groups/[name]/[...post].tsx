@@ -4,7 +4,6 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { notFound, usePathname } from 'next/navigation';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { cloudFrontUrl } from 'constants/links';
 import { HeadCom } from 'constants/HeadCom';
 import { DateObjectType, LangType, PostsType } from 'types/global.types';
 import { Database } from 'types/database.types';
@@ -25,7 +24,8 @@ export async function generateMetadata({ post }: { post: string }): Promise<Meta
 }
 
 const supabase = createServerComponentClient<Database>({ cookies });
-const post = async (locale: LangType, postId: string, name: string, dataDateObject: DateObjectType) => {
+
+async function post(locale: LangType, postId: string, name: string, dataDateObject: DateObjectType) {
   let postsArray: PostsType = {
     authorId: '',
     authorName: '',
@@ -38,6 +38,7 @@ const post = async (locale: LangType, postId: string, name: string, dataDateObje
     roleId: '',
     shared: 0,
     title: '',
+    idLiked: '',
   };
 
   const { data } = await supabase
@@ -50,11 +51,14 @@ const post = async (locale: LangType, postId: string, name: string, dataDateObje
     const { title, content, likes, shared, commented, authorId, groupId, createdAt, updatedAt, Users, Roles } =
       post;
 
-    const { data } = await supabase.from('Liked').select('id').match({ postId: postId, userId: authorId });
+    const { data: lData } = await supabase.from('Liked').select('id, userId').match({ postId, userId: authorId });
+
+    const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
+
     postsArray = {
       authorName: Users?.pseudonym!,
-      authorProfilePhoto: `https://${cloudFrontUrl}/${Users?.profilePhoto!}`,
-      liked: !!data?.[0].id,
+      authorProfilePhoto: Users?.profilePhoto!,
+      liked: indexCurrentUser >= 0,
       postId,
       title,
       content,
@@ -65,19 +69,18 @@ const post = async (locale: LangType, postId: string, name: string, dataDateObje
       groupId,
       roleId: Roles?.id!,
       date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+      idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
     };
   }
   return postsArray;
-};
+}
 
 export default async function PostFromGroup({ locale }: { locale: LangType }) {
   setStaticParamsLocale(locale);
 
-  const userData = await getUserData();
-
-  const pathname = usePathname();
-
   const dataDateObject = await dateData();
+  const pathname = usePathname();
+  const userData = await getUserData();
 
   const split = pathname.split('/');
   const containUrl = split.includes('https') || split.includes('http');
@@ -89,5 +92,5 @@ export default async function PostFromGroup({ locale }: { locale: LangType }) {
 
   if (!postOnGroup) return notFound();
 
-  return <Post userId={userData?.id!} pseudonym={userData?.pseudonym!} postOnGroup={postOnGroup!} />;
+  return <Post userId={userData?.id!} name={name} postOnGroup={postOnGroup!} profilePhoto={userData?.profilePhoto!} />;
 }

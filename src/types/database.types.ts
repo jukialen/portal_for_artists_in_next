@@ -388,7 +388,6 @@ export type Database = {
           commented: number
           content: string
           createdAt: string
-          fileUrl: string
           groupId: string
           likes: number
           postId: string
@@ -402,7 +401,6 @@ export type Database = {
           commented: number
           content: string
           createdAt?: string
-          fileUrl: string
           groupId: string
           likes: number
           postId?: string
@@ -416,7 +414,6 @@ export type Database = {
           commented?: number
           content?: string
           createdAt?: string
-          fileUrl?: string
           groupId?: string
           likes?: number
           postId?: string

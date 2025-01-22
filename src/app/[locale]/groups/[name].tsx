@@ -150,7 +150,6 @@ async function getFirstPosts(groupId: string, maxItems: number, locale: LangType
       const {
         title,
         content,
-        fileUrl,
         shared,
         commented,
         authorId,
@@ -169,7 +168,6 @@ async function getFirstPosts(groupId: string, maxItems: number, locale: LangType
       postsArray.push({
         authorName: Users?.pseudonym!,
         authorProfilePhoto: Users?.profilePhoto!,
-        fileUrl,
         liked: indexCurrentUser >= 0,
         postId,
         title,
