@@ -8,6 +8,7 @@ import { Database } from 'types/database.types';
 import { FileType, GalleryType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
+import { getFileRoleId } from 'utils/roles';
 
 import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -51,6 +52,8 @@ export const AnimatedGallery = ({
       for (const file of data!) {
         const { fileId, name, tags, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
 
+        const roleId = await getFileRoleId(fileId, authorId!);
+
         nextArray.push({
           fileId,
           name,
@@ -60,6 +63,7 @@ export const AnimatedGallery = ({
           authorId: authorId!,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
           tags,
+          roleId: roleId!,
         });
       }
 
@@ -82,7 +86,7 @@ export const AnimatedGallery = ({
         <Wrapper>
           {userAnimatedPhotos.length > 0 ? (
             userAnimatedPhotos.map(
-              ({ fileId, name, fileUrl, shortDescription, tags, authorId, time }: FileType, index) => (
+              ({ fileId, name, fileUrl, shortDescription, tags, authorId, time, roleId }: FileType, index) => (
                 <Article
                   key={index}
                   fileId={fileId!}
@@ -95,6 +99,7 @@ export const AnimatedGallery = ({
                   authorBool={author === pseudonym!}
                   profilePhoto={profilePhoto!}
                   time={time}
+                  roleId={roleId!}
                 />
               ),
             )

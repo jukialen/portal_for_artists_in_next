@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 
-import { backUrl } from 'constants/links';
-import { DateObjectType, FilesCommentsType } from 'types/global.types';
+import { againFilesComments } from 'utils/comments';
+
+import { DateObjectType, FilesCommentsType, LangType } from 'types/global.types';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -13,38 +14,33 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import styles from './FilesCommentsClient.module.scss';
 
 type FilesCommentsClientType = {
-  filesFilesComments: FilesCommentsType[];
+  firstFilesComments: FilesCommentsType[];
   fileId: string;
   dataDateObject: DateObjectType;
   noComments: string;
   pseudonym: string;
+  locale: LangType;
 };
 export const FilesCommentsClient = ({
-  filesFilesComments,
+  firstFilesComments,
   fileId,
   noComments,
   pseudonym,
+  locale,
+  dataDateObject,
 }: FilesCommentsClientType) => {
-  const [commentsArray, setCommentsArray] = useState<FilesCommentsType[]>(filesFilesComments);
-  const [lastVisible, setLastVisible] = useState('');
-  let [i, setI] = useState(1);
-
   const maxItems = 30;
+
+  const [commentsArray, setCommentsArray] = useState<FilesCommentsType[]>(firstFilesComments);
+  const [lastVisible, setLastVisible] = useState(
+    firstFilesComments.length === maxItems ? firstFilesComments[firstFilesComments.length - 1].createdAt : '',
+  );
+  let [i, setI] = useState(1);
 
   const nextComments = async () => {
     try {
-      const params = encodeURI(
-        JSON.stringify({
-          fileId,
-          maxItems,
-          cursor: lastVisible,
-        }),
-      );
+      const nextPage = await againFilesComments(fileId, locale, maxItems, dataDateObject);
 
-      const nextPage: FilesCommentsType[] = await fetch(`${backUrl}/files-comments?${params}`, {
-        method: 'GET',
-      }).then((data) => data.json());
-      
       nextPage.length === maxItems && setLastVisible(nextPage[nextPage.length - 1].createdAt!);
 
       const nextArray = commentsArray.concat(...nextPage);
@@ -60,14 +56,24 @@ export const FilesCommentsClient = ({
       {commentsArray.length > 0 ? (
         commentsArray.map(
           (
-            { fileCommentId, fileId, comment, authorName, authorProfilePhoto, role, roleId, authorId, date }: FilesCommentsType,
+            {
+              fileCommentId,
+              fileId,
+              content,
+              authorName,
+              authorProfilePhoto,
+              role,
+              roleId,
+              authorId,
+              date,
+            }: FilesCommentsType,
             index,
           ) => (
             <DCProvider key={index}>
               <FileComment
                 fileCommentId={fileCommentId}
                 fileId={fileId}
-                comment={comment}
+                content={content}
                 authorName={authorName}
                 authorProfilePhoto={authorProfilePhoto}
                 role={role}

@@ -7,6 +7,7 @@ import { Database } from 'types/database.types';
 import { DateObjectType, FileType, GalleryType, LangType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
+import { getFileRoleId } from 'utils/roles';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
@@ -54,6 +55,8 @@ export const VideoGallery = ({
       for (const file of data!) {
         const { fileId, name, tags, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
 
+        const roleId = await getFileRoleId(fileId, authorId!);
+
         filesArray.push({
           fileId,
           name,
@@ -63,6 +66,7 @@ export const VideoGallery = ({
           authorId: authorId!,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
           tags,
+          roleId: roleId!,
         });
       }
 
@@ -85,7 +89,10 @@ export const VideoGallery = ({
       <Wrapper>
         {userVideos.length > 0 ? (
           userVideos.map(
-            ({ fileId, name, fileUrl, shortDescription, tags, authorId, authorName, time }: FileType, index) => (
+            (
+              { fileId, name, fileUrl, shortDescription, tags, authorId, authorName, time, roleId }: FileType,
+              index,
+            ) => (
               <Videos
                 key={index}
                 fileId={fileId!}
@@ -98,6 +105,7 @@ export const VideoGallery = ({
                 authorBool={authorName! === pseudonym!}
                 profilePhoto={profilePhoto!}
                 time={time}
+                roleId={roleId!}
               />
             ),
           )

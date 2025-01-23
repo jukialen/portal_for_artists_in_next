@@ -114,14 +114,8 @@ export const Post = ({
         </p>
       </div>
       <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-        <NewComments
-          authorId={authorId}
-          groupId={groupId}
-          postId={postId}
-          profilePhoto={profilePhoto}
-          roleId={roleId}
-        />
-        <Comments postId={postId!} />
+        <NewComments authorId={authorId} profilePhoto={profilePhoto} roleId={roleId} postId={postId} />
+        <Comments postId={postId!} roleId={roleId} />
       </article>
     </article>
   );

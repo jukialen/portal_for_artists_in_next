@@ -23,6 +23,7 @@ type FileOptionsType = {
   dataDateObject: DateObjectType;
   locale: LangType;
   noComments: string;
+  roleId: string;
 };
 
 export const FileOptions = ({
@@ -34,6 +35,7 @@ export const FileOptions = ({
   authorId,
   locale,
   noComments,
+  roleId,
 }: FileOptionsType) => {
   const [open, setOpen] = useState(false);
   const showOpenComments = () => setOpen(!open);
@@ -58,6 +60,7 @@ export const FileOptions = ({
             fileId={fileId}
             authorId={authorId}
             profilePhoto={profilePhoto}
+            roleId={roleId}
           />
           <ClientPortalWrapper>
             <FilesComments fileId={fileId} />

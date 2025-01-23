@@ -18,6 +18,7 @@ export const Videos = async ({
   fileId,
   authorBool,
   profilePhoto,
+  roleId,
 }: ArticleVideosType) => {
   const locale = getCurrentLocale();
   const tComments = await getScopedI18n('Comments');
@@ -48,6 +49,7 @@ export const Videos = async ({
         locale={locale}
         authorId={authorId}
         profilePhoto={profilePhoto}
+        roleId={roleId!}
       />
     </div>
   );

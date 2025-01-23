@@ -54,6 +54,17 @@ export const Posts = ({ groupId, locale, userId, profilePhoto, name, firstPosts 
 
       const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
 
+      const { data: rData, error } = await supabase
+        .from('Roles')
+        .select('id')
+        .eq('groupId', groupId)
+        .eq('userId', userId)
+        .eq('role', 'ADMIN')
+      .limit(1)
+      .maybeSingle();
+      
+      !!error && console.error(error);
+      
       nextArray.push({
         authorName: Users?.pseudonym!,
         authorProfilePhoto: Users?.profilePhoto!,
@@ -66,7 +77,7 @@ export const Posts = ({ groupId, locale, userId, profilePhoto, name, firstPosts 
         commented,
         authorId,
         groupId,
-        roleId: Roles?.id!,
+        roleId: rData?.id || Roles?.id!,
         date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
       });

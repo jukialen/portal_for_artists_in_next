@@ -1,7 +1,7 @@
 'use client';
 
 import { useContext } from 'react';
-import Link from 'next/link'
+import Link from 'next/link';
 import { Avatar } from 'components/ui/avatar';
 
 import { FilesCommentsType } from 'types/global.types';
@@ -17,7 +17,7 @@ import styles from './FileComment.module.scss';
 export const FileComment = ({
   fileCommentId,
   fileId,
-  comment,
+  content,
   authorId,
   authorName,
   authorProfilePhoto,
@@ -38,7 +38,7 @@ export const FileComment = ({
             </p>
             <p className={styles.date}>{date}</p>
           </div>
-          <h2 className={styles.text}>{comment}</h2>
+          <h2 className={styles.text}>{content}</h2>
         </div>
       </div>
       <OptionsComments fileId={fileId} authorId={authorId} roleId={roleId} role={role} userId={authorId}>
@@ -47,6 +47,7 @@ export const FileComment = ({
           fileCommentId={fileCommentId}
           authorId={authorId}
           profilePhoto={authorProfilePhoto}
+          roleId={roleId!}
         />
         <SubComments fileCommentId={fileCommentId} fileId={fileId} />
       </OptionsComments>

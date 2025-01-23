@@ -68,6 +68,7 @@ export type FileType = Time & {
   authorId: string;
   fileUrl: string;
   time: string;
+  roleId?: string;
 };
 
 export type ArticleVideosType = {
@@ -81,6 +82,7 @@ export type ArticleVideosType = {
   tags: Database['public']['Enums']['Tags'];
   authorId: string;
   time: string;
+  roleId: string;
 };
 
 //FRIENDS
@@ -262,21 +264,18 @@ type Comment = Time & {
   fileUrl?: string;
   roleId?: string;
   role: Database['public']['Enums']['Role'];
-  groupRole?: Database['public']['Enums']['Role'];
   date?: string;
   pseudonym?: string;
-  adModRoleId?: string;
+  content: string;
 };
 
 export type NewCommentsType = {
   authorId: string;
-  profilePhoto: string;
-  adModRoleId?: string;
-  roleId?: string;
-  comment?: string;
+  profilePhoto?: string;
+  roleId: string;
+  content: string;
   fileId?: string;
   postId?: string;
-  groupId?: string;
   fileCommentId?: string;
   commentId?: string;
   subCommentId?: string;
@@ -286,9 +285,7 @@ export type CommentType = Comment & {
   authorName: string;
   authorProfilePhoto: string;
   commentId: string;
-  comment: string;
-  groupRole: Database['public']['Enums']['Role'];
-  postId?: string;
+  postId: string;
 };
 
 export type FilesCommentsType = Comment & {
@@ -296,14 +293,12 @@ export type FilesCommentsType = Comment & {
   authorProfilePhoto: string;
   fileCommentId: string;
   fileId: string;
-  comment: string;
 };
 
 export type SubCommentType = Comment & {
   authorName: string;
   authorProfilePhoto: string;
   subCommentId: string;
-  subComment: string;
   commentId?: string;
   fileCommentId?: string;
   fileId?: string;
@@ -315,5 +310,4 @@ export type LastCommentType = Comment & {
   authorProfilePhoto: string;
   lastCommentId: string;
   subCommentId: string;
-  lastComment: string;
 };

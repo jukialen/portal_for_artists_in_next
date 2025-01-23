@@ -11,6 +11,7 @@ import { DateObjectType, FileType, IndexType, LangType } from 'types/global.type
 import { TagConstants } from 'constants/values';
 
 import { getDate } from 'helpers/getDate';
+import { getFileRoleId } from 'utils/roles';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
@@ -65,6 +66,8 @@ export const AnothersWrapper = ({
       for (const draw of data!) {
         const { fileId, name, fileUrl, tags, shortDescription, Users, authorId, createdAt, updatedAt } = draw;
 
+        const roleId = await getFileRoleId(fileId, authorId!);
+
         nextArray.push({
           authorName: Users?.pseudonym!,
           fileId,
@@ -74,11 +77,12 @@ export const AnothersWrapper = ({
           authorId: authorId!,
           tags,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          roleId,
         });
       }
 
       nextArray.length === maxItems ? setLastVisible(nextArray[nextArray.length - 1].createdAt!) : setLastVisible('');
-      
+
       const newArray = filesArray.concat(...nextArray);
       setUserDrawings(newArray);
       setLoadingFiles(!loadingFiles);
@@ -92,7 +96,7 @@ export const AnothersWrapper = ({
     <>
       {userDrawings.length > 0 ? (
         userDrawings.map(
-          ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time }: FileType, index) => (
+          ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType, index) => (
             <Skeleton loading={loadingFiles} variant="shine" key={index}>
               {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
                 <Videos
@@ -106,6 +110,7 @@ export const AnothersWrapper = ({
                   authorBool={authorName === pseudonym!}
                   profilePhoto={profilePhoto}
                   time={time}
+                  roleId={roleId!}
                 />
               ) : (
                 <Article
@@ -119,6 +124,7 @@ export const AnothersWrapper = ({
                   authorBool={authorName === pseudonym!}
                   profilePhoto={profilePhoto}
                   time={time}
+                  roleId={roleId!}
                 />
               )}
             </Skeleton>

@@ -1,9 +1,12 @@
-import { selectFiles } from 'constants/selects';
-import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
-import { getDate } from 'helpers/getDate';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '../types/database.types';
 import { cookies } from 'next/headers';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+
+import { getDate } from 'helpers/getDate';
+import { getFileRoleId } from './roles';
+
+import { selectFiles } from 'constants/selects';
+import { Database } from 'types/database.types';
+import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
 const supabase = createServerComponentClient<Database>({ cookies });
 
@@ -31,6 +34,8 @@ export const graphics = async (
     for (const file of data!) {
       const { fileId, name, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
 
+      const roleId = await getFileRoleId(fileId, authorId!);
+
       filesArray.push({
         fileId,
         name,
@@ -41,6 +46,7 @@ export const graphics = async (
         authorId: authorId!,
         time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         createdAt,
+        roleId,
         updatedAt: updatedAt || '',
       });
     }
@@ -73,6 +79,8 @@ export const videosAnimations = async (
     for (const file of data!) {
       const { fileId, name, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
 
+      const roleId = await getFileRoleId(fileId, authorId!);
+
       filesArray.push({
         fileId,
         name,
@@ -84,6 +92,7 @@ export const videosAnimations = async (
         time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
         createdAt,
         updatedAt: updatedAt || '',
+        roleId: roleId!,
       });
     }
     return filesArray;

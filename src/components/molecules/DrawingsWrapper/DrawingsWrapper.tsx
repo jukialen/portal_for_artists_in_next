@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { DateObjectType, FileType, LangType, Tags } from "types/global.types";
+import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 
@@ -13,6 +13,7 @@ import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
 import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
+import { getFileRoleId } from '../../../utils/roles';
 
 type DrawingsWrapperType = {
   locale: LangType;
@@ -57,6 +58,8 @@ export const DrawingsWrapper = ({
       for (const file of data) {
         const { fileId, name, shortDescription, Users, tags, fileUrl, authorId, createdAt, updatedAt } = file;
 
+        const roleId = await getFileRoleId(fileId, authorId!);
+
         filesArray.push({
           fileId,
           name,
@@ -67,6 +70,7 @@ export const DrawingsWrapper = ({
           authorId: authorId!,
           tags,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          roleId,
         });
       }
 
@@ -84,7 +88,18 @@ export const DrawingsWrapper = ({
       {!!userDrawings && userDrawings.length > 0 ? (
         userDrawings.map(
           (
-            { fileId, name, fileUrl, shortDescription, tags, authorName, authorProfilePhoto, authorId, time }: FileType,
+            {
+              fileId,
+              name,
+              fileUrl,
+              shortDescription,
+              tags,
+              authorName,
+              authorProfilePhoto,
+              authorId,
+              time,
+              roleId,
+            }: FileType,
             index,
           ) => (
             <ClientPortalWrapper key={index}>
@@ -99,6 +114,7 @@ export const DrawingsWrapper = ({
                 authorBool={authorName === pseudonym!}
                 profilePhoto={authorProfilePhoto!}
                 time={time}
+                roleId={roleId!}
               />
             </ClientPortalWrapper>
           ),

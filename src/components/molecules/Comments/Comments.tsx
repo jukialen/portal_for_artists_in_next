@@ -15,9 +15,9 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './Comments.module.scss';
 
-type CommentsType = { postId: string };
+type CommentsType = { postId: string; roleId: string };
 
-export const Comments = ({ postId }: CommentsType) => {
+export const Comments = ({ postId, roleId }: CommentsType) => {
   const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState('');
   let [i, setI] = useState(1);
@@ -27,14 +27,14 @@ export const Comments = ({ postId }: CommentsType) => {
   const maxItems = 30;
 
   useEffect(() => {
-    firstComments(locale, postId, maxItems).then((t) => {
+    firstComments(locale, postId, maxItems, roleId).then((t) => {
       setCommentsArray(t!);
       t!.length === maxItems && setLastVisible(t![t!.length - 1].postId!);
     });
   }, []);
 
   const nextComments = () =>
-    againComments(locale, postId, maxItems).then((t) => {
+    againComments(locale, postId, maxItems, roleId).then((t) => {
       const nextArray = commentsArray.concat(...t!);
       setCommentsArray(nextArray);
       setI(++i);
@@ -47,13 +47,12 @@ export const Comments = ({ postId }: CommentsType) => {
           (
             {
               commentId,
-              comment,
+              content,
               authorName,
               authorProfilePhoto,
               role,
               roleId,
               authorId,
-              groupRole,
               postId,
               date,
             }: CommentType,
@@ -62,12 +61,11 @@ export const Comments = ({ postId }: CommentsType) => {
             <DCProvider key={index}>
               <Comment
                 commentId={commentId}
-                comment={comment}
+                content={content}
                 authorName={authorName}
                 authorProfilePhoto={authorProfilePhoto}
                 role={role}
                 roleId={roleId}
-                groupRole={groupRole}
                 authorId={authorId}
                 postId={postId}
                 date={date}

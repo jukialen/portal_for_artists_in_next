@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import Link from 'next/link'
+import Link from 'next/link';
 import { Badge } from '@chakra-ui/react';
 import { Avatar } from 'components/ui/avatar';
 
@@ -15,7 +15,7 @@ import styles from './Comment.module.scss';
 
 export const Comment = ({
   commentId,
-  comment,
+  content,
   authorName,
   authorProfilePhoto,
   role,
@@ -40,21 +40,16 @@ export const Comment = ({
             </p>
             <p className={styles.date}>{date}</p>
           </div>
-          <h2 className={styles.text}>{comment}</h2>
+          <h2 className={styles.text}>{content}</h2>
         </div>
       </div>
-      <OptionsComments
-        commentId={commentId}
-        roleId={roleId}
-        authorId={authorId}
-        role={role}
-       userId={authorId}
-      >
+      <OptionsComments commentId={commentId} roleId={roleId} authorId={authorId} role={role} userId={authorId}>
         <NewComments
           profilePhoto={authorProfilePhoto}
           commentId={commentId}
           postId={postId}
           authorId={authorId}
+          roleId={roleId!}
         />
         <SubComments commentId={commentId} postId={postId} />
       </OptionsComments>

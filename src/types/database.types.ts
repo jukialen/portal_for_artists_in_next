@@ -36,30 +36,27 @@ export type Database = {
     Tables: {
       Comments: {
         Row: {
-          adModRoleId: string
           authorId: string
-          comment: string
           commentId: string
+          content: string
           createdAt: string
           postId: string
           roleId: string
           updatedAt: string | null
         }
         Insert: {
-          adModRoleId: string
           authorId: string
-          comment: string
           commentId?: string
+          content: string
           createdAt?: string
           postId: string
           roleId: string
           updatedAt?: string | null
         }
         Update: {
-          adModRoleId?: string
           authorId?: string
-          comment?: string
           commentId?: string
+          content?: string
           createdAt?: string
           postId?: string
           roleId?: string
@@ -67,8 +64,8 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "public_Comments_adModRoleId_fkey"
-            columns: ["adModRoleId"]
+            foreignKeyName: "Comments_roleId_fkey"
+            columns: ["roleId"]
             isOneToOne: false
             referencedRelation: "Roles"
             referencedColumns: ["id"]
@@ -86,13 +83,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "Posts"
             referencedColumns: ["postId"]
-          },
-          {
-            foreignKeyName: "public_Comments_roleId_fkey"
-            columns: ["roleId"]
-            isOneToOne: false
-            referencedRelation: "Roles"
-            referencedColumns: ["id"]
           },
         ]
       }
@@ -153,7 +143,7 @@ export type Database = {
       FilesComments: {
         Row: {
           authorId: string
-          comment: string
+          content: string
           createdAt: string
           fileId: string
           id: string
@@ -162,7 +152,7 @@ export type Database = {
         }
         Insert: {
           authorId: string
-          comment: string
+          content: string
           createdAt?: string
           fileId: string
           id?: string
@@ -171,7 +161,7 @@ export type Database = {
         }
         Update: {
           authorId?: string
-          comment?: string
+          content?: string
           createdAt?: string
           fileId?: string
           id?: string
@@ -279,43 +269,33 @@ export type Database = {
       }
       LastComments: {
         Row: {
-          adModRoleId: string | null
           authorId: string
+          content: string
           createdAt: string
-          lastComment: string
           lastCommentId: string
           roleId: string
           subCommentId: string
           updatedAt: string | null
         }
         Insert: {
-          adModRoleId?: string | null
           authorId: string
+          content: string
           createdAt?: string
-          lastComment: string
           lastCommentId?: string
           roleId: string
           subCommentId: string
           updatedAt?: string | null
         }
         Update: {
-          adModRoleId?: string | null
           authorId?: string
+          content?: string
           createdAt?: string
-          lastComment?: string
           lastCommentId?: string
           roleId?: string
           subCommentId?: string
           updatedAt?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "public_LastComments_adModRoleId_fkey"
-            columns: ["adModRoleId"]
-            isOneToOne: false
-            referencedRelation: "Roles"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "public_LastComments_authorId_fkey"
             columns: ["authorId"]
@@ -478,46 +458,36 @@ export type Database = {
       }
       SubComments: {
         Row: {
-          adModRoleId: string | null
           authorId: string
           commentId: string | null
+          content: string
           createdAt: string
           fileCommentId: string | null
           roleId: string
-          subComment: string
           subCommentId: string
           updatedAt: string | null
         }
         Insert: {
-          adModRoleId?: string | null
           authorId: string
           commentId?: string | null
+          content: string
           createdAt?: string
           fileCommentId?: string | null
           roleId: string
-          subComment: string
           subCommentId?: string
           updatedAt?: string | null
         }
         Update: {
-          adModRoleId?: string | null
           authorId?: string
           commentId?: string | null
+          content?: string
           createdAt?: string
           fileCommentId?: string | null
           roleId?: string
-          subComment?: string
           subCommentId?: string
           updatedAt?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "public_SubComments_adModRoleId_fkey"
-            columns: ["adModRoleId"]
-            isOneToOne: false
-            referencedRelation: "Roles"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "public_SubComments_authorId_fkey"
             columns: ["authorId"]
@@ -528,7 +498,7 @@ export type Database = {
           {
             foreignKeyName: "public_SubComments_commentId_fkey"
             columns: ["commentId"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "Comments"
             referencedColumns: ["commentId"]
           },

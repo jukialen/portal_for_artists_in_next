@@ -5,16 +5,17 @@ import { usePathname } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { selectFiles } from 'constants/selects';
+import { Database } from 'types/database.types';
 import { FileType, GalleryType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
+import { getFileRoleId } from 'utils/roles';
 
 import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Article } from 'components/molecules/Article/Article';
-import { Database } from '../../../types/database.types';
 
 export const PhotosGallery = ({
   id,
@@ -54,6 +55,8 @@ export const PhotosGallery = ({
       for (const file of data!) {
         const { fileId, name, tags, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt } = file;
 
+        const roleId = await getFileRoleId(fileId, authorId!);
+
         nextArray.push({
           fileId,
           name,
@@ -63,6 +66,7 @@ export const PhotosGallery = ({
           authorName: Users?.pseudonym!,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
           tags,
+          roleId,
         });
       }
 
@@ -81,21 +85,24 @@ export const PhotosGallery = ({
       <ClientPortalWrapper>
         <Wrapper>
           {userPhotos.length > 0 ? (
-            userPhotos.map(({ fileId, name, fileUrl, shortDescription, tags, authorId, time }: FileType, index) => (
-              <Article
-                key={index}
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorName={author!}
-                authorId={authorId}
-                authorBool={author === pseudonym!}
-                profilePhoto={profilePhoto!}
-                time={time}
-              />
-            ))
+            userPhotos.map(
+              ({ fileId, name, fileUrl, shortDescription, tags, authorId, time, roleId }: FileType, index) => (
+                <Article
+                  key={index}
+                  fileId={fileId!}
+                  name={name!}
+                  fileUrl={fileUrl}
+                  shortDescription={shortDescription!}
+                  tags={tags!}
+                  authorName={author!}
+                  authorId={authorId}
+                  authorBool={author === pseudonym!}
+                  profilePhoto={profilePhoto!}
+                  time={time}
+                  roleId={roleId!}
+                />
+              ),
+            )
           ) : (
             <ZeroFiles text={tGallery?.noPhotos!} />
           )}

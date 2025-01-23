@@ -92,15 +92,29 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
           !!er && setValuesFields(tr.uploadFile);
         }
       } else {
-        const { error } = await supabase.from('Groups').insert([
-          {
-            name,
-            description,
-            adminId: userData?.id!,
-          },
-        ]);
+        const { data, error } = await supabase
+          .from('Groups')
+          .insert([
+            {
+              name,
+              description,
+              adminId: userData?.id!,
+            },
+          ])
+          .select('groupId')
+          .limit(1)
+          .single();
 
-        if (!!error) {
+        if (!!error || !data) {
+          setValuesFields(tr.error);
+          return;
+        }
+
+        const { error: rError } = await supabase
+          .from('Roles')
+          .insert([{ groupId: data.groupId, userId: userData?.id!, role: 'ADMIN' }]);
+
+        if (!!rError) {
           setValuesFields(tr.error);
           return;
         }

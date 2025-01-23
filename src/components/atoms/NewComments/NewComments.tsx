@@ -2,113 +2,57 @@ import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Button, Textarea } from '@chakra-ui/react';
-import { Avatar } from "components/ui/avatar";
+import { Avatar } from 'components/ui/avatar';
 
-import { backUrl } from 'constants/links';
+import { ResetFormType } from 'types/global.types';
 
 import { useScopedI18n } from 'locales/client';
 
-import { ResetFormType, NewCommentsType } from 'types/global.types';
+import { newComment } from 'utils/comments';
 
 import styles from './NewComments.module.scss';
 
 type NewCommentType = { comment: string };
 
+type NewComment = {
+  authorId: string;
+  profilePhoto: string;
+  roleId: string;
+  postId?: string;
+  fileId?: string;
+  commentId?: string;
+  subCommentId?: string;
+  fileCommentId?: string;
+}
+
 export const NewComments = ({
   fileId,
-  groupId,
   authorId,
   postId,
+  roleId,
   commentId,
   subCommentId,
   fileCommentId,
-  adModRoleId,
-  profilePhoto
-}: NewCommentsType) => {
+  profilePhoto,
+}: NewComment) => {
   const initialValues = { comment: '' };
 
   const tComments = useScopedI18n('Comments');
 
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
-
-  const updateCommentId = async (roleId: string, commentId: string) =>
-    await fetch(`${backUrl}/api/roles`, {
-      method: 'PATCH',
-      body: JSON.stringify({ roleId, commentId }),
-    }).then((r) => r.json());
-
+  
   const createNewComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
-      const { id: roleId }: { id: string } = await fetch(`${backUrl}/api/roles`, {
-        method: 'POST',
-        body: JSON.stringify({
-          fileId,
-          postId,
-          groupId,
-          userId: authorId,
-        }),
-      }).then((t) => t.json());
-
-      if (!!subCommentId) {
-        const { roleId: subRoleId, lastCommentId }: { roleId: string; lastCommentId: string } = await fetch(
-          `${backUrl}/api/last-comments`,
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              lastComment: comment,
-              subCommentId,
-              adModRoleId,
-              roleId,
-              authorId,
-            }),
-          },
-        ).then((s) => s.json());
-        await updateCommentId(subRoleId, lastCommentId);
-      }
-      if (!!(commentId || fileCommentId)) {
-        const { roleId: comFileComId, subCommentId: subComId }: { roleId: string; subCommentId: string } = await fetch(
-          `${backUrl}/api/sub-comments`,
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              subComment: comment,
-              commentId,
-              fileCommentId,
-              fileId,
-              postId,
-              adModRoleId,
-              roleId,
-              authorId,
-            }),
-          },
-        ).then((cf) => cf.json());
-        await updateCommentId(comFileComId, subComId!);
-      }
-      if (!!fileId) {
-        const { roleId: fileRoleId, fileCommentId: fileComId }: { roleId: string; fileCommentId: string } = await fetch(
-          `${backUrl}/api/files-comments`,
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              authorId,
-              comment,
-              fileId,
-              roleId,
-            }),
-          },
-        ).then((f) => f.json());
-        await updateCommentId(fileRoleId, fileComId);
-      } else {
-        const { roleId: comRoleId, fileCommentId: comId }: { roleId: string; fileCommentId: string } = await fetch(
-          `${backUrl}/api/comments`,
-          {
-            method: 'POST',
-            body: JSON.stringify({ authorId, comment, roleId, postId, adModRoleId }),
-          },
-        ).then((c) => c.json());
-
-        await updateCommentId(comRoleId, comId);
-      }
+      await newComment({
+        content: comment,
+        authorId,
+        postId,
+        roleId,
+        commentId,
+        fileId,
+        subCommentId,
+        fileCommentId,
+      });
 
       resetForm(initialValues);
     } catch (e) {

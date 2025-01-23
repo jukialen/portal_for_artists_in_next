@@ -12,6 +12,7 @@ import { getScopedI18n } from 'locales/server';
 
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
+import { getFileRoleId } from 'utils/roles';
 
 import { AppWrapper } from 'components/atoms/AppWrapper/AppWrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
@@ -41,6 +42,8 @@ async function getTop10Drawings(maxItems: number, locale: LangType, dataDateObje
     for (const draw of data) {
       const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt } = draw;
 
+      const roleId = await getFileRoleId(fileId, authorId!);
+
       filesArray.push({
         fileId,
         name,
@@ -49,6 +52,7 @@ async function getTop10Drawings(maxItems: number, locale: LangType, dataDateObje
         fileUrl,
         authorId: authorId!,
         time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+        roleId,
       });
     }
 
@@ -77,6 +81,8 @@ async function getTop10Pavo(maxItems: number, tag: Tags, locale: LangType, dataD
       for (const draw of data!) {
         const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt } = draw;
 
+        const roleId = await getFileRoleId(fileId, authorId!);
+
         filesArray.push({
           fileId,
           name,
@@ -85,6 +91,7 @@ async function getTop10Pavo(maxItems: number, tag: Tags, locale: LangType, dataD
           fileUrl,
           authorId: authorId!,
           time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          roleId,
         });
       }
     }

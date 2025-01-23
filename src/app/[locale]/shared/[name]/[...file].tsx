@@ -13,11 +13,12 @@ import { Database } from 'types/database.types';
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
+import { getFileRoleId } from "utils/roles";
 
 import { Videos } from 'components/molecules/Videos/Videos';
 import { Article } from 'components/molecules/Article/Article';
 
-async function post(locale: LangType, fileId: string) {
+async function file(locale: LangType, fileId: string) {
   try {
     const supabase = createServerComponentClient<Database>({ cookies });
 
@@ -32,7 +33,7 @@ async function post(locale: LangType, fileId: string) {
       console.error(error);
       return;
     }
-
+    
     const { data: d, error: er } = await supabase
       .from('Users')
       .select('pseudonym, profilePhoto')
@@ -46,13 +47,16 @@ async function post(locale: LangType, fileId: string) {
     }
 
     const { fileUrl, shortDescription, tags, authorId, createdAt, updatedAt } = data;
-
+    
+    const roleId =  await getFileRoleId(fileId, authorId!);
+    
     const postData: FileType = {
       authorId: authorId!,
       authorName: d?.pseudonym!,
       authorProfilePhoto: d?.profilePhoto!,
       fileUrl,
       shortDescription: shortDescription!,
+      roleId,
       tags,
       time: getDate(locale, updatedAt! || createdAt!, await dateData()),
     };
@@ -79,7 +83,7 @@ export default async function Post({ params: { locale } }: { params: { locale: L
 
   const pseudonym = await getUserData().then((t) => t?.pseudonym!);
 
-  const authorPost = await post(locale, fileId);
+  const authorPost = await file(locale, fileId);
 
   return (
     <>
@@ -95,6 +99,7 @@ export default async function Post({ params: { locale } }: { params: { locale: L
           authorId={authorPost?.authorId!}
           time={authorPost?.time!}
           authorBool={authorPost?.authorName! === pseudonym}
+          roleId={authorPost?.roleId!}
         />
       ) : (
         <Article
@@ -108,6 +113,7 @@ export default async function Post({ params: { locale } }: { params: { locale: L
           authorId={authorPost?.authorId!}
           time={authorPost?.time!}
           authorBool={authorPost?.authorName! === pseudonym}
+          roleId={authorPost?.roleId!}
         />
       )}
     </>

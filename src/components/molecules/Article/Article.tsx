@@ -22,6 +22,7 @@ export const Article = async ({
   shortDescription,
   tags,
   time,
+  roleId,
 }: ArticleVideosType) => {
   let img = 600;
   const locale = getCurrentLocale();
@@ -59,6 +60,7 @@ export const Article = async ({
         dataDateObject={dataDateObject}
         noComments={tComments('noComments')}
         locale={locale}
+        roleId={roleId}
       />
     </div>
   );
