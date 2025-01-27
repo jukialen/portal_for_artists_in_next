@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import { Avatar } from 'components/ui/avatar';
 
-import { FilesCommentsType } from 'types/global.types';
+import { FilesCommentsType, TableNameEnum } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 
@@ -22,7 +22,6 @@ export const FileComment = ({
   authorName,
   authorProfilePhoto,
   roleId,
-  role,
   date,
 }: FilesCommentsType) => {
   const { del } = useContext(DCContext);
@@ -41,7 +40,13 @@ export const FileComment = ({
           <h2 className={styles.text}>{content}</h2>
         </div>
       </div>
-      <OptionsComments fileId={fileId} authorId={authorId} roleId={roleId} role={role} userId={authorId}>
+      <OptionsComments
+        fileId={fileId}
+        fileCommentId={fileCommentId}
+        authorId={authorId}
+        roleId={roleId!}
+        userId={authorId}
+        tableName={TableNameEnum.FileComments}>
         <NewComments
           fileId={fileId}
           fileCommentId={fileCommentId}

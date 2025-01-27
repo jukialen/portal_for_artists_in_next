@@ -5,6 +5,13 @@ import { Database } from './database.types';
 type Like = { likes: number; liked: boolean };
 type Time = { createdAt?: string; updatedAt?: string };
 
+export enum TableNameEnum {
+  Comments= 'Comments',
+  FileComments = 'FileComments',
+  SubComments = 'SubComments',
+  LastComments = 'LastComments',
+}
+
 export type Tags = Database['public']['Enums']['Tags'];
 export type LangType = 'en' | 'pl' | 'jp';
 export type IndexType = 'photographs' | 'videos' | 'animations';
@@ -12,7 +19,7 @@ export type Provider = Database['public']['Enums']['Provider'];
 
 //FORMS & CONTROLLERS ELEMENTS
 export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
-
+export type RoleType = Database['public']['Enums']['Role'];
 export type ResetFormType = {
   resetForm: any;
 };
@@ -119,7 +126,7 @@ export type GroupType = Time & {
   usersGroupsId: string;
   favorited?: boolean;
   favorites: number;
-  role: Database['public']['Enums']['Role'];
+  role: RoleType;
   roleId: string;
   time?: string;
 };
@@ -145,7 +152,7 @@ export type MemberType = {
   usersGroupsId?: string;
   pseudonym: string;
   profilePhoto: string;
-  role: Database['public']['Enums']['Role'];
+  role: RoleType;
 };
 
 export type GroupUsersType = {
@@ -263,7 +270,7 @@ type Comment = Time & {
   authorId: string;
   fileUrl?: string;
   roleId?: string;
-  role: Database['public']['Enums']['Role'];
+  role: RoleType;
   date?: string;
   pseudonym?: string;
   content: string;
@@ -299,10 +306,12 @@ export type SubCommentType = Comment & {
   authorName: string;
   authorProfilePhoto: string;
   subCommentId: string;
+  profilePhoto?: string;
   commentId?: string;
   fileCommentId?: string;
   fileId?: string;
   postId?: string;
+  groupsPostsRoleId?: string;
 };
 
 export type LastCommentType = Comment & {

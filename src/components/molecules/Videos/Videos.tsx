@@ -32,7 +32,7 @@ export const Videos = async ({
       <video preload="metadata" controls className={styles.video} playsInline>
         <source src={fileUrl} />
         {/* eslint-disable-next-line react/no-unescaped-entities */}
-        Sorry, your browser doesn't support embedded videos,
+        Sorry, your browser doesn\'t support embedded videos,
         {/* eslint-disable-next-line react/no-unescaped-entities */}
         but don't worry, you can <Link href={fileUrl}>download it</Link>
         and watch it with your favorite video player!

@@ -1,8 +1,9 @@
 import { useContext } from 'react';
-import { Link } from '@chakra-ui/next-js';
-import { Avatar } from '@chakra-ui/react';
+import Link from 'next/link';
+import { Avatar } from 'components/ui/avatar';
+import { Tag } from 'components/ui/tag';
 
-import { SubCommentType } from 'types/global.types';
+import { SubCommentType, TableNameEnum } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 
@@ -14,18 +15,15 @@ import styles from './SubComment.module.scss';
 
 export const SubComment = ({
   subCommentId,
-  commentId,
-  subComment,
+  content,
   authorProfilePhoto,
   authorName,
+  role,
   roleId,
-  groupRole,
   authorId,
-  fileCommentId,
   date,
   fileId,
   postId,
-  pseudonym,
   profilePhoto,
 }: SubCommentType) => {
   const { del } = useContext(DCContext);
@@ -38,30 +36,32 @@ export const SubComment = ({
           <div className={styles.topPartComment}>
             <p className={styles.pseudonym}>
               <Link href={`/user/${authorName}`}>{authorName}</Link>
+              <Tag variant="subtle" colorPalette="blue">
+                {role}
+              </Tag>
             </p>
             <p className={styles.date}>{date}</p>
           </div>
-          <h2 className={styles.text}>{subComment}</h2>
+          <h2 className={styles.text}>{content}</h2>
         </div>
       </div>
 
       <OptionsComments
         subCommentId={subCommentId}
-        commentId={commentId!}
-        roleId={roleId}
+        roleId={roleId!}
         postId={postId!}
         authorId={authorId}
-      >
+        userId={authorId}
+        tableName={TableNameEnum.SubComments}>
         <NewComments
           profilePhoto={profilePhoto!}
           subCommentId={subCommentId}
-          fileCommentId={fileCommentId}
           fileId={fileId}
           postId={postId}
           authorId={authorId}
-          author={authorName === pseudonym}
+          roleId={roleId!}
         />
-        <LastComments subCommentId={subCommentId} fileId={fileId} postId={postId} />
+        <LastComments subCommentId={subCommentId} roleId={roleId!} />
       </OptionsComments>
     </div>
   );

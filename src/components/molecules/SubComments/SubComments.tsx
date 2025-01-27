@@ -1,13 +1,8 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import { SubCommentType } from 'types/global.types';
 
-import { backUrl, cloudFrontUrl } from 'constants/links';
-
-import { getDate } from 'helpers/getDate';
-
-import { dateData } from 'helpers/dateData';
+import { againSubComments, subComments } from 'utils/comments';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -19,78 +14,34 @@ type SubCommentsType = {
   commentId?: string;
   fileId?: string;
   postId?: string;
-  groupRoledId?: string;
+  groupsPostsRoleId?: string;
 };
 
-export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCommentsType) => {
+export const SubComments = ({ fileCommentId, commentId, fileId, postId, groupsPostsRoleId }: SubCommentsType) => {
   const [subCommentsArray, setSubCommentsArray] = useState<SubCommentType[]>([]);
-  const [lastVisible, setLastVisible] = useState<string>();
+  const [lastVisible, setLastVisible] = useState('');
   let [i, setI] = useState(1);
-
-  const dataDateObject = dateData();
 
   const maxItems = 30;
 
-  const params = encodeURI(JSON.stringify({
-    fileCommentId,
-    commentId,
-    maxItems,
-    cursor: lastVisible,
-  }))
-  const firstComments = async () => {
-    try {
-      const comments: SubCommentType[] = await fetch(`${backUrl}/api/sub-comments/${params}`, {
-        method: 'GET',
-      }).then(c => c.json());
-
-      setSubCommentsArray(comments);
-      comments.length === maxItems && setLastVisible(comments[comments.length - 1].createdAt);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   useEffect(() => {
-    !!commentId && firstComments();
-  }, [commentId]);
+    subComments(maxItems, groupsPostsRoleId, commentId, fileCommentId).then((t) => {
+      setSubCommentsArray(t);
+      t.length === maxItems &&
+        setLastVisible(t[t.length - 1].commentId ? t[t.length - 1].commentId! : t[t.length - 1].fileCommentId!);
+    });
+  }, [commentId, fileCommentId, groupsPostsRoleId]);
 
   const nextComments = async () => {
-    try {
-      const nextSubCommentsArray: SubCommentType[] = [];
-
-      const comments: { data: SubCommentType[] } = await axios.get(`${backUrl}/sub-comments/all`, {
-        params: {
-          orderBy: 'createdAt, desc',
-          where: fileCommentId ? { fileCommentId } : { commentId: commentId },
-          limit: maxItems,
-          cursor: lastVisible!,
-        },
+    lastVisible !== '' &&
+      againSubComments(maxItems, lastVisible!, groupsPostsRoleId, commentId, fileCommentId).then((t) => {
+        const nextArray = subCommentsArray.concat(...t);
+        setSubCommentsArray(nextArray);
+        if (t.length === maxItems) {
+          setLastVisible(t[t.length - 1].commentId ? t[t.length - 1].commentId! : t[t.length - 1].fileCommentId!);
+          setI(++i);
+        }
       });
-
-      for (const _c of comments.data) {
-        const { subCommentId, subComment, pseudonym, profilePhoto, role, roleId, authorId, createdAt, updatedAt } = _c;
-
-        nextSubCommentsArray.push({
-          subCommentId,
-          subComment,
-          pseudonym,
-          profilePhoto,
-          role,
-          roleId,
-          authorId,
-          date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
-        });
-      }
-
-      const nextArray = subCommentsArray.concat(...nextSubCommentsArray);
-      setSubCommentsArray(nextArray);
-      setI(++i);
-      setLastVisible(
-        fileCommentId ? nextArray[nextArray.length - 1].fileCommentId : nextArray[nextArray.length - 1].commentId,
-      );
-    } catch (e) {
-      console.error(e);
-    }
   };
 
   return (
@@ -98,15 +49,15 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId }: SubCom
       {subCommentsArray.length > 0 &&
         subCommentsArray.map(
           (
-            { subCommentId, subComment, pseudonym, profilePhoto, role, roleId, authorId, date }: SubCommentType,
+            { subCommentId, content, authorName, authorProfilePhoto, role, roleId, authorId, date }: SubCommentType,
             index,
           ) => (
             <DCProvider key={index}>
               <SubComment
                 subCommentId={subCommentId}
-                subComment={subComment}
-                pseudonym={pseudonym}
-                profilePhoto={profilePhoto}
+                content={content}
+                authorName={authorName}
+                authorProfilePhoto={authorProfilePhoto}
                 role={role}
                 roleId={roleId}
                 authorId={authorId}

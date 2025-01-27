@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { againFilesComments } from 'utils/comments';
 
-import { DateObjectType, FilesCommentsType, LangType } from 'types/global.types';
+import { FilesCommentsType } from 'types/global.types';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -16,18 +16,15 @@ import styles from './FilesCommentsClient.module.scss';
 type FilesCommentsClientType = {
   firstFilesComments: FilesCommentsType[];
   fileId: string;
-  dataDateObject: DateObjectType;
   noComments: string;
   pseudonym: string;
-  locale: LangType;
 };
+
 export const FilesCommentsClient = ({
   firstFilesComments,
   fileId,
   noComments,
   pseudonym,
-  locale,
-  dataDateObject,
 }: FilesCommentsClientType) => {
   const maxItems = 30;
 
@@ -39,7 +36,7 @@ export const FilesCommentsClient = ({
 
   const nextComments = async () => {
     try {
-      const nextPage = await againFilesComments(fileId, locale, maxItems, dataDateObject);
+      const nextPage = await againFilesComments(fileId, maxItems);
 
       nextPage.length === maxItems && setLastVisible(nextPage[nextPage.length - 1].createdAt!);
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { useCurrentLocale, useScopedI18n } from 'locales/client';
+import { useScopedI18n } from 'locales/client';
 
 import { CommentType } from 'types/global.types';
 
@@ -22,40 +22,33 @@ export const Comments = ({ postId, roleId }: CommentsType) => {
   const [lastVisible, setLastVisible] = useState('');
   let [i, setI] = useState(1);
 
-  const locale = useCurrentLocale();
   const tComments = useScopedI18n('Comments');
   const maxItems = 30;
 
   useEffect(() => {
-    firstComments(locale, postId, maxItems, roleId).then((t) => {
+    firstComments(postId, maxItems, roleId).then((t) => {
       setCommentsArray(t!);
-      t!.length === maxItems && setLastVisible(t![t!.length - 1].postId!);
+      !!t && t.length === maxItems && setLastVisible(t[t.length - 1].postId!);
     });
-  }, []);
+  }, [postId, roleId]);
 
   const nextComments = () =>
-    againComments(locale, postId, maxItems, roleId).then((t) => {
+    lastVisible !== '' &&
+    againComments(postId, maxItems, roleId).then((t) => {
       const nextArray = commentsArray.concat(...t!);
+
       setCommentsArray(nextArray);
-      setI(++i);
-      t!.length === maxItems && setLastVisible(t![t!.length - 1].postId!);
+      if (t!.length === maxItems) {
+        setLastVisible(t![t!.length - 1].postId!);
+        setI(++i);
+      }
     });
   return (
     <>
       {commentsArray.length > 0 ? (
         commentsArray.map(
           (
-            {
-              commentId,
-              content,
-              authorName,
-              authorProfilePhoto,
-              role,
-              roleId,
-              authorId,
-              postId,
-              date,
-            }: CommentType,
+            { commentId, content, authorName, authorProfilePhoto, role, roleId, authorId, postId, date }: CommentType,
             index,
           ) => (
             <DCProvider key={index}>

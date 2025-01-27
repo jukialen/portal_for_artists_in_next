@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import Link from 'next/link';
-import { Badge } from '@chakra-ui/react';
 import { Avatar } from 'components/ui/avatar';
+import { Tag } from 'components/ui/tag';
 
-import { CommentType } from 'types/global.types';
+import { CommentType, TableNameEnum } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 
@@ -30,20 +30,25 @@ export const Comment = ({
     <div className={del ? styles.container__deleted : styles.container}>
       <div className={styles.comment}>
         <Avatar src={authorProfilePhoto} className={styles.avatar} />
-        <Badge ml="1" fontSize=".8rem" colorScheme="blue">
-          role
-        </Badge>
         <div className={styles.rightSideComment}>
           <div className={styles.topPartComment}>
             <p className={styles.pseudonym}>
               <Link href={`/user/${authorName}`}>{authorName}</Link>
+              <Tag variant="subtle" colorPalette="blue">
+                {role}
+              </Tag>
             </p>
             <p className={styles.date}>{date}</p>
           </div>
           <h2 className={styles.text}>{content}</h2>
         </div>
       </div>
-      <OptionsComments commentId={commentId} roleId={roleId} authorId={authorId} role={role} userId={authorId}>
+      <OptionsComments
+        commentId={commentId}
+        roleId={roleId!}
+        authorId={authorId}
+        userId={authorId}
+        tableName={TableNameEnum.Comments}>
         <NewComments
           profilePhoto={authorProfilePhoto}
           commentId={commentId}
