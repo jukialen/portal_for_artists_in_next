@@ -25,6 +25,8 @@ export const SubComment = ({
   fileId,
   postId,
   profilePhoto,
+  liked,
+  likes,
 }: SubCommentType) => {
   const { del } = useContext(DCContext);
 
@@ -48,10 +50,11 @@ export const SubComment = ({
 
       <OptionsComments
         subCommentId={subCommentId}
-        roleId={roleId!}
         postId={postId!}
         authorId={authorId}
         userId={authorId}
+        liked={liked}
+        likes={likes}
         tableName={TableNameEnum.SubComments}>
         <NewComments
           profilePhoto={profilePhoto!}

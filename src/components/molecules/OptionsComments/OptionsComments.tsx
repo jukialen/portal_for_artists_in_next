@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useContext, useEffect, useState } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -19,16 +19,18 @@ import {
 import { IconButton, Textarea } from '@chakra-ui/react';
 
 import { updComment, delComment } from 'utils/comments';
+import { toggleLiked } from 'utils/likes';
 
 import { darkMode } from 'constants/links';
-import { ResetFormType, RoleType, TableNameEnum } from 'types/global.types';
+import { ResetFormType, TableNameEnum } from 'types/global.types';
+
+import { useI18n, useScopedI18n } from 'locales/client';
 
 import { ModeContext } from 'providers/ModeProvider';
 import { DCContext } from 'providers/DeleteCommentProvider';
 
 import styles from './OptionsComments.module.scss';
 import { AiFillLike, AiOutlineLike, AiOutlineMore } from 'react-icons/ai';
-import { useI18n, useScopedI18n } from 'locales/client';
 
 type OptionsType = {
   fileId?: string;
@@ -36,12 +38,11 @@ type OptionsType = {
   commentId?: string;
   subCommentId?: string;
   lastCommentId?: string;
-  roleId: string;
   postId?: string;
   authorId: string;
   userId: string;
-  liked?: boolean;
-  likes?: number;
+  liked: boolean;
+  likes: number;
   tableName: TableNameEnum;
   children?: ReactNode;
 };
@@ -54,16 +55,16 @@ export const OptionsComments = ({
   commentId,
   subCommentId,
   lastCommentId,
-  roleId,
   postId,
   authorId,
   userId,
   liked,
-  likes,
+  likes: l,
   tableName,
   children,
 }: OptionsType) => {
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(liked);
+  let [likes, setLikes] = useState(l || 0);
   const [moreOptions, setMoreOptions] = useState(false);
   const [com, setCom] = useState(false);
   const { isMode } = useContext(ModeContext);
@@ -86,69 +87,27 @@ export const OptionsComments = ({
   const tComments = useScopedI18n('Comments');
   const tDeletionFile = useScopedI18n('DeletionFile');
 
-  const likedCount = () => {
+  const toggleLike = async () => {
     try {
-      //      liked?.forEach((like) => (like === userId ? setLike(true) : setLike(false)));
+      const toggle = async () => await toggleLiked(like, authorId, postId, fileId)!;
+
+      if (await toggle()) {
+        setLikes(like ? --likes : ++likes);
+        setLike(!like);
+      }
     } catch (e) {
       console.error(e);
     }
   };
 
-  useEffect(() => {
-    likedCount();
-  }, []);
-
-  const toggleLike = async () => {
-    if (like) {
-    } else {
-    }
-    //    setLikeCount(like ? (likeCount -= 1) : (likeCount += 1));
-    setLike(!like);
-  };
-
   const deleteComment = async () => {
-    // const fileParams = encodeURI(
-    //   JSON.stringify({
-    //     fileCommentId: fileId,
-    //     where: 'fileId',
-    //     roleId,
-    //     userId: authorId,
-    //   }),
-    // );
-    // const params = encodeURI(
-    //   JSON.stringify({
-    //     commentId,
-    //     where: 'commentId',
-    //     roleId,
-    //     userId: authorId,
-    //     postId,
-    //   }),
-    // );
-    // const subParams = encodeURI(
-    //   JSON.stringify({
-    //     commentId: subCommentId,
-    //     where: 'subCommentId',
-    //     roleId,
-    //     userId: authorId,
-    //     postId,
-    //   }),
-    // );
-    // const lastParams = encodeURI(
-    //   JSON.stringify({
-    //     commentId: lastCommentId,
-    //     where: 'postId',
-    //     postId,
-    //     userId: authorId,
-    //     roleId,
-    //   }),
-    // );
-    //
     try {
-      //   !!commentId && (await axios.delete(`${backUrl}/comments/${params}`));
-      //   !!fileId && (await axios.delete(`${backUrl}/api/files-comments/${fileParams}`));
-      //   !!subCommentId && (await axios.delete(`${backUrl}/api/sub-comments/${subParams}`));
-      //   !!lastCommentId && (await axios.delete(`${backUrl}/api/last-comments/${lastParams}`));
-      //
+      !!fileId && (await delComment(tableName, 'fileId', fileId));
+      !!fileCommentId && (await delComment(tableName, 'fileCommentId', fileCommentId));
+      !!commentId && (await delComment(tableName, 'commentId', commentId));
+      !!subCommentId && (await delComment(tableName, 'subCommentId', subCommentId));
+      !!lastCommentId && (await delComment(tableName, 'lastCommentId', lastCommentId));
+
       changeDel();
       onClose();
     } catch (e) {
@@ -158,9 +117,28 @@ export const OptionsComments = ({
 
   const updateComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
-      await updComment(tableName, commentId || fileCommentId || subCommentId || lastCommentId!, comment);
-      onCloseEdit();
-      resetForm(initialValues);
+      let upd: boolean | undefined;
+
+      if (!!fileId) {
+        upd = await updComment(tableName, 'fileId', fileId!, comment);
+      }
+      if (!!fileCommentId) {
+        upd = await updComment(tableName, 'fileCommentId', fileCommentId!, comment);
+      }
+      if (!!commentId) {
+        upd = await updComment(tableName, 'commentId', commentId!, comment);
+      }
+      if (!!subCommentId) {
+        upd = await updComment(tableName, 'subCommentId', subCommentId!, comment);
+      }
+      if (!!lastCommentId) {
+        upd = await updComment(tableName, 'lastCommentId', lastCommentId!, comment);
+      }
+
+      if (!!upd) {
+        onCloseEdit();
+        resetForm(initialValues);
+      }
     } catch (e) {
       console.error(e);
     }

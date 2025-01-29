@@ -21,6 +21,8 @@ export const FileComment = ({
   authorId,
   authorName,
   authorProfilePhoto,
+  liked,
+  likes,
   roleId,
   date,
 }: FilesCommentsType) => {
@@ -44,8 +46,9 @@ export const FileComment = ({
         fileId={fileId}
         fileCommentId={fileCommentId}
         authorId={authorId}
-        roleId={roleId!}
         userId={authorId}
+        liked={liked}
+        likes={likes}
         tableName={TableNameEnum.FileComments}>
         <NewComments
           fileId={fileId}

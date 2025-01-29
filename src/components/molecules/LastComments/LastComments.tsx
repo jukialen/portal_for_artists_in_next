@@ -51,6 +51,8 @@ export const LastComments = ({ subCommentId, roleId }: LastCommentsType) => {
               role,
               roleId,
               date,
+              liked,
+              likes,
             }: LastCommentType,
             index,
           ) => (
@@ -59,12 +61,14 @@ export const LastComments = ({ subCommentId, roleId }: LastCommentsType) => {
                 lastCommentId={lastCommentId}
                 content={content}
                 authorName={authorName}
+                authorProfilePhoto={authorProfilePhoto}
                 role={role}
                 roleId={roleId}
                 authorId={authorId}
                 subCommentId={subCommentId}
+                liked={liked}
+                likes={likes}
                 date={date}
-                authorProfilePhoto={authorProfilePhoto}
               />
             </DCProvider>
           ),

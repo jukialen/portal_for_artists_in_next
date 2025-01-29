@@ -49,7 +49,18 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId, groupsPo
       {subCommentsArray.length > 0 &&
         subCommentsArray.map(
           (
-            { subCommentId, content, authorName, authorProfilePhoto, role, roleId, authorId, date }: SubCommentType,
+            {
+              subCommentId,
+              content,
+              authorName,
+              authorProfilePhoto,
+              role,
+              roleId,
+              authorId,
+              date,
+              liked,
+              likes,
+            }: SubCommentType,
             index,
           ) => (
             <DCProvider key={index}>
@@ -64,8 +75,8 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId, groupsPo
                 fileCommentId={fileCommentId}
                 fileId={fileId}
                 postId={postId}
-                //                likes={likes}
-                //                liked={liked}
+                likes={likes}
+                liked={liked}
                 date={date}
               />
             </DCProvider>

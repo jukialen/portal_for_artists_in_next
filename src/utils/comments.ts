@@ -18,6 +18,7 @@ import {
   SubCommentType,
   TableNameEnum,
 } from 'types/global.types';
+import { likeList } from './likes';
 
 type DataArrayType = {
   subCommentId: string;
@@ -35,6 +36,16 @@ const locale = getCurrentLocale();
 const supabase = createServerComponentClient<Database>({ cookies });
 
 const dataDateObject = dateData();
+
+const likeRes = async (
+  authorId: string,
+  postId?: string,
+  fileId?: string,
+  commentId?: string,
+  fileCommentId?: string,
+  subCommentId?: string,
+  lastCommentId?: string,
+) => await likeList(authorId, postId, fileId, commentId, fileCommentId, subCommentId, lastCommentId);
 
 //POST
 export const newComment = async (commentData: NewCommentsType) => {
@@ -172,6 +183,8 @@ export const firstComments = async (postId: string, maxItems: number, groupsPost
         roleId: groupsPostsRoleId || roleId,
         authorId,
         postId,
+        likes: (await likeRes(authorId, postId)).likes,
+        liked: (await likeRes(authorId, postId)).liked,
         date: getDate(locale!, updatedAt! || createdAt!, await dateData()),
       });
     }
@@ -221,6 +234,8 @@ export const againComments = async (postId: string, maxItems: number, groupsPost
         role,
         roleId: groupsPostsRoleId || roleId,
         authorId,
+        likes: (await likeRes(authorId, postId)).likes,
+        liked: (await likeRes(authorId, postId)).liked,
         date: getDate(locale!, updatedAt! || createdAt!, await dateData()),
       });
     }
@@ -259,6 +274,8 @@ export const filesComments = async (fileId: string, maxItems: number) => {
         role: Roles?.role!,
         roleId,
         authorId,
+        likes: (await likeRes(authorId, undefined, fileId)).likes,
+        liked: (await likeRes(authorId, undefined, fileId)).liked,
         date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
       });
     }
@@ -299,6 +316,8 @@ export const againFilesComments = async (fileId: string, maxItems: number) => {
         role: Roles?.role!,
         roleId,
         authorId,
+        likes: (await likeRes(authorId, undefined, fileId)).likes,
+        liked: (await likeRes(authorId, undefined, fileId)).liked,
         date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
       });
     }
@@ -370,6 +389,8 @@ export const subComments = async (
         role: gRole!,
         roleId: !!commentId ? groupsPostsRoleId || roleId : roleId,
         authorId,
+        likes: (await likeRes(authorId, undefined, undefined, commentId, fileCommentId)).likes,
+        liked: (await likeRes(authorId, undefined, undefined, commentId, fileCommentId)).liked,
         date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         groupsPostsRoleId,
       });
@@ -445,6 +466,8 @@ export const againSubComments = async (
         role: gRole!,
         roleId: !!commentId ? groupsPostsRoleId || roleId : roleId,
         authorId,
+        likes: (await likeRes(authorId, undefined, undefined, commentId, fileCommentId)).likes,
+        liked: (await likeRes(authorId, undefined, undefined, commentId, fileCommentId)).liked,
         date: getDate(locale!, updatedAt! || createdAt!, await dataDateObject),
         groupsPostsRoleId,
       });
@@ -498,6 +521,8 @@ export const firstLastComments = async (subCommentId: string, maxItems: number, 
         role,
         roleId: groupsPostsRoleId || roleId,
         authorId,
+        likes: (await likeRes(authorId, undefined, undefined, undefined, undefined, undefined, lastCommentId)).likes,
+        liked: (await likeRes(authorId, undefined, undefined, undefined, undefined, undefined, lastCommentId)).liked,
         date: getDate(locale!, updatedAt! || createdAt!, await dateData()),
         subCommentId,
       });
@@ -548,6 +573,8 @@ export const againLastComments = async (subCommentId: string, maxItems: number, 
         role,
         roleId: groupsPostsRoleId || roleId,
         authorId,
+        likes: (await likeRes(authorId, undefined, undefined, undefined, undefined, undefined, lastCommentId)).likes,
+        liked: (await likeRes(authorId, undefined, undefined, undefined, undefined, undefined, lastCommentId)).liked,
         date: getDate(locale!, updatedAt! || createdAt!, await dateData()),
       });
     }
@@ -560,11 +587,16 @@ export const againLastComments = async (subCommentId: string, maxItems: number, 
 
 //PATCH
 
-export const updComment = async (tableName: TableNameEnum, id: string, content: string) => {
+export const updComment = async (
+  tableName: TableNameEnum,
+  nameId: 'commentId' | 'fileId' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
+  id: string,
+  content: string,
+) => {
   try {
-    const { error } = await supabase.from(tableName).insert([{ content }]).eq('commentId', id);
+    const { error } = await supabase.from(tableName).insert([{ content }]).eq(nameId, id);
 
-    if (error) return false;
+    return !error;
   } catch (e) {
     console.error(e);
   }
@@ -572,11 +604,15 @@ export const updComment = async (tableName: TableNameEnum, id: string, content: 
 
 ///DELETE
 
-export const delComment = async (tableName: TableNameEnum, id: string) => {
+export const delComment = async (
+  tableName: TableNameEnum,
+  nameId: 'commentId' | 'fileId' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
+  id: string,
+) => {
   try {
-    const { error } = await supabase.from(tableName).delete().eq('commentId', id);
+    const { error } = await supabase.from(tableName).delete().eq(nameId, id);
 
-    if (error) return false;
+    return !error;
   } catch (e) {
     console.error(e);
   }

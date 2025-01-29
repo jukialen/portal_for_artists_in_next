@@ -20,12 +20,7 @@ type FilesCommentsClientType = {
   pseudonym: string;
 };
 
-export const FilesCommentsClient = ({
-  firstFilesComments,
-  fileId,
-  noComments,
-  pseudonym,
-}: FilesCommentsClientType) => {
+export const FilesCommentsClient = ({ firstFilesComments, fileId, noComments, pseudonym }: FilesCommentsClientType) => {
   const maxItems = 30;
 
   const [commentsArray, setCommentsArray] = useState<FilesCommentsType[]>(firstFilesComments);
@@ -63,6 +58,8 @@ export const FilesCommentsClient = ({
               roleId,
               authorId,
               date,
+              liked,
+              likes,
             }: FilesCommentsType,
             index,
           ) => (
@@ -76,8 +73,10 @@ export const FilesCommentsClient = ({
                 role={role}
                 roleId={roleId}
                 authorId={authorId}
-                date={date}
                 pseudonym={pseudonym}
+                liked={liked}
+                likes={likes}
+                date={date}
               />
             </DCProvider>
           ),

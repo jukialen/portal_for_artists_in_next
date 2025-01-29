@@ -22,6 +22,8 @@ export const LastComment = ({
   authorId,
   subCommentId,
   date,
+  liked,
+  likes,
 }: LastCommentType) => {
   const { del } = useContext(DCContext);
 
@@ -45,9 +47,10 @@ export const LastComment = ({
 
       <OptionsComments
         lastCommentId={lastCommentId}
-        roleId={roleId!}
         authorId={authorId}
         userId={authorId}
+        liked={liked}
+        likes={likes}
         tableName={TableNameEnum.LastComments}>
         <NewComments
           profilePhoto={authorProfilePhoto!}

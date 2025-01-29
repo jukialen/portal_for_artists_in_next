@@ -23,6 +23,8 @@ export const Comment = ({
   authorId,
   postId,
   date,
+  liked,
+  likes,
 }: CommentType) => {
   const { del } = useContext(DCContext);
 
@@ -45,10 +47,11 @@ export const Comment = ({
       </div>
       <OptionsComments
         commentId={commentId}
-        roleId={roleId!}
         authorId={authorId}
         userId={authorId}
-        tableName={TableNameEnum.Comments}>
+        tableName={TableNameEnum.Comments}
+        liked={liked}
+        likes={likes}>
         <NewComments
           profilePhoto={authorProfilePhoto}
           commentId={commentId}

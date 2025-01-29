@@ -274,6 +274,8 @@ type Comment = Time & {
   date?: string;
   pseudonym?: string;
   content: string;
+  liked: boolean;
+  likes: number;
 };
 
 export type NewCommentsType = {

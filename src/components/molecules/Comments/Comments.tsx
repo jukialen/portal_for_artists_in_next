@@ -48,7 +48,19 @@ export const Comments = ({ postId, roleId }: CommentsType) => {
       {commentsArray.length > 0 ? (
         commentsArray.map(
           (
-            { commentId, content, authorName, authorProfilePhoto, role, roleId, authorId, postId, date }: CommentType,
+            {
+              commentId,
+              content,
+              authorName,
+              authorProfilePhoto,
+              role,
+              roleId,
+              authorId,
+              postId,
+              date,
+              liked,
+              likes,
+            }: CommentType,
             index,
           ) => (
             <DCProvider key={index}>
@@ -62,6 +74,8 @@ export const Comments = ({ postId, roleId }: CommentsType) => {
                 authorId={authorId}
                 postId={postId}
                 date={date}
+                liked={liked}
+                likes={likes}
               />
             </DCProvider>
           ),
