@@ -3,12 +3,14 @@ import Link from 'next/link';
 
 import { getI18n } from 'locales/server';
 
+import { LangType } from 'types/global.types';
+
 import { HeaderButtons } from 'components/atoms/HeaderButtons/HeaderButtons';
 import { Nav } from 'components/atoms/Nav/Nav';
 
 import styles from './Header.module.scss';
 
-export const Header = async ({ locale }: { locale: string }) => {
+export const Header = async ({ locale }: { locale: LangType }) => {
   const t = await getI18n();
 
   const headers = {

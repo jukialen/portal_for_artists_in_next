@@ -36,16 +36,14 @@ export const SkeletonRootLayout = ({ children, session, userMenuComponents, loca
   ) {
     push(`/${locale}/`);
   }
-  
+
   if (
     session &&
-    (
-      pathname === `/${locale}/` ||
+    (pathname === `/${locale}/` ||
       pathname === `/${locale}/signin` ||
       pathname === `/${locale}/signup` ||
       pathname === `/${locale}/forgotten` ||
-      pathname === `/${locale}/new-password`
-    )
+      pathname === `/${locale}/new-password`)
   ) {
     push(`/${locale}/app`);
   }

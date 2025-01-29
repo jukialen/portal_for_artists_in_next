@@ -1,9 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Button, Icon } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
+
+import { LangType } from 'types/global.types';
 
 import styles from 'components/organisms/Header/Header.module.scss';
+
 import { BiLogInCircle } from 'react-icons/bi';
 import { MdOutlineSettings } from 'react-icons/md';
 
@@ -13,7 +16,7 @@ type HeadersType = {
     signIn: string;
     signUp: string;
   };
-  locale: string
+  locale: LangType;
 };
 
 export const HeaderButtons = ({ headers, locale }: HeadersType) => {
@@ -27,7 +30,7 @@ export const HeaderButtons = ({ headers, locale }: HeadersType) => {
         id={styles.settings_button}
         onClick={() => push(`/${locale}/signin`)}
         aria-label="sign in/up button">
-        <Icon as={BiLogInCircle} />
+        <BiLogInCircle />
         <p>{headers.signIn}</p>
       </Button>
       <Button
@@ -35,7 +38,7 @@ export const HeaderButtons = ({ headers, locale }: HeadersType) => {
         onClick={() => push(`/${locale}/settings`)}
         className={styles.menu_buttons}
         aria-label="Settings">
-        <Icon as={MdOutlineSettings} />
+        <MdOutlineSettings />
         <p>{headers.title}</p>
       </Button>
     </>

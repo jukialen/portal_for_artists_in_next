@@ -52,7 +52,7 @@ export default async function RootLayout({ children, params }: ChildrenType) {
       <body>
         <noscript
           dangerouslySetInnerHTML={{
-            __html: `<iframe src='https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js' height="0" width="0" style="display: none; visibility: hidden;"></iframe>`,
+            __html: `<iframe src="https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js" height="0" width="0" style="display: none; visibility: hidden;"></iframe>`,
           }}
         />
 
