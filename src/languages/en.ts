@@ -401,4 +401,6 @@ export default {
   cancel: 'Cancel',
   chooseTag: 'Choose tag',
   newFile: 'New File',
+  notFound: 'Nothing found',
+  searchResultTitle: 'Search results for: ',
 } as const;

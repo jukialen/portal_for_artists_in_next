@@ -402,4 +402,6 @@ export default {
   cancel: 'Anuluj',
   chooseTag: 'Wybierz tag',
   newFile: 'Nowy plik',
+  notFound: 'Nic nie znaleziono',
+  searchResultTitle: 'Wyniki wyszukiwania dla: ',
 } as const;

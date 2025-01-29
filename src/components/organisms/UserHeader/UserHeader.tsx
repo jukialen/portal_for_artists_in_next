@@ -2,13 +2,14 @@ import { getI18n, getScopedI18n } from 'locales/server';
 
 import { UserHeaderCom } from 'components/atoms/UserHeaderCom/UserHeaderCom';
 
-import { getUserData } from "helpers/getUserData";
+import { getUserData } from 'helpers/getUserData';
 
 import styles from './UserHeader.module.scss';
 
 export async function UserHeader({ locale }: { locale: string }) {
   const t = await getI18n();
   const tNav = await getScopedI18n('Nav');
+  const tAside = await getScopedI18n('Aside');
 
   const UserHeaderTranslate = {
     home: tNav('home'),
@@ -22,12 +23,29 @@ export async function UserHeader({ locale }: { locale: string }) {
     signIn: tNav('signIn'),
     signup: tNav('signUp'),
   };
-  
+
+  const translated = {
+    category: tAside('category'),
+    drawings: tAside('drawings'),
+    realistic: tAside('realistic'),
+    manga: tAside('manga'),
+    anime: tAside('anime'),
+    comics: tNav('profile'),
+    photographs: tAside('photographs'),
+    animations: tAside('animations'),
+    videos: tAside('videos'),
+    others: tAside('others'),
+    friends: tAside('friends'),
+    groups: tAside('groups'),
+    notFound: t('notFound'),
+    searchResultTitle: t('searchResultTitle'),
+  };
+
   const userData = await getUserData();
-  
+
   return (
     <header className={styles.header}>
-      <UserHeaderCom headers={UserHeaderTranslate} locale={locale} userData={userData!} />
+      <UserHeaderCom headers={UserHeaderTranslate} locale={locale} userData={userData!} translated={translated} />
     </header>
   );
 }

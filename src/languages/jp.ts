@@ -379,7 +379,7 @@ export default {
     Mode: {
       light: '明るい',
       dark: '暗い',
-    }
+    },
   },
   Date: {
     second: '秒',
@@ -393,5 +393,7 @@ export default {
   edit: 'エディト',
   cancel: '取り止める',
   chooseTag: 'タグが選ぶ',
-  newFile: '新しのファイル'
+  newFile: '新しのファイル',
+  notFound: '何も見つからない',
+  searchResultTitle: '成績の探し物：',
 } as const;
