@@ -20,27 +20,39 @@ export default async function Login({ params: { locale } }: { params: { locale: 
   const t = await getI18n();
   const tNavForm = await getScopedI18n('NavForm');
 
+  const translated = {
+    statusLogin: tNavForm('statusLogin'),
+    wrongLoginData: tNavForm('wrongLoginData'),
+    titleOfLogin: tNavForm('titleOfLogin'),
+    email: tNavForm('email'),
+    password: tNavForm('password'),
+    loginSubmit: tNavForm('loginSubmit'),
+  };
+
   return (
     <>
       <div className={styles.login}>
-        <FormSignIn locale={locale} />
+        <div className={styles.orientation}>
+          <FormSignIn locale={locale} translated={translated} />
 
-        <Link href={`/${locale}/forgotten`} className={styles.forgotten}>
-          {tNavForm('forgottenPasswordLink')}
-        </Link>
-
-        <div className={styles.dividerWithText}>
-          <hr />
-          <h4 className={styles.provider__title}>{tNavForm('providerTitleLogin')}</h4>
-          <hr />
+          <Link href={`/${locale}/forgotten`} className={styles.forgotten}>
+            {tNavForm('forgottenPasswordLink')}
+          </Link>
         </div>
+        <div className={styles.orientation}>
+          <div className={styles.dividerWithText}>
+            <hr />
+            <h4 className={styles.provider__title}>{tNavForm('providerTitleLogin')}</h4>
+            <hr />
+          </div>
 
-        <Providers locale={locale} />
+          <Providers locale={locale} />
 
-        <p className={styles.changeForm}>
-          {tNavForm('changeToLogin')}
-          <Link href={`/${locale}/signup`}>{t('Nav.signUp')}</Link>
-        </p>
+          <p className={styles.changeForm}>
+            {tNavForm('changeToLogin')}
+            <Link href={`/${locale}/signup`}>{t('Nav.signUp')}</Link>
+          </p>
+        </div>
       </div>
     </>
   );

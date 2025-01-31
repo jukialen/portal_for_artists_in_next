@@ -9,9 +9,7 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { IconButton, Input, Stack, StackSeparator } from '@chakra-ui/react';
 import { InputGroup } from 'components/ui/input-group';
 
-import { useScopedI18n } from 'locales/client';
-
-import { ResetFormType, UserFormType } from 'types/global.types';
+import { LangType, ResetFormType, UserFormType } from 'types/global.types';
 
 import { initialValuesForSignInUp } from 'constants/objects';
 
@@ -21,19 +19,29 @@ import { FormError } from 'components/atoms/FormError/FormError';
 import styles from './FormSignIn.module.scss';
 import { GrFormView, GrFormViewHide } from 'react-icons/gr';
 
-export const FormSignIn = ({ locale }: { locale: string }) => {
+export const FormSignIn = ({
+  locale,
+  translated,
+}: {
+  locale: LangType;
+  translated: {
+    statusLogin: string;
+    wrongLoginData: string;
+    titleOfLogin: string;
+    email: string;
+    password: string;
+    loginSubmit: string;
+  };
+}) => {
   const [show, setShow] = useState(false);
   const [valuesFields, setValuesFields] = useState('');
 
   const { push, refresh } = useRouter();
-
-  const tNavForm = useScopedI18n('NavForm');
-
+  
   const schemaValidation = Yup.object({
     email: SchemaValidation().email,
     password: SchemaValidation().password,
   });
-
   const showPass = () => setShow(!show);
 
   const signIn = async ({ email, password }: UserFormType, { resetForm }: ResetFormType) => {
@@ -42,10 +50,10 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password: password! });
 
     if (!!error && error.status !== 200) {
-      setValuesFields(tNavForm('wrongLoginData'));
+      setValuesFields(translated.wrongLoginData);
     } else {
       resetForm(initialValuesForSignInUp);
-      setValuesFields(tNavForm('statusLogin'));
+      setValuesFields(translated.statusLogin);
 
       const { data: dataUser } = await supabase
         .from('Users')
@@ -65,14 +73,14 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
     <Formik initialValues={initialValuesForSignInUp} validationSchema={schemaValidation} onSubmit={signIn}>
       {({ values, handleChange, errors, touched }) => (
         <Form className={styles.form}>
-          <h2 className={styles.title}>{tNavForm('titleOfLogin')}</h2>
+          <h2 className={styles.title}>{translated.titleOfLogin}</h2>
 
           <Input
             name="email"
             type="email"
             value={values.email}
             onChange={handleChange}
-            placeholder={tNavForm('email')}
+            placeholder={translated.email}
             className={touched.email && !!errors.email ? styles.inputForm__error : styles.inputForm}
           />
 
@@ -81,6 +89,7 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
           <Stack separator={<StackSeparator />}>
             <InputGroup
               flex="1"
+              className={styles.inputGroup}
               endElement={
                 <IconButton className={styles.showingPass} onClick={showPass} aria-label="show and hide password">
                   {show ? <GrFormView /> : <GrFormViewHide />}
@@ -91,7 +100,7 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
                 type={show ? 'text' : 'password'}
                 value={values.password}
                 onChange={handleChange}
-                placeholder={tNavForm('password')}
+                placeholder={translated.password}
                 className={touched.password && !!errors.password ? styles.inputForm__error : styles.inputForm}
               />
             </InputGroup>
@@ -100,7 +109,7 @@ export const FormSignIn = ({ locale }: { locale: string }) => {
           <FormError nameError="password" />
 
           <button type="submit" className={`button ${styles.submit__button}`} aria-label="login button">
-            {tNavForm('loginSubmit')}
+            {translated.loginSubmit}
           </button>
 
           {!!valuesFields && <Alerts valueFields={valuesFields} />}

@@ -1,4 +1,4 @@
-@use '../../../styles/variables' as *;
+@use 'styles/variables' as *;
 
 .form {
 	display: flex;
@@ -27,9 +27,9 @@
 	}
 
 	.showingPass {
-		height: 85%;
-		top: 1rem;
-		right: 1.3rem;
+		height: 2rem;
+		width: 2rem;
+		margin: 1rem 1rem .5rem 0;
 		color: $dark__background__light__color;
 		background-color: $another__color;
 		border-color: $primary__color;

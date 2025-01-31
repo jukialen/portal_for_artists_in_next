@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { setStaticParamsLocale } from 'next-international/server';
 
-import { LangType } from "types/global.types";
+import { LangType } from 'types/global.types';
 
 import { HeadCom } from 'constants/HeadCom';
 
@@ -22,31 +22,45 @@ export default async function Registration({ params: { locale } }: { params: { l
   const t = await getI18n();
   const tNavForm = await getScopedI18n('NavForm');
 
+  const translated = {
+    successInfoRegistration: tNavForm('successInfoRegistration'),
+    theSameEmail: tNavForm('theSameEmail'),
+    titleOfRegistration: tNavForm('titleOfRegistration'),
+    email: tNavForm('email'),
+    password: tNavForm('password'),
+    createSubmit: tNavForm('createSubmit'),
+    loadingRegistration: tNavForm('loadingRegistration'),
+    error: t('error'),
+  };
+
   return (
     <>
       <div className={styles.create__account}>
-        <FormSignUp locale={locale} />
-
-        <div className={styles.dividerWithText}>
-          <hr />
-          <h4 className={styles.provider__title}>{tNavForm('providerTitleRegistration')}</h4>
-          <hr />
+        <div className={styles.orientation}>
+          <FormSignUp locale={locale} translated={translated} />
         </div>
+        <div className={styles.orientation}>
+          <div className={styles.dividerWithText}>
+            <hr />
+            <h4 className={styles.provider__title}>{tNavForm('providerTitleRegistration')}</h4>
+            <hr />
+          </div>
 
-        <Providers locale={locale} />
+          <Providers locale={locale} />
 
-        <p className={styles.acceptInfo}>
-          {tNavForm('acceptInfoOne')}
-          <Link href={`/${locale}/terms`}>{tNavForm('acceptInfoTwo')}</Link>
-          {tNavForm('acceptInfoThree')}
-          <Link href={`/${locale}/privacy`}>{tNavForm('acceptInfoFour')}</Link>
-          {tNavForm('dot')}
-        </p>
+          <p className={styles.acceptInfo}>
+            {tNavForm('acceptInfoOne')}
+            <Link href={`/${locale}/terms`}>{tNavForm('acceptInfoTwo')}</Link>
+            {tNavForm('acceptInfoThree')}
+            <Link href={`/${locale}/privacy`}>{tNavForm('acceptInfoFour')}</Link>
+            {tNavForm('dot')}
+          </p>
 
-        <p className={styles.changeForm}>
-          {tNavForm('changeToCreate')}
-          <Link href={`/${locale}/signin`}>{t('Nav.signIn')}</Link>
-        </p>
+          <p className={styles.changeForm}>
+            {tNavForm('changeToCreate')}
+            <Link href={`/${locale}/signin`}>{t('Nav.signIn')}</Link>
+          </p>
+        </div>
       </div>
     </>
   );
