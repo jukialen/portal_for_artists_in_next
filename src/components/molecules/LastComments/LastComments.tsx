@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { againLastComments, firstLastComments } from 'utils/comments';
+import { lastComments } from 'utils/comments';
 
 import { LastCommentType } from 'types/global.types';
 
@@ -19,7 +19,7 @@ export const LastComments = ({ subCommentId, roleId }: LastCommentsType) => {
   const maxItems = 5;
 
   useEffect(() => {
-    firstLastComments(subCommentId, maxItems, roleId).then((t) => {
+    lastComments(subCommentId, maxItems, roleId, 'first').then((t) => {
       setLastCommentsArray(t!);
       !!t && t.length === maxItems && setLastVisible(t[t.length - 1].createdAt!);
     });
@@ -27,7 +27,7 @@ export const LastComments = ({ subCommentId, roleId }: LastCommentsType) => {
 
   const nextShowingComments = async () => {
     lastVisible !== '' &&
-      againLastComments(subCommentId, maxItems, roleId).then((t) => {
+      lastComments(subCommentId, maxItems, roleId, 'again').then((t) => {
         setLastCommentsArray(t!);
         if (!!t && t.length === maxItems) {
           setLastVisible(t[t.length - 1].createdAt!);

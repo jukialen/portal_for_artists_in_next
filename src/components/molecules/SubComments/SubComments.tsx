@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { SubCommentType } from 'types/global.types';
 
-import { againSubComments, subComments } from 'utils/comments';
+import { subComments } from 'utils/comments';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -25,23 +25,25 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId, groupsPo
   const maxItems = 30;
 
   useEffect(() => {
-    subComments(maxItems, groupsPostsRoleId, commentId, fileCommentId).then((t) => {
-      setSubCommentsArray(t);
-      t.length === maxItems &&
-        setLastVisible(t[t.length - 1].commentId ? t[t.length - 1].commentId! : t[t.length - 1].fileCommentId!);
+    subComments(maxItems, 'first', groupsPostsRoleId, commentId, fileCommentId, '').then((t) => {
+      setSubCommentsArray(t!);
+      t!.length === maxItems &&
+        setLastVisible(t![t!.length - 1].commentId ? t![t!.length - 1].commentId! : t![t!.length - 1].fileCommentId!);
     });
   }, [commentId, fileCommentId, groupsPostsRoleId]);
 
   const nextComments = async () => {
     lastVisible !== '' &&
-      againSubComments(maxItems, lastVisible!, groupsPostsRoleId, commentId, fileCommentId).then((t) => {
-        const nextArray = subCommentsArray.concat(...t);
-        setSubCommentsArray(nextArray);
-        if (t.length === maxItems) {
-          setLastVisible(t[t.length - 1].commentId ? t[t.length - 1].commentId! : t[t.length - 1].fileCommentId!);
-          setI(++i);
-        }
-      });
+    subComments(maxItems, 'again', groupsPostsRoleId, commentId, fileCommentId, lastVisible).then(
+        (t) => {
+          const nextArray = subCommentsArray.concat(...t!);
+          setSubCommentsArray(nextArray);
+          if (t!.length === maxItems) {
+            setLastVisible(t![t!.length - 1].commentId ? t![t!.length - 1].commentId! : t![t!.length - 1].fileCommentId!);
+            setI(++i);
+          }
+        },
+      );
   };
 
   return (

@@ -6,7 +6,7 @@ import { useScopedI18n } from 'locales/client';
 
 import { CommentType } from 'types/global.types';
 
-import { againComments, firstComments } from 'utils/comments';
+import { comments } from "utils/comments";
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -26,7 +26,7 @@ export const Comments = ({ postId, roleId }: CommentsType) => {
   const maxItems = 30;
 
   useEffect(() => {
-    firstComments(postId, maxItems, roleId).then((t) => {
+    comments(postId, maxItems, roleId, 'first').then((t) => {
       setCommentsArray(t!);
       !!t && t.length === maxItems && setLastVisible(t[t.length - 1].postId!);
     });
@@ -34,7 +34,7 @@ export const Comments = ({ postId, roleId }: CommentsType) => {
 
   const nextComments = () =>
     lastVisible !== '' &&
-    againComments(postId, maxItems, roleId).then((t) => {
+    comments(postId, maxItems, roleId, 'again').then((t) => {
       const nextArray = commentsArray.concat(...t!);
 
       setCommentsArray(nextArray);

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { againFilesComments } from 'utils/comments';
+import { filesComments } from 'utils/comments';
 
 import { FilesCommentsType } from 'types/global.types';
 
@@ -31,7 +31,7 @@ export const FilesCommentsClient = ({ firstFilesComments, fileId, noComments, ps
 
   const nextComments = async () => {
     try {
-      const nextPage = await againFilesComments(fileId, maxItems);
+      const nextPage = (await filesComments(fileId, maxItems, 'again'))!;
 
       nextPage.length === maxItems && setLastVisible(nextPage[nextPage.length - 1].createdAt!);
 
