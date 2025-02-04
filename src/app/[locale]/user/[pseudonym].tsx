@@ -4,7 +4,6 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Tabs } from '@chakra-ui/react';
 
-import { cloudFrontUrl } from 'constants/links';
 import { HeadCom } from 'constants/HeadCom';
 import { Database } from 'types/database.types';
 import { GroupUsersType, LangType } from 'types/global.types';
@@ -13,7 +12,7 @@ import { getI18n, getScopedI18n } from 'locales/server';
 
 import { dateData } from 'helpers/dateData';
 import { getUserData } from 'helpers/getUserData';
-import { graphics, tags, videosAnimations } from 'utils/files';
+import { graphics, videosAnimations } from 'utils/files';
 import { getFirstFriends } from 'utils/friends';
 
 import { FriendsButtons } from 'components/atoms/FriendsButtons/FriendsButtons';
@@ -61,7 +60,7 @@ async function getAdminGroups(adminId: string, maxItems: number) {
     for (const admin of data!) {
       adminArray.push({
         name: admin.name!,
-        logo: !!admin.logo ? `https://${cloudFrontUrl}/${admin.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        logo: !!admin.logo ? admin.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
       });
     }
 
@@ -86,9 +85,7 @@ async function getModGroups(userId: string, maxItems: number) {
     for (const mod of data!) {
       modArray.push({
         name: mod.name!,
-        logo: !!mod.Groups?.logo
-          ? `https://${cloudFrontUrl}/${mod.Groups.logo}`
-          : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        logo: !!mod.Groups?.logo ? mod.Groups.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
       });
     }
 
@@ -113,9 +110,7 @@ async function getMembersGroups(userId: string, maxItems: number) {
     for (const mem of data!) {
       memArray.push({
         name: mem.name!,
-        logo: !!mem.Groups?.logo
-          ? `https://${cloudFrontUrl}/${mem.Groups.logo}`
-          : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        logo: !!mem.Groups?.logo ? mem.Groups.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
       });
     }
 
@@ -200,8 +195,8 @@ export default async function User({
   const modGroups = await getModGroups(user?.id!, maxItems);
   const membersGroups = await getMembersGroups(user?.id!, maxItems);
   const firstGraphics = await graphics(locale, maxItems, user?.pseudonym!, dataDateObject);
-  const firstAnimations = await videosAnimations(tags[0], locale, maxItems, user?.pseudonym!, dataDateObject);
-  const firstVideos = await videosAnimations(tags[1], locale, maxItems, user?.pseudonym!, dataDateObject);
+  const firstAnimations = await videosAnimations(0, locale, maxItems, user?.pseudonym!, dataDateObject);
+  const firstVideos = await videosAnimations(1, locale, maxItems, user?.pseudonym!, dataDateObject);
 
   const favLength = (): number => {
     let favs = 0;

@@ -8,7 +8,7 @@ import { LangType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
 import { dateData } from 'helpers/dateData';
-import { graphics, tags, videosAnimations } from 'utils/files';
+import { graphics, videosAnimations } from 'utils/files';
 import { getFirstFriends } from 'utils/friends';
 import { adminList, modsUsersList } from 'utils/groups';
 
@@ -59,8 +59,8 @@ export default async function Account({ params: { locale } }: { params: { locale
   };
 
   const firstGraphics = await graphics(locale, maxItems, userData?.id!, dataDateObject);
-  const firstAnimations = await videosAnimations(tags[0], locale, maxItems, userData?.id!, dataDateObject);
-  const firstVideos = await videosAnimations(tags[1], locale, maxItems, userData?.id!, dataDateObject);
+  const firstAnimations = await videosAnimations(0, locale, maxItems, userData?.id!, dataDateObject);
+  const firstVideos = await videosAnimations(1, locale, maxItems, userData?.id!, dataDateObject);
   const firstFriendsList = await getFirstFriends(dataDateObject, userData?.id!, locale, maxItems);
   const firstAdminList = await adminList(maxItems);
   const firstModsUsersList = await modsUsersList(maxItems);

@@ -10,7 +10,7 @@ import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
 const supabase = createServerComponentClient<Database>({ cookies });
 
-export const tags: Tags[] = ['animations', 'videos'];
+const tags: Tags[] = ['animations', 'videos'];
 
 export const graphics = async (
   locale: LangType,
@@ -57,7 +57,7 @@ export const graphics = async (
 };
 
 export const videosAnimations = async (
-  tags: Tags,
+  tag: 0 | 1,
   locale: LangType,
   maxItems: number,
   authorId: string,
@@ -70,7 +70,7 @@ export const videosAnimations = async (
       .from('Files')
       .select(selectFiles)
       .eq('authorId', authorId)
-      .eq('tags', tags)
+      .eq('tags', tags[tag])
       .order('createdAt', { ascending: false })
       .limit(maxItems);
 

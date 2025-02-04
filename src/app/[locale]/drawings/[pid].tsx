@@ -4,7 +4,6 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { cloudFrontUrl } from 'constants/links';
 import { selectFiles } from 'constants/selects';
 import { Database } from 'types/database.types';
 import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
@@ -38,14 +37,14 @@ async function getFirstDrawings(pid: string, maxItems: number, locale: LangType,
     if (data?.length === 0 || !!error) return filesArray;
 
     for (const file of data) {
-      const { fileId, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
+      const { fileId, fileUrl, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
 
       filesArray.push({
         fileId,
         name,
         shortDescription: shortDescription!,
         authorName: Users?.pseudonym!,
-        fileUrl: `https://${cloudFrontUrl}/${name}`,
+        fileUrl: fileUrl,
         authorId: authorId!,
         time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
       });

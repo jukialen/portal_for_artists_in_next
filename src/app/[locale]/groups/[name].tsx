@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { cloudFrontUrl } from 'constants/links';
 import { HeadCom } from 'constants/HeadCom';
 import { Database } from 'types/database.types';
 import { DateObjectType, LangType, MemberType, PostsType } from 'types/global.types';
@@ -75,7 +74,7 @@ async function joinedUser(name: string, stringError: string): Promise<JoinUser> 
       const joinedUser = !!userGroupData;
 
       return {
-        logo: `https://${cloudFrontUrl}/${Groups?.logo}`,
+        logo: Groups?.logo!,
         description: Groups?.description!,
         regulation: Groups?.regulation!,
         join: joinedUser,
