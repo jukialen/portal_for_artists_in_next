@@ -190,7 +190,7 @@ export default async function User({
   const user = await getUserData();
   const maxItems = 30;
   const fidsFavs = await getFidAndFavs(pseudonymName);
-  const firstFriends = await getFirstFriends(dataDateObject, fidsFavs?.pseudonymId!, locale, maxItems);
+  const firstFriends = await getFirstFriends(fidsFavs?.pseudonymId!, maxItems);
   const adminGroups = await getAdminGroups(user?.id!, maxItems);
   const modGroups = await getModGroups(user?.id!, maxItems);
   const membersGroups = await getMembersGroups(user?.id!, maxItems);

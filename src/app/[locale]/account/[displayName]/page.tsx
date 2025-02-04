@@ -61,7 +61,7 @@ export default async function Account({ params: { locale } }: { params: { locale
   const firstGraphics = await graphics(locale, maxItems, userData?.id!, dataDateObject);
   const firstAnimations = await videosAnimations(0, locale, maxItems, userData?.id!, dataDateObject);
   const firstVideos = await videosAnimations(1, locale, maxItems, userData?.id!, dataDateObject);
-  const firstFriendsList = await getFirstFriends(dataDateObject, userData?.id!, locale, maxItems);
+  const firstFriendsList = await getFirstFriends(userData?.id!, maxItems);
   const firstAdminList = await adminList(maxItems);
   const firstModsUsersList = await modsUsersList(maxItems);
   return (
