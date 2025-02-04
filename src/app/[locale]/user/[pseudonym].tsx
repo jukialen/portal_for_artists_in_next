@@ -10,7 +10,6 @@ import { GroupUsersType, LangType } from 'types/global.types';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { dateData } from 'helpers/dateData';
 import { getUserData } from 'helpers/getUserData';
 import { graphics, videosAnimations } from 'utils/files';
 import { getFirstFriends } from 'utils/friends';
@@ -134,8 +133,7 @@ export default async function User({
   params: { locale: LangType; pseudonym: string };
 }) {
   setStaticParamsLocale(locale);
-
-  const dataDateObject = await dateData();
+  
   const tAccountaMenu = await getScopedI18n('Account.aMenu');
   const tAside = await getScopedI18n('Aside');
   const t = await getI18n();
@@ -194,9 +192,9 @@ export default async function User({
   const adminGroups = await getAdminGroups(user?.id!, maxItems);
   const modGroups = await getModGroups(user?.id!, maxItems);
   const membersGroups = await getMembersGroups(user?.id!, maxItems);
-  const firstGraphics = await graphics(locale, maxItems, user?.pseudonym!, dataDateObject);
-  const firstAnimations = await videosAnimations(0, locale, maxItems, user?.pseudonym!, dataDateObject);
-  const firstVideos = await videosAnimations(1, locale, maxItems, user?.pseudonym!, dataDateObject);
+  const firstGraphics = await graphics(maxItems, fidsFavs?.pseudonymId!, 'first');
+  const firstAnimations = await videosAnimations(0, maxItems, fidsFavs?.pseudonymId!, 'first');
+  const firstVideos = await videosAnimations(1, maxItems, fidsFavs?.pseudonymId!, 'first');
 
   const favLength = (): number => {
     let favs = 0;
@@ -262,37 +260,31 @@ export default async function User({
             <Tabs.Content size="sm" isFitted className={styles.tabsForPanels}>
               <PhotosGallery
                 id={user?.id!}
-                locale={locale}
                 pseudonym={user?.pseudonym!}
                 profilePhoto={user?.profilePhoto!}
                 author={pseudonymName}
                 firstGraphics={firstGraphics}
                 tGallery={tGallery}
-                dataDateObject={dataDateObject}
               />
             </Tabs.Content>
             <Tabs.Content className={styles.tabPanel} role="tabpanel">
               <AnimatedGallery
                 id={user?.id!}
-                locale={locale}
                 pseudonym={user?.pseudonym!}
                 profilePhoto={user?.profilePhoto!}
                 author={pseudonymName}
                 firstAnimations={firstAnimations}
                 tGallery={tGallery}
-                dataDateObject={dataDateObject}
               />
             </Tabs.Content>
             <Tabs.Content className={styles.tabPanel} role="tabpanel">
               <VideoGallery
                 id={user?.id!}
-                locale={locale}
                 pseudonym={user?.pseudonym!}
                 profilePhoto={user?.profilePhoto!}
                 author={pseudonymName}
                 firstVideos={firstVideos}
                 tGallery={tGallery}
-                dataDateObject={dataDateObject}
               />
             </Tabs.Content>
           </Tabs.Root>

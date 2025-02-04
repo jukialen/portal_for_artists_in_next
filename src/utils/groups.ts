@@ -37,7 +37,7 @@ export const modsUsersList = async (maxItems: number) => {
 
   try {
     const res: { members: GroupUserType[]; moderators: GroupUserType[] } = await fetch(
-      `${backUrl}/en/api/groups/modsUsers/list?${queryString}`,
+      `${backUrl}/en/api/groups/mods-users/list?${queryString}`,
       {
         method: 'GET',
       },

@@ -2,14 +2,10 @@
 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { selectFiles } from 'constants/selects';
-import { Database } from 'types/database.types';
+import { graphics } from 'utils/files';
+
 import { FileType, GalleryType } from 'types/global.types';
-
-import { getDate } from 'helpers/getDate';
-import { getFileRoleId } from 'utils/roles';
 
 import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
@@ -23,8 +19,6 @@ export const PhotosGallery = ({
   pseudonym,
   profilePhoto,
   tGallery,
-  locale,
-  dataDateObject,
   firstGraphics,
 }: GalleryType) => {
   const [userPhotos, setUserPhotos] = useState<FileType[]>(firstGraphics!);
@@ -34,46 +28,18 @@ export const PhotosGallery = ({
   let [i, setI] = useState(1);
 
   const pathname = usePathname();
-  const supabase = createClientComponentClient<Database>();
   const maxItems = 30;
 
   const nextElements = async () => {
     try {
-      const nextArray: FileType[] = [];
-
-      const { data } = await supabase
-        .from('Files')
-        .select(selectFiles)
-        .eq('authorId', id)
-        .in('tags', ['realistic', 'manga', 'anime', 'comics', 'photographs'])
-        .order('createdAt', { ascending: false })
-        .lt('fileId', lastVisible!)
-        .limit(maxItems);
-
-      if (data?.length === 0) return userPhotos;
-
-      for (const file of data!) {
-        const { fileId, name, tags, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt } = file;
-
-        const roleId = await getFileRoleId(fileId, authorId!);
-
-        nextArray.push({
-          fileId,
-          name,
-          shortDescription: shortDescription!,
-          fileUrl,
-          authorId: authorId!,
-          authorName: Users?.pseudonym!,
-          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-          tags,
-          roleId,
-        });
-      }
+      const nextArray: FileType[] = (await graphics(maxItems, id, 'again', lastVisible!))!;
 
       const newArray = userPhotos.concat(...nextArray);
       setUserPhotos(newArray);
-      setLastVisible(data?.length === 0 ? null : nextArray[nextArray.length - 1].fileId!);
-      data?.length !== 0 && setI(++i);
+      if (nextArray.length === maxItems) {
+        setLastVisible(nextArray[nextArray.length - 1].createdAt!);
+        setI(++i);
+      }
     } catch (e) {
       console.error(e);
     }

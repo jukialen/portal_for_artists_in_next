@@ -7,7 +7,6 @@ import { HeadCom } from 'constants/HeadCom';
 import { LangType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
-import { dateData } from 'helpers/dateData';
 import { graphics, videosAnimations } from 'utils/files';
 import { getFirstFriends } from 'utils/friends';
 import { adminList, modsUsersList } from 'utils/groups';
@@ -24,11 +23,8 @@ export default async function Account({ params: { locale } }: { params: { locale
   const tAside = await getScopedI18n('Aside');
   const tMenu = await getScopedI18n('Account.aMenu');
   const maxItems = 30;
-
-  const dataDateObject = await dateData();
-
+  
   const userData = await getUserData();
-
   const tMain = {
     validateRequired: t('NavForm.validateRequired'),
     uploadFile: t('AnotherForm.uploadFile'),
@@ -58,9 +54,9 @@ export default async function Account({ params: { locale } }: { params: { locale
     noFriends: t('Friends.noFriends'),
   };
 
-  const firstGraphics = await graphics(locale, maxItems, userData?.id!, dataDateObject);
-  const firstAnimations = await videosAnimations(0, locale, maxItems, userData?.id!, dataDateObject);
-  const firstVideos = await videosAnimations(1, locale, maxItems, userData?.id!, dataDateObject);
+  const firstGraphics = await graphics(maxItems, userData?.id!, 'first');
+  const firstAnimations = await videosAnimations(0, maxItems, userData?.id!, 'first');
+  const firstVideos = await videosAnimations(1, maxItems, userData?.id!, 'first');
   const firstFriendsList = await getFirstFriends(userData?.id!, maxItems);
   const firstAdminList = await adminList(maxItems);
   const firstModsUsersList = await modsUsersList(maxItems);
@@ -71,8 +67,6 @@ export default async function Account({ params: { locale } }: { params: { locale
         id={userData?.id!}
         author={userData?.pseudonym!}
         profilePhoto={userData?.profilePhoto!}
-        dataDateObject={dataDateObject}
-        locale={locale}
         tDash={tDash}
         tGallery={tGallery}
         tFriends={tFriends}

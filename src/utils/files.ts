@@ -1,102 +1,44 @@
-import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { backUrl } from 'constants/links';
+import { FileType } from 'types/global.types';
 
-import { getDate } from 'helpers/getDate';
-import { getFileRoleId } from './roles';
+export const graphics = async (maxItems: number, authorId: string, step: 'first' | 'again', lastVisible?: string) => {
+  const params = { authorId, maxItems: maxItems.toString() };
+  const lastParams = { ...params, lastVisible };
+  const queryString = new URLSearchParams(!!lastVisible ? lastParams : params).toString();
 
-import { selectFiles } from 'constants/selects';
-import { Database } from 'types/database.types';
-import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
-
-const supabase = createServerComponentClient<Database>({ cookies });
-
-const tags: Tags[] = ['animations', 'videos'];
-
-export const graphics = async (
-  locale: LangType,
-  maxItems: number,
-  authorId: string,
-  dataDateObject: DateObjectType,
-) => {
   try {
-    const filesArray: FileType[] = [];
+    const res: FileType[] = await fetch(`${backUrl}/en/api/files/graphics/${step}?${queryString}`, {
+      method: 'GET',
+    })
+      .then((r) => r.json())
+      .catch((e) => console.error(e));
 
-    const { data, error } = await supabase
-      .from('Files')
-      .select(selectFiles)
-      .eq('authorId', authorId)
-      .in('tags', ['realistic', 'manga', 'anime', 'comics', 'photographs'])
-      .order('createdAt', { ascending: false })
-      .limit(maxItems);
-
-    if (data?.length === 0 || !!error) return filesArray;
-
-    for (const file of data!) {
-      const { fileId, name, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
-
-      const roleId = await getFileRoleId(fileId, authorId!);
-
-      filesArray.push({
-        fileId,
-        name,
-        shortDescription: shortDescription!,
-        authorName: Users?.pseudonym!,
-        authorProfilePhoto: Users?.profilePhoto!,
-        fileUrl,
-        authorId: authorId!,
-        time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-        createdAt,
-        roleId,
-        updatedAt: updatedAt || '',
-      });
-    }
-    return filesArray;
+    return res;
   } catch (e) {
-    console.error('no your videos', e);
+    console.error(e);
   }
 };
 
 export const videosAnimations = async (
   tag: 0 | 1,
-  locale: LangType,
   maxItems: number,
   authorId: string,
-  dataDateObject: DateObjectType,
+  step: 'first' | 'again',
+  lastVisible?: string,
 ) => {
+  const params = { tag: tag.toString(), authorId, maxItems: maxItems.toString() };
+  const lastParams = { ...params, lastVisible };
+  const queryString = new URLSearchParams(!!lastVisible ? lastParams : params).toString();
+
   try {
-    const filesArray: FileType[] = [];
+    const res: FileType[] = await fetch(`${backUrl}/en/api/files/videos-animations/${step}?${queryString}`, {
+      method: 'GET',
+    })
+      .then((r) => r.json())
+      .catch((e) => console.error(e));
 
-    const { data, error } = await supabase
-      .from('Files')
-      .select(selectFiles)
-      .eq('authorId', authorId)
-      .eq('tags', tags[tag])
-      .order('createdAt', { ascending: false })
-      .limit(maxItems);
-
-    if (data?.length === 0 || !!error) return filesArray;
-
-    for (const file of data!) {
-      const { fileId, name, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
-
-      const roleId = await getFileRoleId(fileId, authorId!);
-
-      filesArray.push({
-        fileId,
-        name,
-        shortDescription: shortDescription!,
-        authorName: Users?.pseudonym!,
-        authorProfilePhoto: Users?.profilePhoto!,
-        fileUrl,
-        authorId: authorId!,
-        time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-        createdAt,
-        updatedAt: updatedAt || '',
-        roleId: roleId!,
-      });
-    }
-    return filesArray;
+    return res;
   } catch (e) {
-    console.error('no your videos', e);
+    console.error(e);
   }
 };

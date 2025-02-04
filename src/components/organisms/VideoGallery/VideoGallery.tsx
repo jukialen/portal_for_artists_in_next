@@ -3,18 +3,13 @@
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 
-import { Database } from 'types/database.types';
-import { DateObjectType, FileType, GalleryType, LangType } from 'types/global.types';
-
-import { getDate } from 'helpers/getDate';
-import { getFileRoleId } from 'utils/roles';
+import { FileType, GalleryType } from 'types/global.types';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Videos } from 'components/molecules/Videos/Videos';
-import { selectFiles } from 'constants/selects';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { videosAnimations } from "../../../utils/files";
 
 export const VideoGallery = ({
   id,
@@ -22,8 +17,6 @@ export const VideoGallery = ({
   pseudonym,
   profilePhoto,
   tGallery,
-  locale,
-  dataDateObject,
   firstVideos,
 }: GalleryType) => {
   const maxItems = 30;
@@ -35,40 +28,10 @@ export const VideoGallery = ({
   let [i, setI] = useState(1);
 
   const pathname = usePathname();
-  const supabase = createClientComponentClient<Database>();
 
-  const nextElements = async (locale: LangType, maxItems: number, dataDateObject: DateObjectType) => {
+  const nextElements = async () => {
     try {
-      const filesArray: FileType[] = [];
-
-      const { data } = await supabase
-        .from('Files')
-        .select(selectFiles)
-        .eq('authorId', id)
-        .eq('tags', 'videos')
-        .gt('createdAt', lastVisible)
-        .order('createdAt', { ascending: false })
-        .limit(maxItems);
-
-      if (data?.length === 0) return filesArray;
-
-      for (const file of data!) {
-        const { fileId, name, tags, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
-
-        const roleId = await getFileRoleId(fileId, authorId!);
-
-        filesArray.push({
-          fileId,
-          name,
-          shortDescription: shortDescription!,
-          authorName: Users?.pseudonym!,
-          fileUrl,
-          authorId: authorId!,
-          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-          tags,
-          roleId: roleId!,
-        });
-      }
+      const filesArray: FileType[] = (await videosAnimations(1, maxItems, id, 'again', lastVisible!))!;
 
       const nextArray = userVideos.concat([...filesArray]);
       setUserVideos(nextArray);
@@ -114,7 +77,7 @@ export const VideoGallery = ({
         )}
 
         {!!lastVisible && userVideos.length === maxItems * i && (
-          <MoreButton nextElements={() => nextElements(locale, maxItems, dataDateObject)} />
+          <MoreButton nextElements={nextElements} />
         )}
       </Wrapper>
     </article>

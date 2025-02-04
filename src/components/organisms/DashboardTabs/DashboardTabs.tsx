@@ -17,8 +17,6 @@ export const DashboardTabs = ({
   id,
   author,
   profilePhoto,
-  dataDateObject,
-  locale,
   tDash,
   tGallery,
   tFriends,
@@ -70,9 +68,7 @@ export const DashboardTabs = ({
               id={id}
               profilePhoto={profilePhoto}
               author={author}
-              locale={locale}
               tGallery={tGallery}
-              dataDateObject={dataDateObject}
               firstGraphics={firstGraphics}
             />
           </ClientPortalWrapper>
@@ -83,9 +79,7 @@ export const DashboardTabs = ({
               id={id}
               profilePhoto={profilePhoto}
               author={author}
-              locale={locale}
               tGallery={tGallery}
-              dataDateObject={dataDateObject}
               firstAnimations={firstAnimations}
             />
           </ClientPortalWrapper>
@@ -96,9 +90,7 @@ export const DashboardTabs = ({
               id={id!}
               profilePhoto={profilePhoto}
               author={author!}
-              locale={locale}
               tGallery={tGallery!}
-              dataDateObject={dataDateObject}
               firstVideos={firstVideos}
             />
           </ClientPortalWrapper>

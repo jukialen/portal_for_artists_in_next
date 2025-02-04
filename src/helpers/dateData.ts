@@ -1,5 +1,5 @@
-import { getScopedI18n } from 'locales/server'
-import { DateObjectType } from "../types/global.types";
+import { getScopedI18n } from 'locales/server';
+import { DateObjectType } from 'types/global.types';
 
 export const dateData = async (): Promise<DateObjectType> => {
   const t = await getScopedI18n('Date');

@@ -242,8 +242,6 @@ export type GalleryType = {
   pseudonym?: string;
   profilePhoto: string;
   author: string;
-  dataDateObject: DateObjectType;
-  locale: LangType;
   firstGraphics?: FileType[];
   firstAnimations?: FileType[];
   firstVideos?: FileType[];
