@@ -6,7 +6,7 @@ import { Button } from '@chakra-ui/react';
 import { darkMode } from 'constants/links';
 import { LangType } from 'types/global.types';
 
-import { useChangeLocale, useCurrentLocale, useI18n } from "locales/client";
+import { useChangeLocale, useI18n } from 'locales/client';
 
 import { ModeContext } from 'providers/ModeProvider';
 
@@ -14,14 +14,13 @@ import styles from './LanguagesSettings.module.scss';
 import { MdLanguage } from 'react-icons/md';
 import { RxChevronDown } from 'react-icons/rx';
 
-export const LanguagesSettings = () => {
+export const LanguagesSettings = ({ locale }: { locale: LangType }) => {
   const { isMode } = useContext(ModeContext);
   const [isLanguage, setLanguage] = useState(false);
   const changeLocale = useChangeLocale();
 
-  const locale = useCurrentLocale();
   const t = useI18n();
-  
+
   const locales: LangType[] = ['en', 'jp', 'pl'];
 
   const redirectedPathName = (locale: LangType) => {

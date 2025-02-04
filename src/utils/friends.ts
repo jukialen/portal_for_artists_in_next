@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { cloudFrontUrl } from 'constants/links';
 import { DateObjectType, FriendsListType, LangType } from 'types/global.types';
 import { Database } from '../types/database.types';
 
@@ -31,9 +30,7 @@ export const getFirstFriends = async (
       const {} = _f;
       friendArray.push({
         pseudonym: _f.pseudonym!,
-        fileUrl: !!_f.profilePhoto
-          ? `https://${cloudFrontUrl}/${_f.profilePhoto}`
-          : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
+        fileUrl: !!_f.profilePhoto ? _f.profilePhoto : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
         favorite: _f.favorite!,
         plan: _f.plan!,
         createdAt: getDate(locale, _f.createdAt!, dataDateObject),

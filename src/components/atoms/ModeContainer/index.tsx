@@ -25,7 +25,6 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
 
   const tSettings = useScopedI18n('Settings');
 
-  console.log('isMode === darkMode', isMode);
   return (
     <div className={styles.modeContainer}>
       <div>
@@ -66,14 +65,14 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
             <Button
               className={`${styles.colors__version} ${isMode === darkMode && styles.colors__version__dark}`}
               onClick={() => newMode('dark')}>
-              DARK
+              {dark}
             </Button>
           </li>
           <li>
             <Button
               className={`${styles.colors__version} ${isMode === darkMode && styles.colors__version__dark}`}
               onClick={() => newMode('light')}>
-              LIGHT
+              {light}
             </Button>
           </li>
         </div>
