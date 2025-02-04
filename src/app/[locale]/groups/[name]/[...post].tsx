@@ -44,7 +44,7 @@ async function post(locale: LangType, postId: string, name: string, dataDateObje
   const { data } = await supabase
     .from('Posts')
     .select('*, Users (pseudonym, profilePhoto), Roles (id)')
-    .match({ postId: postId, title: name })
+    .match({ postId, title: name })
     .order('createdAt', { ascending: false });
 
   for (const post of data!) {

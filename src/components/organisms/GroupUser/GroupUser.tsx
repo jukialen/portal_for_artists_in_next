@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Separator } from '@chakra-ui/react';
 
-import { cloudFrontUrl } from 'constants/links';
 import { Database } from 'types/database.types';
 import { GroupUsersType } from 'types/global.types';
 
@@ -40,27 +39,27 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
   const maxItems = 30;
 
   const supabase = createClientComponentClient<Database>();
-  
+
   const nextAdminList = async () => {
-      const nextAdminArray: GroupUsersType[] = [];
-      
-      const { data, error } = await supabase
+    const nextAdminArray: GroupUsersType[] = [];
+
+    const { data, error } = await supabase
       .from('Groups')
       .select('name, logo')
       .eq('adminId', id)
       .order('name', { ascending: true })
       .gt('name', lastAdminsVisible)
       .limit(maxItems);
-      
-      try {
-        if (!data || data.length === 0 || error) console.error(error);
-        
-        for (const admin of data!) {
-          nextAdminArray.push({
-            name: admin.name!,
-            logo: !!admin.logo ? `https://${cloudFrontUrl}/${admin.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          });
-        }
+
+    try {
+      if (!data || data.length === 0 || error) console.error(error);
+
+      for (const admin of data!) {
+        nextAdminArray.push({
+          name: admin.name!,
+          logo: !!admin.logo ? admin.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        });
+      }
 
       const nextArray = adminsArray.concat(...nextAdminArray);
       setAdminsArray(nextArray);
@@ -73,24 +72,22 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
 
   const nextModeratorsList = async () => {
     const nextModeratorArray: GroupUsersType[] = [];
-    
+
     const { data, error } = await supabase
-    .from('UsersGroups')
-    .select('name, Groups (logo)')
-    .eq('userId', id)
-    .order('name', { ascending: true })
-    .gt('name', lastModeratorsVisible)
-    .limit(maxItems);
-    
+      .from('UsersGroups')
+      .select('name, Groups (logo)')
+      .eq('userId', id)
+      .order('name', { ascending: true })
+      .gt('name', lastModeratorsVisible)
+      .limit(maxItems);
+
     try {
       if (!data || data.length === 0 || error) console.error(error);
-      
+
       for (const mod of data!) {
         nextModeratorArray.push({
           name: mod.name!,
-          logo: !!mod.Groups?.logo
-            ? `https://${cloudFrontUrl}/${mod.Groups.logo}`
-            : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          logo: !!mod.Groups?.logo ? mod.Groups.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
 
@@ -106,24 +103,22 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
 
   const nextMembersList = async () => {
     const nextMemberArray: GroupUsersType[] = [];
-    
+
     const { data, error } = await supabase
-    .from('UsersGroups')
-    .select('name, Groups (logo)')
-    .eq('userId', id)
-    .order('name', { ascending: true })
-    .gt('name', lastMembersVisible)
-    .limit(maxItems);
-    
+      .from('UsersGroups')
+      .select('name, Groups (logo)')
+      .eq('userId', id)
+      .order('name', { ascending: true })
+      .gt('name', lastMembersVisible)
+      .limit(maxItems);
+
     try {
       if (!data || data.length === 0 || error) console.error(error);
-      
+
       for (const mod of data!) {
         nextMemberArray.push({
           name: mod.name!,
-          logo: !!mod.Groups?.logo
-            ? `https://${cloudFrontUrl}/${mod.Groups.logo}`
-            : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          logo: !!mod.Groups?.logo ? mod.Groups.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
         });
       }
 

@@ -6,7 +6,7 @@ import { Separator } from '@chakra-ui/react';
 
 import { Database } from 'types/database.types';
 
-import { roles } from 'utils/groups';
+import { roles } from 'utils/roles';
 
 import { useI18n, useScopedI18n } from "locales/client";
 

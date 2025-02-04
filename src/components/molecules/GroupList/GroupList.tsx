@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
 
-import { backUrl, cloudFrontUrl } from 'constants/links';
-import { GroupListType, GroupType, LangType } from 'types/global.types';
+import { GroupListType, LangType } from 'types/global.types';
+
+import { nextGroupList } from 'utils/groups';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/atoms/Tile/Tile';
@@ -28,39 +28,23 @@ export const GroupList = ({
   Groups: GroupsType;
   groupArray: GroupListType[] | undefined;
 }) => {
+  const maxItems = 30;
+
   const [listArray, setListArray] = useState<GroupListType[] | undefined>(groupArray);
-  const [lastVisible, setLastVisible] = useState<string | null>(null);
+  const [lastVisible, setLastVisible] = useState(
+    !!groupArray && groupArray.length === maxItems ? groupArray[groupArray.length - 1].name : '',
+  );
   let [i, setI] = useState(1);
 
-  const maxItems = 30;
-  
-  !!groupArray && groupArray.length === maxItems && setLastVisible(groupArray[groupArray.length - 1].name);
-  
   const nextGroupsList = async () => {
-    const groups: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
-      params: {
-        queryData: {
-          orderBy: { name: 'desc' },
-          limit: maxItems,
-          cursor: lastVisible,
-        },
-      },
-    });
-
-    const groupArray: GroupListType[] = [];
-
-    for (const _group of groups.data) {
-      groupArray.push({
-        name: _group.name!,
-        fileUrl: !!_group.logo
-          ? `https://${cloudFrontUrl}/${_group.logo}`
-          : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-      });
-    }
+    const groupArray = await nextGroupList(maxItems, lastVisible!);
 
     setListArray(listArray!.concat(...groupArray));
-    setLastVisible(groupArray[groupArray.length - 1].name);
-    setI(++i);
+
+    if (listArray?.length === maxItems) {
+      setLastVisible(groupArray[groupArray.length - 1].name);
+      setI(++i);
+    }
   };
 
   return (
@@ -77,9 +61,13 @@ export const GroupList = ({
           )}
         </div>
       </div>
-      {!!lastVisible && !!listArray && listArray.length === maxItems * i && <MoreButton nextElements={nextGroupsList} />}
+      {!!lastVisible && !!listArray && listArray.length === maxItems * i && (
+        <MoreButton nextElements={nextGroupsList} />
+      )}
 
-      {!lastVisible && !!listArray && listArray.length >= maxItems * i && <p className={styles.noALl}>{Groups.list.all}</p>}
+      {!lastVisible && !!listArray && listArray.length >= maxItems * i && (
+        <p className={styles.noALl}>{Groups.list.all}</p>
+      )}
     </section>
   );
 };

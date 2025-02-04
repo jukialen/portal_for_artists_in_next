@@ -1,94 +1,51 @@
-import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { backUrl } from 'constants/links';
+import { GroupListType, GroupUserType } from 'types/global.types';
 
-import { getUserData } from 'helpers/getUserData';
+export const nextGroupList = async (maxItems: number, lastVisible: string) => {
+  const params = { maxItems: maxItems.toString(), lastVisible };
+  const queryString = new URLSearchParams(params).toString();
 
-import { Database } from 'types/database.types';
-import { GroupUserType } from "types/global.types";
+  const res: GroupListType[] = await fetch(`${backUrl}/en/api/groups/list?${queryString}`, {
+    method: 'GET',
+  })
+    .then((r) => r.json())
+    .catch((e) => console.error(e));
 
-
-export  const roles = async (roleId: string, userId: string) => {
-  'use server';
-  const supabase = createServerComponentClient<Database>({ cookies });
-  
-  const { data, error } = await supabase.from('Roles').select('role').eq('roleId', roleId).eq('userId', userId).limit(1).maybeSingle();
-  
-  return data?.role!;
-}
+  return res;
+};
 
 export const adminList = async (maxItems: number) => {
-  'use server';
-  const supabase = createServerComponentClient<Database>({ cookies });
-  const user = await getUserData();
-
-  const adminArray: GroupUserType[] = [];
+  const params = { maxItems: maxItems.toString() };
+  const queryString = new URLSearchParams(params).toString();
 
   try {
-    const { data, error } = await supabase
-      .from('Groups')
-      .select('name, logo, groupId')
-      .eq('adminId', user?.id!)
-      .order('name', { ascending: true })
-      .limit(maxItems);
-    
-    if (data?.length === 0 || !!error) {
-      console.error(error);
-      return adminArray;
-    }
+    const res: GroupUserType[] = await fetch(`${backUrl}/en/api/groups/admin/list?${queryString}`, {
+      method: 'GET',
+    })
+      .then((r) => r.json())
+      .catch((e) => console.error(e));
 
-    for (const _group of data!) {
-      adminArray.push({
-        name: _group.name,
-        logo: !!_group.logo ? _group.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-        groupId: _group.groupId,
-      });
-    }
-
-    return adminArray;
+    return res;
   } catch (e) {
     console.error(e);
   }
 };
 
 export const modsUsersList = async (maxItems: number) => {
-  'use server';
-  const supabase = createServerComponentClient<Database>({ cookies });
-  const user = await getUserData();
-  
-  const memberArray: GroupUserType[] = [];
-  const moderatorArray: GroupUserType[] = [];
+  const params = { maxItems: maxItems.toString() };
+  const queryString = new URLSearchParams(params).toString();
 
   try {
-    const { data, error } = await supabase
-      .from('UsersGroups')
-      .select('name, Groups (logo), groupId, roleId')
-      .eq('userId', user?.id!)
-      .order('name', { ascending: true })
-      .limit(maxItems);
+    const res: { members: GroupUserType[]; moderators: GroupUserType[] } = await fetch(
+      `${backUrl}/en/api/groups/modsUsers/list?${queryString}`,
+      {
+        method: 'GET',
+      },
+    )
+      .then((r) => r.json())
+      .catch((e) => console.error(e));
 
-    if (data?.length === 0 || !!error) {
-      console.error(error);
-      return { members: memberArray, moderators: moderatorArray };
-    }
-    
-    for (const d of data) {
-      const role = await roles(d.roleId, user?.id!);
-      if (role == 'MODERATOR') {
-        moderatorArray.push({
-          name: d.name,
-          logo: !!d.Groups?.logo ? d.Groups?.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          groupId: d.groupId,
-        });
-      } else if (role == 'USER') {
-        memberArray.push({
-          name: d.name,
-          logo: !!d.Groups?.logo ? d.Groups?.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-          groupId: d.groupId,
-        });
-      }
-    }
-    
-    return { members: memberArray, moderators: moderatorArray };
+    return res;
   } catch (e) {
     console.error(e);
   }

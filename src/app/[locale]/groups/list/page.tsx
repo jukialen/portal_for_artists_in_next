@@ -1,39 +1,46 @@
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { setStaticParamsLocale } from 'next-international/server';
-import axios from 'axios';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { getScopedI18n } from 'locales/server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { backUrl, cloudFrontUrl } from 'constants/links';
-import { DateObjectType, GroupListType, GroupType, LangType } from 'types/global.types';
-
-import { dateData } from 'helpers/dateData';
+import { Database } from 'types/database.types';
+import { GroupListType, LangType } from 'types/global.types';
 
 import { GroupList } from 'components/molecules/GroupList/GroupList';
 
 export const metadata: Metadata = HeadCom('List of all groups');
 
-async function getGroupsList(maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
-  const groups: { data: GroupType[] } = await axios.get(`${backUrl}/groups/all`, {
-    params: {
-      queryData: {
-        orderBy: { name: 'desc' },
-        limit: maxItems,
-      },
-    },
-  });
+async function getGroupsList(maxItems: number) {
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const groupArray: GroupListType[] = [];
 
-  for (const _group of groups.data) {
-    groupArray.push({
-      name: _group.name!,
-      fileUrl: !!_group.logo ? `https://${cloudFrontUrl}/${_group.logo}` : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-    });
-  }
+  try {
+    const { data, error } = await supabase
+      .from('Groups')
+      .select('name, logo')
+      .order('name', { ascending: false })
+      .limit(maxItems);
 
-  return groupArray;
+    if (!!error) {
+      console.error(error);
+      return groupArray;
+    }
+
+    for (const g of data) {
+      groupArray.push({
+        name: g.name!,
+        fileUrl: !!g.logo ? g.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+      });
+    }
+
+    return groupArray;
+  } catch (e) {
+    console.error('Error getting groups list', e);
+  }
 }
 
 export default async function List({ params: { locale } }: { params: { locale: LangType } }) {
@@ -49,9 +56,7 @@ export default async function List({ params: { locale } }: { params: { locale: L
     noGroups: tGroups('noGroups'),
   };
 
-  const dataDateObject = await dateData();
-
-  const groupArray = await getGroupsList(30, locale, dataDateObject);
+  const groupArray = await getGroupsList(30);
 
   return <GroupList locale={locale} Groups={Groups} groupArray={groupArray} />;
 }

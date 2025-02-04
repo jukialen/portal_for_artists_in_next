@@ -2,11 +2,7 @@
 
 import { useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import {
-  Button,
-  IconButton,
-  Input,
-} from '@chakra-ui/react';
+import { Button, IconButton, Input } from '@chakra-ui/react';
 import {
   DialogActionTrigger,
   DialogBody,
@@ -19,6 +15,7 @@ import {
   DialogTrigger,
 } from 'components/ui/dialog';
 
+import { Database } from 'types/database.types';
 import { EventType, nameGroupTranslatedType } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -37,9 +34,9 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
-  const[open, setOpen] = useState(false);
-  
-  const supabase = createClientComponentClient();
+  const [open, setOpen] = useState(false);
+
+  const supabase = createClientComponentClient<Database>();
 
   const changeFile = (e: EventType) => {
     if (e.target.files?.[0]) {
@@ -61,7 +58,7 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
         !!data && setValuesFields(translated!.updateLogo!.upload);
         !!error && setValuesFields(translated!.updateLogo!.notUpload);
 
-        await supabase.from('Groups').update([{ logo: data?.path }]);
+        await supabase.from('Groups').update({ logo: data?.path! });
       } else {
         console.log('no logo selected');
         setValuesFields('no logo selected');
@@ -75,21 +72,25 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
   return (
     <>
       <img src={logo} alt={`${name} logo`} />
-      
-      <DialogRoot lazyMount open={open} onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
+
+      <DialogRoot
+        lazyMount
+        open={open}
+        onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
         <DialogTrigger asChild>
           <IconButton
             aria-label="update group logo"
             colorScheme="yellow"
             className={styles.updateLogo}
-            onClick={() => setOpen(true)}
-          >
+            onClick={() => setOpen(true)}>
             <MdCameraEnhance />
-            </IconButton>
+          </IconButton>
         </DialogTrigger>
         <DialogContent backgroundColor="#2D3748" color={selectedColor} className={styles.modal}>
-          <DialogHeader><DialogTitle>logo</DialogTitle></DialogHeader>
-          
+          <DialogHeader>
+            <DialogTitle>logo</DialogTitle>
+          </DialogHeader>
+
           <DialogBody className={styles.modal}>
             <Input
               type="file"
