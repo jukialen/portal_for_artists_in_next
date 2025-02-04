@@ -3,8 +3,8 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { getCurrentLocale } from 'locales/server';
 
-import { CommentType } from 'types/global.types';
 import { Database } from 'types/database.types';
+import { CommentType } from 'types/global.types';
 
 import { likeList } from 'utils/likes';
 import { giveRole } from 'utils/roles';

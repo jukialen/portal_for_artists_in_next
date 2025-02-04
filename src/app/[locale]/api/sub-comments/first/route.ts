@@ -7,7 +7,7 @@ import { getCurrentLocale } from 'locales/server';
 import { RoleType, SubCommentType } from 'types/global.types';
 import { Database } from 'types/database.types';
 
-import { groupRole } from 'utils/comments';
+import { groupRole } from 'utils/roles';
 import { likeList } from 'utils/likes';
 
 import { dateData } from 'helpers/dateData';

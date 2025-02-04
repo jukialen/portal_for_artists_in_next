@@ -1,10 +1,4 @@
-import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-
-import { getCurrentLocale } from 'locales/server';
-
 import { backUrl } from 'constants/links';
-import { Database } from 'types/database.types';
 import {
   CommentType,
   FilesCommentsType,
@@ -15,14 +9,10 @@ import {
   TableNameEnum,
 } from 'types/global.types';
 
-const locale = getCurrentLocale();
-
-const supabase = createServerComponentClient<Database>({ cookies });
-
 //POST
 export const newComment = async (commentData: NewCommentsType) => {
   try {
-    const role: RoleType = await fetch(`${backUrl}/${locale}/api/comments/new`, {
+    const role: RoleType = await fetch(`${backUrl}/en/api/comments/new`, {
       method: 'POST',
       body: JSON.stringify(commentData),
     }).then((r) => r.json());
@@ -34,24 +24,6 @@ export const newComment = async (commentData: NewCommentsType) => {
 };
 
 //GET
-export const groupRole = async (groupsPostsRoleId: string, userId: string): Promise<RoleType | undefined> => {
-  try {
-    const { data, error } = await supabase
-      .from('Roles')
-      .select('role')
-      .eq('id', groupsPostsRoleId)
-      .eq('userId', userId)
-      .limit(1)
-      .single();
-
-    !!error && console.error(error);
-
-    return data?.role;
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 export const comments = async (
   postId: string,
   maxItems: number,
@@ -62,7 +34,7 @@ export const comments = async (
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: CommentType[] = await fetch(`${backUrl}/${locale}/api/comments/${step}?${queryString}`, {
+    const res: CommentType[] = await fetch(`${backUrl}/en/api/comments/${step}?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -79,7 +51,7 @@ export const filesComments = async (fileId: string, maxItems: number, step: 'fir
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: FilesCommentsType[] = await fetch(`${backUrl}/${locale}/api/files-comments/${step}?${queryString}`, {
+    const res: FilesCommentsType[] = await fetch(`${backUrl}/en/api/files-comments/${step}?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -113,7 +85,7 @@ export const subComments = async (
   const queryString = new URLSearchParams(!!lastParams ? lastParams : params).toString();
 
   try {
-    const res: SubCommentType[] = await fetch(`${backUrl}/${locale}/api/sub-comments/${step}?${queryString}`, {
+    const res: SubCommentType[] = await fetch(`${backUrl}/en/api/sub-comments/${step}?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -135,7 +107,7 @@ export const lastComments = async (
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: LastCommentType[] = await fetch(`${backUrl}/${locale}/api/last-comments/${step}?${queryString}`, {
+    const res: LastCommentType[] = await fetch(`${backUrl}/en/api/last-comments/${step}?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -156,7 +128,7 @@ export const updComment = async (
   content: string,
 ) => {
   try {
-    const up: boolean = await fetch(`${backUrl}/api/comments/update`, {
+    const up: boolean = await fetch(`${backUrl}/en/api/comments/update`, {
       method: 'PATCH',
       body: JSON.stringify({ tableName, nameId, id, content }),
     }).then((r) => r.json());
@@ -175,7 +147,7 @@ export const delComment = async (
   id: string,
 ) => {
   try {
-    const del: boolean = await fetch(`${backUrl}/api/comments/update`, {
+    const del: boolean = await fetch(`${backUrl}/en/api/comments/update`, {
       method: 'DELETE',
       body: JSON.stringify({ tableName, nameId, id }),
     }).then((r) => r.json());
