@@ -1,4 +1,4 @@
-import { Tags } from "../types/global.types";
+import { Tags } from 'types/global.types';
 
 export const TagConstants: Tags[] = [
   'realistic',

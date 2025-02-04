@@ -19,56 +19,60 @@ export const likeList = async (
   let e;
   let res;
 
-  if (!!postId || !!fileId) {
-    const { data, error } = await supabase
-      .from('Liked')
-      .select()
-      .eq(!!postId ? 'postId' : 'fileId', postId || fileId!);
+  try {
+    if (!!postId || !!fileId) {
+      const { data, error } = await supabase
+        .from('Liked')
+        .select()
+        .eq(!!postId ? 'postId' : 'fileId', postId || fileId!);
 
-    e = error;
-    res = data;
-  }
+      e = error;
+      res = data;
+    }
 
-  if (!!fileCommentId || !!commentId) {
-    const { data, error } = await supabase
-      .from('Liked')
-      .select()
-      .eq('userId', authorId)
-      .eq(!!fileCommentId ? 'fileCommentId' : 'commentId', fileCommentId || commentId!);
+    if (!!fileCommentId || !!commentId) {
+      const { data, error } = await supabase
+        .from('Liked')
+        .select()
+        .eq('userId', authorId)
+        .eq(!!fileCommentId ? 'fileCommentId' : 'commentId', fileCommentId || commentId!);
 
-    e = error;
-    res = data;
-  }
+      e = error;
+      res = data;
+    }
 
-  if (!!subCommentId || !!lastCommentId) {
-    const { data, error } = await supabase
-      .from('Liked')
-      .select()
-      .eq('userId', authorId)
-      .eq(!!subCommentId ? 'subCommentId' : 'lastCommentId', subCommentId || lastCommentId!);
+    if (!!subCommentId || !!lastCommentId) {
+      const { data, error } = await supabase
+        .from('Liked')
+        .select()
+        .eq('userId', authorId)
+        .eq(!!subCommentId ? 'subCommentId' : 'lastCommentId', subCommentId || lastCommentId!);
 
-    e = error;
-    res = data;
-  }
+      e = error;
+      res = data;
+    }
 
-  if (!!e) {
-    console.error(e);
+    if (!!e) {
+      console.error(e);
+      return {
+        likes: 0,
+        liked: false,
+      };
+    }
+
+    for (const d of res!) {
+      likesConst.push({
+        authorId: d.userId,
+      });
+    }
+
     return {
-      likes: 0,
-      liked: false,
+      likes: likesConst.length,
+      liked: likesConst.includes({ authorId }, 0),
     };
+  } catch (e) {
+    console.error(e);
   }
-
-  for (const d of res!) {
-    likesConst.push({
-      authorId: d.userId,
-    });
-  }
-
-  return {
-    likes: likesConst.length,
-    liked: likesConst.includes({ authorId }, 0),
-  };
 };
 
 //PATCH && DELETE
