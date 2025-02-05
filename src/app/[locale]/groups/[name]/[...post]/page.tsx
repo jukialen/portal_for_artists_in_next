@@ -48,8 +48,7 @@ async function post(locale: LangType, postId: string, name: string, dataDateObje
     .order('createdAt', { ascending: false });
 
   for (const post of data!) {
-    const { title, content, likes, shared, commented, authorId, groupId, createdAt, updatedAt, Users, Roles } =
-      post;
+    const { title, content, likes, shared, commented, authorId, groupId, createdAt, updatedAt, Users, Roles } = post;
 
     const { data: lData } = await supabase.from('Liked').select('id, userId').match({ postId, userId: authorId });
 
@@ -75,7 +74,7 @@ async function post(locale: LangType, postId: string, name: string, dataDateObje
   return postsArray;
 }
 
-export default async function PostFromGroup({ locale }: { locale: LangType }) {
+export default async function PostFromGroup({ params: { locale } }: { params: { locale: LangType } }) {
   setStaticParamsLocale(locale);
 
   const dataDateObject = await dateData();

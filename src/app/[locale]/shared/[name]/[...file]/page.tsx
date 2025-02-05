@@ -1,11 +1,10 @@
 import { Metadata } from 'next';
-import { setStaticParamsLocale } from 'next-international/server';
-
-import { HeadCom } from 'constants/HeadCom';
 import { cookies } from 'next/headers';
+import { setStaticParamsLocale } from 'next-international/server';
 import { usePathname } from 'next/navigation';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
+import { HeadCom } from 'constants/HeadCom';
 import { TagConstants } from 'constants/values';
 import { FileType, LangType } from 'types/global.types';
 import { Database } from 'types/database.types';
@@ -13,7 +12,7 @@ import { Database } from 'types/database.types';
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
-import { getFileRoleId } from "utils/roles";
+import { getFileRoleId } from 'utils/roles';
 
 import { Videos } from 'components/molecules/Videos/Videos';
 import { Article } from 'components/molecules/Article/Article';
@@ -33,7 +32,7 @@ async function file(locale: LangType, fileId: string) {
       console.error(error);
       return;
     }
-    
+
     const { data: d, error: er } = await supabase
       .from('Users')
       .select('pseudonym, profilePhoto')
@@ -47,9 +46,9 @@ async function file(locale: LangType, fileId: string) {
     }
 
     const { fileUrl, shortDescription, tags, authorId, createdAt, updatedAt } = data;
-    
-    const roleId =  await getFileRoleId(fileId, authorId!);
-    
+
+    const roleId = await getFileRoleId(fileId, authorId!);
+
     const postData: FileType = {
       authorId: authorId!,
       authorName: d?.pseudonym!,
@@ -100,6 +99,7 @@ export default async function Post({ params: { locale } }: { params: { locale: L
           time={authorPost?.time!}
           authorBool={authorPost?.authorName! === pseudonym}
           roleId={authorPost?.roleId!}
+          locale={locale}
         />
       ) : (
         <Article
@@ -114,6 +114,7 @@ export default async function Post({ params: { locale } }: { params: { locale: L
           time={authorPost?.time!}
           authorBool={authorPost?.authorName! === pseudonym}
           roleId={authorPost?.roleId!}
+          locale={locale}
         />
       )}
     </>
