@@ -9,10 +9,11 @@ import { getI18n, getScopedI18n } from 'locales/server';
 import { HeadCom } from 'constants/HeadCom';
 import { LangType } from 'types/global.types';
 
+import { ChangePseuDescData } from 'components/atoms/ChangePseuDescData/ChangePseuDescData';
 import { LanguagesSettings } from 'components/atoms/LanguagesSettings';
 import { ModeContainer } from 'components/atoms/ModeContainer';
 import { DeleteSettings } from 'components/molecules/DeleteSettings/DeleteSettings';
-import { UserPartOfSettings } from 'components/organisms/UserPartOfSettings/UserPartOfSettings';
+import { AccountData } from 'components/organisms/AccountData/AccountData';
 
 import styles from './page.module.scss';
 
@@ -36,9 +37,14 @@ export default async function Settings({ params: { locale } }: { params: { local
 
         <LanguagesSettings locale={locale} />
       </div>
-
-      <UserPartOfSettings />
-
+      
+      {!!userData?.id && (
+        <>
+          <AccountData userData={userData!} />
+          <h3>{t('Nav.profile')}</h3>
+          <ChangePseuDescData userData={userData!} />
+        </>
+      )}
       <footer>
         <button className={styles.links}>
           <Link href={`/${locale}/terms`}>{t('Footer.termsOfUse')}</Link>
