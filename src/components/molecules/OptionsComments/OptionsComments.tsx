@@ -89,7 +89,7 @@ export const OptionsComments = ({
 
   const toggleLike = async () => {
     try {
-      const toggle = async () => await toggleLiked(like, authorId, postId, fileId)!;
+      const toggle = async () => (await toggleLiked(like, authorId, postId, fileId))!;
 
       if (await toggle()) {
         setLikes(like ? --likes : ++likes);
