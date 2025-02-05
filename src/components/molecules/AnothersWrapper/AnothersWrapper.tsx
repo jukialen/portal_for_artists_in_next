@@ -2,41 +2,27 @@
 
 import { useState } from 'react';
 import { Skeleton } from '@chakra-ui/react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-
-import { selectFiles } from 'constants/selects';
-import { Database } from 'types/database.types';
-import { DateObjectType, FileType, IndexType, LangType } from 'types/global.types';
 
 import { TagConstants } from 'constants/values';
+import { FileType, IndexType } from 'types/global.types';
 
-import { getDate } from 'helpers/getDate';
-import { getFileRoleId } from 'utils/roles';
+import { drawings } from 'utils/files';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Article } from 'components/molecules/Article/Article';
 import { Videos } from 'components/molecules/Videos/Videos';
 
 type AnothersWrapperType = {
-  locale: LangType;
   index: IndexType;
   pseudonym: string;
   profilePhoto: string;
-  dataDateObject: DateObjectType;
   noVideos: string;
   filesArray: FileType[];
 };
 
-export const AnothersWrapper = ({
-  locale,
-  index,
-  pseudonym,
-  profilePhoto,
-  dataDateObject,
-  noVideos,
-  filesArray,
-}: AnothersWrapperType) => {
+export const AnothersWrapper = ({ index, pseudonym, profilePhoto, noVideos, filesArray }: AnothersWrapperType) => {
   const [userDrawings, setUserDrawings] = useState<FileType[]>(filesArray);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [lastVisible, setLastVisible] = useState<string>(
@@ -50,36 +36,7 @@ export const AnothersWrapper = ({
     setLoadingFiles(!loadingFiles);
 
     try {
-      const nextArray: FileType[] = [];
-      const supabase = createClientComponentClient<Database>();
-
-      const { data } = await supabase
-        .from('Files')
-        .select(selectFiles)
-        .eq('tags', index)
-        .gt('createdAt', lastVisible)
-        .order('name', { ascending: false })
-        .limit(maxItems);
-
-      if (data?.length === 0) return filesArray;
-
-      for (const draw of data!) {
-        const { fileId, name, fileUrl, tags, shortDescription, Users, authorId, createdAt, updatedAt } = draw;
-
-        const roleId = await getFileRoleId(fileId, authorId!);
-
-        nextArray.push({
-          authorName: Users?.pseudonym!,
-          fileId,
-          name,
-          shortDescription: shortDescription!,
-          fileUrl,
-          authorId: authorId!,
-          tags,
-          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
-          roleId,
-        });
-      }
+      const nextArray: FileType[] = await drawings(index, lastVisible, maxItems);
 
       nextArray.length === maxItems ? setLastVisible(nextArray[nextArray.length - 1].createdAt!) : setLastVisible('');
 
@@ -93,7 +50,7 @@ export const AnothersWrapper = ({
   };
 
   return (
-    <>
+    <Wrapper>
       {userDrawings.length > 0 ? (
         userDrawings.map(
           ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType, index) => (
@@ -134,6 +91,6 @@ export const AnothersWrapper = ({
         <ZeroFiles text={noVideos} />
       )}
       {!!lastVisible && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
-    </>
+    </Wrapper>
   );
 };

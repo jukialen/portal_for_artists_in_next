@@ -1,8 +1,8 @@
 import { cookies } from 'next/headers';
+import { NextRequest } from 'next/server';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { Database } from 'types/database.types';
-import { NextRequest } from 'next/server';
 
 const supabase = createServerComponentClient<Database>({ cookies });
 

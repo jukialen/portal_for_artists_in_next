@@ -14,11 +14,10 @@ import { getDate } from 'helpers/getDate';
 
 import { HeadCom } from 'constants/HeadCom';
 
-import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { AnothersWrapper } from 'components/molecules/AnothersWrapper/AnothersWrapper';
 
 import styles from './page.module.scss';
-import { getUserData } from '../../../helpers/getUserData';
+import { getUserData } from 'helpers/getUserData';
 
 const downloadDrawings = async ({
   index,
@@ -93,17 +92,13 @@ export default async function Drawings({
         {tAnotherCategories.category}: {index}
       </em>
 
-      <Wrapper>
         <AnothersWrapper
-          locale={locale}
           index={index}
           pseudonym={user?.pseudonym!}
           profilePhoto={user?.profilePhoto!}
-          dataDateObject={dataDateObject}
           noVideos={tAnotherCategories.noVideos}
           filesArray={filesArray!}
         />
-      </Wrapper>
     </article>
   );
 }
