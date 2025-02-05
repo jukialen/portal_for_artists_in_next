@@ -1,37 +1,36 @@
-import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from 'types/database.types';
-import { RoleType } from "../types/global.types";
-
-const supabase = createServerComponentClient<Database>({ cookies });
+import { backUrl } from 'constants/links';
+import { RoleType } from 'types/global.types';
 
 //SELECT
 export const roles = async (roleId: string, userId: string) => {
-  const supabase = createServerComponentClient<Database>({ cookies });
-  
-  const { data, error } = await supabase.from('Roles').select('role').eq('roleId', roleId).eq('userId', userId).limit(1).maybeSingle();
-  
-  !!error && console.error(error);
-  
-  return data?.role!;
-}
+  const params = { roleId, userId };
+  const queryString = new URLSearchParams(params).toString();
+
+  try {
+    const role: RoleType = await fetch(`${backUrl}/en/api/roles?${queryString}`, {
+      method: 'GET',
+    })
+      .then((r) => r.json())
+      .catch((e) => console.error(e));
+
+    return role;
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 export const getFileRoleId = async (fileId: string, userId: string) => {
+  const params = { fileId, userId };
+  const queryString = new URLSearchParams(params).toString();
+
   try {
-    const { data, error } = await supabase
-    .from('Roles')
-    .select('id')
-    .eq('fileId', fileId)
-    .eq('userId', userId)
-    .limit(1)
-    .single();
-    
-    if (!!error) {
-      console.error(error);
-      return;
-    }
-    
-    return data.id;
+    const roleId: string = await fetch(`${backUrl}/en/api/roles/file/role-id?${queryString}`, {
+      method: 'GET',
+    })
+      .then((r) => r.json())
+      .catch((e) => console.error(e));
+
+    return roleId;
   } catch (e) {
     console.error(e);
   }
@@ -40,32 +39,29 @@ export const getFileRoleId = async (fileId: string, userId: string) => {
 //POST
 export const giveRole = async (roleId: string) => {
   try {
-    const { data, error } = await supabase.from('Roles').select('role').eq('id', roleId).limit(1).single();
+    const role: RoleType = await fetch(`${backUrl}/en/api/roles/give`, {
+      method: 'POST',
+      body: JSON.stringify({ roleId }),
+    }).then((r) => r.json());
 
-    if (!!error) {
-      console.error(error);
-      return;
-    }
-
-    return data.role;
+    return role;
   } catch (e) {
     console.error(e);
   }
 };
 
-export const groupRole = async (groupsPostsRoleId: string, userId: string): Promise<RoleType | undefined> => {
+export const groupRole = async (groupsPostsRoleId: string, userId: string) => {
+  const params = { groupsPostsRoleId, userId };
+  const queryString = new URLSearchParams(params).toString();
+
   try {
-    const { data, error } = await supabase
-    .from('Roles')
-    .select('role')
-    .eq('id', groupsPostsRoleId)
-    .eq('userId', userId)
-    .limit(1)
-    .single();
-    
-    !!error && console.error(error);
-    
-    return data?.role;
+    const role: RoleType = await fetch(`${backUrl}/en/api/roles/group?${queryString}`, {
+      method: 'GET',
+    })
+      .then((r) => r.json())
+      .catch((e) => console.error(e));
+
+    return role;
   } catch (e) {
     console.error(e);
   }
