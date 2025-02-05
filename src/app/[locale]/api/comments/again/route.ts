@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 import { Database } from "types/database.types";
 import { CommentType } from "types/global.types";
@@ -12,7 +12,7 @@ import { likeList } from "utils/likes";
 import { giveRole } from "utils/roles";
 import { NextRequest } from "next/server";
 
-const supabase = createServerComponentClient<Database>({ cookies });
+const supabase = createRouteHandlerClient<Database>({ cookies });
 
 const locale = getCurrentLocale();
 

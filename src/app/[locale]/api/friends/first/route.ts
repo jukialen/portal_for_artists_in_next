@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 import { Database } from 'types/database.types';
 import { FriendsListType } from 'types/global.types';
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   const usernameId = searchParams.get('usernameId')!;
   const maxItems = searchParams.get('maxItems')!;
 
-  const supabase = createServerComponentClient<Database>({ cookies });
+  const supabase = createRouteHandlerClient<Database>({ cookies });
   const locale = getCurrentLocale();
 
   try {

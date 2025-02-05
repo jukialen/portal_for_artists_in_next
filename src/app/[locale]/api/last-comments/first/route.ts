@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 import { getCurrentLocale } from 'locales/server';
 
@@ -15,7 +15,7 @@ import { NextRequest } from 'next/server';
 
 const locale = getCurrentLocale();
 
-const supabase = createServerComponentClient<Database>({ cookies });
+const supabase = createRouteHandlerClient<Database>({ cookies });
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

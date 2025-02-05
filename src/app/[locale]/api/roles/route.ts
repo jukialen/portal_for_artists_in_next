@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 import { Database } from 'types/database.types';
 
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const roleId = searchParams.get('roleId')!;
   const userId = searchParams.get('userId')!;
 
-  const supabase = createServerComponentClient<Database>({ cookies });
+  const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
     const { data, error } = await supabase

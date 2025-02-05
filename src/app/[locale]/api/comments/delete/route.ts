@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 import { Database } from 'types/database.types';
 import { TableNameEnum } from 'types/global.types';
@@ -12,7 +12,7 @@ type DelCommentType = {
 };
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const supabase = createServerComponentClient<Database>({ cookies });
+  const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
     const requestBody: DelCommentType = await new Promise((resolve, reject) => {

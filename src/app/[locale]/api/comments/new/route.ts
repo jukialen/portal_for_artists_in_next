@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 import { giveRole } from 'utils/roles';
 
 import { Database } from 'types/database.types';
 import { CommentType, FilesCommentsType, RoleType, SubCommentType } from 'types/global.types';
 
-const supabase = createServerComponentClient<Database>({ cookies });
+const supabase = createRouteHandlerClient<Database>({ cookies });
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
   let role: RoleType | undefined;

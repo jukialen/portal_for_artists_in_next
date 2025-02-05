@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 import { Database } from 'types/database.types';
 import { GroupUserType } from 'types/global.types';
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
   const adminArray: GroupUserType[] = [];
 
-  const supabase = createServerComponentClient<Database>({ cookies });
+  const supabase = createRouteHandlerClient<Database>({ cookies });
   const user = await getUserData();
 
   try {

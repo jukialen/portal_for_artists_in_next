@@ -6,7 +6,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Button, Separator, Tabs } from '@chakra-ui/react';
 
 import { Database } from 'types/database.types';
-import { JoinUser, LangType, MemberType, nameGroupTranslatedType, PostsType, UserType } from 'types/global.types';
+import { JoinUser, MemberType, nameGroupTranslatedType, PostsType, UserType } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { Members } from 'components/atoms/Members/Members';
@@ -20,7 +20,6 @@ import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 export const NameGroupPage = ({
   name,
   userData,
-  locale,
   joined,
   members,
   usersGroupsId,
@@ -29,7 +28,6 @@ export const NameGroupPage = ({
 }: {
   name: string;
   userData: UserType;
-  locale: LangType;
   joined: JoinUser;
   members: MemberType[];
   usersGroupsId: string;
@@ -266,7 +264,6 @@ export const NameGroupPage = ({
               {join ? (
                 <Posts
                   groupId={joined.groupId!}
-                  locale={locale}
                   profilePhoto={userData?.profilePhoto!}
                   userId={userData?.id!}
                   name={name}
