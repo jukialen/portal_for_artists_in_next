@@ -1,10 +1,8 @@
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { setStaticParamsLocale } from 'next-international/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { selectFiles } from 'constants/selects';
-import { Database } from 'types/database.types';
 import { DateObjectType, FileType, IndexType, LangType } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
@@ -32,7 +30,7 @@ const downloadDrawings = async ({
 }) => {
   try {
     const filesArray: FileType[] = [];
-    const supabase = createServerComponentClient<Database>({ cookies });
+    const supabase = await createServer();
 
     const { data } = await supabase
       .from('Files')
@@ -66,10 +64,11 @@ const downloadDrawings = async ({
 export const metadata: Metadata = HeadCom('Subpage with another categories');
 
 export default async function Drawings({
-  params: { locale, index },
+  params,
 }: {
-  params: { locale: LangType; index: IndexType };
+  params: Promise<{ locale: LangType; index: IndexType }>;
 }) {
+  const { locale, index } = await params;
   setStaticParamsLocale(locale);
 
   const t = await getI18n();

@@ -1,7 +1,5 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createServer } from 'utils/supabase/clientSSR';
 
-import { Database } from 'types/database.types';
 import { FriendsListArrayType, GroupsType } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
@@ -9,10 +7,10 @@ import { getUserData } from 'helpers/getUserData';
 
 import { AsideWrapper } from 'components/molecules/AsideWrapper/AsideWrapper';
 
-const supabase = createServerComponentClient<Database>({ cookies });
-
 async function getFriendsList(userId: string, maxItems: number) {
   const favoriteFriendArray: FriendsListArrayType[] = [];
+
+  const supabase = await createServer();
 
   const { data, error } = await supabase
     .from('Friends')
@@ -35,7 +33,9 @@ async function getFriendsList(userId: string, maxItems: number) {
 
 async function getGroupsList(maxItems: number) {
   const groupList: GroupsType[] = [];
+
   const user = await getUserData();
+  const supabase = await createServer();
 
   const { data, error } = await supabase
     .from('UsersGroups')
@@ -52,9 +52,7 @@ async function getGroupsList(maxItems: number) {
       groupList.push({
         name: d.name,
         description: d?.Groups?.description!,
-        logo: !!d.Groups?.logo
-          ? d.Groups?.logo
-          : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        logo: !!d.Groups?.logo ? d.Groups?.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
       });
     }
   } catch (e) {

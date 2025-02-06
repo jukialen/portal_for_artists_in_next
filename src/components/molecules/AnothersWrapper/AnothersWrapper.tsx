@@ -1,18 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Skeleton } from '@chakra-ui/react';
 
-import { TagConstants } from 'constants/values';
 import { FileType, IndexType } from 'types/global.types';
 
 import { drawings } from 'utils/files';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { Article } from 'components/molecules/Article/Article';
-import { Videos } from 'components/molecules/Videos/Videos';
+import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
+import { AnothersWrapperContent } from 'components/Views/AnothersWrapperContent/AnothersWrapperContent';
 
 type AnothersWrapperType = {
   index: IndexType;
@@ -50,47 +47,20 @@ export const AnothersWrapper = ({ index, pseudonym, profilePhoto, noVideos, file
   };
 
   return (
-    <Wrapper>
+    <>
       {userDrawings.length > 0 ? (
-        userDrawings.map(
-          ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType, index) => (
-            <Skeleton loading={loadingFiles} variant="shine" key={index}>
-              {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
-                <Videos
-                  fileId={fileId!}
-                  name={name!}
-                  fileUrl={fileUrl}
-                  shortDescription={shortDescription!}
-                  tags={tags}
-                  authorName={authorName!}
-                  authorId={authorId}
-                  authorBool={authorName === pseudonym!}
-                  profilePhoto={profilePhoto}
-                  time={time}
-                  roleId={roleId!}
-                />
-              ) : (
-                <Article
-                  fileId={fileId!}
-                  name={name!}
-                  fileUrl={fileUrl}
-                  shortDescription={shortDescription!}
-                  tags={tags!}
-                  authorName={pseudonym!}
-                  authorId={authorId}
-                  authorBool={authorName === pseudonym!}
-                  profilePhoto={profilePhoto}
-                  time={time}
-                  roleId={roleId!}
-                />
-              )}
-            </Skeleton>
-          ),
-        )
+        <ClientPortalWrapper>
+          <AnothersWrapperContent
+            loadingFiles
+            userDrawings={userDrawings}
+            pseudonym={pseudonym}
+            profilePhoto={profilePhoto}
+          />
+        </ClientPortalWrapper>
       ) : (
         <ZeroFiles text={noVideos} />
       )}
       {!!lastVisible && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
-    </Wrapper>
+    </>
   );
 };

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from 'utils/supabase/clientCSR';
 import {
   DialogActionTrigger,
   DialogBody,
@@ -18,7 +18,6 @@ import { Button } from 'components/ui/button';
 
 import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
-import { Database } from 'types/database.types';
 import { UserType } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -35,7 +34,7 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
   const tContact = useScopedI18n('Contact');
   const tDeletionAccount = useScopedI18n('DeletionAccount');
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
   const { push } = useRouter();
 
   const deletionUser = async () => {
@@ -46,24 +45,24 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
 
       const { data, error } = await supabase.auth.admin.deleteUser(userData?.id!);
 
-      if(!data.user || !!error) {
+      if (!data.user || !!error) {
         setValues(t('error'));
         return;
       }
-      
+
       setValues(!!data.user || !error ? tContact('success') : tContact('fail'));
 
       const { data: usData, error: usError } = await supabase
         .from('Users')
         .delete({ count: 'estimated' })
         .eq('id', userData.id!)
-      .select();
-      
-      if (!usData || !!usError ) {
+        .select();
+
+      if (!usData || !!usError) {
         setValues(t('error'));
         return;
       }
-      
+
       setDeleting(!deleting);
       push(`${locale}/`);
     } catch (e) {

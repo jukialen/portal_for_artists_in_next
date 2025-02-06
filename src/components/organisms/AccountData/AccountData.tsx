@@ -3,7 +3,7 @@
 import { useContext, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from 'utils/supabase/clientCSR';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -20,7 +20,6 @@ import {
 import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
 import { darkMode } from 'constants/links';
-import { Database } from 'types/database.types';
 import { NewPlanType, ResetFormType, UserFormType, UserType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -69,7 +68,6 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
   const { push } = useRouter();
 
   const items = ['FREE', 'PREMIUM', 'GOLD'];
-  const supabase = createClientComponentClient<Database>();
 
   const schemaEmail = Yup.object({
     email: SchemaValidation().email,
@@ -83,7 +81,9 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
   const schemaSubscription = Yup.object({
     plan: SchemaValidation().tags,
   });
-
+  
+  const supabase =  createClient();
+  
   const update__email = async ({ email }: UserFormType, { resetForm }: ResetFormType) => {
     try {
       resetForm(initialValues);

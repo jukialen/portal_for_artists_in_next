@@ -5,11 +5,12 @@ import { usePathname } from 'next/navigation';
 
 import { FileType, GalleryType } from 'types/global.types';
 
+import { videosAnimations } from 'utils/files';
+
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Videos } from 'components/molecules/Videos/Videos';
-import { videosAnimations } from "../../../utils/files";
 
 export const VideoGallery = ({
   id,
@@ -76,9 +77,7 @@ export const VideoGallery = ({
           <ZeroFiles text={tGallery?.noVideos!} />
         )}
 
-        {!!lastVisible && userVideos.length === maxItems * i && (
-          <MoreButton nextElements={nextElements} />
-        )}
+        {!!lastVisible && userVideos.length === maxItems * i && <MoreButton nextElements={nextElements} />}
       </Wrapper>
     </article>
   );

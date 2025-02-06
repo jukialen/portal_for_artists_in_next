@@ -16,7 +16,8 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Sign up site');
 
-export default async function Registration({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function Registration({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   const t = await getI18n();

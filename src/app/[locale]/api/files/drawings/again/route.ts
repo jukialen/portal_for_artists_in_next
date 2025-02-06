@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { selectFiles } from 'constants/selects';
 import { Database } from 'types/database.types';
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   const maxItems = searchParams.get('maxItems')!;
 
   const locale = getCurrentLocale();
-  const supabase = createRouteHandlerClient<Database>({ cookies });
+  const supabase = await createServer();
 
   const nextArray: FileType[] = [];
 

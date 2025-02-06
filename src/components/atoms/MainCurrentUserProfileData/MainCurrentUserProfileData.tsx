@@ -2,8 +2,7 @@
 
 import { useState, useContext } from 'react';
 import Image from 'next/image';
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Button, Input } from "@chakra-ui/react";
+import { Button, Input } from '@chakra-ui/react';
 import {
   DialogActionTrigger,
   DialogBody,
@@ -16,10 +15,11 @@ import {
   DialogTrigger,
 } from 'components/ui/dialog';
 
-import { useScopedI18n } from "locales/client";
+import { createClient } from 'utils/supabase/clientCSR';
+
+import { useScopedI18n } from 'locales/client';
 
 import { darkMode } from 'constants/links';
-import { Database } from "types/database.types";
 import { EventType, UserType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -46,15 +46,15 @@ export const MainCurrentUserProfileData = ({
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
   const [open, setOpen] = useState(false);
-  
+
   const { isMode } = useContext(ModeContext);
-  
-  const supabase = createClientComponentClient<Database>();
-  
+
+  const supabase = createClient();
+
   const selectedColor = '#FFD068';
-  
+
   const tAnotherForm = useScopedI18n('AnotherForm');
-  
+
   const changeFile = (e: EventType) => {
     if (e.target.files?.[0]) {
       setNewLogo(e.target.files[0]);
@@ -68,14 +68,15 @@ export const MainCurrentUserProfileData = ({
     try {
       if (!!newLogo && !required) {
         const { data, error } = await supabase.storage.from('profiles').upload(`/${userData?.id!}`, newLogo, {
-          upsert: !!userData?.profilePhoto });
-        
+          upsert: !!userData?.profilePhoto,
+        });
+
         if (!!error) console.error(error);
-        
-        const { error: er } = await supabase.from('Users').update({ profilePhoto: data?.path})
-        
+
+        const { error: er } = await supabase.from('Users').update({ profilePhoto: data?.path });
+
         if (!!er) console.error(er);
-        
+
         setValuesFields(tAnotherForm('uploadFile'));
       }
     } catch (e) {
@@ -88,19 +89,17 @@ export const MainCurrentUserProfileData = ({
     <article className={styles.mainData}>
       <div className={styles.logoPseu}>
         <div className={styles.logo}>
-          <Image
-            src={userData?.profilePhoto!}
-            fill
-            alt={`${userData?.profilePhoto} logo`}
-          />
-          <DialogRoot lazyMount open={open} onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
+          <Image src={userData?.profilePhoto!} fill alt={`${userData?.profilePhoto} logo`} />
+          <DialogRoot
+            lazyMount
+            open={open}
+            onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
             <DialogTrigger asChild>
               <Button
                 aria-label="update group logo"
                 colorScheme="yellow"
                 className={styles.updateLogo}
-                onClick={() => setOpen(true)}
-              >
+                onClick={() => setOpen(true)}>
                 <MdCameraEnhance />
               </Button>
             </DialogTrigger>
@@ -108,7 +107,7 @@ export const MainCurrentUserProfileData = ({
               <DialogHeader backgroundColor={`${isMode === darkMode ? '#2D3748' : ''}`} color={selectedColor}>
                 <DialogTitle>Update logo</DialogTitle>
               </DialogHeader>
-              
+
               <DialogBody>
                 <Input
                   type="file"
@@ -120,7 +119,7 @@ export const MainCurrentUserProfileData = ({
                   onChange={changeFile}
                   borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
                 />
-                
+
                 <p style={{ color: '#bd0000' }}>{!newLogo && required && tCurrPrPhoto.validateRequired}</p>
                 {!!newLogo && (
                   <img
@@ -139,7 +138,7 @@ export const MainCurrentUserProfileData = ({
                 {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
               </DialogBody>
               <DialogFooter>
-                <DialogActionTrigger colorScheme="blue" borderColor="transparent"  mr={3}>
+                <DialogActionTrigger colorScheme="blue" borderColor="transparent" mr={3}>
                   {tCurrPrPhoto.cancelButton}
                 </DialogActionTrigger>
                 <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
@@ -153,7 +152,7 @@ export const MainCurrentUserProfileData = ({
         <h1 className={styles.name}>{userData?.pseudonym}</h1>
       </div>
       <div className={styles.description}>{userData?.description}</div>
-      <FilesUpload />
+      <FilesUpload userId={userData?.id!} />
     </article>
   );
 };

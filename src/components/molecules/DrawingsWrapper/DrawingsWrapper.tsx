@@ -1,19 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
+import { getFileRoleId } from 'utils/roles';
+import { createClient } from 'utils/supabase/clientCSR';
 
 import { selectFiles } from 'constants/selects';
-import { Database } from 'types/database.types';
+import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Article } from 'components/molecules/Article/Article';
 import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
-import { getFileRoleId } from '../../../utils/roles';
 
 type DrawingsWrapperType = {
   locale: LangType;
@@ -38,7 +37,7 @@ export const DrawingsWrapper = ({
 
   const maxItems = 30;
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   !!userDrawings && userDrawings.length === maxItems && setLastVisible(userDrawings[userDrawings.length - 1].fileId!);
 

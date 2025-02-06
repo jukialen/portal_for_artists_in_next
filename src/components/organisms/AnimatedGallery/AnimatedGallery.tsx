@@ -1,21 +1,16 @@
 'use client';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-import { selectFiles } from 'constants/selects';
-import { Database } from 'types/database.types';
+import { videosAnimations } from 'utils/files';
+
 import { FileType, GalleryType } from 'types/global.types';
-
-import { getDate } from 'helpers/getDate';
-import { getFileRoleId } from 'utils/roles';
 
 import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { Article } from 'components/molecules/Article/Article';
-import { videosAnimations } from '../../../utils/files';
 
 export const AnimatedGallery = ({ id, author, pseudonym, profilePhoto, tGallery, firstAnimations }: GalleryType) => {
   const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>(firstAnimations!);
@@ -24,7 +19,6 @@ export const AnimatedGallery = ({ id, author, pseudonym, profilePhoto, tGallery,
 
   const pathname = usePathname();
   const maxItems = 30;
-  const supabase = createClientComponentClient<Database>();
 
   const nextElements = async () => {
     try {

@@ -16,7 +16,8 @@ import { MainCurrentUserProfileData } from 'components/atoms/MainCurrentUserProf
 
 export const metadata: Metadata = HeadCom('Account portal site.');
 
-export default async function Account({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function Account({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   const t = await getI18n();

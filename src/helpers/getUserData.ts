@@ -1,13 +1,9 @@
-'use server';
+import { createServer } from 'utils/supabase/clientSSR';
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-
-import { Database } from 'types/database.types';
 import { UserType } from 'types/global.types';
 
 export const getUserData = async (): Promise<UserType | undefined> => {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
+  const supabase = await createServer();
 
   const { data: dataSession } = await supabase.auth.getUser();
 

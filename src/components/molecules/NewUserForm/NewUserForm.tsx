@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserResponse } from '@supabase/gotrue-js';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -10,9 +9,9 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Input } from '@chakra-ui/react';
 
 import { convertStringToUnionType } from 'helpers/convertStringToType';
+import { createClient } from 'utils/supabase/clientCSR';
 
 import { EventType, Provider } from 'types/global.types';
-import { Database } from 'types/database.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
@@ -45,7 +44,7 @@ export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserT
   const [photo, setPhoto] = useState<File | null>(null);
 
   const { push } = useRouter();
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   const initialValues = {
     username: '',

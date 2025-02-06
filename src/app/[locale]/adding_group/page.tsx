@@ -4,6 +4,7 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { getUserData } from 'helpers/getUserData';
 
 import { HeadCom } from 'constants/HeadCom';
+import { LangType } from 'types/global.types';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
@@ -11,7 +12,8 @@ import { AddingGroupForm } from 'components/molecules/AddingGroupForm/AddingGrou
 
 export const metadata: Metadata = HeadCom("User's adding some group");
 
-export default async function AddingGroup({ params: { locale } }: { params: { locale: string } }) {
+export default async function AddingGroup({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   const userData = await getUserData();

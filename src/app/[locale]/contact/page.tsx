@@ -11,7 +11,8 @@ import { ContactContainer } from 'components/molecules/ContactContainer/ContactC
 
 export const metadata: Metadata = HeadCom('Site for contact to me.');
 
-export default async function Contact({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function Contact({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
   
   const userData = await getUserData();

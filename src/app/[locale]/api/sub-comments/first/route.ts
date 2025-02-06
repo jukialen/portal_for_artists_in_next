@@ -1,22 +1,18 @@
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 import { getCurrentLocale } from 'locales/server';
 
 import { RoleType, SubCommentType } from 'types/global.types';
-import { Database } from 'types/database.types';
 
 import { groupRole } from 'utils/roles';
 import { likeList } from 'utils/likes';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 
 const locale = getCurrentLocale();
-
-const supabase = createRouteHandlerClient<Database>({ cookies });
 
 type DataArrayType = {
   subCommentId: string;
@@ -43,6 +39,8 @@ export async function GET(request: NextRequest) {
   let dataArray: DataArrayType[] = [];
 
   try {
+    const supabase = await createServer();
+
     if (!!commentId) {
       const { data, error } = await supabase
         .from('SubComments')

@@ -2,12 +2,12 @@ import Link from 'next/link';
 import { getCurrentLocale, getScopedI18n } from 'locales/server';
 
 import { ArticleVideosType } from 'types/global.types';
-import { dateData } from 'helpers/dateData';
 
 import { DeletionFile } from 'components/molecules/DeletionFile/DeletionFile';
 import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
 
 import styles from './Videos.module.scss';
+// import { useScopedI18n } from '../../../locales/client';
 
 export const Videos = async ({
   name,
@@ -22,8 +22,6 @@ export const Videos = async ({
 }: ArticleVideosType) => {
   const locale = getCurrentLocale();
   const tComments = await getScopedI18n('Comments');
-
-  const dataDateObject = await dateData();
 
   return (
     <div className={styles.videos}>
@@ -44,7 +42,6 @@ export const Videos = async ({
         fileUrl={fileUrl}
         tags={tags!}
         name={name!}
-        dataDateObject={dataDateObject}
         noComments={tComments('noComments')}
         locale={locale}
         authorId={authorId}

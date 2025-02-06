@@ -1,21 +1,16 @@
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 import { getCurrentLocale } from 'locales/server';
 
 import { FilesCommentsType } from 'types/global.types';
-import { Database } from 'types/database.types';
-
-import { likeList } from 'utils/likes';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
+import { likeList } from 'utils/likes';
+import { createServer } from 'utils/supabase/clientSSR';
 
 const locale = getCurrentLocale();
-
-const supabase = createRouteHandlerClient<Database>({ cookies });
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -27,6 +22,8 @@ export async function GET(request: NextRequest) {
   const filesArray: FilesCommentsType[] = [];
 
   try {
+    const supabase = await createServer();
+
     const { data, error } = await supabase
       .from('FilesComments')
       .select(

@@ -90,7 +90,6 @@ export type ArticleVideosType = {
   authorId: string;
   time: string;
   roleId: string;
-  locale: LangType;
 };
 
 //FRIENDS
@@ -262,7 +261,6 @@ export type GalleryType = {
     noVideos: string;
   };
   tFriends?: { friends: string; noFriends: string };
-  locale: LangType;
 };
 
 // COMMENTS

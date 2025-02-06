@@ -1,10 +1,6 @@
 import { NextApiRequest } from 'next';
-import { cookies } from 'next/headers';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
-import { Database } from 'types/database.types';
-
-const supabase = createRouteHandlerClient<Database>({ cookies });
+import { createServer } from 'utils/supabase/clientSSR';
 
 export async function POST(req: NextApiRequest) {
   const requestBody: { roleId: string } = await new Promise((resolve, reject) => {
@@ -22,6 +18,8 @@ export async function POST(req: NextApiRequest) {
   });
 
   try {
+    const supabase = await createServer();
+
     const { data, error } = await supabase.from('Roles').select('role').eq('id', requestBody.roleId).limit(1).single();
 
     if (!!error) console.error(error);

@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { permanentRedirect } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Icon } from '@chakra-ui/react';
+import { Provider } from '@supabase/gotrue-js';
+
+import { createClient } from 'utils/supabase/clientCSR';
 
 import { LangType } from 'types/global.types';
-import { Provider } from '@supabase/gotrue-js';
 
 import { useI18n } from 'locales/client';
 
@@ -19,7 +20,7 @@ import { RiGoogleFill } from 'react-icons/ri';
 export const Providers = ({ locale }: { locale: LangType }) => {
   const [valuesFields, setValuesFields] = useState<string>('');
 
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const t = useI18n();
 

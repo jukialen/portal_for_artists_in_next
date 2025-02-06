@@ -1,8 +1,8 @@
 'use client';
 
 import { useContext, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import tus from 'tus-js-client';
+import { createClient } from 'utils/supabase/clientCSR';
+import { Upload } from 'tus-js-client';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -18,8 +18,6 @@ import {
 } from 'components/ui/dialog';
 import { NativeSelectField, NativeSelectRoot } from 'components/ui/native-select';
 import { ProgressValueText, ProgressRoot } from 'components/ui/progress';
-
-import { getUserData } from 'helpers/getUserData';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -45,7 +43,7 @@ const initialValues: FileDataType = {
   tags: '',
 };
 
-export const FilesUpload = () => {
+export const FilesUpload = ({ userId }: { userId: string }) => {
   const [file, setFile] = useState<File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
   const [progressUpload, setProgressUpload] = useState<number>(0);
@@ -54,7 +52,7 @@ export const FilesUpload = () => {
 
   const { isMode } = useContext(ModeContext);
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
   const tAnotherForm = useScopedI18n('AnotherForm');
   const tAside = useScopedI18n('Aside');
   const t = useI18n();
@@ -74,8 +72,6 @@ export const FilesUpload = () => {
     }
   };
   const uploadFiles = async ({ tags, shortDescription }: FileDataType, { resetForm }: ResetFormType) => {
-    const userData = await getUserData();
-
     try {
       if (!file || !tags) {
         setRequired(true);
@@ -92,15 +88,15 @@ export const FilesUpload = () => {
           file.type === 'video/mp4' ||
           file.type === 'video/webm')
       ) {
-        const { data, error } = await supabase.storage.from('basic').upload(`/${userData?.id!}`, file);
+        const { data, error } = await supabase.storage.from('basic').upload(`/${userId}`, file);
 
         if (!!error) console.error(error);
 
         const { error: er } = await supabase.from('Files').insert([
           {
-            name: Date.now() + '/' + userData?.id! + '/' + file!.name!,
+            name: Date.now() + '/' + userId + '/' + file!.name!,
             shortDescription,
-            authorId: userData?.id!,
+            authorId: userId,
             tags,
             fileUrl: data?.path!,
           },
@@ -118,7 +114,7 @@ export const FilesUpload = () => {
           file.type === 'video/webm')
       ) {
         return new Promise<void>(async (resolve, reject) => {
-          let upload = new tus.Upload(file, {
+          let upload = new Upload(file, {
             endpoint: `https://${projectId}.supabase.co/storage/v1/upload/resumable`,
             retryDelays: [0, 3000, 5000, 10000, 20000],
             headers: { authorization: `Bearer ${access_token}` },
@@ -149,9 +145,9 @@ export const FilesUpload = () => {
               if (progressUpload === 100) {
                 const { error } = await supabase.from('Files').insert([
                   {
-                    name: Date.now() + '/' + userData?.id! + '/' + file!.name!,
+                    name: Date.now() + '/' + userId + '/' + file!.name!,
                     shortDescription,
-                    authorId: userData?.id!,
+                    authorId: userId,
                     tags,
                     fileUrl: upload.url!,
                   },

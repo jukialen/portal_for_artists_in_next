@@ -1,14 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Separator } from '@chakra-ui/react';
 
-import { Database } from 'types/database.types';
-
 import { roles } from 'utils/roles';
+import { createClient } from 'utils/supabase/clientCSR';
 
-import { useI18n, useScopedI18n } from "locales/client";
+import { useI18n, useScopedI18n } from 'locales/client';
 
 import { Links } from 'components/atoms/Links/Links';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -54,8 +52,8 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
   const tAccount = useScopedI18n('Account.groups');
   const tAside = useScopedI18n('Aside');
   const t = useI18n();
-  
-  const supabase = createClientComponentClient<Database>();
+
+  const supabase = createClient();
 
   const nextAdminList = async () => {
     const nextAdminArray: GroupUserType[] = [];
@@ -139,18 +137,18 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
 
     try {
       const { data, error } = await supabase
-      .from('UsersGroups')
-      .select('name, Groups (logo), groupId, roleId')
-      .eq('userId', id)
-      .order('name', { ascending: true })
-      .gt('name', lastMembersVisible)
-      .limit(maxItems);
-      
+        .from('UsersGroups')
+        .select('name, Groups (logo), groupId, roleId')
+        .eq('userId', id)
+        .order('name', { ascending: true })
+        .gt('name', lastMembersVisible)
+        .limit(maxItems);
+
       if (data?.length === 0 || !!error) {
         console.error(error);
         return;
       }
-      
+
       for (const d of data) {
         const role = await roles(d.roleId, id);
         if (role == 'USER') {
@@ -161,7 +159,6 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
           });
         }
       }
-
 
       const nextArray = membersArray.concat(...nextMemberArray);
       setMembersArray(nextArray);

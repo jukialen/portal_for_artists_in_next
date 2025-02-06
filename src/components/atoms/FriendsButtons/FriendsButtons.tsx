@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Separator } from '@chakra-ui/react';
 
-import { Database } from 'types/database.types';
+import { createClient } from 'utils/supabase/clientCSR';
 
 import styles from './FriendsButtons.module.scss';
 import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
@@ -44,7 +43,7 @@ export const FriendsButtons = ({
   const [favorite, setFavorite] = useState(fav);
   const [favoriteLength, setFavoriteLength] = useState(favLength);
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   const addToFriends = async () => {
     try {
@@ -66,7 +65,7 @@ export const FriendsButtons = ({
         if (!data || !!error) {
           console.error(error);
         }
-        
+
         setFriend(true);
       }
     } catch (e) {
@@ -83,7 +82,7 @@ export const FriendsButtons = ({
         .eq('friendId', fid);
 
       if (!data || !!error) console.error(error);
-      
+
       setFavorite(!favorite);
       setFavoriteLength(favorite ? favLength - 1 : favLength + 1);
     } catch (e) {

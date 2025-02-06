@@ -1,25 +1,23 @@
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { setStaticParamsLocale } from 'next-international/server';
 import { usePathname } from 'next/navigation';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { HeadCom } from 'constants/HeadCom';
 import { TagConstants } from 'constants/values';
 import { FileType, LangType } from 'types/global.types';
-import { Database } from 'types/database.types';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/roles';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { Videos } from 'components/molecules/Videos/Videos';
 import { Article } from 'components/molecules/Article/Article';
 
 async function file(locale: LangType, fileId: string) {
   try {
-    const supabase = createServerComponentClient<Database>({ cookies });
+    const supabase = await createServer();
 
     const { data, error } = await supabase
       .from('Files')
@@ -72,7 +70,8 @@ export async function generateMetadata({ shared }: { shared: string }): Promise<
   return { ...HeadCom(`${authorName} user post subpage`) };
 }
 
-export default async function Post({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function Post({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   const pathname = usePathname();
@@ -99,7 +98,6 @@ export default async function Post({ params: { locale } }: { params: { locale: L
           time={authorPost?.time!}
           authorBool={authorPost?.authorName! === pseudonym}
           roleId={authorPost?.roleId!}
-          locale={locale}
         />
       ) : (
         <Article
@@ -114,7 +112,6 @@ export default async function Post({ params: { locale } }: { params: { locale: L
           time={authorPost?.time!}
           authorBool={authorPost?.authorName! === pseudonym}
           roleId={authorPost?.roleId!}
-          locale={locale}
         />
       )}
     </>

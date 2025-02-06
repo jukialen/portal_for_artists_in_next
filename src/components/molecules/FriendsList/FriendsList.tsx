@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { FriendsListType } from 'types/global.types';
-import { Database } from 'types/database.types';
+
+import { createClient } from 'utils/supabase/clientCSR';
 
 import { Tile } from 'components/atoms/Tile/Tile';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -24,7 +24,7 @@ export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListCompo
   );
   let [i, setI] = useState(1);
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
   const maxItems = 30;
 
   const nextFriends = async () => {

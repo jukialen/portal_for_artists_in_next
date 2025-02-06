@@ -8,7 +8,8 @@ import { FormForgotten } from "components/molecules/FormForgotten/FormForgotten"
 
 export const metadata: Metadata = HeadCom('The site for resetting password.');
 
-export default function Forgotten({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function Forgotten({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   return <FormForgotten locale={locale} />

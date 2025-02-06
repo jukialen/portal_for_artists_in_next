@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -21,7 +21,7 @@ export const FormForgotten = ({ locale }: { locale: LangType }) => {
 
   const t = useI18n();
 
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const initialValues = {
     email: '',

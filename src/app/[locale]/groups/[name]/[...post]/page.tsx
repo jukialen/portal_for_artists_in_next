@@ -1,16 +1,14 @@
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { setStaticParamsLocale } from 'next-international/server';
-import { notFound, usePathname } from 'next/navigation';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { notFound } from 'next/navigation';
 
 import { HeadCom } from 'constants/HeadCom';
 import { DateObjectType, LangType, PostsType } from 'types/global.types';
-import { Database } from 'types/database.types';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { Post } from 'components/molecules/Post/Post';
 
@@ -23,9 +21,7 @@ export async function generateMetadata({ post }: { post: string }): Promise<Meta
   return { ...HeadCom(`${name} user post subpage`) };
 }
 
-const supabase = createServerComponentClient<Database>({ cookies });
-
-async function post(locale: LangType, postId: string, name: string, dataDateObject: DateObjectType) {
+async function postOne(locale: LangType, postId: string, name: string, dataDateObject: DateObjectType) {
   let postsArray: PostsType = {
     authorId: '',
     authorName: '',
@@ -40,7 +36,9 @@ async function post(locale: LangType, postId: string, name: string, dataDateObje
     title: '',
     idLiked: '',
   };
-
+  
+  const supabase = await createServer();
+  
   const { data } = await supabase
     .from('Posts')
     .select('*, Users (pseudonym, profilePhoto), Roles (id)')
@@ -74,21 +72,30 @@ async function post(locale: LangType, postId: string, name: string, dataDateObje
   return postsArray;
 }
 
-export default async function PostFromGroup({ params: { locale } }: { params: { locale: LangType } }) {
+type Params = Promise<{
+  locale: LangType;
+  name: string;
+  post: {
+    postId: string;
+  };
+}>;
+
+export default async function PostFromGroup({ params }: { params: Params }) {
+  const { locale, name, post } = await params;
   setStaticParamsLocale(locale);
 
   const dataDateObject = await dateData();
-  const pathname = usePathname();
+  // const pathname = usePathname();
   const userData = await getUserData();
 
-  const split = pathname.split('/');
-  const containUrl = split.includes('https') || split.includes('http');
+  // const split = pathname.split('/');
+  // const containUrl = split.includes('https') || split.includes('http');
 
-  const name = decodeURIComponent(split[containUrl ? 4 : 2]);
-  const postId = decodeURIComponent(split[containUrl ? 6 : 4]);
+  // const name = decodeURIComponent(split[containUrl ? 4 : 2]);
+  // const postId = decodeURIComponent(split[containUrl ? 6 : 4]);
 
-  const postOnGroup = await post(locale, postId, name, dataDateObject);
-
+  const postOnGroup = await postOne(locale, post.postId, name, dataDateObject);
+  console.log('post', post);
   if (!postOnGroup) return notFound();
 
   return <Post userId={userData?.id!} name={name} postOnGroup={postOnGroup!} profilePhoto={userData?.profilePhoto!} />;

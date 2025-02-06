@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import { IconButton, Input, Stack, StackSeparator } from '@chakra-ui/react';
 import * as Yup from 'yup';
@@ -34,7 +34,7 @@ export const FormSignUp = ({
     error: string;
   };
 }) => {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const [isLoading, setIsLoading] = useState(false);
   const [valuesFields, setValuesFields] = useState('');

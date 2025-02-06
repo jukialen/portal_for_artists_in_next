@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Button, Separator, Tabs } from '@chakra-ui/react';
 
-import { Database } from 'types/database.types';
+import { createClient } from 'utils/supabase/clientCSR';
+
 import { JoinUser, MemberType, nameGroupTranslatedType, PostsType, UserType } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -44,7 +44,7 @@ export const NameGroupPage = ({
   const regulation = joined.regulation !== '' ? joined.regulation.split('\n').join('\n') : translated?.noRegulation!;
   const groupId = joined.groupId;
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   const { push } = useRouter();
 

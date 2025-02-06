@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import NextLink from 'next/link';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from 'utils/supabase/clientCSR';
 import { Separator, IconButton, Link } from '@chakra-ui/react';
 import { Avatar } from 'components/ui/avatar';
 
@@ -24,7 +24,7 @@ type MembersType = {
   userData: UserType;
 };
 
-const supabase = createClientComponentClient();
+const supabase = createClient();
 
 export const Members = ({ admin, groupId, name, usersGroupsId, members, translated, userData }: MembersType) => {
   const maxItems = 30;
@@ -69,7 +69,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
         nextModeratorArray.push({
           usersGroupsId,
           pseudonym: mod.Users[0].pseudonym,
-          profilePhoto: mod.Users[0].profilePhoto,
+          profilePhoto: mod.Users[0].profilePhoto!,
           role: mod.Roles[0].role,
         });
       }
@@ -103,7 +103,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
         nextMemberArray.push({
           usersGroupsId,
           pseudonym: mod.Users[0].pseudonym,
-          profilePhoto: mod.Users[0].profilePhoto,
+          profilePhoto: mod.Users[0].profilePhoto!,
           role: mod.Roles[0].role,
         });
       }
@@ -149,7 +149,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
           .insert([
             {
               groupId,
-              userId: userData.id,
+              userId: userData?.id!,
               role: 'MODERATOR',
             },
           ])

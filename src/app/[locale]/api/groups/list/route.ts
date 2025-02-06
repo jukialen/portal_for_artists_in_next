@@ -1,11 +1,8 @@
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
-import { Database } from 'types/database.types';
+import { createServer } from 'utils/supabase/clientSSR';
+
 import { GroupListType } from 'types/global.types';
-
-const supabase = createRouteHandlerClient<Database>({ cookies });
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -14,24 +11,31 @@ export async function GET(request: NextRequest) {
 
   const groupArray: GroupListType[] = [];
 
-  const { data, error } = await supabase
-    .from('Groups')
-    .select('name, logo')
-    .gt('name', lastVisible)
-    .order('name', { ascending: false })
-    .limit(parseInt(maxItems));
+  try {
+    const supabase = await createServer();
 
-  if (!!error) {
-    console.error(error);
+    const { data, error } = await supabase
+      .from('Groups')
+      .select('name, logo')
+      .gt('name', lastVisible)
+      .order('name', { ascending: false })
+      .limit(parseInt(maxItems));
+
+    if (!!error) {
+      console.error(error);
+      return groupArray;
+    }
+
+    for (const g of data) {
+      groupArray.push({
+        name: g.name!,
+        fileUrl: !!g.logo ? g.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+      });
+    }
+
+    return groupArray;
+  } catch (e) {
+    console.error(e);
     return groupArray;
   }
-
-  for (const g of data) {
-    groupArray.push({
-      name: g.name!,
-      fileUrl: !!g.logo ? g.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
-    });
-  }
-
-  return groupArray;
 }

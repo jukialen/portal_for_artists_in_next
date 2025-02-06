@@ -1,11 +1,8 @@
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { setStaticParamsLocale } from 'next-international/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
 import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
-import { Database } from 'types/database.types';
 import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
@@ -13,6 +10,7 @@ import { getScopedI18n } from 'locales/server';
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
 import { getFileRoleId } from 'utils/roles';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { AppWrapper } from 'components/atoms/AppWrapper/AppWrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
@@ -22,11 +20,11 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Main site for logged in users.');
 
-const supabase = createServerComponentClient<Database>({ cookies });
-
 async function getTop10Drawings(maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
   try {
     const filesArray: FileType[] = [];
+
+    const supabase = await createServer();
 
     const { data, error } = await supabase
       .from('Files')
@@ -66,6 +64,8 @@ async function getTop10Pavo(maxItems: number, tag: Tags, locale: LangType, dataD
   try {
     const filesArray: FileType[] = [];
 
+    const supabase = await createServer();
+
     const { data } = await supabase
       .from('Files')
       .select(selectFiles)
@@ -102,7 +102,8 @@ async function getTop10Pavo(maxItems: number, tag: Tags, locale: LangType, dataD
   }
 }
 
-export default async function App({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function App({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   const tApp = await getScopedI18n('App');

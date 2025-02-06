@@ -10,7 +10,8 @@ import { NewPasswordForm } from "components/molecules/NewPasswordForm/NewPasswor
 
 export const metadata: Metadata = HeadCom('The site for resetting password.');
 
-export default async function NewPassword({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function NewPassword({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   const t = await getI18n();

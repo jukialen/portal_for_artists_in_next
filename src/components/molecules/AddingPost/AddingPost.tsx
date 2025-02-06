@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Input, Textarea } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
+
+import { createClient } from 'utils/supabase/clientCSR';
 
 import { ResetFormType } from 'types/global.types';
 
@@ -34,7 +35,7 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
 
   const initialValues = { title: '', content: '' };
 
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const schemaNew = Yup.object({
     post: SchemaValidation().description,

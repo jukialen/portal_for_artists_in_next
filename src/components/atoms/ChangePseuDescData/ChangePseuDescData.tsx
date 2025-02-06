@@ -1,7 +1,7 @@
 'use client';
 
 import { useContext, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -10,7 +10,6 @@ import { Input, Textarea } from '@chakra-ui/react';
 import { useI18n, useScopedI18n } from 'locales/client';
 
 import { darkMode } from 'constants/links';
-import { Database } from 'types/database.types';
 import { EventType, ResetFormType, UserType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -29,7 +28,7 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
   const { isMode } = useContext(ModeContext);
   const [valuesFields, setValuesFields] = useState('');
   const [photo, setPhoto] = useState<File | undefined>();
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   const t = useI18n();
   const tAnotherForm = useScopedI18n('AnotherForm');

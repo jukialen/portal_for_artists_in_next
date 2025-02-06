@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Button, IconButton, Input } from '@chakra-ui/react';
 import {
   DialogActionTrigger,
@@ -15,7 +14,8 @@ import {
   DialogTrigger,
 } from 'components/ui/dialog';
 
-import { Database } from 'types/database.types';
+import { createClient } from 'utils/supabase/clientCSR';
+
 import { EventType, nameGroupTranslatedType } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -36,7 +36,7 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
   const [valuesFields, setValuesFields] = useState<string>('');
   const [open, setOpen] = useState(false);
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   const changeFile = (e: EventType) => {
     if (e.target.files?.[0]) {

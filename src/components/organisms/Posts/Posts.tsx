@@ -2,14 +2,16 @@
 
 import { useState } from 'react';
 
+import { againPosts } from 'utils/posts';
+
 import { PostsType } from 'types/global.types';
+
 import { useScopedI18n } from 'locales/client';
 
 import { Post } from 'components/molecules/Post/Post';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 
 import styles from './Posts.module.scss';
-import { againPosts } from '../../../utils/posts';
 
 type GroupsPropsType = {
   groupId: string;

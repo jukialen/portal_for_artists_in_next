@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
 import { Icon, Button, Input, Group, IconButton } from '@chakra-ui/react';
 import { DialogBody, DialogContent, DialogRoot } from 'components/ui/dialog';
 import { Avatar } from 'components/ui/avatar';
 
-import { Database } from 'types/database.types';
+import { createClient } from 'utils/supabase/clientCSR';
+
 import { EventType, Tags, UserType } from 'types/global.types';
 
 import styles from './UserHeaderCom.module.scss';
@@ -69,7 +69,7 @@ export const UserHeaderCom = ({ headers, locale, userData, translated }: Headers
   const [results, setResults] = useState<SearchingValues[]>([]);
   const [open, setOpen] = useState(false);
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   const searchOptions = [
     headers.account,

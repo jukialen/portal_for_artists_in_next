@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Separator } from '@chakra-ui/react';
 
-import { Database } from 'types/database.types';
+import { createClient } from 'utils/supabase/clientCSR';
+
 import { GroupUsersType } from 'types/global.types';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -38,7 +38,7 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
 
   const maxItems = 30;
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   const nextAdminList = async () => {
     const nextAdminArray: GroupUsersType[] = [];

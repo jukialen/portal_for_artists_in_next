@@ -6,19 +6,21 @@ import { LangType } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
 
-import { serverSupabase } from 'helpers/creatingSupabase';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { NewUserForm } from 'components/molecules/NewUserForm/NewUserForm';
 
 export const metadata: Metadata = HeadCom('Site for new user');
 
-export default async function NewUser({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function NewUser({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   const tAnotherForm = await getScopedI18n('AnotherForm');
   const tNewUser = await getScopedI18n('NewUser');
 
-  const supabase = await serverSupabase();
+  const supabase = await createServer();
+
   const newUserTranslate = {
     title: tNewUser('title'),
     username: tNewUser('name'),

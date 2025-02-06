@@ -1,11 +1,9 @@
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { setStaticParamsLocale } from 'next-international/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createServer } from 'utils/supabase/clientSSR';
 import { Tabs } from '@chakra-ui/react';
 
 import { HeadCom } from 'constants/HeadCom';
-import { Database } from 'types/database.types';
 import { GroupUsersType, LangType } from 'types/global.types';
 
 import { getI18n, getScopedI18n } from 'locales/server';
@@ -24,9 +22,9 @@ import { GroupUser } from 'components/organisms/GroupUser/GroupUser';
 
 import styles from './page.module.scss';
 
-const supabase = createServerComponentClient<Database>({ cookies });
-
 async function getFidAndFavs(pseudonym: string) {
+  const supabase = await createServer();
+
   const { data: d, error } = await supabase.from('Users').select('id').eq('pseudonym', pseudonym).limit(1).single();
   if (!d || !!error) console.error('no user');
 
@@ -45,6 +43,8 @@ async function getFidAndFavs(pseudonym: string) {
 }
 async function getAdminGroups(adminId: string, maxItems: number) {
   const adminArray: GroupUsersType[] = [];
+
+  const supabase = await createServer();
 
   const { data, error } = await supabase
     .from('Groups')
@@ -71,6 +71,8 @@ async function getAdminGroups(adminId: string, maxItems: number) {
 async function getModGroups(userId: string, maxItems: number) {
   const modArray: GroupUsersType[] = [];
 
+  const supabase = await createServer();
+
   const { data, error } = await supabase
     .from('UsersGroups')
     .select('name, Groups (logo)')
@@ -95,6 +97,8 @@ async function getModGroups(userId: string, maxItems: number) {
 }
 async function getMembersGroups(userId: string, maxItems: number) {
   const memArray: GroupUsersType[] = [];
+
+  const supabase = await createServer();
 
   const { data, error } = await supabase
     .from('UsersGroups')
@@ -127,13 +131,10 @@ export async function generateMetadata({
   return { ...HeadCom(`${pseudonym} site`) };
 }
 
-export default async function User({
-  params: { locale, pseudonym },
-}: {
-  params: { locale: LangType; pseudonym: string };
-}) {
+export default async function User({ params }: { params: Promise<{ locale: LangType; pseudonym: string }> }) {
+  const { locale, pseudonym } = await params;
   setStaticParamsLocale(locale);
-  
+
   const tAccountaMenu = await getScopedI18n('Account.aMenu');
   const tAside = await getScopedI18n('Aside');
   const t = await getI18n();

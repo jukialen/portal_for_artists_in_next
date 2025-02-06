@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link'
 
-import { DateObjectType, LangType, Tags } from 'types/global.types';
+import { LangType, Tags } from 'types/global.types';
 
 import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { FilesComments } from 'components/molecules/FilesComments/FilesComments';
@@ -20,7 +20,6 @@ type FileOptionsType = {
   fileUrl: string;
   tags: Tags;
   name: string;
-  dataDateObject: DateObjectType;
   locale: LangType;
   noComments: string;
   roleId: string;

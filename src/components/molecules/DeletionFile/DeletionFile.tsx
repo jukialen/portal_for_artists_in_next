@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from 'utils/supabase/clientCSR';
 import { Button } from 'components/ui/button';
 import { IconButton } from '@chakra-ui/react';
 import {
@@ -37,7 +37,7 @@ export const DeletionFile = ({ fileId }: { fileId: string }) => {
   const selectedColor = '#FFD068';
 
   const deleteFile = async () => {
-    const supabase = createClientComponentClient<Database>();
+    const supabase = await createClient();
 
     try {
       setOpen(false);

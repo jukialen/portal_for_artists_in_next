@@ -1,18 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { cookies } from 'next/headers';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 import { giveRole } from 'utils/roles';
+import { createServer } from 'utils/supabase/clientSSR';
 
-import { Database } from 'types/database.types';
 import { CommentType, FilesCommentsType, RoleType, SubCommentType } from 'types/global.types';
-
-const supabase = createRouteHandlerClient<Database>({ cookies });
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
   let role: RoleType | undefined;
 
   try {
+    const supabase = await createServer();
+
     const requestBody: CommentType & FilesCommentsType & SubCommentType = await new Promise((resolve, reject) => {
       let body = '';
       req.on('data', (chunk) => {

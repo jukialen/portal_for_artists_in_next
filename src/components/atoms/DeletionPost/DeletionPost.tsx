@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from 'utils/supabase/clientCSR';
 import { IconButton } from '@chakra-ui/react';
 import { Button } from 'components/ui/button';
 import {
@@ -41,7 +41,7 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
   const selectedColor = '#FFD068';
 
   const deletePost = async () => {
-    const supabase = createClientComponentClient<Database>();
+    const supabase = await createClient();
 
     try {
       setOpen(false);

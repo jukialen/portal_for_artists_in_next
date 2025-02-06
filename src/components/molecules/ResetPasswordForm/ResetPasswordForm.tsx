@@ -2,13 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Separator, Input } from '@chakra-ui/react';
 
-import { Database } from "types/database.types";
+import { createClient } from 'utils/supabase/clientCSR';
 
 import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -51,7 +50,7 @@ export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType) => {
     repeatPassword: SchemaValidation().password,
   });
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   const newPasswordEntered = async ({ newPassword, repeatPassword }: ResetPasswordType) => {
     try {

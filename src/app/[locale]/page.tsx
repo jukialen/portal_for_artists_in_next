@@ -5,6 +5,7 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { getScopedI18n } from 'locales/server';
 
 import { HeadCom } from 'constants/HeadCom';
+import { LangType } from 'types/global.types';
 
 import styles from './page.module.scss';
 import dark_mode from '../../../public/dark_mode.png';
@@ -20,18 +21,18 @@ import authorButton from '../../../public/authorButton.png';
 import top from '../../../public/top.jpg';
 import minimalism from '../../../public/minimalism.png';
 import likes from '../../../public/likes.png';
-import { LangType } from "../../types/global.types";
 
 export const metadata: Metadata = HeadCom('Main site.');
 
-export default async function Home({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function Home({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
-  
+
   const t = await getScopedI18n('Main');
   const width = 450;
   const height = 320;
   const quality = 100;
- 
+
   return (
     <>
       <div className={styles.group__element}>

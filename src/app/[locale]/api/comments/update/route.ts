@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { cookies } from 'next/headers';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { Database } from 'types/database.types';
 import { TableNameEnum } from 'types/global.types';
@@ -13,7 +13,7 @@ type UpdateCommentType = {
 };
 
 export async function PATCH(req: NextApiRequest, res: NextApiResponse) {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
+  const supabase = await createServer();
 
   try {
     const requestBody: UpdateCommentType = await new Promise((resolve, reject) => {

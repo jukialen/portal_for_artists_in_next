@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
@@ -37,7 +37,7 @@ export const FormSignIn = ({
   const [valuesFields, setValuesFields] = useState('');
 
   const { push, refresh } = useRouter();
-  
+
   const schemaValidation = Yup.object({
     email: SchemaValidation().email,
     password: SchemaValidation().password,
@@ -45,7 +45,7 @@ export const FormSignIn = ({
   const showPass = () => setShow(!show);
 
   const signIn = async ({ email, password }: UserFormType, { resetForm }: ResetFormType) => {
-    const supabase = createClientComponentClient();
+    const supabase = createClient();
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password: password! });
 
@@ -58,7 +58,7 @@ export const FormSignIn = ({
       const { data: dataUser } = await supabase
         .from('Users')
         .select('*')
-        .eq('id', data.session?.user.id);
+        .eq('id', data.session?.user.id!);
 
       if (dataUser?.length !== 0) {
         localStorage.setItem('menu', 'true');

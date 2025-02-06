@@ -3,7 +3,8 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Button, Separator, IconButton, Textarea } from '@chakra-ui/react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+
+import { createClient } from 'utils/supabase/clientCSR';
 
 import { ResetFormType } from 'types/global.types';
 
@@ -41,7 +42,7 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
   const [openUpRegulation, setOpenUpRegulation] = useState(false);
   const [valuesFields, setValuesFields] = useState('');
 
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const initialValuesDes = { newDescription: descrip };
   const initialValuesReg = { newRegulation: regul };
@@ -57,14 +58,14 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
   const updateDescription = async ({ newDescription }: NewDescType, { resetForm }: ResetFormType) => {
     const { status, statusText, data, error } = await supabase
       .from('Groups')
-      .update([{ description: newDescription }])
+      .update({ description: newDescription })
       .eq('groupId', groupId)
       .select('description')
       .limit(1)
       .single();
     if (status === 200 || 204) {
       resetForm(initialValuesReg);
-      setDescrip(data?.description);
+      setDescrip(data?.description!);
     } else {
       console.error(`statusText: ${statusText} \n Error: ${error}`);
       setValuesFields(`${t('unknownError')}. \n Error: ${error}`);
@@ -74,7 +75,7 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
   const updateRegulations = async ({ newRegulation }: NewRegulationType, { resetForm }: ResetFormType) => {
     const { status, statusText, data, error } = await supabase
       .from('Groups')
-      .update([{ regulation: newRegulation }])
+      .update({ regulation: newRegulation })
       .eq('groupId', groupId)
       .select('regulation')
       .limit(1)
@@ -82,7 +83,7 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
 
     if (status === 200 || 204) {
       resetForm(initialValuesReg);
-      setRegul(data?.regulation);
+      setRegul(data?.regulation!);
     } else {
       console.error(`statusText: ${statusText} \n Error: ${error}`);
       setValuesFields(`${t('unknownError')}. \n Error: ${error}`);

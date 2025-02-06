@@ -1,11 +1,8 @@
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
-import { Database } from 'types/database.types';
 import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
@@ -13,6 +10,7 @@ import { getI18n } from 'locales/server';
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { DrawingsWrapper } from 'components/molecules/DrawingsWrapper/DrawingsWrapper';
@@ -21,12 +19,12 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Sites with drawings and photos.');
 
-const supabase = createServerComponentClient<Database>({ cookies });
-
 async function getFirstDrawings(pid: string, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
   try {
     const filesArray: FileType[] = [];
-
+    
+    const supabase = await createServer();
+    
     const { data, error } = await supabase
       .from('Files')
       .select(selectFiles)
@@ -57,7 +55,8 @@ async function getFirstDrawings(pid: string, maxItems: number, locale: LangType,
   }
 }
 
-export default async function Drawings({ params: { locale, pid } }: { params: { locale: LangType; pid: Tags } }) {
+export default async function Drawings({ params }: { params: Promise<{ locale: LangType; pid: Tags }> }) {
+  const { locale, pid } = await params;
   setStaticParamsLocale(locale);
 
   const t = await getI18n();

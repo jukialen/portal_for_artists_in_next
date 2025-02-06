@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Button, IconButton } from '@chakra-ui/react';
 import { Avatar } from 'components/ui/avatar';
 
-import { Database } from 'types/database.types';
+import { createClient } from 'utils/supabase/clientCSR';
+
 import { PostsType } from 'types/global.types';
 
 import { useI18n } from 'locales/client';
@@ -53,7 +53,7 @@ export const Post = ({
   let [likeCount, setLikeCount] = useState(likes);
 
   const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${authorName}/${postId}`;
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   const showingComments = () => setShowComments(!showComments);
 

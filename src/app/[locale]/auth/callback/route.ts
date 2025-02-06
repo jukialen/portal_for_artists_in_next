@@ -1,17 +1,14 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { NextRequest, NextResponse } from 'next/server'
-import { Database } from 'types/database.types';
+import { NextRequest, NextResponse } from 'next/server';
+
+import { createServer } from 'utils/supabase/clientSSR';
 
 export async function GET(req: NextRequest) {
-  const cookieStore = cookies();
+  const supabase = await createServer();
+  const { searchParams } = new URL(req.url);
+  const code = searchParams.get('code');
 
-  const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
-  const { searchParams } = new URL(req.url)
-  const code = searchParams.get('code')
-  
   if (code) {
-    await supabase.auth.exchangeCodeForSession(code)
+    await supabase.auth.exchangeCodeForSession(code);
   }
-  return NextResponse.redirect(new URL(`${req.url}/app`, req.url))
+  return NextResponse.redirect(new URL(`${req.url}/app`, req.url));
 }

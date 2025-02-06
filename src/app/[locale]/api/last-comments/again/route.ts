@@ -1,21 +1,17 @@
-import { cookies } from 'next/headers';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { NextRequest } from 'next/server';
 
 import { getCurrentLocale } from 'locales/server';
 
 import { LastCommentType } from 'types/global.types';
-import { Database } from 'types/database.types';
 
 import { likeList } from 'utils/likes';
 import { giveRole } from 'utils/roles';
 
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
-import { NextRequest } from 'next/server';
+import { createServer } from 'utils/supabase/clientSSR';
 
 const locale = getCurrentLocale();
-
-const supabase = createRouteHandlerClient<Database>({ cookies });
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -26,6 +22,8 @@ export async function GET(request: NextRequest) {
   const lastCommentArray: LastCommentType[] = [];
 
   try {
+    const supabase = await createServer();
+
     const { data, error } = await supabase
       .from('LastComments')
       .select('*')

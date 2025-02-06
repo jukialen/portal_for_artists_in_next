@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
+import { LangType } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
 
@@ -9,7 +10,8 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Site with information about terms.');
 
-export default async function Terms({ params: { locale } }: { params: { locale: string } }) {
+export default async function Terms({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   const t = await getI18n();

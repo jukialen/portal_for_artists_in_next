@@ -15,7 +15,8 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Faq site');
 
-export default async function Faq({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function Faq({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
 
   const link = '#4F8DFF !important';

@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-
 import { Button, Input, Textarea } from '@chakra-ui/react';
 
-import { Database } from 'types/database.types';
+import { createClient } from 'utils/supabase/clientCSR';
+
 import { EventType, ResetFormType, UserType } from 'types/global.types';
 
 import { FormError } from 'components/atoms/FormError/FormError';
@@ -50,7 +49,7 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
     description: SchemaValidation().description,
   });
 
-  const supabase = createClientComponentClient<Database>();
+  const supabase = createClient();
 
   const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] ? setLogoGroup(e.target.files[0]) : setLogoGroup(null);

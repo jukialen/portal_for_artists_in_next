@@ -1,10 +1,6 @@
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
-import { Database } from 'types/database.types';
-
-const supabase = createRouteHandlerClient<Database>({ cookies });
+import { createServer } from 'utils/supabase/clientSSR';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -21,6 +17,8 @@ export async function GET(req: NextRequest) {
   let res;
 
   try {
+    const supabase = await createServer();
+
     if (!!postId || !!fileId) {
       const { data, error } = await supabase
         .from('Liked')

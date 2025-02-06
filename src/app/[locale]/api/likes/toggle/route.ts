@@ -1,11 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
-import { Database } from 'types/database.types';
-
-const supabase = createRouteHandlerClient<Database>({ cookies });
+import { createServer } from 'utils/supabase/clientSSR';
 
 type PostType = {
   postId: string;
@@ -13,6 +9,8 @@ type PostType = {
   fileId: string;
 };
 export default async function handler(req: NextApiRequest | NextRequest, res: NextApiResponse) {
+  const supabase = await createServer();
+
   if (req.method === 'POST') {
     const requestBody: PostType = await new Promise((resolve, reject) => {
       let body = '';

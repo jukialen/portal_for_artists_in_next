@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { getUserData } from 'helpers/getUserData';
 import { roles } from 'utils/roles';
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   const memberArray: GroupUserType[] = [];
   const moderatorArray: GroupUserType[] = [];
 
-  const supabase = createRouteHandlerClient<Database>({ cookies });
+  const supabase = await createServer();
   const user = await getUserData();
 
   try {

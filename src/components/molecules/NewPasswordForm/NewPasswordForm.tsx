@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Separator, Input } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
+
+import { createClient } from 'utils/supabase/clientCSR';
 
 import { ResetFormType } from 'types/global.types';
 
@@ -28,7 +28,7 @@ type TranslateType = {
 export const NewPasswordForm = ({ translate }: { translate: TranslateType }) => {
   const [valuesFields, setValuesFields] = useState('');
 
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const initialValues = {
     password: '',

@@ -19,7 +19,8 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Settings site for unlogged in users.');
 
-export default async function Settings({ params: { locale } }: { params: { locale: LangType } }) {
+export default async function Settings({ params }: { params: Promise<{ locale: LangType }> }) {
+  const { locale } = await params;
   setStaticParamsLocale(locale);
   const t = await getI18n();
   const tSettings = await getScopedI18n('Settings');

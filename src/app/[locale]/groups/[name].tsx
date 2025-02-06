@@ -1,20 +1,18 @@
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { HeadCom } from 'constants/HeadCom';
-import { Database } from 'types/database.types';
 import { DateObjectType, LangType, MemberType, PostsType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
+import { getDate } from 'helpers/getDate';
+import { dateData } from 'helpers/dateData';
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { UpdateGroupLogo } from 'components/molecules/UpdateGroupLogo/UpdateGroupLogo';
 import { NameGroupPage } from 'components/Views/NameGroupPage/NameGroupPage';
 
 import styles from './page.module.scss';
-import { getDate } from '../../../helpers/getDate';
-import { dateData } from '../../../helpers/dateData';
 
 type JoinUser = {
   logo: string;
@@ -28,8 +26,6 @@ type JoinUser = {
   roleId: string;
   usersGroupsId: string;
 };
-
-const supabase = createServerComponentClient<Database>({ cookies });
 
 const emptyObject: JoinUser = {
   logo: '',
@@ -45,6 +41,8 @@ const emptyObject: JoinUser = {
 };
 
 async function joinedUser(name: string, stringError: string): Promise<JoinUser> {
+  const supabase = await createServer();
+  
   const myUser = await getUserData();
 
   const userGroupData = await supabase
@@ -95,6 +93,8 @@ async function joinedUser(name: string, stringError: string): Promise<JoinUser> 
   }
 }
 async function members(usersGroupsId: string, name: string, stringError: string): Promise<MemberType[]> {
+  const supabase = await createServer();
+  
   const usersGroupData = await supabase
     .from('Groups')
     .select(
@@ -133,7 +133,9 @@ async function members(usersGroupsId: string, name: string, stringError: string)
 }
 async function getFirstPosts(groupId: string, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
   const postsArray: PostsType[] = [];
-
+  
+  const supabase = await createServer();
+  
   const { data, error } = await supabase
     .from('Posts')
     .select('*, Users (pseudonym, profilePhoto), Roles (id)')
@@ -146,19 +148,7 @@ async function getFirstPosts(groupId: string, maxItems: number, locale: LangType
     return;
   } else {
     for (const post of data!) {
-      const {
-        title,
-        content,
-        shared,
-        commented,
-        authorId,
-        groupId,
-        postId,
-        createdAt,
-        updatedAt,
-        Users,
-        Roles,
-      } = post;
+      const { title, content, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
 
       const { data: lData, count } = await supabase.from('Liked').select('id, userId').match({ postId, authorId });
 
@@ -189,7 +179,8 @@ export async function generateMetadata({ name }: { name: string }): Promise<Meta
   return { ...HeadCom(`${name} group website`) };
 }
 
-export default async function Groups({ params: { locale, name } }: { params: { locale: LangType; name: string } }) {
+export default async function Groups({ params }: { params: Promise<{ locale: LangType; name: string }> }) {
+  const { locale, name } = await params;
   const tAnotherForm = await getScopedI18n('AnotherForm');
   const tOther = await getI18n();
 
@@ -258,7 +249,6 @@ export default async function Groups({ params: { locale, name } }: { params: { l
         <NameGroupPage
           name={name}
           userData={userData!}
-          locale={locale}
           joined={joined}
           usersGroupsId={joined.usersGroupsId}
           members={membersGroups}
