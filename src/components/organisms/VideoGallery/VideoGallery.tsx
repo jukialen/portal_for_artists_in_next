@@ -10,16 +10,9 @@ import { videosAnimations } from 'utils/files';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { Videos } from 'components/molecules/Videos/Videos';
+import { AnothersWrapperContent } from 'components/Views/AnothersWrapperContent/AnothersWrapperContent';
 
-export const VideoGallery = ({
-  id,
-  author,
-  pseudonym,
-  profilePhoto,
-  tGallery,
-  firstVideos,
-}: GalleryType) => {
+export const VideoGallery = ({ id, author, pseudonym, profilePhoto, tGallery, firstVideos }: GalleryType) => {
   const maxItems = 30;
 
   const [userVideos, setUserVideos] = useState(firstVideos!);
@@ -27,10 +20,13 @@ export const VideoGallery = ({
     firstVideos?.length === maxItems ? firstVideos[firstVideos!.length - 1].createdAt : '',
   );
   let [i, setI] = useState(1);
+  const [loadingFiles, setLoadingFiles] = useState(false);
 
   const pathname = usePathname();
 
   const nextElements = async () => {
+    setLoadingFiles(!loadingFiles);
+
     try {
       const filesArray: FileType[] = (await videosAnimations(1, maxItems, id, 'again', lastVisible!))!;
 
@@ -41,6 +37,7 @@ export const VideoGallery = ({
         setLastVisible(nextArray[nextArray.length - 1].createdAt);
         setI(i++);
       }
+      setLoadingFiles(!loadingFiles);
     } catch (e) {
       console.error('no your videos', e);
     }
@@ -52,27 +49,12 @@ export const VideoGallery = ({
 
       <Wrapper>
         {userVideos.length > 0 ? (
-          userVideos.map(
-            (
-              { fileId, name, fileUrl, shortDescription, tags, authorId, authorName, time, roleId }: FileType,
-              index,
-            ) => (
-              <Videos
-                key={index}
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorId={authorId}
-                authorName={authorName!}
-                authorBool={authorName! === pseudonym!}
-                profilePhoto={profilePhoto!}
-                time={time}
-                roleId={roleId!}
-              />
-            ),
-          )
+          <AnothersWrapperContent
+            loadingFiles={loadingFiles}
+            userFiles={userVideos}
+            pseudonym={pseudonym!}
+            profilePhoto={profilePhoto}
+          />
         ) : (
           <ZeroFiles text={tGallery?.noVideos!} />
         )}

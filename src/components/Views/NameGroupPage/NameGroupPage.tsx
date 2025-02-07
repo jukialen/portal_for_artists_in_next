@@ -199,7 +199,7 @@ export const NameGroupPage = ({
       )}
       <Separator orientation="horizontal" className={styles.hr} />
 
-      <Tabs.Root className={styles.tabs} lazyMount isFitted variant="subtle">
+      <Tabs.Root className={styles.tabs} lazyMount fitted variant="subtle">
         <Tabs.List className={styles.tablist} role="tablist">
           {contentList.map((content, index) => (
             <Tabs.Trigger
@@ -210,7 +210,7 @@ export const NameGroupPage = ({
               borderColor={activeColor}
               className={styles.tab}
               role="tab"
-              value={content}>
+              value={content!}>
               {content}
             </Tabs.Trigger>
           ))}
@@ -221,7 +221,7 @@ export const NameGroupPage = ({
             borderColor={activeColor}
             className={styles.tab}
             role="tab"
-            value={contentList[0]}>
+            value={contentList[0]!}>
             {contentList[0]}
           </Tabs.Trigger>
           {join && (
@@ -232,7 +232,7 @@ export const NameGroupPage = ({
               borderColor={activeColor}
               className={styles.tab}
               role="tab"
-              value={contentList[1]}>
+              value={contentList[1]!}>
               {contentList[1]}
             </Tabs.Trigger>
           )}
@@ -243,14 +243,14 @@ export const NameGroupPage = ({
             borderColor={activeColor}
             className={styles.tab}
             role="tab"
-            value={contentList[2]}>
+            value={contentList[2]!}>
             {contentList[2]}
           </Tabs.Trigger>
           <Tabs.Indicator rounded="l2" />
         </Tabs.List>
 
         <Tabs.List padding={zeroPadding}>
-          <Tabs.Content padding={zeroPadding}>
+          <Tabs.Content value={contentList[0]!} padding={zeroPadding}>
             <>
               {join && (
                 <AddingPost
@@ -275,7 +275,7 @@ export const NameGroupPage = ({
             </>
           </Tabs.Content>
           {join && (
-            <Tabs.Content padding={zeroPadding}>
+            <Tabs.Content value={contentList[1]!} padding={zeroPadding}>
               <Members
                 admin={joined.admin}
                 groupId={groupId}
@@ -287,7 +287,7 @@ export const NameGroupPage = ({
               />
             </Tabs.Content>
           )}
-          <Tabs.Content padding={zeroPadding}>
+          <Tabs.Content value={contentList[2]!} padding={zeroPadding}>
             <DescriptionSection
               description={description}
               regulation={regulation}

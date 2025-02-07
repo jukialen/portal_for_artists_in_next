@@ -20,9 +20,9 @@ import styles from './page.module.scss';
 export const metadata: Metadata = HeadCom('Sites with drawings and photos.');
 
 async function getFirstDrawings(pid: string, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
+  const filesArray: FileType[] = [];
+  
   try {
-    const filesArray: FileType[] = [];
-    
     const supabase = await createServer();
     
     const { data, error } = await supabase
@@ -52,6 +52,7 @@ async function getFirstDrawings(pid: string, maxItems: number, locale: LangType,
   } catch (e) {
     console.error(e);
     console.log('No such drawings!');
+    return filesArray;
   }
 }
 
@@ -82,6 +83,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
           locale={locale}
           pid={pid}
           pseudonym={user?.pseudonym!}
+          profilePhoto={user?.profilePhoto!}
           dataDateObject={dataDateObject}
           noDrawings={tDrawingsCategories.noDrawings}
           filesDrawings={drawings}

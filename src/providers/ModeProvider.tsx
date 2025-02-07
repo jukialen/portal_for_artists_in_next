@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { createContext, ReactNode, useEffect, useState } from 'react';
 
@@ -8,7 +8,7 @@ type childrenType = {
 
 export const ModeContext = createContext({
   isMode: '',
-  changeMode: (mode: string) => {},
+  changeMode: (mode: 'dark' | 'light') => {},
 });
 
 export const ModeProvider = ({ children }: childrenType) => {
@@ -18,7 +18,7 @@ export const ModeProvider = ({ children }: childrenType) => {
     const watchSysTheme = window.matchMedia('(prefers-color-scheme: dark)');
     const themeLocalStorage = localStorage.getItem('mode');
     const themeSystem = watchSysTheme.matches ? 'dark' : 'light';
-
+  
     if (themeLocalStorage !== undefined || null) {
       return themeLocalStorage ?? themeSystem;
     }
@@ -27,6 +27,8 @@ export const ModeProvider = ({ children }: childrenType) => {
   useEffect(() => {
     if (!isMode) return setMode(defaultTheme());
     localStorage.setItem('mode', isMode ?? defaultTheme());
+    localStorage.setItem('chakra-ui-color-mode',isMode ?? defaultTheme());
+    
     setMode(isMode ?? defaultTheme());
   }, [isMode]);
 
@@ -34,8 +36,10 @@ export const ModeProvider = ({ children }: childrenType) => {
     if (mode === 'dark') {
       setMode('dark');
       localStorage.setItem('mode', 'dark');
+      localStorage.setItem('chakra-ui-color-mode', 'dark');
     } else {
       localStorage.setItem('mode', 'light');
+      localStorage.setItem('chakra-ui-color-mode', 'light');
       setMode('light');
     }
   };

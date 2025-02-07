@@ -16,6 +16,7 @@ import { AnothersWrapper } from 'components/molecules/AnothersWrapper/AnothersWr
 
 import styles from './page.module.scss';
 import { getUserData } from 'helpers/getUserData';
+import { error } from "@chakra-ui/utils";
 
 const downloadDrawings = async ({
   index,
@@ -39,7 +40,7 @@ const downloadDrawings = async ({
       .order('name', { ascending: false })
       .limit(maxItems);
 
-    if (data?.length === 0) return filesArray;
+    if (!!error || data?.length === 0) return filesArray;
 
     for (const draw of data!) {
       const { fileId, name, shortDescription, Users, fileUrl, authorId, createdAt, updatedAt } = draw;

@@ -204,12 +204,7 @@ export const OptionsComments = ({
                 </DialogContent>
               </DialogRoot>
 
-              <DialogRoot
-                lazyMount
-                open={openEdit}
-                onOpenChange={(e: { openEdit: boolean | ((prevState: boolean) => boolean) }) =>
-                  setOpenEdit(e.openEdit)
-                }>
+              <DialogRoot lazyMount open={openEdit} onOpenChange={() => setOpenEdit(!openEdit)}>
                 <DialogTrigger></DialogTrigger>
                 <DialogContent m="auto" backgroundColor={`${isMode === darkMode ? '#2D3748' : '#f7f7f7'}`}>
                   <DialogHeader

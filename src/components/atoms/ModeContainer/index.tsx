@@ -17,7 +17,7 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
   const { isMode, changeMode } = useContext(ModeContext);
   const [mode, setMode] = useState(false);
 
-  const newMode = (mode: string) => {
+  const newMode = (mode: 'dark' | 'light') => {
     changeMode(mode);
     showMode();
   };

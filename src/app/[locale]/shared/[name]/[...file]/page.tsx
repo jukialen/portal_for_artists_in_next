@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
-import { usePathname } from 'next/navigation';
 
 import { HeadCom } from 'constants/HeadCom';
 import { TagConstants } from 'constants/values';
@@ -70,14 +69,9 @@ export async function generateMetadata({ shared }: { shared: string }): Promise<
   return { ...HeadCom(`${authorName} user post subpage`) };
 }
 
-export default async function Post({ params }: { params: Promise<{ locale: LangType }> }) {
-  const { locale } = await params;
+export default async function Post({ params }: { params: Promise<{ locale: LangType, name: string, fileId: string }> }) {
+  const { locale, name, fileId } = await params;
   setStaticParamsLocale(locale);
-
-  const pathname = usePathname();
-  const split = pathname.split('/');
-  const name = split[2];
-  const fileId = split[3];
 
   const pseudonym = await getUserData().then((t) => t?.pseudonym!);
 

@@ -222,7 +222,7 @@ export default async function User({ params }: { params: Promise<{ locale: LangT
         friendBool={!!fave!.favorite}
         translated={tFriends}
       />
-      <Tabs.Root className={styles.tabs} size="sm" lazyMount isFitted variant="subtle">
+      <Tabs.Root className={styles.tabs} size="sm" lazyMount fitted variant="subtle">
         <Tabs.List className={styles.topTabList} role="tablist">
           <div className={styles.profile__user__menu}>
             <div className={styles.content}>
@@ -242,11 +242,12 @@ export default async function User({ params }: { params: Promise<{ locale: LangT
           </div>
           <Tabs.Indicator rounded="l2" />
         </Tabs.List>
-        <Tabs.Content className={styles.tabsForPanels}>
-          <Tabs.Root lazyMount variant="subtle" size="sm" isFitted>
+        <Tabs.Content value={contentList[0]} className={styles.tabsForPanels}>
+          <Tabs.Root lazyMount variant="subtle" size="sm" fitted>
             <Tabs.List className={styles.tabList} role="tablist">
               {fileTabList.map((tab, index) => (
                 <Tabs.Trigger
+                  value={tab}
                   key={index}
                   className={styles.tabForPanels}
                   _selected={{ borderColor: selectedColor }}
@@ -258,7 +259,7 @@ export default async function User({ params }: { params: Promise<{ locale: LangT
                 </Tabs.Trigger>
               ))}
             </Tabs.List>
-            <Tabs.Content size="sm" isFitted className={styles.tabsForPanels}>
+            <Tabs.Content value={fileTabList[0]} className={styles.tabsForPanels}>
               <PhotosGallery
                 id={user?.id!}
                 pseudonym={user?.pseudonym!}
@@ -268,7 +269,7 @@ export default async function User({ params }: { params: Promise<{ locale: LangT
                 tGallery={tGallery}
               />
             </Tabs.Content>
-            <Tabs.Content className={styles.tabPanel} role="tabpanel">
+            <Tabs.Content value={fileTabList[1]} className={styles.tabPanel} role="tabpanel">
               <AnimatedGallery
                 id={user?.id!}
                 pseudonym={user?.pseudonym!}
@@ -278,7 +279,7 @@ export default async function User({ params }: { params: Promise<{ locale: LangT
                 tGallery={tGallery}
               />
             </Tabs.Content>
-            <Tabs.Content className={styles.tabPanel} role="tabpanel">
+            <Tabs.Content value={fileTabList[2]} className={styles.tabPanel} role="tabpanel">
               <VideoGallery
                 id={user?.id!}
                 pseudonym={user?.pseudonym!}
@@ -290,7 +291,7 @@ export default async function User({ params }: { params: Promise<{ locale: LangT
             </Tabs.Content>
           </Tabs.Root>
         </Tabs.Content>
-        <Tabs.Content className={styles.tabPanel} role="tabpanel">
+        <Tabs.Content value={contentList[1]} className={styles.tabPanel} role="tabpanel">
           <ProfileUser
             language={tProfile}
             pseudonym={pseudonymName}
@@ -298,10 +299,10 @@ export default async function User({ params }: { params: Promise<{ locale: LangT
             description={user?.description!}
           />
         </Tabs.Content>
-        <Tabs.Content className={styles.tabPanel} role="tabpanel">
+        <Tabs.Content value={contentList[1]} className={styles.tabPanel} role="tabpanel">
           <FriendsList id={user?.id!} tFriends={tFriends} firstFriendsList={firstFriends!} />
         </Tabs.Content>
-        <Tabs.Content className={styles.tabPanel} role="tabpanel">
+        <Tabs.Content value={contentList[2]} className={styles.tabPanel} role="tabpanel">
           <GroupUser
             id={user?.id!}
             firstAdminArray={adminGroups!}

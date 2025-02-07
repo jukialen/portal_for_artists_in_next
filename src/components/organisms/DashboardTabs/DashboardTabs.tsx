@@ -35,7 +35,7 @@ export const DashboardTabs = ({
   const fileTabList = [tDash?.friends, tDash?.groups, tDash?.photos, tDash?.animations, tDash?.videos];
 
   return (
-    <Tabs.Root className={styles.tabsMenu} size="sm" isLazy lazyMount isFitted variant="subtle">
+    <Tabs.Root className={styles.tabsMenu} size="sm" lazyMount fitted variant="subtle">
       <Tabs.List className={styles.topTabList} role="tablist">
         <div className={styles.account__menu}>
           <div className={styles.content}>
@@ -47,7 +47,8 @@ export const DashboardTabs = ({
                 _hover={{ borderColor: hoverColor }}
                 _active={{ borderColor: activeColor }}
                 borderColor={borderColor}
-                role="tab">
+                role="tab"
+                value={tab!}>
                 {tab}
               </Tabs.Trigger>
             ))}
@@ -56,13 +57,13 @@ export const DashboardTabs = ({
       </Tabs.List>
 
       <div className={styles.tabContents}>
-        <Tabs.Content className={styles.tabContent} role="tabcontent">
+        <Tabs.Content value={fileTabList[0]!} className={styles.tabContent} role="tabcontent">
           <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} />
         </Tabs.Content>
-        <Tabs.Content className={styles.tabContent} role="tabcontent">
+        <Tabs.Content value={fileTabList[1]!} className={styles.tabContent} role="tabcontent">
           <GroupUsers id={id!} firstAdminList={firstAdminList!} firstModsUsersList={firstModsUsersList!} />
         </Tabs.Content>
-        <Tabs.Content padding={0} role="tabcontent">
+        <Tabs.Content value={fileTabList[2]!} padding={0} role="tabcontent">
           <ClientPortalWrapper>
             <PhotosGallery
               id={id}
@@ -73,7 +74,7 @@ export const DashboardTabs = ({
             />
           </ClientPortalWrapper>
         </Tabs.Content>
-        <Tabs.Content padding={0} role="tabcontent">
+        <Tabs.Content value={fileTabList[3]!} padding={0} role="tabcontent">
           <ClientPortalWrapper>
             <AnimatedGallery
               id={id}
@@ -84,7 +85,7 @@ export const DashboardTabs = ({
             />
           </ClientPortalWrapper>
         </Tabs.Content>
-        <Tabs.Content padding={0} role="tabcontent">
+        <Tabs.Content value={fileTabList[4]!} padding={0} role="tabcontent">
           <ClientPortalWrapper>
             <VideoGallery
               id={id!}

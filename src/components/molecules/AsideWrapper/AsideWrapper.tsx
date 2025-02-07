@@ -26,7 +26,7 @@ export const AsideWrapper = ({
   friendsAsideList: FriendsListArrayType[];
   groupsAsideList: GroupsType[];
 }) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const [openDr, setOpenDr] = useState(false);
   const { isMode } = useContext(ModeContext);
@@ -66,7 +66,7 @@ export const AsideWrapper = ({
         </button>
       )}
 
-      <DrawerRoot placement="start" oopen={openDr} onClick={() => setOpenDr(!openDr)}>
+      <DrawerRoot placement="start" open={openDr} onOpenChange={() => setOpenDr(!openDr)}>
         <DrawerBackdrop />
         <DrawerContent style={{ width: undefined }} className={styles.drawer}>
           <DrawerBody className={styles.aside}>

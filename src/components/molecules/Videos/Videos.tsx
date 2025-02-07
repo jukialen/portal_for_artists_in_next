@@ -7,7 +7,6 @@ import { DeletionFile } from 'components/molecules/DeletionFile/DeletionFile';
 import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
 
 import styles from './Videos.module.scss';
-// import { useScopedI18n } from '../../../locales/client';
 
 export const Videos = async ({
   name,

@@ -22,7 +22,7 @@ export const AppTop10s = async ({ data, type }: { data: FileType[]; type: 'video
             tags={tags!}
             authorName={authorName!}
             authorId={authorId}
-            authorBool={true}
+            authorBool={authorName === userData?.pseudonym!}
             profilePhoto={userData?.profilePhoto!}
             time={time}
             roleId={roleId!}
@@ -37,7 +37,7 @@ export const AppTop10s = async ({ data, type }: { data: FileType[]; type: 'video
             tags={tags!}
             authorName={authorName}
             authorId={authorId}
-            authorBool={true}
+            authorBool={authorName === userData?.pseudonym!}
             profilePhoto={userData?.profilePhoto!}
             time={time}
             roleId={roleId!}

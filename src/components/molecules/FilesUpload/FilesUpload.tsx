@@ -22,7 +22,6 @@ import { ProgressValueText, ProgressRoot } from 'components/ui/progress';
 import { useI18n, useScopedI18n } from 'locales/client';
 
 import { access_token, bucketName, darkMode, projectId } from 'constants/links';
-import { Database } from 'types/database.types';
 import { Tags, EventType, ResetFormType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';

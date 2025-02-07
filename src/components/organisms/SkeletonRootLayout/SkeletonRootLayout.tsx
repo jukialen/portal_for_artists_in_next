@@ -1,7 +1,6 @@
 'use client';
 
 import { ReactElement, ReactNode, useContext } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
 
 import { darkMode } from 'constants/links';
 import { LangType } from 'types/global.types';
@@ -19,35 +18,7 @@ type ChildrenType = {
 
 export const SkeletonRootLayout = ({ children, session, userMenuComponents, locale }: ChildrenType) => {
   const { isMode } = useContext(ModeContext);
-
-  const { push } = useRouter();
-
-  const pathname = usePathname();
-
-  if (
-    !session &&
-    !(
-      pathname === `/${locale}/` ||
-      pathname === `/${locale}/signin` ||
-      pathname === `/${locale}/signup` ||
-      pathname === `/${locale}/forgotten` ||
-      pathname === `/${locale}/new-password`
-    )
-  ) {
-    push(`/${locale}/`);
-  }
-
-  if (
-    session &&
-    (pathname === `/${locale}/` ||
-      pathname === `/${locale}/signin` ||
-      pathname === `/${locale}/signup` ||
-      pathname === `/${locale}/forgotten` ||
-      pathname === `/${locale}/new-password`)
-  ) {
-    push(`/${locale}/app`);
-  }
-
+  
   return (
     <div className={`${styles.whole__page} ${isMode === darkMode ? 'dark' : ''}`}>
       {session ? userMenuComponents.userHeader : userMenuComponents.header}

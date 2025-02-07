@@ -26,6 +26,6 @@ export const getUserData = async (): Promise<UserType | undefined> => {
       console.error(`Error for getting user data: ${error?.message}, wit ${error?.code}`);
     }
   } else {
-    console.error('not user');
+    console.log('not user');
   }
 };

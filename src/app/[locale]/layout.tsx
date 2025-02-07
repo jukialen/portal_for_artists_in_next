@@ -19,12 +19,16 @@ import { SkeletonRootLayout } from 'components/organisms/SkeletonRootLayout/Skel
 import 'styles/reset.scss';
 import 'styles/global.scss';
 import 'styles/darkLightMode.scss';
+import { Viewport } from 'next';
 
 type ChildrenType = {
   children: ReactNode;
   params: Promise<{ locale: LangType }>;
 };
 
+export const viewport: Viewport = {
+  themeColor: '#FFD068',
+}
 export function generateStaticParams() {
   return getStaticParams();
 }

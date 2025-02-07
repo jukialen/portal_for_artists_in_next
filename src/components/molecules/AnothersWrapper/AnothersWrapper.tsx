@@ -50,12 +50,13 @@ export const AnothersWrapper = ({ index, pseudonym, profilePhoto, noVideos, file
     <>
       {userDrawings.length > 0 ? (
         <ClientPortalWrapper>
-          <AnothersWrapperContent
-            loadingFiles
-            userDrawings={userDrawings}
-            pseudonym={pseudonym}
-            profilePhoto={profilePhoto}
-          />
+          {/*<AnothersWrapperContent*/}
+          {/*  loadingFiles={loadingFiles}*/}
+          {/*  userFiles={userDrawings}*/}
+          {/*  pseudonym={pseudonym}*/}
+          {/*  profilePhoto={profilePhoto}*/}
+          {/*/>*/}
+          <div></div>
         </ClientPortalWrapper>
       ) : (
         <ZeroFiles text={noVideos} />

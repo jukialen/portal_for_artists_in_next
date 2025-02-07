@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, SetStateAction, useContext, useState } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from 'components/ui/accordion';
 import { ModeContext } from 'providers/ModeProvider';
 
@@ -27,23 +27,20 @@ export const AccordionWrapper = ({
       unmountOnExit
       defaultValue={['']}
       value={value}
-      onValueChange={(e: { value: { toString: () => SetStateAction<string[]> } }) => setValue(e.value.toString())}
+      onValueChange={(e) => setValue(e.value)}
       width="95vw"
       maxW="26rem"
       justifyContent="space-around"
       alignSelf="center"
-      m>
-      <AccordionItem margin={m} backgroundColor={backgroundColor} color={color}>
-        <AccordionItemTrigger />
+      >
         {items.map((item, index) => (
-          <AccordionItem key={index} value={item.value}>
+          <AccordionItem key={index} value={item.value.toString()} margin={m} backgroundColor={backgroundColor} color={color}>
             <h2>
               <AccordionItemTrigger className={styles.accordionButton}>{item.head}</AccordionItemTrigger>
               <AccordionItemContent color={color}>{item.body}</AccordionItemContent>
             </h2>
           </AccordionItem>
         ))}
-      </AccordionItem>
     </AccordionRoot>
   );
 };
