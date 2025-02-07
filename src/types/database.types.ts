@@ -374,20 +374,20 @@ export type Database = {
           roleId: string
           shared: number
           title: string
-          updatedAt: string
+          updatedAt: string | null
         }
         Insert: {
           authorId: string
-          commented: number
+          commented?: number
           content: string
           createdAt?: string
           groupId: string
-          likes: number
+          likes?: number
           postId?: string
           roleId: string
-          shared: number
+          shared?: number
           title: string
-          updatedAt: string
+          updatedAt?: string | null
         }
         Update: {
           authorId?: string
@@ -400,7 +400,7 @@ export type Database = {
           roleId?: string
           shared?: number
           title?: string
-          updatedAt?: string
+          updatedAt?: string | null
         }
         Relationships: [
           {
