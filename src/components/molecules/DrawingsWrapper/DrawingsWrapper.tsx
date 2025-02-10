@@ -9,8 +9,9 @@ import { createClient } from 'utils/supabase/clientCSR';
 import { selectFiles } from 'constants/selects';
 import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
-import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
+import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
+import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { AnothersWrapperContent } from 'components/Views/AnothersWrapperContent/AnothersWrapperContent';
 
 type DrawingsWrapperType = {
@@ -97,12 +98,14 @@ export const DrawingsWrapper = ({
   return (
     <>
       {!!userDrawings && userDrawings.length > 0 ? (
-        <AnothersWrapperContent
-          loadingFiles={loadingFiles}
-          userFiles={userDrawings}
-          pseudonym={pseudonym}
-          profilePhoto={profilePhoto}
-        />
+        <ClientPortalWrapper>
+          <AnothersWrapperContent
+            loadingFiles={loadingFiles}
+            userFiles={userDrawings}
+            pseudonym={pseudonym}
+            profilePhoto={profilePhoto}
+          />
+        </ClientPortalWrapper>
       ) : (
         <ZeroFiles text={noDrawings} />
       )}

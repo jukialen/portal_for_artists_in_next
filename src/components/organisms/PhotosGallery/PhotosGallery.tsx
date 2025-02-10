@@ -7,6 +7,7 @@ import { graphics } from 'utils/files';
 
 import { FileType, GalleryType } from 'types/global.types';
 
+import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
@@ -46,12 +47,14 @@ export const PhotosGallery = ({ id, author, pseudonym, profilePhoto, tGallery, f
       {decodeURIComponent(pathname!) === `/account/${author}` && <h2 className="title">{tGallery?.userPhotosTitle}</h2>}
       <Wrapper>
         {userPhotos.length > 0 ? (
-          <AnothersWrapperContent
-            loadingFiles={loadingFiles}
-            userFiles={userPhotos}
-            pseudonym={pseudonym!}
-            profilePhoto={profilePhoto}
-          />
+          <ClientPortalWrapper>
+            <AnothersWrapperContent
+              loadingFiles={loadingFiles}
+              userFiles={userPhotos}
+              pseudonym={pseudonym!}
+              profilePhoto={profilePhoto}
+            />
+          </ClientPortalWrapper>
         ) : (
           <ZeroFiles text={tGallery?.noPhotos!} />
         )}

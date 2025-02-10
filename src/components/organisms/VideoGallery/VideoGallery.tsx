@@ -7,6 +7,7 @@ import { FileType, GalleryType } from 'types/global.types';
 
 import { videosAnimations } from 'utils/files';
 
+import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -49,12 +50,14 @@ export const VideoGallery = ({ id, author, pseudonym, profilePhoto, tGallery, fi
 
       <Wrapper>
         {userVideos.length > 0 ? (
-          <AnothersWrapperContent
-            loadingFiles={loadingFiles}
-            userFiles={userVideos}
-            pseudonym={pseudonym!}
-            profilePhoto={profilePhoto}
-          />
+          <ClientPortalWrapper>
+            <AnothersWrapperContent
+              loadingFiles={loadingFiles}
+              userFiles={userVideos}
+              pseudonym={pseudonym!}
+              profilePhoto={profilePhoto}
+            />
+          </ClientPortalWrapper>
         ) : (
           <ZeroFiles text={tGallery?.noVideos!} />
         )}
