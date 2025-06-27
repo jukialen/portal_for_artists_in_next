@@ -1,8 +1,6 @@
 import { type NextRequest } from 'next/server';
 import { createI18nMiddleware } from 'next-international/middleware';
 
-import { updateSession } from 'utils/supabase/middlewares/update-session';
-
 const i18n = createI18nMiddleware({
   locales: ['en', 'pl', 'jp'],
   defaultLocale: 'en',
@@ -13,8 +11,6 @@ const i18n = createI18nMiddleware({
 });
 
 export async function middleware(req: NextRequest) {
-  await updateSession(req);
-
   return i18n(req);
 }
 

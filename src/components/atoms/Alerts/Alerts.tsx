@@ -49,56 +49,28 @@ export const Alerts = ({ valueFields }: AlertsType) => {
     }
   };
 
-  const switchAlertColor = (valueFields: string) => {
+  const bcColor = (valueFields: string) => {
     let color: string;
-
-    switch (valueFields) {
-      case t('Contact.success'):
-      case t('NewPassword.success'):
-      case t('ResetPassword.success'):
-      case t('NewUser.successSending'):
-      case t('DeletionPost.deleted'):
-      case t('DeletionFile.deleted'):
-      case t('NavForm.statusLogin'):
-      case t('NavForm.successInfoRegistration'):
-      case t('PasswordAccount.success'):
-      case t('Forgotten.success'):
-      case t('AnotherForm.uploadFile'):
-      case t('Account.profile.successSending'):
-        return (color = 'green');
-      case t('DeletionAccount.deletionAccount'):
-      case t('DeletionPost.deleting'):
-      case t('DeletionFile.deleting'):
-        return (color = 'blue');
-      case t('NavForm.unVerified'):
-      case t('PasswordAccount.differentPasswords'):
-        return (color = 'yellow');
-      case 'Nie usunięto pliku.':
-      case t('NavForm.notExist'):
-      case t('NavForm.theSameEmail'):
-      case t('AnotherForm.notUploadFile'):
-      case t('ResetPassword.failed'):
-      case t('NewUser.errorSending'):
-      case t('EmailVerification.expired'):
-      case t('unknownError'):
-      case t('ResetPassword.wrongValues'):
-      case t('NavForm.wrongLoginData'):
-      case t('error'):
-        return (color = 'red');
+    switch (switchAlert(valueFields)) {
+      case 'success':
+        return (color = 'green.500');
+      case 'error':
+        return (color = 'red.500');
       default:
-        return (color = 'yellow');
+        return (color = 'yellow.500');
     }
   };
-
   return (
     <Alert
       title={valueFields}
       status={switchAlert(valueFields)}
-      colorScheme={switchAlertColor(valueFields)}
-      color="blackAlpha.900"
+      backgroundColor={bcColor(valueFields)}
+      color="blackAlpha.700"
       size="sm"
       margin="1rem auto"
-      width="17.5rem"
-      fontSize="md" />
+      padding="1rem"
+      maxWidth="20.5rem"
+      fontSize="md"
+    />
   );
 };

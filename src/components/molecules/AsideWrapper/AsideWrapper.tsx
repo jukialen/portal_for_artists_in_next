@@ -62,7 +62,7 @@ export const AsideWrapper = ({
 
       {!openDr && (
         <button className={styles.aside__right} aria-label="left menu button" onClick={() => setOpenDr(!openDr)}>
-          <RightOutlined />
+          <RightOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
         </button>
       )}
 
@@ -96,7 +96,7 @@ export const AsideWrapper = ({
               className={styles.drawer__right}
               aria-label="right menu button"
               onClick={() => setOpenDr(false)}>
-              <RightOutlined />
+              <RightOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
             </Button>
           </DrawerBody>
         </DrawerContent>

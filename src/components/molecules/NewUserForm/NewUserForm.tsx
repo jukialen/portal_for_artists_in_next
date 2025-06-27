@@ -57,6 +57,7 @@ export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserT
   });
 
   const handleChangeFile = async (e: EventType) => {
+    console.log(e.target.files?.[0]);
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
 
@@ -68,7 +69,7 @@ export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserT
     try {
       if (!!photo) {
         if (
-          photo.size < 6291456 &&
+          photo.size < 1200000 &&
           (photo.type === 'image/jpg' ||
             photo.type === 'image/jpeg' ||
             photo.type === 'image/png' ||
@@ -82,7 +83,11 @@ export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserT
             .upload(`/${userDataAuth.data.user?.id!}`, photo);
 
           if (!!error) console.error(error);
-
+          
+          console.log("photo", photo);
+          console.log("error", error);
+          console.log("data", data);
+          
           const name = Date.now() + '/' + userDataAuth.data.user?.id! + '/' + photo!.name!;
           const { error: er } = await supabase.from('Files').insert([
             {

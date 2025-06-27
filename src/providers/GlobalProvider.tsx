@@ -20,7 +20,7 @@ type ChildrenType = {
 export const GlobalProvider = ({ children, locale }: ChildrenType) => {
   const pathname = usePathname();
   const router = useRouter();
-  const homePage = pathname === `/${locale}`;
+  const homePage = pathname === `/${locale === 'en' ? '' : locale}`;
   
   locale === '/' && router.replace(`/${useCurrentLocale}`);
   
@@ -52,7 +52,7 @@ export const GlobalProvider = ({ children, locale }: ChildrenType) => {
   }, [homePage, pathname]);
 
   return (
-        <I18nProviderClient>
+        <I18nProviderClient locale={locale}>
           <ModeProvider>
             {children}
             <AffixButton />

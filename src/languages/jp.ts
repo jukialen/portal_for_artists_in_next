@@ -17,7 +17,7 @@ export default {
     unVerified: 'メールがベリファイいませんでした。',
     wrongLoginData: 'メールパスワードの組み合わせが正しくありません。',
     statusLogin: 'ログイン中している。',
-    notExist: 'ユーザーは生きませｎ。',
+    notExist: 'ユーザーは生きません。',
     validateRequired: '所要',
     validateUsernameFl: '第一字が大きいでなければなりません。',
     validateUsernameHKik: '名前は字だけ受け入れます。今、ひらがなとカタカナと漢字が出来ます。',
@@ -96,7 +96,7 @@ export default {
     aData: {
       subscription: 'サブスクリプション',
       currentPlan: '現在の計画',
-      changeButton: ' 変わります',
+      changeButton: '変わります',
       actualEmail: '現在のメール',
       changeEmail: 'メールが変わります',
       currentPassword: '現在のパスポート入ります',
@@ -292,6 +292,11 @@ export default {
     wrongValues: '価値観は同じではありません。',
     success: 'パスワードのリセットに成功しました！',
     failed: 'パスワードのリセットに失敗しました。もう一度やり直してください。',
+  },
+  PasswordAccount: {
+    differentPasswords: "Passwords aren't the same.",
+    buttonAria: 'button to update the password',
+    success: 'The password has been updated.',
   },
   DeletionFile: {
     loadingText: '消してます',

@@ -36,7 +36,7 @@ export const FormSignIn = ({
   const [show, setShow] = useState(false);
   const [valuesFields, setValuesFields] = useState('');
 
-  const { push, refresh } = useRouter();
+  const { push } = useRouter();
 
   const schemaValidation = Yup.object({
     email: SchemaValidation().email,
@@ -61,8 +61,8 @@ export const FormSignIn = ({
         .eq('id', data.session?.user.id!);
 
       if (dataUser?.length !== 0) {
-        localStorage.setItem('menu', 'true');
-        localStorage.getItem('menu') === 'true' && refresh();
+        localStorage.setItem("menu", "true");
+        push(`/${locale}/app`);
       } else {
         push(`/${locale}/new-user`);
       }

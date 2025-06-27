@@ -4,7 +4,7 @@ import { MouseEventHandler, useState } from 'react';
 import { Affix, Button } from 'antd';
 
 import styles from './AffixButton.module.scss';
-import { UpOutlined } from '@ant-design/icons';
+import { IoIosArrowUp } from "react-icons/io";
 
 export const AffixButton = () => {
   const [bottom, setBottom] = useState<number>(0);
@@ -26,11 +26,9 @@ export const AffixButton = () => {
   return (
     <Affix offsetBottom={bottom}>
       <Button type="primary" href="#" onClick={changeBottom}>
-        <UpOutlined
+        <IoIosArrowUp
           className={`${styles.up} ${visible && styles.up__active}`}
-          aria-label="top of page button"
-          alt="top of page button"
-        />
+          aria-label="top of page button" />
       </Button>
     </Affix>
   );

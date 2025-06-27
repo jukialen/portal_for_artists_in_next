@@ -1,15 +1,15 @@
 import { ReactNode } from 'react';
 import Script from 'next/script';
+import { Provider } from 'components/ui/provider';
 
 import { getStaticParams } from 'locales/server';
-
-import { createServer } from 'utils/supabase/clientSSR';
 
 import { GTM_ID } from 'constants/links';
 import { LangType } from 'types/global.types';
 
+import { getUserData } from 'helpers/getUserData';
+
 import { GlobalProvider } from 'providers/GlobalProvider';
-import { Provider } from 'components/ui/provider';
 
 import { UserHeader } from 'components/organisms/UserHeader/UserHeader';
 import { Header } from 'components/organisms/Header/Header';
@@ -21,6 +21,7 @@ import 'styles/global.scss';
 import 'styles/darkLightMode.scss';
 import { Viewport } from 'next';
 
+
 type ChildrenType = {
   children: ReactNode;
   params: Promise<{ locale: LangType }>;
@@ -28,7 +29,7 @@ type ChildrenType = {
 
 export const viewport: Viewport = {
   themeColor: '#FFD068',
-}
+};
 export function generateStaticParams() {
   return getStaticParams();
 }
@@ -36,18 +37,18 @@ export function generateStaticParams() {
 export default async function RootLayout({ children, params }: ChildrenType) {
   const { locale } = await params;
   
-  const supabase = await  createServer();
-
+  console.log('RootLayout locale:', locale);
+  
   const userMenuComponents = {
     userHeader: <UserHeader locale={locale} />,
     header: <Header locale={locale} />,
     aside: <Aside />,
   };
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const user = await getUserData();
 
+  const isUser = !!user;
+  
   return (
     <html lang={locale} suppressHydrationWarning>
       {process.env.NODE_ENV === 'production' && (
@@ -63,7 +64,7 @@ export default async function RootLayout({ children, params }: ChildrenType) {
 
         <Provider>
           <GlobalProvider locale={locale}>
-            <SkeletonRootLayout session={!!session} userMenuComponents={userMenuComponents} locale={locale}>
+            <SkeletonRootLayout isUser={isUser} userMenuComponents={userMenuComponents} locale={locale}>
               {children}
             </SkeletonRootLayout>
           </GlobalProvider>

@@ -30,7 +30,7 @@ export default {
     validatePseudonymMax: 'Pseudonym is too long. Must have a maximum 15 letters.',
     validateEmail: 'Invalid email address',
     validatePasswordNum: 'Password is too short. Must have a minimum 9 letters.',
-    validatePasswordOl: 'Password must have at least 1 bid letter.',
+    validatePasswordOl: 'Password must have at least 1 big letter.',
     validatePasswordHKik: 'Password accept only letters. These can be Hiragana, Katakana and kanji characters.',
     validatePasswordOn: 'Password must have at least 1 number.',
     validatePasswordSpec: 'Password must include at least 1 special character: #?!@$%^&*-',
@@ -52,7 +52,7 @@ export default {
     acceptInfoFour: 'Privacy Policy',
     dot: '.',
     changeToCreate: 'Already have an account? ',
-    changeToLogin: "Don't have an account? ",
+    changeToLogin: "Don't you have an account? ",
   },
   Aside: {
     category: 'Categories',
@@ -119,7 +119,7 @@ export default {
       userVideosTitle: 'Your videos',
       userLikedVideos: 'Liked by others',
       userAnimationsTitle: 'Your animations',
-      userLikedAnimations: 'Liked　animations',
+      userLikedAnimations: 'Liked animations',
     },
     profile: {
       aboutMe: 'About me',
