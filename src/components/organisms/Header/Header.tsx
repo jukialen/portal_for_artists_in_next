@@ -22,7 +22,7 @@ export const Header = async ({ locale }: { locale: LangType }) => {
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>
-        <Link href={`/${locale}`}>
+        <Link href='/'>
           <Image src="/pfartists.png" width={58} height={58} alt="Pfartists logo" quality={100} priority />
         </Link>
       </h1>

@@ -38,7 +38,6 @@ export default async function RootLayout({ children, params }: ChildrenType) {
   const { locale } = await params;
   
   console.log('RootLayout locale:', locale);
-  
   const userMenuComponents = {
     userHeader: <UserHeader locale={locale} />,
     header: <Header locale={locale} />,

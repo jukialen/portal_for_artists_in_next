@@ -16,10 +16,10 @@ export const Nav = ({ headers, locale }: HeadersType) => {
     <nav className={`${styles.nav} ${locale === 'jp' ? styles.nav__jp : ''}`}>
       <ul className={styles.list}>
         <li className={styles.menu}>
-          <Link href={`/${locale}/signin`}>{headers.signIn}</Link>
+          <Link href={'/signin'}>{headers.signIn}</Link>
         </li>
         <li className={styles.menu}>
-          <Link href={`/${locale}/signup`}>{headers.signUp}</Link>
+          <Link href={'/signup'}>{headers.signUp}</Link>
         </li>
       </ul>
     </nav>

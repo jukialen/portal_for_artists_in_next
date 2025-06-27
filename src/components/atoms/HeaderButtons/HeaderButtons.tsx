@@ -28,14 +28,14 @@ export const HeaderButtons = ({ headers, locale }: HeadersType) => {
         colorScheme="yellow"
         className={styles.menu_buttons}
         id={styles.settings_button}
-        onClick={() => push(`/${locale}/signin`)}
+        onClick={() => push('/signin')}
         aria-label="sign in/up button">
         <BiLogInCircle />
         <p>{headers.signIn}</p>
       </Button>
       <Button
         colorScheme="yellow"
-        onClick={() => push(`/${locale}/settings`)}
+        onClick={() => push('/settings')}
         className={styles.menu_buttons}
         aria-label="Settings">
         <MdOutlineSettings />

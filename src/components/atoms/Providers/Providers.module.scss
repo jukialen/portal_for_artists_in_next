@@ -6,6 +6,7 @@
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  position: relative;
 
   .button {
     width: 2.7rem;
@@ -44,5 +45,11 @@
     &:nth-child(4) {
       color: $line_provider;
     }
+  }
+
+  .errorComp {
+    position: absolute;
+    bottom: 3rem;
+    width: max-content;
   }
 }

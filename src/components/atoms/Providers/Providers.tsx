@@ -62,7 +62,7 @@ export const Providers = ({ locale }: { locale: LangType }) => {
         <Icon as={FaDiscord} className={styles.svg} />
       </button>
 
-      {!!valuesFields && <Alerts valueFields={valuesFields} />}
+      <div className={styles.errorComp}>{!!valuesFields && <Alerts valueFields={valuesFields} />}</div>
     </div>
   );
 };

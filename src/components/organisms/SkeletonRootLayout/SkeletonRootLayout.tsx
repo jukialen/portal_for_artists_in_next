@@ -23,39 +23,45 @@ export const SkeletonRootLayout = ({ children, isUser, userMenuComponents, local
   const path = usePathname();
   const { push } = useRouter();
   
-  console.log(`checkUserAndPath, ${checkUserAndPath}`)
-useEffect(() => {
   const publicForAll = [
-    `/${locale}/settings`,
-    `/${locale}/terms`,
-    `/${locale}/privacy`,
-    `/${locale}/contact`,
-    `/${locale}/faq`,
-    `/${locale}/plans`,
-  ];
+  '/settings',
+  '/terms',
+  '/privacy',
+  '/contact',
+  '/faq',
+  '/plans',
+];
 
-  const onlyForGuests = [
-    `/${locale}/`,
-    `/${locale}/signin`,
-    `/${locale}/signup`,
-    `/${locale}/forgotten`,
-    `/${locale}/new-password`,
-  ];
+const onlyForGuests = [
+  '/',
+  '/signin',
+  '/signup',
+  '/forgotten',
+  '/new-password',
+];
 
-  if (!isUser && !publicForAll.includes(path) && !onlyForGuests.includes(path)) {
-    push(`/${locale}/signin`);
+useEffect(() => {
+  const normalize = (p: string) => p.endsWith('/') && p !== '/' ? p.slice(0, -1) : p;
+  const isIn = (list: string[]) =>
+    list.some(p =>
+      normalize(path) === p ||
+      normalize(path).startsWith(p + '/')
+    );
+
+  if (!isUser && !isIn(publicForAll) && !isIn(onlyForGuests)) {
+    push('/signin');
     setCheckUserAndPath(false);
     return;
   }
 
-  if (isUser && onlyForGuests.includes(path)) {
-    push(`/${locale}/app`);
+  if (isUser && isIn(onlyForGuests)) {
+    push('/app');
     setCheckUserAndPath(false);
     return;
   }
 
   setCheckUserAndPath(false);
-}, [isUser, locale, path, push]);
+}, [isUser, path, push]);
   
   return (
     <div className={`${styles.whole__page} ${isMode === darkMode ? 'dark' : ''}`}>
