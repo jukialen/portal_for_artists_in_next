@@ -1,21 +1,22 @@
-# Portal_for_artists
+# Portal_for_artists_in_next
 
 It is created by [jukialen](https://github.com/jukialen/).
 
 ## Purpose of the project
 
-It's project for learning all the things to create websites.
-Title of project is social portal for people, which they create drawings, short animations or films and editing photos
-for hobbyist or professional purpose.
-Technologies.
+It's project improving knowledge to create websites on the basis of React and Nextjs.
+
+## Target
+As the name of the project says, it is a social network for artists. It is mainly aimed at cartoonists, painters, filmmakers and photographers, both professional and amateur. In the future, it may be extended to include artists from other artistic genres, such as writers and musicians.
+
+## Technologies
 
 Site's in full responsive on target devices from small smartphones to TV and SMART TV.
-
-## The project uses:
 
 - HTML5;
 - SCSS;
 - methodology BEM;
+- Gsap + ScrollTrigger;
 - React;
 - Next (CNA);
 - Atomic Design;
@@ -25,8 +26,6 @@ Site's in full responsive on target devices from small smartphones to TV and SMA
 - REST API;
 - axios;
 - Typescript;
-- Firebase;
-- Gsap + ScrollTrigger;
 - Next-pwa.
 
 ## Branches:
@@ -37,4 +36,4 @@ Site's in full responsive on target devices from small smartphones to TV and SMA
 
 ### Web site;
 
-https://pfartists.xyz
+https://pfartists.piotrbidny.ovh
