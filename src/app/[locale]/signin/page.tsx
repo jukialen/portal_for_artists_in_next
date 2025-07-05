@@ -22,6 +22,7 @@ export default async function Login({ params }: { params: Promise<{ locale: Lang
   const tNavForm = await getScopedI18n('NavForm');
 
   const translated = {
+    unVerified: tNavForm('unVerified'),
     statusLogin: tNavForm('statusLogin'),
     wrongLoginData: tNavForm('wrongLoginData'),
     titleOfLogin: tNavForm('titleOfLogin'),
@@ -34,9 +35,9 @@ export default async function Login({ params }: { params: Promise<{ locale: Lang
     <>
       <div className={styles.login}>
         <div className={styles.orientation}>
-          <FormSignIn locale={locale} translated={translated} />
+          <FormSignIn translated={translated} />
 
-          <Link href={`/${locale}/forgotten`} className={styles.forgotten}>
+          <Link href={'/forgotten'} className={styles.forgotten}>
             {tNavForm('forgottenPasswordLink')}
           </Link>
         </div>
@@ -47,11 +48,11 @@ export default async function Login({ params }: { params: Promise<{ locale: Lang
             <hr />
           </div>
 
-          <Providers locale={locale} />
+          <Providers />
 
           <p className={styles.changeForm}>
             {tNavForm('changeToLogin')}
-            <Link href={`/${locale}/signup`}>{t('Nav.signUp')}</Link>
+            <Link href={'/signup'}>{t('Nav.signUp')}</Link>
           </p>
         </div>
       </div>

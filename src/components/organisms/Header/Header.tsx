@@ -30,7 +30,7 @@ export const Header = async ({ locale }: { locale: LangType }) => {
         <Nav headers={headers} locale={locale} />
       </div>
 
-      <HeaderButtons headers={headers} locale={locale} />
+      <HeaderButtons headers={headers} />
     </header>
   );
 };

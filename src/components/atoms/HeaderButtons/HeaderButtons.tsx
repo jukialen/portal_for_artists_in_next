@@ -3,8 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { Button } from '@chakra-ui/react';
 
-import { LangType } from 'types/global.types';
-
 import styles from 'components/organisms/Header/Header.module.scss';
 
 import { BiLogInCircle } from 'react-icons/bi';
@@ -16,10 +14,9 @@ type HeadersType = {
     signIn: string;
     signUp: string;
   };
-  locale: LangType;
 };
 
-export const HeaderButtons = ({ headers, locale }: HeadersType) => {
+export const HeaderButtons = ({ headers }: HeadersType) => {
   const { push } = useRouter();
 
   return (

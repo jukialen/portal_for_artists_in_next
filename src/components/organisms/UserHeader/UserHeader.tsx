@@ -1,14 +1,12 @@
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { LangType } from "types/global.types";
-
 import { getUserData } from 'helpers/getUserData';
 
 import { UserHeaderCom } from 'components/atoms/UserHeaderCom/UserHeaderCom';
 
 import styles from './UserHeader.module.scss';
 
-export async function UserHeader({ locale }: { locale: LangType }) {
+export async function UserHeader() {
   const t = await getI18n();
   const tNav = await getScopedI18n('Nav');
   const tAside = await getScopedI18n('Aside');
@@ -47,7 +45,7 @@ export async function UserHeader({ locale }: { locale: LangType }) {
 
   return (
     <header className={styles.header}>
-      <UserHeaderCom headers={UserHeaderTranslate} locale={locale} userData={userData!} translated={translated} />
+      <UserHeaderCom headers={UserHeaderTranslate} userData={userData!} translated={translated} />
     </header>
   );
 }

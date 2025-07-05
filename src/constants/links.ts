@@ -5,4 +5,6 @@ export const bucketName =`${process.env.NEXT_PUBLIC_SUPABASE_ACCESS_TOKEN}`;
 
 export const GTM_ID = process.env.NEXT_PUBLIC_G_TAG;
 
+export const newUserRed = process.env.NEXT_PUBLIC_NEW_USER;
+
 export const darkMode = 'dark';

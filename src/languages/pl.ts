@@ -23,6 +23,7 @@ export default {
     validateUsernameHKik: 'Imię przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji.',
     validateUsernameNum: 'Imię nie może zawierać cyfr.',
     validateUsernameMin: 'Imię jest za krótkie.',
+    validatePasswordMax: 'Hasło jest za długie. Maksymalnie musi mieć 72 znaki.',
     validatePseudonymNum: 'Pseudonym musi mieć conajmniej 1 cyfrę.',
     validatePseudonymSpec: 'Pseudonym musi zawierać conajmniej 1 znak specjalny: #?!@$%^&*-＃？！＄％＆＊ー',
     validatePseudonymHKik: 'Pseudonym przyjmuje tylko litery. Mogą to być znaki Hiragany, Katakany i kanji',

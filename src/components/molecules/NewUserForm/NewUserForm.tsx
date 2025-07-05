@@ -2,14 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { UserResponse } from '@supabase/gotrue-js';
-import { Form, Formik } from 'formik';
+import { Form, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Input } from '@chakra-ui/react';
 
 import { convertStringToUnionType } from 'helpers/convertStringToType';
-import { createClient } from 'utils/supabase/clientCSR';
 
 import { EventType, Provider } from 'types/global.types';
 
@@ -17,13 +15,18 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './NewUserForm.module.scss';
+import { createClient } from 'utils/supabase/clientCSR';
 
 type FirstDataType = {
   username: string;
   pseudonym: string;
+  photo?: File | null;
 };
 
 type NewUserType = {
+  id: string;
+  email: string;
+  provider: Provider;
   newUserTranslate: {
     title: string;
     username: string;
@@ -31,20 +34,22 @@ type NewUserType = {
     profilePhoto: string;
     ariaLabelButton: string;
     send: string;
-    uploadFile: string;
     successSending: string;
     errorSending: string;
+    uploadFile: string;
   };
-  locale: string;
-  userDataAuth: UserResponse;
 };
 
-export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserType) => {
+export const NewUserForm = ({ newUserTranslate, id, email, provider }: NewUserType) => {
   const [valuesFields, setValuesFields] = useState<string>('');
   const [photo, setPhoto] = useState<File | null>(null);
 
   const { push } = useRouter();
+
   const supabase = createClient();
+
+  const typeArray: Provider[] = ['email', 'google', 'discord', 'spotify'];
+  const prov: Provider | undefined = convertStringToUnionType(provider, typeArray);
 
   const initialValues = {
     username: '',
@@ -61,11 +66,15 @@ export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserT
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
 
-  const typeArray: Provider[] = ['email', 'google', 'discord', 'spotify'];
-  const provider = userDataAuth.data.user?.app_metadata.provider!;
-  const prov: Provider | undefined = convertStringToUnionType(provider, typeArray);
+  const sendingData = async ({ username, pseudonym }: FirstDataType, { resetForm }: FormikHelpers<FirstDataType>) => {
+    const insertToUsers = async (photo: boolean, name: string) => {
+      const { error } = await supabase
+        .from('Users')
+        .insert([{ id, email, pseudonym, username, provider: prov!, profilePhoto: !!photo ? name : null }]);
 
-  const sendingData = async ({ username, pseudonym }: FirstDataType) => {
+      return error;
+    };
+
     try {
       if (!!photo) {
         if (
@@ -73,64 +82,58 @@ export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserT
           (photo.type === 'image/jpg' ||
             photo.type === 'image/jpeg' ||
             photo.type === 'image/png' ||
-            photo.type === ' image/webp' ||
+            photo.type === 'image/webp' ||
             photo.type === 'image/avif' ||
-            photo.type === 'video/mp4' ||
-            photo.type === 'video/webm')
+            photo.type === 'image/heif' ||
+            photo.type === 'image/heic')
         ) {
-          const { data, error } = await supabase.storage
-            .from('profiles')
-            .upload(`/${userDataAuth.data.user?.id!}`, photo);
+          const name = Date.now() + '-' + id + '-' + photo!.name!;
 
-          if (!!error) console.error(error);
-          
-          console.log("photo", photo);
-          console.log("error", error);
-          console.log("data", data);
-          
-          const name = Date.now() + '/' + userDataAuth.data.user?.id! + '/' + photo!.name!;
-          const { error: er } = await supabase.from('Files').insert([
+          const { data, error } = await supabase.storage.from('profiles').upload(`${id}/${name}`, photo);
+
+          if (!!error) setValuesFields(newUserTranslate.uploadFile);
+
+          const userError = await insertToUsers(!!photo, name);
+          !!userError && setValuesFields(newUserTranslate.errorSending);
+
+          const publicUrl = supabase.storage.from('profiles').getPublicUrl(data?.path!).data.publicUrl;
+
+          const { data: uploudPhoto, error: er } = await supabase.from('Files').insert([
             {
               name,
               shortDescription: photo.name,
-              authorId: userDataAuth.data.user?.id!,
+              authorId: id,
               tags: 'profile',
-              fileUrl: data?.path!,
+              fileUrl: publicUrl,
               profileType: true,
             },
           ]);
 
-          if (!!er) {
-            setValuesFields(newUserTranslate.errorSending);
-            console.error(er);
-            !!data && (await supabase.storage.from('profiles').remove([`/${userDataAuth.data.user?.id!}`, name]));
+          !!er && setValuesFields(newUserTranslate.errorSending);
 
-            return;
+          !!uploudPhoto && setValuesFields(newUserTranslate.uploadFile);
+
+          if (!!er) {
+            await supabase.storage.from('profiles').remove([`/${id}`, name]);
+
+            return setValuesFields(newUserTranslate.errorSending);
           }
+        } else {
+          setValuesFields('wrong file type or size');
         }
       } else {
-        setValuesFields('wrong file type or size');
-      }
-      const { error } = await supabase.from('Users').insert([
-        {
-          id: userDataAuth.data.user?.id!,
-          email: userDataAuth.data.user?.email!,
-          pseudonym,
-          username,
-          provider: prov!,
-        },
-      ]);
+        const userError = await insertToUsers(!!photo, '');
 
-      if (!!error) {
-        setValuesFields(newUserTranslate.errorSending);
-        return;
+        if (!!userError) {
+          setValuesFields(newUserTranslate.errorSending);
+        }
       }
+
       setValuesFields(newUserTranslate.successSending);
-      localStorage.setItem('menu', 'true');
-      return push(`/${locale}/app`);
-    } catch (e) {
-      console.log(e);
-      setValuesFields(newUserTranslate.errorSending);
+      resetForm();
+      push('/signin');
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -165,7 +168,7 @@ export const NewUserForm = ({ newUserTranslate, locale, userDataAuth }: NewUserT
           <Input
             name="profilePhoto"
             type="file"
-            accept=".jpg, .jpeg, .png, .webp, .avif"
+            accept=".jpg, .jpeg, .png, .webp, .avif, .heif, .heic"
             onChange={handleChangeFile}
             placeholder={newUserTranslate.profilePhoto}
             className={styles.inputForm}

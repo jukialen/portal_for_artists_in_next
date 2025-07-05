@@ -1,12 +1,12 @@
 'use client';
 
 import { ReactNode, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import gsap from 'gsap';
 
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import { useCurrentLocale, I18nProviderClient } from 'locales/client';
+import { I18nProviderClient } from 'locales/client';
 
 import { ModeProvider } from 'providers/ModeProvider';
 
@@ -19,13 +19,9 @@ type ChildrenType = {
 
 export const GlobalProvider = ({ children, locale }: ChildrenType) => {
   const pathname = usePathname();
-  const router = useRouter();
-  const homePage = pathname === `/${locale === 'en' ? '' : locale}`;
-  
-  locale === '/' && router.replace(`/${useCurrentLocale}`);
-  
+
   useEffect(() => {
-    if (homePage) {
+    if (pathname === '/') {
       gsap.registerPlugin(ScrollTrigger);
 
       const sections = document.querySelectorAll('article');
@@ -49,7 +45,7 @@ export const GlobalProvider = ({ children, locale }: ChildrenType) => {
         );
       });
     }
-  }, [homePage, pathname]);
+  }, [pathname]);
 
   return (
         <I18nProviderClient locale={locale}>

@@ -19,6 +19,8 @@
     "@chakra-ui/react": "^3.5.1",
     "@chakra-ui/system": "^2.6.2",
     "@emotion/react": "^11.14.0",
+    "@supabase/auth-js": "supabase/gotrue-js",
+    "@supabase/gotrue-js": "^2.70.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.39.1",
     "@types/web-push": "^3.6.4",
@@ -37,7 +39,6 @@
     "react-icons": "^5.4.0",
     "react-web-share": "^2.0.2",
     "sass": "^1.67.0",
-    "supabase": "^1.183.5",
     "tus-js-client": "^4.2.3",
     "web-push": "^3.6.7",
     "yup": "^1.2.0"

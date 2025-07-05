@@ -26,6 +26,7 @@ export const SchemaValidation = () => {
 
   const password = Yup.string()
     .min(9, ts('validatePasswordNum'))
+    .max(72, ts('validatePasswordMax'))
     .matches(/[A-Z]+/g, ts('validatePasswordOl'))
     .matches(/[a-ząćęłńóśźżĄĘŁŃÓŚŹŻぁ-んァ-ヾ一-龯]*/g, ts('validatePasswordHKik'))
     .matches(/[0-9]+/g, ts('validatePasswordOn'))

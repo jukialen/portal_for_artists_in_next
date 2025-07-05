@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { InputGroup } from 'components/ui/input-group';
 
-import { LangType, ResetFormType, UserFormType } from 'types/global.types';
+import { ResetFormType, UserFormType } from 'types/global.types';
 
 import { initialValuesForSignInUp } from 'constants/objects';
 
@@ -19,10 +19,8 @@ import styles from './FormSignUp.module.scss';
 import { GrFormView, GrFormViewHide } from 'react-icons/gr';
 
 export const FormSignUp = ({
-  locale,
   translated,
 }: {
-  locale: LangType;
   translated: {
     successInfoRegistration: string;
     theSameEmail: string;
@@ -51,25 +49,34 @@ export const FormSignUp = ({
     try {
       setIsLoading(true);
 
-      const { data } = await supabase.from('Users').select('email').eq('email', email).limit(1).maybeSingle();
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password: password!,
+        options: { emailRedirectTo: `${location.origin}/auth/callback` },
+      });
 
-      if (!data) {
-        await supabase.auth.signUp({
-          email,
-          password: password!,
-          options: {
-            emailRedirectTo: `${location.origin}/${locale}/auth/callback`,
-          },
-        });
-        setValuesFields(translated.successInfoRegistration);
-        resetForm(initialValuesForSignInUp);
+      console.log('data', data);
+      console.log('error', error);
+      if (!!error) {
+        if (
+          error.message.includes('User already registered') ||
+          error.message.includes('User already exists') ||
+          error.message === 'Email not confirmed'
+        ) {
+          setValuesFields(translated.theSameEmail);
+        } else {
+          setValuesFields(translated.error);
+        }
         setIsLoading(false);
-      } else {
-        setValuesFields(translated.theSameEmail);
+        return;
       }
+
+      setValuesFields(translated.successInfoRegistration);
+      resetForm(initialValuesForSignInUp);
+      setIsLoading(false);
     } catch (e) {
       setValuesFields(translated.error);
-      setIsLoading(!isLoading);
+      setIsLoading(false);
     }
   };
 

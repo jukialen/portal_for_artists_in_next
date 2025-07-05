@@ -14,8 +14,8 @@ import { Groups } from 'components/atoms/Groups/Groups';
 import { Friends } from 'components/atoms/Friends/Friends';
 
 import styles from './Aside.module.scss';
-import { RightOutlined } from '@ant-design/icons';
-import { RxTriangleDown, RxTriangleUp } from 'react-icons/rx';
+
+import { RxTriangleDown, RxTriangleUp, RxTriangleRight } from 'react-icons/rx';
 
 export const AsideWrapper = ({
   asideCategory,
@@ -62,7 +62,7 @@ export const AsideWrapper = ({
 
       {!openDr && (
         <button className={styles.aside__right} aria-label="left menu button" onClick={() => setOpenDr(!openDr)}>
-          <RightOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+          <RxTriangleRight />
         </button>
       )}
 
@@ -96,7 +96,7 @@ export const AsideWrapper = ({
               className={styles.drawer__right}
               aria-label="right menu button"
               onClick={() => setOpenDr(false)}>
-              <RightOutlined onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+              <RxTriangleRight />
             </Button>
           </DrawerBody>
         </DrawerContent>

@@ -3,11 +3,8 @@
 import { useState } from 'react';
 import { permanentRedirect } from 'next/navigation';
 import { Icon } from '@chakra-ui/react';
-import { Provider } from '@supabase/gotrue-js';
 
 import { createClient } from 'utils/supabase/clientCSR';
-
-import { LangType } from 'types/global.types';
 
 import { useI18n } from 'locales/client';
 
@@ -17,21 +14,26 @@ import styles from './Providers.module.scss';
 import { FaDiscord, FaSpotify } from 'react-icons/fa';
 import { RiGoogleFill } from 'react-icons/ri';
 
-export const Providers = ({ locale }: { locale: LangType }) => {
+export const Providers = () => {
   const [valuesFields, setValuesFields] = useState<string>('');
 
   const supabase = createClient();
 
   const t = useI18n();
 
-  const signInWithProvider = async (provider: Provider) => {
+  type ProviderType = 'google' | 'spotify' | 'discord';
+
+  const signInWithProvider = async (provider: ProviderType) => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
       });
 
+      console.log('data', data);
+      console.log('error', error);
+
       (!!error || !data) && setValuesFields(t('unknownError'));
-      permanentRedirect(`/${locale}/app`);
+      permanentRedirect('/app');
     } catch (e) {
       setValuesFields(t('unknownError'));
     }

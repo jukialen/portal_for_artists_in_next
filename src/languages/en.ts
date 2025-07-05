@@ -23,6 +23,7 @@ export default {
     validateUsernameHKik: 'Name accept only letters. These can be Hiragana, Katakana and kanji characters',
     validateUsernameNum: 'Name cannot include numbers.',
     validateUsernameMin: 'Name is too short.',
+    validatePasswordMax: 'Password is too long. Must have a maximum 72 letters.',
     validatePseudonymNum: 'Pseudonym must have at least 1 number.',
     validatePseudonymSpec: 'Pseudonym must include at least 1 special character: #?!@$%^&*-＃？！＄％＆＊ー',
     validatePseudonymHKik: 'Pseudonym accept only letters. These can be Hiragana, Katakana and kanji characters',

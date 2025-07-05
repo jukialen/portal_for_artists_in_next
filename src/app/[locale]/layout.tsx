@@ -21,7 +21,6 @@ import 'styles/global.scss';
 import 'styles/darkLightMode.scss';
 import { Viewport } from 'next';
 
-
 type ChildrenType = {
   children: ReactNode;
   params: Promise<{ locale: LangType }>;
@@ -36,34 +35,33 @@ export function generateStaticParams() {
 
 export default async function RootLayout({ children, params }: ChildrenType) {
   const { locale } = await params;
-  
+
   console.log('RootLayout locale:', locale);
   const userMenuComponents = {
-    userHeader: <UserHeader locale={locale} />,
+    userHeader: <UserHeader />,
     header: <Header locale={locale} />,
     aside: <Aside />,
   };
 
   const user = await getUserData();
 
-  const isUser = !!user;
-  
+  const cookiesYesLink = `https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js`;
+
+  console.log('RootLayout user:', !!user);
   return (
     <html lang={locale} suppressHydrationWarning>
-      {process.env.NODE_ENV === 'production' && (
-        <Script src={`https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js`} strategy="beforeInteractive" />
-      )}
+      {process.env.NODE_ENV === 'production' && <Script src={cookiesYesLink} strategy="beforeInteractive" />}
 
       <body>
         <noscript
           dangerouslySetInnerHTML={{
-            __html: `<iframe src="https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js" height="0" width="0" style="display: none; visibility: hidden;"></iframe>`,
+            __html: `<iframe src="${cookiesYesLink}" height="0" width="0" style="display: none; visibility: hidden;"></iframe>`,
           }}
         />
 
         <Provider>
           <GlobalProvider locale={locale}>
-            <SkeletonRootLayout isUser={isUser} userMenuComponents={userMenuComponents} locale={locale}>
+            <SkeletonRootLayout isUser={!!user} userMenuComponents={userMenuComponents}>
               {children}
             </SkeletonRootLayout>
           </GlobalProvider>

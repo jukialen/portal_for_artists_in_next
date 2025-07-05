@@ -28,7 +28,6 @@ type HeadersType = {
     signIn: string;
     signup: string;
   };
-  locale: string;
   userData: UserType;
   translated: {
     category: string;
@@ -48,7 +47,7 @@ type HeadersType = {
   };
 };
 
-export const UserHeaderCom = ({ headers, locale, userData, translated }: HeadersType) => {
+export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) => {
   type SearchingValues = {
     categoryName: string;
     data:
@@ -208,7 +207,7 @@ export const UserHeaderCom = ({ headers, locale, userData, translated }: Headers
     <>
       <Button
         colorScheme="yellow"
-        onClick={() => push(`/${locale}/app`)}
+        onClick={() => push('/app')}
         className={styles.menu_buttons}
         aria-label="this button redirect to groups's section">
         <MdOutlineHome />
@@ -216,7 +215,7 @@ export const UserHeaderCom = ({ headers, locale, userData, translated }: Headers
       </Button>
       <div className={styles.buttons}>
         <Button
-          onClick={() => push(`/${locale}/groups/list`)}
+          onClick={() => push('/groups/list')}
           colorScheme="yellow"
           className={styles.menu_buttons}
           aria-label="button for groups">
@@ -224,7 +223,7 @@ export const UserHeaderCom = ({ headers, locale, userData, translated }: Headers
           <p>{headers.groups}</p>
         </Button>
         <Button
-          onClick={() => push(`/${locale}/friends`)}
+          onClick={() => push('/friends')}
           colorScheme="yellow"
           className={styles.menu_buttons}
           aria-label="this button redirect to friends's section">
@@ -235,9 +234,9 @@ export const UserHeaderCom = ({ headers, locale, userData, translated }: Headers
               viewBox="0 0 24 24"
               fill="none"
               stroke="#000000"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
               <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -305,12 +304,12 @@ export const UserHeaderCom = ({ headers, locale, userData, translated }: Headers
       )}
       <ul className={`${styles.menu_profile} ${profileMenu ? styles.menu_profile__active : ''}`}>
         <li>
-          <Link href={`/${locale}/account/${userData?.pseudonym}`} onClick={toggleProfileMenu}>
+          <Link href={`/account/${userData?.pseudonym}`} onClick={toggleProfileMenu}>
             {headers.profile}
           </Link>
         </li>
         <li>
-          <Link href={`/${locale}/settings`} onClick={toggleProfileMenu}>
+          <Link href={'/settings'} onClick={toggleProfileMenu}>
             {headers.title}
           </Link>
         </li>

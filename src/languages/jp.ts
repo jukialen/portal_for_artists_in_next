@@ -23,6 +23,7 @@ export default {
     validateUsernameHKik: '名前は字だけ受け入れます。今、ひらがなとカタカナと漢字が出来ます。',
     validateUsernameNum: '名前がナンバーを含めることが出来ません。',
     validateUsernameMin: '名前が短すぎまあす。',
+    validatePasswordMax: 'パスポートが長すぎる。最大限七十二字をなければなりません。',
     validatePseudonymNum: 'あだ名が少なくとも一ナンバーがでなければなりません。',
     validatePseudonymSpec: 'あだ名が少なくとも一特殊文字を含めることが出来ます: #?!@$%^&*-＃？！＄％＆＊ー',
     validatePseudonymHKik: 'あだ名は字だけ受け入れます。今、ひらがなとカタカナと漢字が出来ます。',

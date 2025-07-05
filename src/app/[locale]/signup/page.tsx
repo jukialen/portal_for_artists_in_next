@@ -38,7 +38,7 @@ export default async function Registration({ params }: { params: Promise<{ local
     <>
       <div className={styles.create__account}>
         <div className={styles.orientation}>
-          <FormSignUp locale={locale} translated={translated} />
+          <FormSignUp translated={translated} />
         </div>
         <div className={styles.orientation}>
           <div className={styles.dividerWithText}>
@@ -47,19 +47,19 @@ export default async function Registration({ params }: { params: Promise<{ local
             <hr />
           </div>
 
-          <Providers locale={locale} />
+          <Providers />
 
           <p className={styles.acceptInfo}>
             {tNavForm('acceptInfoOne')}
-            <Link href={`/${locale}/terms`}>{tNavForm('acceptInfoTwo')}</Link>
+            <Link href={'/terms'}>{tNavForm('acceptInfoTwo')}</Link>
             {tNavForm('acceptInfoThree')}
-            <Link href={`/${locale}/privacy`}>{tNavForm('acceptInfoFour')}</Link>
+            <Link href={'/privacy'}>{tNavForm('acceptInfoFour')}</Link>
             {tNavForm('dot')}
           </p>
 
           <p className={styles.changeForm}>
             {tNavForm('changeToCreate')}
-            <Link href={`/${locale}/signin`}>{t('Nav.signIn')}</Link>
+            <Link href={'/signin'}>{t('Nav.signIn')}</Link>
           </p>
         </div>
       </div>

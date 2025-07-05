@@ -9,7 +9,7 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { IconButton, Input, Stack, StackSeparator } from '@chakra-ui/react';
 import { InputGroup } from 'components/ui/input-group';
 
-import { LangType, ResetFormType, UserFormType } from 'types/global.types';
+import { ResetFormType, UserFormType } from 'types/global.types';
 
 import { initialValuesForSignInUp } from 'constants/objects';
 
@@ -20,11 +20,10 @@ import styles from './FormSignIn.module.scss';
 import { GrFormView, GrFormViewHide } from 'react-icons/gr';
 
 export const FormSignIn = ({
-  locale,
   translated,
 }: {
-  locale: LangType;
   translated: {
+    unVerified: string;
     statusLogin: string;
     wrongLoginData: string;
     titleOfLogin: string;
@@ -36,7 +35,7 @@ export const FormSignIn = ({
   const [show, setShow] = useState(false);
   const [valuesFields, setValuesFields] = useState('');
 
-  const { push } = useRouter();
+  const { push, refresh } = useRouter();
 
   const schemaValidation = Yup.object({
     email: SchemaValidation().email,
@@ -50,21 +49,22 @@ export const FormSignIn = ({
     const { data, error } = await supabase.auth.signInWithPassword({ email, password: password! });
 
     if (!!error && error.status !== 200) {
-      setValuesFields(translated.wrongLoginData);
+      setValuesFields(
+        error?.message === 'Email not confirmed' || error?.message === 'AuthApiError: Email not confirmed'
+          ? translated.unVerified
+          : translated.wrongLoginData,
+      );
     } else {
       resetForm(initialValuesForSignInUp);
       setValuesFields(translated.statusLogin);
 
-      const { data: dataUser } = await supabase
-        .from('Users')
-        .select('*')
-        .eq('id', data.session?.user.id!);
+      const { data: dataUser, error } = await supabase.from('Users').select('*').eq('id', data.session?.user.id!);
 
       if (dataUser?.length !== 0) {
-        localStorage.setItem("menu", "true");
-        push(`/${locale}/app`);
+        localStorage.setItem('menu', 'true');
+        refresh();
       } else {
-        push(`/${locale}/new-user`);
+        push('/new-user');
       }
     }
   };

@@ -1,3 +1,4 @@
+import { newUserRed } from 'constants/links';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { createServer } from 'utils/supabase/clientSSR';
@@ -10,5 +11,6 @@ export async function GET(req: NextRequest) {
   if (code) {
     await supabase.auth.exchangeCodeForSession(code);
   }
-  return NextResponse.redirect(new URL(`${req.url}/app`, req.url));
+  
+  return NextResponse.redirect(new URL(`${newUserRed}`, req.url));
 }

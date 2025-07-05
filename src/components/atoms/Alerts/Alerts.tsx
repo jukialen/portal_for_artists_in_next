@@ -29,9 +29,9 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case t('DeletionPost.deleting'):
       case t('DeletionFile.deleting'):
         return (status = 'info');
-      case t('NavForm.unVerified'):
       case t('PasswordAccount.differentPasswords'):
         return (status = 'warning');
+      case t('NavForm.unVerified'):
       case 'Nie usunięto pliku.':
       case t('NavForm.notExist'):
       case t('NavForm.theSameEmail'):
