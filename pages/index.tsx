@@ -71,7 +71,7 @@ export default function Home() {
 
   return (
     <>
-      <HeadCom path={asPath} content="Main site." />
+      <HeadCom path={asPath} content="Pfartists" />
 
       <div className={styles.group__element}>
         <h2 className={styles.title}>{data?.Main?.title}</h2>
