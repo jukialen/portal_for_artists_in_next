@@ -1,9 +1,7 @@
-@use '../../../styles/variables' as *;
-
 button.choosePlan {
   width: 100%;
   border-color: transparent;
-  color: $dark__background__light__color;
+  color: var(--text);
   cursor: pointer;
 }
 
@@ -34,7 +32,7 @@ button.choosePlan {
   button {
     width: inherit;
     border-color: transparent;
-    color: $dark__background__light__color;
+    color: var(--text);
     cursor: pointer;
   }
 }

@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .mainData {
   max-width: 31rem;
   margin: 2rem auto 1.5rem;
@@ -19,9 +17,9 @@
     position: relative;
 
     img {
-      border: .3rem inset $secondary__color;
+      border: .3rem inset var(--secondary);
       border-radius: 3rem;
-      box-shadow: 0 0 15rem -.3rem $secondary__color;
+      box-shadow: 0 0 15rem -.3rem var(--secondary);
     }
 
     .updateLogo {
@@ -32,9 +30,9 @@
       height: 2.8rem;
       margin: 0 .5rem;
       font-size: 1.4rem;
-      border: .1rem solid $primary__color;
+      border: .1rem solid var(--primary);
       border-radius: .75rem;
-      background-color: $primary__color;
+      background-color: var(--primary);
       color: black;
       cursor: pointer;
     }
@@ -53,13 +51,13 @@
 }
 
 .edit {
-  background: $third__color;
-  border-color: $third__color;
+  background: var(--third);
+  border-color: var(--third);
 }
 
 .cancel {
-  background: $primary__color;
-  border-color: $another__color;
+  background: var(--primary);
+  border-color: var(--primary);
 }
 
 @media (min-width: 768px) {

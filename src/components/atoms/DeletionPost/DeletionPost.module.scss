@@ -1,9 +1,7 @@
-@use '../../../styles/variables' as *;
-
 .icon {
   border: .1rem solid transparent;
   background-color: transparent;
-  color: $dark__background__light__color;
+  color: var(--text);
   cursor: pointer;
 }
 

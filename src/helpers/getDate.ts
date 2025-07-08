@@ -1,6 +1,6 @@
-import { DateObjectType } from 'types/global.types';
+import { DateObjectType, LangType } from "types/global.types";
 
-export const getDate = (locale: string, dateField: string, dataDateObject: DateObjectType) => {
+export const getDate = (locale: LangType, dateField: string, dataDateObject: DateObjectType) => {
   const today = new Date(parseInt(dateField));
 
   const second = today.getSeconds();

@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .roles {
   margin: 2rem auto 0;
 }
@@ -14,12 +12,12 @@
     align-self: center;
     font-size: 1.1rem;
     margin-left: .5rem;
-    color: $third__color;
+    color: var(--third);
   }
 
 
   button {
-    background-color: $third__color;
+    background-color: var(--third);
     border: .1rem solid transparent;
     cursor: pointer;
   }

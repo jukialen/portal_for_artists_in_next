@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .aside, .aside__dark {
   display: none;
 }
@@ -14,8 +12,8 @@ div button.aside__right {
   bottom: 5rem;
   font-size: 2rem;
   border: 0;
-  background-color: $another__color;
-  color: $dark__background__light__color;
+  background-color: var(--primary);
+  color: var(--text);
   cursor: pointer;
   z-index: 1;
 }
@@ -25,9 +23,9 @@ div button.aside__right {
   width: 17rem;
   max-width: 100vh;
   height: 100vh;
-  background-image: linear-gradient(rgb($secondary__color, .2), rgb($secondary__color, .2), rgb($secondary__color, .2));
+  background-image: linear-gradient(rgb(var(--secondary), .2), rgb(var(--secondary), .2), rgb(var(--secondary), .2));
   backdrop-filter: blur(2px);
-  background-color: rgb($secondary__color, .5);
+  background-color: rgb(var(--secondary), .5);
   z-index: -1;
 }
 
@@ -43,7 +41,7 @@ div.drawer {
     flex-direction: column;
     justify-content: space-between;
     padding: 0;
-    background-color: rgb($dark__color__light__back, .5);
+    background-color: rgba(var(--background), .5);
     z-index: 1;
 
     .rolling {
@@ -124,19 +122,19 @@ div.drawer {
     font-size: 1.5rem;
     overflow: hidden auto;
     scrollbar-width: thin;
-    scrollbar-color: $another__color $fourth__color;
-    background-color: rgb($secondary__color, .75);
+    scrollbar-color: var(--primary) var(--fourth);
+    background-color: rgb(var(--secondary), .75);
 
     &::-webkit-scrollbar {
       width: 10px
     }
 
     &::-webkit-scrollbar-track {
-      background-color: $fourth__color
+      background-color: var(--fourth)
     }
 
     &::-webkit-scrollbar-thumb {
-      background: $another__color
+      background: var(--primary)
     }
 
     &::-webkit-scrollbar-thumb:hover {
@@ -144,12 +142,12 @@ div.drawer {
     }
 
     &::-webkit-scrollbar-thumb:hover {
-      background: $third__color;
+      background: var(--third);
       border-radius: 20px;
     }
 
     &::-webkit-scrollbar-thumb:active {
-      background: $another__color;
+      background: var(--primary);
       border-radius: 20px;
     }
 
@@ -177,7 +175,7 @@ div.drawer {
   }
 
   .aside__dark {
-    background-color: rgb($secondary__color, .75);
+    background-color: rgb(var(--secondary), .75);
   }
 
   div button.aside__right {

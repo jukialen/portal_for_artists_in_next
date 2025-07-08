@@ -7,18 +7,16 @@ const i18n = createI18nMiddleware({
   locales: ['en', 'pl', 'jp'],
   defaultLocale: 'en',
   urlMappingStrategy: 'rewrite',
-  resolveLocaleFromRequest: () => 'en', // Możesz dodać własną logikę
+  resolveLocaleFromRequest: () => 'en',
 });
 
 export async function middleware(req: NextRequest) {
-  // 1. Wygeneruj wstępną odpowiedź z i18n
   const res = i18n(req);
 
   let supabaseResponse = NextResponse.next({
     request: req,
   });
-
-  // 2. Utwórz Supabase klienta z ciasteczkami pochodzącymi z żądania
+  
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

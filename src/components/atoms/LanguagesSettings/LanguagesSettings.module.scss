@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .langMenu {
   display: flex;
   width: inherit;
@@ -37,16 +35,16 @@
       justify-content: center;
       align-items: center;
       gap: 0.5rem;
-      border: 0.1rem solid $secondary__color;
+      border: 0.1rem solid var(--secondary);
       border-radius: 0.5rem;
-      color: $dark__background__light__color;
+      color: var(--text);
 
       &:hover {
-        background-color: $secondary__color;
+        background-color: var(--secondary);
       }
 
       &__dark {
-        color: $dark__color__light__back ;
+        color: var(--text) ;
       }
     }
 
@@ -57,16 +55,16 @@
         height: min-content;
         display: flex;
         flex-direction: column;
-        background-color: $dark__color__light__back;
+        background-color: var(--background);
         position: absolute;
         top: -3rem;
         gap: 0 0.5rem;
-        border: 0.1rem solid $secondary__color;
+        border: 0.1rem solid var(--secondary);
         border-radius: 0.4rem;
         z-index: 2;
 
         &__dark {
-          background-color: $dark__background__light__color;
+           background-color: var(--background);
         }
       }
 
@@ -86,24 +84,24 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          color: $another__color;
+          color: var(--primary);
           font-size: 1rem;
           border-color: transparent;
 
           &:hover,
           &:active {
-            background-color: $dark__color__light__back;
+            background-color: var(--background);
             filter: invert(0.2);
             font-weight: bold;
             border-radius: 0.4rem;
           }
 
           &__dark {
-            background-color: $dark__background__light__color;
+             background-color: var(--background);
 
             &:hover,
             &:active {
-              background-color: $dark__background__light__color;
+               background-color: var(--background);
               filter: invert(0.2);
               font-weight: bold;
               border-radius: 0.4rem;
@@ -112,7 +110,7 @@
         }
 
         .dark__title {
-          color: $dark__color__light__back;
+          color: var(--text);
         }
       }
     }

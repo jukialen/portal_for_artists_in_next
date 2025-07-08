@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .tabsMenu {
   width: 100vw;
   max-width: 44.5rem;
@@ -38,7 +36,7 @@
         scroll-behavior: smooth;
         overflow: auto hidden;
         scrollbar-width: auto;
-        scrollbar-color: $another__color $fourth__color;
+        scrollbar-color: var(--primary) var(--fourth);
 
         button {
           width: 9rem;
@@ -52,11 +50,11 @@
         }
 
         &::-webkit-scrollbar-track {
-          background-color: $fourth__color;
+          background-color: var(--fourth);
         }
 
         &::-webkit-scrollbar-thumb {
-          background: $another__color;
+          background: var(--primary);
         }
 
         &::-webkit-scrollbar-thumb:hover {
@@ -64,12 +62,12 @@
         }
 
         &::-webkit-scrollbar-thumb:hover {
-          background: $third__color;
+          background: var(--third);
           border-radius: 10px;
         }
 
         &::-webkit-scrollbar-thumb:active {
-          background: $another__color;
+          background: var(--primary);
           border-radius: 10px;
         }
       }

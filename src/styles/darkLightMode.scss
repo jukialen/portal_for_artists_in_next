@@ -1,33 +1,31 @@
-@use 'variables' as *;
-
 .dark {
-  background-color: $dark__background__light__color;
+   background-color: var(--background);
 
   button {
-    color: $dark__color__light__back;
+    color: var(--text);
   }
 }
 
 .main__container--dark {
-  color: $dark__color__light__back;
+  color: var(--text);
 
   a {
-    color: $dark__color__light__back;
+    color: var(--text);
 
     &:visited {
-      color: $third__color;
+      color: var(--third);
     }
 
     &:focus {
-      color: $link__dark__focus;
+      color: var(--focus);
     }
 
     &:hover {
-      color: $link__dark__hover;
+      color: var(--hover);
     }
 
     &:active {
-      color: $link__dark__active;
+      color: var(--active);
     }
   }
 }

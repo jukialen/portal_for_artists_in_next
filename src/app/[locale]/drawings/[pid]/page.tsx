@@ -19,7 +19,7 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = HeadCom('Sites with drawings and photos.');
 
-async function getFirstDrawings(pid: string, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
+async function getFirstDrawings(pid: Tags, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
   const filesArray: FileType[] = [];
   
   try {

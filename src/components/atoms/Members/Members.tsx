@@ -17,7 +17,7 @@ import { LuPlus, LuMinus } from 'react-icons/lu';
 type MembersType = {
   admin: boolean;
   groupId: string;
-  name: string | string[];
+  name: string;
   usersGroupsId: string;
   members: MemberType[];
   translated: nameGroupTranslatedType;

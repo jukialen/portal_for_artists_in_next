@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { getCurrentLocale, getScopedI18n } from "locales/server";
+import { getScopedI18n } from "locales/server";
 import { Tag } from 'components/ui/tag';
 
 import { ArticleVideosType } from 'types/global.types';
@@ -23,7 +23,6 @@ export const Article = async ({
   roleId,
 }: ArticleVideosType) => {
   let img = 600;
-  const locale = getCurrentLocale();
   const tComments = await getScopedI18n('Comments');
   return (
     <div className={styles.article}>
@@ -51,7 +50,6 @@ export const Article = async ({
         authorId={authorId}
         fileUrl={fileUrl}
         profilePhoto={profilePhoto}
-        locale={locale}
         tags={tags!}
         name={name!}
         noComments={tComments('noComments')}

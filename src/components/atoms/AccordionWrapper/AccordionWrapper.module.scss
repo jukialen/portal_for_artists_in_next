@@ -2,10 +2,10 @@
 
 .accordionButton div svg {
 	text-align: inherit;
-	background-color: $primary__color;
+	background-color: var(--primary);
 	border-radius: 1rem;
 
 	&:hover {
-		background-color: $primary__color;
+		background-color: var(--primary);
 	}
 }

@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .settings {
   width: 90vw;
   margin: -3rem auto 5rem;
@@ -13,7 +11,7 @@
   h3 {
     margin-bottom: 1.5rem;
     font-size: 1.6rem;
-    color: $third__color;
+    color: var(--third);
   }
 
   .flow {

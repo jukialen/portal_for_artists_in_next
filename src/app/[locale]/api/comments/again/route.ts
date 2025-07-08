@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
         authorId,
         likes: (await likeList(authorId, postId!))!.likes,
         liked: (await likeList(authorId, postId!))!.liked,
-        date: getDate(locale!, updatedAt! || createdAt!, await dateData()),
+        date: getDate(await locale!, updatedAt! || createdAt!, await dateData()),
       });
     }
 

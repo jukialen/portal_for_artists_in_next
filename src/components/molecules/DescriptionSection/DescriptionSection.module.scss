@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .container {
   width: 90%;
   margin: 1rem auto;
@@ -29,18 +27,18 @@
       align-items: center;
 
       .updateField, .updateField__error {
-        border: .1rem solid $third__color;
-        color: $third__color;
+        border: .1rem solid var(--third);
+        color: var(--third);
         margin-bottom: .5rem;
 
         &__error {
-          border-color: $required__color;
+          border-color: var(--required);
         }
       }
 
       .addingButton {
-        background-color: $third__color;
-        border: .1rem solid $third__color;
+        background-color: var(--third);
+        border: .1rem solid var(--third);
         margin: 1rem 0 2rem;
         border-radius: 0.5rem;
       }
@@ -50,8 +48,8 @@
       width: 2.8rem;
       height: 2.8rem;
       margin: 1rem auto;
-      background: $primary__color;
-      border: .1rem solid $primary__color;
+      background: var(--primary);
+      border: .1rem solid var(--primary);
       border-radius: .75rem;
       color: black;
       cursor: pointer;

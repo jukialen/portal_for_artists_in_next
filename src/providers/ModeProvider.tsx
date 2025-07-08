@@ -1,55 +1,52 @@
 'use client';
 
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useState
+} from 'react';
 
 type childrenType = {
   children: ReactNode;
 };
 
+type ModeType =  'light' | 'dark';
+
 export const ModeContext = createContext({
   isMode: '',
-  changeMode: (mode: 'dark' | 'light') => {},
+  changeMode: (mode: ModeType) => {}
 });
 
 export const ModeProvider = ({ children }: childrenType) => {
-  const [isMode, setMode] = useState<string>();
-
-  const defaultTheme = () => {
-    const watchSysTheme = window.matchMedia('(prefers-color-scheme: dark)');
-    const themeLocalStorage = localStorage.getItem('mode');
-    const themeSystem = watchSysTheme.matches ? 'dark' : 'light';
+  const [isMode, setMode] = useState<ModeType>();
   
-    if (themeLocalStorage !== undefined || null) {
-      return themeLocalStorage ?? themeSystem;
-    }
+  const defaultTheme = (): ModeType | null => {
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedMode = localStorage.getItem('mode') as 'light' | 'dark' | null;
+    return savedMode ?? (systemPrefersDark ? 'dark' : 'light');
   };
-
+  
   useEffect(() => {
-    if (!isMode) return setMode(defaultTheme());
-    localStorage.setItem('mode', isMode ?? defaultTheme());
-    localStorage.setItem('chakra-ui-color-mode',isMode ?? defaultTheme());
-    
-    setMode(isMode ?? defaultTheme());
+    const mode: ModeType | null = isMode ?? defaultTheme();
+    setMode(mode!);
+    document.documentElement.setAttribute('data-theme', mode!);
+    localStorage.setItem('mode', mode!);
   }, [isMode]);
-
-  const changeMode = (mode: string) => {
-    if (mode === 'dark') {
-      setMode('dark');
-      localStorage.setItem('mode', 'dark');
-      localStorage.setItem('chakra-ui-color-mode', 'dark');
-    } else {
-      localStorage.setItem('mode', 'light');
-      localStorage.setItem('chakra-ui-color-mode', 'light');
-      setMode('light');
-    }
+  
+  const changeMode = (mode: ModeType) => {
+    setMode(mode);
+    document.documentElement.setAttribute('data-theme', mode);
+    localStorage.setItem('mode', mode);
   };
-
+  
   return (
     <ModeContext.Provider
       value={{
         isMode: isMode!,
-        changeMode,
-      }}>
+        changeMode
+      }}
+    >
       {children}
     </ModeContext.Provider>
   );

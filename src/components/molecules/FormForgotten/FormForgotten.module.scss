@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .forgotten {
   width: 30rem;
   max-width: 94vw;
@@ -12,7 +10,7 @@
 
   .borderContainer {
     padding: 4rem 9% 3rem;
-    box-shadow: 0 0 1.4rem $third__color;
+    box-shadow: 0 0 1.4rem var(--third);
     border-radius: 2rem;
 
     .title {
@@ -33,15 +31,15 @@
       max-width: 90%;
       display: block;
       margin: 1rem auto 1.5rem;
-      color: $third__color;
+      color: var(--third);
     }
 
     .inputForm {
-      border-color: $third__color;
+      border-color: var(--third);
     }
 
     .inputForm__error {
-      border-color: $required__color;
+      border-color: var(--required);
     }
 
     .submit__button {
@@ -51,7 +49,7 @@
       //border-radius: 0.5rem;
       //font-weight: bold;
       //background-color: rgba(0, 0, 0, 0);
-      //border: 0.1rem solid $secondary__color;
+      //border: 0.1rem solid var(--secondary);
     }
   }
 

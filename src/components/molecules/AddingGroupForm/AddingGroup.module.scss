@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .container__form {
   height: 85vh;
   display: flex;
@@ -15,11 +13,11 @@
   .field__error {
     width: 20rem;
     margin: 0.5rem auto;
-    color: $third__color;
+    color: var(--third);
   }
 
   .field__error {
-    border-color: $required__color;
+    border-color: var(--required);
   }
 
   .input {

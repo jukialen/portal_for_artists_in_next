@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .account__data {
   margin: 2rem 0;
   display: flex;
@@ -36,16 +34,16 @@
       border-radius: 1rem;
 
       &:placeholder-shown {
-        color: $dark__background__light__color;
+        color: var(--text);
       }
     }
 
     .input {
-      border-color: $third__color;
+      border-color: var(--third);
     }
 
     .input__error {
-      border-color: $required__color;
+      border-color: var(--required);
     }
 
     .planButton {
@@ -54,7 +52,7 @@
   }
 
   .form_dark input {
-    color: $dark__color__light__back;
+    color: var(--text);
   }
 }
 
@@ -78,44 +76,44 @@ section.subscription, section.subscription__dark {
     margin-bottom: 1rem;
 
     select {
-      border-color: $third__color;
+      border-color: var(--third);
       cursor: pointer;
     }
 
     &__error {
-      color: $required__color;
+      color: var(--required);
       margin-bottom: .5rem;
     }
 
     .req__error {
-      border-color: $required__color;
+      border-color: var(--required);
     }
   }
 
   .selectSub {
     select {
       option {
-        background-color: $dark__color__light__back;
+        background-color: var(--background);
       }
     }
 
     div {
-      color: $dark__background__light__color;
+      color: var(--text);
     }
   }
 
   .selectSub__dark {
     select {
-      color: $dark__color__light__back;
+      color: var(--text);
 
       option {
-        background-color: $dark__background__light__color;
-        color: $dark__color__light__back;
+         background-color: var(--background);
+        color: var(--text);
       }
     }
 
     div {
-      color: $dark__color__light__back;
+      color: var(--text);
     }
   }
 
@@ -123,7 +121,7 @@ section.subscription, section.subscription__dark {
     margin: 1rem 0 2rem;
 
     a {
-      text-decoration: underline $third__color;
+      text-decoration: underline var(--third);
     }
   }
 
@@ -133,7 +131,7 @@ section.subscription, section.subscription__dark {
     margin-bottom: -.5rem;
 
     &__dark {
-      color: $dark__color__light__back ;
+      color: var(--text) ;
     }
     button {
       border-color: transparent;
@@ -146,44 +144,44 @@ section.subscription, section.subscription__dark {
 
     button {
       border-color: transparent;
-      color: $dark__color__light__back;
+      color: var(--text);
     }
   }
 }
 
 section.subscription {
-  background-color: $dark__color__light__back;
+  background-color: var(--background);
 
   .arrow {
-    background-color: $dark__color__light__back !important;
+    background-color: var(--background) !important;
   }
 
   header {
-    color: $dark__background__light__color;
+    color: var(--text);
   }
 
   .message, .message a {
-    color: $dark__background__light__color;
+    color: var(--text);
   }
 
   footer button:first-of-type {
-    color: $dark__background__light__color;
+    color: var(--text);
   }
 }
 
 section.subscription__dark {
-  background-color: $dark__background__light__color;
+   background-color: var(--background);
 
   .arrow {
-    background-color: $dark__background__light__color !important;
+     background-color: var(--background) !important;
   }
 
   header {
-    color: $dark__color__light__back;
+    color: var(--text);
   }
 
   .message, .message a {
-    color: $dark__color__light__back;
+    color: var(--text);
   }
 }
 

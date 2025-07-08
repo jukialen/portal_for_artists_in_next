@@ -1,30 +1,49 @@
-//MAINLY
-$primary__color: #FFD068;
-$secondary__color: #FF5CAE;
-$third__color: rgb(151, 179, 255);
-$fourth__color: #82FF82;
-$another__color: #FFC74F;
-//LINKS
-$link__hover: #D69E2E;
-$link__active: #3F1027;
-$link__focus: #418041;
-$link__visited: #403214;
+$light: (
+  primary: hsl(44, 100%, 71%),
+  secondary: hsl(328, 100%, 66%),
+  third: hsl(223, 100%, 80%),
+  fourth: hsl(120, 100%, 75%),
+  hover: hsl(43, 72%, 52%),
+  active: hsl(339, 59%, 23%),
+  focus: hsl(128, 33%, 38%),
+  visited: hsl(41, 17%, 23%),
+  text: hsl(217, 22%, 21%),
+  background: hsl(0, 0%, 97%),
+  required: hsl(0, 100%, 37%),
+  google__provider: hsl(4, 65%, 55%),
+  spotify_provider: hsl(141, 63%, 42%),
+  discord_provider: hsl(234, 82%, 65%),
+  line_provider: hsl(132, 91%, 36%)
+);
 
-//DARK AND LIGHT MODE
-$dark__background__light__color: #283140;
-$dark__color__light__back: #f7f7f7;
+$dark: (
+  primary: hsl(41, 85%, 62%),
+  secondary: hsl(328, 100%, 60%),
+  third: hsl(225, 68%, 63%),
+  fourth: hsl(120, 49%, 52%),
+  hover: hsl(43, 72%, 52%),
+  active: hsl(328, 100%, 66%),
+  focus: hsl(120, 100%, 75%),
+  visited: hsl(59, 100%, 50%),
+  text: hsl(0, 0%, 97%),
+  background: hsl(217, 22%, 21%),
+  required: hsl(0, 100%, 37%),
+  google__provider: hsl(4, 65%, 55%),
+  spotify_provider: hsl(141, 63%, 42%),
+  discord_provider: hsl(234, 82%, 65%),
+  line_provider: hsl(132, 91%, 36%)
+);
 
-//DARK LINKS
-$link__dark__hover: #D69E2E;
-$link__dark__active: #FF5CAE;
-$link__dark__focus: #82FF82;
-$link__dark__visited: #FFF500;
+@mixin theme-variables($map) {
+  @each $key, $value in $map {
+    --#{$key}: #{$value};
+  }
+}
 
-//BORDERS
-$required__color: #bd0000;
+[data-theme='light'], .light {
+  @include theme-variables($light);
+}
 
-//PROVIDERS__ICONS
-$google__provider: #db4437;
-$spotify_provider: #1db954;
-$discord_provider: #5865f2;
-$line_provider: #07b53b;
+[data-theme='dark'], .dark {
+  @include theme-variables($dark);
+}

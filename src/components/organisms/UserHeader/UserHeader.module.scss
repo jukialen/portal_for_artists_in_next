@@ -1,11 +1,9 @@
-@use 'styles/variables' as *;
-
 .header {
   width: 100%;
   position: fixed;
   bottom: 0;
   display: flex;
-  background-color: $primary__color;
+  background-color: var(--primary);
   z-index: 9999;
   padding: .2rem 0;
 }

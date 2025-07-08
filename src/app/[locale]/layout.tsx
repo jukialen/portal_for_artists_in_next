@@ -19,6 +19,8 @@ import { SkeletonRootLayout } from 'components/organisms/SkeletonRootLayout/Skel
 import 'styles/reset.scss';
 import 'styles/global.scss';
 import 'styles/darkLightMode.scss';
+import 'styles/_variables.scss';
+
 import { Viewport } from 'next';
 
 type ChildrenType = {
@@ -53,11 +55,13 @@ export default async function RootLayout({ children, params }: ChildrenType) {
       {process.env.NODE_ENV === 'production' && <Script src={cookiesYesLink} strategy="beforeInteractive" />}
 
       <body>
-        <noscript
-          dangerouslySetInnerHTML={{
-            __html: `<iframe src="${cookiesYesLink}" height="0" width="0" style="display: none; visibility: hidden;"></iframe>`,
-          }}
-        />
+        {process.env.NODE_ENV === 'production' && (
+          <noscript
+            dangerouslySetInnerHTML={{
+              __html: `<iframe src="${cookiesYesLink}" height="0" width="0" style="display: none; visibility: hidden;"></iframe>`,
+            }}
+          />
+        )}
 
         <Provider>
           <GlobalProvider locale={locale}>

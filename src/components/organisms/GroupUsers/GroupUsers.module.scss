@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .tilesSection {
   width: 100%;
   display: flex;
@@ -18,7 +16,7 @@
     &__button {
       width: fit-content;
       height: 2.5rem;
-      border-color: $third__color;
+      border-color: var(--third);
     }
   }
 

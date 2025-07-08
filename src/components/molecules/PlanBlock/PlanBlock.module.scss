@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .box {
 	max-width: 22rem;
 	min-height: 32rem;
@@ -7,7 +5,7 @@
 	flex-direction: column;
 	padding: 0 .5%;
 	border-radius: 1rem;
-	background-color: $another__color;
+	background-color: var(--primary);
 
 	&__title {
 		color: black;
@@ -47,7 +45,7 @@
 			svg.icon {
 				margin: 0 .8rem 0 .3rem;
 				font-size: 1.4rem;
-				color: $link__focus;
+				color: var(--focus);
 			}
 
 			p {
@@ -59,21 +57,21 @@
 	}
 
 	&:nth-of-type(2) {
-		background-color: $secondary__color;
+		background-color: var(--secondary);
 	}
 
 	.choosePlan, .chooseSecondPlan {
 		margin: 2.8rem auto 2rem;
-		color: $dark__background__light__color;
+		color: var(--text);
 		position: relative;
 
 		div {
-			background: $another__color;
+			background: var(--primary);
 		}
 	}
 
 	.chooseSecondPlan div {
-		background-color: $secondary__color;
+		background-color: var(--secondary);
 	}
 
 	&:first-of-type {

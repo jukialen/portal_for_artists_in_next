@@ -1,8 +1,6 @@
-@use '../../../styles/variables' as *;
-
 .container {
   margin: 1rem 0 1rem 1rem;
-  border-left: 0.1rem solid $third__color;
+  border-left: 0.1rem solid var(--third);
 
   .comment {
     display: grid;

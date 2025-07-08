@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
         authorId,
         likes: (await likeList(authorId, undefined, fileId))!.likes,
         liked: (await likeList(authorId, undefined, fileId))!.liked,
-        date: getDate(locale!, updatedAt! || createdAt!, await dateData()),
+        date: getDate(await locale!, updatedAt! || createdAt!, await dateData()),
       });
     }
 

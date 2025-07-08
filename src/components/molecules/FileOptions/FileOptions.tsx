@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link'
 
-import { LangType, Tags } from 'types/global.types';
+import { Tags } from 'types/global.types';
 
 import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { FilesComments } from 'components/molecules/FilesComments/FilesComments';
@@ -20,7 +20,6 @@ type FileOptionsType = {
   fileUrl: string;
   tags: Tags;
   name: string;
-  locale: LangType;
   noComments: string;
   roleId: string;
 };
@@ -32,7 +31,6 @@ export const FileOptions = ({
   tags,
   name,
   authorId,
-  locale,
   noComments,
   roleId,
 }: FileOptionsType) => {
@@ -45,7 +43,7 @@ export const FileOptions = ({
     <div className={styles.options}>
       <div className={styles.bottomPanel}>
         <div className={styles.author__name}>
-          <Link href={`/${locale}/user/${authorName}`}>{authorName}</Link>
+          <Link href={`/user/${authorName}`}>{authorName}</Link>
         </div>
 
         <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} />

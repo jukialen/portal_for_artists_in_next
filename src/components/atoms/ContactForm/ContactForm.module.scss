@@ -1,5 +1,3 @@
-@use '../../../styles/variables' as *;
-
 .form, .form__dark {
 	width: 100%;
 	max-width: 29rem;
@@ -12,41 +10,41 @@
 	}
 
 	input::placeholder, textarea::placeholder {
-		color: $third__color;
+		color: var(--third);
 	}
 
 	input, textarea, button {
 		margin: 1rem 0;
-		border-color: $third__color;
+		border-color: var(--third);
 	}
 
 	.select, .select__dark {
 		margin: 1rem 0;
-		color: $third__color;
+		color: var(--third);
 
 		.tags, .tags__error {
 			font-size: 1rem;
-			color: $third__color;
-			border-color: $third__color;
+			color: var(--third);
+			border-color: var(--third);
 
 			&__error {
-				border-color: $required__color;
+				border-color: var(--required);
 			}
 
 			option {
-				background-color: $dark__color__light__back;
+				background-color: var(--background);
 			}
 		}
 
 		&__dark {
 			.tags, .tags__error {
 				font-size: 1rem;
-				border-color: $third__color;
-				color: $third__color;
-				background-color: $dark__background__light__color;
+				border-color: var(--third);
+				color: var(--third);
+				 background-color: var(--background);
 
 				&__error {
-					border-color: $required__color;
+					border-color: var(--required);
 				}
 
 				option {
@@ -58,7 +56,7 @@
 	}
 
 	.titleInput__error, .message_error {
-		border-color: $required__color;
+		border-color: var(--required);
 	}
 
 	.button {
@@ -70,14 +68,14 @@
 		margin-left: .25rem;
 
 		&:hover {
-			background-color: $third__color;
-			color: $dark__color__light__back;
+			background-color: var(--third);
+			color: var(--text);
 		}
 	}
 }
 
 .form__dark {
 	input, textarea, button {
-		color: $third__color;
+		color: var(--third);
 	}
 }
