@@ -5,7 +5,6 @@ import { createServer } from 'utils/supabase/clientSSR';
 import { getUserData } from 'helpers/getUserData';
 import { roles } from 'utils/roles';
 
-import { Database } from 'types/database.types';
 import { GroupUserType } from 'types/global.types';
 
 export async function GET(request: NextRequest) {

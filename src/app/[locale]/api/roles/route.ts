@@ -2,8 +2,6 @@ import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { Database } from 'types/database.types';
-
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const roleId = searchParams.get('roleId')!;

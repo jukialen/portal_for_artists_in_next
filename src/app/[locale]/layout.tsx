@@ -38,7 +38,6 @@ export function generateStaticParams() {
 export default async function RootLayout({ children, params }: ChildrenType) {
   const { locale } = await params;
 
-  console.log('RootLayout locale:', locale);
   const userMenuComponents = {
     userHeader: <UserHeader />,
     header: <Header locale={locale} />,
@@ -49,7 +48,6 @@ export default async function RootLayout({ children, params }: ChildrenType) {
 
   const cookiesYesLink = `https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js`;
 
-  console.log('RootLayout user:', !!user);
   return (
     <html lang={locale} suppressHydrationWarning>
       {process.env.NODE_ENV === 'production' && <Script src={cookiesYesLink} strategy="beforeInteractive" />}

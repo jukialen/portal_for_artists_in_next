@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { cookies } from 'next/headers';
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { Database } from 'types/database.types';
 import { TableNameEnum } from 'types/global.types';
 
 type UpdateCommentType = {

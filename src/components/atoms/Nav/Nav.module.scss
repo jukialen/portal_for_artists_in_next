@@ -36,6 +36,9 @@
           background-color: var(--focus);
         }
 
+        &:visited {
+          //color: var(--visited);
+        }
       }
     }
   }

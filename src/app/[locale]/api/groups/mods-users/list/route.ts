@@ -2,7 +2,6 @@ import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { Database } from 'types/database.types';
 import { GroupUserType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';

@@ -5,4 +5,3 @@ export const { getI18n, getScopedI18n, getStaticParams, getCurrentLocale } = cre
    pl: () => import('languages/pl'),
    jp: () => import('languages/jp'),
 })
-

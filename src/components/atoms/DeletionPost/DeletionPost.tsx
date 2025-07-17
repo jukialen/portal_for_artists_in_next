@@ -14,8 +14,6 @@ import {
   DialogTrigger,
 } from 'components/ui/dialog';
 
-import { Database } from 'types/database.types';
-
 import { useI18n, useScopedI18n } from 'locales/client';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -41,7 +39,7 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
   const selectedColor = '#FFD068';
 
   const deletePost = async () => {
-    const supabase = await createClient();
+    const supabase = createClient();
 
     try {
       setOpen(false);

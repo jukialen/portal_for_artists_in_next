@@ -18,12 +18,14 @@ export const Header = async ({ locale }: { locale: LangType }) => {
     signIn: t('Nav.signIn'),
     signUp: t('Nav.signUp'),
   };
+  
+  const imgSize = 60;
 
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>
         <Link href='/'>
-          <Image src="/pfartists.png" width={58} height={58} alt="Pfartists logo" quality={100} priority />
+          <Image src="/pfartists.png" width={imgSize} height={imgSize} alt="Pfartists logo" quality={100} priority />
         </Link>
       </h1>
       <div className={styles.desktop_nav}>
