@@ -20,7 +20,7 @@
     color: var(--text);
 
     &::placeholder {
-      color: rgba(45, 55, 72, 0.81);
+      color: inherit;
     }
   }
 

@@ -1,11 +1,7 @@
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createServer } from 'utils/supabase/clientSSR';
+import { createServer, Locale } from "utils/supabase/clientSSR";
 
-import { Database } from 'types/database.types';
 import { FriendsListType } from 'types/global.types';
-
-import { getCurrentLocale } from 'locales/server';
 
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
@@ -16,7 +12,7 @@ export async function GET(request: NextRequest) {
   const maxItems = searchParams.get('maxItems')!;
 
   const supabase = await createServer();
-  const locale = getCurrentLocale();
+  
 
   try {
     const { data } = await supabase
@@ -37,7 +33,7 @@ export async function GET(request: NextRequest) {
         fileUrl: !!_f.profilePhoto ? _f.profilePhoto : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
         favorite: _f.favorite!,
         plan: _f.plan!,
-        createdAt: getDate(locale, _f.createdAt!, await dateData()),
+        createdAt: getDate(await Locale, _f.createdAt!, await dateData()),
       });
     }
 

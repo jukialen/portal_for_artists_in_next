@@ -1,13 +1,9 @@
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createServer } from 'utils/supabase/clientSSR';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
+import { createServer, Locale } from 'utils/supabase/clientSSR';
 
-import { getCurrentLocale } from 'locales/server';
-
-import { Database } from 'types/database.types';
 import { PostsType } from 'types/global.types';
 
 export async function GET(req: NextRequest) {
@@ -18,8 +14,6 @@ export async function GET(req: NextRequest) {
 
   const userId = searchParams.get('userId')!;
   const supabase = await createServer();
-
-  const locale = getCurrentLocale();
 
   const nextArray: PostsType[] = [];
 
@@ -63,7 +57,7 @@ export async function GET(req: NextRequest) {
         authorId,
         groupId,
         roleId: rData?.id || Roles?.id!,
-        date: getDate(locale!, updatedAt! || createdAt!, await dateData()),
+        date: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
         idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
       });
     }

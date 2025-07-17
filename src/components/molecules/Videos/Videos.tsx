@@ -1,5 +1,7 @@
 import Link from 'next/link';
-import { getCurrentLocale, getScopedI18n } from 'locales/server';
+
+import { getScopedI18n } from 'locales/server';
+import { Locale } from 'utils/supabase/clientSSR';
 
 import { ArticleVideosType } from 'types/global.types';
 
@@ -19,7 +21,6 @@ export const Videos = async ({
   profilePhoto,
   roleId,
 }: ArticleVideosType) => {
-  const locale = getCurrentLocale();
   const tComments = await getScopedI18n('Comments');
 
   return (
@@ -42,7 +43,6 @@ export const Videos = async ({
         tags={tags!}
         name={name!}
         noComments={tComments('noComments')}
-        locale={locale}
         authorId={authorId}
         profilePhoto={profilePhoto}
         roleId={roleId!}

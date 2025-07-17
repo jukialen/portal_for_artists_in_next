@@ -1,21 +1,16 @@
 'use client';
 
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@chakra-ui/react';
 
-import { darkMode } from 'constants/links';
 import { LangType } from 'types/global.types';
-
 import { useChangeLocale, useI18n } from 'locales/client';
-
-import { ModeContext } from 'providers/ModeProvider';
 
 import styles from './LanguagesSettings.module.scss';
 import { MdLanguage } from 'react-icons/md';
 import { RxChevronDown } from 'react-icons/rx';
 
 export const LanguagesSettings = ({ locale }: { locale: LangType }) => {
-  const { isMode } = useContext(ModeContext);
   const [isLanguage, setLanguage] = useState(false);
   const changeLocale = useChangeLocale();
 
@@ -34,27 +29,20 @@ export const LanguagesSettings = ({ locale }: { locale: LangType }) => {
     <div className={styles.langMenu}>
       <div>
         <MdLanguage className={styles.icon} />
-        <p className={isMode === darkMode ? styles.dark__title : ''}>{t('Footer.changeLanguage')}</p>
+        <p>{t('Footer.changeLanguage')}</p>
       </div>
 
       <ul className={styles.languages}>
-        <li
-          className={`${styles.languages__select} ${isMode === darkMode ? styles.languages__select__dark : ''}`}
-          onClick={showLanguages}>
+        <li className={styles.languages__select} onClick={showLanguages}>
           <p>{locale.toLocaleUpperCase()}</p>
           <RxChevronDown />
         </li>
 
-        <div
-          className={`${styles.language} ${isLanguage && styles.language__active} ${
-            isMode === darkMode && styles.language__active__dark
-          }`}>
+        <div className={`${styles.language} ${isLanguage && styles.language__active}`}>
           {locales.map((_l) => {
             return (
               <li key={_l}>
-                <Button
-                  onClick={() => redirectedPathName(_l)}
-                  className={`${styles.languages__version} ${isMode === darkMode && styles.languages__version__dark}`}>
+                <Button onClick={() => redirectedPathName(_l)} className={styles.languages__version}>
                   {_l.toLocaleUpperCase()}
                 </Button>
               </li>

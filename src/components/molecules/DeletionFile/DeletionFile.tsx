@@ -18,8 +18,6 @@ import {
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { Database } from 'types/database.types';
-
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './DeletionFile.module.scss';
@@ -34,10 +32,10 @@ export const DeletionFile = ({ fileId }: { fileId: string }) => {
 
   const t = useI18n();
   const tDeletionFile = useScopedI18n('DeletionFile');
-  const selectedColor = '#FFD068';
+  const selectedColor = 'hsl(44, 100%, 71%)';
 
   const deleteFile = async () => {
-    const supabase = await createClient();
+    const supabase = createClient();
 
     try {
       setOpen(false);

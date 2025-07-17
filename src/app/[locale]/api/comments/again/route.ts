@@ -2,15 +2,11 @@ import { NextRequest } from 'next/server';
 
 import { CommentType } from 'types/global.types';
 
-import { getCurrentLocale } from 'locales/server';
-
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { likeList } from 'utils/likes';
 import { giveRole } from 'utils/roles';
-import { createServer } from 'utils/supabase/clientSSR';
-
-const locale = getCurrentLocale();
+import { createServer, Locale } from 'utils/supabase/clientSSR';
 
 export async function GET(req: NextRequest) {
   const commentArray: CommentType[] = [];
@@ -60,7 +56,7 @@ export async function GET(req: NextRequest) {
         authorId,
         likes: (await likeList(authorId, postId!))!.likes,
         liked: (await likeList(authorId, postId!))!.liked,
-        date: getDate(await locale!, updatedAt! || createdAt!, await dateData()),
+        date: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
       });
     }
 

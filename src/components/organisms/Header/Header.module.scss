@@ -4,15 +4,19 @@
   bottom: 0;
   display: grid;
   grid-template-columns: 5rem 1fr auto;
-  background-color: var(--primary);
   z-index: 9999;
   padding: .2rem 0;
+  background-color: var(--background__opacity);
 
-  .title a {
+  .title {
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+
+    img {
+      border-radius: 1rem;
+    }
   }
 
   .desktop_nav {
@@ -21,7 +25,7 @@
 
   .menu_buttons {
     width: 5.5rem;
-    height: 100%;
+    height: 90%;
     display: flex;
     flex-direction: column;
     row-gap: .2rem;
@@ -30,14 +34,29 @@
     margin: auto .5rem auto .1rem;
     padding: .2rem;
     background: inherit;
-    border: none;
-    color: black;
+    border-radius: 1rem;
+    color: var(--primary);
+    background-color: transparent;
     cursor: pointer;
 
     svg {
       width: 2.2rem;
       height: 2.2rem;
-      color: black;
+      color: inherit;
+    }
+
+    &:hover {
+      background-color: var(--hover);
+      color: var(--text);
+    }
+
+    &:active {
+      background-color: var(--active);
+      color: var(--text);
+    }
+
+    &:focus {
+      background-color: var(--focus);
     }
   }
 

@@ -1,18 +1,14 @@
 import { NextRequest } from 'next/server';
 
-import { getCurrentLocale } from 'locales/server';
-
 import { RoleType, SubCommentType } from 'types/global.types';
 
 import { groupRole } from 'utils/roles';
 import { likeList } from 'utils/likes';
-import { createServer } from 'utils/supabase/clientSSR';
+import { createServer, Locale } from "utils/supabase/clientSSR";
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
-
-const locale = getCurrentLocale();
 
 type DataArrayType = {
   subCommentId: string;
@@ -89,7 +85,7 @@ export async function GET(request: NextRequest) {
         authorId,
         likes: (await likeList(authorId, undefined, undefined, commentId!, fileCommentId!))!.likes,
         liked: (await likeList(authorId, undefined, undefined, commentId!, fileCommentId!))!.liked,
-        date: getDate(locale!, updatedAt! || createdAt!, await dateData()),
+        date: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
         groupsPostsRoleId: groupsPostsRoleId!,
       });
     }

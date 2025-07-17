@@ -1,16 +1,12 @@
 import { NextRequest } from 'next/server';
 
-import { getCurrentLocale } from 'locales/server';
-
 import { FilesCommentsType } from 'types/global.types';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { likeList } from 'utils/likes';
-import { createServer } from 'utils/supabase/clientSSR';
-
-const locale = getCurrentLocale();
+import { createServer, Locale } from "utils/supabase/clientSSR";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -48,7 +44,7 @@ export async function GET(request: NextRequest) {
         authorId,
         likes: (await likeList(authorId, undefined, fileId))!.likes,
         liked: (await likeList(authorId, undefined, fileId))!.liked,
-        date: getDate(await locale!, updatedAt! || createdAt!, await dateData()),
+        date: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
       });
     }
 

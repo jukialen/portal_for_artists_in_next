@@ -20,15 +20,15 @@
 		color: var(--text);
 
 		&::placeholder {
-			color: rgba(45, 55, 72, 0.81);
+			color: inherit;
 		}
 	}
 
 	.showingPass {
 		height: 2rem;
 		width: 2rem;
-		margin: 1rem 1rem .5rem 0;
-		color: var(--text);
+		margin: 1rem 1.2rem .5rem 0;
+		color: var(--background);
 		background-color: var(--primary);
 		border-color: var(--primary);
 	}

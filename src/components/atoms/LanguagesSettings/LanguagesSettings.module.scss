@@ -42,10 +42,6 @@
       &:hover {
         background-color: var(--secondary);
       }
-
-      &__dark {
-        color: var(--text) ;
-      }
     }
 
     .language {
@@ -62,10 +58,6 @@
         border: 0.1rem solid var(--secondary);
         border-radius: 0.4rem;
         z-index: 2;
-
-        &__dark {
-           background-color: var(--background);
-        }
       }
 
       li {
@@ -84,33 +76,16 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          color: var(--primary);
+          background-color: var(--background);
           font-size: 1rem;
           border-color: transparent;
 
           &:hover,
           &:active {
-            background-color: var(--background);
             filter: invert(0.2);
             font-weight: bold;
             border-radius: 0.4rem;
           }
-
-          &__dark {
-             background-color: var(--background);
-
-            &:hover,
-            &:active {
-               background-color: var(--background);
-              filter: invert(0.2);
-              font-weight: bold;
-              border-radius: 0.4rem;
-            }
-          }
-        }
-
-        .dark__title {
-          color: var(--text);
         }
       }
     }

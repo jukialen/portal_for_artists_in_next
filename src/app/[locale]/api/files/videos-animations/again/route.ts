@@ -1,10 +1,8 @@
 import { NextRequest } from 'next/server';
-import { createServer } from 'utils/supabase/clientSSR';
+import { createServer, Locale } from "utils/supabase/clientSSR";
 
 import { selectFiles } from 'constants/selects';
 import { FileType, Tags } from 'types/global.types';
-
-import { getCurrentLocale } from 'locales/server';
 
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
@@ -20,7 +18,7 @@ export async function GET(request: NextRequest) {
   const lastVisible = searchParams.get('lastVisible')!;
 
   const supabase = await createServer();
-  const locale = getCurrentLocale();
+  
 
   try {
     const filesArray: FileType[] = [];
@@ -49,7 +47,7 @@ export async function GET(request: NextRequest) {
         authorProfilePhoto: Users?.profilePhoto!,
         fileUrl,
         authorId: authorId!,
-        time: getDate(await locale!, updatedAt! || createdAt!, await dateData()),
+        time: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
         createdAt,
         updatedAt: updatedAt || '',
         roleId: roleId!,

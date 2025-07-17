@@ -1,16 +1,12 @@
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
-import { createServer } from 'utils/supabase/clientSSR';
 
 import { selectFiles } from 'constants/selects';
-import { Database } from 'types/database.types';
 import { FileType, IndexType } from 'types/global.types';
-
-import { getCurrentLocale } from 'locales/server';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getFileRoleId } from 'utils/roles';
+import { createServer, Locale } from 'utils/supabase/clientSSR';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -18,7 +14,6 @@ export async function GET(req: NextRequest) {
   const lastVisible = searchParams.get('lastVisible');
   const maxItems = searchParams.get('maxItems')!;
 
-  const locale = getCurrentLocale();
   const supabase = await createServer();
 
   const nextArray: FileType[] = [];
@@ -52,7 +47,7 @@ export async function GET(req: NextRequest) {
           fileUrl,
           authorId: authorId!,
           tags,
-          time: getDate(locale!, updatedAt! || createdAt!, await dateData()),
+          time: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
           roleId,
         });
       }

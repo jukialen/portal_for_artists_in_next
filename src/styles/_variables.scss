@@ -1,5 +1,6 @@
 $light: (
   primary: hsl(44, 100%, 71%),
+  primary__opacity: hsl(44, 100%, 71%, 0.8),
   secondary: hsl(328, 100%, 66%),
   third: hsl(223, 100%, 80%),
   fourth: hsl(120, 100%, 75%),
@@ -9,6 +10,7 @@ $light: (
   visited: hsl(41, 17%, 23%),
   text: hsl(217, 22%, 21%),
   background: hsl(0, 0%, 97%),
+  background__opacity: hsl(0, 0%, 97%, 0.9),
   required: hsl(0, 100%, 37%),
   google__provider: hsl(4, 65%, 55%),
   spotify_provider: hsl(141, 63%, 42%),
@@ -18,6 +20,7 @@ $light: (
 
 $dark: (
   primary: hsl(41, 85%, 62%),
+  primary__opacity: hsl(41, 85%, 62%, 0.8),
   secondary: hsl(328, 100%, 60%),
   third: hsl(225, 68%, 63%),
   fourth: hsl(120, 49%, 52%),
@@ -27,6 +30,7 @@ $dark: (
   visited: hsl(59, 100%, 50%),
   text: hsl(0, 0%, 97%),
   background: hsl(217, 22%, 21%),
+  background__opacity: hsla(0, 0%, 97%, 0.1),
   required: hsl(0, 100%, 37%),
   google__provider: hsl(4, 65%, 55%),
   spotify_provider: hsl(141, 63%, 42%),
@@ -40,10 +44,10 @@ $dark: (
   }
 }
 
-[data-theme='light'], .light {
+[data-theme='light'] {
   @include theme-variables($light);
 }
 
-[data-theme='dark'], .dark {
+[data-theme='dark'] {
   @include theme-variables($dark);
 }

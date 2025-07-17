@@ -24,12 +24,16 @@ export const ModeProvider = ({ children }: childrenType) => {
   const defaultTheme = (): ModeType | null => {
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const savedMode = localStorage.getItem('mode') as 'light' | 'dark' | null;
-    return savedMode ?? (systemPrefersDark ? 'dark' : 'light');
+    
+    const defaultMode = savedMode ?? (systemPrefersDark ? 'dark' : 'light');
+    localStorage.setItem('chakra-ui-color-mode', defaultMode);
+    return defaultMode;
   };
   
   useEffect(() => {
     const mode: ModeType | null = isMode ?? defaultTheme();
     setMode(mode!);
+    localStorage.setItem('chakra-ui-color-mode', mode!);
     document.documentElement.setAttribute('data-theme', mode!);
     localStorage.setItem('mode', mode!);
   }, [isMode]);

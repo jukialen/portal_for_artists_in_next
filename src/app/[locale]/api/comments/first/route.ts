@@ -1,7 +1,5 @@
 import { NextRequest } from 'next/server';
 
-import { getCurrentLocale } from 'locales/server';
-
 import { CommentType } from 'types/global.types';
 
 import { likeList } from 'utils/likes';
@@ -9,9 +7,7 @@ import { giveRole } from 'utils/roles';
 
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
-import { createServer } from 'utils/supabase/clientSSR';
-
-const locale = getCurrentLocale();
+import { createServer, Locale } from 'utils/supabase/clientSSR';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -61,7 +57,7 @@ export async function GET(request: NextRequest) {
         postId,
         likes: (await likeList(authorId, postId))!.likes,
         liked: (await likeList(authorId, postId))!.liked,
-        date: getDate(locale!, updatedAt! || createdAt!, await dateData()),
+        date: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
       });
     }
 

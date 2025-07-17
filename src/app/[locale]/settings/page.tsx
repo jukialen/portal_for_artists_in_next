@@ -48,13 +48,13 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
       )}
       <footer>
         <button className={styles.links}>
-          <Link href='terms'>{t('Footer.termsOfUse')}</Link>
+          <Link href='/terms'>{t('Footer.termsOfUse')}</Link>
         </button>
         <button className={styles.links}>
           <Link href='/privacy'>{t('Footer.privacyPolice')}</Link>
         </button>
         <button className={styles.links}>
-          <Link href={'/contact'}>{t('Footer.contact')}</Link>
+          <Link href='/contact'>{t('Footer.contact')}</Link>
         </button>
         <button className={styles.links}>
           <Link href='/faq'>{t('Footer.faq')}</Link>

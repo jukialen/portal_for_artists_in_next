@@ -40,19 +40,19 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
 
         <div className={styles.question}>
           <h2>{t('firstQuestion')}</h2>
-          <Image src={searchingService} width={width} height={height} alt="image for first question" />
+          <Image src={searchingService} width={width} height={height} alt="image for first question" priority />
         </div>
 
         <div className={styles.question}>
           <h2>{t('secondQuestion')}</h2>
-          <Image src={diary} width={width} height={height} alt="image for second question" />
+          <Image src={diary} width={width} height={height} alt="image for second question" priority />
         </div>
 
         <div className={styles.question}>
           <h3>
             {t('firstAnswer')} {t('secondAnswer')}
           </h3>
-          <Image src={artist} width={width} height={height} alt="image for answer" />
+          <Image src={artist} width={width} height={height} alt="image for answer" priority />
         </div>
       </div>
       <article className={styles.main__container}>
@@ -66,8 +66,8 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
           width={width}
           height={height}
           className={styles.image}
+          loading="lazy"
           alt="picture.jpg"
-          priority
           quality={quality}
         />
       </article>
@@ -83,8 +83,8 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
           width={width}
           height={height}
           className={styles.image}
+          loading="lazy"
           alt="picture.jpg"
-          priority
           quality={quality}
         />
       </article>
@@ -100,8 +100,8 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
           width={width}
           height={height}
           className={styles.image}
+          loading="lazy"
           alt="sign in photo file"
-          priority
           quality={quality}
         />
       </article>
@@ -120,8 +120,8 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
           width={width}
           height={height}
           className={styles.image}
+          loading="lazy"
           alt="picture.jpg"
-          priority
           quality={quality}
         />
       </article>
@@ -137,8 +137,8 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
           width={width}
           height={height}
           className={styles.image}
+          loading="lazy"
           alt="sign in photo file"
-          priority
           quality={quality}
         />
       </article>
@@ -151,13 +151,13 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
 
         <div className={styles.image}>
           <div className={styles.modeImage}>
-            <Image src={light_mode} width={width} height={height} alt="picture.jpg" priority quality={quality} />
+            <Image src={light_mode} width={width} height={height} loading="lazy" alt="picture.jpg" quality={quality} />
             <Image
               src={dark_mode}
               width={width}
               height={height}
+              loading="lazy"
               alt="dark mode photo file"
-              priority
               quality={quality}
             />
           </div>
@@ -175,8 +175,8 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
           width={width}
           height={height}
           className={styles.image}
+          loading="lazy"
           alt="categories photo file"
-          priority
           quality={quality}
         />
       </article>
@@ -192,8 +192,8 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
           width={width}
           height={height}
           className={styles.image}
+          loading="lazy"
           alt="groups photo file"
-          priority
           quality={quality}
         />
       </article>
@@ -209,8 +209,8 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
           width={width}
           height={height}
           className={styles.image}
+          loading="lazy"
           alt="friends photo file"
-          priority
           quality={quality}
         />
       </article>

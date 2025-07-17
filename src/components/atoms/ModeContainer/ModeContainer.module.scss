@@ -12,10 +12,10 @@
 
     .icon {
       margin-right: 0.2rem;
-    }
-
-    .dark__title {
+      width: 1.3rem;
+      height: 1.2rem;
       color: var(--text);
+      bac: var(--text);
     }
 
     p {
@@ -74,9 +74,10 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          color: var(--primary);
+          color: var(--text);
           font-size: 1rem;
           border-color: transparent;
+          border-radius: 0.5rem;
 
           &:hover,
           &:active {
@@ -87,11 +88,11 @@
           }
 
           &__dark {
-             background-color: var(--background);
+            background-color: var(--background);
 
             &:hover,
             &:active {
-               background-color: var(--background);
+              background-color: var(--background);
               filter: invert(0.2);
               font-weight: bold;
               border-radius: 0.4rem;
@@ -118,7 +119,7 @@
       z-index: 2;
 
       &__dark {
-         background-color: var(--background);
+        background-color: var(--background);
       }
     }
   }
