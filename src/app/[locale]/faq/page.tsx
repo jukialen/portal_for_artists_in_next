@@ -12,7 +12,6 @@ import { AccordionWrapper } from 'components/atoms/AccordionWrapper/AccordionWra
 
 import styles from './page.module.scss';
 
-
 export const metadata: Metadata = HeadCom('Faq site');
 
 export default async function Faq({ params }: { params: Promise<{ locale: LangType }> }) {
@@ -32,7 +31,7 @@ export default async function Faq({ params }: { params: Promise<{ locale: LangTy
       body: (
         <div>
           {tFAQ('body2')}
-          <Link href={`${locale}/plans`} color={link}>
+          <Link href='/plans'>
             {tFAQ('body2Link')}
           </Link>
           {tFAQ('body2dot')}
