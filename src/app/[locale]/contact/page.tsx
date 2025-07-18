@@ -17,5 +17,5 @@ export default async function Contact({ params }: { params: Promise<{ locale: La
   
   const userData = await getUserData();
 
-  return <ContactContainer locale={locale} userData={userData!} />;
+  return <ContactContainer userData={userData!} />;
 }

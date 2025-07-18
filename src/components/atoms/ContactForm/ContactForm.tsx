@@ -11,7 +11,7 @@ import { NativeSelectField, NativeSelectRoot } from 'components/ui/native-select
 import { useI18n, useScopedI18n } from 'locales/client';
 
 import { initialValuesForContact } from 'constants/objects';
-import { darkMode } from 'constants/links';
+import { backUrl } from "constants/links";
 import { ResetFormType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -42,7 +42,7 @@ export const ContactForm = () => {
   });
 
   const sendFeedback = async ({ title, message, tags }: ContactType, { resetForm }: ResetFormType) => {
-    const messages = await axios.post(`${process.env.NEXT_PUBLIC_PAGE}/api/contact`, {
+    const messages = await axios.post(`${backUrl}/api/contact`, {
       tags,
       title,
       message,
@@ -60,13 +60,13 @@ export const ContactForm = () => {
   return (
     <Formik initialValues={initialValuesForContact} validationSchema={schemaValidation} onSubmit={sendFeedback}>
       {({ values, handleChange, errors, touched }) => (
-        <Form className={isMode === darkMode ? styles.form__dark : styles.form}>
-          <div className={isMode === darkMode ? styles.select__dark : styles.select}>
+        <Form className={styles.form}>
+          <div className={styles.select}>
             <NativeSelectRoot
               onChange={handleChange}
               className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}>
-              <NativeSelectField name="tags" value={values.tags} placeholder={tContact('chooseTitle')}>
-                <option role="option" value={tContact('suggestion')}>
+              <NativeSelectField name="tags" value={values.tags} placeholder={tContact('chooseTitle')} onChange={() => console.log('mmm')}>
+                <option role="option" value={tContact('suggestion')} >
                   {tContact('suggestion')}
                 </option>
                 <option role="option" value={tContact('problem')}>

@@ -1,11 +1,11 @@
-.form, .form__dark {
+.form {
 	width: 100%;
 	max-width: 29rem;
 	padding: 0 1rem;
 
 	select.tags, input, textarea {
 		&:hover {
-			border-color: rgba(79, 141, 255, .5);
+			border-color: var(--third__opacity);
 		}
 	}
 
@@ -16,41 +16,35 @@
 	input, textarea, button {
 		margin: 1rem 0;
 		border-color: var(--third);
+		color: var(--third);
 	}
 
-	.select, .select__dark {
+	.select {
 		margin: 1rem 0;
 		color: var(--third);
 
 		.tags, .tags__error {
 			font-size: 1rem;
-			color: var(--third);
 			border-color: var(--third);
+			color: var(--third);
+			background-color: var(--background);
 
+
+			select {
+				border-color: var(--third);
+			}
+
+			div svg {
+				color: var(--third);
+			}
+			
 			&__error {
 				border-color: var(--required);
 			}
 
 			option {
+				color: inherit;
 				background-color: var(--background);
-			}
-		}
-
-		&__dark {
-			.tags, .tags__error {
-				font-size: 1rem;
-				border-color: var(--third);
-				color: var(--third);
-				 background-color: var(--background);
-
-				&__error {
-					border-color: var(--required);
-				}
-
-				option {
-					color: inherit;
-					background-color: inherit;
-				}
 			}
 		}
 	}
@@ -71,11 +65,5 @@
 			background-color: var(--third);
 			color: var(--text);
 		}
-	}
-}
-
-.form__dark {
-	input, textarea, button {
-		color: var(--third);
 	}
 }

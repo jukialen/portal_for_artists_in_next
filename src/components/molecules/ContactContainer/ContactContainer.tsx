@@ -9,8 +9,8 @@ import { ContactForm } from "components/atoms/ContactForm/ContactForm";
 
 import styles from './ContactContainer.module.scss';
 
-type ContactContainerType = { locale: string, userData: UserType }
-export const ContactContainer = ({ locale, userData }: ContactContainerType) => {
+type ContactContainerType = { userData: UserType }
+export const ContactContainer = ({ userData }: ContactContainerType) => {
   const tContact = useScopedI18n('Contact');
   
   return (
@@ -23,7 +23,7 @@ export const ContactContainer = ({ locale, userData }: ContactContainerType) => 
           
           <p>
             {tContact('toFAQ')}
-            <Link href={`${locale}/faq`}>{tContact('toFAQHere')}</Link>
+            <Link href='/faq'>{tContact('toFAQHere')}</Link>
             {tContact('dot')}
           </p>
         </div>
