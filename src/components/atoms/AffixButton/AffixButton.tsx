@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { MouseEventHandler, useState } from 'react';
-import { Affix, Button } from 'antd';
+import { MouseEventHandler, useEffect, useState } from 'react';
 
 import styles from './AffixButton.module.scss';
-import { IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowUp } from 'react-icons/io';
+import { Box, Link } from '@chakra-ui/react';
 
 export const AffixButton = () => {
   const [bottom, setBottom] = useState<number>(0);
@@ -21,15 +21,16 @@ export const AffixButton = () => {
 
   const changeBottom: MouseEventHandler = () => setBottom(0);
 
-  typeof window !== 'undefined' && window.addEventListener('scroll', toggleVisible);
+  useEffect(() => {
+    window.addEventListener('scroll', toggleVisible);
+    return () => window.removeEventListener('scroll', toggleVisible);
+  }, []);
 
   return (
-    <Affix offsetBottom={bottom}>
-      <Button type="primary" href="#" onClick={changeBottom}>
-        <IoIosArrowUp
-          className={`${styles.up} ${visible && styles.up__active}`}
-          aria-label="top of page button" />
-      </Button>
-    </Affix>
+    <Box className={styles.upBox} bottom={bottom}>
+      <Link type="primary" href="#" onClick={changeBottom}>
+        <IoIosArrowUp className={visible ? styles.up__active : styles.up} aria-label="top of page button" />
+      </Link>
+    </Box>
   );
 };

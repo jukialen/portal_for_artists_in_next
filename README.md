@@ -21,7 +21,6 @@ Site's in full responsive on target devices from small smartphones to TV and SMA
 - Next (CNA);
 - Atomic Design;
 - Formik with Yup;
-- Ant Design;
 - Git;
 - REST API;
 - axios;
