@@ -1,16 +1,46 @@
 button.choosePlan {
   width: 100%;
-  border-color: transparent;
+  border-radius: 0.5rem;
+  background-color: var(--opacity);
   color: var(--text);
   cursor: pointer;
+
+  &:hover {
+    background-color: var(--hover);
+  }
+
+  &:focus {
+    background-color: var(--focus);
+  }
+
+  &:active {
+    background-color: var(--active);
+    color: var(--background);
+  }
 }
 
 .openButton {
   visibility: unset;
   position: absolute;
-  bottom: 3.5rem;
+  bottom: 1rem;
   width: 100%;
-  border-radius: .5rem;
+  height: 8.5rem;
+  background: transparent;
+
+  button {
+    &:hover {
+      background-color: var(--hover);
+    }
+
+    &:focus {
+      background-color: var(--focus);
+    }
+
+    &:active {
+      background-color: var(--active);
+      color: var(--background);
+    }
+  }
 }
 
 .hideButton {
@@ -20,19 +50,21 @@ button.choosePlan {
 
 .noUsersPlan {
   width: 100%;
-  height: fit-content;
   display: grid;
   grid-template-columns: 1fr;
   justify-items: center;
   gap: 1rem;
+  border-radius: 0.5rem 0.5rem 0 0;
   margin: 0 auto;
-  padding: .5rem 0;
+  padding: 0.5rem 0;
   font-size: 1.2rem;
+  box-shadow:
+    10px 10px 19px var(--opacity),
+    -10px -10px 19px var(--opacity);
 
   button {
     width: inherit;
-    border-color: transparent;
-    color: var(--text);
+    font-size: 1.2rem;
     cursor: pointer;
   }
 }

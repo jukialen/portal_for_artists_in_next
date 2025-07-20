@@ -68,7 +68,6 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
       <div className={styles.plansFormats}>
         <PlanWrapper pseudonym={user?.pseudonym!}>
           <PlanBlock
-            locale={locale}
             amount={freePlan.amount}
             plan={freePlan.plan}
             period={freePlan.period}
@@ -80,7 +79,6 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
             noAds={freePlan.noAds}
           />
           <PlanBlock
-            locale={locale}
             amount={premiumPlan.amount}
             plan={premiumPlan.plan}
             period={premiumPlan.period}
@@ -93,7 +91,6 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
             support={premiumPlan.support}
           />
           <PlanBlock
-            locale={locale}
             amount={goldPlan.amount}
             plan={goldPlan.plan}
             period={goldPlan.period}

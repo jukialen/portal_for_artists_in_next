@@ -62,16 +62,8 @@
 
 	.choosePlan, .chooseSecondPlan {
 		margin: 2.8rem auto 2rem;
-		color: var(--text);
 		position: relative;
-
-		div {
-			background: var(--primary);
-		}
-	}
-
-	.chooseSecondPlan div {
-		background-color: var(--secondary);
+		font-size: 2rem;
 	}
 
 	&:first-of-type {
