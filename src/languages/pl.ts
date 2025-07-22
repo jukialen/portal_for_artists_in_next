@@ -65,7 +65,6 @@ export default {
     photographs: 'Fotografie',
     animations: 'Animacje',
     videos: 'Filmy',
-    others: 'Inne',
     friends: 'Ulubieni znajomi',
     groups: 'Ulubione grupy',
     addingGroup: 'Dodaj grupę',
@@ -82,7 +81,6 @@ export default {
   App: {
     lastDrawings: 'Ostatnie rysunki',
     lastPhotos: 'Ostatnie zdjęcia',
-    lastOthers: 'Ostatnie inne',
     lastAnimations: 'Ostatnie animacje',
     lastVideos: 'Ostatnie filmy',
   },
@@ -273,7 +271,6 @@ export default {
   ZeroFiles: {
     drawings: 'Brak rysunków.',
     photos: 'Brak zdjęć.',
-    others: 'Brak inne.',
     animations: 'Brak animacji.',
     videos: 'Brak filmów.',
     files: 'Brak plików.',

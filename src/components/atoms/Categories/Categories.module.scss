@@ -33,7 +33,9 @@
     }
   }
 
-  .containerImgLink {
+
+
+  .containerImgLink, .drawings {
     width: 95%;
     display: flex;
     gap: 0 .8rem;
@@ -41,8 +43,9 @@
     align-items: center;
     margin: .4rem auto;
 
-
     img {
+      width: 2.5rem;
+      height: 2.5rem;
       border-radius: 25%;
 
     }
@@ -61,12 +64,12 @@
     }
   }
 
-  .source {
-    display: none;
+  .drawings {
+    margin-left: 1rem;
   }
 
-  .photographs {
-    margin-top: .8rem;
+  .source {
+    display: none;
   }
 
   .hiddenElement {

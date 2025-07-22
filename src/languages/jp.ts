@@ -65,7 +65,6 @@ export default {
     photographs: '写真',
     animations: 'アニメーション',
     videos: '映画',
-    others: '他',
     friends: 'フェイバリットの友達',
     groups: 'フェイバリットの団体',
     addingGroup: '団体が増設',
@@ -82,7 +81,6 @@ export default {
   App: {
     lastDrawings: '最近の描画',
     lastPhotos: '最近の写真',
-    lastOthers: '最近の他',
     lastAnimations: '最近のアニメーション',
     lastVideos: '最近の映画',
   },
@@ -272,7 +270,6 @@ export default {
   ZeroFiles: {
     drawings: '描画が見つけあせん。',
     photos: '写真が見つけあせん。',
-    others: '他が見つけあせん。',
     animations: 'アニメーションが見つけあせん。',
     videos: '映画が見つけあせん。',
     files: 'ヒレが見つけません。',

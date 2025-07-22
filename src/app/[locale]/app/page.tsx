@@ -112,13 +112,12 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
   const dataDateObject = await dateData();
 
   const maxItems = 10;
-  const tags: Tags[] = ['photographs', 'animations', 'videos', 'others'];
+  const tags: Tags[] = ['photographs', 'animations', 'videos'];
 
   const drawings = await getTop10Drawings(maxItems, locale, dataDateObject);
   const photos = await getTop10Pavo(maxItems, tags[0], locale, dataDateObject);
   const animations = await getTop10Pavo(maxItems, tags[1], locale, dataDateObject);
   const videos = await getTop10Pavo(maxItems, tags[2], locale, dataDateObject);
-  const others = await getTop10Pavo(maxItems, tags[3], locale, dataDateObject);
 
   return (
     <>
@@ -155,15 +154,6 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
           <AppTop10s data={videos!} type="videos" />
         ) : (
           <ZeroFiles text={tZero('videos')} />
-        )}
-      </AppWrapper>
-
-      <h2 className={styles.top__among__users}>{tApp('lastOthers')}</h2>
-      <AppWrapper>
-        {!!others && others?.length > 0 ? (
-          <AppTop10s data={others!} type="others" />
-        ) : (
-          <ZeroFiles text={tZero('others')} />
         )}
       </AppWrapper>
     </>

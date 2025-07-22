@@ -1,5 +1,38 @@
-.aside, .aside__dark {
+.aside {
   display: none;
+}
+
+.container {
+  display: flex;
+}
+
+.hidden__categories {
+  display: none;
+}
+.aside,
+.drawer {
+  .rolling {
+    margin-bottom: 4rem;
+
+    .h3 {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 3rem;
+      justify-items: center;
+      align-items: center;
+      margin: 2rem 0 0.25rem;
+      cursor: pointer;
+
+      p {
+        width: 100%;
+        padding-left: 1rem;
+      }
+    }
+
+    .afterHidden {
+      margin-bottom: 2rem;
+    }
+  }
 }
 
 div button.aside__right {
@@ -11,60 +44,39 @@ div button.aside__right {
   align-items: center;
   bottom: 5rem;
   font-size: 2rem;
-  border: 0;
+  border-radius: 0 0.5rem 0.5rem 0;
   background-color: var(--primary);
   color: var(--text);
   cursor: pointer;
   z-index: 1;
-}
 
-.blur {
-  position: absolute;
-  width: 17rem;
-  max-width: 100vh;
-  height: 100vh;
-  background-image: linear-gradient(rgb(var(--secondary), .2), rgb(var(--secondary), .2), rgb(var(--secondary), .2));
-  backdrop-filter: blur(2px);
-  background-color: rgb(var(--secondary), .5);
-  z-index: -1;
+  svg {
+    transform: rotate(90deg);
+  }
 }
-
 
 div.drawer {
   width: 17rem;
   max-width: 100vh;
   background-color: transparent;
-  margin-bottom: 4rem;
+  margin-bottom: 4.5rem;
 
-  .aside {
+  .drawerBody {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 0;
-    background-color: rgba(var(--background), .5);
+    justify-content: flex-start;
+    padding-top: 1rem;
+    background-color: var(--secondary__opacity);
+    backdrop-filter: blur(2px);
+    color: var(--text);
     z-index: 1;
 
-    .rolling {
-      margin-bottom: 4rem;
-
-      .h3 {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 3rem;
-        justify-items: center;
-        align-items: center;
-        margin: 2rem 0 .25rem;
-        cursor: pointer;
-
-        p {
-          width: 100%;
-          padding-left: 1rem;
-        }
-      }
-
-      .afterHidden {
-        margin-bottom: 2rem;
-      }
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.2;
+      pointer-events: none;
     }
   }
 
@@ -75,32 +87,29 @@ div.drawer {
     justify-content: flex-end;
     border-color: transparent;
     border-radius: 0;
-    position: fixed;
-    bottom: 0;
+    position: sticky;
+    bottom: 4.5rem;
+    background-color: var(--secondary);
+    opacity: .8;
 
-    span {
+    svg {
       width: 2.5rem;
       height: 100%;
-      transform: rotate(-.5turn);
+      transform: rotate(-90deg);
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 2rem;
     }
   }
-}
-
-.container {
-  display: flex;
-}
-
-.hidden__categories {
-  display: none;
 }
 
 @media (min-width: 768px) {
   div.drawer {
     margin-bottom: 0;
+
+    .drawerBody {
+      padding-top: 3.5rem;
+    }
 
     .aside .rolling {
       .h3 {
@@ -111,7 +120,7 @@ div.drawer {
 }
 
 @media (min-width: 1024px) {
-  .aside, .aside__dark {
+  .aside {
     width: 17rem;
     height: 100vh;
     display: flex;
@@ -123,63 +132,39 @@ div.drawer {
     overflow: hidden auto;
     scrollbar-width: thin;
     scrollbar-color: var(--primary) var(--fourth);
-    background-color: rgb(var(--secondary), .75);
+    background-color: var(--secondary__opacity);
+    backdrop-filter: blur(2px);
+    color: var(--text);
 
     &::-webkit-scrollbar {
-      width: 10px
+      width: 0.6rem;
     }
 
     &::-webkit-scrollbar-track {
-      background-color: var(--fourth)
+      background-color: var(--fourth);
     }
 
     &::-webkit-scrollbar-thumb {
-      background: var(--primary)
+      background: var(--primary);
     }
 
     &::-webkit-scrollbar-thumb:hover {
-      width: 15px
+      width: 1rem;
     }
 
     &::-webkit-scrollbar-thumb:hover {
       background: var(--third);
-      border-radius: 20px;
+      border-radius: 1.25rem;
     }
 
     &::-webkit-scrollbar-thumb:active {
       background: var(--primary);
-      border-radius: 20px;
+      border-radius: 1.25rem;
     }
-
-    .rolling {
-      .h3 {
-        display: grid;
-        grid-template-columns: 1fr 3rem;
-        justify-items: center;
-        align-items: center;
-        margin: 2rem 0 .25rem;
-        cursor: pointer;
-        z-index: 1;
-
-
-        p {
-          width: 100%;
-          padding-left: 1rem;
-        }
-      }
-
-      .afterHidden {
-        margin-bottom: 2rem;
-      }
-    }
-  }
-
-  .aside__dark {
-    background-color: rgb(var(--secondary), .75);
   }
 
   div button.aside__right {
-    display: none
+    display: none;
   }
 
   div.drawer {

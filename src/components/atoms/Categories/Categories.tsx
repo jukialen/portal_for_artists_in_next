@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import Link from 'next/link'
-import Image from 'next/image';
+import Link from 'next/link';
+import Image, { StaticImageData } from "next/image";
 import { usePathname } from 'next/navigation';
 import { useScopedI18n } from 'locales/client';
 
 import styles from './Categories.module.scss';
-import { RxTriangleDown, RxTriangleUp } from "react-icons/rx";
 import realistic from '../../../../public/realistic.jpg';
 import manga from '../../../../public/manga.jpg';
 import anime from '../../../../public/anime.jpg';
@@ -13,89 +12,65 @@ import comics from '../../../../public/comics.jpg';
 import photograph from '../../../../public/photograph.jpg';
 import animations from '../../../../public/animations.jpg';
 import videos from '../../../../public/videos.jpg';
-import others from '../../../../public/others.jpg';
+import { RiArrowUpSLine } from 'react-icons/ri';
 
 export const Categories = () => {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const [arrowIcon, setArrowIcon] = useState(false);
 
   const tAside = useScopedI18n('Aside');
 
   const changeOpenCategories = () => setArrowIcon(!arrowIcon);
 
-  const icons = 40;
-  const arrowIcons = '1.5rem';
+  type ImgSourceType = {
+    name: 'realistic' | 'manga' | 'anime' | 'comics';
+    source: StaticImageData;
+  }
+  const imgDrawingSources: ImgSourceType[] = [
+    { name: 'realistic', source: realistic },
+    { name: 'manga', source: manga },
+    { name: 'anime', source: anime },
+    { name: 'comics', source: comics },
+  ];
 
   return (
     <ol className={styles.categories}>
       <li className={styles.shadow}>
         <Link href={pathname!} className={styles.withIcon} onClick={changeOpenCategories}>
           <p>{tAside('drawings')}</p>
-          {arrowIcon ? (
-            <RxTriangleUp width={arrowIcons} height={arrowIcons} />
-          ) : (
-            <RxTriangleDown width={arrowIcons} height={arrowIcons} />
-          )}
+          <RiArrowUpSLine
+            style={{
+              transform: arrowIcon ? 'rotate(-180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.3s cubic-bezier(0.65, 0, 0.35, 1)',
+              display: 'inline-block',
+            }}
+          />
         </Link>
 
         <ol className={arrowIcon ? '' : styles.hiddenElement}>
-          <Link href="/drawings/realistic" className={styles.containerImgLink}>
-            <Image src={realistic} height={icons} width={icons} alt={tAside('realistic')} />
-            <p className={styles.link}>{tAside('realistic')}</p>
-          </Link>
-          <Link href="/drawings/manga" className={styles.containerImgLink}>
-            <Image src={manga} height={icons} width={icons} alt={tAside('manga')} />
-            <p className={styles.link}>{tAside('manga')}</p>
-          </Link>
-          <Link href="https://www.freepik.com/vectors/poster" className={styles.source}>
+          {imgDrawingSources.map((s) => (
+            <Link href={`/drawings/${s.name}`} className={`${styles.containerImgLink} ${styles.drawings}`} key={s.name}>
+              <Image src={s.source} alt={tAside(s.name)} />
+              <p className={styles.link}>{tAside(s.name)}</p>
+            </Link>
+          ))}
+          <Link href="https://www.freepik.com/vectors/poster" className={`${styles.source} ${styles.drawings}`}>
             Poster vector created by gstudioimagen1 - www.freepik.com
-          </Link>
-          <Link href="/drawings/anime" className={styles.containerImgLink}>
-            <Image src={anime} height={icons} width={icons} alt={tAside('anime')} />
-            <p className={styles.link}>{tAside('anime')}</p>
-          </Link>
-          <Link href="/drawings/comics" className={styles.containerImgLink}>
-            <Image src={comics} height={icons} width={icons} alt={tAside('comics')} />
-            <p className={styles.link}>{tAside('comics')}</p>
           </Link>
         </ol>
       </li>
 
       <Link href="/photographs" className={`${styles.containerImgLink} ${styles.photographs}`}>
-        <Image
-          src={photograph}
-          height={icons}
-          width={icons}
-          alt={`${tAside('photographs')} Photo by Rirri on Unsplash`}
-        />
+        <Image src={photograph} alt={`${tAside('photographs')} Photo by Rirri on Unsplash`} />
         <p className={styles.link}>{tAside('photographs')}</p>
       </Link>
       <Link href="/animations" className={styles.containerImgLink}>
-        <Image
-          src={animations}
-          height={icons}
-          width={icons}
-          alt={`${tAside('photographs')} Photo by Sebastian Svenson on Unsplash`}
-        />
+        <Image src={animations} alt={`${tAside('photographs')} Photo by Sebastian Svenson on Unsplash`} />
         <p className={styles.link}>{tAside('animations')}</p>
       </Link>
       <Link href="/videos" className={styles.containerImgLink}>
-        <Image
-          src={videos}
-          height={icons}
-          width={icons}
-          alt={`${tAside('photographs')} Photo by Jakob Owens on Unsplash`}
-        />
+        <Image src={videos} alt={`${tAside('photographs')} Photo by Jakob Owens on Unsplash`} />
         <p className={styles.link}>{tAside('videos')}</p>
-      </Link>
-      <Link href="/others" className={styles.containerImgLink}>
-        <Image
-          src={others}
-          height={icons}
-          width={icons}
-          alt={`${tAside('photographs')} Photo by Yong Chuan Tan on Unsplash`}
-        />
-        <p className={styles.link}>{tAside('others')}</p>
       </Link>
     </ol>
   );

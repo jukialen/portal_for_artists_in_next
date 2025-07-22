@@ -65,7 +65,6 @@ export default {
     photographs: 'Photographs',
     animations: 'Animations',
     videos: 'Videos',
-    others: 'Others',
     friends: 'Favorite friends',
     groups: 'Favorite groups',
     addingGroup: 'Adding a group',
@@ -82,7 +81,6 @@ export default {
   App: {
     lastDrawings: 'Last drawings',
     lastPhotos: 'Last photos',
-    lastOthers: 'Last others',
     lastAnimations: 'Last animations',
     lastVideos: 'Last videos',
   },
@@ -118,7 +116,6 @@ export default {
       userPhotosTitle: 'Your photos and draws',
       userLikedPhotos: 'Liked photos and draws',
       userVideosTitle: 'Your videos',
-      userLikedVideos: 'Liked by others',
       userAnimationsTitle: 'Your animations',
       userLikedAnimations: 'Liked animations',
     },
@@ -272,7 +269,6 @@ export default {
   ZeroFiles: {
     drawings: 'No your drawings.',
     photos: 'No your photos.',
-    others: 'No your others.',
     animations: 'No your animations.',
     videos: 'No your videos.',
     files: 'No found files.',

@@ -9,7 +9,7 @@ import { GroupsType } from 'types/global.types';
 import { Links } from 'components/atoms/Links/Links';
 
 import styles from './Groups.module.scss';
-import { RxTriangleDown, RxTriangleUp } from 'react-icons/rx';
+import { RiArrowUpSLine } from "react-icons/ri";
 
 export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) => {
   const [open, setOpen] = useState(false);
@@ -17,8 +17,6 @@ export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) =
   const locale = useCurrentLocale();
   const t = useI18n();
   const tAside = useScopedI18n('Aside');
-
-  const arrowIcons = '1.5rem';
   
   const changeOpenGroups = () => setOpen(!open);
 
@@ -26,11 +24,12 @@ export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) =
     <div className={styles.groups}>
       <h3 className={styles.title} onClick={changeOpenGroups}>
         <p className={locale === 'jp' ? styles.title__jp : ''}>{tAside('groups')}</p>
-        {open ? (
-          <RxTriangleUp width={arrowIcons} height={arrowIcons} />
-        ) : (
-          <RxTriangleDown width={arrowIcons} height={arrowIcons} />
-        )}
+        <RiArrowUpSLine
+          style={{
+            transform: open ? 'rotate(-180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.3s cubic-bezier(0.65, 0, 0.35, 1)',
+            display: 'inline-block'
+          }} />
       </h3>
 
       <div className={open ? styles.groups__container : styles.hiddenGroups}>

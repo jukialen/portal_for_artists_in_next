@@ -4,10 +4,10 @@ import Link from 'next/link';
 
 import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
-import { FriendsListArrayType } from "types/global.types";
+import { FriendsListArrayType } from 'types/global.types';
 
 import styles from './Friends.module.scss';
-import { RxTriangleDown, RxTriangleUp } from 'react-icons/rx';
+import { RiArrowUpSLine } from 'react-icons/ri';
 
 export const Friends = ({ friendsAsideList }: { friendsAsideList: FriendsListArrayType[] }) => {
   const [open, setOpen] = useState(false);
@@ -16,19 +16,19 @@ export const Friends = ({ friendsAsideList }: { friendsAsideList: FriendsListArr
   const tAside = useScopedI18n('Aside');
   const locale = useCurrentLocale();
 
-  const arrowIcons = '1.5rem';
-  
   const changeOpenFriends = () => setOpen(!open);
-  
+
   return (
     <div className={styles.friends}>
       <h3 className={styles.title} onClick={changeOpenFriends}>
         <p className={locale === 'jp' ? styles.title__jp : styles.title__others}>{tAside('friends')}</p>
-        {open ? (
-          <RxTriangleUp width={arrowIcons} height={arrowIcons} />
-        ) : (
-          <RxTriangleDown width={arrowIcons} height={arrowIcons} />
-        )}
+        <RiArrowUpSLine
+          style={{
+            transform: open ? 'rotate(-180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.3s cubic-bezier(0.65, 0, 0.35, 1)',
+            display: 'inline-block',
+          }}
+        />
       </h3>
 
       <div className={open ? styles.container : styles.hiddenFriends}>
