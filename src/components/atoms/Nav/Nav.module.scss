@@ -19,7 +19,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--primary);
+        color: var(--text);
         border-radius: 1rem;
 
 
@@ -34,10 +34,6 @@
 
         &:focus {
           background-color: var(--focus);
-        }
-
-        &:visited {
-          //color: var(--visited);
         }
       }
     }

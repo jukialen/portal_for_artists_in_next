@@ -11,20 +11,21 @@ button.choosePlan {
 
   &:focus {
     background-color: var(--focus);
+    color: var(--background);
   }
 
   &:active {
     background-color: var(--active);
-    color: var(--background);
+    color: var(--text);
   }
 }
 
 .openButton {
   visibility: unset;
   position: absolute;
-  bottom: 1rem;
+  bottom: 3rem;
   width: 100%;
-  height: 8.5rem;
+  height: 6.5rem;
   background: transparent;
 
   button {
@@ -34,11 +35,12 @@ button.choosePlan {
 
     &:focus {
       background-color: var(--focus);
+      color: var(--background);
     }
 
     &:active {
       background-color: var(--active);
-      color: var(--background);
+      color: var(--text);
     }
   }
 }

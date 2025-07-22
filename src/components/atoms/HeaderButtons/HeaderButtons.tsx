@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Button } from '@chakra-ui/react';
 
-import styles from 'components/organisms/Header/Header.module.scss';
+import styles from './HeadersButtons.module.scss';
 
 import { BiLogInCircle } from 'react-icons/bi';
 import { MdOutlineSettings } from 'react-icons/md';
@@ -22,7 +22,6 @@ export const HeaderButtons = ({ headers }: HeadersType) => {
   return (
     <>
       <Button
-        colorScheme="yellow"
         className={styles.menu_buttons}
         id={styles.settings_button}
         onClick={() => push('/signin')}
@@ -31,7 +30,6 @@ export const HeaderButtons = ({ headers }: HeadersType) => {
         <p>{headers.signIn}</p>
       </Button>
       <Button
-        colorScheme="yellow"
         onClick={() => push('/settings')}
         className={styles.menu_buttons}
         aria-label="Settings">

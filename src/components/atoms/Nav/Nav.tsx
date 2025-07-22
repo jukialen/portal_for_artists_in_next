@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { LangType } from 'types/global.types';
+
 import styles from './Nav.module.scss';
 
 type HeadersType = {
@@ -8,7 +10,7 @@ type HeadersType = {
     signIn: string;
     signUp: string;
   };
-  locale: string
+  locale: LangType;
 };
 
 export const Nav = ({ headers, locale }: HeadersType) => {
