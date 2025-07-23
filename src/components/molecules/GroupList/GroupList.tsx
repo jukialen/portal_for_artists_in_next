@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { GroupListType, LangType } from 'types/global.types';
+import { GroupListType } from 'types/global.types';
 
 import { nextGroupList } from 'utils/groups';
 
@@ -20,11 +20,9 @@ type GroupsType = {
 };
 
 export const GroupList = ({
-  locale,
   Groups,
   groupArray,
 }: {
-  locale: LangType;
   Groups: GroupsType;
   groupArray: GroupListType[] | undefined;
 }) => {
@@ -54,7 +52,7 @@ export const GroupList = ({
         <div className={styles.list}>
           {!!listArray && listArray.length > 0 ? (
             listArray.map(({ name, fileUrl }, index) => (
-              <Tile key={index} name={name} link={`/${locale}/groups/${name}`} fileUrl={fileUrl} />
+              <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={fileUrl} />
             ))
           ) : (
             <p>{Groups.noGroups}</p>

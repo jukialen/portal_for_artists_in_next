@@ -13,7 +13,6 @@ export async function GET(request: NextRequest) {
 
   const supabase = await createServer();
   
-
   try {
     const { data } = await supabase
       .from('Friends_View')

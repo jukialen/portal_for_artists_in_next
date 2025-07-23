@@ -57,5 +57,5 @@ export default async function List({ params }: { params: Promise<{ locale: LangT
 
   const groupArray = await getGroupsList(30);
 
-  return <GroupList locale={locale} Groups={Groups} groupArray={groupArray} />;
+  return <GroupList Groups={Groups} groupArray={groupArray} />;
 }

@@ -6,7 +6,7 @@ export const getFirstFriends = async (id: string, maxItems: number) => {
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: FriendsListType[] = await fetch(`${backUrl}/en/api/friends/list?${queryString}`, {
+    const res: FriendsListType[] = await fetch(`${backUrl}/api/friends/first?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())

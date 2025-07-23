@@ -75,7 +75,7 @@ async function getModGroups(userId: string, maxItems: number) {
 
   const { data, error } = await supabase
     .from('UsersGroups')
-    .select('name, Groups (logo)')
+    .select('name, Groups!name (logo)')
     .eq('userId', userId)
     .order('name', { ascending: true })
     .limit(maxItems);
@@ -102,7 +102,7 @@ async function getMembersGroups(userId: string, maxItems: number) {
 
   const { data, error } = await supabase
     .from('UsersGroups')
-    .select('name, Groups (logo)')
+    .select('name, Groups!name (logo)')
     .eq('userId', userId)
     .order('name', { ascending: true })
     .limit(maxItems);

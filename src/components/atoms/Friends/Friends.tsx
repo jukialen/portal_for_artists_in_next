@@ -32,7 +32,7 @@ export const Friends = ({ friendsAsideList }: { friendsAsideList: FriendsListArr
       </h3>
 
       <div className={open ? styles.container : styles.hiddenFriends}>
-        {friendsAsideList.length > 0 ? (
+        {!!friendsAsideList && friendsAsideList.length > 0 ? (
           friendsAsideList.map(({ pseudonym, profilePhoto }, index) => (
             <Link href={`/user/${pseudonym}`} key={index} className={styles.link}>
               <div className={styles.item}>

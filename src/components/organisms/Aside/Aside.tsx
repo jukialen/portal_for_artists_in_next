@@ -14,7 +14,7 @@ async function getFriendsList(userId: string, maxItems: number) {
 
   const { data, error } = await supabase
     .from('Friends')
-    .select('Users (pseudonym, profilePhoto)')
+    .select('Users!friendId (pseudonym, profilePhoto)')
     .eq('usernameId', userId)
     .eq('favorite', true)
     .order('createdAt', { ascending: true })
@@ -31,16 +31,14 @@ async function getFriendsList(userId: string, maxItems: number) {
   }
 }
 
-async function getGroupsList(maxItems: number) {
+async function getGroupsList(id: string, maxItems: number) {
   const groupList: GroupsType[] = [];
 
-  const user = await getUserData();
   const supabase = await createServer();
-
   const { data, error } = await supabase
     .from('UsersGroups')
-    .select('name, Groups (description, logo)')
-    .eq('userId', user?.id!)
+    .select('Groups!name (description, logo, name)')
+    .eq('userId', id)
     .eq('favorite', true)
     .order('createdAt', { ascending: true })
     .limit(maxItems);
@@ -50,9 +48,9 @@ async function getGroupsList(maxItems: number) {
 
     for (const d of data!) {
       groupList.push({
-        name: d.name,
-        description: d?.Groups?.description!,
-        logo: !!d.Groups?.logo ? d.Groups?.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        name: d.Groups.name,
+        description: d.Groups.description!,
+        logo: !!d.Groups.logo ? d.Groups.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
       });
     }
   } catch (e) {
@@ -66,7 +64,7 @@ export async function Aside() {
   const maxItems = 5;
 
   const friendsAsideList = await getFriendsList(userData?.id!, maxItems);
-  const groupsAsideList = await getGroupsList(maxItems);
+  const groupsAsideList = await getGroupsList(userData?.id!, maxItems);
 
   return (
     <AsideWrapper

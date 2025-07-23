@@ -5,7 +5,7 @@ export const nextGroupList = async (maxItems: number, lastVisible: string) => {
   const params = { maxItems: maxItems.toString(), lastVisible };
   const queryString = new URLSearchParams(params).toString();
 
-  const res: GroupListType[] = await fetch(`${backUrl}/en/api/groups/list?${queryString}`, {
+  const res: GroupListType[] = await fetch(`${backUrl}/api/groups/list?${queryString}`, {
     method: 'GET',
   })
     .then((r) => r.json())

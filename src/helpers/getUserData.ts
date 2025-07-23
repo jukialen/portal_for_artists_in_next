@@ -6,8 +6,7 @@ export const getUserData = async (): Promise<UserType | undefined> => {
   const supabase = await createServer();
 
   const { data: dataSession } = await supabase.auth.getUser();
-
-  console.log('dataSession:', !!dataSession);
+  
   const id = dataSession.user?.id;
 
   if (id) {

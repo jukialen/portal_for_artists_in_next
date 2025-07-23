@@ -18,6 +18,7 @@ export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) =
   const t = useI18n();
   const tAside = useScopedI18n('Aside');
   
+  console.log(groupsAsideList)
   const changeOpenGroups = () => setOpen(!open);
 
   return (
@@ -31,9 +32,9 @@ export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) =
             display: 'inline-block'
           }} />
       </h3>
-
+      
       <div className={open ? styles.groups__container : styles.hiddenGroups}>
-        {groupsAsideList.length > 0 ? (
+        {!!groupsAsideList && groupsAsideList.length > 0 ? (
           groupsAsideList.map(({ name, logo, description }, index) => (
             <div className={styles.container} key={index}>
               <img src={logo} alt={`${name} logo`} />
