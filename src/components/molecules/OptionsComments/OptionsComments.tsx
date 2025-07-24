@@ -22,7 +22,7 @@ import { updComment, delComment } from 'utils/comments';
 import { toggleLiked } from 'utils/likes';
 
 import { darkMode } from 'constants/links';
-import { ResetFormType, TableNameEnum } from 'types/global.types';
+import { ResetFormType, TableNameType } from 'types/global.types';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -43,7 +43,7 @@ type OptionsType = {
   userId: string;
   liked: boolean;
   likes: number;
-  tableName: TableNameEnum;
+  tableName: TableNameType;
   children?: ReactNode;
 };
 

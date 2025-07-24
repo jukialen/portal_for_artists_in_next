@@ -6,6 +6,7 @@ import { Separator } from '@chakra-ui/react';
 import { roles } from 'utils/roles';
 import { createClient } from 'utils/supabase/clientCSR';
 
+import { backUrl } from 'constants/links';
 import { useI18n, useScopedI18n } from 'locales/client';
 
 import { Links } from 'components/atoms/Links/Links';
@@ -75,7 +76,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
       for (const _group of data!) {
         nextAdminArray.push({
           name: _group.name,
-          logo: !!_group.logo ? _group.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          logo: !!_group.logo ? _group.logo : `${backUrl}/group.svg`,
           groupId: _group.groupId,
         });
       }
@@ -98,7 +99,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
     try {
       const { data, error } = await supabase
         .from('UsersGroups')
-        .select('name, Groups (logo), groupId, roleId')
+        .select('name, Groups!name (logo), groupId, roleId')
         .eq('userId', id)
         .order('name', { ascending: true })
         .gt('name', lastModeratorsVisible)
@@ -114,7 +115,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
         if (role == 'MODERATOR') {
           nextModeratorArray.push({
             name: d.name,
-            logo: !!d.Groups?.logo ? d.Groups?.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+            logo: !!d.Groups?.logo ? d.Groups?.logo : `${backUrl}/group.svg`,
             groupId: d.groupId,
           });
         }
@@ -138,7 +139,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
     try {
       const { data, error } = await supabase
         .from('UsersGroups')
-        .select('name, Groups (logo), groupId, roleId')
+        .select('name, Groups!name (logo), groupId, roleId')
         .eq('userId', id)
         .order('name', { ascending: true })
         .gt('name', lastMembersVisible)
@@ -154,7 +155,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
         if (role == 'USER') {
           nextMemberArray.push({
             name: d.name,
-            logo: !!d.Groups?.logo ? d.Groups?.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+            logo: !!d.Groups?.logo ? d.Groups?.logo : `${backUrl}/group.svg`,
             groupId: d.groupId,
           });
         }

@@ -5,6 +5,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 import { getScopedI18n } from 'locales/server';
 
 import { HeadCom } from 'constants/HeadCom';
+import { backUrl } from 'constants/links';
 import { GroupListType, LangType } from 'types/global.types';
 
 import { GroupList } from 'components/molecules/GroupList/GroupList';
@@ -31,7 +32,7 @@ async function getGroupsList(maxItems: number) {
     for (const g of data) {
       groupArray.push({
         name: g.name!,
-        fileUrl: !!g.logo ? g.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        fileUrl: !!g.logo ? g.logo : `${backUrl}/group.svg`,
       });
     }
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link'
 
+import { backUrl } from 'constants/links';
 import { Tags } from 'types/global.types';
 
 import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
@@ -37,7 +38,7 @@ export const FileOptions = ({
   const [open, setOpen] = useState(false);
   const showOpenComments = () => setOpen(!open);
 
-  const linkShare = `${process.env.NEXT_PUBLIC_PAGE}/shared/${name}${fileId}/${authorName}`;
+  const linkShare = `${backUrl}/shared/${name}${fileId}/${authorName}`;
 
   return (
     <div className={styles.options}>

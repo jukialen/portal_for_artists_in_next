@@ -42,7 +42,7 @@ const emptyObject: JoinUser = {
 
 async function joinedUser(name: string, stringError: string): Promise<JoinUser> {
   const supabase = await createServer();
-  
+
   const myUser = await getUserData();
 
   const userGroupData = await supabase
@@ -50,7 +50,7 @@ async function joinedUser(name: string, stringError: string): Promise<JoinUser> 
     .select(
       `
       groupId, roleId, favorite, usersGroupsId,
-      Groups ( logo, name, description, regulation, adminId),
+      Groups!name ( logo, name, description, regulation, adminId),
       Roles (role)
      `,
     )
@@ -94,7 +94,7 @@ async function joinedUser(name: string, stringError: string): Promise<JoinUser> 
 }
 async function members(usersGroupsId: string, name: string, stringError: string): Promise<MemberType[]> {
   const supabase = await createServer();
-  
+
   const usersGroupData = await supabase
     .from('Groups')
     .select(
@@ -133,9 +133,9 @@ async function members(usersGroupsId: string, name: string, stringError: string)
 }
 async function getFirstPosts(groupId: string, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
   const postsArray: PostsType[] = [];
-  
+
   const supabase = await createServer();
-  
+
   const { data, error } = await supabase
     .from('Posts')
     .select('*, Users (pseudonym, profilePhoto), Roles (id)')

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
 import { getScopedI18n } from 'locales/server';
-import { Locale } from 'utils/supabase/clientSSR';
 
 import { ArticleVideosType } from 'types/global.types';
 

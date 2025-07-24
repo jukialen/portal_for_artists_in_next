@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { backUrl } from 'constants/links';
 import { FriendsListType } from 'types/global.types';
 
 import { createClient } from 'utils/supabase/clientCSR';
@@ -46,7 +47,7 @@ export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListCompo
         nextArray.push({
           favorite: _f.favorite!,
           pseudonym: _f.pseudonym!,
-          fileUrl: !!_f.profilePhoto ? _f.profilePhoto : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
+          fileUrl: !!_f.profilePhoto ? _f.profilePhoto : `${backUrl}/friends.svg`,
           plan: _f.plan!,
           createdAt: _f.createdAt!,
         });

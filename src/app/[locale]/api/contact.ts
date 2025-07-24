@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
-
+import { mailerApiKey } from 'constants/links';
 const mailerSend = new MailerSend({
-  apiKey: process.env.NEXT_PUBLIC_MAILERSEND_API_KEY!,
+  apiKey: mailerApiKey,
 });
 
 async function sendEmail(req: NextApiRequest, res: NextApiResponse) {

@@ -19,7 +19,7 @@ import {
 
 import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
-import { darkMode } from 'constants/links';
+import { backUrl, darkMode } from "constants/links";
 import { NewPlanType, ResetFormType, UserFormType, UserType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -122,7 +122,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
       }
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${process.env.NEXT_PUBLIC_PAGE}/${locale}/new-password`,
+        redirectTo: `${backUrl}/${locale}/new-password`,
       });
 
       if (!!error) {

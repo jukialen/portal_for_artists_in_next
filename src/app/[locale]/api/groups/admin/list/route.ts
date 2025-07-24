@@ -1,10 +1,10 @@
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { getUserData } from 'helpers/getUserData';
 import { roles } from 'utils/roles';
 
+import { backUrl } from 'constants/links';
 import { GroupUserType } from 'types/global.types';
 
 export async function GET(request: NextRequest) {
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
   try {
     const { data, error } = await supabase
       .from('UsersGroups')
-      .select('name, Groups (logo), groupId, roleId')
+      .select('name, Groups!name (logo), groupId, roleId')
       .eq('userId', user?.id!)
       .order('name', { ascending: true })
       .limit(parseInt(maxItems));
@@ -36,13 +36,13 @@ export async function GET(request: NextRequest) {
       if (role == 'MODERATOR') {
         moderatorArray.push({
           name: d.name,
-          logo: !!d.Groups?.logo ? d.Groups?.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          logo: !!d.Groups?.logo ? d.Groups?.logo : `${backUrl}/group.svg`,
           groupId: d.groupId,
         });
       } else if (role == 'USER') {
         memberArray.push({
           name: d.name,
-          logo: !!d.Groups?.logo ? d.Groups?.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          logo: !!d.Groups?.logo ? d.Groups?.logo : `${backUrl}/group.svg`,
           groupId: d.groupId,
         });
       }

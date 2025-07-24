@@ -6,7 +6,7 @@ import {
   NewCommentsType,
   RoleType,
   SubCommentType,
-  TableNameEnum,
+  TableNameType,
 } from 'types/global.types';
 
 //POST
@@ -122,13 +122,13 @@ export const lastComments = async (
 //PATCH
 
 export const updComment = async (
-  tableName: TableNameEnum,
+  tableName: TableNameType,
   nameId: 'commentId' | 'fileId' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
   id: string,
   content: string,
 ) => {
   try {
-    const up: boolean = await fetch(`${backUrl}/en/api/comments/update`, {
+    const up: boolean = await fetch(`${backUrl}/api/comments/update`, {
       method: 'PATCH',
       body: JSON.stringify({ tableName, nameId, id, content }),
     }).then((r) => r.json());
@@ -142,12 +142,12 @@ export const updComment = async (
 ///DELETE
 
 export const delComment = async (
-  tableName: TableNameEnum,
+  tableName: TableNameType,
   nameId: 'commentId' | 'fileId' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
   id: string,
 ) => {
   try {
-    const del: boolean = await fetch(`${backUrl}/en/api/comments/update`, {
+    const del: boolean = await fetch(`${backUrl}/api/comments/update`, {
       method: 'DELETE',
       body: JSON.stringify({ tableName, nameId, id }),
     }).then((r) => r.json());

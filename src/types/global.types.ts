@@ -5,12 +5,11 @@ import { Database } from './database.types';
 type Like = { likes: number; liked: boolean };
 type Time = { createdAt?: string; updatedAt?: string };
 
-export enum TableNameEnum {
-  Comments= 'Comments',
-  FileComments = 'FileComments',
-  SubComments = 'SubComments',
-  LastComments = 'LastComments',
-}
+export type TableNameType =
+  | 'Comments'
+  | 'FilesComments'
+  | 'LastComments'
+  | 'SubComments'
 
 export type Tags = Database['public']['Enums']['Tags'];
 export type LangType = 'en' | 'pl' | 'jp';

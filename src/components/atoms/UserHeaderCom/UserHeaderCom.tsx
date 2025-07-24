@@ -39,7 +39,6 @@ type HeadersType = {
     photographs: string;
     animations: string;
     videos: string;
-    others: string;
     friends: string;
     groups: string;
     notFound: string;
@@ -82,7 +81,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     translated.photographs,
     translated.animations,
     translated.videos,
-    translated.others,
   ];
 
   const toggleSearch = () => {
@@ -129,7 +127,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
       const { data: da, error: err } = await supabase
         .from('Friends')
-        .select('Users (pseudonym, profilePhoto, description)')
+        .select('Users!usernameId (pseudonym, profilePhoto, description)')
         .eq('usernameId', userData?.id!)
         .textSearch('pseudonym', `${searchValues}`);
 

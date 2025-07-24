@@ -1,7 +1,7 @@
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
+import { backUrl } from 'constants/links';
 import { GroupUserType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     for (const _group of data!) {
       adminArray.push({
         name: _group.name,
-        logo: !!_group.logo ? _group.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        logo: !!_group.logo ? _group.logo : `${backUrl}/group.svg`,
         groupId: _group.groupId,
       });
     }

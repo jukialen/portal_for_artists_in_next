@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Avatar } from 'components/ui/avatar';
 import { Tag } from 'components/ui/tag';
 
-import { SubCommentType, TableNameEnum } from 'types/global.types';
+import { SubCommentType } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 
@@ -55,7 +55,7 @@ export const SubComment = ({
         userId={authorId}
         liked={liked}
         likes={likes}
-        tableName={TableNameEnum.SubComments}>
+        tableName='SubComments'>
         <NewComments
           profilePhoto={profilePhoto!}
           subCommentId={subCommentId}

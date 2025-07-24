@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Separator, Input } from '@chakra-ui/react';
 
+import { backUrl } from 'constants/links';
 import { LangType, ResetFormType, UserFormType } from 'types/global.types';
 
 import { useI18n } from 'locales/client';
@@ -34,7 +35,7 @@ export const FormForgotten = ({ locale }: { locale: LangType }) => {
   const reset__password = async ({ email }: UserFormType, { resetForm }: ResetFormType) => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${process.env.NEXT_PUBLIC_PAGE}/${locale}/new-password`,
+        redirectTo: `${backUrl}/${locale}/new-password`,
       });
 
       if (error?.status === 200) {

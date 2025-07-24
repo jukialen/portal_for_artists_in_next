@@ -2,10 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { TableNameEnum } from 'types/global.types';
+import { TableNameType } from 'types/global.types';
 
 type DelCommentType = {
-  tableName: TableNameEnum;
+  tableName: TableNameType;
   nameId: 'commentId' | 'fileId' | 'fileCommentId' | 'subCommentId' | 'lastCommentId';
   id: string;
 };

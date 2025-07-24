@@ -16,6 +16,7 @@ import {
 
 import { createClient } from 'utils/supabase/clientCSR';
 
+import { backUrl } from 'constants/links';
 import { EventType, nameGroupTranslatedType } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -105,7 +106,7 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
             <p style={{ color: '#bd0000' }}>{!newLogo && required && translated!.updateLogo!.validateRequired}</p>
             {!!newLogo && (
               <img
-                src={`${process.env.NEXT_PUBLIC_PAGE}/${newLogo.name}`}
+                src={`${backUrl}/${newLogo.name}`}
                 alt="preview new logo"
                 width={192}
                 height={192}

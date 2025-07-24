@@ -1,13 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { TableNameEnum } from 'types/global.types';
+import { TableNameType } from 'types/global.types';
 
 type UpdateCommentType = {
-  tableName: TableNameEnum;
+  tableName: TableNameType;
   nameId: 'commentId' | 'fileId' | 'fileCommentId' | 'subCommentId' | 'lastCommentId';
   id: string;
   content: string;
+  authorId: string;
+  // postId: string;
+  // roleId: string;
 };
 
 export async function PATCH(req: NextApiRequest, res: NextApiResponse) {
@@ -30,7 +33,7 @@ export async function PATCH(req: NextApiRequest, res: NextApiResponse) {
 
     const { tableName, nameId, id, content } = requestBody;
 
-    const { error } = await supabase.from(tableName).insert([{ content }]).eq(nameId, id);
+    const { error } = await supabase.from(tableName).update({ content }).eq(nameId, id);
 
     return !error;
   } catch (e) {

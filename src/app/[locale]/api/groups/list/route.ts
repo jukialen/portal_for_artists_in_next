@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
+import { backUrl } from 'constants/links';
 import { GroupListType } from 'types/global.types';
 
 export async function GET(request: NextRequest) {
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
     for (const g of data) {
       groupArray.push({
         name: g.name!,
-        fileUrl: !!g.logo ? g.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        fileUrl: !!g.logo ? g.logo : `${backUrl}/group.svg`,
       });
     }
 

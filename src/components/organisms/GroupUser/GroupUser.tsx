@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Separator } from '@chakra-ui/react';
 
+import { backUrl } from 'constants/links';
 import { createClient } from 'utils/supabase/clientCSR';
 
 import { GroupUsersType } from 'types/global.types';
@@ -57,7 +58,7 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
       for (const admin of data!) {
         nextAdminArray.push({
           name: admin.name!,
-          logo: !!admin.logo ? admin.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          logo: !!admin.logo ? admin.logo : `${backUrl}/group.svg`,
         });
       }
 
@@ -75,7 +76,7 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
 
     const { data, error } = await supabase
       .from('UsersGroups')
-      .select('name, Groups (logo)')
+      .select('Groups!name (name, logo)')
       .eq('userId', id)
       .order('name', { ascending: true })
       .gt('name', lastModeratorsVisible)
@@ -86,8 +87,8 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
 
       for (const mod of data!) {
         nextModeratorArray.push({
-          name: mod.name!,
-          logo: !!mod.Groups?.logo ? mod.Groups.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          name: mod.Groups.name!,
+          logo: !!mod.Groups?.logo ? mod.Groups.logo : `${backUrl}/group.svg`,
         });
       }
 
@@ -106,7 +107,7 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
 
     const { data, error } = await supabase
       .from('UsersGroups')
-      .select('name, Groups (logo)')
+      .select('Groups!name (name, logo)')
       .eq('userId', id)
       .order('name', { ascending: true })
       .gt('name', lastMembersVisible)
@@ -117,8 +118,8 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
 
       for (const mod of data!) {
         nextMemberArray.push({
-          name: mod.name!,
-          logo: !!mod.Groups?.logo ? mod.Groups.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+          name: mod.Groups.name!,
+          logo: !!mod.Groups?.logo ? mod.Groups.logo : `${backUrl}/group.svg`,
         });
       }
 

@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { createServer } from 'utils/supabase/clientSSR';
 

@@ -4,6 +4,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 import { Tabs } from '@chakra-ui/react';
 
 import { HeadCom } from 'constants/HeadCom';
+import { backUrl } from 'constants/links';
 import { GroupUsersType, LangType } from 'types/global.types';
 
 import { getI18n, getScopedI18n } from 'locales/server';
@@ -59,7 +60,7 @@ async function getAdminGroups(adminId: string, maxItems: number) {
     for (const admin of data!) {
       adminArray.push({
         name: admin.name!,
-        logo: !!admin.logo ? admin.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        logo: !!admin.logo ? admin.logo : `${backUrl}/group.svg`,
       });
     }
 
@@ -86,7 +87,7 @@ async function getModGroups(userId: string, maxItems: number) {
     for (const mod of data!) {
       modArray.push({
         name: mod.name!,
-        logo: !!mod.Groups?.logo ? mod.Groups.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        logo: !!mod.Groups?.logo ? mod.Groups.logo : `${backUrl}/group.svg`,
       });
     }
 
@@ -113,7 +114,7 @@ async function getMembersGroups(userId: string, maxItems: number) {
     for (const mem of data!) {
       memArray.push({
         name: mem.name!,
-        logo: !!mem.Groups?.logo ? mem.Groups.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        logo: !!mem.Groups?.logo ? mem.Groups.logo : `${backUrl}/group.svg`,
       });
     }
 

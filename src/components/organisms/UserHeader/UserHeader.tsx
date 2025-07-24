@@ -34,7 +34,6 @@ export async function UserHeader() {
     photographs: tAside('photographs'),
     animations: tAside('animations'),
     videos: tAside('videos'),
-    others: tAside('others'),
     friends: tAside('friends'),
     groups: tAside('groups'),
     notFound: t('notFound'),

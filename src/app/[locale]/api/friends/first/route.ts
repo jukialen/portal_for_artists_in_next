@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createServer, Locale } from "utils/supabase/clientSSR";
 
+import { backUrl } from 'constants/links';
 import { FriendsListType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
       const {} = _f;
       friendArray.push({
         pseudonym: _f.pseudonym!,
-        fileUrl: !!_f.profilePhoto ? _f.profilePhoto : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
+        fileUrl: !!_f.profilePhoto ? _f.profilePhoto : `${backUrl}/friends.svg`,
         favorite: _f.favorite!,
         plan: _f.plan!,
         createdAt: getDate(await Locale, _f.createdAt!, await dateData()),

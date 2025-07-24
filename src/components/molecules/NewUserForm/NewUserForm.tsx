@@ -70,7 +70,7 @@ export const NewUserForm = ({ newUserTranslate, id, email, provider }: NewUserTy
     const insertToUsers = async (photo: boolean, name: string) => {
       const { error } = await supabase
         .from('Users')
-        .insert([{ id, email, pseudonym, username, provider: prov!, profilePhoto: !!photo ? name : null }]);
+        .insert([{ id, email, pseudonym, username, provider: prov!, profilePhoto: photo ? name! : undefined }]);
 
       return error;
     };

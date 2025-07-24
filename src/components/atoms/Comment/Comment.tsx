@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Avatar } from 'components/ui/avatar';
 import { Tag } from 'components/ui/tag';
 
-import { CommentType, TableNameEnum } from 'types/global.types';
+import { CommentType } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 
@@ -49,7 +49,7 @@ export const Comment = ({
         commentId={commentId}
         authorId={authorId}
         userId={authorId}
-        tableName={TableNameEnum.Comments}
+        tableName="Comments"
         liked={liked}
         likes={likes}>
         <NewComments

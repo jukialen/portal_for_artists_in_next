@@ -1,5 +1,6 @@
 import { createServer } from 'utils/supabase/clientSSR';
 
+import { backUrl } from 'constants/links';
 import { FriendsListArrayType, GroupsType } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
@@ -25,7 +26,7 @@ async function getFriendsList(userId: string, maxItems: number) {
   for (const _f of data!) {
     favoriteFriendArray.push({
       pseudonym: _f.Users?.pseudonym!,
-      profilePhoto: !!_f.Users?.profilePhoto ? _f.Users?.profilePhoto : `${process.env.NEXT_PUBLIC_PAGE}/friends.svg`,
+      profilePhoto: !!_f.Users?.profilePhoto ? _f.Users?.profilePhoto : `${backUrl}/friends.svg`,
       favorites: data.length,
     });
   }
@@ -50,7 +51,7 @@ async function getGroupsList(id: string, maxItems: number) {
       groupList.push({
         name: d.Groups.name,
         description: d.Groups.description!,
-        logo: !!d.Groups.logo ? d.Groups.logo : `${process.env.NEXT_PUBLIC_PAGE}/group.svg`,
+        logo: !!d.Groups.logo ? d.Groups.logo : `${backUrl}/group.svg`,
       });
     }
   } catch (e) {

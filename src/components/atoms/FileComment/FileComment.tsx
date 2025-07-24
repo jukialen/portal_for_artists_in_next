@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import { Avatar } from 'components/ui/avatar';
 
-import { FilesCommentsType, TableNameEnum } from 'types/global.types';
+import { FilesCommentsType } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 
@@ -49,7 +49,7 @@ export const FileComment = ({
         userId={authorId}
         liked={liked}
         likes={likes}
-        tableName={TableNameEnum.FileComments}>
+        tableName="FilesComments">
         <NewComments
           fileId={fileId}
           fileCommentId={fileCommentId}

@@ -120,7 +120,7 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
             uploadDataDuringCreation: true,
             removeFingerprintOnSuccess: true,
             metadata: {
-              bucketName: bucketName,
+              bucketName: bucketName!,
               objectName: file.name,
               contentType: 'image/jpg, image/jpeg, image/png, image/webp, image/avif, video/mp4, video/webm',
               cacheControl: '3600',
@@ -230,9 +230,6 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
                       </option>
                       <option role="option" value="animations">
                         {tAside('animations')}
-                      </option>
-                      <option role="option" value="others">
-                        {tAside('others')}
                       </option>
                     </NativeSelectField>
                   </NativeSelectRoot>

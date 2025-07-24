@@ -19,7 +19,7 @@ import { createClient } from 'utils/supabase/clientCSR';
 
 import { useScopedI18n } from 'locales/client';
 
-import { darkMode } from 'constants/links';
+import { backUrl, darkMode } from 'constants/links';
 import { EventType, UserType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -123,7 +123,7 @@ export const MainCurrentUserProfileData = ({
                 <p style={{ color: '#bd0000' }}>{!newLogo && required && tCurrPrPhoto.validateRequired}</p>
                 {!!newLogo && (
                   <img
-                    src={`${process.env.NEXT_PUBLIC_PAGE}/${newLogo.name}`}
+                    src={`${backUrl}/${newLogo.name}`}
                     alt="preview new logo"
                     width={192}
                     height={192}

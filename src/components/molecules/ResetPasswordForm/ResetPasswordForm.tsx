@@ -9,6 +9,8 @@ import { Separator, Input } from '@chakra-ui/react';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
+import { backUrl } from 'constants/links';
+
 import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
@@ -62,7 +64,7 @@ export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType) => {
           {
             password: newPassword,
           },
-          { emailRedirectTo: `${process.env.NEXT_PUBLIC_PAGE}/${locale}/signin` },
+          { emailRedirectTo: `${backUrl}/${locale}/signin` },
         );
 
         if (error?.status !== 200) {

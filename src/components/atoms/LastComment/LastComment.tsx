@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Avatar } from 'components/ui/avatar';
 import { Tag } from 'components/ui/tag';
 
-import { LastCommentType, TableNameEnum } from 'types/global.types';
+import { LastCommentType } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 import { NewComments } from 'components/atoms/NewComments/NewComments';
@@ -51,7 +51,7 @@ export const LastComment = ({
         userId={authorId}
         liked={liked}
         likes={likes}
-        tableName={TableNameEnum.LastComments}>
+        tableName="LastComments">
         <NewComments
           profilePhoto={authorProfilePhoto!}
           subCommentId={subCommentId}

@@ -7,6 +7,7 @@ import { Avatar } from 'components/ui/avatar';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
+import { backUrl } from 'constants/links';
 import { PostsType } from 'types/global.types';
 
 import { useI18n } from 'locales/client';
@@ -52,7 +53,7 @@ export const Post = ({
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
 
-  const link = `${process.env.NEXT_PUBLIC_PAGE}/groups/${name}/${authorName}/${postId}`;
+  const link = `${backUrl}/groups/${name}/${authorName}/${postId}`;
   const supabase = createClient();
 
   const showingComments = () => setShowComments(!showComments);
