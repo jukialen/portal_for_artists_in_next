@@ -1,20 +1,21 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
-import { mailerApiKey } from 'constants/links';
+import { feedbackEmail, feedbackEmailTemplateId, mailerApiKey } from 'constants/links';
+
 const mailerSend = new MailerSend({
   apiKey: mailerApiKey,
 });
 
 async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
-  const sentFrom = new Sender(process.env.NEXT_PUBLIC_FEEDBACK_EMAIL!, 'Form Pfartists');
+  const sentFrom = new Sender(feedbackEmail!, 'Form Pfartists');
 
-  const recipients = [new Recipient(process.env.NEXT_PUBLIC_FEEDBACK_EMAIL!, 'To Pfartists')];
+  const recipients = [new Recipient(feedbackEmail!, 'To Pfartists')];
   try {
     const messageText: string[] = req.body.message.split('\n');
 
     const personalisations = [
       {
-        email: process.env.NEXT_PUBLIC_FEEDBACK_EMAIL!,
+        email: feedbackEmail!,
         data: {
           tags: req.body.tags,
           message: messageText,
@@ -27,7 +28,7 @@ async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
       .setTo(recipients)
       .setSubject(req.body.title)
       .setPersonalization(personalisations)
-      .setTemplateId(process.env.NEXT_PUBLIC_FEEDBACK_TEMPLATE_ID!);
+      .setTemplateId(feedbackEmailTemplateId!);
 
     console.log('personalisations', personalisations[0].data);
     console.log('emailParams', emailParams);

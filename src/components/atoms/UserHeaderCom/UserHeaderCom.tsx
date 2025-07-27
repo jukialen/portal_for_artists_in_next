@@ -108,7 +108,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
       const { data, error } = await supabase
         .from('Users')
         .select('pseudonym, profilePhoto, description')
-        .textSearch('pseudonym', `${searchValues}`);
+        .textSearch('pseudonym', searchValues);
 
       if (!!error) {
         searchArray.push({ categoryName: searchOptions[0], data: translated.notFound });

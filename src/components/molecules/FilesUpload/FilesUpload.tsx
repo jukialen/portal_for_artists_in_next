@@ -120,7 +120,7 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
             uploadDataDuringCreation: true,
             removeFingerprintOnSuccess: true,
             metadata: {
-              bucketName: bucketName!,
+              bucketName: 'basic',
               objectName: file.name,
               contentType: 'image/jpg, image/jpeg, image/png, image/webp, image/avif, video/mp4, video/webm',
               cacheControl: '3600',
