@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Viewport } from 'next';
 import Script from 'next/script';
 import { Provider } from 'components/ui/provider';
 
@@ -21,16 +22,18 @@ import 'styles/global.scss';
 import 'styles/darkLightMode.scss';
 import 'styles/_variables.scss';
 
-import { Viewport } from 'next';
-
 type ChildrenType = {
   children: ReactNode;
   params: Promise<{ locale: LangType }>;
 };
 
 export const viewport: Viewport = {
-  themeColor: '#FFD068',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'hsl(44, 100%, 71%)' },
+    { media: '(prefers-color-scheme: dark)', color: 'hsl(41, 85%, 62%)' },
+  ],
 };
+
 export function generateStaticParams() {
   return getStaticParams();
 }
@@ -50,7 +53,7 @@ export default async function RootLayout({ children, params }: ChildrenType) {
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      {process.env.NODE_ENV === 'production' && <Script src={cookiesYesLink} strategy="beforeInteractive" />}
+      {process.env.NODE_ENV === 'production' && <Script src={cookiesYesLink} strategy="afterInteractive" />}
 
       <body>
         {process.env.NODE_ENV === 'production' && (
