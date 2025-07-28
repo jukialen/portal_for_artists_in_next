@@ -9,22 +9,22 @@ import { getI18n } from 'locales/server';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
-import { getUserData } from 'helpers/getUserData';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { DrawingsWrapper } from 'components/molecules/DrawingsWrapper/DrawingsWrapper';
 
 import styles from './page.module.scss';
+import { getMoreRenderedContent } from '../../actions';
 
 export const metadata: Metadata = HeadCom('Sites with drawings and photos.');
 
 async function getFirstDrawings(pid: Tags, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
   const filesArray: FileType[] = [];
-  
+
   try {
     const supabase = await createServer();
-    
+
     const { data, error } = await supabase
       .from('Files')
       .select(selectFiles)
@@ -64,10 +64,8 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
 
   const tDrawingsCategories = {
     category: t('Aside.category'),
-    noDrawings: t('ZeroFiles.files'),
   };
 
-  const user = await getUserData();
   const dataDateObject = await dateData();
 
   const drawings = await getFirstDrawings(pid, 30, locale, dataDateObject);
@@ -82,11 +80,9 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
         <DrawingsWrapper
           locale={locale}
           pid={pid}
-          pseudonym={user?.pseudonym!}
-          profilePhoto={user?.profilePhoto!}
           dataDateObject={dataDateObject}
-          noDrawings={tDrawingsCategories.noDrawings}
           filesDrawings={drawings}
+          initialRenderedContentAction={() => getMoreRenderedContent({ files: drawings!, noEls: 1 })}
         />
       </Wrapper>
     </>

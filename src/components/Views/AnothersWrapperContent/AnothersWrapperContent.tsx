@@ -6,12 +6,10 @@ import { Videos } from 'components/molecules/Videos/Videos';
 import { Article } from 'components/molecules/Article/Article';
 
 export const AnothersWrapperContent = async ({
-  loadingFiles,
   userFiles,
   pseudonym,
   profilePhoto,
 }: {
-  loadingFiles: boolean;
   userFiles: FileType[];
   pseudonym: string;
   profilePhoto: string;
@@ -20,7 +18,7 @@ export const AnothersWrapperContent = async ({
     <>
       {userFiles.map(
         ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType, index) => (
-          <Skeleton loading={loadingFiles} variant="shine" key={index}>
+          <Skeleton loading={index > 3} variant="shine" key={index}>
             {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
               <Videos
                 fileId={fileId!}

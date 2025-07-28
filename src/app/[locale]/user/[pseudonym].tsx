@@ -4,6 +4,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 import { Tabs } from '@chakra-ui/react';
 
 import { HeadCom } from 'constants/HeadCom';
+import { initialRenderedContent } from 'constants/InitialDataFiles';
 import { backUrl } from 'constants/links';
 import { GroupUsersType, LangType } from 'types/global.types';
 
@@ -22,6 +23,7 @@ import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
 import { GroupUser } from 'components/organisms/GroupUser/GroupUser';
 
 import styles from './page.module.scss';
+import { getMoreRenderedContent } from '../actions';
 
 async function getFidAndFavs(pseudonym: string) {
   const supabase = await createServer();
@@ -29,10 +31,7 @@ async function getFidAndFavs(pseudonym: string) {
   const { data: d, error } = await supabase.from('Users').select('id').eq('pseudonym', pseudonym).limit(1).single();
   if (!d || !!error) console.error('no user');
 
-  const { data, error: er } = await supabase
-    .from('Friends')
-    .select('friendId, favorite')
-    .eq('usernameId', d?.id!);
+  const { data, error: er } = await supabase.from('Friends').select('friendId, favorite').eq('usernameId', d?.id!);
 
   if (data?.length === 0 || !!er) return null;
 
@@ -164,9 +163,6 @@ export default async function User({ params }: { params: Promise<{ locale: LangT
     userPhotosTitle: t('Account.gallery.userPhotosTitle'),
     userAnimationsTitle: t('Account.gallery.userAnimationsTitle'),
     userVideosTitle: t('Account.gallery.userVideosTitle'),
-    noPhotos: t('ZeroFiles.photos'),
-    noAnimations: t('ZeroFiles.animations'),
-    noVideos: t('ZeroFiles.videos'),
   };
   const contentList = [
     tAccountaMenu('gallery'),
@@ -263,31 +259,28 @@ export default async function User({ params }: { params: Promise<{ locale: LangT
             <Tabs.Content value={fileTabList[0]} className={styles.tabsForPanels}>
               <PhotosGallery
                 id={user?.id!}
-                pseudonym={user?.pseudonym!}
-                profilePhoto={user?.profilePhoto!}
                 author={pseudonymName}
                 firstGraphics={firstGraphics}
                 tGallery={tGallery}
+                initialRenderedContentAction={() => getMoreRenderedContent({ files: firstGraphics!, noEls: 1 })}
               />
             </Tabs.Content>
             <Tabs.Content value={fileTabList[1]} className={styles.tabPanel} role="tabpanel">
               <AnimatedGallery
                 id={user?.id!}
-                pseudonym={user?.pseudonym!}
-                profilePhoto={user?.profilePhoto!}
                 author={pseudonymName}
                 firstAnimations={firstAnimations}
                 tGallery={tGallery}
+                initialRenderedContentAction={() => getMoreRenderedContent({ files: firstAnimations!, noEls: 2 })}
               />
             </Tabs.Content>
             <Tabs.Content value={fileTabList[2]} className={styles.tabPanel} role="tabpanel">
               <VideoGallery
                 id={user?.id!}
-                pseudonym={user?.pseudonym!}
-                profilePhoto={user?.profilePhoto!}
                 author={pseudonymName}
                 firstVideos={firstVideos}
                 tGallery={tGallery}
+                initialRenderedContentAction={() => getMoreRenderedContent({ files: firstVideos!, noEls: 3 })}
               />
             </Tabs.Content>
           </Tabs.Root>

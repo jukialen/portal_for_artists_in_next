@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { getDate } from 'helpers/getDate';
 import { getFileRoleId } from 'utils/roles';
@@ -9,30 +9,25 @@ import { createClient } from 'utils/supabase/clientCSR';
 import { selectFiles } from 'constants/selects';
 import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
-import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { AnothersWrapperContent } from 'components/Views/AnothersWrapperContent/AnothersWrapperContent';
+import { getMoreRenderedContent } from '../../../app/[locale]/actions';
 
 type DrawingsWrapperType = {
   locale: LangType;
   pid: Tags;
-  pseudonym: string;
-  profilePhoto: string;
   dataDateObject: DateObjectType;
-  noDrawings: string;
   filesDrawings: FileType[];
+  initialRenderedContentAction: () => ReactNode;
 };
 
 export const DrawingsWrapper = ({
   locale,
   pid,
-  pseudonym,
-  profilePhoto,
   dataDateObject,
-  noDrawings,
   filesDrawings,
+  initialRenderedContentAction,
 }: DrawingsWrapperType) => {
+  const [renderedContent, setRenderedContent] = useState(initialRenderedContentAction);
   const [userDrawings, setUserDrawings] = useState<FileType[]>(filesDrawings);
   const [lastVisible, setLastVisible] = useState(
     userDrawings.length > 0 ? userDrawings[userDrawings.length - 1].createdAt : '',
@@ -83,10 +78,12 @@ export const DrawingsWrapper = ({
         });
       }
 
-      setLastVisible(nextArray[nextArray.length - 1].fileId!);
       const newArray = filesDrawings!.concat(...nextArray);
+
+      setRenderedContent(await getMoreRenderedContent({ files: newArray, noEls: 1 }));
+      setUserDrawings(newArray);
       if (nextArray.length === maxItems) {
-        setUserDrawings(newArray);
+        setLastVisible(nextArray[nextArray.length - 1].fileId!);
         setI(++i);
       }
       setLoadingFiles(!loadingFiles);
@@ -97,20 +94,7 @@ export const DrawingsWrapper = ({
 
   return (
     <>
-      {!!userDrawings && userDrawings.length > 0 ? (
-        <ClientPortalWrapper>
-          {/*<AnothersWrapperContent*/}
-          {/*  loadingFiles={loadingFiles}*/}
-          {/*  userFiles={userDrawings}*/}
-          {/*  pseudonym={pseudonym}*/}
-          {/*  profilePhoto={profilePhoto}*/}
-          {/*/>*/}
-          <div></div>
-        </ClientPortalWrapper>
-      ) : (
-        <ZeroFiles text={noDrawings} />
-      )}
-
+      {renderedContent}
       {!!lastVisible && !!userDrawings && userDrawings.length === maxItems * i && (
         <MoreButton nextElements={nextElements} />
       )}

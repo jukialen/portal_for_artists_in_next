@@ -1,15 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { FileType, IndexType } from 'types/global.types';
 
 import { drawings } from 'utils/files';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
-import { AnothersWrapperContent } from 'components/Views/AnothersWrapperContent/AnothersWrapperContent';
+import { getMoreRenderedContent } from '../../../app/[locale]/actions';
 
 type AnothersWrapperType = {
   index: IndexType;
@@ -17,9 +15,18 @@ type AnothersWrapperType = {
   profilePhoto: string;
   noVideos: string;
   filesArray: FileType[];
+  initialRenderedContentAction: () => ReactNode;
 };
 
-export const AnothersWrapper = ({ index, pseudonym, profilePhoto, noVideos, filesArray }: AnothersWrapperType) => {
+export const AnothersWrapper = ({
+  index,
+  pseudonym,
+  profilePhoto,
+  noVideos,
+  filesArray,
+  initialRenderedContentAction,
+}: AnothersWrapperType) => {
+  const [renderedContent, setRenderedContent] = useState(initialRenderedContentAction);
   const [userDrawings, setUserDrawings] = useState<FileType[]>(filesArray);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [lastVisible, setLastVisible] = useState<string>(
@@ -39,6 +46,7 @@ export const AnothersWrapper = ({ index, pseudonym, profilePhoto, noVideos, file
 
       const newArray = filesArray.concat(...nextArray);
       setUserDrawings(newArray);
+      setRenderedContent(await getMoreRenderedContent({ files: userDrawings, noEls: 1 }));
       setLoadingFiles(!loadingFiles);
       setI(++i);
     } catch (e) {
@@ -48,18 +56,7 @@ export const AnothersWrapper = ({ index, pseudonym, profilePhoto, noVideos, file
 
   return (
     <>
-      {userDrawings.length > 0 ? (
-        <ClientPortalWrapper>
-          <AnothersWrapperContent
-            loadingFiles={loadingFiles}
-            userFiles={userDrawings}
-            pseudonym={pseudonym}
-            profilePhoto={profilePhoto}
-          />
-        </ClientPortalWrapper>
-      ) : (
-        <ZeroFiles text={noVideos} />
-      )}
+      {renderedContent}
       {!!lastVisible && userDrawings.length === maxItems * i && <MoreButton nextElements={nextElements} />}
     </>
   );

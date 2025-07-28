@@ -4,19 +4,19 @@ import { Tabs } from '@chakra-ui/react';
 
 import { GalleryType } from 'types/global.types';
 
+import { getMoreRenderedContent } from '../../../app/[locale]/actions';
+
 import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
 import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
 import { PhotosGallery } from 'components/organisms/PhotosGallery/PhotosGallery';
 import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
 import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
-import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 
 import styles from './DashboardTabs.module.scss';
 
 export const DashboardTabs = ({
   id,
   author,
-  profilePhoto,
   tDash,
   tGallery,
   tFriends,
@@ -64,37 +64,37 @@ export const DashboardTabs = ({
           <GroupUsers id={id!} firstAdminList={firstAdminList!} firstModsUsersList={firstModsUsersList!} />
         </Tabs.Content>
         <Tabs.Content value={fileTabList[2]!} padding={0} role="tabcontent">
-          <ClientPortalWrapper>
-            <PhotosGallery
-              id={id}
-              profilePhoto={profilePhoto}
-              author={author}
-              tGallery={tGallery}
-              firstGraphics={firstGraphics}
-            />
-          </ClientPortalWrapper>
+          {/*<ClientPortalWrapper>*/}
+          <PhotosGallery
+            id={id}
+            author={author}
+            tGallery={tGallery}
+            firstGraphics={firstGraphics}
+            initialRenderedContentAction={() => getMoreRenderedContent({ files: firstGraphics!, noEls: 1 })}
+          />
+          {/*</ClientPortalWrapper>*/}
         </Tabs.Content>
         <Tabs.Content value={fileTabList[3]!} padding={0} role="tabcontent">
-          <ClientPortalWrapper>
-            <AnimatedGallery
-              id={id}
-              profilePhoto={profilePhoto}
-              author={author}
-              tGallery={tGallery}
-              firstAnimations={firstAnimations}
-            />
-          </ClientPortalWrapper>
+          {/*<ClientPortalWrapper>*/}
+          <AnimatedGallery
+            id={id}
+            author={author}
+            tGallery={tGallery}
+            firstAnimations={firstAnimations}
+            initialRenderedContentAction={() => getMoreRenderedContent({ files: firstAnimations!, noEls: 2 })}
+          />
+          {/*</ClientPortalWrapper>*/}
         </Tabs.Content>
         <Tabs.Content value={fileTabList[4]!} padding={0} role="tabcontent">
-          <ClientPortalWrapper>
-            <VideoGallery
-              id={id!}
-              profilePhoto={profilePhoto}
-              author={author!}
-              tGallery={tGallery!}
-              firstVideos={firstVideos}
-            />
-          </ClientPortalWrapper>
+          {/*<ClientPortalWrapper>*/}
+          <VideoGallery
+            id={id!}
+            author={author!}
+            tGallery={tGallery!}
+            firstVideos={firstVideos}
+            initialRenderedContentAction={() => getMoreRenderedContent({ files: firstVideos!, noEls: 3 })}
+          />
+          {/*</ClientPortalWrapper>*/}
         </Tabs.Content>
       </div>
     </Tabs.Root>

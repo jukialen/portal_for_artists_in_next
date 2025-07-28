@@ -4,16 +4,15 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { graphics } from 'utils/files';
+import { getMoreRenderedContent } from 'app/[locale]/actions';
 
 import { FileType, GalleryType } from 'types/global.types';
 
-import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { AnothersWrapperContent } from 'components/Views/AnothersWrapperContent/AnothersWrapperContent';
 
-export const PhotosGallery = ({ id, author, pseudonym, profilePhoto, tGallery, firstGraphics }: GalleryType) => {
+export const PhotosGallery = ({ id, author, tGallery, firstGraphics, initialRenderedContentAction }: GalleryType) => {
+  const [renderedContent, setRenderedContent] = useState(initialRenderedContentAction);
   const [userPhotos, setUserPhotos] = useState<FileType[]>(firstGraphics!);
   const [lastVisible, setLastVisible] = useState(
     firstGraphics!.length > 0 ? firstGraphics![firstGraphics!.length - 1].fileId! : null,
@@ -32,6 +31,8 @@ export const PhotosGallery = ({ id, author, pseudonym, profilePhoto, tGallery, f
 
       const newArray = userPhotos.concat(...nextArray);
       setUserPhotos(newArray);
+      setRenderedContent(await getMoreRenderedContent({ files: userPhotos, noEls: 1 }));
+
       if (nextArray.length === maxItems) {
         setLastVisible(nextArray[nextArray.length - 1].createdAt!);
         setI(++i);
@@ -46,19 +47,7 @@ export const PhotosGallery = ({ id, author, pseudonym, profilePhoto, tGallery, f
     <article>
       {decodeURIComponent(pathname!) === `/account/${author}` && <h2 className="title">{tGallery?.userPhotosTitle}</h2>}
       <Wrapper>
-        {userPhotos.length > 0 ? (
-          <ClientPortalWrapper>
-            <AnothersWrapperContent
-              loadingFiles={loadingFiles}
-              userFiles={userPhotos}
-              pseudonym={pseudonym!}
-              profilePhoto={profilePhoto}
-            />
-          </ClientPortalWrapper>
-        ) : (
-          <ZeroFiles text={tGallery?.noPhotos!} />
-        )}
-
+        {renderedContent}
         {!!lastVisible && userPhotos.length === maxItems * i && <MoreButton nextElements={nextElements} />}
       </Wrapper>
     </article>

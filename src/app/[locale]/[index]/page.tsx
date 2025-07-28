@@ -16,7 +16,8 @@ import { AnothersWrapper } from 'components/molecules/AnothersWrapper/AnothersWr
 
 import styles from './page.module.scss';
 import { getUserData } from 'helpers/getUserData';
-import { error } from "@chakra-ui/utils";
+import { error } from '@chakra-ui/utils';
+import { getMoreRenderedContent } from '../actions';
 
 const downloadDrawings = async ({
   index,
@@ -64,11 +65,7 @@ const downloadDrawings = async ({
 
 export const metadata: Metadata = HeadCom('Subpage with another categories');
 
-export default async function Drawings({
-  params,
-}: {
-  params: Promise<{ locale: LangType; index: IndexType }>;
-}) {
+export default async function Drawings({ params }: { params: Promise<{ locale: LangType; index: IndexType }> }) {
   const { locale, index } = await params;
   setStaticParamsLocale(locale);
 
@@ -92,13 +89,14 @@ export default async function Drawings({
         {tAnotherCategories.category}: {index}
       </em>
 
-        <AnothersWrapper
-          index={index}
-          pseudonym={user?.pseudonym!}
-          profilePhoto={user?.profilePhoto!}
-          noVideos={tAnotherCategories.noVideos}
-          filesArray={filesArray!}
-        />
+      <AnothersWrapper
+        index={index}
+        pseudonym={user?.pseudonym!}
+        profilePhoto={user?.profilePhoto!}
+        noVideos={tAnotherCategories.noVideos}
+        filesArray={filesArray!}
+        initialRenderedContentAction={() => getMoreRenderedContent({ files: filesArray!, noEls: 1 })}
+      />
     </article>
   );
 }

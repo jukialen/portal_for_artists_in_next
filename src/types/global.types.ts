@@ -1,15 +1,11 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, ReactNode } from 'react';
 import { Database } from './database.types';
 
 //GENERAL
 type Like = { likes: number; liked: boolean };
 type Time = { createdAt?: string; updatedAt?: string };
 
-export type TableNameType =
-  | 'Comments'
-  | 'FilesComments'
-  | 'LastComments'
-  | 'SubComments'
+export type TableNameType = 'Comments' | 'FilesComments' | 'LastComments' | 'SubComments';
 
 export type Tags = Database['public']['Enums']['Tags'];
 export type LangType = 'en' | 'pl' | 'jp';
@@ -238,8 +234,6 @@ export type PostsType = Time &
 //GALLERY
 export type GalleryType = {
   id: string;
-  pseudonym?: string;
-  profilePhoto: string;
   author: string;
   firstGraphics?: FileType[];
   firstAnimations?: FileType[];
@@ -255,11 +249,9 @@ export type GalleryType = {
     userPhotosTitle: string;
     userAnimationsTitle: string;
     userVideosTitle: string;
-    noPhotos: string;
-    noAnimations: string;
-    noVideos: string;
   };
   tFriends?: { friends: string; noFriends: string };
+  initialRenderedContentAction?: () => ReactNode;
 };
 
 // COMMENTS

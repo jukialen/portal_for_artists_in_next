@@ -3,6 +3,7 @@
   "version": "1.2.0",
   "private": true,
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",

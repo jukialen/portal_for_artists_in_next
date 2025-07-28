@@ -24,7 +24,7 @@ export default async function Account({ params }: { params: Promise<{ locale: La
   const tAside = await getScopedI18n('Aside');
   const tMenu = await getScopedI18n('Account.aMenu');
   const maxItems = 30;
-  
+
   const userData = await getUserData();
   const tMain = {
     validateRequired: t('NavForm.validateRequired'),
@@ -67,7 +67,6 @@ export default async function Account({ params }: { params: Promise<{ locale: La
       <DashboardTabs
         id={userData?.id!}
         author={userData?.pseudonym!}
-        profilePhoto={userData?.profilePhoto!}
         tDash={tDash}
         tGallery={tGallery}
         tFriends={tFriends}

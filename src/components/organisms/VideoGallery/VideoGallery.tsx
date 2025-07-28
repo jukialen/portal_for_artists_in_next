@@ -5,17 +5,16 @@ import { usePathname } from 'next/navigation';
 
 import { FileType, GalleryType } from 'types/global.types';
 
+import { getMoreRenderedContent } from '../../../app/[locale]/actions';
 import { videosAnimations } from 'utils/files';
 
-import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
-import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { AnothersWrapperContent } from 'components/Views/AnothersWrapperContent/AnothersWrapperContent';
 
-export const VideoGallery = ({ id, author, pseudonym, profilePhoto, tGallery, firstVideos }: GalleryType) => {
+export const VideoGallery = ({ id, author, tGallery, firstVideos, initialRenderedContentAction }: GalleryType) => {
   const maxItems = 30;
 
+  const [renderedContent, setRenderedContent] = useState(initialRenderedContentAction);
   const [userVideos, setUserVideos] = useState(firstVideos!);
   const [lastVisible, setLastVisible] = useState(
     firstVideos?.length === maxItems ? firstVideos[firstVideos!.length - 1].createdAt : '',
@@ -34,6 +33,8 @@ export const VideoGallery = ({ id, author, pseudonym, profilePhoto, tGallery, fi
       const nextArray = userVideos.concat([...filesArray]);
       setUserVideos(nextArray);
 
+      setRenderedContent(await getMoreRenderedContent({ files: userVideos, noEls: 3 }));
+
       if (nextArray.length === maxItems) {
         setLastVisible(nextArray[nextArray.length - 1].createdAt);
         setI(i++);
@@ -49,18 +50,7 @@ export const VideoGallery = ({ id, author, pseudonym, profilePhoto, tGallery, fi
       {decodeURIComponent(pathname!) === `/account/${author}` && <h2 className="title">{tGallery?.userVideosTitle}</h2>}
 
       <Wrapper>
-        {userVideos.length > 0 ? (
-          <ClientPortalWrapper>
-            <AnothersWrapperContent
-              loadingFiles={loadingFiles}
-              userFiles={userVideos}
-              pseudonym={pseudonym!}
-              profilePhoto={profilePhoto}
-            />
-          </ClientPortalWrapper>
-        ) : (
-          <ZeroFiles text={tGallery?.noVideos!} />
-        )}
+        {renderedContent}
 
         {!!lastVisible && userVideos.length === maxItems * i && <MoreButton nextElements={nextElements} />}
       </Wrapper>

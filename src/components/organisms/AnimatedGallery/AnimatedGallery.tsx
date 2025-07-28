@@ -11,9 +11,17 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { AnothersWrapperContent } from 'components/Views/AnothersWrapperContent/AnothersWrapperContent';
+import { getMoreRenderedContent } from '../../../app/[locale]/actions';
 
-export const AnimatedGallery = ({ id, author, pseudonym, profilePhoto, tGallery, firstAnimations }: GalleryType) => {
-  const [userAnimatedPhotos, setUserAnimatedPhotos] = useState<FileType[]>(firstAnimations!);
+export const AnimatedGallery = ({
+  id,
+  author,
+  tGallery,
+  firstAnimations,
+  initialRenderedContentAction,
+}: GalleryType) => {
+  const [renderedContent, setRenderedContent] = useState(initialRenderedContentAction);
+  const [userAnimates, setUserAnimates] = useState<FileType[]>(firstAnimations!);
   const [lastVisible, setLastVisible] = useState(
     firstAnimations!.length > 0 ? firstAnimations![firstAnimations!.length - 1].createdAt : '',
   );
@@ -29,8 +37,11 @@ export const AnimatedGallery = ({ id, author, pseudonym, profilePhoto, tGallery,
     try {
       const nextArray: FileType[] = (await videosAnimations(0, maxItems, id, 'again', lastVisible!))!;
 
-      const newArray = userAnimatedPhotos.concat(...nextArray);
-      setUserAnimatedPhotos(newArray);
+      const newArray = userAnimates.concat(...nextArray);
+      setUserAnimates(newArray);
+
+      setRenderedContent(await getMoreRenderedContent({ files: userAnimates, noEls: 2 }));
+
       if (nextArray.length === maxItems) {
         setLastVisible(nextArray[nextArray.length - 1].createdAt);
         setI(i++);
@@ -48,20 +59,9 @@ export const AnimatedGallery = ({ id, author, pseudonym, profilePhoto, tGallery,
       )}
 
       <Wrapper>
-        {userAnimatedPhotos.length > 0 ? (
-          <ClientPortalWrapper>
-            <AnothersWrapperContent
-              loadingFiles={loadingFiles}
-              userFiles={userAnimatedPhotos}
-              pseudonym={pseudonym!}
-              profilePhoto={profilePhoto}
-            />
-          </ClientPortalWrapper>
-        ) : (
-          <ZeroFiles text={tGallery?.noAnimations!} />
-        )}
+        {renderedContent}
 
-        {!!lastVisible && userAnimatedPhotos.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+        {!!lastVisible && userAnimates.length === maxItems * i && <MoreButton nextElements={nextElements} />}
       </Wrapper>
     </article>
   );

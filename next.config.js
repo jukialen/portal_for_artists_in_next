@@ -1,9 +1,15 @@
 /** @type {import("next").NextConfig} */
 
-module.exports = {
+import { projectUrlWithOutPrefix } from './src/constants/links.js';
+const nextConfig = {
   reactStrictMode: true,
   images: {
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: projectUrlWithOutPrefix,
+        port: '',
+      },
       {
         protocol: 'https',
         hostname: 's.yimg.com',
@@ -20,3 +26,5 @@ module.exports = {
     formats: ['image/avif', 'image/webp'],
   },
 };
+
+export default nextConfig;
