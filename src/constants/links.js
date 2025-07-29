@@ -9,6 +9,6 @@ export const GTM_ID = process.env.NEXT_PUBLIC_G_TAG;
 
 export const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL;
 export const feedbackEmailTemplateId = process.env.NEXT_PUBLIC_FEEDBACK_TEMPLATE_ID;
-export const newUserRed = `${backUrl}/new-user`;
+export const newUserRed = '/new-user';
 
 export const darkMode = 'dark';

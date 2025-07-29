@@ -58,14 +58,9 @@ export const FormSignIn = ({
       resetForm(initialValuesForSignInUp);
       setValuesFields(translated.statusLogin);
 
-      const { data: dataUser, error } = await supabase.from('Users').select('*').eq('id', data.session?.user.id!);
+      const { data: dataUser } = await supabase.from('Users').select('*').eq('id', data.session?.user.id!);
 
-      if (dataUser?.length !== 0) {
-        localStorage.setItem('menu', 'true');
-        refresh();
-      } else {
-        push('/new-user');
-      }
+      dataUser?.length !== 0 ? refresh() : push('/new-user');
     }
   };
 

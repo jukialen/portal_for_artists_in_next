@@ -391,6 +391,12 @@ export default {
     day: '日',
     yearDateSeparator: '年',
   },
+  ErrorPage: {
+    title: '誤ったリダイレクトアドレス',
+    description: '誤ったリダイレクトアドレス',
+    goHome: 'ホームへ行きます',
+    tryAgain: '再試行下さい',
+  },
   unknownError: 'おっと？！何かが間違っていた。',
   error: '遣り返すかインターネット接続が見えてください。',
   edit: 'エディト',

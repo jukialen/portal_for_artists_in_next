@@ -92,7 +92,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   const sign__out = async () => {
     try {
       await supabase.auth.signOut();
-      localStorage.setItem('menu', 'false');
       toggleProfileMenu();
       refresh();
     } catch (e) {

@@ -392,6 +392,13 @@ export default {
     day: 'd',
     yearDateSeparator: '.',
   },
+  ErrorPage: {
+    title: 'Incorrect redirect address',
+    description:
+      'There was a problem redirecting to the page. Please clear your browser cache and refresh the page. If this does not help, a new version of the site may be in the process of being made available. After full sharing, the error should disappear.',
+    goHome: 'Go to home',
+    tryAgain: 'try again',
+  },
   unknownError: 'Oops! Something went wrong.',
   error: 'Try again or check your internet connection.',
   edit: 'Edit',

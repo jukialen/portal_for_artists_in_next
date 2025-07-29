@@ -6,6 +6,8 @@ import { Icon } from '@chakra-ui/react';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
+import { backUrl, newUserRed } from 'constants/links';
+
 import { useI18n } from 'locales/client';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -26,11 +28,11 @@ export const Providers = () => {
   const signInWithProvider = async (provider: ProviderType) => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: provider,
+        provider,
+        options: {
+          redirectTo: `${backUrl}/auth/callback?next=${newUserRed}`,
+        },
       });
-
-      console.log('data', data);
-      console.log('error', error);
 
       (!!error || !data) && setValuesFields(t('unknownError'));
       permanentRedirect('/app');

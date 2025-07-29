@@ -394,6 +394,13 @@ export default {
     day: 'dni temu',
     yearDateSeparator: '.',
   },
+  ErrorPage: {
+    title: 'Błędny adres przekierowania',
+    description:
+      'Nastąpił problem z przekierowaniem na stronę. Proszę usunąć pamięć podręczną przeglądarki i odświeżyć stronę. Jeśli to nie pomoże, nowa wersja strony może być w trakcie udostępniania. Po pełnym udostępnieniu  błąd powinien zniknąć.',
+    goHome: 'Powrót do strony głównej',
+    tryAgain: 'Spróbuj ponownie',
+  },
   unknownError: 'Ups! Coś poszło nie tak.',
   error: 'Spróbuj ponownie lub sprawdź połączenie z internetem',
   edit: 'Edytuj',
