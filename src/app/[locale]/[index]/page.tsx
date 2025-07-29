@@ -91,9 +91,6 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
 
       <AnothersWrapper
         index={index}
-        pseudonym={user?.pseudonym!}
-        profilePhoto={user?.profilePhoto!}
-        noVideos={tAnotherCategories.noVideos}
         filesArray={filesArray!}
         initialRenderedContentAction={() => getMoreRenderedContent({ files: filesArray!, noEls: 1 })}
       />

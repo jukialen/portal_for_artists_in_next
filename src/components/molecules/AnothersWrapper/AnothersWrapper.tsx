@@ -11,21 +11,11 @@ import { getMoreRenderedContent } from '../../../app/[locale]/actions';
 
 type AnothersWrapperType = {
   index: IndexType;
-  pseudonym: string;
-  profilePhoto: string;
-  noVideos: string;
   filesArray: FileType[];
   initialRenderedContentAction: () => ReactNode;
 };
 
-export const AnothersWrapper = ({
-  index,
-  pseudonym,
-  profilePhoto,
-  noVideos,
-  filesArray,
-  initialRenderedContentAction,
-}: AnothersWrapperType) => {
+export const AnothersWrapper = ({ index, filesArray, initialRenderedContentAction }: AnothersWrapperType) => {
   const [renderedContent, setRenderedContent] = useState(initialRenderedContentAction);
   const [userDrawings, setUserDrawings] = useState<FileType[]>(filesArray);
   const [loadingFiles, setLoadingFiles] = useState(false);

@@ -6,11 +6,8 @@ import { videosAnimations } from 'utils/files';
 
 import { FileType, GalleryType } from 'types/global.types';
 
-import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
-import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { AnothersWrapperContent } from 'components/Views/AnothersWrapperContent/AnothersWrapperContent';
 import { getMoreRenderedContent } from '../../../app/[locale]/actions';
 
 export const AnimatedGallery = ({

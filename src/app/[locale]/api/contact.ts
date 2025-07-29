@@ -3,7 +3,7 @@ import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
 import { feedbackEmail, feedbackEmailTemplateId, mailerApiKey } from 'constants/links';
 
 const mailerSend = new MailerSend({
-  apiKey: mailerApiKey,
+  apiKey: mailerApiKey!,
 });
 
 async function sendEmail(req: NextApiRequest, res: NextApiResponse) {

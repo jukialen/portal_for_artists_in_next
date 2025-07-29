@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link'
+import Link from 'next/link';
 
 import { backUrl } from 'constants/links';
 import { Tags } from 'types/global.types';
 
-import { ClientPortalWrapper } from 'components/atoms/ClientPortalWrapper/ClientPortalWrapper';
 import { FilesComments } from 'components/molecules/FilesComments/FilesComments';
 import { NewComments } from 'components/atoms/NewComments/NewComments';
 import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 
 import styles from './FileOptions.module.scss';
 
@@ -54,15 +54,10 @@ export const FileOptions = ({
       </button>
       {open && (
         <>
-          <NewComments
-            fileId={fileId}
-            authorId={authorId}
-            profilePhoto={profilePhoto}
-            roleId={roleId}
-          />
-          <ClientPortalWrapper>
+          <NewComments fileId={fileId} authorId={authorId} profilePhoto={profilePhoto} roleId={roleId} />
+          <Wrapper>
             <FilesComments fileId={fileId} />
-          </ClientPortalWrapper>
+          </Wrapper>
         </>
       )}
     </div>
