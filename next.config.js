@@ -9,6 +9,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: projectUrlWithOutPrefix,
         port: '',
+        pathname: '/**',
       },
       {
         protocol: 'https',
