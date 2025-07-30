@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { FilesCommentsType } from 'types/global.types';
 
@@ -15,11 +15,11 @@ export async function GET(request: NextRequest) {
 
   const userData = await getUserData();
 
+  const supabase = await createServer();
+
   const filesArray: FilesCommentsType[] = [];
 
   try {
-    const supabase = await createServer();
-
     const { data, error } = await supabase
       .from('FilesComments')
       .select(
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       .order('createdAt', { ascending: false })
       .limit(parseInt(maxItems));
 
-    if (!data || data?.length === 0 || !!error) return filesArray;
+    if (!data || data?.length === 0 || !!error) return NextResponse.json(filesArray);
 
     for (const again of data!) {
       const { id, fileId, content, Users, Roles, roleId, authorId, createdAt, updatedAt } = again;
@@ -49,10 +49,9 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return filesArray;
+    return NextResponse.json(filesArray);
   } catch (error) {
     console.error(error);
-
-    return filesArray;
+    return NextResponse.json(filesArray);
   }
 }

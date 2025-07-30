@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
@@ -18,13 +18,15 @@ export async function GET(req: NextRequest) {
   const nextArray: PostsType[] = [];
 
   try {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('Posts')
       .select('*, Users (pseudonym, profilePhoto), Roles (id)')
       .eq('groupId', groupId)
       .order('createdAt', { ascending: false })
       .gt('createdAt', lastVisible)
       .limit(parseInt(maxItems));
+
+    !!error && NextResponse.json(nextArray);
 
     for (const post of data!) {
       const { title, content, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
@@ -33,7 +35,7 @@ export async function GET(req: NextRequest) {
 
       const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
 
-      const { data: rData, error } = await supabase
+      const { data: rData, error: rEr } = await supabase
         .from('Roles')
         .select('id')
         .eq('groupId', groupId)
@@ -42,7 +44,7 @@ export async function GET(req: NextRequest) {
         .limit(1)
         .maybeSingle();
 
-      !!error && console.error(error);
+      !!rEr && NextResponse.json(nextArray);
 
       nextArray.push({
         authorName: Users?.pseudonym!,
@@ -62,9 +64,9 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    return nextArray;
+    return NextResponse.json(nextArray);
   } catch (e) {
     console.error(e);
-    return nextArray;
+    return NextResponse.json(nextArray);
   }
 }

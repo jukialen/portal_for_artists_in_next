@@ -1,5 +1,5 @@
-import { NextRequest } from 'next/server';
-import { createServer, Locale } from "utils/supabase/clientSSR";
+import { NextRequest, NextResponse } from 'next/server';
+import { createServer, Locale } from 'utils/supabase/clientSSR';
 
 import { selectFiles } from 'constants/selects';
 import { FileType } from 'types/global.types';
@@ -15,11 +15,10 @@ export async function GET(request: NextRequest) {
   const lastVisible = searchParams.get('lastVisible')!;
 
   const supabase = await createServer();
-  
+
+  const filesArray: FileType[] = [];
 
   try {
-    const filesArray: FileType[] = [];
-
     const { data, error } = await supabase
       .from('Files')
       .select(selectFiles)
@@ -29,12 +28,14 @@ export async function GET(request: NextRequest) {
       .order('createdAt', { ascending: false })
       .limit(parseInt(maxItems));
 
-    if (data?.length === 0 || !!error) return filesArray;
+    if (data?.length === 0 || !!error) return NextResponse.json(filesArray);
 
     for (const file of data!) {
       const { fileId, name, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
 
       const roleId = await getFileRoleId(fileId, authorId!);
+
+      roleId === 'no id' && NextResponse.json(filesArray);
 
       filesArray.push({
         fileId,
@@ -50,8 +51,9 @@ export async function GET(request: NextRequest) {
         updatedAt: updatedAt || '',
       });
     }
-    return filesArray;
+    return NextResponse.json(filesArray);
   } catch (e) {
     console.error('no your videos', e);
+    return NextResponse.json(filesArray);
   }
 }

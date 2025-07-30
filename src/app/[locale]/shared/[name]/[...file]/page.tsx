@@ -13,6 +13,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 
 import { Videos } from 'components/molecules/Videos/Videos';
 import { Article } from 'components/molecules/Article/Article';
+import { NextResponse } from 'next/server';
 
 async function file(locale: LangType, fileId: string) {
   try {
@@ -46,6 +47,8 @@ async function file(locale: LangType, fileId: string) {
 
     const roleId = await getFileRoleId(fileId, authorId!);
 
+    if (roleId === 'no id') return;
+
     const postData: FileType = {
       authorId: authorId!,
       authorName: d?.pseudonym!,
@@ -69,7 +72,11 @@ export async function generateMetadata({ shared }: { shared: string }): Promise<
   return { ...HeadCom(`${authorName} user post subpage`) };
 }
 
-export default async function Post({ params }: { params: Promise<{ locale: LangType, name: string, fileId: string }> }) {
+export default async function Post({
+  params,
+}: {
+  params: Promise<{ locale: LangType; name: string; fileId: string }>;
+}) {
   const { locale, name, fileId } = await params;
   setStaticParamsLocale(locale);
 

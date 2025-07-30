@@ -1,10 +1,10 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { LastCommentType } from 'types/global.types';
 
 import { likeList } from 'utils/likes';
 import { giveRole } from 'utils/roles';
-import { createServer, Locale } from "utils/supabase/clientSSR";
+import { createServer, Locale } from 'utils/supabase/clientSSR';
 
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 
     if (!!error || data?.length === 0) {
       console.error(error);
-      return lastCommentArray;
+      return NextResponse.json(lastCommentArray);
     }
 
     for (const first of data!) {
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
       const role = await giveRole(groupsPostsRoleId || roleId);
       if (!!er || role === undefined) {
         console.error(er || 'role is undefined');
-        return lastCommentArray;
+        return NextResponse.json(lastCommentArray);
       }
 
       lastCommentArray.push({
@@ -63,9 +63,9 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return lastCommentArray;
+    return NextResponse.json(lastCommentArray);
   } catch (e) {
     console.error(e);
-    return lastCommentArray;
+    return NextResponse.json(lastCommentArray);
   }
 }

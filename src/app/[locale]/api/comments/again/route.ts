@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { CommentType } from 'types/global.types';
 
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
 
     if (!!error || data?.length === 0) {
       console.error(error);
-      return commentArray;
+      return NextResponse.json(commentArray);
     }
     for (const next of data!) {
       const { commentId, content, roleId, authorId, createdAt, updatedAt } = next;
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
       const role = await giveRole(groupsPostsRoleId || roleId);
       if (!!er || role === undefined) {
         console.error(er || 'role is undefined');
-        return commentArray;
+        return NextResponse.json(commentArray);
       }
 
       commentArray.push({
@@ -60,9 +60,9 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    return commentArray;
+    return NextResponse.json(commentArray);
   } catch (e) {
     console.error(e);
-    return commentArray;
+    return NextResponse.json(commentArray);
   }
 }

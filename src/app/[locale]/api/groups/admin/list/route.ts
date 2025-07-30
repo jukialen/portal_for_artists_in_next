@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { getUserData } from 'helpers/getUserData';
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     if (data?.length === 0 || !!error) {
       console.error(error);
-      return { members: memberArray, moderators: moderatorArray };
+      return NextResponse.json({ members: memberArray, moderators: moderatorArray });
     }
 
     for (const d of data) {
@@ -48,8 +48,9 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return { members: memberArray, moderators: moderatorArray };
+    return NextResponse.json({ members: memberArray, moderators: moderatorArray });
   } catch (e) {
     console.error(e);
+    return NextResponse.json({ members: memberArray, moderators: moderatorArray });
   }
 }

@@ -1,5 +1,5 @@
-import { NextRequest } from 'next/server';
-import { createServer, Locale } from "utils/supabase/clientSSR";
+import { NextRequest, NextResponse } from 'next/server';
+import { createServer, Locale } from 'utils/supabase/clientSSR';
 
 import { backUrl } from 'constants/links';
 import { FriendsListType } from 'types/global.types';
@@ -13,7 +13,9 @@ export async function GET(request: NextRequest) {
   const maxItems = searchParams.get('maxItems')!;
 
   const supabase = await createServer();
-  
+
+  const friendArray: FriendsListType[] = [];
+
   try {
     const { data } = await supabase
       .from('Friends_View')
@@ -22,9 +24,7 @@ export async function GET(request: NextRequest) {
       .order('createdAt', { ascending: false })
       .limit(parseInt(maxItems));
 
-    const friendArray: FriendsListType[] = [];
-
-    if (data?.length === 0) return friendArray;
+    if (data?.length === 0) return NextResponse.json(friendArray);
 
     for (const _f of data!) {
       const {} = _f;
@@ -37,8 +37,9 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return friendArray;
+    return NextResponse.json(friendArray);
   } catch (e) {
     console.error(e);
+    return NextResponse.json(friendArray);
   }
 }

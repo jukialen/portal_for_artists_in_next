@@ -1,10 +1,10 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { RoleType, SubCommentType } from 'types/global.types';
 
 import { groupRole } from 'utils/roles';
 import { likeList } from 'utils/likes';
-import { createServer, Locale } from "utils/supabase/clientSSR";
+import { createServer, Locale } from 'utils/supabase/clientSSR';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
         .order('createdAt', { ascending: false })
         .limit(parseInt(maxItems));
 
-      if (!data || data?.length === 0 || !!error) return subArray;
+      if (!data || data?.length === 0 || !!error) return NextResponse.json(subArray);
 
       dataArray = data;
     }
@@ -61,12 +61,12 @@ export async function GET(request: NextRequest) {
         .order('createdAt', { ascending: false })
         .limit(parseInt(maxItems));
 
-      if (!data || data?.length === 0 || !!error) return subArray;
+      if (!data || data?.length === 0 || !!error) return NextResponse.json(subArray);
 
       dataArray = data;
     }
 
-    if (dataArray.length === 0) return subArray;
+    if (dataArray.length === 0) return NextResponse.json(subArray);
 
     for (const first of dataArray!) {
       const { subCommentId, content, Users, Roles, roleId, authorId, createdAt, updatedAt } = first;
@@ -90,10 +90,9 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return subArray;
+    return NextResponse.json(subArray);
   } catch (error) {
     console.error(error);
-
-    return subArray;
+    return NextResponse.json(subArray);
   }
 }

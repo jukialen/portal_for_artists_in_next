@@ -11,6 +11,7 @@ import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { getMoreRenderedContent } from '../../../app/[locale]/actions';
+import { NextResponse } from 'next/server';
 
 type DrawingsWrapperType = {
   locale: LangType;
@@ -63,6 +64,8 @@ export const DrawingsWrapper = ({
         const { fileId, name, shortDescription, Users, tags, fileUrl, authorId, createdAt, updatedAt } = file;
 
         const roleId = await getFileRoleId(fileId, authorId!);
+
+        if (roleId === 'no id') return;
 
         nextArray.push({
           fileId,

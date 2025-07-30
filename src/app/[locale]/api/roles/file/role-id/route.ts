@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
@@ -20,11 +20,12 @@ export async function GET(req: NextRequest) {
 
     if (!!error) {
       console.error(error);
-      return;
+      return NextResponse.json('no id');
     }
 
-    return data.id;
+    return NextResponse.json(data.id);
   } catch (e) {
     console.error(e);
+    return NextResponse.json('no id');
   }
 }

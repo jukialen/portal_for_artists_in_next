@@ -17,6 +17,7 @@ import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
 import { AppTop10s } from 'components/molecules/AppTop10s/AppTop10s';
 
 import styles from './page.module.scss';
+import { NextResponse } from 'next/server';
 
 export const metadata: Metadata = HeadCom('Main site for logged in users.');
 
@@ -42,6 +43,7 @@ async function getTop10Drawings(maxItems: number, locale: LangType, dataDateObje
 
       const roleId = await getFileRoleId(fileId, authorId!);
 
+      roleId === 'no id' && NextResponse.json(filesArray);
       filesArray.push({
         fileId,
         name,

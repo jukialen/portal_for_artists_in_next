@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     if (!!error) {
       console.error(error);
-      return groupArray;
+      return NextResponse.json(groupArray);
     }
 
     for (const g of data) {
@@ -34,9 +34,9 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return groupArray;
+    return NextResponse.json(groupArray);
   } catch (e) {
     console.error(e);
-    return groupArray;
+    return NextResponse.json(groupArray);
   }
 }

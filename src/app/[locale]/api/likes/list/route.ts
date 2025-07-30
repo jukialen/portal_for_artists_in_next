@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
@@ -53,10 +53,10 @@ export async function GET(req: NextRequest) {
 
     if (!!e) {
       console.error(e);
-      return {
+      return NextResponse.json({
         likes: 0,
         liked: false,
-      };
+      });
     }
 
     for (const d of res!) {
@@ -65,11 +65,15 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    return {
+    return NextResponse.json({
       likes: likesConst.length,
       liked: likesConst.includes({ authorId }, 0),
-    };
+    });
   } catch (e) {
     console.error(e);
+    return NextResponse.json({
+      likes: 0,
+      liked: false,
+    });
   }
 }

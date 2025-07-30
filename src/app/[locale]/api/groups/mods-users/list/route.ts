@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { backUrl } from 'constants/links';
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 
     if (data?.length === 0 || !!error) {
       console.error(error);
-      return adminArray;
+      return NextResponse.json(adminArray);
     }
 
     for (const _group of data!) {
@@ -36,8 +36,9 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return adminArray;
+    return NextResponse.json(adminArray);
   } catch (e) {
     console.error(e);
+    return NextResponse.json(adminArray);
   }
 }

@@ -9,8 +9,6 @@ type UpdateCommentType = {
   id: string;
   content: string;
   authorId: string;
-  // postId: string;
-  // roleId: string;
 };
 
 export async function PATCH(req: NextApiRequest, res: NextApiResponse) {

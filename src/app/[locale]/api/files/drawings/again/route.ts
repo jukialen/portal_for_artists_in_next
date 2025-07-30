@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { selectFiles } from 'constants/selects';
 import { FileType, IndexType } from 'types/global.types';
@@ -32,12 +32,14 @@ export async function GET(req: NextRequest) {
         .order('name', { ascending: false })
         .limit(parseInt(maxItems));
 
-      if (data?.length === 0) return nextArray;
+      if (data?.length === 0) return NextResponse.json(nextArray);
 
       for (const draw of data!) {
         const { fileId, name, fileUrl, tags, shortDescription, Users, authorId, createdAt, updatedAt } = draw;
 
         const roleId = await getFileRoleId(fileId, authorId!);
+
+        roleId == 'no id' && NextResponse.json(nextArray);
 
         nextArray.push({
           authorName: Users?.pseudonym!,
@@ -52,12 +54,12 @@ export async function GET(req: NextRequest) {
         });
       }
 
-      return nextArray;
+      return NextResponse.json(nextArray);
     } else {
-      return nextArray;
+      return NextResponse.json(nextArray);
     }
   } catch (e) {
     console.error(e);
-    return nextArray;
+    return NextResponse.json(nextArray);
   }
 }
