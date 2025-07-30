@@ -1,32 +1,20 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const requestBody: { roleId: string } = await new Promise((resolve, reject) => {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
-      try {
-        resolve(JSON.parse(body));
-      } catch (error) {
-        reject(error);
-      }
-    });
-  });
+export async function POST(req: NextRequest) {
+  const supabase = await createServer();
+
+  const requestBody: { roleId: string } = await req.json();
 
   try {
-    const supabase = await createServer();
-
     const { data, error } = await supabase.from('Roles').select('role').eq('id', requestBody.roleId).limit(1).single();
 
-    if (!!error) res.status(400).json({ message: error.message });
+    if (!!error) return NextResponse.json({ message: error.message }, { status: 400 });
 
-    return res.status(201).json(data?.role!);
+    return NextResponse.json(data?.role!);
   } catch (e: any) {
     console.error(e);
-    return res.status(400).json({ message: e.message });
+    return NextResponse.json({ message: e.message }, { status: 400 });
   }
 }

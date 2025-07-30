@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { TableNameType } from 'types/global.types';
@@ -11,31 +11,19 @@ type UpdateCommentType = {
   authorId: string;
 };
 
-export async function PATCH(req: NextApiRequest, res: NextApiResponse) {
+export async function PATCH(req: NextRequest) {
   const supabase = await createServer();
 
   try {
-    const requestBody: UpdateCommentType = await new Promise((resolve, reject) => {
-      let body = '';
-      req.on('data', (chunk: Buffer) => {
-        body += chunk.toString();
-      });
-      req.on('end', () => {
-        try {
-          resolve(JSON.parse(body));
-        } catch (error) {
-          reject(error);
-        }
-      });
-    });
+    const requestBody: UpdateCommentType = await req.json();
 
     const { tableName, nameId, id, content } = requestBody;
 
     const { error } = await supabase.from(tableName).update({ content }).eq(nameId, id);
 
-    return !error;
+    return NextResponse.json(!error);
   } catch (e) {
     console.error(e);
-    res.status(400).json({ message: 'Invalid request body' });
+    return NextResponse.json({ message: 'Invalid request body' });
   }
 }

@@ -1,29 +1,17 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { giveRole } from 'utils/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { CommentType, FilesCommentsType, RoleType, SubCommentType } from 'types/global.types';
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest) {
   let role: RoleType | undefined;
 
   try {
     const supabase = await createServer();
 
-    const requestBody: CommentType & FilesCommentsType & SubCommentType = await new Promise((resolve, reject) => {
-      let body = '';
-      req.on('data', (chunk) => {
-        body += chunk.toString();
-      });
-      req.on('end', () => {
-        try {
-          resolve(JSON.parse(body));
-        } catch (error) {
-          reject(error);
-        }
-      });
-    });
+    const requestBody: CommentType & FilesCommentsType & SubCommentType = await req.json();
 
     const { content, authorId, postId, roleId, fileId, fileCommentId, commentId, subCommentId } = requestBody;
 
@@ -39,7 +27,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 
       if (!!error) {
         console.error(error);
-        return null;
+        return NextResponse.json(null);
       }
       role = await giveRole(roleId!);
     }
@@ -56,7 +44,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 
       if (!!error) {
         console.error(error);
-        return null;
+        return NextResponse.json(null);
       }
       role = await giveRole(roleId!);
     }
@@ -74,7 +62,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 
       if (!!error) {
         console.error(error);
-        return null;
+        return NextResponse.json(null);
       }
       role = await giveRole(roleId!);
     }
@@ -91,14 +79,14 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 
       if (!!error) {
         console.error(error);
-        return null;
+        return NextResponse.json(null);
       }
       role = await giveRole(roleId!);
 
-      return role;
+      return NextResponse.json(role);
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({ message: 'Invalid request body' });
+    return NextResponse.json({ message: 'Invalid request body' });
   }
 }

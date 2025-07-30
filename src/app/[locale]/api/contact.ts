@@ -1,24 +1,31 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
+
 import { feedbackEmail, feedbackEmailTemplateId, mailerApiKey } from 'constants/links';
+import { Tags } from 'types/global.types';
 
-const mailerSend = new MailerSend({
-  apiKey: mailerApiKey!,
-});
+const mailerSend = new MailerSend({ apiKey: mailerApiKey! });
 
-async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
+type MesssageType = {
+  title: string;
+  message: string;
+  tags: Tags;
+};
+
+export async function POST(req: NextRequest) {
   const sentFrom = new Sender(feedbackEmail!, 'Form Pfartists');
-
   const recipients = [new Recipient(feedbackEmail!, 'To Pfartists')];
-  try {
-    const messageText: string[] = req.body.message.split('\n');
 
+  try {
+    const messageText: MesssageType = await req.json();
+
+    const message = messageText.message.split('\n');
     const personalisations = [
       {
         email: feedbackEmail!,
         data: {
-          tags: req.body.tags,
-          message: messageText,
+          tags: messageText.tags,
+          message,
         },
       },
     ];
@@ -26,7 +33,7 @@ async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
     const emailParams = new EmailParams()
       .setFrom(sentFrom)
       .setTo(recipients)
-      .setSubject(req.body.title)
+      .setSubject(messageText.title)
       .setPersonalization(personalisations)
       .setTemplateId(feedbackEmailTemplateId!);
 
@@ -34,10 +41,8 @@ async function sendEmail(req: NextApiRequest, res: NextApiResponse) {
     console.log('emailParams', emailParams);
     await mailerSend.email.send(emailParams);
 
-    return res.status(200).json({ error: '' });
+    return NextResponse.json({ error: '' });
   } catch (e) {
-    return res.status(500).json({ error: JSON.stringify(e) });
+    return NextResponse.json({ error: JSON.stringify(e) });
   }
 }
-
-export default sendEmail;

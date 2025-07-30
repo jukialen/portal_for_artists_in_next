@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -11,10 +11,8 @@ import { NativeSelectField, NativeSelectRoot } from 'components/ui/native-select
 import { useI18n, useScopedI18n } from 'locales/client';
 
 import { initialValuesForContact } from 'constants/objects';
-import { backUrl } from "constants/links";
+import { backUrl } from 'constants/links';
 import { ResetFormType } from 'types/global.types';
-
-import { ModeContext } from 'providers/ModeProvider';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
@@ -29,8 +27,6 @@ type ContactType = {
 
 export const ContactForm = () => {
   const [valuesFields, setValuesFields] = useState<string>('');
-
-  const { isMode } = useContext(ModeContext);
 
   const t = useI18n();
   const tContact = useScopedI18n('Contact');
@@ -65,8 +61,12 @@ export const ContactForm = () => {
             <NativeSelectRoot
               onChange={handleChange}
               className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}>
-              <NativeSelectField name="tags" value={values.tags} placeholder={tContact('chooseTitle')} onChange={() => console.log('mmm')}>
-                <option role="option" value={tContact('suggestion')} >
+              <NativeSelectField
+                name="tags"
+                value={values.tags}
+                placeholder={tContact('chooseTitle')}
+                onChange={() => console.log('mmm')}>
+                <option role="option" value={tContact('suggestion')}>
                   {tContact('suggestion')}
                 </option>
                 <option role="option" value={tContact('problem')}>

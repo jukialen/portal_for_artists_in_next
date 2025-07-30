@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server'; // Zmieniony import
 
 import { createServer } from 'utils/supabase/clientSSR';
 
@@ -10,31 +10,23 @@ type DelCommentType = {
   id: string;
 };
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest) {
   const supabase = await createServer();
 
   try {
-    const requestBody: DelCommentType = await new Promise((resolve, reject) => {
-      let body = '';
-      req.on('data', (chunk: Buffer) => {
-        body += chunk.toString();
-      });
-      req.on('end', () => {
-        try {
-          resolve(JSON.parse(body));
-        } catch (error) {
-          reject(error);
-        }
-      });
-    });
+    const requestBody: DelCommentType = await req.json();
 
     const { tableName, nameId, id } = requestBody;
 
     const { error } = await supabase.from(tableName).delete().eq(nameId, id);
 
-    return res.status(200).json(!error);
+    if (error) {
+      return NextResponse.json({ message: 'Failed to delete comment', error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(!error);
   } catch (e) {
-    console.error(e);
-    res.status(400).json({ message: 'Invalid request body' });
+    console.error('Error in POST handler:', e);
+    return NextResponse.json({ message: 'Invalid request body or internal server error' }, { status: 400 });
   }
 }
