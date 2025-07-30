@@ -18,7 +18,7 @@ import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
 import { Comments } from 'components/molecules/Comments/Comments';
 
 import styles from './Post.module.scss';
-import group from 'public/group.svg';
+import group from '../../../../public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 export const Post = ({
