@@ -32,7 +32,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     const { error } = await supabase.from(tableName).delete().eq(nameId, id);
 
-    return !error;
+    return res.status(200).json(!error);
   } catch (e) {
     console.error(e);
     res.status(400).json({ message: 'Invalid request body' });
