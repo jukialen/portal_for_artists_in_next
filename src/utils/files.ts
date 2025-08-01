@@ -7,7 +7,7 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
   const queryString = new URLSearchParams(!!lastVisible ? lastParams : params).toString();
 
   try {
-    const res: FileType[] = await fetch(`${backUrl}/en/api/files/graphics/${step}?${queryString}`, {
+    const res: FileType[] = await fetch(`${backUrl}/api/files/graphics/${step}?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -31,7 +31,7 @@ export const videosAnimations = async (
   const queryString = new URLSearchParams(!!lastVisible ? lastParams : params).toString();
 
   try {
-    const res: FileType[] = await fetch(`${backUrl}/en/api/files/videos-animations/${step}?${queryString}`, {
+    const res: FileType[] = await fetch(`${backUrl}/api/files/videos-animations/${step}?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -49,7 +49,7 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
     const params = { index, lastVisible, maxItems: maxItems.toString() };
     const queryString = new URLSearchParams(params).toString();
 
-    res = await fetch(`${backUrl}/en/api/files/drawings/again?${queryString}`, { method: 'GET' })
+    res = await fetch(`${backUrl}/api/files/drawings/again?${queryString}`, { method: 'GET' })
       .then((r) => r.json())
       .catch((e) => console.error(e));
 

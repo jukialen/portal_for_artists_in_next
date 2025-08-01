@@ -167,7 +167,7 @@ async function getFirstPosts(groupId: string, maxItems: number, locale: LangType
         authorId,
         groupId,
         roleId: Roles?.id!,
-        date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+        date: await getDate(updatedAt! || createdAt!, dataDateObject),
         idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
       });
     }

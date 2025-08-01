@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
           fileUrl,
           authorId: authorId!,
           tags,
-          time: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
+          time: await getDate(updatedAt! || createdAt!, await dateData()),
           roleId,
         });
       }

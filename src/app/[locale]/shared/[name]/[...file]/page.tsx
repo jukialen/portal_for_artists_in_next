@@ -13,9 +13,8 @@ import { createServer } from 'utils/supabase/clientSSR';
 
 import { Videos } from 'components/molecules/Videos/Videos';
 import { Article } from 'components/molecules/Article/Article';
-import { NextResponse } from 'next/server';
 
-async function file(locale: LangType, fileId: string) {
+async function file(fileId: string) {
   try {
     const supabase = await createServer();
 
@@ -57,7 +56,7 @@ async function file(locale: LangType, fileId: string) {
       shortDescription: shortDescription!,
       roleId,
       tags,
-      time: getDate(locale, updatedAt! || createdAt!, await dateData()),
+      time: await getDate(updatedAt! || createdAt!, await dateData()),
     };
 
     return postData;
@@ -82,7 +81,7 @@ export default async function Post({
 
   const pseudonym = await getUserData().then((t) => t?.pseudonym!);
 
-  const authorPost = await file(locale, fileId);
+  const authorPost = await file(fileId);
 
   return (
     <>

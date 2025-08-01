@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
         authorProfilePhoto: Users?.profilePhoto!,
         fileUrl,
         authorId: authorId!,
-        time: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
+        time: await getDate(updatedAt! || createdAt!, await dateData()),
         createdAt,
         roleId,
         updatedAt: updatedAt || '',

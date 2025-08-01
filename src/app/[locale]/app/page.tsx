@@ -21,7 +21,7 @@ import { NextResponse } from 'next/server';
 
 export const metadata: Metadata = HeadCom('Main site for logged in users.');
 
-async function getTop10Drawings(maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
+async function getTop10Drawings(maxItems: number, dataDateObject: DateObjectType) {
   try {
     const filesArray: FileType[] = [];
 
@@ -51,7 +51,7 @@ async function getTop10Drawings(maxItems: number, locale: LangType, dataDateObje
         authorName: Users?.pseudonym!,
         fileUrl,
         authorId: authorId!,
-        time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+        time: await getDate(updatedAt! || createdAt!, dataDateObject),
         roleId,
       });
     }
@@ -62,7 +62,7 @@ async function getTop10Drawings(maxItems: number, locale: LangType, dataDateObje
   }
 }
 
-async function getTop10Pavo(maxItems: number, tag: Tags, locale: LangType, dataDateObject: DateObjectType) {
+async function getTop10Pavo(maxItems: number, tag: Tags, dataDateObject: DateObjectType) {
   try {
     const filesArray: FileType[] = [];
 
@@ -92,7 +92,7 @@ async function getTop10Pavo(maxItems: number, tag: Tags, locale: LangType, dataD
           authorName: Users?.pseudonym!,
           fileUrl,
           authorId: authorId!,
-          time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+          time: await getDate(updatedAt! || createdAt!, dataDateObject),
           roleId,
         });
       }
@@ -116,10 +116,10 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
   const maxItems = 10;
   const tags: Tags[] = ['photographs', 'animations', 'videos'];
 
-  const drawings = await getTop10Drawings(maxItems, locale, dataDateObject);
-  const photos = await getTop10Pavo(maxItems, tags[0], locale, dataDateObject);
-  const animations = await getTop10Pavo(maxItems, tags[1], locale, dataDateObject);
-  const videos = await getTop10Pavo(maxItems, tags[2], locale, dataDateObject);
+  const drawings = await getTop10Drawings(maxItems, dataDateObject);
+  const photos = await getTop10Pavo(maxItems, tags[0], dataDateObject);
+  const animations = await getTop10Pavo(maxItems, tags[1], dataDateObject);
+  const videos = await getTop10Pavo(maxItems, tags[2], dataDateObject);
 
   return (
     <>

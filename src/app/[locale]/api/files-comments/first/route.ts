@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
         authorId,
         likes: (await likeList(authorId, undefined, fileId))!.likes,
         liked: (await likeList(authorId, undefined, fileId))!.liked,
-        date: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
+        date: await getDate(updatedAt! || createdAt!, await dateData()),
       });
     }
 

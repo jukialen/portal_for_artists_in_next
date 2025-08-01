@@ -1,6 +1,8 @@
-import { DateObjectType, LangType } from "types/global.types";
+import { DateObjectType, LangType } from 'types/global.types';
+import { getCurrentLocale } from '../locales/server';
 
-export const getDate = (locale: LangType, dateField: string, dataDateObject: DateObjectType) => {
+export const getDate = async (dateField: string, dataDateObject: DateObjectType) => {
+  const locale: LangType = await getCurrentLocale();
   const today = new Date(parseInt(dateField));
 
   const second = today.getSeconds();

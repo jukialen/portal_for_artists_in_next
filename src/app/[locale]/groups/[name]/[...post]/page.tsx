@@ -12,16 +12,20 @@ import { createServer } from 'utils/supabase/clientSSR';
 
 import { Post } from 'components/molecules/Post/Post';
 
-export async function generateMetadata({ post }: { post: string }): Promise<Metadata> {
-  const split = post.split('/');
-  const containUrl = split.includes('https') || split.includes('http');
+type PropsType = {
+  locale: LangType;
+  name: string;
+  post: string[];
+};
 
-  const name = decodeURIComponent(split[containUrl ? 4 : 2]);
+export async function generateMetadata({ params }: { params: PropsType }): Promise<Metadata> {
+  const { name, post } = params;
+  const authorName = decodeURIComponent(post[0]);
 
-  return { ...HeadCom(`${name} user post subpage`) };
+  return { ...HeadCom(`${authorName} user post subpage for group ${name}`) };
 }
 
-async function postOne(locale: LangType, postId: string, name: string, dataDateObject: DateObjectType) {
+async function postOne(postId: string, name: string, dataDateObject: DateObjectType) {
   let postsArray: PostsType = {
     authorId: '',
     authorName: '',
@@ -36,9 +40,9 @@ async function postOne(locale: LangType, postId: string, name: string, dataDateO
     title: '',
     idLiked: '',
   };
-  
+
   const supabase = await createServer();
-  
+
   const { data } = await supabase
     .from('Posts')
     .select('*, Users (pseudonym, profilePhoto), Roles (id)')
@@ -65,37 +69,23 @@ async function postOne(locale: LangType, postId: string, name: string, dataDateO
       authorId,
       groupId,
       roleId: Roles?.id!,
-      date: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+      date: await getDate(updatedAt! || createdAt!, dataDateObject),
       idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
     };
   }
   return postsArray;
 }
 
-type Params = Promise<{
-  locale: LangType;
-  name: string;
-  post: {
-    postId: string;
-  };
-}>;
-
-export default async function PostFromGroup({ params }: { params: Params }) {
+export default async function PostFromGroup({ params }: { params: Promise<PropsType> }) {
   const { locale, name, post } = await params;
   setStaticParamsLocale(locale);
 
-  const dataDateObject = await dateData();
-  // const pathname = usePathname();
+  const postId = post[1];
+
   const userData = await getUserData();
 
-  // const split = pathname.split('/');
-  // const containUrl = split.includes('https') || split.includes('http');
+  const postOnGroup = await postOne(postId, name, await dateData());
 
-  // const name = decodeURIComponent(split[containUrl ? 4 : 2]);
-  // const postId = decodeURIComponent(split[containUrl ? 6 : 4]);
-
-  const postOnGroup = await postOne(locale, post.postId, name, dataDateObject);
-  console.log('post', post);
   if (!postOnGroup) return notFound();
 
   return <Post userId={userData?.id!} name={name} postOnGroup={postOnGroup!} profilePhoto={userData?.profilePhoto!} />;

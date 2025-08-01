@@ -19,7 +19,7 @@ export const adminList = async (maxItems: number) => {
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: GroupUserType[] = await fetch(`${backUrl}/en/api/groups/admin/list?${queryString}`, {
+    const res: GroupUserType[] = await fetch(`${backUrl}/api/groups/admin/list?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -37,7 +37,7 @@ export const modsUsersList = async (maxItems: number) => {
 
   try {
     const res: { members: GroupUserType[]; moderators: GroupUserType[] } = await fetch(
-      `${backUrl}/en/api/groups/mods-users/list?${queryString}`,
+      `${backUrl}/api/groups/mods-users/list?${queryString}`,
       {
         method: 'GET',
       },

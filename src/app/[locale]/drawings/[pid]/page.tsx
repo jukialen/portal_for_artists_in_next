@@ -19,7 +19,7 @@ import { getMoreRenderedContent } from '../../actions';
 
 export const metadata: Metadata = HeadCom('Sites with drawings and photos.');
 
-async function getFirstDrawings(pid: Tags, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
+async function getFirstDrawings(pid: Tags, maxItems: number, dataDateObject: DateObjectType) {
   const filesArray: FileType[] = [];
 
   try {
@@ -44,7 +44,7 @@ async function getFirstDrawings(pid: Tags, maxItems: number, locale: LangType, d
         authorName: Users?.pseudonym!,
         fileUrl: fileUrl,
         authorId: authorId!,
-        time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+        time: await getDate(updatedAt! || createdAt!, dataDateObject),
       });
     }
 
@@ -68,7 +68,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
 
   const dataDateObject = await dateData();
 
-  const drawings = await getFirstDrawings(pid, 30, locale, dataDateObject);
+  const drawings = await getFirstDrawings(pid, 30, dataDateObject);
 
   return (
     <>
@@ -78,9 +78,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
 
       <Wrapper>
         <DrawingsWrapper
-          locale={locale}
           pid={pid}
-          dataDateObject={dataDateObject}
           filesDrawings={drawings}
           initialRenderedContentAction={() => getMoreRenderedContent({ files: drawings!, noEls: 1 })}
         />

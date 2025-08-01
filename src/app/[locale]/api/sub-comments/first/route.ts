@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
         authorId,
         likes: (await likeList(authorId, undefined, undefined, commentId!, fileCommentId!))!.likes,
         liked: (await likeList(authorId, undefined, undefined, commentId!, fileCommentId!))!.liked,
-        date: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
+        date: await getDate(updatedAt! || createdAt!, await dateData()),
         groupsPostsRoleId: groupsPostsRoleId!,
       });
     }

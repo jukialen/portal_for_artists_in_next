@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
         authorId,
         groupId,
         roleId: rData?.id || Roles?.id!,
-        date: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
+        date: await getDate(updatedAt! || createdAt!, await dateData()),
         idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
       });
     }

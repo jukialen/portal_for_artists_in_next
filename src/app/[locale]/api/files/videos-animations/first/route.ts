@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServer, Locale } from 'utils/supabase/clientSSR';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { selectFiles } from 'constants/selects';
 import { FileType, Tags } from 'types/global.types';
@@ -37,7 +37,6 @@ export async function GET(request: NextRequest) {
       const roleId = await getFileRoleId(fileId, authorId!);
 
       roleId === 'no id' && NextResponse.json(filesArray);
-
       filesArray.push({
         fileId,
         name,
@@ -46,7 +45,7 @@ export async function GET(request: NextRequest) {
         authorProfilePhoto: Users?.profilePhoto!,
         fileUrl,
         authorId: authorId!,
-        time: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
+        time: await getDate(updatedAt! || createdAt!, await dateData()),
         createdAt,
         updatedAt: updatedAt || undefined,
         roleId,

@@ -6,7 +6,7 @@ import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { likeList } from 'utils/likes';
 import { giveRole } from 'utils/roles';
-import { createServer, Locale } from 'utils/supabase/clientSSR';
+import { createServer } from 'utils/supabase/clientSSR';
 
 export async function GET(req: NextRequest) {
   const commentArray: CommentType[] = [];
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
         authorId,
         likes: (await likeList(authorId, postId!))!.likes,
         liked: (await likeList(authorId, postId!))!.liked,
-        date: getDate(await Locale, updatedAt! || createdAt!, await dateData()),
+        date: await getDate(updatedAt! || createdAt!, await dateData()),
       });
     }
 

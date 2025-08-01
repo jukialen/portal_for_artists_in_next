@@ -12,7 +12,7 @@ import {
 //POST
 export const newComment = async (commentData: NewCommentsType) => {
   try {
-    const role: RoleType = await fetch(`${backUrl}/en/api/comments/new`, {
+    const role: RoleType = await fetch(`${backUrl}/api/comments/new`, {
       method: 'POST',
       body: JSON.stringify(commentData),
     }).then((r) => r.json());
@@ -34,7 +34,7 @@ export const comments = async (
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: CommentType[] = await fetch(`${backUrl}/en/api/comments/${step}?${queryString}`, {
+    const res: CommentType[] = await fetch(`${backUrl}/api/comments/${step}?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -51,7 +51,7 @@ export const filesComments = async (fileId: string, maxItems: number, step: 'fir
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: FilesCommentsType[] = await fetch(`${backUrl}/en/api/files-comments/${step}?${queryString}`, {
+    const res: FilesCommentsType[] = await fetch(`${backUrl}/api/files-comments/${step}?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -85,7 +85,7 @@ export const subComments = async (
   const queryString = new URLSearchParams(!!lastParams ? lastParams : params).toString();
 
   try {
-    const res: SubCommentType[] = await fetch(`${backUrl}/en/api/sub-comments/${step}?${queryString}`, {
+    const res: SubCommentType[] = await fetch(`${backUrl}/api/sub-comments/${step}?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -107,7 +107,7 @@ export const lastComments = async (
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: LastCommentType[] = await fetch(`${backUrl}/en/api/last-comments/${step}?${queryString}`, {
+    const res: LastCommentType[] = await fetch(`${backUrl}/api/last-comments/${step}?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())

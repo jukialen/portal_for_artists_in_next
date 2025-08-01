@@ -6,7 +6,7 @@ export const againPosts = async (groupId: string, lastVisible: string, maxItems:
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: PostsType[] = await fetch(`${backUrl}/en/api/posts/again?${queryString}`, {
+    const res: PostsType[] = await fetch(`${backUrl}/api/posts/again?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())

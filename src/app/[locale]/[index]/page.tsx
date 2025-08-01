@@ -15,13 +15,11 @@ import { HeadCom } from 'constants/HeadCom';
 import { AnothersWrapper } from 'components/molecules/AnothersWrapper/AnothersWrapper';
 
 import styles from './page.module.scss';
-import { getUserData } from 'helpers/getUserData';
 import { error } from '@chakra-ui/utils';
 import { getMoreRenderedContent } from '../actions';
 
 const downloadDrawings = async ({
   index,
-  locale,
   maxItems,
   dataDateObject,
 }: {
@@ -53,7 +51,7 @@ const downloadDrawings = async ({
         shortDescription: shortDescription!,
         fileUrl,
         authorId: authorId!,
-        time: getDate(locale!, updatedAt! || createdAt!, dataDateObject),
+        time: await getDate(updatedAt! || createdAt!, dataDateObject),
       });
     }
 
@@ -76,12 +74,9 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
     noVideos: t('ZeroFiles.videos'),
   };
 
-  const user = await getUserData();
-
-  const dataDateObject = await dateData();
   const maxItems = 30;
 
-  const filesArray = await downloadDrawings({ index, locale, maxItems, dataDateObject });
+  const filesArray = await downloadDrawings({ index, locale, maxItems, dataDateObject: await dateData() });
 
   return (
     <article className={styles.categories__index__in__account}>

@@ -25,7 +25,7 @@ export const likeList = async (
     const likesConst: {
       likes: number;
       liked: boolean;
-    } = await fetch(`${backUrl}/en/api/likes/list?${queryString}`, {
+    } = await fetch(`${backUrl}/api/likes/list?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
@@ -41,7 +41,7 @@ export const likeList = async (
 export const toggleLiked = async (is: boolean, authorId: string, postId?: string, fileId?: string) => {
   try {
     if (is) {
-      const status: boolean = await fetch(`${backUrl}/en/api/likes/toggle`, {
+      const status: boolean = await fetch(`${backUrl}/api/likes/toggle`, {
         method: 'POST',
         body: JSON.stringify({
           postId: postId!,
@@ -61,7 +61,7 @@ export const toggleLiked = async (is: boolean, authorId: string, postId?: string
       };
       const queryString = new URLSearchParams(params).toString();
 
-      const status: boolean = await fetch(`${backUrl}/en/api/likes/toggle?${queryString}`, {
+      const status: boolean = await fetch(`${backUrl}/api/likes/toggle?${queryString}`, {
         method: 'DELETE',
       })
         .then((r) => r.json())

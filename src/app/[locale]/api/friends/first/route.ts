@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServer, Locale } from 'utils/supabase/clientSSR';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { backUrl } from 'constants/links';
 import { FriendsListType } from 'types/global.types';
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
         fileUrl: !!_f.profilePhoto ? _f.profilePhoto : `${backUrl}/friends.svg`,
         favorite: _f.favorite!,
         plan: _f.plan!,
-        createdAt: getDate(await Locale, _f.createdAt!, await dateData()),
+        createdAt: await getDate(_f.createdAt!, await dateData()),
       });
     }
 
