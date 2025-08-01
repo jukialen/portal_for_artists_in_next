@@ -3,8 +3,9 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { createServer } from 'utils/supabase/clientSSR';
 import { Tabs } from '@chakra-ui/react';
 
+import { getMoreRenderedContent } from '../actions';
+
 import { HeadCom } from 'constants/HeadCom';
-import { initialRenderedContent } from 'constants/InitialDataFiles';
 import { backUrl } from 'constants/links';
 import { GroupUsersType, LangType } from 'types/global.types';
 
@@ -23,7 +24,6 @@ import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
 import { GroupUser } from 'components/organisms/GroupUser/GroupUser';
 
 import styles from './page.module.scss';
-import { getMoreRenderedContent } from '../actions';
 
 async function getFidAndFavs(pseudonym: string) {
   const supabase = await createServer();
@@ -123,15 +123,19 @@ async function getMembersGroups(userId: string, maxItems: number) {
   }
 }
 
-export async function generateMetadata({
-  params: { pseudonym },
-}: {
-  params: { pseudonym: string };
-}): Promise<Metadata> {
+type PropsType = {
+  params: Promise<{
+    locale: LangType;
+    pseudonym: string;
+  }>;
+};
+
+export async function generateMetadata({ params }: PropsType): Promise<Metadata> {
+  const { pseudonym } = await params;
   return { ...HeadCom(`${pseudonym} site`) };
 }
 
-export default async function User({ params }: { params: Promise<{ locale: LangType; pseudonym: string }> }) {
+export default async function User({ params }: PropsType) {
   const { locale, pseudonym } = await params;
   setStaticParamsLocale(locale);
 

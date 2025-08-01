@@ -12,13 +12,15 @@ import { createServer } from 'utils/supabase/clientSSR';
 
 import { Post } from 'components/molecules/Post/Post';
 
-type PropsType = Promise<{
-  locale: LangType;
-  name: string;
-  post: string[];
-}>;
+type PropsType = {
+  params: Promise<{
+    locale: LangType;
+    name: string;
+    post: string[];
+  }>;
+};
 
-export async function generateMetadata({ params }: { params: PropsType }): Promise<Metadata> {
+export async function generateMetadata({ params }: PropsType): Promise<Metadata> {
   const { name, post } = await params;
   const authorName = decodeURIComponent(post[0]);
 
@@ -76,7 +78,7 @@ async function postOne(postId: string, name: string, dataDateObject: DateObjectT
   return postsArray;
 }
 
-export default async function PostFromGroup({ params }: { params: PropsType }) {
+export default async function PostFromGroup({ params }: PropsType) {
   const { locale, name, post } = await params;
   setStaticParamsLocale(locale);
 

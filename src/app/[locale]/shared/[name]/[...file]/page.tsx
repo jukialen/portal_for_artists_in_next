@@ -14,7 +14,23 @@ import { createServer } from 'utils/supabase/clientSSR';
 import { Videos } from 'components/molecules/Videos/Videos';
 import { Article } from 'components/molecules/Article/Article';
 
-async function file(fileId: string) {
+type PropsType = {
+  params: Promise<{
+    locale: LangType;
+    name: string;
+    file: string[];
+  }>;
+};
+
+export async function generateMetadata({ params }: PropsType): Promise<Metadata> {
+  const { file } = await params;
+
+  const authorName = decodeURIComponent(file[1]);
+
+  return { ...HeadCom(`${authorName} user post subpage`) };
+}
+
+async function oneFile(fileId: string) {
   try {
     const supabase = await createServer();
 
@@ -65,23 +81,14 @@ async function file(fileId: string) {
   }
 }
 
-export async function generateMetadata({ shared }: { shared: string }): Promise<Metadata> {
-  const authorName = decodeURIComponent(shared.split('/')[4]);
-
-  return { ...HeadCom(`${authorName} user post subpage`) };
-}
-
-export default async function Post({
-  params,
-}: {
-  params: Promise<{ locale: LangType; name: string; fileId: string }>;
-}) {
-  const { locale, name, fileId } = await params;
+export default async function Post({ params }: PropsType) {
+  const { locale, name, file } = await params;
   setStaticParamsLocale(locale);
 
-  const pseudonym = await getUserData().then((t) => t?.pseudonym!);
+  const fileId = file[1];
 
-  const authorPost = await file(fileId);
+  const pseudonym = await getUserData().then((t) => t?.pseudonym!);
+  const authorPost = await oneFile(fileId);
 
   return (
     <>

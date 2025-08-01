@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { setStaticParamsLocale } from 'next-international/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { HeadCom } from 'constants/HeadCom';
@@ -26,6 +27,18 @@ type JoinUser = {
   roleId: string;
   usersGroupsId: string;
 };
+
+type PropsType = {
+  params: Promise<{
+    locale: LangType;
+    name: string;
+  }>;
+};
+
+export async function generateMetadata({ params }: PropsType): Promise<Metadata> {
+  const { name } = await params;
+  return { ...HeadCom(`${name} group website`) };
+}
 
 const emptyObject: JoinUser = {
   logo: '',
@@ -131,7 +144,7 @@ async function members(usersGroupsId: string, name: string, stringError: string)
     return [{ usersGroupsId, pseudonym: '', profilePhoto: '', role: 'USER' }];
   }
 }
-async function getFirstPosts(groupId: string, maxItems: number, locale: LangType, dataDateObject: DateObjectType) {
+async function getFirstPosts(groupId: string, maxItems: number, dataDateObject: DateObjectType) {
   const postsArray: PostsType[] = [];
 
   const supabase = await createServer();
@@ -175,12 +188,10 @@ async function getFirstPosts(groupId: string, maxItems: number, locale: LangType
   }
 }
 
-export async function generateMetadata({ name }: { name: string }): Promise<Metadata> {
-  return { ...HeadCom(`${name} group website`) };
-}
-
-export default async function Groups({ params }: { params: Promise<{ locale: LangType; name: string }> }) {
+export default async function Groups({ params }: PropsType) {
   const { locale, name } = await params;
+  setStaticParamsLocale(locale);
+
   const tAnotherForm = await getScopedI18n('AnotherForm');
   const tOther = await getI18n();
 
@@ -229,13 +240,12 @@ export default async function Groups({ params }: { params: Promise<{ locale: Lan
   };
 
   const userData = await getUserData();
-  const dataDateObject = dateData();
 
   const selectedColor = '#FFD068';
 
   const joined = await joinedUser(name, tOther('unknownError'));
   const membersGroups = await members(joined.usersGroupsId, name, tOther('unknownError'));
-  const firstPosts = await getFirstPosts(joined.groupId, 30, locale, await dataDateObject);
+  const firstPosts = await getFirstPosts(joined.groupId, 30, await dateData());
 
   return (
     <>
