@@ -1,47 +1,68 @@
-// middleware.ts
 import { type NextRequest, NextResponse } from 'next/server';
 import { createI18nMiddleware } from 'next-international/middleware';
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
 import { anonKey, projectId } from 'constants/links';
 
-const i18n = createI18nMiddleware({
+const i18nMiddleware = createI18nMiddleware({
   locales: ['en', 'pl', 'jp'],
   defaultLocale: 'en',
   urlMappingStrategy: 'rewrite',
   resolveLocaleFromRequest: () => 'en',
 });
 
-export async function middleware(req: NextRequest) {
-  const res = i18n(req);
+const publicForAll = ['/settings', '/terms', '/privacy', '/contact', '/faq', '/plans'];
+const onlyForGuests = ['/', '/signin', '/signup', '/forgotten', '/new-user'];
 
-  let supabaseResponse = NextResponse.next({
-    request: req,
+export async function middleware(req: NextRequest) {
+  let response = NextResponse.next({
+    request: {
+      headers: new Headers(req.headers),
+    },
   });
 
   const supabase = createServerClient(projectId!, anonKey!, {
     cookies: {
-      getAll() {
-        return req.cookies.getAll();
+      get(name: string) {
+        return req.cookies.get(name)?.value;
       },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => req.cookies.set(name, value));
-        supabaseResponse = NextResponse.next({
-          request: req,
-        });
-        cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options));
+      set(name: string, value: string, options: CookieOptions) {
+        // Aktualizujemy ciasteczka w przychodzącym żądaniu
+        req.cookies.set({ name, value, ...options });
+        // I w odpowiedzi, która zostanie wysłana do klienta
+        response.cookies.set({ name, value, ...options });
+      },
+      remove(name: string, options: CookieOptions) {
+        req.cookies.set({ name, value: '', ...options });
+        response.cookies.set({ name, value: '', ...options });
       },
     },
   });
 
-  // Możesz np. dodać redirect dla niezalogowanych:
-  // if (!user && req.nextUrl.pathname.startsWith('/dashboard')) {
-  //   const url = req.nextUrl.clone();
-  //   url.pathname = '/sign-in';
-  //   return NextResponse.redirect(url);
-  // }
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return res;
+  const { pathname } = req.nextUrl;
+
+  const normalize = (p: string) => (p.endsWith('/') && p !== '/' ? p.slice(0, -1) : p);
+  const normalizedPath = normalize(pathname);
+  const isIn = (list: string[]) => list.some((p) => normalizedPath === p || normalizedPath.startsWith(`${p}/`));
+
+  const isGuestOnlyPath = isIn(onlyForGuests);
+  const isPublicPath = isIn(publicForAll);
+
+  user && isGuestOnlyPath && NextResponse.redirect(new URL('/app', req.url));
+
+  if (!user && !isPublicPath && !isGuestOnlyPath) {
+    const redirectUrl = new URL('/signin', req.url);
+    redirectUrl.searchParams.set('next', pathname);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  response = i18nMiddleware(req);
+
+  return response;
 }
 
 export const config = {

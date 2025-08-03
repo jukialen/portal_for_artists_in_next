@@ -15,11 +15,10 @@ import { GlobalProvider } from 'providers/GlobalProvider';
 import { UserHeader } from 'components/organisms/UserHeader/UserHeader';
 import { Header } from 'components/organisms/Header/Header';
 import { Aside } from 'components/organisms/Aside/Aside';
-import { SkeletonRootLayout } from 'components/organisms/SkeletonRootLayout/SkeletonRootLayout';
 
+import styles from './Layout.module.scss';
 import 'styles/reset.scss';
 import 'styles/global.scss';
-import 'styles/darkLightMode.scss';
 import 'styles/_variables.scss';
 
 type ChildrenType = {
@@ -66,9 +65,17 @@ export default async function RootLayout({ children, params }: ChildrenType) {
 
         <Provider>
           <GlobalProvider locale={locale}>
-            <SkeletonRootLayout isUser={!!user} userMenuComponents={userMenuComponents}>
-              {children}
-            </SkeletonRootLayout>
+            <div className={`${styles.whole__page} dark`}>
+              {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
+
+              <div className={styles.container}>
+                {!!user && userMenuComponents.aside}
+
+                <main className={!!user ? styles.user__container : styles.main__container}>
+                  <section className={styles.workspace}>{children}</section>
+                </main>
+              </div>
+            </div>
           </GlobalProvider>
         </Provider>
       </body>

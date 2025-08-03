@@ -77,8 +77,10 @@ a {
   }
 }
 
-button {
+button, a, h1, h2, h3, h4, h5, h6, span, p, input, textarea {
   background-color: transparent;
+  color: var(--text) !important;
+  //color: var(--background) !important;
   cursor: pointer;
 }
 
@@ -99,80 +101,5 @@ button {
 
   &:hover {
     background-color: var(--secondary);
-  }
-}
-
-.pagination {
-  display: flex;
-  flex-flow: row wrap;
-  width: 100vw;
-  max-width: 40rem;
-  justify-content: center;
-  align-items: center;
-  margin: 1rem auto;
-  color: var(--text);
-
-
-  button.ant-pagination-item-link {
-    background: transparent;
-    border: 0;
-    color: var(--primary);
-    margin: 0 1.5rem;
-
-    &:focus {
-      color: var(--focus);
-    }
-
-    &:hover {
-      color: var(--third);
-    }
-
-    &:active {
-      border-color: var(--active);
-    }
-
-    &:disabled {
-      visibility: hidden;
-    }
-  }
-
-  .ant-pagination-simple-pager {
-    input {
-      box-sizing: border-box;
-      height: 100%;
-      margin-right: 8px;
-      padding: 0 6px;
-      text-align: center;
-      background-color: transparent;
-      border: 1px solid var(--background);
-      border-radius: 2px;
-      outline: none;
-      transition: border-color 0.3s;
-
-      &:hover {
-        border-color: var(--hover);
-      }
-
-      &:focus {
-        border-color: var(--focus);
-      }
-    }
-
-    .ant-pagination-slash {
-      margin: 0 10px 0 5px;
-    }
-  }
-
-  &-dark {
-    color: var(--text);
-
-    input {
-      color: var(--text);
-    }
-
-    .ant-pagination-simple-pager input {
-      border: 1px solid var(--background);
-
-    }
   }
 }
