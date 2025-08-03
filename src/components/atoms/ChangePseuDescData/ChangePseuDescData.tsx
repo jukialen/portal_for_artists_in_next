@@ -127,10 +127,7 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
               value={values.newPseudonym}
               onChange={handleChange}
               placeholder={tAnotherForm('pseudonym')}
-              className={`
-            ${!!errors.newPseudonym && touched.newPseudonym ? styles.input__error : styles.input}
-            ${isMode === darkMode ? styles.input__dark : ''}
-          `}
+              className={!!errors.newPseudonym && touched.newPseudonym ? styles.input__error : styles.input}
             />
           </div>
 
@@ -150,10 +147,9 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
               value={values.newDescription}
               onChange={handleChange}
               placeholder={tAccount('profile.aboutMe')}
-              className={`
-            ${!!errors.newDescription && touched.newDescription ? styles.description__error : styles.description}
-            ${isMode === darkMode ? styles.description__dark : ''}
-          `}
+              className={
+                !!errors.newDescription && touched.newDescription ? styles.description__error : styles.description
+              }
             />
           </div>
           {!!errors.newDescription && touched.newDescription && (

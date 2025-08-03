@@ -17,9 +17,9 @@ import {
   PopoverTrigger,
 } from 'components/ui/popover';
 
-import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
+import { useI18n, useScopedI18n } from 'locales/client';
 
-import { backUrl, darkMode } from "constants/links";
+import { backUrl, darkMode } from 'constants/links';
 import { NewPlanType, ResetFormType, UserFormType, UserType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -55,7 +55,6 @@ type SubscriptionType = {
 type PlanType = NewPlanType | 'FREE' | 'PREMIUM' | 'GOLD';
 
 export const AccountData = ({ userData }: { userData: UserType }) => {
-  const locale = useCurrentLocale();
   const t = useI18n();
   const tAccount = useScopedI18n('Account');
 
@@ -81,9 +80,9 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
   const schemaSubscription = Yup.object({
     plan: SchemaValidation().tags,
   });
-  
-  const supabase =  createClient();
-  
+
+  const supabase = createClient();
+
   const update__email = async ({ email }: UserFormType, { resetForm }: ResetFormType) => {
     try {
       resetForm(initialValues);
@@ -94,17 +93,14 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
         return;
       }
 
-      const { error: er } = await supabase
-        .from('Users')
-        .update({ email })
-        .eq('id', userData?.id!);
+      const { error: er } = await supabase.from('Users').update({ email }).eq('id', userData?.id!);
       if (!!er) {
         console.error(er);
         setValuesFields(t('error'));
         return;
       }
       setValuesFields(t('Forgotten.success'));
-      push(`${locale}/`);
+      push('/');
     } catch (e) {
       console.error(e);
       setValuesFields(t('error'));
@@ -122,7 +118,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
       }
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${backUrl}/${locale}/new-password`,
+        redirectTo: `${backUrl}/new-password`,
       });
 
       if (!!error) {
@@ -140,10 +136,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
 
   const changeSubscription = async ({ newPlan }: SubscriptionType, { resetForm }: ResetFormType) => {
     try {
-      const { error } = await supabase
-        .from('Users')
-        .update({ plan: newPlan })
-        .eq('id', userData?.id!);
+      const { error } = await supabase.from('Users').update({ plan: newPlan }).eq('id', userData?.id!);
 
       if (!!error) {
         console.error(error);
@@ -177,7 +170,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
             <Portal>
               <PopoverContent
                 borderColor={isMode === darkMode ? 'gray.600' : 'gray.100'}
-                className={isMode === darkMode ? styles.subscription__dark : styles.subscription}>
+                className={styles.subscription}>
                 <PopoverArrow
                   boxShadow={
                     isMode === darkMode
@@ -188,7 +181,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                 />
                 <PopoverHeader>{tAccount('aData.Premium.header')}</PopoverHeader>
                 <PopoverBody>
-                  <div className={isMode === darkMode ? styles.selectSub__dark : styles.selectSub}>
+                  <div className={styles.selectSub}>
                     <Formik
                       // @ts-ignore
                       initialValues={initialPlan}
@@ -218,16 +211,12 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                           )}
                           <p className={styles.message}>
                             {tAccount('aData.Premium.body')}
-                            <Link href={`${locale}/plans`}>{tAccount('aData.Premium.bodyLink')}</Link>
+                            <Link href="/plans">{tAccount('aData.Premium.bodyLink')}</Link>
                             {tAccount('aData.Premium.bodyDot')}
                           </p>
-                          <Group
-                            className={`${styles.buttonContainer} ${
-                              isMode === darkMode ? styles.buttonContainer__dark : ''
-                            }`}>
+                          <Group className={styles.buttonContainer}>
                             <Button
                               variant="ghost"
-                              className={`${isMode === darkMode ? styles.buttonContainer__dark : ''}`}
                               _hover={{ backgroundColor: isMode === darkMode ? 'gray.600' : 'gray.300' }}
                               onClick={() => setOpen(false)}>
                               {t('cancel')}
@@ -251,7 +240,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
         <>
           <Formik initialValues={initialValues} validationSchema={schemaEmail} onSubmit={update__email}>
             {({ values, handleChange, errors, touched }) => (
-              <Form className={`${styles.form} ${isMode === darkMode ? styles.form_dark : ''}`}>
+              <Form className={styles.form}>
                 <h3 className={styles.title}>{t('NavForm.email')}</h3>
                 <Input
                   name="email"
@@ -272,7 +261,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
 
           <Formik initialValues={initialValuesPass} validationSchema={schemaValidation} onSubmit={newPassword}>
             {({ values, handleChange, errors, touched }) => (
-              <Form className={`${styles.form} ${isMode === darkMode ? styles.form_dark : ''}`}>
+              <Form className={styles.form}>
                 <h3 className={styles.title}>{t('NavForm.password')}</h3>
                 <Input
                   name="email"

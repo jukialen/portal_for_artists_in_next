@@ -55,8 +55,6 @@ export const FormSignUp = ({
         options: { emailRedirectTo: `${location.origin}/auth/callback?next=${newUserRed}` },
       });
 
-      console.log('data', data);
-      console.log('error', error);
       if (!!error) {
         if (
           error.message.includes('User already registered') ||

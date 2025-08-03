@@ -1,4 +1,4 @@
-.aside, .aside__dark {
+.aside {
   display: none;
 }
 
@@ -111,7 +111,7 @@ div.drawer {
 }
 
 @media (min-width: 1024px) {
-  .aside, .aside__dark {
+  .aside {
     width: 17rem;
     height: 100vh;
     display: flex;
@@ -172,10 +172,6 @@ div.drawer {
         margin-bottom: 2rem;
       }
     }
-  }
-
-  .aside__dark {
-    background-color: rgb(var(--secondary), .75);
   }
 
   div button.aside__right {

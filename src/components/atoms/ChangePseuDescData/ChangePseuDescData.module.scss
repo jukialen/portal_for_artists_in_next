@@ -26,10 +26,6 @@
       border-color: var(--third);
       border-radius: 1rem;
 
-      &__dark {
-        color: var(--text);
-      }
-
       &__error {
         border-color: var(--required);
       }

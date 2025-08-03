@@ -37,7 +37,7 @@ section.modelContent {
     margin-bottom: 1rem;
   }
 
-  .select, .select__dark {
+  .select {
     width: 100vw;
     max-width: 22.5rem;
     color: var(--third);
@@ -58,22 +58,6 @@ section.modelContent {
         background-color: var(--background);
       }
     }
-
-    &__dark {
-      .tags, .tags__error {
-        color: var(--text);
-         background-color: var(--background);
-
-        &__error {
-          border-color: var(--required);
-        }
-
-        option {
-          color: inherit;
-          background-color: inherit;
-        }
-      }
-    }
   }
 
   .shortDescription {
@@ -83,10 +67,6 @@ section.modelContent {
     margin: 0.5rem;
     border-color: var(--third);
     border-radius: 1rem;
-
-    &__dark {
-      color: var(--text);
-    }
 
     &__error {
       border-color: var(--required);

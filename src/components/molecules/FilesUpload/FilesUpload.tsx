@@ -21,7 +21,7 @@ import { ProgressValueText, ProgressRoot } from 'components/ui/progress';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { access_token, bucketName, darkMode, projectId } from 'constants/links';
+import { access_token, darkMode, projectId } from 'constants/links';
 import { Tags, EventType, ResetFormType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -200,7 +200,7 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
               <Form className={styles.adding__files}>
                 <h3 className={styles.title}>{tAnotherForm('fileTitle')}</h3>
 
-                <div className={isMode === darkMode ? styles.select__dark : styles.select}>
+                <div className={styles.select}>
                   <NativeSelectRoot
                     onChange={handleChange}
                     className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}
@@ -253,14 +253,11 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
                   value={values.shortDescription}
                   onChange={handleChange}
                   placeholder="short description for file"
-                  className={`
-                    ${
-                      !!errors.shortDescription && touched.shortDescription
-                        ? styles.shortDescription__error
-                        : styles.shortDescription
-                    }
-                    ${isMode === darkMode ? styles.shortDescription__dark : ''}
-                    `}
+                  className={
+                    !!errors.shortDescription && touched.shortDescription
+                      ? styles.shortDescription__error
+                      : styles.shortDescription
+                  }
                 />
 
                 {!!errors.shortDescription && touched.shortDescription && (

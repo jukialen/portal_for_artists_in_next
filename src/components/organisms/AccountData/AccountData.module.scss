@@ -50,13 +50,9 @@
       margin: unset;
     }
   }
-
-  .form_dark input {
-    color: var(--text);
-  }
 }
 
-section.subscription, section.subscription__dark {
+section.subscription {
   max-width: inherit;
   right: 1rem;
 
@@ -72,7 +68,7 @@ section.subscription, section.subscription__dark {
     cursor: pointer;
   }
 
-  .selectSub, .selectSub__dark {
+  .selectSub {
     margin-bottom: 1rem;
 
     select {
@@ -102,21 +98,6 @@ section.subscription, section.subscription__dark {
     }
   }
 
-  .selectSub__dark {
-    select {
-      color: var(--text);
-
-      option {
-         background-color: var(--background);
-        color: var(--text);
-      }
-    }
-
-    div {
-      color: var(--text);
-    }
-  }
-
   .message {
     margin: 1rem 0 2rem;
 
@@ -129,10 +110,6 @@ section.subscription, section.subscription__dark {
     display: flex;
     justify-content: flex-end;
     margin-bottom: -.5rem;
-
-    &__dark {
-      color: var(--text) ;
-    }
     button {
       border-color: transparent;
     }
@@ -169,24 +146,8 @@ section.subscription {
   }
 }
 
-section.subscription__dark {
-   background-color: var(--background);
-
-  .arrow {
-     background-color: var(--background) !important;
-  }
-
-  header {
-    color: var(--text);
-  }
-
-  .message, .message a {
-    color: var(--text);
-  }
-}
-
 @media (min-width: 768px) {
-  section.subscription, section.subscription__dark {
+  section.subscription {
     right: 0;
   }
 }

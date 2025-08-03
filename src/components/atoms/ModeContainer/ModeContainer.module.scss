@@ -49,10 +49,6 @@
       &:hover {
         background-color: var(--secondary);
       }
-
-      &__dark {
-        color: var(--text);
-      }
     }
 
     .color {
@@ -86,18 +82,6 @@
             font-weight: bold;
             border-radius: 0.4rem;
           }
-
-          &__dark {
-            background-color: var(--background);
-
-            &:hover,
-            &:active {
-              background-color: var(--background);
-              filter: invert(0.2);
-              font-weight: bold;
-              border-radius: 0.4rem;
-            }
-          }
         }
 
         .dark__title {
@@ -117,10 +101,6 @@
       border: 0.1rem solid var(--secondary);
       border-radius: 0.5rem;
       z-index: 2;
-
-      &__dark {
-        background-color: var(--background);
-      }
     }
   }
 }

@@ -38,29 +38,19 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
       </div>
 
       <ul className={styles.mode}>
-        <li
-          className={`${styles.colors__select} ${isMode === darkMode ? styles.colors__select__dark : ''}`}
-          onClick={showMode}>
+        <li className={styles.colors__select} onClick={showMode}>
           <p className={styles.languages__version}>{isMode?.toLocaleUpperCase()}</p>
           <RxChevronDown />
         </li>
 
-        <div
-          className={`
-            ${styles.color} ${mode && styles.color__active}
-            ${isMode === darkMode && styles.color__active__dark}
-            `}>
+        <div className={`${styles.color} ${mode && styles.color__active}`}>
           <li>
-            <Button
-              className={`${styles.colors__version} ${isMode === darkMode && styles.colors__version__dark}`}
-              onClick={() => newMode('dark')}>
+            <Button className={styles.colors__version} onClick={() => newMode('dark')}>
               {dark}
             </Button>
           </li>
           <li>
-            <Button
-              className={`${styles.colors__version} ${isMode === darkMode && styles.colors__version__dark}`}
-              onClick={() => newMode('light')}>
+            <Button className={styles.colors__version} onClick={() => newMode('light')}>
               {light}
             </Button>
           </li>
