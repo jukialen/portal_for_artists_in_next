@@ -65,7 +65,7 @@ export default async function RootLayout({ children, params }: ChildrenType) {
 
         <Provider>
           <GlobalProvider locale={locale}>
-            <div className={`${styles.whole__page} dark`}>
+            <div className={styles.whole__page}>
               {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
 
               <div className={styles.container}>
