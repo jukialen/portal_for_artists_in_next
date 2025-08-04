@@ -2,8 +2,11 @@ button.choosePlan {
   width: 100%;
   border-radius: 0.5rem;
   background-color: var(--opacity);
-  color: var(--text);
   cursor: pointer;
+
+  svg {
+    color: inherit;
+  }
 
   &:hover {
     background-color: var(--hover);

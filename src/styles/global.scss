@@ -57,7 +57,7 @@ h4 {
 
 a {
   text-decoration: none;
-  color: black;
+  color: var(--primary);
   cursor: pointer;
 
   &:visited {
@@ -77,10 +77,8 @@ a {
   }
 }
 
-button, a, h1, h2, h3, h4, h5, h6, span, p, input, textarea {
+button {
   background-color: transparent;
-  color: var(--text) !important;
-  //color: var(--background) !important;
   cursor: pointer;
 }
 
@@ -102,4 +100,12 @@ button, a, h1, h2, h3, h4, h5, h6, span, p, input, textarea {
   &:hover {
     background-color: var(--secondary);
   }
+}
+
+p, span, h1, h2, h3, h4, h5, h6, svg:not([class]), svg[class*='_icon'], button a {
+  color: var(--text);
+}
+
+button[class*='__choosePlan']:focus svg {
+  color: var(--backgorund);
 }

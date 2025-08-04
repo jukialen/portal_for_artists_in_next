@@ -36,8 +36,8 @@ export const PlanBlock = async ({
     <div className={styles.box}>
       <h3 className={styles.box__title}>{plan}</h3>
       <div className={styles.box__price}>
-        <p>${amount}</p>
-        <p>{period}</p>
+        <p className={styles.priceCount}>${amount}</p>
+        <p className={styles.priceTime}>{period}</p>
       </div>
       <div className={styles.list}>
         <ul>
