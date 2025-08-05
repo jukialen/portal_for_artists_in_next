@@ -52,7 +52,9 @@ export async function middleware(req: NextRequest) {
   const isGuestOnlyPath = isIn(onlyForGuests);
   const isPublicPath = isIn(publicForAll);
 
-  user && isGuestOnlyPath && NextResponse.redirect(new URL('/app', req.url));
+  if (user && isGuestOnlyPath) {
+    return NextResponse.redirect(new URL('/app', req.url));
+  }
 
   if (!user && !isPublicPath && !isGuestOnlyPath) {
     const redirectUrl = new URL('/signin', req.url);
@@ -74,6 +76,6 @@ export const config = {
      * - favicon.png (favicon file)
      * Feel free to modify this pattern to include more paths.
      */
-    '/((?!_next/static|_next/image|favicon.png|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|heif|heic)$).*)',
+    '/((?!_next/static|_next/image|favicon.png|robots.txt|.*\\.(?:svg|png|ico|json|webmanifest|jpg|jpeg|gif|webp|avif|heif|heic)$).*)',
   ],
 };
