@@ -28,8 +28,8 @@ type ChildrenType = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'hsl(44, 100%, 71%)' },
-    { media: '(prefers-color-scheme: dark)', color: 'hsl(41, 85%, 62%)' },
+    { media: '(prefers-color-scheme: light)', color: 'hsl(0, 0%, 97%, 0.9)' },
+    { media: '(prefers-color-scheme: dark)', color: 'hsla(0, 0%, 97%, 0.1)' },
   ],
 };
 
