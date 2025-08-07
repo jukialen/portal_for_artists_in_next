@@ -89,7 +89,7 @@ export const MainCurrentUserProfileData = ({
     <article className={styles.mainData}>
       <div className={styles.logoPseu}>
         <div className={styles.logo}>
-          <Image src={userData?.profilePhoto!} fill alt={`${userData?.profilePhoto} logo`} />
+          <Image src={userData?.profilePhoto!} fill alt={`${userData?.profilePhoto} logo`} priority />
           <DialogRoot
             lazyMount
             open={open}
@@ -122,9 +122,11 @@ export const MainCurrentUserProfileData = ({
 
                 <p style={{ color: '#bd0000' }}>{!newLogo && required && tCurrPrPhoto.validateRequired}</p>
                 {!!newLogo && (
-                  <img
+                  <Image
                     src={`${backUrl}/${newLogo.name}`}
                     alt="preview new logo"
+                    fill
+                    priority
                     width={192}
                     height={192}
                     style={{

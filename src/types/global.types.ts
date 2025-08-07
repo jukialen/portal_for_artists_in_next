@@ -1,5 +1,6 @@
-import { ChangeEvent, ReactNode } from 'react';
+import { ChangeEvent, JSX, ReactNode } from 'react';
 import { Database } from './database.types';
+import { StaticImageData } from 'next/image';
 
 //GENERAL
 type Like = { likes: number; liked: boolean };
@@ -310,4 +311,14 @@ export type LastCommentType = Comment & {
   authorProfilePhoto: string;
   lastCommentId: string;
   subCommentId: string;
+};
+
+//PAGes TYPES
+export type ContainerType = {
+  question: JSX.Element | string;
+  answer: string;
+  imageSource: StaticImageData[];
+  imageAlt: string[];
+  quality: number;
+  mode?: boolean;
 };

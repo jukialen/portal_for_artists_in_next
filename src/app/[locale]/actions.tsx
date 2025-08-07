@@ -10,3 +10,5 @@ interface GetMoreRenderedContentProps {
 
 export const getMoreRenderedContent = async ({ files, noEls }: GetMoreRenderedContentProps) =>
   await initialRenderedContent(files, noEls);
+
+export const getFilesComments = async ({ fileId }: { fileId: string }) => {};

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@chakra-ui/react';
 
@@ -9,7 +10,7 @@ import { GroupsType } from 'types/global.types';
 import { Links } from 'components/atoms/Links/Links';
 
 import styles from './Groups.module.scss';
-import { RiArrowUpSLine } from "react-icons/ri";
+import { RiArrowUpSLine } from 'react-icons/ri';
 
 export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) => {
   const [open, setOpen] = useState(false);
@@ -17,8 +18,8 @@ export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) =
   const locale = useCurrentLocale();
   const t = useI18n();
   const tAside = useScopedI18n('Aside');
-  
-  console.log(groupsAsideList)
+
+  console.log(groupsAsideList);
   const changeOpenGroups = () => setOpen(!open);
 
   return (
@@ -29,15 +30,16 @@ export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) =
           style={{
             transform: open ? 'rotate(-180deg)' : 'rotate(0deg)',
             transition: 'transform 0.3s cubic-bezier(0.65, 0, 0.35, 1)',
-            display: 'inline-block'
-          }} />
+            display: 'inline-block',
+          }}
+        />
       </h3>
-      
+
       <div className={open ? styles.groups__container : styles.hiddenGroups}>
         {!!groupsAsideList && groupsAsideList.length > 0 ? (
           groupsAsideList.map(({ name, logo, description }, index) => (
             <div className={styles.container} key={index}>
-              <img src={logo} alt={`${name} logo`} />
+              <Image src={logo} alt={`${name} logo`} fill priority />
               <Links hrefLink={`/groups/${name}`} classLink={styles.container__item} arial-label={description}>
                 <h4>{name}</h4>
               </Links>

@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import { Viewport } from 'next';
 import Script from 'next/script';
-import { Provider } from 'components/ui/provider';
 
 import { getStaticParams } from 'locales/server';
 
@@ -10,7 +9,7 @@ import { LangType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
 
-import { GlobalProvider } from 'providers/GlobalProvider';
+import { ModeProvider } from 'providers/ModeProvider';
 
 import { UserHeader } from 'components/organisms/UserHeader/UserHeader';
 import { Header } from 'components/organisms/Header/Header';
@@ -63,21 +62,19 @@ export default async function RootLayout({ children, params }: ChildrenType) {
           />
         )}
 
-        <Provider>
-          <GlobalProvider locale={locale}>
-            <div className={styles.whole__page}>
-              {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
+        <ModeProvider locale={locale}>
+          <div className={styles.whole__page}>
+            {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
 
-              <div className={styles.container}>
-                {!!user && userMenuComponents.aside}
+            <div className={styles.container}>
+              {!!user && userMenuComponents.aside}
 
-                <main className={!!user ? styles.user__container : styles.main__container}>
-                  <section className={styles.workspace}>{children}</section>
-                </main>
-              </div>
+              <main className={!!user ? styles.user__container : styles.main__container}>
+                <section className={styles.workspace}>{children}</section>
+              </main>
             </div>
-          </GlobalProvider>
-        </Provider>
+          </div>
+        </ModeProvider>
       </body>
     </html>
   );

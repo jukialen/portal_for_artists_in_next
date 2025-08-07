@@ -5,7 +5,9 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { getScopedI18n } from 'locales/server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { LangType } from 'types/global.types';
+import { ContainerType, LangType } from 'types/global.types';
+
+import { HomeImageContainers } from 'components/atoms/HomeImageContainers/HomeImageContainers';
 
 import styles from './page.module.scss';
 import dark_mode from '../../../public/dark_mode.png';
@@ -33,6 +35,78 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
   const height = 320;
   const quality = 100;
 
+  const containerData: ContainerType[] = [
+    {
+      question: t('containerFirstQuestion'),
+      answer: t('containerFirstAnswer'),
+      imageSource: [upload],
+      imageAlt: ['picture.jpg'],
+      quality,
+    },
+    {
+      question: t('containerSecondQuestion'),
+      answer: t('containerSecondAnswer'),
+      imageSource: [authorButton],
+      imageAlt: ['picture.jpg'],
+      quality,
+    },
+    {
+      question: t('containerThirdQuestion'),
+      answer: t('containerThirdAnswer'),
+      imageSource: [top],
+      imageAlt: ['sign in photo file'],
+      quality,
+    },
+    {
+      question: (
+        <>
+          {t('containerFourthQuestion')}
+          <br />
+        </>
+      ),
+      answer: t('containerFourthAnswer'),
+      imageSource: [likes],
+      imageAlt: ['picture.jpg'],
+      quality,
+    },
+    {
+      question: t('containerFifthQuestion'),
+      answer: t('containerFifthAnswer'),
+      imageSource: [minimalism],
+      imageAlt: ['sign in photo file'],
+      quality,
+    },
+    {
+      question: t('containerSixthQuestion'),
+      answer: t('containerSixthAnswer'),
+      imageSource: [light_mode, dark_mode],
+      imageAlt: ['light mode photo file', 'dark mode photo file'],
+      quality,
+      mode: true,
+    },
+    {
+      question: t('containerSeventhQuestion'),
+      answer: t('containerSeventhAnswer'),
+      imageSource: [categories],
+      imageAlt: ['categories photo file'],
+      quality,
+    },
+    {
+      question: t('containerEighthQuestion'),
+      answer: t('containerEighthAnswer'),
+      imageSource: [groups],
+      imageAlt: ['groups photo file'],
+      quality,
+    },
+    {
+      question: t('containerNinthQuestion'),
+      answer: t('containerNinthAnswer'),
+      imageSource: [friends],
+      imageAlt: ['friends photo file'],
+      quality,
+    },
+  ];
+
   return (
     <>
       <div className={styles.group__element}>
@@ -55,165 +129,7 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
           <Image src={artist} width={width} height={height} alt="image for answer" priority />
         </div>
       </div>
-      <article className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>{t('containerFirstQuestion')}</h4>
-          <p className={styles.answer}>{t('containerFirstAnswer')}</p>
-        </div>
-
-        <Image
-          src={upload}
-          width={width}
-          height={height}
-          className={styles.image}
-          loading="lazy"
-          alt="picture.jpg"
-          quality={quality}
-        />
-      </article>
-      <article className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>{t('containerSecondQuestion')}</h4>
-
-          <p className={styles.answer}>{t('containerSecondAnswer')}</p>
-        </div>
-
-        <Image
-          src={authorButton}
-          width={width}
-          height={height}
-          className={styles.image}
-          loading="lazy"
-          alt="picture.jpg"
-          quality={quality}
-        />
-      </article>
-      <article className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>{t('containerThirdQuestion')}</h4>
-
-          <p className={styles.answer}>{t('containerThirdAnswer')}</p>
-        </div>
-
-        <Image
-          src={top}
-          width={width}
-          height={height}
-          className={styles.image}
-          loading="lazy"
-          alt="sign in photo file"
-          quality={quality}
-        />
-      </article>
-      <article className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>
-            {t('containerFourthQuestion')}
-            <br />
-          </h4>
-
-          <p className={styles.answer}>{t('containerFourthAnswer')}</p>
-        </div>
-
-        <Image
-          src={likes}
-          width={width}
-          height={height}
-          className={styles.image}
-          loading="lazy"
-          alt="picture.jpg"
-          quality={quality}
-        />
-      </article>
-      <article className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>{t('containerFifthQuestion')}</h4>
-
-          <p className={styles.answer}>{t('containerFifthAnswer')}</p>
-        </div>
-
-        <Image
-          src={minimalism}
-          width={width}
-          height={height}
-          className={styles.image}
-          loading="lazy"
-          alt="sign in photo file"
-          quality={quality}
-        />
-      </article>
-      <article className={styles.main__container__mode}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>{t('containerSixthQuestion')}</h4>
-
-          <p className={styles.answer}>{t('containerSixthAnswer')}</p>
-        </div>
-
-        <div className={styles.image}>
-          <div className={styles.modeImage}>
-            <Image src={light_mode} width={width} height={height} loading="lazy" alt="picture.jpg" quality={quality} />
-            <Image
-              src={dark_mode}
-              width={width}
-              height={height}
-              loading="lazy"
-              alt="dark mode photo file"
-              quality={quality}
-            />
-          </div>
-        </div>
-      </article>
-      <article className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>{t('containerSeventhQuestion')}</h4>
-
-          <p className={styles.answer}>{t('containerSeventhAnswer')}</p>
-        </div>
-
-        <Image
-          src={categories}
-          width={width}
-          height={height}
-          className={styles.image}
-          loading="lazy"
-          alt="categories photo file"
-          quality={quality}
-        />
-      </article>
-      <article className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>{t('containerEighthQuestion')}</h4>
-
-          <p className={styles.answer}>{t('containerEighthAnswer')}</p>
-        </div>
-
-        <Image
-          src={groups}
-          width={width}
-          height={height}
-          className={styles.image}
-          loading="lazy"
-          alt="groups photo file"
-          quality={quality}
-        />
-      </article>
-      <article className={styles.main__container}>
-        <div className={styles.container}>
-          <h4 className={styles.question}>{t('containerNinthQuestion')}</h4>
-
-          <p className={styles.answer}>{t('containerNinthAnswer')}</p>
-        </div>
-
-        <Image
-          src={friends}
-          width={width}
-          height={height}
-          className={styles.image}
-          loading="lazy"
-          alt="friends photo file"
-          quality={quality}
-        />
-      </article>
+      <HomeImageContainers containerData={containerData} width={width} height={height} />
     </>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Button, IconButton, Input } from '@chakra-ui/react';
 import {
   DialogActionTrigger,
@@ -72,7 +73,7 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
 
   return (
     <>
-      <img src={logo} alt={`${name} logo`} />
+      <Image src={logo} fill priority alt={`${name} logo`} />
 
       <DialogRoot
         lazyMount
@@ -105,9 +106,11 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
 
             <p style={{ color: '#bd0000' }}>{!newLogo && required && translated!.updateLogo!.validateRequired}</p>
             {!!newLogo && (
-              <img
+              <Image
                 src={`${backUrl}/${newLogo.name}`}
                 alt="preview new logo"
+                fill
+                priority
                 width={192}
                 height={192}
                 style={{
