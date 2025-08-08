@@ -1,3 +1,4 @@
+// next.config.js
 /** @type {import("next").NextConfig} */
 
 import { GenerateSW } from 'workbox-webpack-plugin';
@@ -71,22 +72,35 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/workbox-:hash.js',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/javascript; charset=utf-8',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
     ];
   },
   webpack: (config, { isServer, dev }) => {
     if (!isServer && !dev) {
-      const publicPath = path.join(process.cwd(), 'public');
+      config.output.publicPath = '/_next/';
 
-      config.output.publicPath = '/';
+      const publicFolderRoot = path.join(process.cwd(), 'public');
 
       config.plugins.push(
         new GenerateSW({
-          swDest: path.join(publicPath, 'sw.js'),
+          swDest: path.join(publicFolderRoot, 'sw.js'),
           clientsClaim: true,
           skipWaiting: true,
           include: [
-            /^static\//,
-            /^\/$/,
+            /^\/_next\/static\//,
+            '/',
             '/manifest.webmanifest',
             '/icon-192x192.png',
             '/icon-256x256.png',
@@ -96,8 +110,29 @@ const nextConfig = {
             '/apple-touch-icon.png',
             '/pfartists.png',
           ],
-          exclude: [/\.map$/, /asset-manifest\.json$/],
+          exclude: [
+            /\.map$/,
+            /asset-manifest\.json$/,
+            /\/_next\/static\/webpack\//,
+            /\/_next\/static\/chunks\/(pages|app)\/_app\.js/,
+            /\/_next\/static\/chunks\/pages\/_error\.js/,
+            /\/_next\/static\/chunks\/pages\/_document\.js/,
+          ],
           runtimeCaching: [
+            {
+              urlPattern: /^\/_next\/static\/chunks\/(pages|app)\/.*\.js$/,
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'next-js-chunks',
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 7 * 24 * 60 * 60,
+                },
+                cacheableResponse: {
+                  statuses: [0, 200],
+                },
+              },
+            },
             {
               urlPattern: ({ url }) => url.origin === self.location.origin,
               handler: 'NetworkFirst',
@@ -110,21 +145,10 @@ const nextConfig = {
               },
             },
             {
-              urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
+              urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif|apng|webm|mp4)$/,
               handler: 'CacheFirst',
               options: {
-                cacheName: 'images-cache',
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 30 * 24 * 60 * 60,
-                },
-              },
-            },
-            {
-              urlPattern: /\.(?:gif|webp|avif|apng|webm|mp4)$/,
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'images-cache',
+                cacheName: 'media-cache',
                 expiration: {
                   maxEntries: 50,
                   maxAgeSeconds: 30 * 24 * 60 * 60,
@@ -141,7 +165,6 @@ const nextConfig = {
                 },
               },
             },
-            // Przykład dla API: Network First (jeśli API często się zmienia)
             {
               urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
               handler: 'NetworkFirst',

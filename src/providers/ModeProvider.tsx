@@ -43,11 +43,7 @@ export const ModeProvider = ({ children, locale }: childrenType) => {
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      // Sprawdź, czy przeglądarka wspiera Service Workery
       window.addEventListener('load', () => {
-        // Zarejestruj po pełnym załadowaniu strony
-        // Pamiętaj, że swDest w Twoim next.config.js to 'public/sw.js'
-        // Service worker musi być dostępny z root'a domeny, więc ścieżka to '/sw.js'
         navigator.serviceWorker
           .register('/sw.js')
           .then((registration) => {

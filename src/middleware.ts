@@ -76,6 +76,6 @@ export const config = {
      * - favicon.png (favicon file)
      * Feel free to modify this pattern to include more paths.
      */
-    '/((?!_next/static|_next/image|sw.js|favicon.png|robots.txt|.well-known/*|.*\\.(?:svg|png|ico|json|webmanifest|jpg|jpeg|gif|webp|avif|heif|heic)$).*)',
+    '/((?!_next/static|_next/image|sw.js|workbox-.*\\.js|favicon.png|robots.txt|.well-known/*|.*\\.(?:svg|png|ico|json|webmanifest|jpg|jpeg|gif|webp|avif|heif|heic)$).*)',
   ],
 };

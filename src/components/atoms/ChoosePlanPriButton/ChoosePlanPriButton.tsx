@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@chakra-ui/react';
 
-
 import { useI18n } from 'locales/client';
 
 import styles from './ChoosePlanPriButton.module.scss';
@@ -17,8 +16,6 @@ export const ChoosePlanPriButton = ({ pseudonym }: { pseudonym?: string }) => {
   const t = useI18n();
 
   const changePlan = () => (!!pseudonym ? replace(`/account/${pseudonym}`) : setOpen(!open));
-
-  console.log(open)
   return (
     <>
       <Button colorScheme="whiteAlpha" className={styles.choosePlan} onClick={changePlan}>
