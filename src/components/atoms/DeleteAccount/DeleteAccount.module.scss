@@ -1,0 +1,16 @@
+.deleteDiv {
+  display: flex;
+  flex-wrap: wrap;
+  align-self: center;
+  justify-content: space-between;
+  margin: 0 0 7rem 0;
+
+  button {
+    width: fit-content;
+    color: var(--required);
+  }
+
+  > div {
+    margin-bottom: 0;
+  }
+}

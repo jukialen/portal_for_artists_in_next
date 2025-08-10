@@ -1,0 +1,40 @@
+.accordionRoot {
+	width: 95vw;
+	display: grid;
+	justify-content: space-around;
+	align-self: center;
+	margin: 2rem auto;
+
+	.accordionItem {
+		width: 26rem;
+		margin: 1rem 0;
+		background-color: transparent;
+		color: var(--text);
+
+		.accordionButton div svg {
+			width: 1.5rem;
+			height: 1.5rem;
+			text-align: inherit;
+			background-color: var(--primary);
+			border-radius: 1rem;
+
+			&:hover {
+				background-color: var(--primary);
+			}
+		}
+
+		.accordionBody {
+			font-size: 1rem;
+			margin-top: .5rem;
+			margin-right: 2rem;
+
+			a {
+				color: var(--third);
+
+				&:hover {
+					color: var(--primary);
+				}
+			}
+		}
+	}
+}

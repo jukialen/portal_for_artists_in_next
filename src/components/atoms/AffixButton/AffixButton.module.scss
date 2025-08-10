@@ -1,0 +1,28 @@
+.upBox {
+  position: sticky;
+}
+
+.up, .up__active {
+  width: 3rem;
+  height: 3rem;
+  position: absolute;
+  display: none;
+  right: 2rem;
+  bottom: 5rem;
+  font-size: 2rem;
+  padding: .5rem;
+  background-color: var(--primary);
+  color: var(--text);
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.up__active {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .up {
+    bottom: 3rem;
+  }
+}

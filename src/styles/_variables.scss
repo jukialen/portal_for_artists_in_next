@@ -1,0 +1,59 @@
+$light: (
+  primary: hsl(44, 100%, 71%),
+  primary__opacity: hsl(44, 100%, 71%, 0.5),
+  secondary: hsl(328, 100%, 66%),
+  secondary__opacity: hsl(328, 100%, 66%, 0.5),
+  third: hsl(223, 100%, 80%),
+  third__opacity: hsl(223, 100%, 80%, 0.5),
+  fourth: hsl(120, 100%, 75%),
+  hover: hsl(43, 72%, 52%),
+  active: hsl(339, 59%, 23%),
+  focus: hsl(128, 33%, 38%),
+  visited: hsl(41, 17%, 23%),
+  text: hsl(217, 22%, 21%),
+  background: hsl(0, 0%, 97%),
+  background__opacity: hsl(0, 0%, 97%, 0.9),
+  required: hsl(0, 100%, 37%),
+  google__provider: hsl(4, 65%, 55%),
+  spotify_provider: hsl(141, 63%, 42%),
+  discord_provider: hsl(234, 82%, 65%),
+  line_provider: hsl(132, 91%, 36%),
+  opacity: hsl(0, 0%, 100%, 0.36),
+);
+
+$dark: (
+  primary: hsl(41, 85%, 62%),
+  primary__opacity: hsl(41, 85%, 62%, 0.5),
+  secondary: hsl(328, 100%, 60%),
+  secondary__opacity: hsl(328, 100%, 60%, 0.5),
+  third: hsl(225, 68%, 63%),
+  third__opacity: hsl(225, 68%, 63%, 0.5),
+  fourth: hsl(120, 49%, 52%),
+  hover: hsl(43, 72%, 52%),
+  active: hsl(339, 59%, 23%),
+  focus: hsl(120, 100%, 75%),
+  visited: hsl(59, 100%, 50%),
+  text: hsl(0, 0%, 97%),
+  background: hsl(217, 22%, 21%),
+  background__opacity: hsla(0, 0%, 97%, 0.1),
+  required: hsl(0, 100%, 37%),
+  google__provider: hsl(4, 65%, 55%),
+  spotify_provider: hsl(141, 63%, 42%),
+  discord_provider: hsl(234, 82%, 65%),
+  line_provider: hsl(132, 91%, 36%),
+  opacity: hsl(0, 0%, 100%, 0.36),
+);
+
+@mixin theme-variables($map) {
+  @each $key, $value in $map {
+    --#{$key}: #{$value};
+  }
+}
+
+[data-theme='light'] {
+  @include theme-variables($light);
+}
+
+[data-theme='dark'] {
+  @include theme-variables($dark);
+}

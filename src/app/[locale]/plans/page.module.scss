@@ -1,0 +1,44 @@
+.container {
+  width: 100%;
+  min-height: 91vh;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+
+  .title {
+    margin: 2rem auto 1rem;
+    font-size: 2.5rem;
+  }
+
+  .subTitle {
+    opacity: .8;
+    margin: 0 auto 1rem;
+    text-align: center;
+  }
+
+  .plansFormats {
+    width: 95%;
+    margin: 4rem auto auto;
+    display: flex;
+    flex-direction: column;
+
+    .toFaq {
+      width: fit-content;
+      margin: 2rem auto;
+    }
+
+    .formats {
+      margin: 0 1rem 4rem;
+      font-size: .8rem;
+      opacity: .8;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 1300px) {
+      .plans__user {
+        flex-direction: row;
+      }
+    }
+  }
+}
+

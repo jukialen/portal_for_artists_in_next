@@ -1,0 +1,64 @@
+.profile {
+  display: grid;
+  justify-items: center;
+  margin: 0 auto;
+  font-size: 1.33rem;
+
+
+  .photo__profile {
+    width: 10rem;
+    height: 10rem;
+    position: relative;
+    margin: 2rem;
+    border: 0.05rem solid transparent;
+    border-radius: 2rem;
+    background-color: var(--secondary);
+
+    img {
+      border: 0.05rem solid transparent;
+      border-radius: 2rem;
+    }
+  }
+
+  .publicContainer {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 1rem auto 0;
+
+    .title {
+      margin: .5rem auto;
+      align-self: flex-start;
+    }
+
+    .input {
+      margin: 0 auto .5rem;
+      padding: 0.4rem 0.7rem;
+    }
+
+    .description {
+      max-width: 22rem;
+      padding: 0.4rem 0.7rem;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+  }
+
+  @media (min-width: 600px) {
+    .publicContainer {
+      width: 70%;
+      grid-template-columns: 8rem 1fr;
+
+      .title, .input, .description {
+        width: 100%;
+      }
+
+      .input, .description {
+        margin: .3rem .5rem;
+      }
+
+      .firstTitle {
+        align-self: center;
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+.showForm {
+  width: 10rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: .2rem solid var(--third);
+  border-radius: 10rem;
+  font-size: 1rem;
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+
+  .title, .title__error, .description, .description__error {
+    max-width: 90%;
+    margin: 1rem auto;
+    padding: 0.3rem 0.5rem;
+    border-color: var(--third);
+    color: var(--third);
+
+    &__error {
+      border-color: var(--required);
+    }
+  }
+
+  .title, .title__error {
+    margin: 2rem auto 1rem;
+  }
+
+  .addingButton {
+    margin: 1rem auto;
+    background: var(--third);
+    border-color: var(--third);
+    cursor: pointer;
+  }
+}
+
+
+.hiding {
+  display: none;
+}

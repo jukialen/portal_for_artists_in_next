@@ -1,0 +1,123 @@
+.main__container,
+.main__container__mode {
+  width: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 1rem auto;
+  font-size: 1.2rem;
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 28.125rem;
+    height: 20rem;
+    justify-content: space-evenly;
+    margin: 0 auto;
+    line-height: 1.8;
+    padding: 1rem;
+    background: var(--third);
+    border-radius: 2rem 2rem 0 0;
+    box-shadow:
+            10px 10px 19px var(--third__opacity),
+            -10px -10px 19px var(--third__opacity);
+
+    .question {
+      display: flex;
+      justify-content: flex-start;
+      padding: 1rem 0 0 1rem;
+    }
+
+    .answer {
+      display: flex;
+      justify-content: flex-end;
+      padding: 2rem 0 0 4rem;
+    }
+  }
+
+  .main__container__mode .modeImage {
+    border-radius: 0 0 2rem 2rem;
+  }
+
+  .image {
+    object-fit: fill;
+    border-radius: 0 0 2rem 2rem;
+    box-shadow:
+            10px 10px 19px var(--third__opacity),
+            -10px -10px 19px var(--third__opacity);
+
+    .modeImage {
+      display: flex;
+      flex-direction: column;
+      border-radius: inherit;
+      box-shadow: inherit;
+
+      img:nth-child(2) {
+        border-radius: inherit;
+      }
+    }
+  }
+}
+
+.main__container:last-of-type {
+  margin-bottom: 12.5rem;
+}
+
+@media (min-width: 824px) {
+  .main__container,
+  .main__container__mode {
+    font-size: 1.4rem;
+
+    .question {
+      font-size: inherit;
+    }
+  }
+}
+
+@media (min-width: 890px) {
+  .main__container,
+  .main__container__mode {
+    div.container {
+      border-radius: 2rem 0 0 2rem;
+    }
+
+    .image {
+      border-radius: 0 2rem 2rem 0;
+    }
+  }
+
+  .main__container__mode {
+    div.container {
+      max-width: 56.25rem;
+      padding: 3rem 7rem;
+      font-size: 1.4rem;
+      border-radius: 2rem 2rem 0 0;
+    }
+
+    .image .modeImage {
+      flex-direction: row;
+      border-radius: 0 0 2rem 2rem;
+
+      img:nth-child(1) {
+        border-bottom-left-radius: inherit;
+      }
+
+      img:nth-child(2) {
+        border-bottom-right-radius: inherit;
+      }
+    }
+  }
+
+  .main__container {
+    width: 100vw;
+    flex-direction: row;
+    margin: 1rem 0;
+
+    .container {
+      width: 100vw;
+      margin: 0;
+    }
+  }
+}

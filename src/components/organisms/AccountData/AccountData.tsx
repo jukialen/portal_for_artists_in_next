@@ -1,0 +1,316 @@
+'use client';
+
+import { useContext, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { createClient } from 'utils/supabase/clientCSR';
+import { Field, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { Button, Group, Input, Portal } from '@chakra-ui/react';
+import {
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverHeader,
+  PopoverRoot,
+  PopoverTrigger,
+} from 'components/ui/popover';
+
+import { useI18n, useScopedI18n } from 'locales/client';
+
+import { backUrl, darkMode } from 'constants/links';
+import { NewPlanType, ResetFormType, UserFormType, UserType } from 'types/global.types';
+
+import { ModeContext } from 'providers/ModeProvider';
+
+import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { FormError } from 'components/atoms/FormError/FormError';
+
+import styles from './AccountData.module.scss';
+
+const initialValues = { email: '' };
+
+// @ts-ignore
+const initialPlan: NewPlanType | string | number | readonly string[] | undefined = { newPlan: '' };
+
+const initialValuesPass = {
+  email: initialValues.email,
+  oldPassword: '',
+  newPassword: '',
+  repeatNewPassword: '',
+};
+
+type ResetPassword = {
+  email: string;
+  oldPassword: string;
+  newPassword: string;
+  repeatNewPassword: string;
+};
+
+type SubscriptionType = {
+  newPlan?: 'FREE' | 'PREMIUM' | 'GOLD';
+};
+
+type PlanType = NewPlanType | 'FREE' | 'PREMIUM' | 'GOLD';
+
+export const AccountData = ({ userData }: { userData: UserType }) => {
+  const t = useI18n();
+  const tAccount = useScopedI18n('Account');
+
+  const [valuesFields, setValuesFields] = useState('');
+  const [valuesFieldsPass, setValuesFieldsPass] = useState('');
+  const [subscriptionPlan, setSubscriptionPlan] = useState<PlanType>(userData?.plan || 'FREE');
+  const [open, setOpen] = useState(false);
+
+  const { isMode } = useContext(ModeContext);
+  const { push } = useRouter();
+
+  const items = ['FREE', 'PREMIUM', 'GOLD'];
+
+  const schemaEmail = Yup.object({
+    email: SchemaValidation().email,
+  });
+  const schemaValidation = Yup.object({
+    email: SchemaValidation().email,
+    oldPassword: SchemaValidation().password,
+    newPassword: SchemaValidation().password,
+    repeatNewPassword: SchemaValidation().password,
+  });
+  const schemaSubscription = Yup.object({
+    plan: SchemaValidation().tags,
+  });
+
+  const supabase = createClient();
+
+  const update__email = async ({ email }: UserFormType, { resetForm }: ResetFormType) => {
+    try {
+      resetForm(initialValues);
+      const { error } = await supabase.auth.updateUser({ email });
+      if (!!error) {
+        console.error(error);
+        setValuesFields(t('error'));
+        return;
+      }
+
+      const { error: er } = await supabase.from('Users').update({ email }).eq('id', userData?.id!);
+      if (!!er) {
+        console.error(er);
+        setValuesFields(t('error'));
+        return;
+      }
+      setValuesFields(t('Forgotten.success'));
+      push('/');
+    } catch (e) {
+      console.error(e);
+      setValuesFields(t('error'));
+    }
+  };
+
+  const newPassword = async (
+    { email, oldPassword, newPassword, repeatNewPassword }: ResetPassword,
+    { resetForm }: ResetFormType,
+  ) => {
+    try {
+      if (newPassword !== repeatNewPassword && oldPassword !== newPassword) {
+        setValuesFieldsPass(t('PasswordAccount.differentPasswords'));
+        return;
+      }
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${backUrl}/new-password`,
+      });
+
+      if (!!error) {
+        console.error(error);
+        return;
+      }
+
+      resetForm(initialValues);
+      setValuesFieldsPass(t('PasswordAccount.success'));
+    } catch (e) {
+      console.error(e);
+      setValuesFieldsPass(t('error'));
+    }
+  };
+
+  const changeSubscription = async ({ newPlan }: SubscriptionType, { resetForm }: ResetFormType) => {
+    try {
+      const { error } = await supabase.from('Users').update({ plan: newPlan }).eq('id', userData?.id!);
+
+      if (!!error) {
+        console.error(error);
+        return;
+      }
+
+      setSubscriptionPlan(newPlan!);
+      await resetForm(initialPlan);
+      setOpen(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return (
+    <article id="account__data" className={styles.account__data}>
+      <div className={styles.form}>
+        <h3 className={styles.title}>{tAccount('aData.subscription')}</h3>
+        <div className={styles.flow}>
+          <div className={styles.subscription}>{subscriptionPlan.toString()}</div>
+          <PopoverRoot
+            lazyMount
+            unmountOnExit
+            open={open}
+            onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
+            <PopoverTrigger asChild>
+              <Button className={`button ${styles.planButton}`} aria-label="Change subscription">
+                {tAccount('aData.changeButton')}
+              </Button>
+            </PopoverTrigger>
+            <Portal>
+              <PopoverContent
+                borderColor={isMode === darkMode ? 'gray.600' : 'gray.100'}
+                className={styles.subscription}>
+                <PopoverArrow
+                  boxShadow={
+                    isMode === darkMode
+                      ? '-1px -1px 1px 0 var(--chakra-colors-gray-600)'
+                      : '-1px -1px 1px 0 var(--chakra-colors-gray-100)'
+                  }
+                  className={styles.arrow}
+                />
+                <PopoverHeader>{tAccount('aData.Premium.header')}</PopoverHeader>
+                <PopoverBody>
+                  <div className={styles.selectSub}>
+                    <Formik
+                      // @ts-ignore
+                      initialValues={initialPlan}
+                      validationSchema={schemaSubscription}
+                      onSubmit={changeSubscription}>
+                      {({ values, handleChange, errors, touched }) => (
+                        <Form>
+                          <Field
+                            as="select"
+                            name="newPlan"
+                            // @ts-ignore
+                            value={values.newPlan}
+                            onChange={handleChange}
+                            focusBorderColor={touched.newPlan && !!errors.newPlan ? 'red.500' : 'blue.500'}
+                            className={touched.newPlan && !!errors.newPlan ? styles.req__error : ''}>
+                            <option role="option" value="">
+                              {t('Plans.choosePlan')}
+                            </option>
+                            {items.map((l, key) => (
+                              <option key={key} role="option" value={l}>
+                                {l}
+                              </option>
+                            ))}
+                          </Field>
+                          {touched.newPlan && !!errors.newPlan && (
+                            <p className={styles.selectSub__error}>{tAccount('aData.Premium.select__error')}</p>
+                          )}
+                          <p className={styles.message}>
+                            {tAccount('aData.Premium.body')}
+                            <Link href="/plans">{tAccount('aData.Premium.bodyLink')}</Link>
+                            {tAccount('aData.Premium.bodyDot')}
+                          </p>
+                          <Group className={styles.buttonContainer}>
+                            <Button
+                              variant="ghost"
+                              _hover={{ backgroundColor: isMode === darkMode ? 'gray.600' : 'gray.300' }}
+                              onClick={() => setOpen(false)}>
+                              {t('cancel')}
+                            </Button>
+                            <Button type="submit" colorScheme="blue">
+                              {tAccount('aData.Premium.update')}
+                            </Button>
+                          </Group>
+                        </Form>
+                      )}
+                    </Formik>
+                  </div>
+                </PopoverBody>
+              </PopoverContent>
+            </Portal>
+          </PopoverRoot>
+        </div>
+      </div>
+
+      {userData?.provider === 'email' && (
+        <>
+          <Formik initialValues={initialValues} validationSchema={schemaEmail} onSubmit={update__email}>
+            {({ values, handleChange, errors, touched }) => (
+              <Form className={styles.form}>
+                <h3 className={styles.title}>{t('NavForm.email')}</h3>
+                <Input
+                  name="email"
+                  type="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  placeholder={userData?.email}
+                  className={touched.email && !!errors.email ? styles.input__error : styles.input}
+                />
+                <FormError nameError="email" />
+                <button className={`${styles.button} button`} type="submit" aria-label="E-mail address change">
+                  {tAccount('aData.changeEmail')}
+                </button>
+                {!!valuesFields && <Alerts valueFields={valuesFields} />}
+              </Form>
+            )}
+          </Formik>
+
+          <Formik initialValues={initialValuesPass} validationSchema={schemaValidation} onSubmit={newPassword}>
+            {({ values, handleChange, errors, touched }) => (
+              <Form className={styles.form}>
+                <h3 className={styles.title}>{t('NavForm.password')}</h3>
+                <Input
+                  name="email"
+                  type="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  placeholder={userData?.email}
+                  className={touched.email && !!errors.email ? styles.input__error : styles.input}
+                />
+                <FormError nameError="email" />
+                <Input
+                  name="oldPassword"
+                  type="password"
+                  value={values.oldPassword}
+                  onChange={handleChange}
+                  placeholder={tAccount('aData.oldPassword')}
+                  className={touched.oldPassword && !!errors.oldPassword ? styles.input__error : styles.input}
+                />
+                <FormError nameError="oldPassword" />
+                <Input
+                  name="newPassword"
+                  type="password"
+                  value={values.newPassword}
+                  onChange={handleChange}
+                  placeholder={tAccount('aData.newPassword')}
+                  className={touched.newPassword && !!errors.newPassword ? styles.input__error : styles.input}
+                />
+                <FormError nameError="newPassword" />
+                <Input
+                  name="repeatNewPassword"
+                  type="password"
+                  value={values.repeatNewPassword}
+                  onChange={handleChange}
+                  placeholder={tAccount('aData.againNewPassword')}
+                  className={
+                    touched.repeatNewPassword && !!errors.repeatNewPassword ? styles.input__error : styles.input
+                  }
+                />
+                <FormError nameError="repeatNewPassword" />
+                <button className="button" type="submit" aria-label={t('PasswordAccount.buttonAria')}>
+                  {tAccount('aData.changePassword')}
+                </button>
+
+                {!!valuesFieldsPass && <Alerts valueFields={valuesFieldsPass} />}
+              </Form>
+            )}
+          </Formik>
+        </>
+      )}
+    </article>
+  );
+};

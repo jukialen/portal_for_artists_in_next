@@ -1,0 +1,44 @@
+.first__data {
+  min-height: 73vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .title {
+    margin-bottom: 2rem;
+  }
+
+  .inputForm,
+  .inputForm__error {
+    width: 17rem;
+    margin: 0.5rem auto 1.2rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 1rem;
+    color: var(--third);
+
+    &::file-selector-button {
+      height: 98%;
+      padding: 0 0.5rem;
+      font-weight: bold;
+      border: thin solid transparent;
+      border-radius: 0.5rem;
+      background-color: var(--third);
+      color: var(--text);
+    }
+  }
+
+  .inputForm {
+    border-color: var(--third);
+  }
+
+  .inputForm__error {
+    border-color: var(--required);
+  }
+
+  .submit__button {
+    width: 11rem;
+    font-size: 1rem;
+    margin: 0.8rem auto;
+  }
+}

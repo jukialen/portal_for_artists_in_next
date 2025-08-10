@@ -1,0 +1,52 @@
+.nav {
+  height: 90%;
+  font-size: 1.5rem;
+  border-radius: 1rem;
+
+  .list {
+    display: flex;
+    width: 17rem;
+    height: 100%;
+
+    .menu {
+      width: inherit;
+      height: inherit;
+      display: flex;
+
+      a {
+        width: 100%;
+        height: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        border-radius: 1rem;
+
+
+        &:hover {
+          background-color: var(--hover);
+          color: var(--background);
+        }
+
+        &:active {
+          background-color: var(--active);
+        }
+
+        &:focus {
+          background-color: var(--focus);
+        }
+      }
+    }
+  }
+
+  &__jp {
+    font-size: 1.3rem;
+  }
+
+  &__jp .list .menu {
+    width: fit-content;
+    margin: 0 .5rem;
+    padding: 0.1rem;
+  }
+}
+

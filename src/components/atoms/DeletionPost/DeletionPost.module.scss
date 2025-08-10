@@ -1,0 +1,28 @@
+.icon {
+  border: .1rem solid transparent;
+  background-color: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.container {
+  position: absolute;
+  top: 4.5rem;
+  right: 1rem;
+  display: none;
+
+  > button {
+    width: 9rem;
+    cursor: pointer;
+  }
+
+  .alert {
+    position: absolute;
+    top: 6.5rem;
+    right: 0;
+  }
+}
+
+.container__active {
+  display: flex;
+}

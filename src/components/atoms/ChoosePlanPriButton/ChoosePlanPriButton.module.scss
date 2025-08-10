@@ -1,0 +1,75 @@
+button.choosePlan {
+  width: 100%;
+  border-radius: 0.5rem;
+  background-color: var(--opacity);
+  cursor: pointer;
+
+  svg {
+    color: inherit;
+  }
+
+  &:hover {
+    background-color: var(--hover);
+  }
+
+  &:focus {
+    background-color: var(--focus);
+    color: var(--background);
+  }
+
+  &:active {
+    background-color: var(--active);
+    color: var(--text);
+  }
+}
+
+.openButton {
+  visibility: unset;
+  position: absolute;
+  bottom: 3rem;
+  width: 100%;
+  height: 6.5rem;
+  background: transparent;
+
+  button {
+    &:hover {
+      background-color: var(--hover);
+    }
+
+    &:focus {
+      background-color: var(--focus);
+      color: var(--background);
+    }
+
+    &:active {
+      background-color: var(--active);
+      color: var(--text);
+    }
+  }
+}
+
+.hideButton {
+  visibility: hidden;
+  display: none;
+}
+
+.noUsersPlan {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 1rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  margin: 0 auto;
+  padding: 0.5rem 0;
+  font-size: 1.2rem;
+  box-shadow:
+    10px 10px 19px var(--opacity),
+    -10px -10px 19px var(--opacity);
+
+  button {
+    width: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+}

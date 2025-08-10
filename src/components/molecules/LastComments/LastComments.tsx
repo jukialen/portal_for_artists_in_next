@@ -1,0 +1,79 @@
+import { useEffect, useState } from 'react';
+
+import { lastComments } from 'utils/comments';
+
+import { LastCommentType } from 'types/global.types';
+
+import { DCProvider } from 'providers/DeleteCommentProvider';
+
+import { LastComment } from 'components/atoms/LastComment/LastComment';
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
+
+type LastCommentsType = { subCommentId: string; roleId: string };
+
+export const LastComments = ({ subCommentId, roleId }: LastCommentsType) => {
+  const [lastCommentsArray, setLastCommentsArray] = useState<LastCommentType[]>([]);
+  const [lastVisible, setLastVisible] = useState<string | null>(null);
+  let [i, setI] = useState(1);
+
+  const maxItems = 5;
+
+  useEffect(() => {
+    lastComments(subCommentId, maxItems, roleId, 'first').then((t) => {
+      setLastCommentsArray(t!);
+      !!t && t.length === maxItems && setLastVisible(t[t.length - 1].createdAt!);
+    });
+  }, [roleId, subCommentId]);
+
+  const nextShowingComments = async () => {
+    lastVisible !== '' &&
+      lastComments(subCommentId, maxItems, roleId, 'again').then((t) => {
+        setLastCommentsArray(t!);
+        if (!!t && t.length === maxItems) {
+          setLastVisible(t[t.length - 1].createdAt!);
+          setI(++i);
+        }
+      });
+  };
+
+  return (
+    <>
+      {lastCommentsArray.length > 0 &&
+        lastCommentsArray.map(
+          (
+            {
+              lastCommentId,
+              subCommentId,
+              content,
+              authorName,
+              authorProfilePhoto,
+              authorId,
+              role,
+              roleId,
+              date,
+              liked,
+              likes,
+            }: LastCommentType,
+            index,
+          ) => (
+            <DCProvider key={index}>
+              <LastComment
+                lastCommentId={lastCommentId}
+                content={content}
+                authorName={authorName}
+                authorProfilePhoto={authorProfilePhoto}
+                role={role}
+                roleId={roleId}
+                authorId={authorId}
+                subCommentId={subCommentId}
+                liked={liked}
+                likes={likes}
+                date={date}
+              />
+            </DCProvider>
+          ),
+        )}
+      {!!lastVisible && lastCommentsArray.length === maxItems * i && <MoreButton nextElements={nextShowingComments} />}
+    </>
+  );
+};

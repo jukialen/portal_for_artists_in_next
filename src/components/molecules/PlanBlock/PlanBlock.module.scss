@@ -1,0 +1,77 @@
+.box {
+  max-width: 22rem;
+  min-height: 32rem;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.5%;
+  border-radius: 1rem;
+  background-color: var(--primary);
+
+  &__title {
+    color: black;
+    margin: 2rem auto;
+  }
+
+  &__price {
+    height: 4.6rem;
+    display: flex;
+    margin: 0 auto 2rem;
+    color: black;
+
+    .priceCount,
+    .priceTime {
+      font-size: 4rem;
+      color: inherit;
+
+      &:nth-of-type(2) {
+        width: inherit;
+        display: flex;
+        align-items: flex-end;
+        margin-left: 0.25rem;
+        font-size: 1rem;
+        opacity: 0.8;
+        padding-bottom: 1rem;
+      }
+    }
+  }
+
+  .list {
+    width: 99%;
+    margin: 0 auto;
+
+    ul li {
+      display: flex;
+      align-items: center;
+      margin: 1rem 0.6rem;
+
+      svg.icon {
+        margin: 0 0.8rem 0 0.3rem;
+        font-size: 1.4rem;
+        color: var(--focus);
+      }
+
+      p {
+        margin: auto 0;
+        font-size: 1rem;
+        color: black;
+      }
+    }
+  }
+
+  &:nth-of-type(2) {
+    background-color: var(--secondary);
+  }
+
+  .choosePlan,
+  .chooseSecondPlan {
+    margin: 2.8rem auto 2rem;
+    position: relative;
+    font-size: 2rem;
+  }
+
+  &:first-of-type {
+    .choosePlan {
+      margin-top: 5.4rem;
+    }
+  }
+}

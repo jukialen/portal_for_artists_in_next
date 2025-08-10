@@ -1,0 +1,40 @@
+.container__form {
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .title {
+    margin-bottom: 2rem;
+  }
+
+  .field,
+  .field__error {
+    width: 20rem;
+    margin: 0.5rem auto;
+    color: var(--third);
+  }
+
+  .field__error {
+    border-color: var(--required);
+  }
+
+  .input {
+    width: 20rem;
+    padding: 0.3rem;
+    border-color: transparent;
+  }
+
+  .submit__button {
+    width: 11rem;
+    font-size: 1rem;
+    margin: 0.8rem auto;
+    background-color: transparent;
+    border-radius: 2rem;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

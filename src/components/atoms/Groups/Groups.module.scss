@@ -1,0 +1,71 @@
+.groups {
+  margin-bottom: 2rem;
+
+  .title {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 3rem;
+    align-items: center;
+    justify-items: center;
+    margin-bottom: 1rem;
+    cursor: pointer;
+
+    p, .title__others {
+      width: 100%;
+      padding-left: 1rem;
+    }
+  }
+
+  p.title__jp {
+    padding-left: 0;
+    font-size: 1.3rem;
+  }
+
+  .groups__container {
+    display: block;
+
+    .listButton {
+      width: 80%;
+      font-size: 1rem;
+      background-color: var(--secondary);
+      margin: 1rem auto;
+    }
+
+    .listButton {
+      display: flex;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--text);
+
+      &:hover {
+        background-color: var(--hover);
+      }
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      margin: .5rem;
+
+      img {
+        width: 2.375rem;
+        height: 2.375rem;
+        border-radius: .5rem;
+      }
+
+      &__item {
+        display: inline-flex;
+        padding-left: 0.6rem;
+      }
+    }
+
+    .no__groups {
+      font-size: 1rem;
+      text-align: center;
+    }
+  }
+}
+
+.hiddenGroups {
+  display: none;
+}
