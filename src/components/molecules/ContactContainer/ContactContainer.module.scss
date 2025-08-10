@@ -1,4 +1,5 @@
-.site, .site__without__footer {
+.site,
+.site__without__footer {
   width: 100%;
   min-height: calc(100vh - 3.3rem);
   display: flex;
@@ -16,7 +17,6 @@
     margin: 2rem auto 3rem;
     gap: 2rem;
 
-
     .welcomeContainer {
       width: 100%;
       max-width: 35rem;
@@ -33,6 +33,82 @@
 
       p:nth-of-type(2) {
         margin-top: 1rem;
+      }
+    }
+
+    .form {
+      width: 100%;
+      max-width: 29rem;
+      padding: 0 1rem;
+
+      select.tags,
+      input,
+      textarea {
+        &:hover {
+          border-color: var(--third__opacity);
+        }
+      }
+
+      input::placeholder,
+      textarea::placeholder {
+        color: var(--third);
+      }
+
+      input,
+      textarea,
+      button {
+        margin: 1rem 0;
+        border-color: var(--third);
+        color: var(--third);
+      }
+
+      .select {
+        margin: 1rem 0;
+        color: var(--third);
+
+        .tags,
+        .tags__error {
+          font-size: 1rem;
+          border-color: var(--third);
+          color: var(--third);
+          background-color: var(--background);
+
+          select {
+            border-color: var(--third);
+          }
+
+          div svg {
+            color: var(--third);
+          }
+
+          &__error {
+            border-color: var(--required);
+          }
+
+          option {
+            color: inherit;
+            background-color: var(--background);
+          }
+        }
+      }
+
+      .titleInput__error,
+      .message_error {
+        border-color: var(--required);
+      }
+
+      .button {
+        width: 6rem;
+        padding: 0.5rem 0;
+        border-radius: 0.5rem;
+        background-color: transparent;
+        cursor: pointer;
+        margin-left: 0.25rem;
+
+        &:hover {
+          background-color: var(--third);
+          color: var(--text);
+        }
       }
     }
 
