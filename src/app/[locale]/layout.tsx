@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Viewport } from 'next';
-import Script from 'next/script';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 import { getStaticParams } from 'locales/server';
 
@@ -47,21 +47,13 @@ export default async function RootLayout({ children, params }: ChildrenType) {
 
   const user = await getUserData();
 
-  const cookiesYesLink = `https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js`;
+  // const cookiesYesLink = `https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js`;
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      {process.env.NODE_ENV === 'production' && <Script src={cookiesYesLink} strategy="afterInteractive" />}
+      {!!GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
 
       <body>
-        {process.env.NODE_ENV === 'production' && (
-          <noscript
-            dangerouslySetInnerHTML={{
-              __html: `<iframe src="${cookiesYesLink}" height="0" width="0" style="display: none; visibility: hidden;"></iframe>`,
-            }}
-          />
-        )}
-
         <ModeProvider locale={locale}>
           <div className={styles.whole__page}>
             {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
