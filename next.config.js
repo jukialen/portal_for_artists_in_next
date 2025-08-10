@@ -109,6 +109,8 @@ const nextConfig = {
             '/maskable_icon-512x512.png',
             '/apple-touch-icon.png',
             '/pfartists.png',
+            '/desktop-screenshot.png',
+            '/mobile-screenshot.png',
           ],
           exclude: [
             /\.map$/,
