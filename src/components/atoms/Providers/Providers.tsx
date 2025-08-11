@@ -34,9 +34,13 @@ export const Providers = () => {
         },
       });
 
-      (!!error || !data) && setValuesFields(t('unknownError'));
-      permanentRedirect('/app');
+      if (!!error || !data) {
+        setValuesFields(t('unknownError'));
+      }
+      console.log(valuesFields);
+      // permanentRedirect('/app');
     } catch (e) {
+      console.log(valuesFields);
       setValuesFields(t('unknownError'));
     }
   };

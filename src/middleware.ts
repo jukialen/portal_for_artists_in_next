@@ -19,9 +19,7 @@ const onlyForGuests = ['/', '/signin', '/signup', '/forgotten', '/new-user'];
 
 export async function middleware(req: NextRequest) {
   let response = NextResponse.next({
-    request: {
-      headers: new Headers(req.headers), // Zachowujemy oryginalne nagłówki
-    },
+    request: { headers: new Headers(req.headers) },
   });
 
   const supabase = createServerClient(projectId!, anonKey!, {
