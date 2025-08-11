@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     if (requestedUrl.hostname === appOriginUrl.hostname && requestedUrl.protocol === appOriginUrl.protocol) {
       redirectPath = requestedUrl.pathname + requestedUrl.search + requestedUrl.hash;
     } else {
-      return NextResponse.redirect(`${origin}/auth/auth-code-error`); // lub inny bezpieczny fallback, np. '/dashboard'
+      return NextResponse.redirect(`${origin}/auth/auth-code-error`);
     }
   } catch (e) {
     return NextResponse.redirect(`${origin}/auth/auth-code-error`);

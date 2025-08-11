@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
-import { createServer, Locale } from 'utils/supabase/clientSSR';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { PostsType } from 'types/global.types';
 

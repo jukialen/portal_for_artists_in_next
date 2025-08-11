@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServer, Locale } from 'utils/supabase/clientSSR';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { selectFiles } from 'constants/selects';
 import { FileType, Tags } from 'types/global.types';

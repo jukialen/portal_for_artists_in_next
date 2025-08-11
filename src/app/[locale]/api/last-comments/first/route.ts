@@ -4,7 +4,7 @@ import { LastCommentType } from 'types/global.types';
 
 import { likeList } from 'utils/likes';
 import { giveRole } from 'utils/roles';
-import { createServer, Locale } from 'utils/supabase/clientSSR';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';

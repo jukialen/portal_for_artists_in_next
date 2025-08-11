@@ -6,7 +6,7 @@ import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { likeList } from 'utils/likes';
-import { createServer, Locale } from 'utils/supabase/clientSSR';
+import { createServer } from 'utils/supabase/clientSSR';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

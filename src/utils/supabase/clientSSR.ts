@@ -3,9 +3,6 @@ import { createServerClient } from '@supabase/ssr';
 
 import { anonKey, projectId } from 'constants/links';
 import { Database } from 'types/database.types';
-import { LangType } from 'types/global.types';
-
-import { getCurrentLocale } from 'locales/server';
 
 export async function createServer() {
   const cookieStore = await cookies();
@@ -27,7 +24,3 @@ export async function createServer() {
     },
   });
 }
-
-const locales = async (): Promise<LangType> => await getCurrentLocale();
-
-export const Locale = locales().then((l) => l);

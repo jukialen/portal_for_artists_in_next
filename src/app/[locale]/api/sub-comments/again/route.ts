@@ -4,7 +4,7 @@ import { RoleType, SubCommentType } from 'types/global.types';
 
 import { groupRole } from 'utils/roles';
 import { likeList } from 'utils/likes';
-import { createServer, Locale } from 'utils/supabase/clientSSR';
+import { createServer } from 'utils/supabase/clientSSR';
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';

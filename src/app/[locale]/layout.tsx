@@ -47,8 +47,6 @@ export default async function RootLayout({ children, params }: ChildrenType) {
 
   const user = await getUserData();
 
-  // const cookiesYesLink = `https://cdn-cookieyes.com/client_data/${GTM_ID}/script.js`;
-
   return (
     <html lang={locale} suppressHydrationWarning>
       {!!GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
