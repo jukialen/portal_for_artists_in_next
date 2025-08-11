@@ -1,13 +1,14 @@
 'use client';
 
 import { createContext, ReactNode, useEffect, useState } from 'react';
+import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+import { ThemeProvider } from 'next-themes';
 
 import { I18nProviderClient } from 'locales/client';
 
 import { LangType } from 'types/global.types';
 
 import { AffixButton } from 'components/atoms/AffixButton/AffixButton';
-import Provider from 'components/ui/provider';
 
 type childrenType = {
   children: ReactNode;
@@ -37,6 +38,7 @@ export const ModeProvider = ({ children, locale }: childrenType) => {
     const mode: ModeType | null = isMode ?? defaultTheme();
     setMode(mode!);
     localStorage.setItem('chakra-ui-color-mode', mode!);
+    document.documentElement.setAttribute('data-mode', mode!);
     document.documentElement.setAttribute('data-theme', mode!);
     localStorage.setItem('mode', mode!);
   }, [isMode]);
@@ -47,10 +49,10 @@ export const ModeProvider = ({ children, locale }: childrenType) => {
         navigator.serviceWorker
           .register('/sw.js')
           .then((registration) => {
-            console.log('Service Worker zarejestrowany pomyślnie:', registration.scope);
+            console.log('Service Worker successfully registered:', registration.scope);
           })
           .catch((error) => {
-            console.error('Błąd rejestracji Service Workera:', error);
+            console.error('Service Worker registration error:', error);
           });
       });
     }
@@ -62,17 +64,25 @@ export const ModeProvider = ({ children, locale }: childrenType) => {
   };
 
   return (
-    <Provider>
-      <I18nProviderClient locale={locale}>
-        <ModeContext.Provider
-          value={{
-            isMode: isMode!,
-            changeMode,
-          }}>
-          {children}
-          <AffixButton />
-        </ModeContext.Provider>
-      </I18nProviderClient>
-    </Provider>
+    <ChakraProvider value={defaultSystem}>
+      <ThemeProvider
+        attribute="data-mode"
+        disableTransitionOnChange
+        enableSystem={false}
+        defaultTheme="dark"
+        themes={['light', 'dark']}
+        enableColorScheme={false}>
+        <I18nProviderClient locale={locale}>
+          <ModeContext.Provider
+            value={{
+              isMode: isMode!,
+              changeMode,
+            }}>
+            {children}
+            <AffixButton />
+          </ModeContext.Provider>
+        </I18nProviderClient>
+      </ThemeProvider>
+    </ChakraProvider>
   );
 };
