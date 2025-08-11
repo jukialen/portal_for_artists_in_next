@@ -5,6 +5,22 @@ import { GenerateSW } from 'workbox-webpack-plugin';
 import path from 'path';
 import { projectUrlWithOutPrefix } from './src/constants/links.js';
 
+const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    img-src 'self' blob: data: https://www.google.com https://www.gstatic.com;
+    font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    connect-src 'self' https://www.google.com https://www.gstatic.com https://www.google.com/recaptcha/ https://recaptcha.google.com/;
+    frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/;
+    worker-src 'self'; 
+    child-src 'self';
+`;
+
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -52,6 +68,10 @@ const nextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: cspHeader.replace(/\n/g, ''),
           },
         ],
       },
