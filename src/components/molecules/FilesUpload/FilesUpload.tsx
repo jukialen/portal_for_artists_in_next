@@ -21,7 +21,7 @@ import { ProgressValueText, ProgressRoot } from 'components/ui/progress';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { access_token, darkMode, projectId } from 'constants/links';
+import { access_token, darkMode, projectUrl } from 'constants/links';
 import { Tags, EventType, ResetFormType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
@@ -114,7 +114,7 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
       ) {
         return new Promise<void>(async (resolve, reject) => {
           let upload = new Upload(file, {
-            endpoint: `https://${projectId}.supabase.co/storage/v1/upload/resumable`,
+            endpoint: `https://${projectUrl}.supabase.co/storage/v1/upload/resumable`,
             retryDelays: [0, 3000, 5000, 10000, 20000],
             headers: { authorization: `Bearer ${access_token}` },
             uploadDataDuringCreation: true,

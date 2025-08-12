@@ -1,13 +1,13 @@
 import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
 
-import { anonKey, projectId } from 'constants/links';
+import { anonKey, projectUrl } from 'constants/links';
 import { Database } from 'types/database.types';
 
 export async function createServer() {
   const cookieStore = await cookies();
 
-  return createServerClient<Database>(projectId!, anonKey!, {
+  return createServerClient<Database>(projectUrl!, anonKey!, {
     cookies: {
       getAll() {
         return cookieStore.getAll();

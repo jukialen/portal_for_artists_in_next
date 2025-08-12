@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { createI18nMiddleware } from 'next-international/middleware';
 
-import { anonKey, projectId } from 'constants/links';
+import { anonKey, projectUrl } from 'constants/links';
 
 const locales = ['en', 'pl', 'jp'];
 const defaultLocale = 'en';
@@ -22,7 +22,7 @@ export async function middleware(req: NextRequest) {
     request: { headers: new Headers(req.headers) },
   });
 
-  const supabase = createServerClient(projectId!, anonKey!, {
+  const supabase = createServerClient(projectUrl!, anonKey!, {
     cookies: {
       getAll() {
         return req.cookies.getAll();
