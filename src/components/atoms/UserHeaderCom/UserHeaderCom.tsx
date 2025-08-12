@@ -207,7 +207,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
         onClick={() => push('/app')}
         className={styles.menu_buttons}
         aria-label="this button redirect to groups's section">
-        <MdOutlineHome />
+        <MdOutlineHome className={styles.buttons} />
         <p>{headers.home}</p>
       </Button>
       <div className={styles.buttons}>
@@ -216,7 +216,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           colorScheme="yellow"
           className={styles.menu_buttons}
           aria-label="button for groups">
-          <MdOutlineGroups />
+          <MdOutlineGroups className={styles.buttons} />
           <p>{headers.groups}</p>
         </Button>
         <Button
@@ -233,7 +233,8 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
               stroke="#000000"
               strokeWidth="2"
               strokeLinecap="round"
-              strokeLinejoin="round">
+              strokeLinejoin="round"
+              className={styles.buttons}>
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
               <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -247,7 +248,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           className={styles.menu_buttons}
           onClick={toggleSearch}
           aria-label="this button shows searching">
-          <IoSearch />
+          <IoSearch className={styles.buttons} />
           <p>{headers.search}</p>
         </Button>
       </div>
