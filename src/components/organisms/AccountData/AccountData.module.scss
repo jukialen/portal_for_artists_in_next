@@ -25,16 +25,26 @@
       align-items: center;
       justify-content: space-between;
       font-size: 1.4rem;
+
+      .subscription {
+        color: var(--text);
+      }
+
+      .button {
+        color: var(--text);
+      }
     }
 
-    .input, .input__error {
+    .input,
+    .input__error {
       max-width: 17.5rem;
       height: 2.5rem;
-      margin: .5rem auto;
+      margin: 0.5rem auto;
       border-radius: 1rem;
+      color: var(--text);
 
-      &:placeholder-shown {
-        color: var(--text);
+      &::placeholder {
+        color: var(--text__opacity);
       }
     }
 
@@ -52,42 +62,41 @@
   }
 }
 
-section.subscription {
+div.subscriptionForm {
   max-width: inherit;
   right: 1rem;
+  background-color: var(--background);
+  color: var(--text);
+  box-shadow:
+    0px -6px 1.4rem var(--third),
+    0px 6px 1.4rem var(--third);
+
+  div.arrow div {
+    background: inherit !important;
+    box-shadow: -1px -1px 1px 0 var(--background__opacity);
+  }
 
   header {
     border-bottom: transparent;
+    color: var(--text);
   }
 
   &:focus {
-    box-shadow: 0 0 0 3px transparent
-  }
-
-  button {
-    cursor: pointer;
+    box-shadow: 0 0 0 3px transparent;
   }
 
   .selectSub {
-    margin-bottom: 1rem;
+    margin: 1rem;
 
     select {
-      border-color: var(--third);
+      width: 100%;
+      color: var(--text);
+      background: var(--background);
+      border: 1px solid var(--text);
+      padding: 0.5rem;
+      border-radius: 0.5rem;
       cursor: pointer;
-    }
 
-    &__error {
-      color: var(--required);
-      margin-bottom: .5rem;
-    }
-
-    .req__error {
-      border-color: var(--required);
-    }
-  }
-
-  .selectSub {
-    select {
       option {
         background-color: var(--background);
       }
@@ -96,58 +105,55 @@ section.subscription {
     div {
       color: var(--text);
     }
+
+    &__error {
+      color: var(--required);
+      margin-bottom: 0.5rem;
+    }
+
+    .req__error {
+      border-color: var(--required);
+
+      &:focus {
+        border-color: inherit;
+      }
+    }
   }
 
   .message {
     margin: 1rem 0 2rem;
+    color: var(--text);
 
     a {
-      text-decoration: underline var(--third);
+      text-decoration: underline;
     }
   }
 
   .buttonContainer {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: -.5rem;
+    margin-bottom: 0.5rem;
+
     button {
-      border-color: transparent;
+      background: var(--background__opacity);
+
+      &:first-child {
+        color: var(--text);
+      }
+
+      &:last-child {
+        color: var(--primary);
+      }
     }
   }
 
-  footer {
-    display: flex;
-    justify-content: flex-end;
-
-    button {
-      border-color: transparent;
-      color: var(--text);
-    }
-  }
-}
-
-section.subscription {
-  background-color: var(--background);
-
-  .arrow {
-    background-color: var(--background) !important;
-  }
-
-  header {
-    color: var(--text);
-  }
-
-  .message, .message a {
-    color: var(--text);
-  }
-
-  footer button:first-of-type {
-    color: var(--text);
+  @media (min-width: 768px) {
+    right: 0;
   }
 }
 
 @media (min-width: 768px) {
-  section.subscription {
+  .subscriptionForm {
     right: 0;
   }
 }

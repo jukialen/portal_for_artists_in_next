@@ -18,22 +18,12 @@
   background-color: transparent;
   cursor: pointer;
 
-  &:hover {
-    background-color: var(--hover);
-  }
-
   &:active {
-    background-color: var(--active);
-
     p, svg, .buttons {
       color: var(--text);
       fill: var(--text);
       stroke: var(--text);
     }
-  }
-
-  &:focus {
-    background-color: var(--focus);
   }
 
   svg, span#avatar {

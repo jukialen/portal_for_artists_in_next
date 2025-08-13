@@ -3,14 +3,66 @@
   flex-wrap: wrap;
   align-self: center;
   justify-content: space-between;
-  margin: 0 0 7rem 0;
+  margin: 3rem 0 7rem;
 
-  button {
+  .button {
     width: fit-content;
+    margin: 0.4rem;
+    border: 1px solid var(--required);
     color: var(--required);
+
+    svg {
+      color: inherit;
+
+      path {
+        fill: var(--required);
+      }
+    }
+
+    &:hover {
+      background-color: var(--required);
+      border-color: var(--required);
+      color: var(--text);
+
+     svg path {
+        fill: var(--text);
+      }
+    }
+  }
+}
+
+.content {
+  margin: auto 1rem;
+  background-color: var(--background);
+
+  .header {
+    margin: 1rem;
+    padding: 1rem;
   }
 
-  > div {
-    margin-bottom: 0;
+  .body {
+    margin: 0 2rem 1rem;
+    font-size: 1.2rem;
+    color: var(--text);
+  }
+
+  .footer {
+    padding: 1rem;
+
+    button {
+      width: 5.5rem;
+      height: 2.5rem;
+      border-radius: .5rem;
+
+      &:last-child {
+        border: 1px solid var(--secondary);
+
+        &:hover {
+          background-color: var(--required);
+          border-color: var(--required);
+          color: var(--text);
+        }
+      }
+    }
   }
 }

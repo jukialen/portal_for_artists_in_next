@@ -6,7 +6,9 @@ import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Input, NativeSelectField, NativeSelectRoot, Textarea } from '@chakra-ui/react';
+import { Input } from '@chakra-ui/react/input';
+import { NativeSelectRoot, NativeSelectField } from '@chakra-ui/react/native-select';
+import { Textarea } from '@chakra-ui/react/textarea';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -15,7 +17,6 @@ import { initialValuesForContact } from 'constants/objects';
 import { ResetFormType, UserType } from 'types/global.types';
 
 import { FormError } from 'components/atoms/FormError/FormError';
-import { Button } from 'components/ui/button';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './ContactContainer.module.scss';
@@ -113,14 +114,9 @@ export const ContactContainer = ({ userData }: ContactContainerType) => {
 
               <FormError nameError="message" />
 
-              <Button
-                colorScheme="blue"
-                type="submit"
-                variant="outline"
-                className={styles.button}
-                aria-label={tContact('ariaSend')}>
+              <button type="submit" className={styles.button} aria-label={tContact('ariaSend')}>
                 {t('AnotherForm.send')}
-              </Button>
+              </button>
 
               {!!valuesFields && <Alerts valueFields={valuesFields} />}
             </Form>

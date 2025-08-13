@@ -11,10 +11,13 @@
     &:first-child input {
       padding: 0.45rem;
       border-radius: 1rem;
+
+      color: var(--text__opacity);
     }
 
-    label {
+    .title {
       padding-top: 0.45rem;
+      color: var(--text);
     }
 
     .input,
@@ -25,9 +28,15 @@
       margin: 0.5rem auto;
       border-color: var(--third);
       border-radius: 1rem;
+      color: var(--text__opacity);
+
+      &::placeholder {
+        color: var(--text__opacity);
+      }
 
       &__error {
         border-color: var(--required);
+        color: var(--text-required);
       }
     }
   }

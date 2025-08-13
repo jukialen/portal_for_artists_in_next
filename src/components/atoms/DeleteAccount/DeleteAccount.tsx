@@ -15,7 +15,6 @@ import {
   DialogTrigger,
 } from 'components/ui/dialog';
 import { Button } from 'components/ui/button';
-
 import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
 import { UserType } from 'types/global.types';
@@ -29,7 +28,6 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
   const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState('');
-  const locale = useCurrentLocale();
   const t = useI18n();
   const tContact = useScopedI18n('Contact');
   const tDeletionAccount = useScopedI18n('DeletionAccount');
@@ -64,7 +62,7 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
       }
 
       setDeleting(!deleting);
-      push(`${locale}/`);
+      push('/');
     } catch (e) {
       setValues(t('error'));
       console.error(e);
@@ -78,34 +76,23 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
         open={open}
         onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
         <DialogTrigger asChild>
-          <Button
-            loading={deleting}
-            loadingText="Deleting"
-            variant="ghost"
-            colorScheme="red"
-            borderColor="red.500"
-            w={145}
-            m={4}>
+          <Button loading={deleting} loadingText="Deleting" variant="ghost" className={styles.button}>
             <AiTwotoneDelete />
             {`${tDeletionAccount('button')} account`}
           </Button>
         </DialogTrigger>
-        <DialogContent m="auto">
-          <DialogHeader fontSize="lg" fontWeight="bold">
+        <DialogContent className={styles.content}>
+          <DialogHeader className={styles.header}>
             <DialogTitle>{tDeletionAccount('title')}</DialogTitle>
           </DialogHeader>
 
-          <DialogBody>{tDeletionAccount('body')}</DialogBody>
+          <DialogBody className={styles.body}>{tDeletionAccount('body')}</DialogBody>
 
-          <DialogFooter>
-            <DialogActionTrigger borderColor="gray.100" asChild>
-              {tDeletionAccount('cancel')}
-            </DialogActionTrigger>
-            <Button colorScheme="red" borderColor="red.500" onClick={deletionUser} ml={3}>
-              {tDeletionAccount('button')}
-            </Button>
+          <DialogFooter className={styles.footer}>
+            <DialogActionTrigger>{tDeletionAccount('cancel')}</DialogActionTrigger>
+            <Button onClick={deletionUser}>{tDeletionAccount('button')}</Button>
           </DialogFooter>
-          <DialogCloseTrigger />
+          <DialogCloseTrigger asChild />
         </DialogContent>
       </DialogRoot>
       {!!values && <Alerts valueFields={values} />}

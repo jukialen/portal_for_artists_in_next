@@ -6,12 +6,12 @@ import { StaticImageData } from 'next/image';
 type Like = { likes: number; liked: boolean };
 type Time = { createdAt?: string; updatedAt?: string };
 
-export type TableNameType = 'Comments' | 'FilesComments' | 'LastComments' | 'SubComments';
-
-export type Tags = Database['public']['Enums']['Tags'];
-export type LangType = 'en' | 'pl' | 'jp';
 export type IndexType = 'photographs' | 'videos' | 'animations';
+export type LangType = 'en' | 'pl' | 'jp';
+export type Plan = Database['public']['Enums']['Plan'];
 export type Provider = Database['public']['Enums']['Provider'];
+export type TableNameType = 'Comments' | 'FilesComments' | 'LastComments' | 'SubComments';
+export type Tags = Database['public']['Enums']['Tags'];
 
 //FORMS & CONTROLLERS ELEMENTS
 export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
@@ -21,7 +21,7 @@ export type ResetFormType = {
 };
 
 export type NewPlanType = {
-  newPlan?: Database['public']['Enums']['Plan'];
+  newPlan?: Plan;
 };
 
 //DATE OBJECT
@@ -41,7 +41,7 @@ export type UserType = NewPlanType &
     description?: string;
     profilePhoto?: string;
     email: string;
-    plan: Database['public']['Enums']['Plan'];
+    plan: Plan;
     provider?: Database['public']['Enums']['Provider'];
   };
 

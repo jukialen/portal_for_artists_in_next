@@ -1,13 +1,33 @@
 'use client';
 
-import { useContext, useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Button, Group, Input, Portal } from '@chakra-ui/react';
+
+const Button = lazy(() =>
+  import('@chakra-ui/react/button').then((mod) => ({
+    default: mod.Button,
+  })),
+);
+
+const Group = lazy(() =>
+  import('@chakra-ui/react/group').then((mod) => ({
+    default: mod.Group,
+  })),
+);
+
+import { Portal } from '@chakra-ui/react/portal';
+
+const Input = lazy(() =>
+  import('@chakra-ui/react/input').then((mod) => ({
+    default: mod.Input,
+  })),
+);
+
 import {
   PopoverArrow,
   PopoverBody,
@@ -19,27 +39,18 @@ import {
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { backUrl, darkMode } from 'constants/links';
-import { NewPlanType, ResetFormType, UserFormType, UserType } from 'types/global.types';
+import { backUrl } from 'constants/links';
+import { NewPlanType, Plan, ResetFormType, UserFormType, UserType } from 'types/global.types';
 
-import { ModeContext } from 'providers/ModeProvider';
-
-import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
 
+const Alerts = lazy(() =>
+  import('../../atoms/Alerts/Alerts').then((a) => ({
+    default: a.Alerts,
+  })),
+);
+
 import styles from './AccountData.module.scss';
-
-const initialValues = { email: '' };
-
-// @ts-ignore
-const initialPlan: NewPlanType | string | number | readonly string[] | undefined = { newPlan: '' };
-
-const initialValuesPass = {
-  email: initialValues.email,
-  oldPassword: '',
-  newPassword: '',
-  repeatNewPassword: '',
-};
 
 type ResetPassword = {
   email: string;
@@ -49,24 +60,33 @@ type ResetPassword = {
 };
 
 type SubscriptionType = {
-  newPlan?: 'FREE' | 'PREMIUM' | 'GOLD';
+  newPlan?: Plan;
 };
 
-type PlanType = NewPlanType | 'FREE' | 'PREMIUM' | 'GOLD';
+type PlanType = NewPlanType | Plan;
 
 export const AccountData = ({ userData }: { userData: UserType }) => {
   const t = useI18n();
   const tAccount = useScopedI18n('Account');
+
+  const initialValues = { email: userData?.email || '' };
+  const initialPlan: NewPlanType = { newPlan: userData?.plan! };
+
+  const initialValuesPass = {
+    email: initialValues.email,
+    oldPassword: '',
+    newPassword: '',
+    repeatNewPassword: '',
+  };
 
   const [valuesFields, setValuesFields] = useState('');
   const [valuesFieldsPass, setValuesFieldsPass] = useState('');
   const [subscriptionPlan, setSubscriptionPlan] = useState<PlanType>(userData?.plan || 'FREE');
   const [open, setOpen] = useState(false);
 
-  const { isMode } = useContext(ModeContext);
   const { push } = useRouter();
 
-  const items = ['FREE', 'PREMIUM', 'GOLD'];
+  const items: Plan[] = ['FREE', 'PREMIUM', 'GOLD'];
 
   const schemaEmail = Yup.object({
     email: SchemaValidation().email,
@@ -143,7 +163,10 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
         return;
       }
 
+      console.log('newPlan', newPlan);
+
       setSubscriptionPlan(newPlan!);
+      console.log(subscriptionPlan);
       await resetForm(initialPlan);
       setOpen(false);
     } catch (e) {
@@ -168,38 +191,24 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
               </Button>
             </PopoverTrigger>
             <Portal>
-              <PopoverContent
-                borderColor={isMode === darkMode ? 'gray.600' : 'gray.100'}
-                className={styles.subscription}>
-                <PopoverArrow
-                  boxShadow={
-                    isMode === darkMode
-                      ? '-1px -1px 1px 0 var(--chakra-colors-gray-600)'
-                      : '-1px -1px 1px 0 var(--chakra-colors-gray-100)'
-                  }
-                  className={styles.arrow}
-                />
+              <PopoverContent className={styles.subscriptionForm}>
+                <PopoverArrow className={styles.arrow} />
                 <PopoverHeader>{tAccount('aData.Premium.header')}</PopoverHeader>
                 <PopoverBody>
                   <div className={styles.selectSub}>
                     <Formik
-                      // @ts-ignore
                       initialValues={initialPlan}
                       validationSchema={schemaSubscription}
-                      onSubmit={changeSubscription}>
+                      onSubmit={changeSubscription}
+                      validateOnChange>
                       {({ values, handleChange, errors, touched }) => (
                         <Form>
                           <Field
                             as="select"
                             name="newPlan"
-                            // @ts-ignore
                             value={values.newPlan}
                             onChange={handleChange}
-                            focusBorderColor={touched.newPlan && !!errors.newPlan ? 'red.500' : 'blue.500'}
                             className={touched.newPlan && !!errors.newPlan ? styles.req__error : ''}>
-                            <option role="option" value="">
-                              {t('Plans.choosePlan')}
-                            </option>
                             {items.map((l, key) => (
                               <option key={key} role="option" value={l}>
                                 {l}
@@ -209,22 +218,19 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                           {touched.newPlan && !!errors.newPlan && (
                             <p className={styles.selectSub__error}>{tAccount('aData.Premium.select__error')}</p>
                           )}
-                          <p className={styles.message}>
+                          <div className={styles.message}>
                             {tAccount('aData.Premium.body')}
                             <Link href="/plans">{tAccount('aData.Premium.bodyLink')}</Link>
                             {tAccount('aData.Premium.bodyDot')}
-                          </p>
-                          <Group className={styles.buttonContainer}>
-                            <Button
-                              variant="ghost"
-                              _hover={{ backgroundColor: isMode === darkMode ? 'gray.600' : 'gray.300' }}
-                              onClick={() => setOpen(false)}>
-                              {t('cancel')}
-                            </Button>
-                            <Button type="submit" colorScheme="blue">
-                              {tAccount('aData.Premium.update')}
-                            </Button>
-                          </Group>
+                          </div>
+                          <Suspense fallback={<div>Loading...</div>}>
+                            <Group className={styles.buttonContainer}>
+                              <Button variant="ghost" onClick={() => setOpen(false)}>
+                                {t('cancel')}
+                              </Button>
+                              <Button type="submit">{tAccount('aData.Premium.update')}</Button>
+                            </Group>
+                          </Suspense>
                         </Form>
                       )}
                     </Formik>
@@ -232,6 +238,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                 </PopoverBody>
               </PopoverContent>
             </Portal>
+            {/*</Suspense>*/}
           </PopoverRoot>
         </div>
       </div>
@@ -242,19 +249,23 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.form}>
                 <h3 className={styles.title}>{t('NavForm.email')}</h3>
-                <Input
-                  name="email"
-                  type="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  placeholder={userData?.email}
-                  className={touched.email && !!errors.email ? styles.input__error : styles.input}
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Input
+                    name="email"
+                    type="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    placeholder={userData?.email}
+                    className={touched.email && !!errors.email ? styles.input__error : styles.input}
+                  />
+                </Suspense>
                 <FormError nameError="email" />
                 <button className={`${styles.button} button`} type="submit" aria-label="E-mail address change">
                   {tAccount('aData.changeEmail')}
                 </button>
-                {!!valuesFields && <Alerts valueFields={valuesFields} />}
+                <Suspense fallback={<div>Loading...</div>}>
+                  {!!valuesFields && <Alerts valueFields={valuesFields} />}
+                </Suspense>
               </Form>
             )}
           </Formik>
@@ -263,14 +274,16 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.form}>
                 <h3 className={styles.title}>{t('NavForm.password')}</h3>
-                <Input
-                  name="email"
-                  type="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  placeholder={userData?.email}
-                  className={touched.email && !!errors.email ? styles.input__error : styles.input}
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Input
+                    name="email"
+                    type="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    placeholder={userData?.email}
+                    className={touched.email && !!errors.email ? styles.input__error : styles.input}
+                  />
+                </Suspense>
                 <FormError nameError="email" />
                 <Input
                   name="oldPassword"
@@ -281,25 +294,29 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                   className={touched.oldPassword && !!errors.oldPassword ? styles.input__error : styles.input}
                 />
                 <FormError nameError="oldPassword" />
-                <Input
-                  name="newPassword"
-                  type="password"
-                  value={values.newPassword}
-                  onChange={handleChange}
-                  placeholder={tAccount('aData.newPassword')}
-                  className={touched.newPassword && !!errors.newPassword ? styles.input__error : styles.input}
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Input
+                    name="newPassword"
+                    type="password"
+                    value={values.newPassword}
+                    onChange={handleChange}
+                    placeholder={tAccount('aData.newPassword')}
+                    className={touched.newPassword && !!errors.newPassword ? styles.input__error : styles.input}
+                  />
+                </Suspense>
                 <FormError nameError="newPassword" />
-                <Input
-                  name="repeatNewPassword"
-                  type="password"
-                  value={values.repeatNewPassword}
-                  onChange={handleChange}
-                  placeholder={tAccount('aData.againNewPassword')}
-                  className={
-                    touched.repeatNewPassword && !!errors.repeatNewPassword ? styles.input__error : styles.input
-                  }
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Input
+                    name="repeatNewPassword"
+                    type="password"
+                    value={values.repeatNewPassword}
+                    onChange={handleChange}
+                    placeholder={tAccount('aData.againNewPassword')}
+                    className={
+                      touched.repeatNewPassword && !!errors.repeatNewPassword ? styles.input__error : styles.input
+                    }
+                  />
+                </Suspense>
                 <FormError nameError="repeatNewPassword" />
                 <button className="button" type="submit" aria-label={t('PasswordAccount.buttonAria')}>
                   {tAccount('aData.changePassword')}

@@ -1,7 +1,7 @@
 * {
   box-sizing: border-box;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode',
-  'Geneva', 'Verdana', sans-serif;
+  font-family:
+    'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
 }
 
 html {
@@ -9,23 +9,23 @@ html {
   scrollbar-color: var(--background) black;
 
   &:hover {
-    scrollbar-color: var(--secondary) black
+    scrollbar-color: var(--secondary) black;
   }
 
   &:active {
-    scrollbar-color: var(--secondary) black
+    scrollbar-color: var(--secondary) black;
   }
 
   &::-webkit-scrollbar {
-    width: 10px
+    width: 10px;
   }
 
   &::-webkit-scrollbar-track {
-    background-color: black
+    background-color: black;
   }
 
   &::-webkit-scrollbar-thumb {
-     background: var(--background);
+    background: var(--background);
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -80,6 +80,22 @@ a {
 button {
   background-color: transparent;
   cursor: pointer;
+  color: var(--text);
+
+  &:focus {
+    background-color: var(--focus);
+    color: var(--background);
+  }
+
+  &:hover {
+    background-color: var(--hover);
+    color: var(--background);
+  }
+
+  &:active {
+    background-color: var(--active);
+    color: var(--text);
+  }
 }
 
 .button {
@@ -102,7 +118,17 @@ button {
   }
 }
 
-p, span, h1, h2, h3, h4, h5, h6, svg:not([class]), svg[class*='_icon'], button a {
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+svg:not([class]),
+svg[class*='_icon'],
+button a {
   color: var(--text);
 }
 

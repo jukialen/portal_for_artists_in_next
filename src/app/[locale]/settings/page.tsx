@@ -12,7 +12,7 @@ import { LangType } from 'types/global.types';
 import { ChangePseuDescData } from 'components/atoms/ChangePseuDescData/ChangePseuDescData';
 import { LanguagesSettings } from 'components/atoms/LanguagesSettings';
 import { ModeContainer } from 'components/atoms/ModeContainer';
-import { DeleteSettings } from 'components/molecules/DeleteSettings/DeleteSettings';
+import { DeleteAccount } from 'components/atoms/DeleteAccount/DeleteAccount';
 import { AccountData } from 'components/organisms/AccountData/AccountData';
 
 import styles from './page.module.scss';
@@ -38,7 +38,7 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
 
         <LanguagesSettings locale={locale} />
       </div>
-      
+
       {!!userData?.id && (
         <>
           <AccountData userData={userData!} />
@@ -47,24 +47,24 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
         </>
       )}
       <footer>
-        <button className={styles.links}>
-          <Link href='/terms'>{t('Footer.termsOfUse')}</Link>
-        </button>
-        <button className={styles.links}>
-          <Link href='/privacy'>{t('Footer.privacyPolice')}</Link>
-        </button>
-        <button className={styles.links}>
-          <Link href='/contact'>{t('Footer.contact')}</Link>
-        </button>
-        <button className={styles.links}>
-          <Link href='/faq'>{t('Footer.faq')}</Link>
-        </button>
-        <button className={styles.links}>
-          <Link href='/plans'>{t('Footer.plans')}</Link>
-        </button>
+        <Link href="/terms" className={styles.links}>
+          {t('Footer.termsOfUse')}
+        </Link>
+        <Link href="/privacy" className={styles.links}>
+          {t('Footer.privacyPolice')}
+        </Link>
+        <Link href="/contact" className={styles.links}>
+          {t('Footer.contact')}
+        </Link>
+        <Link href="/faq" className={styles.links}>
+          {t('Footer.faq')}
+        </Link>
+        <Link href="/plans" className={styles.links}>
+          {t('Footer.plans')}
+        </Link>
       </footer>
 
-      <DeleteSettings userData={userData!} />
+      {!!userData?.id && <DeleteAccount userData={userData!} />}
     </div>
   );
 }
