@@ -32,8 +32,6 @@ export const FormSignUp = ({
     error: string;
   };
 }) => {
-  const supabase = createClient();
-
   const [isLoading, setIsLoading] = useState(false);
   const [valuesFields, setValuesFields] = useState('');
   const [show, setShow] = useState(false);
@@ -47,6 +45,8 @@ export const FormSignUp = ({
 
   const registration = async ({ email, password }: UserFormType, { resetForm }: ResetFormType) => {
     try {
+      const supabase = createClient();
+
       setIsLoading(true);
 
       const { data, error } = await supabase.auth.signUp({

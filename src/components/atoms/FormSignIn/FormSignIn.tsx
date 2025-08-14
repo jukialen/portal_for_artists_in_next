@@ -50,7 +50,9 @@ export const FormSignIn = ({
 
     if (!!error && error.status !== 200) {
       setValuesFields(
-        error?.message === 'Email not confirmed' || error?.message === 'AuthApiError: Email not confirmed'
+        error?.message === 'Email not confirmed' ||
+          error?.message === 'AuthApiError: Email not confirmed' ||
+          error?.message === 'Invalid login credentials'
           ? translated.unVerified
           : translated.wrongLoginData,
       );
@@ -58,9 +60,12 @@ export const FormSignIn = ({
       resetForm(initialValuesForSignInUp);
       setValuesFields(translated.statusLogin);
 
-      const { data: dataUser } = await supabase.from('Users').select('*').eq('id', data.session?.user.id!);
+      const { count } = await supabase
+        .from('Users')
+        .select('*', { count: 'exact', head: true })
+        .eq('id', data.session?.user.id!);
 
-      dataUser?.length !== 0 ? refresh() : push('/new-user');
+      count !== 0 ? refresh() : push('/new-user');
     }
   };
 
