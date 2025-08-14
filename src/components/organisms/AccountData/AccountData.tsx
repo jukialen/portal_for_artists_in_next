@@ -60,7 +60,7 @@ type ResetPassword = {
 };
 
 type SubscriptionType = {
-  newPlan?: Plan;
+  newPlan: Plan;
 };
 
 type PlanType = NewPlanType | Plan;
@@ -70,8 +70,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
   const tAccount = useScopedI18n('Account');
 
   const initialValues = { email: userData?.email || '' };
-  const initialPlan: NewPlanType = { newPlan: userData?.plan! };
-
+  const initialPlan = { newPlan: userData?.plan! };
   const initialValuesPass = {
     email: initialValues.email,
     oldPassword: '',
@@ -81,7 +80,8 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
 
   const [valuesFields, setValuesFields] = useState('');
   const [valuesFieldsPass, setValuesFieldsPass] = useState('');
-  const [subscriptionPlan, setSubscriptionPlan] = useState<PlanType>(userData?.plan || 'FREE');
+  const [valuesFieldsPlan, setValuesFieldsPlan] = useState('');
+  const [subscriptionPlan, setSubscriptionPlan] = useState<PlanType>(userData?.plan!);
   const [open, setOpen] = useState(false);
 
   const { push } = useRouter();
@@ -97,28 +97,26 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
     newPassword: SchemaValidation().password,
     repeatNewPassword: SchemaValidation().password,
   });
-  const schemaSubscription = Yup.object({
-    plan: SchemaValidation().tags,
-  });
 
   const supabase = createClient();
 
   const update__email = async ({ email }: UserFormType, { resetForm }: ResetFormType) => {
     try {
-      resetForm(initialValues);
-      const { error } = await supabase.auth.updateUser({ email });
-      if (!!error) {
-        console.error(error);
-        setValuesFields(t('error'));
-        return;
-      }
+      if (email !== userData?.email!) {
+        const { error } = await supabase.auth.updateUser({ email });
+        if (!!error) {
+          console.error(error);
+          setValuesFields(t('error'));
+          return;
+        }
 
-      const { error: er } = await supabase.from('Users').update({ email }).eq('id', userData?.id!);
-      if (!!er) {
-        console.error(er);
-        setValuesFields(t('error'));
-        return;
+        const { error: er } = await supabase.from('Users').update({ email }).eq('id', userData?.id!);
+        if (!!er) {
+          setValuesFields(t('error'));
+          return;
+        }
       }
+      resetForm(initialValues);
       setValuesFields(t('Forgotten.success'));
       push('/');
     } catch (e) {
@@ -156,21 +154,19 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
 
   const changeSubscription = async ({ newPlan }: SubscriptionType, { resetForm }: ResetFormType) => {
     try {
+      if (newPlan === userData?.plan!) console.log(true);
       const { error } = await supabase.from('Users').update({ plan: newPlan }).eq('id', userData?.id!);
 
       if (!!error) {
-        console.error(error);
+        setValuesFieldsPlan(t('error'));
         return;
       }
 
-      console.log('newPlan', newPlan);
-
-      setSubscriptionPlan(newPlan!);
-      console.log(subscriptionPlan);
+      setSubscriptionPlan(newPlan);
       await resetForm(initialPlan);
       setOpen(false);
     } catch (e) {
-      console.error(e);
+      setValuesFieldsPlan(t('error'));
     }
   };
 
@@ -198,16 +194,15 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                   <div className={styles.selectSub}>
                     <Formik
                       initialValues={initialPlan}
-                      validationSchema={schemaSubscription}
-                      onSubmit={changeSubscription}
+                      onSubmit={(values, formikBag) =>
+                        changeSubscription({ newPlan: values.newPlan }, { resetForm: formikBag.resetForm })
+                      }
                       validateOnChange>
-                      {({ values, handleChange, errors, touched }) => (
+                      {({ errors, touched }) => (
                         <Form>
                           <Field
                             as="select"
                             name="newPlan"
-                            value={values.newPlan}
-                            onChange={handleChange}
                             className={touched.newPlan && !!errors.newPlan ? styles.req__error : ''}>
                             {items.map((l, key) => (
                               <option key={key} role="option" value={l}>
@@ -234,18 +229,21 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                         </Form>
                       )}
                     </Formik>
+                    {!!valuesFieldsPlan && <Alerts valueFields={valuesFieldsPlan} />}
                   </div>
                 </PopoverBody>
               </PopoverContent>
             </Portal>
-            {/*</Suspense>*/}
           </PopoverRoot>
         </div>
       </div>
 
       {userData?.provider === 'email' && (
         <>
-          <Formik initialValues={initialValues} validationSchema={schemaEmail} onSubmit={update__email}>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={schemaEmail}
+            onSubmit={(values, formikBag) => update__email(values, { resetForm: formikBag.resetForm })}>
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.form}>
                 <h3 className={styles.title}>{t('NavForm.email')}</h3>
@@ -270,16 +268,17 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
             )}
           </Formik>
 
-          <Formik initialValues={initialValuesPass} validationSchema={schemaValidation} onSubmit={newPassword}>
-            {({ values, handleChange, errors, touched }) => (
+          <Formik
+            initialValues={initialValuesPass}
+            validationSchema={schemaValidation}
+            onSubmit={(values, formikBag) => newPassword(values, { resetForm: formikBag.resetForm })}>
+            {({ errors, touched }) => (
               <Form className={styles.form}>
                 <h3 className={styles.title}>{t('NavForm.password')}</h3>
                 <Suspense fallback={<div>Loading...</div>}>
                   <Input
                     name="email"
                     type="email"
-                    value={values.email}
-                    onChange={handleChange}
                     placeholder={userData?.email}
                     className={touched.email && !!errors.email ? styles.input__error : styles.input}
                   />
@@ -288,8 +287,6 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                 <Input
                   name="oldPassword"
                   type="password"
-                  value={values.oldPassword}
-                  onChange={handleChange}
                   placeholder={tAccount('aData.oldPassword')}
                   className={touched.oldPassword && !!errors.oldPassword ? styles.input__error : styles.input}
                 />
@@ -298,8 +295,6 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                   <Input
                     name="newPassword"
                     type="password"
-                    value={values.newPassword}
-                    onChange={handleChange}
                     placeholder={tAccount('aData.newPassword')}
                     className={touched.newPassword && !!errors.newPassword ? styles.input__error : styles.input}
                   />
@@ -309,8 +304,6 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                   <Input
                     name="repeatNewPassword"
                     type="password"
-                    value={values.repeatNewPassword}
-                    onChange={handleChange}
                     placeholder={tAccount('aData.againNewPassword')}
                     className={
                       touched.repeatNewPassword && !!errors.repeatNewPassword ? styles.input__error : styles.input
