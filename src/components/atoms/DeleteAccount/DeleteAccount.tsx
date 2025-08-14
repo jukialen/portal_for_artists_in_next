@@ -52,7 +52,7 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
 
       const { data: usData, error: usError } = await supabase
         .from('Users')
-        .delete({ count: 'estimated' })
+        .delete({ count: 'exact' })
         .eq('id', userData.id!)
         .select();
 

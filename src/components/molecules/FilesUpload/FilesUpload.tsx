@@ -114,7 +114,7 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
       ) {
         return new Promise<void>(async (resolve, reject) => {
           let upload = new Upload(file, {
-            endpoint: `https://${projectUrl}.supabase.co/storage/v1/upload/resumable`,
+            endpoint: ` ${projectUrl}/storage/v1/upload/resumable`,
             retryDelays: [0, 3000, 5000, 10000, 20000],
             headers: { authorization: `Bearer ${access_token}` },
             uploadDataDuringCreation: true,
