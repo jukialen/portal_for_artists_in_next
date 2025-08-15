@@ -180,6 +180,10 @@ export default {
     send: 'Send',
     uploadFile: 'File has been uploaded.',
     notUploadFile: "File hasn't been uploaded.",
+    fileTooLarge: 'File is too large',
+    unsupportedFileType: 'Unsupported file type',
+    fileSelectionCancelled: 'File selection canceled',
+    errorOpeningFilePicker: 'Error opening file selection window',
   },
   AddingGroup: {
     title: 'Create a group',

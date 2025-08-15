@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -9,10 +9,9 @@ import { Input, Textarea } from '@chakra-ui/react';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { darkMode } from 'constants/links';
-import { EventType, ResetFormType, UserType } from 'types/global.types';
+import { filesTypes, handleFileSelection, isFileAccessApiSupported, validatePhoto } from 'utils/client/files';
 
-import { ModeContext } from 'providers/ModeProvider';
+import { EventType, ResetFormType, UserType } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
@@ -25,9 +24,8 @@ type ProfileType = {
 };
 
 export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
-  const { isMode } = useContext(ModeContext);
   const [valuesFields, setValuesFields] = useState('');
-  const [photo, setPhoto] = useState<File | undefined>();
+  const [photo, setPhoto] = useState<File | null>(null);
   const supabase = createClient();
 
   const t = useI18n();
@@ -37,7 +35,7 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
   const initialValues = {
     newPseudonym: userData?.pseudonym!,
     newDescription: userData?.description!,
-    photo: null,
+    photo: userData?.profilePhoto || null,
   };
 
   const schemaNew = Yup.object({
@@ -49,73 +47,95 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
 
+  const handleFile = async () => {
+    const result = await handleFileSelection();
+
+    typeof result === 'string' ? setValuesFields(result) : setPhoto(result);
+  };
   const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: ResetFormType) => {
+    setValuesFields('');
+
     try {
-      if (
-        userData?.profilePhoto === null &&
-        !!photo &&
-        photo.size < 6291456 &&
-        (photo.type === 'image/jpg' ||
-          photo.type === 'image/jpeg' ||
-          photo.type === 'image/png' ||
-          photo.type === ' image/webp' ||
-          photo.type === 'image/avif')
-      ) {
-        const { data: pDatahoto, error } = await supabase.storage.from('profiles').upload(`/${userData?.id!}`, photo);
+      let profilePhotoPath = userData?.profilePhoto || null;
+      let updatePhotoInDB = false;
 
-        if (!!error || !pDatahoto) {
-          setValuesFields(t('AnotherForm.notUploadFile'));
+      if (!!photo) {
+        const photoError = await validatePhoto(photo);
+        if (photoError) {
+          setValuesFields(photoError);
           return;
         }
 
-        const { error: er } = await supabase
-          .from('Users')
-          .update({ pseudonym: newPseudonym, description: newDescription, profilePhoto: pDatahoto?.path! });
-        setValuesFields(tAnotherForm('uploadFile'));
-        if (!!er) {
-          setValuesFields(tAccount('profile.errorSending'));
-          return;
-        }
-      } else {
-        const { error: e } = await supabase
-          .from('Users')
-          .update({ pseudonym: newPseudonym, description: newDescription });
+        const { data, error } = await supabase.storage
+          .from('profiles')
+          .upload(`/${userData?.id!}/${photo.name}`, photo, {
+            upsert: !!userData?.profilePhoto,
+          });
 
-        if (!!e) {
-          setValuesFields(tAccount('profile.errorSending'));
+        if (error || !data) {
+          setValuesFields(tAnotherForm('notUploadFile'));
+          console.error('Photo upload error:', error);
           return;
         }
+        profilePhotoPath = data?.path;
+        updatePhotoInDB = true;
+      }
+
+      const updateData: Partial<UserType> = {
+        pseudonym: newPseudonym,
+        description: newDescription,
+      };
+
+      if (updatePhotoInDB && profilePhotoPath) updateData.profilePhoto = profilePhotoPath;
+
+      const { error: usersError } = await supabase.from('Users').update(updateData);
+
+      if (usersError) {
+        setValuesFields(tAccount('profile.errorSending'));
+        console.error('Database update error:', usersError);
+        return;
       }
 
       resetForm(initialValues);
+      setPhoto(null);
       setValuesFields(tAccount('profile.successSending'));
     } catch (e) {
-      console.log(e);
+      console.error('General profile update error:', e);
       setValuesFields(tAccount('profile.errorSending'));
     }
   };
 
   return (
-    <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={updateProfileData}>
-      {({ values, handleChange, errors, touched }) => (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={schemaNew}
+      onSubmit={(values, formikBag) => updateProfileData(values, { resetForm: formikBag.resetForm })}>
+      {({ errors, touched }) => (
         <Form className={styles.form}>
           <div className={styles.container}>
-            <label htmlFor={tAnotherForm('profilePhoto')} className={styles.title}>
-              {tAnotherForm('profilePhoto')}
-            </label>
-            <Input
-              name="photo"
-              type="file"
-              accept=".jpg, .jpeg, .png, .webp, .avif"
-              onChange={handleChangeFile}
-              placeholder={tAnotherForm('profilePhoto')}
-              className={(photo === null || undefined) && touched.photo ? styles.input__error : styles.input}
-            />
+            {isFileAccessApiSupported ? (
+              <button onClick={() => handleFile()} className={`${styles.button} ${styles.filePickerButton}`}>
+                {tAnotherForm('profilePhoto')}
+              </button>
+            ) : (
+              <>
+                <label htmlFor={tAnotherForm('profilePhoto')} className={styles.title}>
+                  {tAnotherForm('profilePhoto')}
+                </label>
+                <Input
+                  id="photoInput"
+                  name="photo"
+                  type="file"
+                  accept={filesTypes}
+                  onChange={handleChangeFile}
+                  placeholder={tAnotherForm('profilePhoto')}
+                  className={!photo && touched.photo ? styles.input__error : styles.input}
+                />
+              </>
+            )}
           </div>
 
-          {(photo === null || undefined) && touched.photo && (
-            <p className={styles.error_profile}>{t('NavForm.validateRequired')}</p>
-          )}
+          {!photo && touched.photo && <p className={styles.error_profile}>{t('NavForm.validateRequired')}</p>}
 
           <div className={styles.container}>
             <label className={styles.title} htmlFor="newPseudonym">
@@ -124,8 +144,6 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
             <Input
               id="newPseudonym"
               name="newPseudonym"
-              value={values.newPseudonym}
-              onChange={handleChange}
               placeholder={tAnotherForm('pseudonym')}
               className={!!errors.newPseudonym && touched.newPseudonym ? styles.input__error : styles.input}
             />
@@ -144,8 +162,6 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
             <Textarea
               id="newDescription"
               name="newDescription"
-              value={values.newDescription}
-              onChange={handleChange}
               placeholder={tAccount('profile.aboutMe')}
               className={
                 !!errors.newDescription && touched.newDescription ? styles.description__error : styles.description

@@ -182,6 +182,10 @@ export default {
     send: 'Wyślij',
     uploadFile: 'Plik został wysłany.',
     notUploadFile: 'Plik nie został wysłany.',
+    fileTooLarge: 'Plik jest zbyt duży.',
+    unsupportedFileType: 'Nieobsługiwany typ pliku',
+    fileSelectionCancelled: 'Wybór pliku anulowany',
+    errorOpeningFilePicker: 'Błąd podczas otwierania okna wyboru plików',
   },
   AddingGroup: {
     title: 'Stwórz grupę',
