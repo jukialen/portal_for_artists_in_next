@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 
 import { darkMode } from 'constants/links';
+import { ModeType } from 'types/global.types';
 
 import { ModeContext } from 'providers/ModeProvider';
 
@@ -18,7 +19,7 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
   const { isMode, changeMode } = useContext(ModeContext);
   const [mode, setMode] = useState(false);
 
-  const newMode = (mode: 'dark' | 'light') => {
+  const newMode = (mode: ModeType) => {
     changeMode(mode);
     showMode();
   };

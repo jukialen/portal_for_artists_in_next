@@ -195,7 +195,10 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
           <DialogTitle>New logo</DialogTitle>
         </DialogHeader>
         <DialogBody className={styles.modal}>
-          <Formik initialValues={initialValues} validationSchema={schemaFile} onSubmit={uploadFiles}>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={schemaFile}
+            onSubmit={(values, formikBag) => uploadFiles(values, { resetForm: formikBag.resetForm })}>
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.adding__files}>
                 <h3 className={styles.title}>{tAnotherForm('fileTitle')}</h3>

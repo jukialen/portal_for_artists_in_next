@@ -20,6 +20,8 @@ export type ResetFormType = {
   resetForm: any;
 };
 
+export type ModeType = 'light' | 'dark';
+
 export type NewPlanType = {
   newPlan?: Plan;
 };

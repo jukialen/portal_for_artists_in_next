@@ -6,7 +6,7 @@ import { ThemeProvider } from 'next-themes';
 
 import { I18nProviderClient } from 'locales/client';
 
-import { LangType } from 'types/global.types';
+import { LangType, ModeType } from 'types/global.types';
 
 import { AffixButton } from 'components/atoms/AffixButton/AffixButton';
 
@@ -14,8 +14,6 @@ type childrenType = {
   children: ReactNode;
   locale: LangType;
 };
-
-type ModeType = 'light' | 'dark';
 
 export const ModeContext = createContext({
   isMode: '',
@@ -27,7 +25,7 @@ export const ModeProvider = ({ children, locale }: childrenType) => {
 
   const defaultTheme = (): ModeType | null => {
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const savedMode = localStorage.getItem('mode') as 'light' | 'dark' | null;
+    const savedMode = localStorage.getItem('mode') as ModeType | null;
 
     const defaultMode = savedMode ?? (systemPrefersDark ? 'dark' : 'light');
     localStorage.setItem('chakra-ui-color-mode', defaultMode);
@@ -44,7 +42,7 @@ export const ModeProvider = ({ children, locale }: childrenType) => {
   }, [isMode]);
 
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker
           .register('/sw.js')
@@ -57,6 +55,7 @@ export const ModeProvider = ({ children, locale }: childrenType) => {
       });
     }
   }, []);
+
   const changeMode = (mode: ModeType) => {
     setMode(mode);
     document.documentElement.setAttribute('data-theme', mode);
