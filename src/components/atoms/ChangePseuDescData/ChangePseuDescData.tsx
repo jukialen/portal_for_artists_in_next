@@ -9,7 +9,7 @@ import { Input, Textarea } from '@chakra-ui/react';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { filesTypes, handleFileSelection, isFileAccessApiSupported, validatePhoto } from 'utils/client/files';
+import { filesProfileTypes, isFileAccessApiSupported, validatePhoto, handleFileSelection } from 'utils/client/files';
 
 import { EventType, ResetFormType, UserType } from 'types/global.types';
 
@@ -48,7 +48,8 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
   };
 
   const handleFile = async () => {
-    const result = await handleFileSelection();
+    const result = await handleFileSelection(tAnotherForm);
+    console.log(result);
 
     typeof result === 'string' ? setValuesFields(result) : setPhoto(result);
   };
@@ -60,7 +61,7 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
       let updatePhotoInDB = false;
 
       if (!!photo) {
-        const photoError = await validatePhoto(photo);
+        const photoError = await validatePhoto(tAnotherForm, t, photo, true);
         if (photoError) {
           setValuesFields(photoError);
           return;
@@ -104,7 +105,7 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
       setValuesFields(tAccount('profile.errorSending'));
     }
   };
-
+  console.log(isFileAccessApiSupported);
   return (
     <Formik
       initialValues={initialValues}
@@ -114,7 +115,10 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
         <Form className={styles.form}>
           <div className={styles.container}>
             {isFileAccessApiSupported ? (
-              <button onClick={() => handleFile()} className={`${styles.button} ${styles.filePickerButton}`}>
+              <button
+                type="button"
+                onClick={() => handleFile()}
+                className={`${styles.button} ${styles.filePickerButton}`}>
                 {tAnotherForm('profilePhoto')}
               </button>
             ) : (
@@ -126,7 +130,7 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
                   id="photoInput"
                   name="photo"
                   type="file"
-                  accept={filesTypes}
+                  accept={filesProfileTypes}
                   onChange={handleChangeFile}
                   placeholder={tAnotherForm('profilePhoto')}
                   className={!photo && touched.photo ? styles.input__error : styles.input}

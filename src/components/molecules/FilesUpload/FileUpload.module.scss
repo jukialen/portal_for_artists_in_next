@@ -5,16 +5,14 @@
   justify-self: flex-start;
 }
 
-section.darkModalContent {
-   background-color: var(--background);
-
-  .closeButton:hover {
-    color: var(--active);
-  }
-}
-
-section.modelContent {
+.modelContent {
   color: var(--primary);
+  background-color: var(--background);
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin: auto 2rem;
+  padding: 0 2rem 1rem;
 
   .closeButton {
     border-color: transparent;
@@ -26,51 +24,70 @@ section.modelContent {
   }
 }
 
+.modelContentHeader, .modal {
+  background-color: var(--background);
+}
+
+.modelContentHeader {
+  margin: 2rem 1rem 1rem;
+}
+
 .adding__files {
-  max-width: 99vw;
+  max-width: 20.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0.5rem auto 3.5rem;
-
-  .title {
-    margin-bottom: 1rem;
-  }
+  margin: 0.5rem auto;
 
   .select {
-    width: 100vw;
-    max-width: 22.5rem;
-    color: var(--third);
+    width: 100%;
 
+    div {
+      color: var(--text);
+    }
     .tags, .tags__error {
       margin: .5rem auto;
-      padding: .5rem 1rem;
-      color: var(--text);
+      padding: .5rem 0;
       border-color: var(--third);
       border-radius: 1rem;
+    }
 
-      &__error {
-        margin: .5rem auto;
-        border-color: var(--required);
-      }
-
-      option {
-        background-color: var(--background);
+    .tags__error {
+      select {
+      border: 1px solid var(--required);
+      color: var(--required);
+    }
+      div {
+        color: var(--required);
       }
     }
   }
 
   .shortDescription {
-    padding: .45rem 1rem;
-    max-width: 90%;
+    width: 100%;
     height: 2.5rem;
     margin: 0.5rem;
+    padding: .45rem 1rem;
     border-color: var(--third);
     border-radius: 1rem;
+
+    &::placeholder {
+      color: var(--text__opacity);
+    }
 
     &__error {
       border-color: var(--required);
     }
+  }
+
+  .filePickerButton {
+    width: 100%;
+    height: 2.5rem;
+    margin: 1rem auto;
+    border-radius: 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+    border: 0.1rem solid var(--secondary);
   }
 
   .input, .input__error {
@@ -79,6 +96,7 @@ section.modelContent {
     padding: .5rem 1rem;
     border-color: var(--third);
     border-radius: 1rem;
+    font-size: 1rem;
 
     &__error {
       border-color: var(--required);
@@ -92,22 +110,21 @@ section.modelContent {
     color: var(--required);
   }
 
-  .button {
-    width: 12rem;
-    margin: 1.5rem auto 1rem;
-  }
-
   .progressbar {
-    width: 100vw;
-    max-width: 22.5rem;
+    width: 100%;
     margin: 1.5rem auto;
   }
 
   .buttons {
     width: 100%;
-    margin: 2.7rem 1.1rem -3rem;
+    margin: 1rem 1.1rem -.5rem;
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
+
+    button:last-child {
+      background-color: var(--third);
+      //color: var(--background);
+    }
   }
 }

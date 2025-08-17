@@ -3,23 +3,49 @@
 import { useI18n, useScopedI18n } from 'locales/client';
 
 const MAX_PHOTO_SIZE = 6291456;
-export const filesTypes = '.jpg, .jpeg, .png, .webp, .avif';
-const ACCEPTED_IMAGE_TYPES = filesTypes.split(', ').map((n) => 'image/' + n);
+export const filesProfileTypes = '.jpg, .jpeg, .png, .webp, .avif';
+export const filesTypes = '.apng, .mp4, .webm';
+const ACCEPTED_IMAGE_TYPES = filesProfileTypes.split(', ').map((n) => 'image/' + n.replace('.', ''));
+const ACCEPTED_ANIM_VIDEOS_TYPES = filesTypes
+  .split(', ')
+  .map((a) => `${a.includes('apng') ? 'image/' : 'video/'}` + a.replace('.', ''));
 export const isFileAccessApiSupported =
   typeof window !== 'undefined' && typeof window.showOpenFilePicker === 'function';
 
-export const handleFileSelection = async (): Promise<File | null | string> => {
-  const tAnotherForm = useScopedI18n('AnotherForm');
-
+console.log(window.showOpenFilePicker);
+export const handleFileSelection = async (
+  tAnotherForm: any,
+  profile: boolean = true,
+): Promise<File | null | string> => {
   try {
     const [handle] = await window.showOpenFilePicker({
       types: [
-        {
-          description: 'Images',
-          accept: {
-            'image/*': filesTypes.split(', '),
-          },
-        },
+        !profile
+          ? {
+              description: 'Images',
+              accept: {
+                'image/*': filesProfileTypes.split(', ').concat('.apng'),
+              },
+            }
+          : {
+              description: 'Images',
+              accept: {
+                'image/*': filesProfileTypes.split(', '),
+              },
+            },
+        ...(!profile
+          ? [
+              {
+                description: 'Videos',
+                accept: {
+                  'video/*': filesTypes
+                    .split(', ')
+                    .filter((r) => r !== '.apng')
+                    .join(', '),
+                },
+              },
+            ]
+          : []),
       ],
       multiple: false,
     });
@@ -34,17 +60,23 @@ export const handleFileSelection = async (): Promise<File | null | string> => {
   }
 };
 
-export const validatePhoto = async (file: File): Promise<string | null> => {
-  const tAnotherForm = useScopedI18n('AnotherForm');
-  const t = useI18n();
-
+export const validatePhoto = async (
+  tAnotherForm: any,
+  t: any,
+  file: File,
+  profile: boolean = true,
+): Promise<string | null> => {
   if (!file) {
     return t('NavForm.validateRequired');
   }
-  if (file.size > MAX_PHOTO_SIZE) {
-    return tAnotherForm('fileTooLarge');
-  }
-  if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+
+  profile && file.size > MAX_PHOTO_SIZE && tAnotherForm('fileTooLarge');
+
+  if (!profile) {
+    if (!ACCEPTED_IMAGE_TYPES.includes(file.type) && !ACCEPTED_ANIM_VIDEOS_TYPES.includes(file.type)) {
+      return tAnotherForm('unsupportedFileType');
+    }
+  } else if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
     return tAnotherForm('unsupportedFileType');
   }
   return null;

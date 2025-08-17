@@ -31,6 +31,13 @@ import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './FileUpload.module.scss';
 import { MdUploadFile } from 'react-icons/md';
+import {
+  filesProfileTypes,
+  filesTypes,
+  handleFileSelection,
+  isFileAccessApiSupported,
+  validatePhoto,
+} from 'utils/client/files';
 
 type FileDataType = {
   shortDescription: string;
@@ -70,6 +77,13 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
       setRequired(true);
     }
   };
+
+  const handleFile = async () => {
+    const result = await handleFileSelection(tAnotherForm);
+
+    typeof result === 'string' ? setValuesFields(result) : setFile(result);
+  };
+
   const uploadFiles = async ({ tags, shortDescription }: FileDataType, { resetForm }: ResetFormType) => {
     try {
       if (!file || !tags) {
@@ -77,16 +91,7 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
         return;
       }
 
-      if (
-        file.size < 6291456 &&
-        (file.type === 'image/jpg' ||
-          file.type === 'image/jpeg' ||
-          file.type === 'image/png' ||
-          file.type === ' image/webp' ||
-          file.type === 'image/avif' ||
-          file.type === 'video/mp4' ||
-          file.type === 'video/webm')
-      ) {
+      if (await validatePhoto(tAnotherForm, t, file)) {
         const { data, error } = await supabase.storage.from('basic').upload(`/${userId}`, file);
 
         if (!!error) console.error(error);
@@ -102,16 +107,7 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
         ]);
 
         if (!!er) console.error(er);
-      } else if (
-        file.size > 6291456 &&
-        (file.type === 'image/jpg' ||
-          file.type === 'image/jpeg' ||
-          file.type === 'image/png' ||
-          file.type === ' image/webp' ||
-          file.type === 'image/avif' ||
-          file.type === 'video/mp4' ||
-          file.type === 'video/webm')
-      ) {
+      } else {
         return new Promise<void>(async (resolve, reject) => {
           let upload = new Upload(file, {
             endpoint: ` ${projectUrl}/storage/v1/upload/resumable`,
@@ -190,9 +186,9 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className={`${isMode === darkMode ? styles.darkModalContent : ''} ${styles.modelContent}`}>
-        <DialogHeader>
-          <DialogTitle>New logo</DialogTitle>
+      <DialogContent className={styles.modelContent}>
+        <DialogHeader className={styles.modelContentHeader}>
+          <DialogTitle>{tAnotherForm('fileTitle')}</DialogTitle>
         </DialogHeader>
         <DialogBody className={styles.modal}>
           <Formik
@@ -201,13 +197,10 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
             onSubmit={(values, formikBag) => uploadFiles(values, { resetForm: formikBag.resetForm })}>
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.adding__files}>
-                <h3 className={styles.title}>{tAnotherForm('fileTitle')}</h3>
-
                 <div className={styles.select}>
                   <NativeSelectRoot
                     onChange={handleChange}
                     className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}
-                    backgroundColor="#red"
                     aria-required>
                     <NativeSelectField name="tags" value={values.tags}>
                       <option role="option" value="">
@@ -240,14 +233,20 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
 
                 <FormError nameError="tags" />
 
-                <Input
-                  name="file"
-                  type="file"
-                  accept=".jpg, .jpeg, .png, .webp, .avif, .gif, .mp4, .webm"
-                  onChange={handleChangeFile}
-                  placeholder={tAnotherForm('file')}
-                  className={!file && required ? styles.input__error : styles.input}
-                />
+                {isFileAccessApiSupported ? (
+                  <button onClick={() => handleFile()} className={styles.filePickerButton}>
+                    {tAnotherForm('file')}
+                  </button>
+                ) : (
+                  <Input
+                    name="file"
+                    type="file"
+                    accept={`${filesProfileTypes}, ${filesTypes}`}
+                    onChange={handleChangeFile}
+                    placeholder={tAnotherForm('file')}
+                    className={!file && required ? styles.input__error : styles.input}
+                  />
+                )}
 
                 <p className={styles.error}>{!file && required && t('NavForm.validateRequired')}</p>
 
@@ -284,17 +283,10 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
                 {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
 
                 <div className={styles.buttons}>
-                  <Button
-                    type="submit"
-                    colorScheme="blue"
-                    borderColor="transparent"
-                    mr={3}
-                    onClick={() => setOpen(false)}>
+                  <Button type="submit" onClick={() => setOpen(false)}>
                     {t('DeletionFile.cancelButton')}
                   </Button>
-                  <Button type="submit" colorScheme="yellow" borderColor="transparent">
-                    {t('Description.submit')}
-                  </Button>
+                  <Button type="submit">{t('Description.submit')}</Button>
                 </div>
               </Form>
             )}

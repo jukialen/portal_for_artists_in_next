@@ -143,7 +143,7 @@ export const MainCurrentUserProfileData = ({
                 <DialogActionTrigger colorScheme="blue" borderColor="transparent" mr={3}>
                   {tCurrPrPhoto.cancelButton}
                 </DialogActionTrigger>
-                <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
+                <Button type="submit" onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
                   {tCurrPrPhoto.submit}
                 </Button>
               </DialogFooter>
