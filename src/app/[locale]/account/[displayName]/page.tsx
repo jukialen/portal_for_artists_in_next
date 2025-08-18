@@ -4,7 +4,7 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { LangType } from 'types/global.types';
+import { FilesUploadType, LangType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
 import { graphics, videosAnimations } from 'utils/files';
@@ -22,6 +22,7 @@ export default async function Account({ params }: { params: Promise<{ locale: La
 
   const t = await getI18n();
   const tAside = await getScopedI18n('Aside');
+  const tAnotherForm = await getScopedI18n('AnotherForm');
   const tMenu = await getScopedI18n('Account.aMenu');
   const maxItems = 30;
 
@@ -31,6 +32,14 @@ export default async function Account({ params }: { params: Promise<{ locale: La
     uploadFile: t('AnotherForm.uploadFile'),
     cancelButton: t('DeletionFile.cancelButton'),
     submit: t('Description.submit'),
+  };
+
+  const fileTranslated: FilesUploadType = {
+    fileSelectionCancelled: tAnotherForm('fileSelectionCancelled'),
+    errorOpeningFilePicker: tAnotherForm('errorOpeningFilePicker'),
+    validateRequired: t('NavForm.validateRequired'),
+    fileTooLarge: tAnotherForm('fileTooLarge'),
+    unsupportedFileType: tAnotherForm('unsupportedFileType'),
   };
 
   const tDash = {
@@ -63,7 +72,7 @@ export default async function Account({ params }: { params: Promise<{ locale: La
   const firstModsUsersList = await modsUsersList(maxItems);
   return (
     <>
-      <MainCurrentUserProfileData tCurrPrPhoto={tMain} userData={userData!} />
+      <MainCurrentUserProfileData tCurrPrPhoto={tMain} fileTranslated={fileTranslated} userData={userData!} />
       <DashboardTabs
         id={userData?.id!}
         author={userData?.pseudonym!}

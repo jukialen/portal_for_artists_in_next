@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Upload } from 'tus-js-client';
 import { Form, Formik } from 'formik';
@@ -21,10 +21,8 @@ import { ProgressValueText, ProgressRoot } from 'components/ui/progress';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { access_token, darkMode, projectUrl } from 'constants/links';
-import { Tags, EventType, ResetFormType } from 'types/global.types';
-
-import { ModeContext } from 'providers/ModeProvider';
+import { access_token, projectUrl } from 'constants/links';
+import { Tags, EventType, ResetFormType, FilesUploadType } from 'types/global.types';
 
 import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -38,6 +36,7 @@ import {
   isFileAccessApiSupported,
   validatePhoto,
 } from 'utils/client/files';
+import Image from 'next/image';
 
 type FileDataType = {
   shortDescription: string;
@@ -49,14 +48,13 @@ const initialValues: FileDataType = {
   tags: '',
 };
 
-export const FilesUpload = ({ userId }: { userId: string }) => {
+export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTranslated: FilesUploadType }) => {
   const [file, setFile] = useState<File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
   const [progressUpload, setProgressUpload] = useState<number>(0);
   const [required, setRequired] = useState(false);
   const [open, setOpen] = useState(false);
-
-  const { isMode } = useContext(ModeContext);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const supabase = createClient();
   const tAnotherForm = useScopedI18n('AnotherForm');
@@ -67,6 +65,20 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
     tags: SchemaValidation().tags,
     shortDescription: SchemaValidation().shortDescription,
   });
+
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [file]);
 
   const handleChangeFile = async (e: EventType) => {
     if (e.target.files?.[0]) {
@@ -79,7 +91,7 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
   };
 
   const handleFile = async () => {
-    const result = await handleFileSelection(tAnotherForm);
+    const result = await handleFileSelection(fileTranslated, false);
 
     typeof result === 'string' ? setValuesFields(result) : setFile(result);
   };
@@ -91,7 +103,7 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
         return;
       }
 
-      if (await validatePhoto(tAnotherForm, t, file)) {
+      if (!(await validatePhoto(fileTranslated, file, false))) {
         const { data, error } = await supabase.storage.from('basic').upload(`/${userId}`, file);
 
         if (!!error) console.error(error);
@@ -180,9 +192,9 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
       open={open}
       onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
       <DialogTrigger asChild>
-        <Button aria-label="new logo" colorScheme="blue" className={styles.updateLogo} onClick={() => setOpen(true)}>
+        <Button aria-label="new logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
           {t('newFile')}
-          <MdUploadFile size="1.4rem" />
+          <MdUploadFile />
         </Button>
       </DialogTrigger>
 
@@ -202,7 +214,7 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
                     onChange={handleChange}
                     className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}
                     aria-required>
-                    <NativeSelectField name="tags" value={values.tags}>
+                    <NativeSelectField name="tags">
                       <option role="option" value="">
                         {t('chooseTag')}
                       </option>
@@ -247,7 +259,9 @@ export const FilesUpload = ({ userId }: { userId: string }) => {
                     className={!file && required ? styles.input__error : styles.input}
                   />
                 )}
-
+                {!!previewUrl && (
+                  <Image src={previewUrl} alt="preview new logo" fill priority className={styles.filePickerImage} />
+                )}
                 <p className={styles.error}>{!file && required && t('NavForm.validateRequired')}</p>
 
                 <Textarea

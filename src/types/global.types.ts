@@ -90,6 +90,14 @@ export type ArticleVideosType = {
   roleId: string;
 };
 
+export type FilesUploadType = {
+  fileSelectionCancelled: string;
+  errorOpeningFilePicker: string;
+  validateRequired: string;
+  fileTooLarge: string;
+  unsupportedFileType: string;
+};
+
 //FRIENDS
 export type FriendType = Time & {
   id?: string;

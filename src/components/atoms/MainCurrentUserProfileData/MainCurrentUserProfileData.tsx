@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button, Input } from '@chakra-ui/react';
 import {
@@ -19,41 +19,58 @@ import { createClient } from 'utils/supabase/clientCSR';
 
 import { useScopedI18n } from 'locales/client';
 
-import { backUrl, darkMode } from 'constants/links';
-import { EventType, UserType } from 'types/global.types';
-
-import { ModeContext } from 'providers/ModeProvider';
+import { EventType, FilesUploadType, UserType } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FilesUpload } from 'components/molecules/FilesUpload/FilesUpload';
 
 import styles from './MainCurrentUserProfileData.module.scss';
 import { MdCameraEnhance } from 'react-icons/md';
+import {
+  filesProfileTypes,
+  filesTypes,
+  handleFileSelection,
+  isFileAccessApiSupported,
+  validatePhoto,
+} from 'utils/client/files';
 
 export const MainCurrentUserProfileData = ({
-  userData,
   tCurrPrPhoto,
+  fileTranslated,
+  userData,
 }: {
-  userData: UserType;
   tCurrPrPhoto: {
     validateRequired: string;
     uploadFile: string;
     cancelButton: string;
     submit: string;
   };
+  fileTranslated: FilesUploadType;
+  userData: UserType;
 }) => {
   const [valuesFields, setValuesFields] = useState('');
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
   const [open, setOpen] = useState(false);
-
-  const { isMode } = useContext(ModeContext);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const supabase = createClient();
 
-  const selectedColor = '#FFD068';
-
   const tAnotherForm = useScopedI18n('AnotherForm');
+
+  useEffect(() => {
+    if (!newLogo) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(newLogo);
+    setPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [newLogo]);
 
   const changeFile = (e: EventType) => {
     if (e.target.files?.[0]) {
@@ -64,20 +81,35 @@ export const MainCurrentUserProfileData = ({
       setRequired(true);
     }
   };
+
+  const handleFile = async (): Promise<void> => {
+    const result = await handleFileSelection(fileTranslated, false);
+
+    if (typeof result === 'string') {
+      setValuesFields(result);
+      setRequired(false);
+    } else {
+      setNewLogo(result);
+      setRequired(true);
+    }
+  };
+
   const updateLogo = async () => {
     try {
       if (!!newLogo && !required) {
-        const { data, error } = await supabase.storage.from('profiles').upload(`/${userData?.id!}`, newLogo, {
-          upsert: !!userData?.profilePhoto,
-        });
+        if (!(await validatePhoto(fileTranslated, newLogo))) {
+          const { data, error } = await supabase.storage.from('profiles').upload(`/${userData?.id!}`, newLogo, {
+            upsert: !!userData?.profilePhoto,
+          });
 
-        if (!!error) console.error(error);
+          if (!!error) console.error(error);
 
-        const { error: er } = await supabase.from('Users').update({ profilePhoto: data?.path });
+          const { error: er } = await supabase.from('Users').update({ profilePhoto: data?.path });
 
-        if (!!er) console.error(er);
+          if (!!er) console.error(er);
 
-        setValuesFields(tAnotherForm('uploadFile'));
+          setValuesFields(tAnotherForm('uploadFile'));
+        }
       }
     } catch (e) {
       console.error(e);
@@ -95,66 +127,49 @@ export const MainCurrentUserProfileData = ({
             open={open}
             onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
             <DialogTrigger asChild>
-              <Button
-                aria-label="update group logo"
-                colorScheme="yellow"
-                className={styles.updateLogo}
-                onClick={() => setOpen(true)}>
+              <Button aria-label="update group logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
                 <MdCameraEnhance />
               </Button>
             </DialogTrigger>
-            <DialogContent>
-              <DialogHeader backgroundColor={`${isMode === darkMode ? '#2D3748' : ''}`} color={selectedColor}>
+            <DialogContent className={styles.logoContent}>
+              <DialogHeader className={styles.logoHeader}>
                 <DialogTitle>Update logo</DialogTitle>
               </DialogHeader>
 
-              <DialogBody>
-                <Input
-                  type="file"
-                  name="newLogo"
-                  id="newLogo"
-                  padding=".5rem 1rem"
-                  margin=".5rem auto 1.5rem"
-                  borderRadius="1rem"
-                  onChange={changeFile}
-                  borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
-                />
-
-                <p style={{ color: '#bd0000' }}>{!newLogo && required && tCurrPrPhoto.validateRequired}</p>
-                {!!newLogo && (
-                  <Image
-                    src={`${backUrl}/${newLogo.name}`}
-                    alt="preview new logo"
-                    fill
-                    priority
-                    width={192}
-                    height={192}
-                    style={{
-                      margin: '1rem auto',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      borderRadius: '1rem',
-                    }}
+              <DialogBody className={!newLogo && required ? styles.logBody__error : styles.logBody}>
+                {isFileAccessApiSupported ? (
+                  <button onClick={() => handleFile()} className={styles.filePickerButton}>
+                    {tAnotherForm('file')}
+                  </button>
+                ) : (
+                  <Input
+                    type="file"
+                    name="newLogo"
+                    id="newLogo"
+                    accept={`${filesProfileTypes}, ${filesTypes}`}
+                    onChange={changeFile}
                   />
                 )}
+                {!newLogo && required && <p>{tCurrPrPhoto.validateRequired}</p>}
+                {!!previewUrl && <Image src={previewUrl} alt="preview new logo" fill priority />}
                 {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
               </DialogBody>
-              <DialogFooter>
-                <DialogActionTrigger colorScheme="blue" borderColor="transparent" mr={3}>
+              <DialogFooter className={styles.logoFooter}>
+                <DialogActionTrigger className={styles.cancel} onChange={() => setNewLogo(null)}>
                   {tCurrPrPhoto.cancelButton}
                 </DialogActionTrigger>
-                <Button type="submit" onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
+                <Button type="submit" className={styles.edit} onClick={updateLogo}>
                   {tCurrPrPhoto.submit}
                 </Button>
               </DialogFooter>
-              <DialogCloseTrigger color={selectedColor} borderColor="transparent" />
+              <DialogCloseTrigger className={styles.closeTrigger} onChange={() => setNewLogo(null)} />
             </DialogContent>
           </DialogRoot>
         </div>
         <h1 className={styles.name}>{userData?.pseudonym}</h1>
       </div>
       <div className={styles.description}>{userData?.description}</div>
-      <FilesUpload userId={userData?.id!} />
+      <FilesUpload userId={userData?.id!} fileTranslated={fileTranslated} />
     </article>
   );
 };

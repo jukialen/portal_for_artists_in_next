@@ -82,13 +82,13 @@ button {
   cursor: pointer;
   color: var(--text);
 
-  &:focus {
-    background-color: var(--focus);
+  &:hover, &:last-child:hover {
+    background-color: var(--hover);
     color: var(--background);
   }
 
-  &:hover {
-    background-color: var(--hover);
+  &:focus {
+    background-color: var(--focus);
     color: var(--background);
   }
 

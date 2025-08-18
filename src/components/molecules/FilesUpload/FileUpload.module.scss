@@ -3,6 +3,11 @@
   border-color: transparent;
   display: flex;
   justify-self: flex-start;
+
+  &:hover svg path:last-child {
+    color: var(--background);
+    fill: var(--background);
+  }
 }
 
 .modelContent {
@@ -45,6 +50,7 @@
     div {
       color: var(--text);
     }
+
     .tags, .tags__error {
       margin: .5rem auto;
       padding: .5rem 0;
@@ -101,6 +107,12 @@
     &__error {
       border-color: var(--required);
     }
+  }
+
+  .filePickerImage {
+    position: static !important;
+    width: 100%;
+    margin: .5rem auto;
   }
 
   .error {

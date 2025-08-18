@@ -1,6 +1,6 @@
 'use client';
 
-import { useI18n, useScopedI18n } from 'locales/client';
+import { FilesUploadType } from 'types/global.types';
 
 const MAX_PHOTO_SIZE = 6291456;
 export const filesProfileTypes = '.jpg, .jpeg, .png, .webp, .avif';
@@ -12,9 +12,8 @@ const ACCEPTED_ANIM_VIDEOS_TYPES = filesTypes
 export const isFileAccessApiSupported =
   typeof window !== 'undefined' && typeof window.showOpenFilePicker === 'function';
 
-console.log(window.showOpenFilePicker);
 export const handleFileSelection = async (
-  tAnotherForm: any,
+  filesUploadTranslated: FilesUploadType,
   profile: boolean = true,
 ): Promise<File | null | string> => {
   try {
@@ -38,10 +37,7 @@ export const handleFileSelection = async (
               {
                 description: 'Videos',
                 accept: {
-                  'video/*': filesTypes
-                    .split(', ')
-                    .filter((r) => r !== '.apng')
-                    .join(', '),
+                  'video/*': filesTypes.split(', ').filter((r) => r !== '.apng'),
                 },
               },
             ]
@@ -52,32 +48,29 @@ export const handleFileSelection = async (
     return (await handle.getFile()) as File | null;
   } catch (err: any) {
     if (err.name === 'AbortError') {
-      return tAnotherForm('fileSelectionCancelled');
+      return filesUploadTranslated.fileSelectionCancelled;
     } else {
       console.error('Błąd podczas otwierania showOpenFilePicker:', err);
-      return tAnotherForm('errorOpeningFilePicker');
+      return filesUploadTranslated.errorOpeningFilePicker;
     }
   }
 };
 
 export const validatePhoto = async (
-  tAnotherForm: any,
-  t: any,
+  filesUploadTranslated: FilesUploadType,
   file: File,
   profile: boolean = true,
 ): Promise<string | null> => {
-  if (!file) {
-    return t('NavForm.validateRequired');
-  }
+  file && filesUploadTranslated.validateRequired;
 
-  profile && file.size > MAX_PHOTO_SIZE && tAnotherForm('fileTooLarge');
+  profile && file.size > MAX_PHOTO_SIZE && filesUploadTranslated.fileTooLarge;
 
   if (!profile) {
     if (!ACCEPTED_IMAGE_TYPES.includes(file.type) && !ACCEPTED_ANIM_VIDEOS_TYPES.includes(file.type)) {
-      return tAnotherForm('unsupportedFileType');
+      return filesUploadTranslated.unsupportedFileType;
     }
   } else if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-    return tAnotherForm('unsupportedFileType');
+    return filesUploadTranslated.unsupportedFileType;
   }
   return null;
 };

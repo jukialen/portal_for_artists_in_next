@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -11,7 +11,7 @@ import { useI18n, useScopedI18n } from 'locales/client';
 
 import { filesProfileTypes, isFileAccessApiSupported, validatePhoto, handleFileSelection } from 'utils/client/files';
 
-import { EventType, ResetFormType, UserType } from 'types/global.types';
+import { EventType, FilesUploadType, ResetFormType, UserType } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
@@ -23,9 +23,17 @@ type ProfileType = {
   newDescription: string;
 };
 
-export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
+export const ChangePseuDescData = ({
+  userData,
+  fileTranslated,
+}: {
+  userData: UserType;
+  fileTranslated: FilesUploadType;
+}) => {
   const [valuesFields, setValuesFields] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const supabase = createClient();
 
   const t = useI18n();
@@ -43,13 +51,27 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
     newDescription: SchemaValidation().description,
   });
 
+  useEffect(() => {
+    if (!photo) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    console.log('photo', photo);
+    const objectUrl = URL.createObjectURL(photo);
+    setPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [photo]);
+
   const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
 
   const handleFile = async () => {
-    const result = await handleFileSelection(tAnotherForm);
-    console.log(result);
+    const result = await handleFileSelection(fileTranslated);
 
     typeof result === 'string' ? setValuesFields(result) : setPhoto(result);
   };
@@ -61,7 +83,7 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
       let updatePhotoInDB = false;
 
       if (!!photo) {
-        const photoError = await validatePhoto(tAnotherForm, t, photo, true);
+        const photoError = await validatePhoto(fileTranslated, photo);
         if (photoError) {
           setValuesFields(photoError);
           return;
@@ -105,7 +127,7 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
       setValuesFields(tAccount('profile.errorSending'));
     }
   };
-  console.log(isFileAccessApiSupported);
+
   return (
     <Formik
       initialValues={initialValues}
@@ -178,7 +200,11 @@ export const ChangePseuDescData = ({ userData }: { userData: UserType }) => {
             </div>
           )}
 
-          <button className={`${styles.button} button`} type="submit" aria-label={tAccount('profile.ariaLabelButton')}>
+          <button
+            className={`${styles.button} button`}
+            type="submit"
+            aria-label={tAccount('profile.ariaLabelButton')}
+            onChange={() => setPhoto(null)}>
             {tAccount('profile.save')}
           </button>
 

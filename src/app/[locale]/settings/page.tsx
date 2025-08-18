@@ -7,7 +7,7 @@ import { getUserData } from 'helpers/getUserData';
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { LangType } from 'types/global.types';
+import { FilesUploadType, LangType } from 'types/global.types';
 
 import { ChangePseuDescData } from 'components/atoms/ChangePseuDescData/ChangePseuDescData';
 import { LanguagesSettings } from 'components/atoms/LanguagesSettings';
@@ -23,7 +23,16 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
   const { locale } = await params;
   setStaticParamsLocale(locale);
   const t = await getI18n();
+  const tAnotherForm = await getScopedI18n('AnotherForm');
   const tSettings = await getScopedI18n('Settings');
+
+  const fileTranslated: FilesUploadType = {
+    fileSelectionCancelled: tAnotherForm('fileSelectionCancelled'),
+    errorOpeningFilePicker: tAnotherForm('errorOpeningFilePicker'),
+    validateRequired: t('NavForm.validateRequired'),
+    fileTooLarge: tAnotherForm('fileTooLarge'),
+    unsupportedFileType: tAnotherForm('unsupportedFileType'),
+  };
 
   const userData = await getUserData();
 
@@ -43,7 +52,7 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
         <>
           <AccountData userData={userData!} />
           <h3>{t('Nav.profile')}</h3>
-          <ChangePseuDescData userData={userData!} />
+          <ChangePseuDescData userData={userData!} fileTranslated={fileTranslated} />
         </>
       )}
       <footer>
