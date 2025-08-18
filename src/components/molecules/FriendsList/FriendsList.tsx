@@ -21,7 +21,7 @@ type FriendsListComponentType = {
 export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListComponentType) => {
   const [friendsList, setFriendsList] = useState<FriendsListType[]>(firstFriendsList);
   const [lastVisible, setLastVisible] = useState<string | null>(
-    firstFriendsList.length > 0 ? firstFriendsList[firstFriendsList.length - 1].createdAt : null,
+    !!firstFriendsList && firstFriendsList.length > 0 ? firstFriendsList[firstFriendsList.length - 1].createdAt : null,
   );
   let [i, setI] = useState(1);
 
@@ -65,7 +65,7 @@ export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListCompo
     <div className={styles.container}>
       <h2 className={styles.title}>{tFriends.friends}</h2>
       <section className={styles.container__section}>
-        {friendsList.length > 0 ? (
+        {!!friendsList && friendsList.length > 0 ? (
           friendsList.map(({ pseudonym, fileUrl }, index) => (
             <Tile key={index} name={pseudonym} link={`/user/${pseudonym}`} fileUrl={fileUrl} />
           ))
