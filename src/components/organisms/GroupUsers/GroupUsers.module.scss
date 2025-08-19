@@ -1,5 +1,5 @@
 .tilesSection {
-  width: 100%;
+  width: 48dvw;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -11,11 +11,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0 1.5rem 2rem;
+    margin: 0 .5rem 2rem;
 
     &__button {
       width: fit-content;
       height: 2.5rem;
+      margin: 0;
       border-color: var(--third);
     }
   }
@@ -36,6 +37,7 @@
     width: 80%;
     margin: 2rem auto;
     font-size: 1rem;
+    text-align: center;
   }
 }
 

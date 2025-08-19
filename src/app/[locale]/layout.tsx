@@ -11,9 +11,10 @@ import { getUserData } from 'helpers/getUserData';
 
 import { ModeProvider } from 'providers/ModeProvider';
 
-import { UserHeader } from 'components/organisms/UserHeader/UserHeader';
-import { Header } from 'components/organisms/Header/Header';
+import { SWStart } from 'components/atoms/SWStart';
 import { Aside } from 'components/organisms/Aside/Aside';
+import { Header } from 'components/organisms/Header/Header';
+import { UserHeader } from 'components/organisms/UserHeader/UserHeader';
 
 import styles from './Layout.module.scss';
 import 'styles/reset.scss';
@@ -52,19 +53,21 @@ export default async function RootLayout({ children, params }: ChildrenType) {
       {!!GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
 
       <body>
-        <ModeProvider locale={locale}>
-          <div className={styles.whole__page}>
-            {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
+        <SWStart locale={locale}>
+          <ModeProvider locale={locale}>
+            <div className={styles.whole__page}>
+              {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
 
-            <div className={styles.container}>
-              {!!user && userMenuComponents.aside}
+              <div className={styles.container}>
+                {!!user && userMenuComponents.aside}
 
-              <main className={!!user ? styles.user__container : styles.main__container}>
-                <section className={styles.workspace}>{children}</section>
-              </main>
+                <main className={!!user ? styles.user__container : styles.main__container}>
+                  <section className={styles.workspace}>{children}</section>
+                </main>
+              </div>
             </div>
-          </div>
-        </ModeProvider>
+          </ModeProvider>
+        </SWStart>
       </body>
     </html>
   );

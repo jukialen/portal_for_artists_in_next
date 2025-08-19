@@ -1,12 +1,30 @@
 .updateLogo {
-  margin: 2rem 1rem 0;
-  border-color: transparent;
   display: flex;
   justify-self: flex-start;
+  margin: 2rem 1rem 0;
+  border: 1px solid var(--text);
+  border-radius: 0.5rem;
 
-  &:hover svg path:last-child {
-    color: var(--background);
-    fill: var(--background);
+  &:hover {
+    border-color: var(--hover);
+
+    svg path:last-child {
+      color: var(--background);
+      fill: var(--background);
+    }
+  }
+
+  &:active {
+    border-color: var(--active);
+  }
+
+  &:focus {
+    border-color: var(--focus);
+
+    svg path:last-child {
+      color: var(--background);
+      fill: var(--background);
+    }
   }
 }
 

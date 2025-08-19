@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { setStaticParamsLocale } from 'next-international/server';
+import { Tabs } from '@ark-ui/react/tabs';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
@@ -11,12 +13,20 @@ import { graphics, videosAnimations } from 'utils/files';
 import { getFirstFriends } from 'utils/friends';
 import { adminList, modsUsersList } from 'utils/groups';
 
-import { DashboardTabs } from 'components/organisms/DashboardTabs/DashboardTabs';
 import { MainCurrentUserProfileData } from 'components/atoms/MainCurrentUserProfileData/MainCurrentUserProfileData';
+import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
+import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
+import { PhotosGallery } from 'components/organisms/PhotosGallery/PhotosGallery';
+import { getMoreRenderedContent } from '../../actions';
+import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
+import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
+
+import styles from './account.module.scss';
+import { RiArrowUpSLine } from 'react-icons/ri';
 
 export const metadata: Metadata = HeadCom('Account portal site.');
 
-export default async function Account({ params }: { params: Promise<{ locale: LangType }> }) {
+export default async function Account({ params }: { params: Promise<{ locale: LangType; displayName: string }> }) {
   const { locale } = await params;
   setStaticParamsLocale(locale);
 
@@ -27,6 +37,8 @@ export default async function Account({ params }: { params: Promise<{ locale: La
   const maxItems = 30;
 
   const userData = await getUserData();
+  const id = userData?.id!;
+  const author = (await params).displayName;
   const tMain = {
     validateRequired: t('NavForm.validateRequired'),
     uploadFile: t('AnotherForm.uploadFile'),
@@ -64,6 +76,8 @@ export default async function Account({ params }: { params: Promise<{ locale: La
     noFriends: t('Friends.noFriends'),
   };
 
+  const fileTabList = [tDash?.friends, tDash?.groups, tDash?.photos, tDash?.animations, tDash?.videos];
+
   const firstGraphics = await graphics(maxItems, userData?.id!, 'first');
   const firstAnimations = await videosAnimations(0, maxItems, userData?.id!, 'first');
   const firstVideos = await videosAnimations(1, maxItems, userData?.id!, 'first');
@@ -73,19 +87,61 @@ export default async function Account({ params }: { params: Promise<{ locale: La
   return (
     <>
       <MainCurrentUserProfileData tCurrPrPhoto={tMain} fileTranslated={fileTranslated} userData={userData!} />
-      <DashboardTabs
-        id={userData?.id!}
-        author={userData?.pseudonym!}
-        tDash={tDash}
-        tGallery={tGallery}
-        tFriends={tFriends}
-        firstGraphics={firstGraphics!}
-        firstVideos={firstVideos!}
-        firstAnimations={firstAnimations!}
-        firstFriendsList={firstFriendsList!}
-        firstAdminList={firstAdminList}
-        firstModsUsersList={firstModsUsersList!}
-      />
+
+      <Tabs.Root className={styles.tabsMenu} defaultValue={fileTabList[0]} defaultChecked lazyMount unmountOnExit>
+        <Tabs.List className={styles.topTabList}>
+          {fileTabList.map((tab, index) => (
+            <Tabs.Trigger className={styles.tabForPanels} value={tab!} key={index}>
+              {tab}
+            </Tabs.Trigger>
+          ))}
+          <Tabs.Indicator />
+        </Tabs.List>
+        <div className={styles.tabContents}>
+          <Tabs.Content value={fileTabList[0]!} className={styles.tabContent} role="tabcontent">
+            <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} />
+          </Tabs.Content>
+          <Tabs.Content value={fileTabList[1]!} className={styles.tabContent} role="tabcontent">
+            <GroupUsers id={id!} firstAdminList={firstAdminList!} firstModsUsersList={firstModsUsersList!} />
+          </Tabs.Content>
+          <Tabs.Content value={fileTabList[2]!} className={styles.tabContent} role="tabcontent">
+            {/*<PhotosGallery*/}
+            {/*  id={id}*/}
+            {/*  author={author}*/}
+            {/*  tGallery={tGallery}*/}
+            {/*  firstGraphics={firstGraphics}*/}
+            {/*  initialRenderedContentAction={() => getMoreRenderedContent({ files: firstGraphics!, noEls: 1 })}*/}
+            {/*/>*/}
+          </Tabs.Content>
+          <Tabs.Content value={fileTabList[3]!} className={styles.tabContent} role="tabcontent">
+            {/*<AnimatedGallery*/}
+            {/*  id={id}*/}
+            {/*  author={author}*/}
+            {/*  tGallery={tGallery}*/}
+            {/*  firstAnimations={firstAnimations}*/}
+            {/*  initialRenderedContentAction={() => getMoreRenderedContent({ files: firstAnimations!, noEls: 2 })}*/}
+            {/*/>*/}
+          </Tabs.Content>
+          <Tabs.Content value={fileTabList[4]!} className={styles.tabContent} role="tabcontent">
+            {/*<VideoGallery*/}
+            {/*  id={id!}*/}
+            {/*  author={author!}*/}
+            {/*  tGallery={tGallery!}*/}
+            {/*  firstVideos={firstVideos}*/}
+            {/*  initialRenderedContentAction={() => getMoreRenderedContent({ files: firstVideos!, noEls: 3 })}*/}
+            {/*/>*/}
+          </Tabs.Content>
+        </div>
+      </Tabs.Root>
+
+      {fileTabList.map((tab, index) => (
+        <div className={styles.mobileTabs} key={index}>
+          <Link href={`/account/${author}/${tab!.toLowerCase()}`} aria-label="">
+            {tab}
+          </Link>
+          <RiArrowUpSLine />
+        </div>
+      ))}
     </>
   );
 }

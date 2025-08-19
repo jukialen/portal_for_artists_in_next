@@ -32,19 +32,19 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
 
   const [adminsArray, setAdminsArray] = useState<GroupUserType[]>(firstAdminList!);
   const [lastAdminsVisible, setAdminsLastVisible] = useState(
-    firstAdminList.length === maxItems ? firstAdminList[firstAdminList.length - 1].name : '',
+    !!firstAdminList && firstAdminList.length === maxItems ? firstAdminList[firstAdminList.length - 1].name : '',
   );
   let [iAdmins, setIAdmins] = useState(1);
-  const [moderatorsArray, setModeratorsArray] = useState<GroupUserType[]>(firstModsUsersList.moderators);
+  const [moderatorsArray, setModeratorsArray] = useState<GroupUserType[]>(firstModsUsersList?.moderators);
   const [lastModeratorsVisible, setModeratorsLastVisible] = useState(
-    firstModsUsersList.moderators.length === maxItems
+    !!firstModsUsersList && firstModsUsersList.moderators.length === maxItems
       ? firstModsUsersList.moderators[firstModsUsersList.moderators.length - 1].name
       : '',
   );
   let [iModerators, setIModerators] = useState(1);
-  const [membersArray, setMembersArray] = useState<GroupUserType[]>(firstModsUsersList.members);
+  const [membersArray, setMembersArray] = useState<GroupUserType[]>(firstModsUsersList?.members);
   const [lastMembersVisible, setMembersLastVisible] = useState(
-    firstModsUsersList.members.length === maxItems
+    !!firstModsUsersList && firstModsUsersList.members.length === maxItems
       ? firstModsUsersList.members[firstModsUsersList.members.length - 1].name
       : '',
   );
@@ -184,7 +184,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
 
       <h2 className={styles.title}>{tAccount('adminTitle')}</h2>
       <Separator className={styles.divider} />
-      {adminsArray.length > 0 ? (
+      {!!adminsArray && adminsArray.length > 0 ? (
         adminsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
@@ -194,7 +194,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
       {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && <MoreButton nextElements={nextAdminList} />}
       <h2 className={styles.title}>{tAccount('modsTitle')}</h2>
       <Separator className={styles.divider} />
-      {moderatorsArray.length > 0 ? (
+      {!!moderatorsArray && moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))
@@ -206,7 +206,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
       )}
       <h2 className={styles.title}>{tAccount('usersTitle')}</h2>
       <Separator className={styles.divider} />
-      {membersArray.length > 0 ? (
+      {!!membersArray && membersArray.length > 0 ? (
         membersArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
         ))

@@ -13,11 +13,7 @@ import { Friends } from 'components/atoms/Friends/Friends';
 import styles from './Aside.module.scss';
 import { RiArrowUpSLine } from 'react-icons/ri';
 
-export const AsideWrapper = ({
-  asideCategory,
-  friendsAsideList,
-  groupsAsideList,
-}: {
+export const AsideWrapper = ({ asideCategory, friendsAsideList, groupsAsideList }: {
   asideCategory: string;
   friendsAsideList: FriendsListArrayType[];
   groupsAsideList: GroupsType[];
