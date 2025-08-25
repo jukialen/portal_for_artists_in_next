@@ -1,5 +1,5 @@
-.article {
-  max-width: 98%;
+.file {
+  min-width: min(17.5rem, 98%);
   justify-self: center;
   margin: 1rem auto;
   padding: 0.5rem 0;
@@ -8,9 +8,20 @@
   border-radius: 0.5rem;
   box-shadow: 0 0 0.5rem 0.1rem var(--third);
 
+
   .item {
     object-fit: contain;
     background-color: transparent;
+    width: 37.5rem;
+    height: 37.5rem;
+  }
+
+  .video {
+    width: inherit;
+    height: max-content;
+    min-height: 20rem;
+    max-width: 37.5rem;
+    max-height: 37.5rem;
   }
 
   .shortDescription {

@@ -1,23 +1,18 @@
 'use client';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 
 import { videosAnimations } from 'utils/files';
 
 import { FileType, GalleryType } from 'types/global.types';
 
-import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
-import { getMoreRenderedContent } from '../../../app/[locale]/actions';
-
-export const AnimatedGallery = ({
-  id,
-  author,
-  tGallery,
-  firstAnimations,
-  initialRenderedContentAction,
-}: GalleryType) => {
-  const [renderedContent, setRenderedContent] = useState(initialRenderedContentAction);
+import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
+const FileContainer = dynamic(() =>
+  import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
+);
+export const AnimatedGallery = ({ id, pseudonym, profilePhoto, author, tGallery, firstAnimations }: GalleryType) => {
   const [userAnimates, setUserAnimates] = useState<FileType[]>(firstAnimations!);
   const [lastVisible, setLastVisible] = useState(
     firstAnimations!.length > 0 ? firstAnimations![firstAnimations!.length - 1].createdAt : '',
@@ -37,8 +32,6 @@ export const AnimatedGallery = ({
       const newArray = userAnimates.concat(...nextArray);
       setUserAnimates(newArray);
 
-      setRenderedContent(await getMoreRenderedContent({ files: userAnimates, noEls: 2 }));
-
       if (nextArray.length === maxItems) {
         setLastVisible(nextArray[nextArray.length - 1].createdAt);
         setI(i++);
@@ -56,7 +49,32 @@ export const AnimatedGallery = ({
       )}
 
       <Wrapper>
-        {renderedContent}
+        <Suspense fallback={<p>Loading...</p>}>
+          {userAnimates.length > 0 ? (
+            userAnimates.map(
+              (
+                { fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType,
+                index,
+              ) => (
+                <FileContainer
+                  fileId={fileId!}
+                  name={name!}
+                  fileUrl={fileUrl}
+                  shortDescription={shortDescription!}
+                  tags={tags!}
+                  authorName={authorName!}
+                  authorId={authorId}
+                  authorBool={authorName === pseudonym}
+                  profilePhoto={profilePhoto}
+                  time={time}
+                  roleId={roleId!}
+                />
+              ),
+            )
+          ) : (
+            <div>nie ma nic</div>
+          )}
+        </Suspense>
 
         {!!lastVisible && userAnimates.length === maxItems * i && <MoreButton nextElements={nextElements} />}
       </Wrapper>

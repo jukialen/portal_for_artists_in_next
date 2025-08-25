@@ -1,7 +1,8 @@
 .mobileTabs {
+  display: grid;
+  grid-template-columns: 1fr 1.4rem;
   width: 90vw;
   height: 3rem;
-  display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
   margin: 1rem auto;
@@ -10,13 +11,13 @@
   border-radius: 0.5rem;
   justify-content: space-between;
 
-  svg {
-    display: inline-block;
-    transform: rotate(90deg);
+  span {
     color: var(--text);
   }
 
-  a {
+  svg {
+    display: inline-block;
+    transform: rotate(90deg);
     color: var(--text);
   }
 
@@ -43,6 +44,10 @@
       font-size: 1.2rem;
       border-radius: 1rem;
     }
+  }
+
+  .tabContents {
+    margin-top: .75rem;
   }
 
   .tabContent {

@@ -346,7 +346,7 @@ export default {
     body3: 'Nie jest potrzebny. Możesz korzystać z serwisu z planem FREE.',
     head4: 'Jak mogę usunąć konto?',
     body4:
-      'Wystarczy, że na dole strony w pierwszej zakladce podstrony konta klikniesz w przycisk \'Usuń\' i zatwierdzisz wybór. Po zatwierdzeniu rozpoczyna się usuwanie wszystkich twoich danych.',
+      "Wystarczy, że na dole strony w pierwszej zakladce podstrony konta klikniesz w przycisk 'Usuń' i zatwierdzisz wybór. Po zatwierdzeniu rozpoczyna się usuwanie wszystkich twoich danych.",
   },
   DeletionAccount: {
     button: 'Usuń',
@@ -413,4 +413,5 @@ export default {
   newFile: 'Nowy plik',
   notFound: 'Nic nie znaleziono',
   searchResultTitle: 'Wyniki wyszukiwania dla: ',
+  backPage: 'Wstecz',
 } as const;

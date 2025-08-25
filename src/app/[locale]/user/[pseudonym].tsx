@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 import { createServer } from 'utils/supabase/clientSSR';
-import { Tabs } from '@chakra-ui/react';
+import { Tabs } from '@ark-ui/react/tabs';
+import { Menu } from '@ark-ui/react/menu';
 
-import { getMoreRenderedContent } from '../actions';
+// import { getMoreRenderedContent } from '../actions';
 
 import { HeadCom } from 'constants/HeadCom';
 import { backUrl } from 'constants/links';
@@ -28,7 +29,12 @@ import styles from './page.module.scss';
 async function getFidAndFavs(pseudonym: string) {
   const supabase = await createServer();
 
-  const { data: d, error } = await supabase.from('Users').select('id').eq('pseudonym', pseudonym).limit(1).single();
+  const { data: d, error } = await supabase
+    .from('Users')
+    .select('id, description, profilePhoto')
+    .eq('pseudonym', pseudonym)
+    .limit(1)
+    .single();
   if (!d || !!error) console.error('no user');
 
   const { data, error: er } = await supabase.from('Friends').select('friendId, favorite').eq('usernameId', d?.id!);
@@ -39,7 +45,7 @@ async function getFidAndFavs(pseudonym: string) {
 
   data.forEach((item) => friendIds.push({ friendId: item.friendId, favorite: item.favorite }));
 
-  return { friendIds, pseudonymId: d?.id };
+  return { friendIds, pseudonymId: d?.id, profilePhotoUser: d?.profilePhoto, descriptionUser: d?.description };
 }
 async function getAdminGroups(adminId: string, maxItems: number) {
   const adminArray: GroupUsersType[] = [];
@@ -144,6 +150,9 @@ export default async function User({ params }: PropsType) {
   const t = await getI18n();
 
   const pseudonymName = decodeURIComponent(pseudonym);
+  const userData = await getUserData();
+  const profilePhoto = userData?.profilePhoto!;
+  const id = userData?.id!;
 
   const tFriends = {
     friends: t('Nav.friends'),
@@ -168,32 +177,19 @@ export default async function User({ params }: PropsType) {
     userAnimationsTitle: t('Account.gallery.userAnimationsTitle'),
     userVideosTitle: t('Account.gallery.userVideosTitle'),
   };
-  const contentList = [
-    tAccountaMenu('gallery'),
-    tAccountaMenu('profile'),
-    tAccountaMenu('friends'),
-    tAccountaMenu('groups'),
-  ];
   const tProfile = {
     userAvatar: t('Account.profile.userAvatar'),
     defaultAvatar: t('Account.profile.defaultAvatar'),
     pseudonym: t('AnotherForm.pseudonym'),
     aboutMe: t('Account.profile.aboutMe'),
   };
-  const fileTabList = [tAside('photos'), tAside('animations'), tAside('videos')];
 
-  const selectedColor = '#FFD068';
-  const hoverColor = '#FF5CAE';
-  const activeColor = '#82FF82';
-  const borderColor = '#4F8DFF';
-
-  const user = await getUserData();
   const maxItems = 30;
   const fidsFavs = await getFidAndFavs(pseudonymName);
   const firstFriends = await getFirstFriends(fidsFavs?.pseudonymId!, maxItems);
-  const adminGroups = await getAdminGroups(user?.id!, maxItems);
-  const modGroups = await getModGroups(user?.id!, maxItems);
-  const membersGroups = await getMembersGroups(user?.id!, maxItems);
+  const adminGroups = await getAdminGroups(fidsFavs?.pseudonymId!, maxItems);
+  const modGroups = await getModGroups(fidsFavs?.pseudonymId!, maxItems);
+  const membersGroups = await getMembersGroups(fidsFavs?.pseudonymId!, maxItems);
   const firstGraphics = await graphics(maxItems, fidsFavs?.pseudonymId!, 'first');
   const firstAnimations = await videosAnimations(0, maxItems, fidsFavs?.pseudonymId!, 'first');
   const firstVideos = await videosAnimations(1, maxItems, fidsFavs?.pseudonymId!, 'first');
@@ -208,108 +204,183 @@ export default async function User({ params }: PropsType) {
     return favs;
   };
   const favs = favLength();
-  const fave = fidsFavs?.friendIds.find((f) => f.friendId === user?.id);
+  const fave = fidsFavs?.friendIds.find((f) => f.friendId === id);
+
+  const contentList = [
+    tAccountaMenu('gallery'),
+    tAccountaMenu('profile'),
+    tAccountaMenu('friends'),
+    tAccountaMenu('groups'),
+  ];
+
+  const fileTabList = [tAside('photos'), tAside('animations'), tAside('videos')];
+  const fileComps = [
+    <PhotosGallery
+      id={fidsFavs?.pseudonymId!}
+      pseudonym={pseudonym}
+      profilePhoto={profilePhoto}
+      author={pseudonymName}
+      tGallery={tGallery}
+      firstGraphics={firstGraphics}
+    />,
+    <AnimatedGallery
+      id={fidsFavs?.pseudonymId!}
+      pseudonym={pseudonym}
+      profilePhoto={profilePhoto}
+      author={pseudonymName}
+      tGallery={tGallery}
+      firstAnimations={firstAnimations}
+    />,
+    <VideoGallery
+      id={fidsFavs?.pseudonymId!!}
+      pseudonym={pseudonym}
+      profilePhoto={profilePhoto}
+      author={pseudonymName}
+      tGallery={tGallery!}
+      firstVideos={firstVideos}
+    />,
+  ];
+
+  const filesList = [
+    <Menu.Root>
+      <Menu.Trigger>
+        Open menu <Menu.Indicator>➡️</Menu.Indicator>
+      </Menu.Trigger>
+      <Menu.Positioner>
+        <Menu.Content className={styles.tabsForPanels}>
+          {fileTabList.map((file, index) => (
+            <Menu.Item value={file}>{fileComps[index]}</Menu.Item>
+          ))}
+        </Menu.Content>
+      </Menu.Positioner>
+    </Menu.Root>,
+    <ProfileUser
+      language={tProfile}
+      pseudonym={pseudonymName}
+      fileUrl={fidsFavs?.profilePhotoUser!}
+      description={fidsFavs?.descriptionUser!}
+    />,
+    <FriendsList id={userData?.id!} tFriends={tFriends} firstFriendsList={firstFriends!} />,
+    <GroupUser
+      id={fidsFavs?.pseudonymId!}
+      firstAdminArray={adminGroups!}
+      firstModsArray={modGroups!}
+      firstMembersArray={membersGroups!}
+      tGroupsUser={tGroupsUser}
+    />,
+  ];
 
   return (
     <>
       <h2 className={styles.profile__user__title}>{pseudonymName}</h2>
 
       <FriendsButtons
-        id={user?.id!}
+        id={id}
         fid={fidsFavs?.pseudonymId!}
-        pseudonym={user?.pseudonym!}
+        pseudonym={userData?.pseudonym!}
         favLength={favs}
         fav={fave!.favorite}
         friendBool={!!fave!.favorite}
         translated={tFriends}
       />
-      <Tabs.Root className={styles.tabs} size="sm" lazyMount fitted variant="subtle">
+      <Tabs.Root className={styles.tabsMenu} defaultValue={contentList[0]} defaultChecked lazyMount unmountOnExit>
         <Tabs.List className={styles.topTabList} role="tablist">
-          <div className={styles.profile__user__menu}>
-            <div className={styles.content}>
-              {contentList.map((content, index) => (
-                <Tabs.Trigger
-                  key={index}
-                  _selected={{ borderColor: selectedColor }}
-                  _hover={{ borderColor: hoverColor }}
-                  _active={{ borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role="tab"
-                  value={content}>
-                  {content}
-                </Tabs.Trigger>
-              ))}
-            </div>
-          </div>
-          <Tabs.Indicator rounded="l2" />
+          {contentList.map((tab, index) => (
+            <Tabs.Trigger className={styles.tabForPanels} role="tab" value={tab!} key={index}>
+              {tab}
+            </Tabs.Trigger>
+          ))}
+          <Tabs.Indicator />
         </Tabs.List>
-        <Tabs.Content value={contentList[0]} className={styles.tabsForPanels}>
-          <Tabs.Root lazyMount variant="subtle" size="sm" fitted>
-            <Tabs.List className={styles.tabList} role="tablist">
-              {fileTabList.map((tab, index) => (
-                <Tabs.Trigger
-                  value={tab}
-                  key={index}
-                  className={styles.tabForPanels}
-                  _selected={{ borderColor: selectedColor }}
-                  _hover={{ borderColor: hoverColor }}
-                  _active={{ borderColor: activeColor }}
-                  borderColor={borderColor}
-                  role="tab">
-                  {tab}
-                </Tabs.Trigger>
-              ))}
-            </Tabs.List>
-            <Tabs.Content value={fileTabList[0]} className={styles.tabsForPanels}>
-              <PhotosGallery
-                id={user?.id!}
-                author={pseudonymName}
-                firstGraphics={firstGraphics}
-                tGallery={tGallery}
-                initialRenderedContentAction={() => getMoreRenderedContent({ files: firstGraphics!, noEls: 1 })}
-              />
+        <div className={styles.tabContents}>
+          {filesList.map((comp, index) => (
+            <Tabs.Content value={fileTabList[index]!} className={styles.tabContent} role="tabcontent" key={index}>
+              {comp}
             </Tabs.Content>
-            <Tabs.Content value={fileTabList[1]} className={styles.tabPanel} role="tabpanel">
-              <AnimatedGallery
-                id={user?.id!}
-                author={pseudonymName}
-                firstAnimations={firstAnimations}
-                tGallery={tGallery}
-                initialRenderedContentAction={() => getMoreRenderedContent({ files: firstAnimations!, noEls: 2 })}
-              />
-            </Tabs.Content>
-            <Tabs.Content value={fileTabList[2]} className={styles.tabPanel} role="tabpanel">
-              <VideoGallery
-                id={user?.id!}
-                author={pseudonymName}
-                firstVideos={firstVideos}
-                tGallery={tGallery}
-                initialRenderedContentAction={() => getMoreRenderedContent({ files: firstVideos!, noEls: 3 })}
-              />
-            </Tabs.Content>
-          </Tabs.Root>
-        </Tabs.Content>
-        <Tabs.Content value={contentList[1]} className={styles.tabPanel} role="tabpanel">
-          <ProfileUser
-            language={tProfile}
-            pseudonym={pseudonymName}
-            fileUrl={user?.profilePhoto!}
-            description={user?.description!}
-          />
-        </Tabs.Content>
-        <Tabs.Content value={contentList[1]} className={styles.tabPanel} role="tabpanel">
-          <FriendsList id={user?.id!} tFriends={tFriends} firstFriendsList={firstFriends!} />
-        </Tabs.Content>
-        <Tabs.Content value={contentList[2]} className={styles.tabPanel} role="tabpanel">
-          <GroupUser
-            id={user?.id!}
-            firstAdminArray={adminGroups!}
-            firstModsArray={modGroups!}
-            firstMembersArray={membersGroups!}
-            tGroupsUser={tGroupsUser}
-          />
-        </Tabs.Content>
+          ))}
+        </div>
       </Tabs.Root>
+
+      {/*<Tabs.Root className={styles.tabs} size="sm" lazyMount fitted variant="subtle">*/}
+      {/*  /!*<Tabs.List className={styles.topTabList} role="tablist">*!/*/}
+      {/*  /!*  <div className={styles.profile__user__menu}>*!/*/}
+      {/*  /!*    <div className={styles.content}>*!/*/}
+      {/*  /!*      {contentList.map((content, index) => (*!/*/}
+      {/*  /!*        <Tabs.Trigger key={index} borderColor={borderColor} role="tab" value={content}>*!/*/}
+      {/*  /!*          {content}*!/*/}
+      {/*  /!*        </Tabs.Trigger>*!/*/}
+      {/*  /!*      ))}*!/*/}
+      {/*  /!*    </div>*!/*/}
+      {/*  /!*  </div>*!/*/}
+      {/*  /!*  <Tabs.Indicator rounded="l2" />*!/*/}
+      {/*  /!*</Tabs.List>*!/*/}
+      {/*  <Tabs.Content value={contentList[0]} className={styles.tabsForPanels}>*/}
+      {/*    <Tabs.Root lazyMount variant="subtle" size="sm" fitted>*/}
+      {/*      <Tabs.List className={styles.tabList} role="tablist">*/}
+      {/*        {fileTabList.map((tab, index) => (*/}
+      {/*          <Tabs.Trigger*/}
+      {/*            value={tab}*/}
+      {/*            key={index}*/}
+      {/*            className={styles.tabForPanels}*/}
+      {/*            _selected={{ borderColor: selectedColor }}*/}
+      {/*            _hover={{ borderColor: hoverColor }}*/}
+      {/*            _active={{ borderColor: activeColor }}*/}
+      {/*            borderColor={borderColor}*/}
+      {/*            role="tab">*/}
+      {/*            {tab}*/}
+      {/*          </Tabs.Trigger>*/}
+      {/*        ))}*/}
+      {/*      </Tabs.List>*/}
+      {/*      <Tabs.Content value={fileTabList[0]} className={styles.tabsForPanels}>*/}
+      {/*        <PhotosGallery*/}
+      {/*          id={user?.id!}*/}
+      {/*          author={pseudonymName}*/}
+      {/*          firstGraphics={firstGraphics}*/}
+      {/*          tGallery={tGallery}*/}
+      {/*          initialRenderedContentAction={() => getMoreRenderedContent({ files: firstGraphics!, noEls: 1 })}*/}
+      {/*        />*/}
+      {/*      </Tabs.Content>*/}
+      {/*      <Tabs.Content value={fileTabList[1]} className={styles.tabPanel} role="tabpanel">*/}
+      {/*        <AnimatedGallery*/}
+      {/*          id={user?.id!}*/}
+      {/*          author={pseudonymName}*/}
+      {/*          firstAnimations={firstAnimations}*/}
+      {/*          tGallery={tGallery}*/}
+      {/*          initialRenderedContentAction={() => getMoreRenderedContent({ files: firstAnimations!, noEls: 2 })}*/}
+      {/*        />*/}
+      {/*      </Tabs.Content>*/}
+      {/*      <Tabs.Content value={fileTabList[2]} className={styles.tabPanel} role="tabpanel">*/}
+      {/*        <VideoGallery*/}
+      {/*          id={user?.id!}*/}
+      {/*          author={pseudonymName}*/}
+      {/*          firstVideos={firstVideos}*/}
+      {/*          tGallery={tGallery}*/}
+      {/*          initialRenderedContentAction={() => getMoreRenderedContent({ files: firstVideos!, noEls: 3 })}*/}
+      {/*        />*/}
+      {/*      </Tabs.Content>*/}
+      {/*    </Tabs.Root>*/}
+      {/*  </Tabs.Content>*/}
+      {/*  <Tabs.Content value={contentList[1]} className={styles.tabPanel} role="tabpanel">*/}
+      {/*    <ProfileUser*/}
+      {/*      language={tProfile}*/}
+      {/*      pseudonym={pseudonymName}*/}
+      {/*      fileUrl={user?.profilePhoto!}*/}
+      {/*      description={user?.description!}*/}
+      {/*    />*/}
+      {/*  </Tabs.Content>*/}
+      {/*  <Tabs.Content value={contentList[1]} className={styles.tabPanel} role="tabpanel">*/}
+      {/*    <FriendsList id={user?.id!} tFriends={tFriends} firstFriendsList={firstFriends!} />*/}
+      {/*  </Tabs.Content>*/}
+      {/*  <Tabs.Content value={contentList[2]} className={styles.tabPanel} role="tabpanel">*/}
+      {/*    <GroupUser*/}
+      {/*      id={user?.id!}*/}
+      {/*      firstAdminArray={adminGroups!}*/}
+      {/*      firstModsArray={modGroups!}*/}
+      {/*      firstMembersArray={membersGroups!}*/}
+      {/*      tGroupsUser={tGroupsUser}*/}
+      {/*    />*/}
+      {/*  </Tabs.Content>*/}
+      {/*</Tabs.Root>*/}
     </>
   );
 }

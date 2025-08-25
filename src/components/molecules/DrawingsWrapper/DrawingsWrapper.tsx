@@ -1,21 +1,25 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import { Suspense, use, useState } from 'react';
+import dynamic from 'next/dynamic';
 
 import { backUrl } from 'constants/links';
 import { FileType, Tags } from 'types/global.types';
 
+import { transAndUserData } from 'utils/users';
+
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
-import { getMoreRenderedContent } from '../../../app/[locale]/actions';
+import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+const FileContainer = dynamic(() =>
+  import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
+);
 
 type DrawingsWrapperType = {
   pid: Tags;
   filesDrawings: FileType[];
-  initialRenderedContentAction: () => ReactNode;
 };
 
-export const DrawingsWrapper = ({ pid, filesDrawings, initialRenderedContentAction }: DrawingsWrapperType) => {
-  const [renderedContent, setRenderedContent] = useState(initialRenderedContentAction);
+export const DrawingsWrapper = ({ pid, filesDrawings }: DrawingsWrapperType) => {
   const [userDrawings, setUserDrawings] = useState<FileType[]>(filesDrawings);
   const [lastVisible, setLastVisible] = useState(
     userDrawings.length > 0 ? userDrawings[userDrawings.length - 1].createdAt : '',
@@ -26,8 +30,10 @@ export const DrawingsWrapper = ({ pid, filesDrawings, initialRenderedContentActi
   const maxItems = 30;
 
   !!userDrawings &&
-    userDrawings.length === maxItems &&
+    userDrawings.length === maxItems * i &&
     setLastVisible(userDrawings[userDrawings.length - 1].createdAt!);
+
+  const userData = use(transAndUserData());
 
   const nextElements = async () => {
     setLoadingFiles(!loadingFiles);
@@ -44,7 +50,6 @@ export const DrawingsWrapper = ({ pid, filesDrawings, initialRenderedContentActi
 
       const newArray = filesDrawings!.concat(...res);
 
-      setRenderedContent(await getMoreRenderedContent({ files: newArray, noEls: 1 }));
       setUserDrawings(newArray);
       if (res.length === maxItems) {
         setLastVisible(res[res.length - 1].fileId!);
@@ -57,11 +62,33 @@ export const DrawingsWrapper = ({ pid, filesDrawings, initialRenderedContentActi
   };
 
   return (
-    <>
-      {renderedContent}
+    <Wrapper>
+      {userDrawings.length > 0 ? (
+        userDrawings.map(
+          ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType, index) => (
+            <Suspense key={index} fallback={<p>Loading...</p>}>
+              <FileContainer
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={authorName!}
+                authorId={authorId}
+                authorBool={authorName === userData?.pseudonym!}
+                profilePhoto={userData?.profilePhoto!}
+                time={time}
+                roleId={roleId!}
+              />
+            </Suspense>
+          ),
+        )
+      ) : (
+        <div>nie ma nic</div>
+      )}
       {!!lastVisible && !!userDrawings && userDrawings.length === maxItems * i && (
         <MoreButton nextElements={nextElements} />
       )}
-    </>
+    </Wrapper>
   );
 };

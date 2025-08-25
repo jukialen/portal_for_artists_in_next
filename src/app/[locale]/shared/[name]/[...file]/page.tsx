@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { TagConstants } from 'constants/values';
 import { FileType, LangType } from 'types/global.types';
 
 import { dateData } from 'helpers/dateData';
@@ -11,14 +11,16 @@ import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { Videos } from 'components/molecules/Videos/Videos';
-import { Article } from 'components/molecules/Article/Article';
+const FileContainer = dynamic(() =>
+  import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
+);
 
 type PropsType = {
   params: Promise<{
     locale: LangType;
     name: string;
     file: string[];
+    noComments: string;
   }>;
 };
 
@@ -87,40 +89,24 @@ export default async function Post({ params }: PropsType) {
 
   const fileId = file[1];
 
-  const pseudonym = await getUserData().then((t) => t?.pseudonym!);
   const authorPost = await oneFile(fileId);
+  const userData = await getUserData();
+
+  const { fileUrl, shortDescription, tags, authorName, authorId, time, roleId } = authorPost!;
 
   return (
-    <>
-      {authorPost?.tags! === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
-        <Videos
-          fileId={fileId}
-          name={name}
-          fileUrl={authorPost?.fileUrl!}
-          shortDescription={authorPost?.shortDescription!}
-          tags={authorPost?.tags!}
-          authorName={authorPost?.authorName!}
-          profilePhoto={authorPost?.authorProfilePhoto!}
-          authorId={authorPost?.authorId!}
-          time={authorPost?.time!}
-          authorBool={authorPost?.authorName! === pseudonym}
-          roleId={authorPost?.roleId!}
-        />
-      ) : (
-        <Article
-          fileId={fileId}
-          name={name}
-          fileUrl={authorPost?.fileUrl!}
-          shortDescription={authorPost?.shortDescription!}
-          tags={authorPost?.tags!}
-          authorName={authorPost?.authorName!}
-          profilePhoto={authorPost?.authorProfilePhoto!}
-          authorId={authorPost?.authorId!}
-          time={authorPost?.time!}
-          authorBool={authorPost?.authorName! === pseudonym}
-          roleId={authorPost?.roleId!}
-        />
-      )}
-    </>
+    <FileContainer
+      fileId={fileId!}
+      name={name!}
+      fileUrl={fileUrl}
+      shortDescription={shortDescription!}
+      tags={tags!}
+      authorName={authorName!}
+      authorId={authorId}
+      authorBool={authorName === userData?.pseudonym!}
+      profilePhoto={userData?.profilePhoto!}
+      time={time}
+      roleId={roleId!}
+    />
   );
 }

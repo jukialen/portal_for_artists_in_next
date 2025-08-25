@@ -35,16 +35,16 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
     !!firstAdminList && firstAdminList.length === maxItems ? firstAdminList[firstAdminList.length - 1].name : '',
   );
   let [iAdmins, setIAdmins] = useState(1);
-  const [moderatorsArray, setModeratorsArray] = useState<GroupUserType[]>(firstModsUsersList?.moderators);
+  const [moderatorsArray, setModeratorsArray] = useState<GroupUserType[]>(firstModsUsersList?.moderators || []);
   const [lastModeratorsVisible, setModeratorsLastVisible] = useState(
-    !!firstModsUsersList && firstModsUsersList.moderators.length === maxItems
+    !!firstModsUsersList.moderators && firstModsUsersList.moderators.length === maxItems
       ? firstModsUsersList.moderators[firstModsUsersList.moderators.length - 1].name
       : '',
   );
   let [iModerators, setIModerators] = useState(1);
   const [membersArray, setMembersArray] = useState<GroupUserType[]>(firstModsUsersList?.members);
   const [lastMembersVisible, setMembersLastVisible] = useState(
-    !!firstModsUsersList && firstModsUsersList.members.length === maxItems
+    !!firstModsUsersList.members && firstModsUsersList.members.length === maxItems
       ? firstModsUsersList.members[firstModsUsersList.members.length - 1].name
       : '',
   );

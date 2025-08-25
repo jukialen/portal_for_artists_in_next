@@ -127,7 +127,7 @@ export const MainCurrentUserProfileData = ({
             open={open}
             onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
             <DialogTrigger asChild>
-              <Button aria-label="update group logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
+              <Button aria-label="update logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
                 <MdCameraEnhance />
               </Button>
             </DialogTrigger>

@@ -1,3 +1,5 @@
+import dynamic from 'next/dynamic';
+
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { backUrl } from 'constants/links';
@@ -6,7 +8,7 @@ import { FriendsListArrayType, GroupsType } from 'types/global.types';
 import { getScopedI18n } from 'locales/server';
 import { getUserData } from 'helpers/getUserData';
 
-import { AsideWrapper } from 'components/molecules/AsideWrapper/AsideWrapper';
+const AsideWrapper = dynamic(() => import('../../molecules/AsideWrapper/AsideWrapper').then((aw) => aw.AsideWrapper));
 
 async function getFriendsList(userId: string, maxItems: number) {
   const favoriteFriendArray: FriendsListArrayType[] = [];

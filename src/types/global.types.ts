@@ -245,6 +245,8 @@ export type PostsType = Time &
 //GALLERY
 export type GalleryType = {
   id: string;
+  pseudonym: string;
+  profilePhoto: string;
   author: string;
   firstGraphics?: FileType[];
   firstAnimations?: FileType[];
@@ -262,7 +264,6 @@ export type GalleryType = {
     userVideosTitle: string;
   };
   tFriends?: { friends: string; noFriends: string };
-  initialRenderedContentAction?: () => ReactNode;
 };
 
 // COMMENTS

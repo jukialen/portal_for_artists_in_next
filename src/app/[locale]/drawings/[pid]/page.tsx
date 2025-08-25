@@ -11,11 +11,9 @@ import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { DrawingsWrapper } from 'components/molecules/DrawingsWrapper/DrawingsWrapper';
 
 import styles from './page.module.scss';
-import { getMoreRenderedContent } from '../../actions';
 
 export const metadata: Metadata = HeadCom('Sites with drawings and photos.');
 
@@ -76,13 +74,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
         {tDrawingsCategories.category}: {pid}
       </em>
 
-      <Wrapper>
-        <DrawingsWrapper
-          pid={pid}
-          filesDrawings={drawings}
-          initialRenderedContentAction={() => getMoreRenderedContent({ files: drawings!, noEls: 1 })}
-        />
-      </Wrapper>
+      <DrawingsWrapper pid={pid} filesDrawings={drawings} />
     </>
   );
 }

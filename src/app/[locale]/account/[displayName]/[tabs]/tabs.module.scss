@@ -1,0 +1,43 @@
+.tabs,
+.android {
+  display: flex;
+  position: fixed;
+  width: 100dvw;
+  height: 3rem;
+  top: 0;
+  margin: 0.5rem 0 1.5rem;
+
+  .arrow {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: .5rem;
+    width: fit-content;
+    align-items: center;
+    position: absolute;
+
+    svg {
+      width: 3rem;
+      height: calc(3rem - 0.25rem);
+      transform: rotate(-90deg);
+    }
+
+    h3 {
+      width: 6rem;
+      margin-left: -.5rem;
+    }
+  }
+
+  .title {
+    display: flex;
+    width: 100dvw;
+    height: inherit;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    font-size: 1.3rem;
+  }
+}
+
+di:has(.container) {
+    margin-top: 1rem;
+}

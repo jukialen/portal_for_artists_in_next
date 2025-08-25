@@ -1,7 +1,9 @@
 import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { setStaticParamsLocale } from 'next-international/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
+import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
 import { DateObjectType, FileType, IndexType, LangType } from 'types/global.types';
 
@@ -10,13 +12,11 @@ import { getI18n } from 'locales/server';
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 
-import { HeadCom } from 'constants/HeadCom';
-
-import { AnothersWrapper } from 'components/molecules/AnothersWrapper/AnothersWrapper';
+const FileContainerClient = dynamic(() =>
+  import('components/organisms/FileContainerClient/FileContainerClient').then((fc) => fc.FileContainerClient),
+);
 
 import styles from './page.module.scss';
-import { error } from '@chakra-ui/utils';
-import { getMoreRenderedContent } from '../actions';
 
 const downloadDrawings = async ({
   index,
@@ -28,11 +28,12 @@ const downloadDrawings = async ({
   maxItems: number;
   dataDateObject: DateObjectType;
 }) => {
+  const filesArray: FileType[] = [];
+
   try {
-    const filesArray: FileType[] = [];
     const supabase = await createServer();
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('Files')
       .select(selectFiles)
       .eq('tags', index)
@@ -58,6 +59,7 @@ const downloadDrawings = async ({
     return filesArray;
   } catch (e) {
     console.error('10drawingsE', e);
+    return filesArray;
   }
 };
 
@@ -84,11 +86,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
         {tAnotherCategories.category}: {index}
       </em>
 
-      <AnothersWrapper
-        index={index}
-        filesArray={filesArray!}
-        initialRenderedContentAction={() => getMoreRenderedContent({ files: filesArray!, noEls: 1 })}
-      />
+      <FileContainerClient index={index} filesArray={filesArray} />
     </article>
   );
 }

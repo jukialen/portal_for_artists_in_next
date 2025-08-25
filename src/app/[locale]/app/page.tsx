@@ -1,4 +1,6 @@
 import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
+import { NextResponse } from 'next/server';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
@@ -8,16 +10,18 @@ import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
 import { getScopedI18n } from 'locales/server';
 
 import { getDate } from 'helpers/getDate';
+import { getUserData } from 'helpers/getUserData';
 import { dateData } from 'helpers/dateData';
 import { getFileRoleId } from 'utils/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { AppWrapper } from 'components/atoms/AppWrapper/AppWrapper';
-import { ZeroFiles } from 'components/atoms/ZeroFiles/ZeroFiles';
-import { AppTop10s } from 'components/molecules/AppTop10s/AppTop10s';
+const ZeroFiles = dynamic(() => import('components/atoms/ZeroFiles/ZeroFiles').then((zf) => zf.ZeroFiles));
+const FileContainer = dynamic(() =>
+  import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
+);
 
 import styles from './page.module.scss';
-import { NextResponse } from 'next/server';
 
 export const metadata: Metadata = HeadCom('Main site for logged in users.');
 
@@ -110,54 +114,60 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
 
   const tApp = await getScopedI18n('App');
   const tZero = await getScopedI18n('ZeroFiles');
+  const tComments = await getScopedI18n('Comments');
+
+  const noComments = tComments('noComments');
 
   const dataDateObject = await dateData();
 
   const maxItems = 10;
   const tags: Tags[] = ['photographs', 'animations', 'videos'];
+  const userData = await getUserData();
+  const pseudonym = userData?.pseudonym!;
+  const profilePhoto = userData?.profilePhoto!;
 
   const drawings = await getTop10Drawings(maxItems, dataDateObject);
   const photos = await getTop10Pavo(maxItems, tags[0], dataDateObject);
   const animations = await getTop10Pavo(maxItems, tags[1], dataDateObject);
   const videos = await getTop10Pavo(maxItems, tags[2], dataDateObject);
 
+  const appData = (data: FileType[]) =>
+    data.map(
+      ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType, index) => (
+        <FileContainer
+          fileId={fileId!}
+          name={name!}
+          fileUrl={fileUrl}
+          shortDescription={shortDescription!}
+          tags={tags!}
+          authorName={authorName!}
+          authorId={authorId}
+          authorBool={authorName === pseudonym!}
+          profilePhoto={profilePhoto}
+          time={time}
+          roleId={roleId!}
+          key={index}
+        />
+      ),
+    );
+
   return (
     <>
       <h2 className={styles.top__among__users}>{tApp('lastDrawings')}</h2>
       <AppWrapper>
-        {!!drawings && drawings?.length > 0 ? (
-          <AppTop10s data={drawings!} type="others" />
-        ) : (
-          <ZeroFiles text={tZero('drawings')} />
-        )}
+        {!!drawings && drawings?.length > 0 ? appData(drawings) : <ZeroFiles text={tZero('drawings')} />}
       </AppWrapper>
 
       <h2 className={styles.top__among__users}>{tApp('lastPhotos')}</h2>
-      <AppWrapper>
-        {!!photos && photos?.length > 0 ? (
-          <AppTop10s data={photos!} type="others" />
-        ) : (
-          <ZeroFiles text={tZero('photos')} />
-        )}
-      </AppWrapper>
+      <AppWrapper>{!!photos && photos?.length > 0 ? appData(photos) : <ZeroFiles text={tZero('photos')} />}</AppWrapper>
 
       <h2 className={styles.top__among__users}>{tApp('lastAnimations')}</h2>
       <AppWrapper>
-        {!!animations && animations?.length > 0 ? (
-          <AppTop10s data={animations!} type="others" />
-        ) : (
-          <ZeroFiles text={tZero('animations')} />
-        )}
+        {!!animations && animations?.length > 0 ? appData(animations) : <ZeroFiles text={tZero('animations')} />}
       </AppWrapper>
 
       <h2 className={styles.liked}>{tApp('lastVideos')}</h2>
-      <AppWrapper>
-        {!!videos && videos?.length > 0 ? (
-          <AppTop10s data={videos!} type="videos" />
-        ) : (
-          <ZeroFiles text={tZero('videos')} />
-        )}
-      </AppWrapper>
+      <AppWrapper>{!!videos && videos?.length > 0 ? appData(videos) : <ZeroFiles text={tZero('videos')} />}</AppWrapper>
     </>
   );
 }

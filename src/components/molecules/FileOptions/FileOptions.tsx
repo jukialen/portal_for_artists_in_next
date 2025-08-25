@@ -1,15 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 import { backUrl } from 'constants/links';
 import { Tags } from 'types/global.types';
 
-import { FilesComments } from 'components/molecules/FilesComments/FilesComments';
 import { NewComments } from 'components/atoms/NewComments/NewComments';
 import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
+const FilesComments = dynamic(() =>
+  import('components/molecules/FilesComments/FilesComments').then((fc) => fc.FilesComments),
+);
 
 import styles from './FileOptions.module.scss';
 
