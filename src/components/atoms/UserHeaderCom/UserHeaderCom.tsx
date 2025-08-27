@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Icon, Button, Input, Group, IconButton } from '@chakra-ui/react';
-import { DialogBody, DialogContent, DialogRoot } from 'components/ui/dialog';
-import { Avatar } from 'components/ui/avatar';
+import { Dialog } from '@ark-ui/react/dialog';
+import { Portal } from '@ark-ui/react/portal';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
 import { EventType, Tags, UserType } from 'types/global.types';
+
+import { Avatar } from 'components/atoms/Avatar/Avatar';
 
 import styles from './UserHeaderCom.module.scss';
 import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
@@ -132,6 +134,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
       if (!!err) {
         searchArray.push({ categoryName: searchOptions[1], data: translated.notFound });
+        return;
       }
 
       for (const s of da!) {
@@ -253,7 +256,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
         </Button>
       </div>
       <Button colorScheme="yellow" className={styles.menu_buttons} onClick={toggleProfileMenu}>
-        <Avatar name={userData?.pseudonym!} src={userData?.profilePhoto!} size="sm" />
+        <Avatar fallbackName={userData?.pseudonym!} src={userData?.profilePhoto!} alt="" />
         <p>{headers.account}</p>
       </Button>
 
@@ -270,36 +273,69 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           <IoSearch />
         </IconButton>
       </Group>
-      {!!results && searchingState && (
-        <DialogRoot lazyMount open={open}>
-          <DialogContent>
-            <div className={styles.searching}>
-              <h3 className={styles.searchValues}>
+      {!!results && searchingState ? (
+        <Dialog.Root
+          lazyMount
+          unmountOnExit
+          onExitComplete={() => console.log('onExitComplete invoked')}
+          open={open}
+          onOpenChange={(e) => setOpen(e.open)}>
+          <Portal>
+            <Dialog.Backdrop />
+            <Dialog.Positioner />
+            <Dialog.Content className={styles.searching}>
+              <Dialog.Title className={styles.searchValues}>
                 {translated.searchResultTitle}
                 {searchValues}
-              </h3>
-              {results.map((option, key) => (
-                <section key={key} className={styles.dataSearching}>
-                  <h4 className={styles.categoryName}>{option.categoryName}</h4>
-                  <div className={styles.data}>
-                    {typeof option.data === 'string' ? (
-                      translated.notFound
-                    ) : (
-                      <>
-                        <Avatar src={option.data.fileUrl} />
-                        <p>{option.data.name}</p>
-                        <p>{option.data.description}</p>
-                        {option.data.tags && <p>{option.data.tags}</p>}
-                      </>
-                    )}
-                  </div>
-                </section>
-              ))}
-            </div>
-            <DialogBody />
-          </DialogContent>
-        </DialogRoot>
-      )}
+              </Dialog.Title>
+              <Dialog.Description>
+                {results.map((option, key) => (
+                  <section key={key} className={styles.dataSearching}>
+                    <h4 className={styles.categoryName}>{option.categoryName}</h4>
+                    <div className={styles.data}>
+                      {typeof option.data === 'string' ? (
+                        translated.notFound
+                      ) : (
+                        <>
+                          <Avatar
+                            src={option.data.fileUrl}
+                            fallbackName={option.data.name}
+                            alt={option.data.description}
+                          />
+                          <p>{option.data.name}</p>
+                          <p>{option.data.description}</p>
+                          {option.data.tags && <p>{option.data.tags}</p>}
+                        </>
+                      )}
+                    </div>
+                  </section>
+                ))}
+              </Dialog.Description>
+              <Dialog.CloseTrigger>Close</Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Portal>
+        </Dialog.Root>
+      ) : <Dialog.Root
+          lazyMount
+          unmountOnExit
+          onExitComplete={() => console.log('onExitComplete invoked')}
+          open={open}
+          onOpenChange={(e) => setOpen(e.open)}>
+          <Portal>
+            <Dialog.Backdrop />
+            <Dialog.Positioner />
+            <Dialog.Content className={styles.searching}>
+              <Dialog.Title className={styles.searchValues}>
+                {translated.searchResultTitle}
+                {searchValues}
+              </Dialog.Title>
+              <Dialog.Description>
+                test
+              </Dialog.Description>
+              <Dialog.CloseTrigger>Close</Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Portal>
+        </Dialog.Root>}
       <ul className={`${styles.menu_profile} ${profileMenu ? styles.menu_profile__active : ''}`}>
         <li>
           <Link href={`/account/${userData?.pseudonym}`} onClick={toggleProfileMenu}>

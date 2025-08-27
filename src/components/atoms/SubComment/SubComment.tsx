@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import Link from 'next/link';
-import { Avatar } from 'components/ui/avatar';
+import { Avatar } from 'components/atoms/Avatar/Avatar';
 import { Tag } from 'components/ui/tag';
 
 import { SubCommentType } from 'types/global.types';

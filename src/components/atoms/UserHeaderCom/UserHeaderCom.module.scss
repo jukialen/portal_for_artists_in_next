@@ -16,17 +16,19 @@
   color: inherit;
   border-color: transparent;
   background-color: transparent;
-  cursor: pointer;
 
   &:active {
-    p, svg, .buttons {
+    p,
+    svg,
+    .buttons {
       color: var(--text);
       fill: var(--text);
       stroke: var(--text);
     }
   }
 
-  svg, span#avatar {
+  svg,
+  span#avatar {
     width: 2.2rem;
     height: inherit;
     color: inherit;
@@ -129,7 +131,7 @@
   z-index: 2;
 
   .searchValues {
-    margin: 0 auto;
+    width: 100%;
     padding: 2rem 0.5rem 1rem;
   }
 
@@ -168,7 +170,7 @@ div.search__active {
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.2rem 0 0.4rem;
-  border-radius: .5rem 0 0 .5rem;
+  border-radius: 0.5rem 0 0 0.5rem;
   background-color: var(--primary);
 
   li {

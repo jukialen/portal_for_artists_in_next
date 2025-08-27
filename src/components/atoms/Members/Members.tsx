@@ -2,7 +2,7 @@ import { useState } from 'react';
 import NextLink from 'next/link';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Separator, IconButton, Link } from '@chakra-ui/react';
-import { Avatar } from 'components/ui/avatar';
+import { Avatar } from 'components/atoms/Avatar/Avatar';
 
 import { MemberType, nameGroupTranslatedType, UserType } from 'types/global.types';
 

@@ -2,7 +2,7 @@ import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Button, Textarea } from '@chakra-ui/react';
-import { Avatar } from 'components/ui/avatar';
+import { Avatar } from 'components/atoms/Avatar/Avatar';
 
 import { ResetFormType } from 'types/global.types';
 

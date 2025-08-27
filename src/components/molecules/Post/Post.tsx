@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button, IconButton } from '@chakra-ui/react';
-import { Avatar } from 'components/ui/avatar';
+import { Avatar } from 'components/atoms/Avatar/Avatar';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
