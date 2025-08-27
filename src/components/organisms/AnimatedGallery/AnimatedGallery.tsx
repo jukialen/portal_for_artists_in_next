@@ -3,7 +3,7 @@ import { Suspense, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 
-import { videosAnimations } from 'utils/files';
+import { videosAnimations } from 'app/actions/files';
 
 import { FileType, GalleryType } from 'types/global.types';
 
@@ -12,7 +12,7 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 const FileContainer = dynamic(() =>
   import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
-export const AnimatedGallery = ({ id, pseudonym, profilePhoto, author, tGallery, firstAnimations }: GalleryType) => {
+export const AnimatedGallery = ({ id, pseudonym, author, tGallery, firstAnimations }: GalleryType) => {
   const [userAnimates, setUserAnimates] = useState<FileType[]>(firstAnimations!);
   const [lastVisible, setLastVisible] = useState(
     firstAnimations!.length > 0 ? firstAnimations![firstAnimations!.length - 1].createdAt : '',
@@ -51,26 +51,19 @@ export const AnimatedGallery = ({ id, pseudonym, profilePhoto, author, tGallery,
       <Wrapper>
         <Suspense fallback={<p>Loading...</p>}>
           {userAnimates.length > 0 ? (
-            userAnimates.map(
-              (
-                { fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType,
-                index,
-              ) => (
-                <FileContainer
-                  fileId={fileId!}
-                  name={name!}
-                  fileUrl={fileUrl}
-                  shortDescription={shortDescription!}
-                  tags={tags!}
-                  authorName={authorName!}
-                  authorId={authorId}
-                  authorBool={authorName === pseudonym}
-                  profilePhoto={profilePhoto}
-                  time={time}
-                  roleId={roleId!}
-                />
-              ),
-            )
+            userAnimates.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
+              <FileContainer
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={authorName!}
+                authorBool={authorName === pseudonym}
+                time={time}
+                key={index}
+              />
+            ))
           ) : (
             <div>nie ma nic</div>
           )}

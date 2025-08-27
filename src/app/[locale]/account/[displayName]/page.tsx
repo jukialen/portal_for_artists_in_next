@@ -10,7 +10,7 @@ import { HeadCom } from 'constants/HeadCom';
 import { FilesUploadType, LangType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
-import { graphics, videosAnimations } from 'utils/files';
+import { graphics, videosAnimations } from 'app/actions/files';
 import { getFirstFriends } from 'utils/friends';
 import { adminList, modsUsersList } from 'utils/groups';
 
@@ -51,7 +51,6 @@ export default async function Account({ params }: { params: Promise<{ locale: La
   const userData = await getUserData();
   const id = userData?.id!;
   const pseudonym = userData?.pseudonym!;
-  const profilePhoto = userData?.profilePhoto!;
   const author = (await params).displayName;
   const maxItems = 30;
 
@@ -99,30 +98,15 @@ export default async function Account({ params }: { params: Promise<{ locale: La
   const fileComps = [
     <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} />,
     <GroupUsers id={id} firstAdminList={firstAdminList!} firstModsUsersList={firstModsUsersList!} />,
-    <PhotosGallery
-      id={id}
-      pseudonym={pseudonym!}
-      profilePhoto={profilePhoto!}
-      author={author!}
-      tGallery={tGallery}
-      firstGraphics={firstGraphics}
-    />,
+    <PhotosGallery id={id} pseudonym={pseudonym!} author={author!} tGallery={tGallery} firstGraphics={firstGraphics} />,
     <AnimatedGallery
       id={id}
       pseudonym={pseudonym!}
-      profilePhoto={profilePhoto!}
       author={author}
       tGallery={tGallery}
       firstAnimations={firstAnimations}
     />,
-    <VideoGallery
-      id={id!}
-      pseudonym={pseudonym!}
-      profilePhoto={profilePhoto!}
-      author={author}
-      tGallery={tGallery!}
-      firstVideos={firstVideos}
-    />,
+    <VideoGallery id={id!} pseudonym={pseudonym!} author={author} tGallery={tGallery!} firstVideos={firstVideos} />,
   ];
 
   return (

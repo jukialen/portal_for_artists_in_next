@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
-import { createServer } from 'utils/supabase/clientSSR';
+import { createServer } from '../../../../utils/supabase/clientSSR';
 
 import { getScopedI18n } from 'locales/server';
 

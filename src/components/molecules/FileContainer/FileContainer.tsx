@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { TagConstants } from 'constants/values';
 import { ArticleVideosType } from 'types/global.types';
 
-const DeletionFile = dynamic(() => import('../DeletionFile/DeletionFile').then((df) => df.DeletionFile));
-import { FileOptions } from '../FileOptions/FileOptions';
+const DeletionFile = dynamic(() =>
+  import('components/molecules/DeletionFile/DeletionFile').then((df) => df.DeletionFile),
+);
+import { FileOptions } from 'components/molecules/FileOptions/FileOptions';
 
 import styles from './FileContainer.module.scss';
 
@@ -14,14 +16,11 @@ export const FileContainer = async ({
   name,
   fileUrl,
   authorName,
-  authorId,
   shortDescription,
   tags,
   time,
   fileId,
   authorBool,
-  profilePhoto,
-  roleId,
 }: ArticleVideosType) => {
   return (
     <div className={styles.file}>
@@ -50,16 +49,7 @@ export const FileContainer = async ({
       <div className={styles.shortDescription}>{shortDescription}</div>
       <div>{tags}</div>
 
-      <FileOptions
-        fileId={fileId}
-        authorName={authorName!}
-        fileUrl={fileUrl}
-        tags={tags!}
-        name={name!}
-        authorId={authorId}
-        profilePhoto={profilePhoto}
-        roleId={roleId!}
-      />
+      <FileOptions fileId={fileId} authorName={authorName!} fileUrl={fileUrl} tags={tags!} name={name!} />
     </div>
   );
 };

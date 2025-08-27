@@ -7,9 +7,9 @@ import { LangType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
 
-import { graphics, videosAnimations } from 'utils/files';
 import { getFirstFriends } from 'utils/friends';
 import { adminList, modsUsersList } from 'utils/groups';
+import { graphics, videosAnimations } from 'app/actions/files';
 
 import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
 import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
@@ -30,11 +30,9 @@ export default async function Tabs({ params, searchParams }: PropsType) {
   setStaticParamsLocale(locale);
 
   const maxItems = 30;
-  const { id, pseudonym, profilePhoto } = (await getUserData()!) as {
-    id: string;
-    pseudonym: string;
-    profilePhoto: string;
-  };
+  const userData = await getUserData();
+  const id = userData?.id!;
+  const pseudonym = userData?.pseudonym!;
 
   const t = await getI18n();
   const tAside = await getScopedI18n('Aside');
@@ -83,7 +81,6 @@ export default async function Tabs({ params, searchParams }: PropsType) {
           <PhotosGallery
             id={id}
             pseudonym={pseudonym!}
-            profilePhoto={profilePhoto!}
             author={author!}
             tGallery={tGallery}
             firstGraphics={firstGraphics}
@@ -94,7 +91,6 @@ export default async function Tabs({ params, searchParams }: PropsType) {
           <AnimatedGallery
             id={id}
             pseudonym={pseudonym!}
-            profilePhoto={profilePhoto!}
             author={author!}
             tGallery={tGallery}
             firstAnimations={firstAnimations}
@@ -105,7 +101,6 @@ export default async function Tabs({ params, searchParams }: PropsType) {
           <VideoGallery
             id={id!}
             pseudonym={pseudonym!}
-            profilePhoto={profilePhoto!}
             author={author!}
             tGallery={tGallery!}
             firstVideos={firstVideos}

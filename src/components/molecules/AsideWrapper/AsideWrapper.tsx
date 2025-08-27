@@ -13,7 +13,11 @@ import { Friends } from 'components/atoms/Friends/Friends';
 import styles from './Aside.module.scss';
 import { RiArrowUpSLine } from 'react-icons/ri';
 
-export const AsideWrapper = ({ asideCategory, friendsAsideList, groupsAsideList }: {
+export const AsideWrapper = ({
+  asideCategory,
+  friendsAsideList,
+  groupsAsideList,
+}: {
   asideCategory: string;
   friendsAsideList: FriendsListArrayType[];
   groupsAsideList: GroupsType[];
@@ -26,16 +30,10 @@ export const AsideWrapper = ({ asideCategory, friendsAsideList, groupsAsideList 
     <>
       <aside className={styles.aside}>
         <div className={styles.rolling}>
-          <h3 className={`${styles.h3} ${!open ? styles.afterHidden : ''}`} onClick={showCategories}>
-            <p>{asideCategory}</p>
-            <RiArrowUpSLine
-              style={{
-                transform: open ? 'rotate(-180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s cubic-bezier(0.65, 0, 0.35, 1)',
-                display: 'inline-block',
-              }}
-            />
-          </h3>
+          <div className={`${styles.h3} ${!open ? styles.afterHidden : ''}`} onClick={showCategories}>
+            <h3>{asideCategory}</h3>
+            <RiArrowUpSLine style={{ transform: open ? 'rotate(-180deg)' : 'rotate(0deg)' }} />
+          </div>
 
           <div className={open ? styles.container : styles.hidden__categories}>
             <Categories />

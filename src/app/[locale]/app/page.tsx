@@ -54,9 +54,7 @@ async function getTop10Drawings(maxItems: number, dataDateObject: DateObjectType
         shortDescription: shortDescription!,
         authorName: Users?.pseudonym!,
         fileUrl,
-        authorId: authorId!,
         time: await getDate(updatedAt! || createdAt!, dataDateObject),
-        roleId,
       });
     }
 
@@ -95,9 +93,7 @@ async function getTop10Pavo(maxItems: number, tag: Tags, dataDateObject: DateObj
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           fileUrl,
-          authorId: authorId!,
           time: await getDate(updatedAt! || createdAt!, dataDateObject),
-          roleId,
         });
       }
     }
@@ -114,9 +110,6 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
 
   const tApp = await getScopedI18n('App');
   const tZero = await getScopedI18n('ZeroFiles');
-  const tComments = await getScopedI18n('Comments');
-
-  const noComments = tComments('noComments');
 
   const dataDateObject = await dateData();
 
@@ -124,7 +117,6 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
   const tags: Tags[] = ['photographs', 'animations', 'videos'];
   const userData = await getUserData();
   const pseudonym = userData?.pseudonym!;
-  const profilePhoto = userData?.profilePhoto!;
 
   const drawings = await getTop10Drawings(maxItems, dataDateObject);
   const photos = await getTop10Pavo(maxItems, tags[0], dataDateObject);
@@ -132,24 +124,19 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
   const videos = await getTop10Pavo(maxItems, tags[2], dataDateObject);
 
   const appData = (data: FileType[]) =>
-    data.map(
-      ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType, index) => (
-        <FileContainer
-          fileId={fileId!}
-          name={name!}
-          fileUrl={fileUrl}
-          shortDescription={shortDescription!}
-          tags={tags!}
-          authorName={authorName!}
-          authorId={authorId}
-          authorBool={authorName === pseudonym!}
-          profilePhoto={profilePhoto}
-          time={time}
-          roleId={roleId!}
-          key={index}
-        />
-      ),
-    );
+    data.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
+      <FileContainer
+        fileId={fileId!}
+        name={name!}
+        fileUrl={fileUrl}
+        shortDescription={shortDescription!}
+        tags={tags!}
+        authorName={authorName!}
+        authorBool={authorName === pseudonym!}
+        time={time}
+        key={index}
+      />
+    ));
 
   return (
     <>

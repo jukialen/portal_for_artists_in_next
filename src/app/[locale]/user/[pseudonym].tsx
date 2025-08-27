@@ -4,8 +4,6 @@ import { createServer } from 'utils/supabase/clientSSR';
 import { Tabs } from '@ark-ui/react/tabs';
 import { Menu } from '@ark-ui/react/menu';
 
-// import { getMoreRenderedContent } from '../actions';
-
 import { HeadCom } from 'constants/HeadCom';
 import { backUrl } from 'constants/links';
 import { GroupUsersType, LangType } from 'types/global.types';
@@ -13,7 +11,7 @@ import { GroupUsersType, LangType } from 'types/global.types';
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { getUserData } from 'helpers/getUserData';
-import { graphics, videosAnimations } from 'utils/files';
+import { graphics, videosAnimations } from 'app/actions/files';
 import { getFirstFriends } from 'utils/friends';
 
 import { FriendsButtons } from 'components/atoms/FriendsButtons/FriendsButtons';
@@ -151,7 +149,6 @@ export default async function User({ params }: PropsType) {
 
   const pseudonymName = decodeURIComponent(pseudonym);
   const userData = await getUserData();
-  const profilePhoto = userData?.profilePhoto!;
   const id = userData?.id!;
 
   const tFriends = {
@@ -218,7 +215,6 @@ export default async function User({ params }: PropsType) {
     <PhotosGallery
       id={fidsFavs?.pseudonymId!}
       pseudonym={pseudonym}
-      profilePhoto={profilePhoto}
       author={pseudonymName}
       tGallery={tGallery}
       firstGraphics={firstGraphics}
@@ -226,7 +222,6 @@ export default async function User({ params }: PropsType) {
     <AnimatedGallery
       id={fidsFavs?.pseudonymId!}
       pseudonym={pseudonym}
-      profilePhoto={profilePhoto}
       author={pseudonymName}
       tGallery={tGallery}
       firstAnimations={firstAnimations}
@@ -234,7 +229,6 @@ export default async function User({ params }: PropsType) {
     <VideoGallery
       id={fidsFavs?.pseudonymId!!}
       pseudonym={pseudonym}
-      profilePhoto={profilePhoto}
       author={pseudonymName}
       tGallery={tGallery!}
       firstVideos={firstVideos}

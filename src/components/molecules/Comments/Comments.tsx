@@ -6,7 +6,7 @@ import { useScopedI18n } from 'locales/client';
 
 import { CommentType } from 'types/global.types';
 
-import { comments } from "utils/comments";
+import { comments } from 'utils/comments';
 
 import { DCProvider } from 'providers/DeleteCommentProvider';
 

@@ -23,10 +23,10 @@ export const AccordionWrapper = ({
       className={styles.accordionRoot}>
       {items.map((item, index) => (
         <AccordionItem key={index} value={item.value.toString()} className={styles.accordionItem}>
-          <h2>
-            <AccordionItemTrigger className={styles.accordionButton}>{item.head}</AccordionItemTrigger>
-            <AccordionItemContent className={styles.accordionBody}>{item.body}</AccordionItemContent>
-          </h2>
+          <AccordionItemTrigger className={styles.accordionButton}>
+            <h2>{item.head}</h2>
+          </AccordionItemTrigger>
+          <AccordionItemContent className={styles.accordionBody}>{item.body}</AccordionItemContent>
         </AccordionItem>
       ))}
     </AccordionRoot>

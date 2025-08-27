@@ -67,12 +67,10 @@ async function oneFile(fileId: string) {
     if (roleId === 'no id') return;
 
     const postData: FileType = {
-      authorId: authorId!,
       authorName: d?.pseudonym!,
       authorProfilePhoto: d?.profilePhoto!,
       fileUrl,
       shortDescription: shortDescription!,
-      roleId,
       tags,
       time: await getDate(updatedAt! || createdAt!, await dateData()),
     };
@@ -92,7 +90,7 @@ export default async function Post({ params }: PropsType) {
   const authorPost = await oneFile(fileId);
   const userData = await getUserData();
 
-  const { fileUrl, shortDescription, tags, authorName, authorId, time, roleId } = authorPost!;
+  const { fileUrl, shortDescription, tags, authorName, time } = authorPost!;
 
   return (
     <FileContainer
@@ -102,11 +100,8 @@ export default async function Post({ params }: PropsType) {
       shortDescription={shortDescription!}
       tags={tags!}
       authorName={authorName!}
-      authorId={authorId}
       authorBool={authorName === userData?.pseudonym!}
-      profilePhoto={userData?.profilePhoto!}
       time={time}
-      roleId={roleId!}
     />
   );
 }

@@ -120,10 +120,7 @@ export const NameGroupPage = ({
           setFavoriteLength(favoriteLength - 1);
         }
       } else {
-        const { count } = await supabase
-          .from('UsersGroups')
-          .select()
-          .eq('userId', userData?.id!);
+        const { count } = await supabase.from('UsersGroups').select().eq('userId', userData?.id!);
 
         if (count === null || count < 5) {
           const { error } = await supabase

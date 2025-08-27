@@ -34,16 +34,14 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId, groupsPo
 
   const nextComments = async () => {
     lastVisible !== '' &&
-    subComments(maxItems, 'again', groupsPostsRoleId, commentId, fileCommentId, lastVisible).then(
-        (t) => {
-          const nextArray = subCommentsArray.concat(...t!);
-          setSubCommentsArray(nextArray);
-          if (t!.length === maxItems) {
-            setLastVisible(t![t!.length - 1].commentId ? t![t!.length - 1].commentId! : t![t!.length - 1].fileCommentId!);
-            setI(++i);
-          }
-        },
-      );
+      subComments(maxItems, 'again', groupsPostsRoleId, commentId, fileCommentId, lastVisible).then((t) => {
+        const nextArray = subCommentsArray.concat(...t!);
+        setSubCommentsArray(nextArray);
+        if (t!.length === maxItems) {
+          setLastVisible(t![t!.length - 1].commentId ? t![t!.length - 1].commentId! : t![t!.length - 1].fileCommentId!);
+          setI(++i);
+        }
+      });
   };
 
   return (

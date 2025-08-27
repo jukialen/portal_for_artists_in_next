@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 
 import { FileType, GalleryType } from 'types/global.types';
 
-import { videosAnimations } from 'utils/files';
+import { videosAnimations } from 'app/actions/files';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 const MoreButton = dynamic(() => import('components/atoms/MoreButton/MoreButton').then((mb) => mb.MoreButton), {
@@ -16,7 +16,7 @@ const FileContainer = dynamic(() =>
   import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
 
-export const VideoGallery = ({ id, pseudonym, profilePhoto, author, tGallery, firstVideos }: GalleryType) => {
+export const VideoGallery = ({ id, pseudonym, author, tGallery, firstVideos }: GalleryType) => {
   const maxItems = 30;
 
   const [userVideos, setUserVideos] = useState(firstVideos!);
@@ -53,26 +53,19 @@ export const VideoGallery = ({ id, pseudonym, profilePhoto, author, tGallery, fi
 
       <Wrapper>
         {userVideos.length > 0 ? (
-          userVideos.map(
-            (
-              { fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType,
-              index,
-            ) => (
-              <FileContainer
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorName={authorName!}
-                authorId={authorId}
-                authorBool={authorName === pseudonym}
-                profilePhoto={profilePhoto}
-                time={time}
-                roleId={roleId!}
-              />
-            ),
-          )
+          userVideos.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
+            <FileContainer
+              fileId={fileId!}
+              name={name!}
+              fileUrl={fileUrl}
+              shortDescription={shortDescription!}
+              tags={tags!}
+              authorName={authorName!}
+              authorBool={authorName === pseudonym}
+              time={time}
+              key={index}
+            />
+          ))
         ) : (
           <div>nie ma nic</div>
         )}

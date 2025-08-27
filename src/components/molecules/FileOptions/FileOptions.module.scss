@@ -6,7 +6,7 @@
     align-items: center;
 
     .author__name {
-      margin: .5rem 2rem;
+      margin: 0.5rem 2rem;
     }
   }
 
@@ -15,12 +15,21 @@
     justify-content: center;
     width: 15rem;
     max-width: 70%;
-    border: .1rem;
-    border-radius: .5rem;
+    border: 0.1rem;
+    border-radius: 0.5rem;
     margin: 1rem auto;
-    padding: 1.3% .3rem;
+    padding: 1.3% 0.3rem;
     font-size: 1rem;
     background-color: var(--third);
     cursor: pointer;
+  }
+
+  .linkToComments {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.5rem 0;
   }
 }

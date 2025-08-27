@@ -23,7 +23,7 @@ type NewComment = {
   commentId?: string;
   subCommentId?: string;
   fileCommentId?: string;
-}
+};
 
 export const NewComments = ({
   fileId,
@@ -40,7 +40,7 @@ export const NewComments = ({
   const tComments = useScopedI18n('Comments');
 
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
-  
+
   const createNewComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
       await newComment({

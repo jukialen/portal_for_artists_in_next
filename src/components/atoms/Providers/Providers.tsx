@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { permanentRedirect } from 'next/navigation';
 import { Icon } from '@chakra-ui/react';
 
-import { createClient } from 'utils/supabase/clientCSR';
+import { createClient } from '../../../utils/supabase/clientCSR';
 
 import { backUrl, newUserRed } from 'constants/links';
 

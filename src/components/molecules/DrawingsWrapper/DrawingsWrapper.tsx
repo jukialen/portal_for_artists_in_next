@@ -1,12 +1,10 @@
 'use client';
 
-import { Suspense, use, useState } from 'react';
+import { Suspense, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { backUrl } from 'constants/links';
 import { FileType, Tags } from 'types/global.types';
-
-import { transAndUserData } from 'utils/users';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
@@ -16,10 +14,11 @@ const FileContainer = dynamic(() =>
 
 type DrawingsWrapperType = {
   pid: Tags;
+  pseudonym: string;
   filesDrawings: FileType[];
 };
 
-export const DrawingsWrapper = ({ pid, filesDrawings }: DrawingsWrapperType) => {
+export const DrawingsWrapper = ({ pid, pseudonym, filesDrawings }: DrawingsWrapperType) => {
   const [userDrawings, setUserDrawings] = useState<FileType[]>(filesDrawings);
   const [lastVisible, setLastVisible] = useState(
     userDrawings.length > 0 ? userDrawings[userDrawings.length - 1].createdAt : '',
@@ -32,8 +31,6 @@ export const DrawingsWrapper = ({ pid, filesDrawings }: DrawingsWrapperType) => 
   !!userDrawings &&
     userDrawings.length === maxItems * i &&
     setLastVisible(userDrawings[userDrawings.length - 1].createdAt!);
-
-  const userData = use(transAndUserData());
 
   const nextElements = async () => {
     setLoadingFiles(!loadingFiles);
@@ -64,25 +61,20 @@ export const DrawingsWrapper = ({ pid, filesDrawings }: DrawingsWrapperType) => 
   return (
     <Wrapper>
       {userDrawings.length > 0 ? (
-        userDrawings.map(
-          ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType, index) => (
-            <Suspense key={index} fallback={<p>Loading...</p>}>
-              <FileContainer
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorName={authorName!}
-                authorId={authorId}
-                authorBool={authorName === userData?.pseudonym!}
-                profilePhoto={userData?.profilePhoto!}
-                time={time}
-                roleId={roleId!}
-              />
-            </Suspense>
-          ),
-        )
+        userDrawings.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
+          <Suspense key={index} fallback={<p>Loading...</p>}>
+            <FileContainer
+              fileId={fileId!}
+              name={name!}
+              fileUrl={fileUrl}
+              shortDescription={shortDescription!}
+              tags={tags!}
+              authorName={authorName!}
+              authorBool={authorName === pseudonym}
+              time={time}
+            />
+          </Suspense>
+        ))
       ) : (
         <div>nie ma nic</div>
       )}

@@ -1,12 +1,11 @@
 'use client';
 
-import { Suspense, use, useState } from 'react';
+import { Suspense, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { FileType, IndexType } from 'types/global.types';
 
-import { drawings } from 'utils/files';
-import { transAndUserData } from 'utils/users';
+import { drawings } from 'app/actions/files';
 
 import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
@@ -15,13 +14,20 @@ const FileContainer = dynamic(() =>
   import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
 
-export const FileContainerClient = ({ index, filesArray }: { index: IndexType; filesArray: FileType[] }) => {
+export const FileContainerClient = ({
+  index,
+  pseudonym,
+  filesArray,
+}: {
+  index: IndexType;
+  pseudonym: string;
+  filesArray: FileType[];
+}) => {
   const [newFileArray, setNewFileArray] = useState(filesArray);
   const [lastVisible, setLastVisible] = useState(
     !!filesArray && filesArray.length > 0 ? filesArray[filesArray.length - 1].name : '',
   );
   let [i, steI] = useState(1);
-  const userData = use(transAndUserData());
 
   const maxItems = 30;
 
@@ -41,25 +47,20 @@ export const FileContainerClient = ({ index, filesArray }: { index: IndexType; f
   return (
     <Wrapper>
       {newFileArray.length > 0 ? (
-        newFileArray.map(
-          ({ fileId, name, fileUrl, shortDescription, tags, authorName, authorId, time, roleId }: FileType, index) => (
-            <Suspense key={index} fallback={<p>Loading...</p>}>
-              <FileContainer
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorName={authorName!}
-                authorId={authorId}
-                authorBool={authorName === userData.pseudonym}
-                profilePhoto={userData.profilePhoto}
-                time={time}
-                roleId={roleId!}
-              />
-            </Suspense>
-          ),
-        )
+        newFileArray.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
+          <Suspense key={index} fallback={<p>Loading...</p>}>
+            <FileContainer
+              fileId={fileId!}
+              name={name!}
+              fileUrl={fileUrl}
+              shortDescription={shortDescription!}
+              tags={tags!}
+              authorName={authorName!}
+              authorBool={authorName === pseudonym}
+              time={time}
+            />
+          </Suspense>
+        ))
       ) : (
         <div>nie ma nic</div>
       )}

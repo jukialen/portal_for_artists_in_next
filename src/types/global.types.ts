@@ -70,10 +70,8 @@ export type FileType = Time & {
   authorProfilePhoto?: string;
   authorName: string;
   profileType?: boolean;
-  authorId: string;
   fileUrl: string;
   time: string;
-  roleId?: string;
 };
 
 export type ArticleVideosType = {
@@ -83,11 +81,8 @@ export type ArticleVideosType = {
   shortDescription: string;
   authorName: string;
   authorBool: boolean;
-  profilePhoto: string;
   tags: Database['public']['Enums']['Tags'];
-  authorId: string;
   time: string;
-  roleId: string;
 };
 
 export type FilesUploadType = {
@@ -246,7 +241,6 @@ export type PostsType = Time &
 export type GalleryType = {
   id: string;
   pseudonym: string;
-  profilePhoto: string;
   author: string;
   firstGraphics?: FileType[];
   firstAnimations?: FileType[];

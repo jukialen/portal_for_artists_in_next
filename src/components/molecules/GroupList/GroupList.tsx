@@ -19,13 +19,7 @@ type GroupsType = {
   noGroups: string;
 };
 
-export const GroupList = ({
-  Groups,
-  groupArray,
-}: {
-  Groups: GroupsType;
-  groupArray: GroupListType[] | undefined;
-}) => {
+export const GroupList = ({ Groups, groupArray }: { Groups: GroupsType; groupArray: GroupListType[] | undefined }) => {
   const maxItems = 30;
 
   const [listArray, setListArray] = useState<GroupListType[] | undefined>(groupArray);

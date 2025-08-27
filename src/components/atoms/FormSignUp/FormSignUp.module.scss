@@ -1,53 +1,53 @@
 .form {
-	display: flex;
-	flex-direction: column;
-	max-width: 20rem;
-	margin: -2rem auto 0;
+  display: flex;
+  flex-direction: column;
+  max-width: 20rem;
+  margin: -2rem auto 0;
 
-	.title {
-		margin: 2.5rem auto .5rem;
-		text-align: center;
-		font-size: 1.8rem;
-	}
+  .title {
+    margin: 2.5rem auto .5rem;
+    text-align: center;
+    font-size: 1.8rem;
+  }
 
-	.inputForm,
-	.inputForm__error {
-		display: block;
-		width: 17rem;
-		max-width: 90%;
-		margin: 1rem auto 0.5rem;
-		border-color: var(--third);
-		color: var(--text);
+  .inputForm,
+  .inputForm__error {
+    display: block;
+    width: 17rem;
+    max-width: 90%;
+    margin: 1rem auto 0.5rem;
+    border-color: var(--third);
+    color: var(--text);
 
-		&::placeholder {
-			color: inherit;
-		}
-	}
+    &::placeholder {
+      color: inherit;
+    }
+  }
 
-	.showingPass {
-		height: 2rem;
-		width: 2rem;
-		margin: 1rem 1.2rem .5rem 0;
-		color: var(--background);
-		background-color: var(--primary);
-		border-color: var(--primary);
-	}
+  .showingPass {
+    height: 2rem;
+    width: 2rem;
+    margin: 1rem 1.2rem .5rem 0;
+    color: var(--background);
+    background-color: var(--primary);
+    border-color: var(--primary);
+  }
 
-	.inputForm {
-		border-color: var(--third);
+  .inputForm {
+    border-color: var(--third);
 
-		&:hover {
-			border-color: rgba(79, 141, 255, 0.7);
-		}
+    &:hover {
+      border-color: rgba(79, 141, 255, 0.7);
+    }
 
-		&__error {
-			border-color: var(--required);
-		}
-	}
+    &__error {
+      border-color: var(--required);
+    }
+  }
 
-	.submit__button {
-		width: 10rem;
-		margin: 1.5rem auto 0;
-		color: var(--text);
-	}
+  .submit__button {
+    width: 10rem;
+    margin: 1.5rem auto 0;
+    color: var(--text);
+  }
 }

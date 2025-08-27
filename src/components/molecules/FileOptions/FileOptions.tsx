@@ -1,45 +1,30 @@
 'use client';
 
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
+
+import { useScopedI18n } from 'locales/client';
 
 import { backUrl } from 'constants/links';
 import { Tags } from 'types/global.types';
 
-import { NewComments } from 'components/atoms/NewComments/NewComments';
 import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
-import { Wrapper } from 'components/atoms/Wrapper/Wrapper';
-const FilesComments = dynamic(() =>
-  import('components/molecules/FilesComments/FilesComments').then((fc) => fc.FilesComments),
-);
 
 import styles from './FileOptions.module.scss';
 
 type FileOptionsType = {
   fileId: string;
   authorName: string;
-  profilePhoto: string;
-  authorId: string;
   fileUrl: string;
   tags: Tags;
   name: string;
-  noComments: string;
-  roleId: string;
 };
 
-export const FileOptions = ({
-  fileId,
-  authorName,
-  profilePhoto,
-  tags,
-  name,
-  authorId,
-  noComments,
-  roleId,
-}: FileOptionsType) => {
+export const FileOptions = ({ fileId, authorName, tags, name }: FileOptionsType) => {
   const [open, setOpen] = useState(false);
   const showOpenComments = () => setOpen(!open);
+
+  const tComments = useScopedI18n('Comments');
 
   const linkShare = `${backUrl}/shared/${name}${fileId}/${authorName}`;
 
@@ -53,15 +38,12 @@ export const FileOptions = ({
         <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} />
       </div>
       <button className={styles.comments} onClick={showOpenComments}>
-        {noComments}
+        {tComments('noComments')}
       </button>
       {open && (
-        <>
-          <NewComments fileId={fileId} authorId={authorId} profilePhoto={profilePhoto} roleId={roleId} />
-          <Wrapper>
-            <FilesComments fileId={fileId} />
-          </Wrapper>
-        </>
+        <Link href={linkShare} className={styles.linkToComments} aria-label="link to this file page">
+          {tComments('comments')}
+        </Link>
       )}
     </div>
   );

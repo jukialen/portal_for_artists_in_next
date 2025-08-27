@@ -8,7 +8,7 @@ import { DateObjectType, LangType, PostsType } from 'types/global.types';
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
-import { createServer } from 'utils/supabase/clientSSR';
+import { createServer } from '../../../../../utils/supabase/clientSSR';
 
 import { Post } from 'components/molecules/Post/Post';
 

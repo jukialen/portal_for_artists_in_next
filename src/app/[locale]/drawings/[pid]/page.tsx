@@ -9,6 +9,7 @@ import { getI18n } from 'locales/server';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
+import { getUserData } from 'helpers/getUserData';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { DrawingsWrapper } from 'components/molecules/DrawingsWrapper/DrawingsWrapper';
@@ -33,7 +34,7 @@ async function getFirstDrawings(pid: Tags, maxItems: number, dataDateObject: Dat
     if (data?.length === 0 || !!error) return filesArray;
 
     for (const file of data) {
-      const { fileId, fileUrl, name, shortDescription, Users, authorId, createdAt, updatedAt } = file;
+      const { fileId, fileUrl, name, shortDescription, Users, createdAt, updatedAt } = file;
 
       filesArray.push({
         fileId,
@@ -41,7 +42,6 @@ async function getFirstDrawings(pid: Tags, maxItems: number, dataDateObject: Dat
         shortDescription: shortDescription!,
         authorName: Users?.pseudonym!,
         fileUrl: fileUrl,
-        authorId: authorId!,
         time: await getDate(updatedAt! || createdAt!, dataDateObject),
       });
     }
@@ -65,6 +65,8 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
   };
 
   const dataDateObject = await dateData();
+  const userData = await getUserData();
+  const pseudonym = userData?.pseudonym!;
 
   const drawings = await getFirstDrawings(pid, 30, dataDateObject);
 
@@ -74,7 +76,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
         {tDrawingsCategories.category}: {pid}
       </em>
 
-      <DrawingsWrapper pid={pid} filesDrawings={drawings} />
+      <DrawingsWrapper pid={pid} pseudonym={pseudonym} filesDrawings={drawings} />
     </>
   );
 }

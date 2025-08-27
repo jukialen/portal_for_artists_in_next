@@ -11,6 +11,7 @@ import { getI18n } from 'locales/server';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
+import { getUserData } from 'helpers/getUserData';
 
 const FileContainerClient = dynamic(() =>
   import('components/organisms/FileContainerClient/FileContainerClient').then((fc) => fc.FileContainerClient),
@@ -43,7 +44,7 @@ const downloadDrawings = async ({
     if (!!error || data?.length === 0) return filesArray;
 
     for (const draw of data!) {
-      const { fileId, name, shortDescription, Users, fileUrl, authorId, createdAt, updatedAt } = draw;
+      const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = draw;
 
       filesArray.push({
         authorName: Users?.pseudonym!,
@@ -51,7 +52,6 @@ const downloadDrawings = async ({
         name,
         shortDescription: shortDescription!,
         fileUrl,
-        authorId: authorId!,
         time: await getDate(updatedAt! || createdAt!, dataDateObject),
       });
     }
@@ -77,6 +77,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
   };
 
   const maxItems = 30;
+  const userData = await getUserData();
 
   const filesArray = await downloadDrawings({ index, locale, maxItems, dataDateObject: await dateData() });
 
@@ -86,7 +87,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
         {tAnotherCategories.category}: {index}
       </em>
 
-      <FileContainerClient index={index} filesArray={filesArray} />
+      <FileContainerClient index={index} pseudonym={userData?.pseudonym!} filesArray={filesArray} />
     </article>
   );
 }

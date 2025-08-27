@@ -36,10 +36,5 @@ export default async function NewUser({ params }: { params: Promise<{ locale: La
   const email = userDataAuth.data.user?.email!;
   const provider = userDataAuth.data.user?.app_metadata.provider! as Provider;
 
-  return <NewUserForm 
-    newUserTranslate={newUserTranslate} 
-    id={id}
-    email={email}
-    provider={provider}
-  />;
+  return <NewUserForm newUserTranslate={newUserTranslate} id={id} email={email} provider={provider} />;
 }
