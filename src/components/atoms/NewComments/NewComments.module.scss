@@ -8,6 +8,12 @@
   .text {
     color: var(--third);
   }
+
+  img {
+    width: 0.625rem;
+    height: 0.625rem;
+    margin-top: .4rem;
+  }
 }
 
 .addingButton {

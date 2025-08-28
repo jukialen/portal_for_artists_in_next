@@ -33,7 +33,7 @@ export const SubComment = ({
   return (
     <div className={del ? styles.container__deleted : styles.container}>
       <div className={styles.comment}>
-        <Avatar src={authorProfilePhoto} className={styles.avatar} />
+        <Avatar src={authorProfilePhoto} fallbackName={authorName} alt="author profile photo icon" />
         <div className={styles.rightSideComment}>
           <div className={styles.topPartComment}>
             <p className={styles.pseudonym}>
@@ -55,7 +55,7 @@ export const SubComment = ({
         userId={authorId}
         liked={liked}
         likes={likes}
-        tableName='SubComments'>
+        tableName="SubComments">
         <NewComments
           profilePhoto={profilePhoto!}
           subCommentId={subCommentId}

@@ -65,7 +65,7 @@ export const NewComments = ({
       {({ values, handleChange }) => (
         <Form>
           <div className={styles.comments}>
-            <Avatar src={profilePhoto} width={10} height={10} marginTop=".4rem" />
+            <Avatar src={profilePhoto} fallbackName="my profile photo icon" alt="my profile photo icon" />
 
             <Textarea
               name="comment"

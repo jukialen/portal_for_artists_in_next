@@ -42,10 +42,8 @@ export const GET = async (req: NextRequest) => {
         authorName: Users?.pseudonym!,
         authorProfilePhoto: Users?.profilePhoto!,
         fileUrl,
-        authorId: authorId!,
         tags,
         time: await getDate(updatedAt! || createdAt!, await dateData()),
-        roleId,
       });
     }
 

@@ -179,7 +179,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
       <Separator orientation="horizontal" />
 
       <div className={styles.usersButton}>
-        <Avatar name={pseudonymAdmin} src={profilePhotoAdmin} />
+        <Avatar src={profilePhotoAdmin} fallbackName={pseudonymAdmin} alt="administrator profile picture icon" />
         <NextLink href={`/user/${pseudonymAdmin}`} passHref>
           <Link>{pseudonymAdmin}</Link>
         </NextLink>
@@ -189,7 +189,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
           <div className={styles.usersButton} key={index}>
-            <Avatar name={pseudonym} src={!!profilePhoto ? profilePhoto : group} />
+            <Avatar src={!!profilePhoto ? profilePhoto : group} fallbackName={pseudonym} alt="my profile photo icon" />
             <NextLink href={`/user/${pseudonym}`} passHref>
               <Link>{pseudonym}</Link>
             </NextLink>
@@ -214,7 +214,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
       {membersArray.length > 0 ? (
         membersArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
           <div className={styles.usersButton} key={index}>
-            <Avatar name={pseudonym} src={!!profilePhoto ? profilePhoto : group} />
+            <Avatar src={!!profilePhoto ? profilePhoto : group} fallbackName={pseudonym} alt="my profile photo icon" />
             <NextLink href={`/user/${pseudonym}`} passHref>
               <Link>{pseudonym}</Link>
             </NextLink>

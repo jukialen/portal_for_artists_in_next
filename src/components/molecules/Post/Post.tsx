@@ -18,7 +18,7 @@ import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
 import { Comments } from 'components/molecules/Comments/Comments';
 
 import styles from './Post.module.scss';
-import group from '../../../../public/group.svg';
+import group from 'public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 export const Post = ({
@@ -85,7 +85,7 @@ export const Post = ({
   return (
     <article className={styles.container}>
       <div className={styles.avatarWithUsername}>
-        <Avatar src={authorProfilePhoto || group} />
+        <Avatar src={authorProfilePhoto || group} fallbackName={authorName} alt="my profile photo icon" />
         <div className={styles.username}>
           <Link href={`/user/${authorName}`}>{authorName}</Link>
           <div className={styles.time}>{date}</div>

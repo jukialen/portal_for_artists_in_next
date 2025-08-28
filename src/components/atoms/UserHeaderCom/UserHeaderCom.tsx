@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Icon, Button, Input, Group, IconButton } from '@chakra-ui/react';
 import { Dialog } from '@ark-ui/react/dialog';
-import { Portal } from '@ark-ui/react/portal';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
@@ -15,7 +14,7 @@ import { Avatar } from 'components/atoms/Avatar/Avatar';
 
 import styles from './UserHeaderCom.module.scss';
 import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
-import { IoSearch } from 'react-icons/io5';
+import { IoCloseOutline, IoSearch } from 'react-icons/io5';
 
 type HeadersType = {
   headers: {
@@ -86,8 +85,10 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   ];
 
   const toggleSearch = () => {
+    setResults([]);
+    setSearchValues('');
+    setOpen(false);
     setSearch(!search);
-    setSearchingState(false);
   };
   const toggleProfileMenu = () => showProfileMenu(!profileMenu);
 
@@ -108,99 +109,121 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     try {
       const { data, error } = await supabase
         .from('Users')
-        .select('pseudonym, profilePhoto, description')
+        .select('id, pseudonym, profilePhoto, description')
         .textSearch('pseudonym', searchValues);
 
-      if (!!error) {
-        searchArray.push({ categoryName: searchOptions[0], data: translated.notFound });
-      }
+      if (!!error) searchArray.push({ categoryName: searchOptions[0], data: translated.notFound });
 
-      for (const s of data!) {
-        searchArray.push({
-          categoryName: searchOptions[0],
-          data: {
-            name: s?.pseudonym,
-            description: s.description!,
-            fileUrl: s.profilePhoto!,
-          },
-        });
-      }
+      if (!!data && data.length > 0) {
+        for (const s of data!) {
+          searchArray.push({
+            categoryName: searchOptions[0],
+            data: {
+              name: s?.pseudonym,
+              description: s.description!,
+              fileUrl: s.profilePhoto!,
+            },
+          });
+        }
 
-      const { data: da, error: err } = await supabase
-        .from('Friends')
-        .select('Users!usernameId (pseudonym, profilePhoto, description)')
-        .eq('usernameId', userData?.id!)
-        .textSearch('pseudonym', `${searchValues}`);
+        for (const du of data!) {
+          const { data: da, error: err } = await supabase
+            .from('Friends')
+            .select('Users!friendId (pseudonym, profilePhoto, description)')
+            .eq('usernameId', userData?.id!)
+            .textSearch('friendId', du.id);
 
-      if (!!err) {
-        searchArray.push({ categoryName: searchOptions[1], data: translated.notFound });
-        return;
-      }
+          if (!!err) searchArray.push({ categoryName: searchOptions[1], data: translated.notFound });
 
-      for (const s of da!) {
-        searchArray.push({
-          categoryName: searchOptions[1],
-          data: {
-            name: s.Users?.pseudonym!,
-            description: s.Users?.description!,
-            fileUrl: s.Users?.profilePhoto!,
-          },
-        });
+          if (!!da && da.length > 0) {
+            for (const s of da!) {
+              searchArray.push({
+                categoryName: searchOptions[1],
+                data: {
+                  name: s.Users?.pseudonym!,
+                  description: s.Users?.description!,
+                  fileUrl: s.Users?.profilePhoto!,
+                },
+              });
+            }
+          }
+        }
       }
 
       const { data: d, error: er } = await supabase
         .from('Groups')
         .select('name, logo, description')
-        .textSearch('name', `${searchValues}`);
+        .textSearch('name', searchValues);
 
       if (!!er) searchArray.push({ categoryName: searchOptions[2], data: translated.notFound });
 
-      for (const s of d!) {
-        searchArray.push({
-          categoryName: searchOptions[2],
-          data: {
-            name: s?.name,
-            description: s.description!,
-            fileUrl: s.logo!,
-          },
-        });
+      if (!!d && d.length > 0) {
+        for (const s of d!) {
+          searchArray.push({
+            categoryName: searchOptions[2],
+            data: {
+              name: s?.name,
+              description: s.description!,
+              fileUrl: s.logo!,
+            },
+          });
+        }
       }
 
       const { data: dt, error: e } = await supabase
         .from('Files')
         .select('name, shortDescription, fileUrl, tags')
-        .textSearch('title', `${searchValues}`);
+        .textSearch('fts_document', searchValues);
 
-      for (let i = 3; i <= searchOptions.length; ++i) {
-        if (!!e) searchArray.push({ categoryName: searchOptions[i], data: translated.notFound });
+      if (dt) {
+        for (let i = 3; i < searchOptions.length; ++i) {
+          if (!!e) searchArray.push({ categoryName: searchOptions[i], data: translated.notFound });
 
-        for (const s of dt!) {
-          searchArray.push({
-            categoryName: searchOptions[i],
-            data: {
-              name: s.name!,
-              description: s.shortDescription!,
-              fileUrl: s.fileUrl,
-              tags: s.tags,
-            },
-          });
+          for (const s of dt!) {
+            searchArray.push({
+              categoryName: searchOptions[i],
+              data: {
+                name: s.name!,
+                description: s.shortDescription!,
+                fileUrl: s.fileUrl,
+                tags: s.tags,
+              },
+            });
+          }
         }
       }
       setResults(searchArray);
+      setOpen(true);
     } catch (e) {
       console.error(e);
-      for (let i = 0; i <= searchOptions.length; ++i) {
+      for (let i = 0; i < searchOptions.length; ++i) {
         searchArray.push({
           categoryName: searchOptions[i],
           data: translated.notFound,
         });
       }
+      setOpen(true);
     }
   };
 
-  const updateVal = async (e: EventType) => {
-    setSearchValues(e.target.value);
-    setOpen(true);
+  const updateVal = (e: EventType) => setSearchValues(e.target.value);
+
+  useEffect(() => {
+    const handleShortcut = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        document.getElementById('search')?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleShortcut);
+    return () => window.removeEventListener('keydown', handleShortcut);
+  }, []);
+
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      await searching();
+    }
   };
 
   return (
@@ -268,74 +291,51 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           placeholder={headers.search}
           defaultValue=""
           onChange={updateVal}
+          onKeyDown={handleKeyDown}
         />
+        <span className={styles.shortcut}>Ctrl/Cmd+k</span>
         <IconButton colorScheme="pink" className={styles.rightButton} aria-label="search phrases" onClick={searching}>
           <IoSearch />
         </IconButton>
       </Group>
-      {!!results && searchingState ? (
-        <Dialog.Root
-          lazyMount
-          unmountOnExit
-          onExitComplete={() => console.log('onExitComplete invoked')}
-          open={open}
-          onOpenChange={(e) => setOpen(e.open)}>
-          <Portal>
-            <Dialog.Backdrop />
-            <Dialog.Positioner />
-            <Dialog.Content className={styles.searching}>
-              <Dialog.Title className={styles.searchValues}>
-                {translated.searchResultTitle}
-                {searchValues}
-              </Dialog.Title>
-              <Dialog.Description>
-                {results.map((option, key) => (
-                  <section key={key} className={styles.dataSearching}>
-                    <h4 className={styles.categoryName}>{option.categoryName}</h4>
-                    <div className={styles.data}>
-                      {typeof option.data === 'string' ? (
-                        translated.notFound
-                      ) : (
-                        <>
-                          <Avatar
-                            src={option.data.fileUrl}
-                            fallbackName={option.data.name}
-                            alt={option.data.description}
-                          />
-                          <p>{option.data.name}</p>
-                          <p>{option.data.description}</p>
-                          {option.data.tags && <p>{option.data.tags}</p>}
-                        </>
-                      )}
-                    </div>
-                  </section>
-                ))}
-              </Dialog.Description>
-              <Dialog.CloseTrigger>Close</Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Portal>
-        </Dialog.Root>
-      ) : <Dialog.Root
-          lazyMount
-          unmountOnExit
-          onExitComplete={() => console.log('onExitComplete invoked')}
-          open={open}
-          onOpenChange={(e) => setOpen(e.open)}>
-          <Portal>
-            <Dialog.Backdrop />
-            <Dialog.Positioner />
-            <Dialog.Content className={styles.searching}>
-              <Dialog.Title className={styles.searchValues}>
-                {translated.searchResultTitle}
-                {searchValues}
-              </Dialog.Title>
-              <Dialog.Description>
-                test
-              </Dialog.Description>
-              <Dialog.CloseTrigger>Close</Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Portal>
-        </Dialog.Root>}
+
+      <Dialog.Root
+        lazyMount
+        unmountOnExit
+        onExitComplete={() => console.log('onExitComplete invoked')}
+        open={open}
+        onOpenChange={(e) => setOpen(e.open)}>
+        <Dialog.Content className={styles.searching}>
+          <div className={styles.closeButton}>
+            <Dialog.CloseTrigger>
+              <IoCloseOutline />
+            </Dialog.CloseTrigger>
+          </div>
+          <Dialog.Title className={styles.searchValues}>
+            {translated.searchResultTitle}
+            {searchValues}
+          </Dialog.Title>
+          <Dialog.Description>
+            {results.map((option, key) => (
+              <section key={key} className={styles.dataSearching}>
+                <h4 className={styles.categoryName}>{option.categoryName}</h4>
+                <div className={styles.data}>
+                  {typeof option.data === 'string' ? (
+                    translated.notFound
+                  ) : (
+                    <>
+                      <Avatar src={option.data.fileUrl} fallbackName={option.data.name} alt={option.data.description} />
+                      <p>{option.data.name}</p>
+                      <p>{option.data.description}</p>
+                      {option.data.tags && <p>{option.data.tags}</p>}
+                    </>
+                  )}
+                </div>
+              </section>
+            ))}
+          </Dialog.Description>
+        </Dialog.Content>
+      </Dialog.Root>
       <ul className={`${styles.menu_profile} ${profileMenu ? styles.menu_profile__active : ''}`}>
         <li>
           <Link href={`/account/${userData?.pseudonym}`} onClick={toggleProfileMenu}>

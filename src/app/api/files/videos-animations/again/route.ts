@@ -47,11 +47,9 @@ export async function GET(request: NextRequest) {
         authorName: Users?.pseudonym!,
         authorProfilePhoto: Users?.profilePhoto!,
         fileUrl,
-        authorId: authorId!,
         time: await getDate(updatedAt! || createdAt!, await dateData()),
         createdAt,
         updatedAt: updatedAt || '',
-        roleId,
       });
     }
     return NextResponse.json(filesArray);

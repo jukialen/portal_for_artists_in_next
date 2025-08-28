@@ -19,7 +19,6 @@ export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) =
   const t = useI18n();
   const tAside = useScopedI18n('Aside');
 
-  console.log(groupsAsideList);
   const changeOpenGroups = () => setOpen(!open);
 
   return (

@@ -109,6 +109,10 @@
   }
 }
 
+  .shortcut {
+    display: none;
+  }
+
 .searching {
   width: 100%;
   max-width: 31rem;
@@ -127,12 +131,30 @@
   background-color: var(--secondary);
   font-size: 1.2rem;
   scroll-behavior: smooth;
-  overflow: scroll;
+  overflow: hidden auto;
   z-index: 2;
 
+  .closeButton {
+    width: inherit;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin-right: 0.5rem;
+      margin-top: 0.5rem;
+      border-radius: 0.5rem;
+
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+  }
+
   .searchValues {
-    width: 100%;
-    padding: 2rem 0.5rem 1rem;
+    width: inherit;
+    padding: 1rem 0.5rem;
+    font-size: 1.5rem;
   }
 
   .dataSearching {
@@ -236,6 +258,16 @@ ul.menu_profile__active {
     bottom: unset;
     top: 3.5rem;
     transform: translateY(-8rem);
+  }
+
+  .shortcut {
+    position: absolute;
+    right: 3.9rem;
+    border: 2px solid var(--opacity);
+    padding: 0.3rem 0.6rem;
+    background: var(--opacity);
+    border-radius: 0.25rem;
+    opacity: 0.75;
   }
 
   .searching {

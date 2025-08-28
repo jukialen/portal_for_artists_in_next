@@ -31,7 +31,7 @@ export const Comment = ({
   return (
     <div className={del ? styles.container__deleted : styles.container}>
       <div className={styles.comment}>
-        <Avatar src={authorProfilePhoto} className={styles.avatar} />
+        <Avatar src={authorProfilePhoto} fallbackName={authorName} alt="author profile photo icon" />
         <div className={styles.rightSideComment}>
           <div className={styles.topPartComment}>
             <p className={styles.pseudonym}>
