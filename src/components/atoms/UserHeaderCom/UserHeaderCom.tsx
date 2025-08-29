@@ -15,7 +15,6 @@ import { Avatar } from 'components/atoms/Avatar/Avatar';
 import styles from './UserHeaderCom.module.scss';
 import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
 import { IoCloseOutline, IoSearch } from 'react-icons/io5';
-import { Database } from 'types/database.types';
 
 type HeadersType = {
   headers: {
@@ -218,10 +217,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     }
   };
 
-  const clearInput = () => {
-    setSearchValues('');
-    console.log(searchValues);
-  };
+  const clearInput = () => setSearchValues('');
 
   return (
     <>
