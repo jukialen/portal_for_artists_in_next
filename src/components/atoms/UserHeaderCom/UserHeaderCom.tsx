@@ -15,6 +15,7 @@ import { Avatar } from 'components/atoms/Avatar/Avatar';
 import styles from './UserHeaderCom.module.scss';
 import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
 import { IoCloseOutline, IoSearch } from 'react-icons/io5';
+import { Database } from 'types/database.types';
 
 type HeadersType = {
   headers: {
@@ -62,7 +63,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
   const [profileMenu, showProfileMenu] = useState(false);
   const [search, setSearch] = useState(false);
-  const [searchingState, setSearchingState] = useState(false);
   const [searchValues, setSearchValues] = useState('');
   const { push, refresh } = useRouter();
   const [results, setResults] = useState<SearchingValues[]>([]);
@@ -85,11 +85,14 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   ];
 
   const toggleSearch = () => {
-    setResults([]);
-    setSearchValues('');
-    setOpen(false);
-    setSearch(!search);
+    if (search) {
+      setSearch(false);
+    } else {
+      setSearch(!search);
+      !!searchInputRef.current && searchInputRef.current.focus();
+    }
   };
+
   const toggleProfileMenu = () => showProfileMenu(!profileMenu);
 
   const sign__out = async () => {
@@ -103,9 +106,39 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   };
 
   const searching = async () => {
-    setSearchingState(true);
     const searchArray: SearchingValues[] = [];
 
+    const noResults = () => {
+      for (let i = 0; i < searchOptions.length; ++i) {
+        searchArray.push({
+          categoryName: searchOptions[i],
+          data: translated.notFound,
+        });
+      }
+    };
+
+    const addData = (
+      title: number,
+      d: {
+        pseudonym?: string;
+        profilePhoto?: string;
+        description?: string;
+        name?: string;
+        logo?: string | null;
+        shortDescription?: string | null;
+        fileUrl?: string | null;
+        tags?: Tags;
+      },
+    ) => {
+      searchArray.push({
+        categoryName: searchOptions[title],
+        data: {
+          name: d.name || d.pseudonym!,
+          description: d.shortDescription || d.description!,
+          fileUrl: d.logo || d.profilePhoto!,
+        },
+      });
+    };
     try {
       const { data, error } = await supabase
         .from('Users')
@@ -115,16 +148,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
       if (!!error) searchArray.push({ categoryName: searchOptions[0], data: translated.notFound });
 
       if (!!data && data.length > 0) {
-        for (const s of data!) {
-          searchArray.push({
-            categoryName: searchOptions[0],
-            data: {
-              name: s?.pseudonym,
-              description: s.description!,
-              fileUrl: s.profilePhoto!,
-            },
-          });
-        }
+        for (const s of data!) addData(0, s);
 
         for (const du of data!) {
           const { data: da, error: err } = await supabase
@@ -135,18 +159,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
           if (!!err) searchArray.push({ categoryName: searchOptions[1], data: translated.notFound });
 
-          if (!!da && da.length > 0) {
-            for (const s of da!) {
-              searchArray.push({
-                categoryName: searchOptions[1],
-                data: {
-                  name: s.Users?.pseudonym!,
-                  description: s.Users?.description!,
-                  fileUrl: s.Users?.profilePhoto!,
-                },
-              });
-            }
-          }
+          if (!!da && da.length > 0) for (const s of da!) addData(1, s.Users);
         }
       }
 
@@ -157,18 +170,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
       if (!!er) searchArray.push({ categoryName: searchOptions[2], data: translated.notFound });
 
-      if (!!d && d.length > 0) {
-        for (const s of d!) {
-          searchArray.push({
-            categoryName: searchOptions[2],
-            data: {
-              name: s?.name,
-              description: s.description!,
-              fileUrl: s.logo!,
-            },
-          });
-        }
-      }
+      if (!!d && d.length > 0) for (const s of d!) addData(2, s);
 
       const { data: dt, error: e } = await supabase
         .from('Files')
@@ -179,29 +181,16 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
         for (let i = 3; i < searchOptions.length; ++i) {
           if (!!e) searchArray.push({ categoryName: searchOptions[i], data: translated.notFound });
 
-          for (const s of dt!) {
-            searchArray.push({
-              categoryName: searchOptions[i],
-              data: {
-                name: s.name!,
-                description: s.shortDescription!,
-                fileUrl: s.fileUrl,
-                tags: s.tags,
-              },
-            });
-          }
+          for (const s of dt!) addData(i, s);
         }
       }
+
+      searchArray.length === 0 && noResults();
       setResults(searchArray);
       setOpen(true);
     } catch (e) {
       console.error(e);
-      for (let i = 0; i < searchOptions.length; ++i) {
-        searchArray.push({
-          categoryName: searchOptions[i],
-          data: translated.notFound,
-        });
-      }
+      noResults();
       setOpen(true);
     }
   };
@@ -237,7 +226,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   return (
     <>
       <Button
-        colorScheme="yellow"
         onClick={() => push('/app')}
         className={styles.menu_buttons}
         aria-label="this button redirect to groups's section">
@@ -255,7 +243,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
         </Button>
         <Button
           onClick={() => push('/friends')}
-          colorScheme="yellow"
           className={styles.menu_buttons}
           aria-label="this button redirect to friends's section">
           <Icon>
@@ -277,11 +264,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           </Icon>
           <p>{headers.friends}</p>
         </Button>
-        <Button
-          colorScheme="yellow"
-          className={styles.menu_buttons}
-          onClick={toggleSearch}
-          aria-label="this button shows searching">
+        <Button className={styles.menu_buttons} onClick={toggleSearch} aria-label="this button shows searching">
           <IoSearch className={styles.buttons} />
           <p>{headers.search}</p>
         </Button>
@@ -313,7 +296,18 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
         </IconButton>
       </Group>
 
-      <Dialog.Root lazyMount unmountOnExit open={open} onOpenChange={(e) => setOpen(e.open)}>
+      <Dialog.Root
+        lazyMount
+        unmountOnExit
+        open={open}
+        onOpenChange={(e) => {
+          setOpen(e.open);
+          if (!e.open) {
+            setSearch(false);
+            setSearchValues('');
+            setResults([]);
+          }
+        }}>
         <Dialog.Content className={styles.searching}>
           <div className={styles.closeButton}>
             <Dialog.CloseTrigger>
@@ -324,7 +318,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
             {translated.searchResultTitle}
             {searchValues}
           </Dialog.Title>
-          <Dialog.Description>
+          <Dialog.Description className={styles.searchResults}>
             {results.map((option, key) => (
               <section key={key} className={styles.dataSearching}>
                 <h4 className={styles.categoryName}>{option.categoryName}</h4>
