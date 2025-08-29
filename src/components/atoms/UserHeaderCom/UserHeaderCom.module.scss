@@ -109,9 +109,28 @@
   }
 }
 
-  .shortcut {
-    display: none;
+.shortcut {
+  display: none;
+}
+
+.clearPhrase {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 3.9rem;
+  color: var(--text);
+  z-index: 22222;
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+
+    path {
+      stroke-width: 3rem;
+    }
   }
+}
 
 .searching {
   width: 100%;
@@ -261,6 +280,7 @@ ul.menu_profile__active {
   }
 
   .shortcut {
+    display: flex;
     position: absolute;
     right: 3.9rem;
     border: 2px solid var(--opacity);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Icon, Button, Input, Group, IconButton } from '@chakra-ui/react';
@@ -208,13 +208,16 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
   const updateVal = (e: EventType) => setSearchValues(e.target.value);
 
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     const handleShortcut = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        document.getElementById('search')?.focus();
+        searchInputRef.current?.focus();
       }
     };
+
     window.addEventListener('keydown', handleShortcut);
     return () => window.removeEventListener('keydown', handleShortcut);
   }, []);
@@ -224,6 +227,11 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
       e.preventDefault();
       await searching();
     }
+  };
+
+  const clearInput = () => {
+    setSearchValues('');
+    console.log(searchValues);
   };
 
   return (
@@ -285,26 +293,27 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
       <Group className={`${styles.search} ${search ? styles.search__active : ''}`}>
         <Input
+          ref={searchInputRef}
           type="search"
           id="search"
           name="search"
           placeholder={headers.search}
-          defaultValue=""
+          value={searchValues}
           onChange={updateVal}
           onKeyDown={handleKeyDown}
         />
+        {!!searchValues && (
+          <button className={styles.clearPhrase} onClick={clearInput}>
+            <IoCloseOutline />
+          </button>
+        )}
         <span className={styles.shortcut}>Ctrl/Cmd+k</span>
         <IconButton colorScheme="pink" className={styles.rightButton} aria-label="search phrases" onClick={searching}>
           <IoSearch />
         </IconButton>
       </Group>
 
-      <Dialog.Root
-        lazyMount
-        unmountOnExit
-        onExitComplete={() => console.log('onExitComplete invoked')}
-        open={open}
-        onOpenChange={(e) => setOpen(e.open)}>
+      <Dialog.Root lazyMount unmountOnExit open={open} onOpenChange={(e) => setOpen(e.open)}>
         <Dialog.Content className={styles.searching}>
           <div className={styles.closeButton}>
             <Dialog.CloseTrigger>
