@@ -12,6 +12,10 @@
 
 .aside,
 .drawer {
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+
   .rolling {
     margin-bottom: 4rem;
 
@@ -24,7 +28,7 @@
       margin: 2rem 0 0.25rem;
       cursor: pointer;
 
-      h3 {
+      p {
         width: 100%;
         padding-left: 1rem;
       }
@@ -51,10 +55,13 @@ div button.aside__right {
   bottom: 5rem;
   font-size: 2rem;
   border-radius: 0 0.5rem 0.5rem 0;
-  background-color: var(--primary);
+  background-color: var(--primary__opacity);
   color: var(--text);
   cursor: pointer;
   z-index: 1;
+   box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 
   svg {
     transform: rotate(90deg);
@@ -96,7 +103,7 @@ div.drawer {
     position: sticky;
     bottom: 4.5rem;
     background-color: var(--secondary);
-    opacity: .8;
+    opacity: 0.8;
 
     svg {
       width: 2.5rem;

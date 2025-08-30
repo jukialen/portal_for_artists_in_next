@@ -1,7 +1,6 @@
 .nav {
   height: 90%;
   font-size: 1.5rem;
-  border-radius: 1rem;
 
   .list {
     display: flex;
@@ -12,6 +11,18 @@
       width: inherit;
       height: inherit;
       display: flex;
+      background-color: var(--primary__opacity);
+      box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);
+
+      &:first-child {
+        border-radius: 1rem 0 0 1rem;
+
+         a:hover { 
+          border-radius: inherit
+         }
+      }
 
       a {
         width: 100%;
@@ -20,8 +31,6 @@
         align-items: center;
         justify-content: center;
         color: var(--text);
-        border-radius: 1rem;
-
 
         &:hover {
           background-color: var(--hover);
@@ -45,8 +54,7 @@
 
   &__jp .list .menu {
     width: fit-content;
-    margin: 0 .5rem;
+    margin: 0 0.5rem;
     padding: 0.1rem;
   }
 }
-

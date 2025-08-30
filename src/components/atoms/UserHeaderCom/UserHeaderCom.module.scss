@@ -1,75 +1,80 @@
-.title a {
+.mobileAlaTabbar,
+.otherAlaTabbar {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
+  justify-content: space-around;
+  width: 100dvw;
+  max-width: 31rem;
+  margin: 0 auto;
 
-.menu_buttons {
-  width: 20%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-  column-gap: 1.3rem;
-  font-size: 0.85rem;
-  color: inherit;
-  border-color: transparent;
-  background-color: transparent;
-
-  &:active {
-    p,
-    svg,
-    .buttons {
-      color: var(--text);
-      fill: var(--text);
-      stroke: var(--text);
-    }
+  .leftPart {
+    padding: 0 0.3rem;
+    border-radius: 2rem;
+    background-color: var(--primary__opacity);
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
   }
-
-  svg,
-  span#avatar {
-    width: 2.2rem;
-    height: inherit;
-    color: inherit;
-  }
-
-  span {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: inherit;
-  }
-
-  p {
-    display: flex;
-    margin: auto 0;
-  }
-
-  svg,
-  p {
-    color: inherit;
-  }
-}
-
-.buttons {
-  width: 60%;
-  height: 100%;
-  display: flex;
 
   .menu_buttons {
-    width: 33.33%;
+    height: 90%;
+    width: 4.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-radius: 2rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
 
-    &:first-child svg {
-      width: 2.6rem;
-      margin: -0.2rem 0;
+    &:active {
+      p,
+      svg {
+        color: var(--text);
+        fill: var(--text);
+        stroke: var(--text);
+      }
     }
 
-    &:nth-child(2) svg,
-    &:nth-child(3) svg {
-      width: 1.8rem;
-      margin: 0.2rem 0 0.21rem;
+    svg,
+    span#avatar {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: inherit;
+
+      path,
+      circle {
+        stroke: var(--text);
+        color: var(--text);
+      }
     }
+  }
+
+  #searchInput {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: auto 0.25rem;
+    border-radius: 50%;
+    background-color: var(--primary__opacity);
+  }
+}
+
+.otherAlaTabbar {
+  display: none;
+  max-width: 38rem;
+  border-radius: 2rem;
+  background-color: var(--primary__opacity);
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+
+  .menu_buttons {
+    width: unset;
+    flex-direction: row;
+    gap: revert-layer;
+    margin: auto;
+    font-size: 1rem;
   }
 }
 
@@ -82,16 +87,14 @@
   right: 0;
   margin: auto;
   padding: 0.45rem;
+  border-radius: 1rem;
   border: 0.1rem solid var(--secondary);
-  border-radius: 0.5rem;
   background-color: var(--secondary__opacity);
   transform: translateY(8.5rem);
   transition: transform 0.9s 0.1s ease-in-out;
-  border-radius: 1rem;
-  box-shadow: 0 .25rem 1.25rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
   -webkit-backdrop-filter: blur(3.5px);
   backdrop-filter: blur(3.5px);
-  
 
   input::placeholder,
   input {
@@ -157,6 +160,9 @@
   scroll-behavior: smooth;
   overflow: hidden auto;
   z-index: 2;
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 
   .closeButton {
     width: inherit;
@@ -184,6 +190,7 @@
   .searchResults {
     padding: 1.5rem 0;
   }
+
   .dataSearching {
     padding: 0 0.5rem;
 
@@ -218,7 +225,10 @@ div.search__active {
   gap: 0.5rem;
   padding: 0.2rem 0 0.4rem;
   border-radius: 0.5rem 0 0 0.5rem;
-  background-color: var(--primary);
+  background-color: var(--primary__opacity);
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(3.5px);
+  backdrop-filter: blur(3.5px);
 
   li {
     width: 8rem;
@@ -259,19 +269,16 @@ ul.menu_profile__active {
 }
 
 @media (min-width: 768px) {
-  .buttons {
-    height: 100%;
+  .mobileAlaTabbar {
+    display: none;
+  }
+
+  .otherAlaTabbar {
     display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin: auto;
   }
 
   .menu_buttons {
-    width: unset;
-    flex-direction: row;
-    margin: auto 0;
-    column-gap: 0.3rem;
+    gap: 0 0.3rem;
 
     span,
     svg {
@@ -312,12 +319,6 @@ ul.menu_profile__active {
     li {
       height: 2.5rem;
     }
-  }
-}
-
-@media (min-width: 1024px) {
-  .buttons .menu_buttons {
-    width: 12rem;
   }
 }
 

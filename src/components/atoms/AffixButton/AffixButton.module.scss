@@ -2,7 +2,8 @@
   position: sticky;
 }
 
-.up, .up__active {
+.up,
+.up__active {
   width: 3rem;
   height: 3rem;
   position: absolute;
@@ -10,11 +11,14 @@
   right: 2rem;
   bottom: 5rem;
   font-size: 2rem;
-  padding: .5rem;
-  background-color: var(--primary);
+  padding: 0.5rem;
+  background-color: var(--primary__opacity);
   color: var(--text);
   border-radius: 50%;
   z-index: 2;
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 }
 
 .up__active {

@@ -60,13 +60,7 @@ export const AsideWrapper = ({
             <div className={styles.rolling}>
               <h3 className={`${!open ? styles.afterHidden : ''} ${styles.h3}`} onClick={showCategories}>
                 <p>{asideCategory}</p>
-                <RiArrowUpSLine
-                  style={{
-                    transform: open ? 'rotate(-180deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.3s cubic-bezier(0.65, 0, 0.35, 1)',
-                    display: 'inline-block',
-                  }}
-                />
+                <RiArrowUpSLine style={{ transform: open ? 'rotate(-180deg)' : 'rotate(0deg)' }} />
               </h3>
 
               <div className={open ? styles.container : styles.hidden__categories}>
@@ -79,7 +73,6 @@ export const AsideWrapper = ({
             </div>
           </DrawerBody>
           <Button
-            colorScheme="pink"
             className={styles.drawer__right}
             aria-label="right menu button"
             onClick={() => setOpenDr(false)}>

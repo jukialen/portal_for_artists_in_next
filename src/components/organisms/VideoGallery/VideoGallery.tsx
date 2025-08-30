@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 
@@ -54,17 +54,18 @@ export const VideoGallery = ({ id, pseudonym, author, tGallery, firstVideos }: G
       <Wrapper>
         {userVideos.length > 0 ? (
           userVideos.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
-            <FileContainer
-              fileId={fileId!}
-              name={name!}
-              fileUrl={fileUrl}
-              shortDescription={shortDescription!}
-              tags={tags!}
-              authorName={authorName!}
-              authorBool={authorName === pseudonym}
-              time={time}
-              key={index}
-            />
+            <Suspense key={index} fallback={<p>Loading...</p>}>
+              <FileContainer
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={authorName!}
+                authorBool={authorName === pseudonym}
+                time={time}
+              />
+            </Suspense>
           ))
         ) : (
           <div>nie ma nic</div>

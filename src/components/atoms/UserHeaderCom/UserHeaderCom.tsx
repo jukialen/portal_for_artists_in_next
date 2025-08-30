@@ -219,22 +219,27 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
   const clearInput = () => setSearchValues('');
 
-  return (
-    <>
-      <Button
-        onClick={() => push('/app')}
-        className={styles.menu_buttons}
-        aria-label="this button redirect to groups's section">
-        <MdOutlineHome className={styles.buttons} />
-        <p>{headers.home}</p>
-      </Button>
-      <div className={styles.buttons}>
+  const closeInputAndDIalog = (e: Dialog.OpenChangeDetails) => {
+    setOpen(e.open);
+    if (!e.open) {
+      setSearch(false);
+      setSearchValues('');
+      setResults([]);
+    }
+  };
+
+  const leftPart = () => {
+    return (
+      <>
         <Button
-          onClick={() => push('/groups/list')}
-          colorScheme="yellow"
+          onClick={() => push('/app')}
           className={styles.menu_buttons}
-          aria-label="button for groups">
-          <MdOutlineGroups className={styles.buttons} />
+          aria-label="this button redirect to groups's section">
+          <MdOutlineHome />
+          <p>{headers.home}</p>
+        </Button>
+        <Button onClick={() => push('/groups/list')} className={styles.menu_buttons} aria-label="button for groups">
+          <MdOutlineGroups />
           <p>{headers.groups}</p>
         </Button>
         <Button
@@ -250,8 +255,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
               stroke="#000000"
               strokeWidth="2"
               strokeLinecap="round"
-              strokeLinejoin="round"
-              className={styles.buttons}>
+              strokeLinejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
               <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -260,15 +264,34 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           </Icon>
           <p>{headers.friends}</p>
         </Button>
+        <Button className={styles.menu_buttons} onClick={toggleProfileMenu}>
+          <Avatar fallbackName={userData?.pseudonym!} src={userData?.profilePhoto!} alt="" />
+          <p>{headers.account}</p>
+        </Button>
+      </>
+    );
+  };
+
+  return (
+    <>
+      <section className={styles.mobileAlaTabbar}>
+        <Group className={styles.leftPart}>{leftPart()}</Group>
+        <Button
+          className={styles.menu_buttons}
+          id={styles.searchInput}
+          onClick={toggleSearch}
+          aria-label="this button shows searching">
+          <IoSearch />
+        </Button>
+      </section>
+
+      <section className={styles.otherAlaTabbar}>
+        {leftPart()}
         <Button className={styles.menu_buttons} onClick={toggleSearch} aria-label="this button shows searching">
-          <IoSearch className={styles.buttons} />
+          <IoSearch />
           <p>{headers.search}</p>
         </Button>
-      </div>
-      <Button colorScheme="yellow" className={styles.menu_buttons} onClick={toggleProfileMenu}>
-        <Avatar fallbackName={userData?.pseudonym!} src={userData?.profilePhoto!} alt="" />
-        <p>{headers.account}</p>
-      </Button>
+      </section>
 
       <Group className={`${styles.search} ${search ? styles.search__active : ''}`}>
         <Input
@@ -292,18 +315,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
         </IconButton>
       </Group>
 
-      <Dialog.Root
-        lazyMount
-        unmountOnExit
-        open={open}
-        onOpenChange={(e) => {
-          setOpen(e.open);
-          if (!e.open) {
-            setSearch(false);
-            setSearchValues('');
-            setResults([]);
-          }
-        }}>
+      <Dialog.Root lazyMount unmountOnExit open={open} onOpenChange={closeInputAndDIalog}>
         <Dialog.Content className={styles.searching}>
           <div className={styles.closeButton}>
             <Dialog.CloseTrigger>

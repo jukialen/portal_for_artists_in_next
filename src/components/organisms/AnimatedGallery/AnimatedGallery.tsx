@@ -12,6 +12,7 @@ import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 const FileContainer = dynamic(() =>
   import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
+
 export const AnimatedGallery = ({ id, pseudonym, author, tGallery, firstAnimations }: GalleryType) => {
   const [userAnimates, setUserAnimates] = useState<FileType[]>(firstAnimations!);
   const [lastVisible, setLastVisible] = useState(
@@ -49,9 +50,9 @@ export const AnimatedGallery = ({ id, pseudonym, author, tGallery, firstAnimatio
       )}
 
       <Wrapper>
-        <Suspense fallback={<p>Loading...</p>}>
-          {userAnimates.length > 0 ? (
-            userAnimates.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
+        {userAnimates.length > 0 ? (
+          userAnimates.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
+            <Suspense key={index} fallback={<p>Loading...</p>}>
               <FileContainer
                 fileId={fileId!}
                 name={name!}
@@ -61,13 +62,12 @@ export const AnimatedGallery = ({ id, pseudonym, author, tGallery, firstAnimatio
                 authorName={authorName!}
                 authorBool={authorName === pseudonym}
                 time={time}
-                key={index}
               />
-            ))
-          ) : (
-            <div>nie ma nic</div>
-          )}
-        </Suspense>
+            </Suspense>
+          ))
+        ) : (
+          <div>nie ma nic</div>
+        )}
 
         {!!lastVisible && userAnimates.length === maxItems * i && <MoreButton nextElements={nextElements} />}
       </Wrapper>
