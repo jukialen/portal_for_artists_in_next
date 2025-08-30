@@ -49,7 +49,6 @@ export default async function Tabs({ params, searchParams }: PropsType) {
   const author = searchParams.back?.split('/')[2];
   const allowedTabs = ['friends', 'groups', 'photos', 'animations', 'videos'] as const;
 
-  console.log(backUrl);
   const tGallery = {
     userPhotosTitle: t('Account.gallery.userPhotosTitle'),
     userAnimationsTitle: t('Account.gallery.userAnimationsTitle'),
