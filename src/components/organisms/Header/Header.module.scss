@@ -2,15 +2,16 @@
   width: 100%;
   position: fixed;
   bottom: 0;
-  display: grid;
-  grid-template-columns: 5rem 1fr auto;
-  z-index: 9999;
+  display: flex;
+  justify-content: space-between;
   padding: 0.2rem 0;
+  z-index: 9999;
 
   .title {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: auto 0.5rem;
     cursor: pointer;
 
     img {
@@ -22,49 +23,54 @@
     display: none;
   }
 
-  .menu_buttons {
-    width: 5.5rem;
-    height: 90%;
+  .mobileButtons {
+    width: unset;
     display: flex;
-    flex-direction: column;
-    font-size: 0.85rem;
-    justify-self: end;
-    align-items: center;
-    margin: auto 0;
-    padding: 0.2rem 0;
-    background: inherit;
-    color: var(--text);
+    gap: 0.5rem;
+    justify-content: flex-end;
+    border-radius: 2rem;
+    padding: 0.25rem;
     background-color: var(--primary__opacity);
     box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
-    cursor: pointer;
 
-    &:first-child, &:first-of-type {
-      border-radius: 2rem 0 0 2rem;
-    }
-
-    &:last-child {
-      border-radius: 0 2rem 2rem 0;
-    }
-
-    svg {
-      width: 2.2rem;
-      height: 2.2rem;
-    }
-
-    &:hover {
-      background-color: var(--hover);
+    .menu_buttons {
+      width: 3.5rem;
+      height: 3.5rem;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.8rem;
+      justify-self: end;
+      align-items: center;
+      margin: auto 0;
+      padding: 0.2rem 0;
+      border-radius: 2rem;
       color: var(--text);
-    }
+      cursor: pointer;
 
-    &:active {
-      background-color: var(--active);
-      color: var(--text);
-    }
+      svg {
+        width: 2rem;
+        height: 2rem;
+      }
 
-    &:focus {
-      background-color: var(--focus);
+      &:hover {
+        background-color: var(--hover);
+        color: var(--text);
+      }
+
+      &:active {
+        background-color: var(--active);
+        color: var(--text);
+      }
+
+      &:focus {
+        background-color: var(--focus);
+      }
+
+      p {
+        font-size: 0.75rem;
+      }
     }
   }
 }
@@ -74,18 +80,40 @@
     top: 0;
     bottom: unset;
     display: grid;
+    grid-template-columns: 3rem 1fr auto;
 
-    @media (min-width: 768px) {
-      #settings_button {
-        display: none;
-      }
+    .title {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    #settings_button {
+      display: none;
     }
 
     .desktop_nav {
-      height: inherit;
       display: flex;
       justify-self: end;
       align-items: center;
+    }
+
+    .mobileButtons {
+      width: unset;
+      margin: 0 0.5rem;
+
+      .menu_buttons {
+        width: 3rem;
+        height: 3rem;
+
+        svg {
+          width: 1.6rem;
+          height: 1.6rem;
+        }
+
+        p {
+          font-size: 0.75rem;
+        }
+      }
     }
   }
 }

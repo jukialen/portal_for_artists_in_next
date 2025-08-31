@@ -33,14 +33,16 @@ export const Header = async ({ locale }: { locale: LangType }) => {
         <Nav headers={headers} locale={locale} />
       </div>
 
-      <Link href="/signin" className={styles.menu_buttons} id={styles.settings_button} aria-label="sign in/up link">
-        <BiLogInCircle />
-        <p>{headers.signIn}</p>
-      </Link>
-      <Link href="/settings" className={styles.menu_buttons} aria-label="Settings">
-        <MdOutlineSettings />
-        <p>{headers.title}</p>
-      </Link>
+      <section className={styles.mobileButtons}>
+        <Link href="/signin" className={styles.menu_buttons} id={styles.settings_button} aria-label="sign in/up link">
+          <BiLogInCircle />
+          <p>{headers.signIn}</p>
+        </Link>
+        <Link href="/settings" className={styles.menu_buttons} aria-label="Settings">
+          <MdOutlineSettings />
+          <p>{headers.title}</p>
+        </Link>
+      </section>
     </header>
   );
 };

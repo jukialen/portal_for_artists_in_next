@@ -116,7 +116,7 @@ export default async function Account({ params }: { params: Promise<{ locale: La
       <Tabs.Root className={styles.tabsMenu} defaultValue={fileTabList[0]} defaultChecked lazyMount unmountOnExit>
         <Tabs.List className={styles.topTabList}>
           {fileTabList.map((tab, index) => (
-            <Tabs.Trigger className={styles.tabForPanels} value={tab!} key={index}>
+            <Tabs.Trigger key={index} className={styles.tabForPanels} value={tab!}>
               {tab}
             </Tabs.Trigger>
           ))}
@@ -124,7 +124,7 @@ export default async function Account({ params }: { params: Promise<{ locale: La
         </Tabs.List>
         <div className={styles.tabContents}>
           {fileComps.map((comp, index) => (
-            <Tabs.Content value={fileTabList[index]!} className={styles.tabContent} role="tabcontent" key={index}>
+            <Tabs.Content key={index} value={fileTabList[index]!} className={styles.tabContent} role="tabcontent">
               {comp}
             </Tabs.Content>
           ))}

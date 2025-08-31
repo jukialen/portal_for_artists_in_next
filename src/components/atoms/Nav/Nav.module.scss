@@ -4,32 +4,30 @@
 
   .list {
     display: flex;
-    width: 17rem;
+    width: 12rem;
     height: 100%;
+    gap: 0.5rem;
 
     .menu {
       width: inherit;
-      height: inherit;
+      height: 3rem;
       display: flex;
+      align-items: center;
+      border-radius: 2rem;
       background-color: var(--primary__opacity);
       box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
       -webkit-backdrop-filter: blur(5px);
       backdrop-filter: blur(5px);
-
-      &:first-child {
-        border-radius: 1rem 0 0 1rem;
-
-         a:hover { 
-          border-radius: inherit
-         }
-      }
+      padding: 0.25rem;
 
       a {
         width: 100%;
-        height: inherit;
+        height: 2.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 2rem;
+        font-size: 1.2rem;
         color: var(--text);
 
         &:hover {
@@ -48,13 +46,7 @@
     }
   }
 
-  &__jp {
-    font-size: 1.3rem;
-  }
-
-  &__jp .list .menu {
-    width: fit-content;
-    margin: 0 0.5rem;
-    padding: 0.1rem;
+  &__jp .list {
+    width: 18rem;
   }
 }
