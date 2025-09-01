@@ -279,8 +279,8 @@ export default async function User({ params }: PropsType) {
       />
       <Tabs.Root className={styles.tabsMenu} defaultValue={contentList[0]} defaultChecked lazyMount unmountOnExit>
         <Tabs.List className={styles.topTabList} role="tablist">
-          {contentList.map((tab, index) => (
-            <Tabs.Trigger className={styles.tabForPanels} role="tab" value={tab!} key={index}>
+          {contentList.map((tab) => (
+            <Tabs.Trigger className={styles.tabForPanels} role="tab" value={tab!} key={tab}>
               {tab}
             </Tabs.Trigger>
           ))}
@@ -288,7 +288,11 @@ export default async function User({ params }: PropsType) {
         </Tabs.List>
         <div className={styles.tabContents}>
           {filesList.map((comp, index) => (
-            <Tabs.Content value={fileTabList[index]!} className={styles.tabContent} role="tabcontent" key={index}>
+            <Tabs.Content
+              key={comp.key ? `${comp.key}` : `comp-${index}`}
+              value={fileTabList[index]!}
+              className={styles.tabContent}
+              role="tabcontent">
               {comp}
             </Tabs.Content>
           ))}

@@ -16,23 +16,11 @@ export const translated = async () => {
 };
 
 export const graphics = async (maxItems: number, authorId: string, step: 'first' | 'again', lastVisible?: string) => {
-  // const params = { authorId, maxItems: maxItems.toString() };
-  // const lastParams = { ...params, lastVisible };
-  // const queryString = new URLSearchParams(!!lastVisible ? lastParams : params).toString();
-
   const supabase = await createServer();
 
   const filesArray: FileType[] = [];
 
   try {
-    // const res: FileType[] = await fetch(`${backUrl}/api/files/graphics/${step}?${queryString}`, {
-    //   method: 'GET',
-    // })
-    //   .then((r) => r.json())
-    //   .catch((e) => console.error(e));
-    //
-    // return res;
-
     if (step === 'first') {
       const { data, error } = await supabase
         .from('Files')
@@ -112,19 +100,6 @@ export const videosAnimations = async (
   step: 'first' | 'again',
   lastVisible?: string,
 ) => {
-  // const params = { tag: tag.toString(), authorId, maxItems: maxItems.toString() };
-  // const lastParams = { ...params, lastVisible };
-  // const queryString = new URLSearchParams(!!lastVisible ? lastParams : params).toString();
-  //
-  // try {
-  //   const res: FileType[] = await fetch(`${backUrl}/api/files/videos-animations/${step}?${queryString}`, {
-  //     method: 'GET',
-  //   })
-  //     .then((r) => r.json())
-  //     .catch((e) => console.error(e));
-  //
-  //   return res;
-
   const supabase = await createServer();
   const tags: Tags[] = ['animations', 'videos'];
 
@@ -203,17 +178,6 @@ export const videosAnimations = async (
 };
 
 export const drawings = async (index: IndexType, lastVisible: string, maxItems: number) => {
-  // let res: FileType[] = [];
-  // try {
-  // const params = { index, lastVisible, maxItems: maxItems.toString() };
-  // const queryString = new URLSearchParams(params).toString();
-  //
-  // res = await fetch(`${backUrl}/api/files/drawings/again?${queryString}`, { method: 'GET' })
-  //   .then((r) => r.json())
-  //   .catch((e) => console.error(e));
-  //
-  // return res;
-
   const supabase = await createServer();
 
   const nextArray: FileType[] = [];

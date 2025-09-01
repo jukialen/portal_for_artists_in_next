@@ -115,8 +115,8 @@ export default async function Account({ params }: { params: Promise<{ locale: La
 
       <Tabs.Root className={styles.tabsMenu} defaultValue={fileTabList[0]} defaultChecked lazyMount unmountOnExit>
         <Tabs.List className={styles.topTabList}>
-          {fileTabList.map((tab, index) => (
-            <Tabs.Trigger key={index} className={styles.tabForPanels} value={tab!}>
+          {fileTabList.map((tab) => (
+            <Tabs.Trigger key={tab} className={styles.tabForPanels} value={tab!}>
               {tab}
             </Tabs.Trigger>
           ))}
@@ -124,7 +124,11 @@ export default async function Account({ params }: { params: Promise<{ locale: La
         </Tabs.List>
         <div className={styles.tabContents}>
           {fileComps.map((comp, index) => (
-            <Tabs.Content key={index} value={fileTabList[index]!} className={styles.tabContent} role="tabcontent">
+            <Tabs.Content
+              key={comp.key ? `${comp.key}` : `comp-${index}`}
+              value={fileTabList[index]!}
+              className={styles.tabContent}
+              role="tabcontent">
               {comp}
             </Tabs.Content>
           ))}
@@ -135,7 +139,7 @@ export default async function Account({ params }: { params: Promise<{ locale: La
         <Link
           href={`/account/${author}/${tab!.toLowerCase()}?back=/account/${userData?.pseudonym}`}
           className={styles.mobileTabs}
-          key={index}
+          key={tab}
           aria-label="">
           <span>{tab}</span>
           <RiArrowUpSLine />
