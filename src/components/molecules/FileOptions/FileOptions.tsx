@@ -26,7 +26,7 @@ export const FileOptions = ({ fileId, authorName, tags, name }: FileOptionsType)
 
   const tComments = useScopedI18n('Comments');
 
-  const linkShare = `${backUrl}/shared/${name}${fileId}/${authorName}`;
+  const linkShare = `${backUrl}/file/${name}${fileId}/${authorName}`;
 
   return (
     <div className={styles.options}>
