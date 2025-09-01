@@ -11,7 +11,8 @@
 }
 
 .aside,
-.drawer {
+div.drawer {
+  background-color: var(--secondary__opacity);
   box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
@@ -28,7 +29,7 @@
       margin: 2rem 0 0.25rem;
       cursor: pointer;
 
-      p {
+      h3 {
         width: 100%;
         padding-left: 1rem;
       }
@@ -59,7 +60,7 @@ div button.aside__right {
   color: var(--text);
   cursor: pointer;
   z-index: 1;
-   box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
 
@@ -82,7 +83,6 @@ div.drawer {
     background-color: var(--secondary__opacity);
     backdrop-filter: blur(2px);
     color: var(--text);
-    z-index: 1;
 
     &::before {
       content: '';
@@ -124,11 +124,19 @@ div.drawer {
       padding-top: 3.5rem;
     }
 
+    .drawer__right {
+      bottom: 0;
+    }
+
     .aside .rolling {
       .h3 {
         margin-top: 7rem;
       }
     }
+  }
+
+  div button.aside__right {
+    bottom: 0;
   }
 }
 

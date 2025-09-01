@@ -35,6 +35,7 @@
       display: flex;
       font-size: 1.2rem;
       font-weight: 400;
+      border-radius: 2rem;
       color: var(--text);
 
       &:hover {
@@ -62,6 +63,7 @@
     .no__groups {
       font-size: 1rem;
       text-align: center;
+      padding: .5rem 0;
     }
   }
 }

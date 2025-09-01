@@ -10,7 +10,7 @@ import { Categories } from 'components/atoms/Categories/Categories';
 import { Groups } from 'components/atoms/Groups/Groups';
 import { Friends } from 'components/atoms/Friends/Friends';
 
-import styles from './Aside.module.scss';
+import styles from './AsideWrapper.module.scss';
 import { RiArrowUpSLine } from 'react-icons/ri';
 
 export const AsideWrapper = ({
@@ -26,24 +26,29 @@ export const AsideWrapper = ({
   const [openDr, setOpenDr] = useState(false);
 
   const showCategories = () => setOpen(!open);
+
+  const asideBody = () => {
+    return (
+      <div className={styles.rolling}>
+        <div className={`${!open ? styles.afterHidden : ''} ${styles.h3}`} onClick={showCategories}>
+          <h3>{asideCategory}</h3>
+          <RiArrowUpSLine style={{ transform: open ? 'rotate(-180deg)' : 'rotate(0deg)' }} />
+        </div>
+
+        <div className={open ? styles.container : styles.hidden__categories}>
+          <Categories />
+        </div>
+
+        <Groups groupsAsideList={groupsAsideList!} />
+
+        <Friends friendsAsideList={friendsAsideList!} />
+      </div>
+    );
+  };
+
   return (
     <>
-      <aside className={styles.aside}>
-        <div className={styles.rolling}>
-          <div className={`${styles.h3} ${!open ? styles.afterHidden : ''}`} onClick={showCategories}>
-            <h3>{asideCategory}</h3>
-            <RiArrowUpSLine style={{ transform: open ? 'rotate(-180deg)' : 'rotate(0deg)' }} />
-          </div>
-
-          <div className={open ? styles.container : styles.hidden__categories}>
-            <Categories />
-          </div>
-
-          <Groups groupsAsideList={groupsAsideList} />
-
-          <Friends friendsAsideList={friendsAsideList} />
-        </div>
-      </aside>
+      <aside className={styles.aside}>{asideBody()}</aside>
 
       {!openDr && (
         <button className={styles.aside__right} aria-label="left menu button" onClick={() => setOpenDr(!openDr)}>
@@ -57,25 +62,9 @@ export const AsideWrapper = ({
           <DrawerBody className={styles.drawerBody}>
             <div className={styles.blur}></div>
 
-            <div className={styles.rolling}>
-              <h3 className={`${!open ? styles.afterHidden : ''} ${styles.h3}`} onClick={showCategories}>
-                <p>{asideCategory}</p>
-                <RiArrowUpSLine style={{ transform: open ? 'rotate(-180deg)' : 'rotate(0deg)' }} />
-              </h3>
-
-              <div className={open ? styles.container : styles.hidden__categories}>
-                <Categories />
-              </div>
-
-              <Groups groupsAsideList={groupsAsideList!} />
-
-              <Friends friendsAsideList={friendsAsideList!} />
-            </div>
+            {asideBody()}
           </DrawerBody>
-          <Button
-            className={styles.drawer__right}
-            aria-label="right menu button"
-            onClick={() => setOpenDr(false)}>
+          <Button className={styles.drawer__right} aria-label="right menu button" onClick={() => setOpenDr(false)}>
             <RiArrowUpSLine />
           </Button>
         </DrawerContent>

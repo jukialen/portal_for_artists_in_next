@@ -1,12 +1,13 @@
 .nav {
-  height: 90%;
-  font-size: 1.5rem;
-
   .list {
     display: flex;
     width: 12rem;
-    height: 100%;
     gap: 0.5rem;
+    border-radius: 2rem 0 0 2rem;
+    background-color: var(--primary__opacity);
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
 
     .menu {
       width: inherit;
@@ -14,10 +15,6 @@
       display: flex;
       align-items: center;
       border-radius: 2rem;
-      background-color: var(--primary__opacity);
-      box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
-      -webkit-backdrop-filter: blur(5px);
-      backdrop-filter: blur(5px);
       padding: 0.25rem;
 
       a {

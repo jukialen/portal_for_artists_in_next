@@ -1,9 +1,8 @@
 .mobileAlaTabbar,
 .otherAlaTabbar {
-  display: flex;
-  justify-content: space-around;
   width: 100dvw;
-  max-width: 31rem;
+  display: flex;
+  justify-content: space-between;
   margin: 0 auto;
 
   .leftPart {
@@ -62,7 +61,7 @@
 
 .otherAlaTabbar {
   display: none;
-  max-width: 38rem;
+  max-width: 23rem;
   border-radius: 2rem;
   background-color: var(--primary__opacity);
   box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
@@ -70,11 +69,7 @@
   backdrop-filter: blur(5px);
 
   .menu_buttons {
-    width: unset;
-    flex-direction: row;
-    gap: revert-layer;
     margin: auto;
-    font-size: 1rem;
   }
 }
 
@@ -204,6 +199,7 @@
       align-items: center;
       padding: 1rem;
       font-size: 1rem;
+      color: var(--text);
     }
   }
 }
@@ -268,7 +264,7 @@ ul.menu_profile__active {
   transition: transform 1.2s 0.1s ease-in-out;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 500px) {
   .mobileAlaTabbar {
     display: none;
   }
@@ -318,6 +314,19 @@ ul.menu_profile__active {
 
     li {
       height: 2.5rem;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .otherAlaTabbar {
+    max-width: 38rem;
+
+    .menu_buttons {
+      width: unset;
+      gap: revert-layer;
+      flex-direction: row;
+      font-size: 1rem;
     }
   }
 }
