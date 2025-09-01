@@ -96,17 +96,32 @@ export default async function Account({ params }: { params: Promise<{ locale: La
   const firstModsUsersList = await modsUsersList(maxItems);
 
   const fileComps = [
-    <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} />,
-    <GroupUsers id={id} firstAdminList={firstAdminList!} firstModsUsersList={firstModsUsersList!} />,
-    <PhotosGallery id={id} pseudonym={pseudonym!} author={author!} tGallery={tGallery} firstGraphics={firstGraphics} />,
+    <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} key="0" />,
+    <GroupUsers id={id} firstAdminList={firstAdminList!} firstModsUsersList={firstModsUsersList!} key="1" />,
+    <PhotosGallery
+      id={id}
+      pseudonym={pseudonym!}
+      author={author!}
+      tGallery={tGallery}
+      firstGraphics={firstGraphics}
+      key="2"
+    />,
     <AnimatedGallery
       id={id}
       pseudonym={pseudonym!}
       author={author}
       tGallery={tGallery}
       firstAnimations={firstAnimations}
+      key="3"
     />,
-    <VideoGallery id={id!} pseudonym={pseudonym!} author={author} tGallery={tGallery!} firstVideos={firstVideos} />,
+    <VideoGallery
+      id={id!}
+      pseudonym={pseudonym!}
+      author={author}
+      tGallery={tGallery!}
+      firstVideos={firstVideos}
+      key="4"
+    />,
   ];
 
   return (
@@ -124,18 +139,14 @@ export default async function Account({ params }: { params: Promise<{ locale: La
         </Tabs.List>
         <div className={styles.tabContents}>
           {fileComps.map((comp, index) => (
-            <Tabs.Content
-              key={comp.key ? `${comp.key}` : `comp-${index}`}
-              value={fileTabList[index]!}
-              className={styles.tabContent}
-              role="tabcontent">
+            <Tabs.Content value={fileTabList[index]!} className={styles.tabContent} role="tabcontent" key={index}>
               {comp}
             </Tabs.Content>
           ))}
         </div>
       </Tabs.Root>
 
-      {fileTabList.map((tab, index) => (
+      {fileTabList.map((tab) => (
         <Link
           href={`/account/${author}/${tab!.toLowerCase()}?back=/account/${userData?.pseudonym}`}
           className={styles.mobileTabs}

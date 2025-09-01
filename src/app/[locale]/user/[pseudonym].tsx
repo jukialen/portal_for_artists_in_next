@@ -23,6 +23,7 @@ import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
 import { GroupUser } from 'components/organisms/GroupUser/GroupUser';
 
 import styles from './page.module.scss';
+import { Fragment } from 'react';
 
 async function getFidAndFavs(pseudonym: string) {
   const supabase = await createServer();
@@ -218,6 +219,7 @@ export default async function User({ params }: PropsType) {
       author={pseudonymName}
       tGallery={tGallery}
       firstGraphics={firstGraphics}
+      key="0"
     />,
     <AnimatedGallery
       id={fidsFavs?.pseudonymId!}
@@ -225,6 +227,7 @@ export default async function User({ params }: PropsType) {
       author={pseudonymName}
       tGallery={tGallery}
       firstAnimations={firstAnimations}
+      key="1"
     />,
     <VideoGallery
       id={fidsFavs?.pseudonymId!!}
@@ -232,35 +235,42 @@ export default async function User({ params }: PropsType) {
       author={pseudonymName}
       tGallery={tGallery!}
       firstVideos={firstVideos}
+      key="2"
     />,
   ];
 
   const filesList = [
-    <Menu.Root>
-      <Menu.Trigger>
-        Open menu <Menu.Indicator>➡️</Menu.Indicator>
-      </Menu.Trigger>
-      <Menu.Positioner>
-        <Menu.Content className={styles.tabsForPanels}>
-          {fileTabList.map((file, index) => (
-            <Menu.Item value={file}>{fileComps[index]}</Menu.Item>
-          ))}
-        </Menu.Content>
-      </Menu.Positioner>
-    </Menu.Root>,
+    <Fragment key="0">
+      <Menu.Root>
+        <Menu.Trigger>
+          {tAccountaMenu('gallery')} <Menu.Indicator>➡️</Menu.Indicator>
+        </Menu.Trigger>
+        <Menu.Positioner>
+          <Menu.Content className={styles.tabsForPanels}>
+            {fileTabList.map((file, index) => (
+              <Menu.Item key={file} value={file}>
+                {fileComps[index]}
+              </Menu.Item>
+            ))}
+          </Menu.Content>
+        </Menu.Positioner>
+      </Menu.Root>
+    </Fragment>,
     <ProfileUser
       language={tProfile}
       pseudonym={pseudonymName}
       fileUrl={fidsFavs?.profilePhotoUser!}
       description={fidsFavs?.descriptionUser!}
+      key="1"
     />,
-    <FriendsList id={userData?.id!} tFriends={tFriends} firstFriendsList={firstFriends!} />,
+    <FriendsList id={userData?.id!} tFriends={tFriends} firstFriendsList={firstFriends!} key="2" />,
     <GroupUser
       id={fidsFavs?.pseudonymId!}
       firstAdminArray={adminGroups!}
       firstModsArray={modGroups!}
       firstMembersArray={membersGroups!}
       tGroupsUser={tGroupsUser}
+      key="3"
     />,
   ];
 
@@ -277,6 +287,7 @@ export default async function User({ params }: PropsType) {
         friendBool={!!fave!.favorite}
         translated={tFriends}
       />
+
       <Tabs.Root className={styles.tabsMenu} defaultValue={contentList[0]} defaultChecked lazyMount unmountOnExit>
         <Tabs.List className={styles.topTabList} role="tablist">
           {contentList.map((tab) => (
@@ -288,11 +299,7 @@ export default async function User({ params }: PropsType) {
         </Tabs.List>
         <div className={styles.tabContents}>
           {filesList.map((comp, index) => (
-            <Tabs.Content
-              key={comp.key ? `${comp.key}` : `comp-${index}`}
-              value={fileTabList[index]!}
-              className={styles.tabContent}
-              role="tabcontent">
+            <Tabs.Content key={index} value={fileTabList[index]!} className={styles.tabContent} role="tabcontent">
               {comp}
             </Tabs.Content>
           ))}
