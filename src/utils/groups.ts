@@ -14,8 +14,8 @@ export const nextGroupList = async (maxItems: number, lastVisible: string) => {
   return res;
 };
 
-export const adminList = async (maxItems: number) => {
-  const params = { maxItems: maxItems.toString() };
+export const adminList = async (id: string, maxItems: number) => {
+  const params = { id, maxItems: maxItems.toString() };
   const queryString = new URLSearchParams(params).toString();
 
   try {

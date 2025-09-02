@@ -1,6 +1,6 @@
 'use client';
 
-import { FilesUploadType } from '../../types/global.types';
+import { FilesUploadType } from 'types/global.types';
 
 const MAX_PHOTO_SIZE = 6291456;
 export const filesProfileTypes = '.jpg, .jpeg, .png, .webp, .avif';

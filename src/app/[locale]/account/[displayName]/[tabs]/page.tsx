@@ -42,7 +42,7 @@ export default async function Tabs({ params, searchParams }: PropsType) {
   const firstAnimations = await videosAnimations(0, maxItems, id, 'first');
   const firstVideos = await videosAnimations(1, maxItems, id, 'first');
   const firstFriendsList = await getFirstFriends(id, maxItems);
-  const firstAdminList = await adminList(maxItems);
+  const firstAdminList = await adminList(id, maxItems);
   const firstModsUsersList = await modsUsersList(maxItems);
 
   const backUrl = searchParams.back ?? '/app';

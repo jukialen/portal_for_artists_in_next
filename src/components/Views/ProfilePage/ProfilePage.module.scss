@@ -1,3 +1,128 @@
+.mainData {
+  max-width: 31rem;
+  margin: 2rem auto 1.5rem;
+}
+
+.logoPseu {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  justify-items: center;
+  margin: 2rem auto 1.5rem;
+
+  .logo {
+    width: 11.25rem;
+    height: 11.25rem;
+    padding: 0 1.5rem;
+    position: relative;
+
+    img {
+      border: 0.3rem inset var(--secondary);
+      border-radius: 3rem;
+      box-shadow: 0 0 15rem -0.3rem var(--secondary);
+    }
+  }
+
+  .name {
+    display: flex;
+    align-items: flex-end;
+    line-height: 1.2;
+    margin-top: 1.5rem;
+  }
+}
+
+.description {
+  margin: 0 2rem;
+}
+
+.edit,
+.cancel {
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 0.5rem;
+}
+
+.edit {
+  background-color: var(--third);
+}
+
+@media (min-width: 768px) {
+  .mainData .logoPseu {
+    grid-template-columns: 11.25rem 1fr;
+
+    .name {
+      margin-left: 1rem;
+    }
+  }
+}
+
+.mobileTabs {
+  display: grid;
+  grid-template-columns: 1fr 1.4rem;
+  width: 90vw;
+  height: 3rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin: 1rem auto;
+  font-size: 1.5rem;
+  border: 1px solid var(--text);
+  border-radius: 0.5rem;
+  justify-content: space-between;
+
+  span {
+    color: var(--text);
+  }
+
+  svg {
+    display: inline-block;
+    transform: rotate(90deg);
+    color: var(--text);
+  }
+
+  &:last-child {
+    margin-bottom: 8rem;
+  }
+}
+
+.tabsMenu {
+  justify-self: center;
+  align-items: center;
+  margin: 0 auto;
+  display: none;
+
+  .topTabList {
+    display: flex;
+    padding: 1rem 0;
+    margin: 1rem auto;
+
+    .tabForPanels {
+      display: block;
+      width: max-content;
+      padding: 0.5rem 1rem;
+      font-size: 1.2rem;
+      border-radius: 1rem;
+    }
+  }
+
+  .tabContents {
+    margin-top: 0.75rem;
+  }
+
+  .tabContent {
+    margin: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobileTabs {
+    display: none;
+  }
+
+  .tabsMenu {
+    display: grid;
+  }
+}
+
 .profile__user__title {
   margin: 3rem auto;
 }

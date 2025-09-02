@@ -5,40 +5,52 @@ import { backUrl } from 'constants/links';
 import { GroupUserType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
+import { roles } from 'utils/roles';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const maxItems = searchParams.get('maxItems')!;
 
-  const adminArray: GroupUserType[] = [];
+  const memberArray: GroupUserType[] = [];
+  const moderatorArray: GroupUserType[] = [];
 
   const supabase = await createServer();
   const user = await getUserData();
 
   try {
     const { data, error } = await supabase
-      .from('Groups')
-      .select('name, logo, groupId')
-      .eq('adminId', user?.id!)
+      .from('UsersGroups')
+      .select('name, Groups!name (logo), groupId, roleId')
+      .eq('userId', user?.id!)
       .order('name', { ascending: true })
       .limit(parseInt(maxItems));
 
     if (data?.length === 0 || !!error) {
       console.error(error);
-      return NextResponse.json(adminArray);
+      return NextResponse.json({ members: memberArray, moderators: moderatorArray });
     }
 
-    for (const _group of data!) {
-      adminArray.push({
-        name: _group.name,
-        logo: !!_group.logo ? _group.logo : `${backUrl}/group.svg`,
-        groupId: _group.groupId,
-      });
+    for (const d of data) {
+      const role = await roles(d.roleId, user?.id!);
+
+      if (role == 'MODERATOR') {
+        moderatorArray.push({
+          name: d.name,
+          logo: !!d.Groups?.logo ? d.Groups?.logo : `${backUrl}/group.svg`,
+          groupId: d.groupId,
+        });
+      } else if (role == 'USER') {
+        memberArray.push({
+          name: d.name,
+          logo: !!d.Groups?.logo ? d.Groups?.logo : `${backUrl}/group.svg`,
+          groupId: d.groupId,
+        });
+      }
     }
 
-    return NextResponse.json(adminArray);
+    return NextResponse.json({ members: memberArray, moderators: moderatorArray });
   } catch (e) {
     console.error(e);
-    return NextResponse.json(adminArray);
+    return NextResponse.json({ members: memberArray, moderators: moderatorArray });
   }
 }
