@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { permanentRedirect } from 'next/navigation';
+import { permanentRedirect, redirect } from 'next/navigation';
 import { Icon } from '@chakra-ui/react';
 
 import { createClient } from '../../../utils/supabase/clientCSR';
@@ -30,7 +30,7 @@ export const Providers = () => {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${backUrl}/auth/callback?next=${newUserRed}`,
+          redirectTo: `${backUrl}/api/auth/callback?next=${newUserRed}`,
         },
       });
 
@@ -38,7 +38,9 @@ export const Providers = () => {
         setValuesFields(t('unknownError'));
       }
       console.log(valuesFields);
-      // permanentRedirect('/app');
+      if (data.url) {
+        redirect(data.url);
+      }
     } catch (e) {
       console.log(valuesFields);
       setValuesFields(t('unknownError'));

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Form, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
@@ -9,13 +9,16 @@ import { Input } from '@chakra-ui/react';
 
 import { convertStringToUnionType } from 'helpers/convertStringToType';
 
-import { EventType, Provider } from 'types/global.types';
+import { EventType, FilesUploadType, Provider } from 'types/global.types';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './NewUserForm.module.scss';
 import { createClient } from 'utils/supabase/clientCSR';
+import { validatePhoto } from '../../../utils/client/files';
+import { getScopedI18n } from '../../../locales/server';
+import { useI18n, useScopedI18n } from '../../../locales/client';
 
 type FirstDataType = {
   username: string;
@@ -48,6 +51,17 @@ export const NewUserForm = ({ newUserTranslate, id, email, provider }: NewUserTy
 
   const supabase = createClient();
 
+  const t = useI18n();
+  const tAnotherForm = useScopedI18n('AnotherForm');
+
+  const fileTranslated: FilesUploadType = {
+    fileSelectionCancelled: tAnotherForm('fileSelectionCancelled'),
+    errorOpeningFilePicker: tAnotherForm('errorOpeningFilePicker'),
+    validateRequired: t('NavForm.validateRequired'),
+    fileTooLarge: tAnotherForm('fileTooLarge'),
+    unsupportedFileType: tAnotherForm('unsupportedFileType'),
+  };
+
   const typeArray: Provider[] = ['email', 'google', 'discord', 'spotify'];
   const prov: Provider | undefined = convertStringToUnionType(provider, typeArray);
 
@@ -74,61 +88,49 @@ export const NewUserForm = ({ newUserTranslate, id, email, provider }: NewUserTy
 
       return error;
     };
-
+    console.log(id);
     try {
-      if (!!photo) {
-        if (
-          photo.size < 1200000 &&
-          (photo.type === 'image/jpg' ||
-            photo.type === 'image/jpeg' ||
-            photo.type === 'image/png' ||
-            photo.type === 'image/webp' ||
-            photo.type === 'image/avif' ||
-            photo.type === 'image/heif' ||
-            photo.type === 'image/heic')
-        ) {
-          const name = Date.now() + '-' + id + '-' + photo!.name!;
+      if (!!photo && (await validatePhoto(fileTranslated, photo))) {
+        const name = Date.now() + '-' + id + '-' + photo!.name!;
 
-          const { data, error } = await supabase.storage.from('profiles').upload(`${id}/${name}`, photo);
+        const { data, error } = await supabase.storage.from('profiles').upload(`${id}/${name}`, photo);
 
-          if (!!error) setValuesFields(newUserTranslate.uploadFile);
+        if (!!error) setValuesFields(newUserTranslate.uploadFile);
 
-          const userError = await insertToUsers(!!photo, name);
-          !!userError && setValuesFields(newUserTranslate.errorSending);
+        const userError = await insertToUsers(!!photo, name);
+        !!userError && setValuesFields(newUserTranslate.errorSending);
 
-          const publicUrl = supabase.storage.from('profiles').getPublicUrl(data?.path!).data.publicUrl;
+        const publicUrl = supabase.storage.from('profiles').getPublicUrl(data?.path!).data.publicUrl;
 
-          const { data: uploudPhoto, error: er } = await supabase.from('Files').insert([
-            {
-              name,
-              shortDescription: photo.name,
-              authorId: id,
-              tags: 'profile',
-              fileUrl: publicUrl,
-              profileType: true,
-            },
-          ]);
+        const { data: uploudPhoto, error: er } = await supabase.from('Files').insert([
+          {
+            name,
+            shortDescription: photo.name,
+            authorId: id,
+            tags: 'profile',
+            fileUrl: publicUrl,
+            profileType: true,
+          },
+        ]);
 
-          !!er && setValuesFields(newUserTranslate.errorSending);
+        !!er && setValuesFields(newUserTranslate.errorSending);
 
-          !!uploudPhoto && setValuesFields(newUserTranslate.uploadFile);
+        !!uploudPhoto && setValuesFields(newUserTranslate.uploadFile);
 
-          if (!!er) {
-            await supabase.storage.from('profiles').remove([`/${id}`, name]);
+        if (!!er) {
+          await supabase.storage.from('profiles').remove([`/${id}`, name]);
 
-            return setValuesFields(newUserTranslate.errorSending);
-          }
-        } else {
-          setValuesFields('wrong file type or size');
+          return setValuesFields(newUserTranslate.errorSending);
         }
       } else {
-        const userError = await insertToUsers(!!photo, '');
+        const userError = await insertToUsers(!photo, '');
 
         if (!!userError) {
+          console.log('Error while inserting photo', photo, userError);
           setValuesFields(newUserTranslate.errorSending);
         }
       }
-
+      console.log('Error while inserting photo', photo);
       setValuesFields(newUserTranslate.successSending);
       resetForm();
       push('/signin');

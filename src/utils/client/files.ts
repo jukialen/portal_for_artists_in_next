@@ -61,7 +61,7 @@ export const validatePhoto = async (
   file: File,
   profile: boolean = true,
 ): Promise<string | null> => {
-  file && filesUploadTranslated.validateRequired;
+  !file && filesUploadTranslated.validateRequired;
 
   profile && file.size > MAX_PHOTO_SIZE && filesUploadTranslated.fileTooLarge;
 

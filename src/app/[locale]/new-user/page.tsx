@@ -31,10 +31,22 @@ export default async function NewUser({ params }: { params: Promise<{ locale: La
   };
 
   const supabase = await createServer();
-  const userDataAuth = await supabase.auth.getUser();
-  const id = userDataAuth.data.user?.id!;
-  const email = userDataAuth.data.user?.email!;
-  const provider = userDataAuth.data.user?.app_metadata.provider! as Provider;
+  const session = await supabase.auth.getSession();
+  const { data } = await supabase.auth.getClaims();
+
+  console.log('session', session);
+  console.log('data', data);
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+  const id = user?.id!;
+  const email = user?.email!;
+  const provider = user?.app_metadata.provider! as Provider;
+
+  console.log('user', user);
+  console.log('error', error);
 
   return <NewUserForm newUserTranslate={newUserTranslate} id={id} email={email} provider={provider} />;
 }

@@ -16,13 +16,7 @@ import {
 } from 'components/ui/dialog';
 
 import { createClient } from 'utils/supabase/clientCSR';
-import {
-  filesProfileTypes,
-  filesTypes,
-  handleFileSelection,
-  isFileAccessApiSupported,
-  validatePhoto,
-} from 'utils/client/files';
+import { filesProfileTypes, handleFileSelection, isFileAccessApiSupported, validatePhoto } from 'utils/client/files';
 
 import { useScopedI18n } from 'locales/client';
 
