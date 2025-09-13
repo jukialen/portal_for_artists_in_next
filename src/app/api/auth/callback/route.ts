@@ -10,14 +10,11 @@ export async function GET(request: Request) {
   if (!next.startsWith('/')) {
     next = '/new-user';
   }
-  console.log('next', next);
-  console.log('code', code);
 
   if (code) {
     const supabase = await createServer();
 
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-    console.log('exchange code', data);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
       const forwardedHost = request.headers.get('x-forwarded-host'); // original origin before load balancer

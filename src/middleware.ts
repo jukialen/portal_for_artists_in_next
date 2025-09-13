@@ -16,7 +16,7 @@ const i18nMiddleware = createI18nMiddleware({
 });
 
 const publicForAll = ['/settings', '/terms', '/privacy', '/contact', '/faq', '/plans'];
-const onlyForGuests = ['/', '/signin', '/signup', '/forgotten', '/new-user'];
+const onlyForGuests = ['/', '/signin', '/signup', '/forgotten'];
 
 export async function middleware(req: NextRequest) {
   let response = NextResponse.next({ request: req });
@@ -78,7 +78,6 @@ export async function middleware(req: NextRequest) {
       : pathWithoutLocalePrefix;
 
   const isIn = (list: string[]) => list.some((p) => normalizedAuthPath === p || normalizedAuthPath.startsWith(`${p}/`));
-
   const isGuestOnlyPath = isIn(onlyForGuests);
   const isPublicPath = isIn(publicForAll);
 
@@ -88,37 +87,39 @@ export async function middleware(req: NextRequest) {
 
   const id = user?.id;
 
-  const { data: userData, error: userError } = await supabase
-    .from('Users')
-    .select('id', { count: 'exact' })
-    .eq('id', id)
-    .single();
+  const { data: userData } = await supabase.from('Users').select('id', { count: 'exact' }).eq('id', id).single();
+
+  if (pathname.startsWith('/new-user') && id && !!userData?.id) return NextResponse.redirect(new URL('/app', req.url));
 
   if (!isPublicPath && !isGuestOnlyPath) {
-    if (user?.app_metadata?.provider !== 'email') {
+    if (user?.app_metadata?.provider !== 'email' && !userData?.id) {
       const avatarUrl = user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
       const email = user?.user_metadata?.email || user?.email;
-      const provider = user?.app_metadata?.provider || user?.app_metadata.provider;
+      const provider = user?.app_metadata?.provider;
       const pseuusername =
         user?.user_metadata?.custom_claims.global_name ||
         user?.user_metadata?.full_name ||
         user?.user_metadata?.full_name;
 
-      if (!!id && (!userData?.id || !!userError)) {
+      if (!!id) {
         const res = await fetch(avatarUrl, {
           headers: {
             Authorization: `Bearer ${session?.data.session?.provider_token || user?.user_metadata?.provider_id}`,
           },
         });
+
         const blob = await res.blob();
 
-        const { data, error: fileError } = await supabase.storage.from('profiles').upload(`/${id}`, blob, {
-          contentType: blob.type,
-        });
+        const pictureName = avatarUrl.split('/');
+        const { data, error: fileError } = await supabase.storage
+          .from('profiles')
+          .upload(`/${id}/${pictureName[pictureName.length - 1]}`, blob, {
+            contentType: blob.type,
+          });
 
         console.log('uploaded', data);
 
-        if (!fileError) {
+        if (!fileError || !!data) {
           const { error } = await supabase.from('Users').insert([
             {
               id,
@@ -131,26 +132,25 @@ export async function middleware(req: NextRequest) {
             },
           ]);
 
+          console.log('error', error);
           if (!error) return NextResponse.redirect(new URL('/app', req.url));
         } else {
           console.log('not uploaded file', fileError);
           return NextResponse.redirect(redirecSignIntUrl);
         }
       } else {
+        console.log('!!id', !!id);
         return NextResponse.redirect(redirecSignIntUrl);
       }
+    } else if (user?.app_metadata?.provider === 'email' && !userData?.id) {
+      return NextResponse.redirect(new URL('/new-user', req.url));
     } else {
       redirecSignIntUrl.searchParams.set('next', pathname);
       return NextResponse.redirect(redirecSignIntUrl);
     }
   }
-  if (isAuthCallback && (!user || !userData)) return NextResponse.redirect(new URL('/new-user', req.url));
 
-  if (!!user && isGuestOnlyPath) {
-    if (normalizedAuthPath === '/auth/callback') {
-      const redirectUrl = new URL(`/new-user`, req.url);
-      return NextResponse.redirect(redirectUrl);
-    }
+  if (!!userData?.id && isGuestOnlyPath && normalizedAuthPath !== '/new-user') {
     const redirectUrl = new URL(`/app`, req.url);
     return NextResponse.redirect(redirectUrl);
   }
