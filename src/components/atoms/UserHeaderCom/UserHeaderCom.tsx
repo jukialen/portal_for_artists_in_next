@@ -15,6 +15,7 @@ import { Avatar } from 'components/atoms/Avatar/Avatar';
 import styles from './UserHeaderCom.module.scss';
 import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
 import { IoCloseOutline, IoSearch } from 'react-icons/io5';
+import { supabaseStorageProfileUrl } from 'constants/links';
 
 type HeadersType = {
   headers: {
@@ -265,7 +266,11 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           <p>{headers.friends}</p>
         </Button>
         <Button className={styles.menu_buttons} onClick={toggleProfileMenu}>
-          <Avatar fallbackName={userData?.pseudonym!} src={userData?.profilePhoto!} alt="" />
+          <Avatar
+            fallbackName={userData?.pseudonym!}
+            src={`${supabaseStorageProfileUrl}/${userData?.profilePhoto!}`}
+            alt=""
+          />
           <p>{headers.account}</p>
         </Button>
       </>

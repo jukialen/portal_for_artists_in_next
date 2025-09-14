@@ -7,6 +7,8 @@ import { cookies } from 'next/headers';
 
 const locales = ['en', 'pl', 'jp'];
 const defaultLocale = 'en';
+const publicForAll = ['/settings', '/terms', '/privacy', '/contact', '/faq', '/plans'];
+const onlyForGuests = ['/', '/signin', '/signup', '/forgotten'];
 
 const i18nMiddleware = createI18nMiddleware({
   locales,
@@ -14,9 +16,6 @@ const i18nMiddleware = createI18nMiddleware({
   urlMappingStrategy: 'rewrite',
   resolveLocaleFromRequest: (request) => defaultLocale,
 });
-
-const publicForAll = ['/settings', '/terms', '/privacy', '/contact', '/faq', '/plans'];
-const onlyForGuests = ['/', '/signin', '/signup', '/forgotten'];
 
 export async function middleware(req: NextRequest) {
   let response = NextResponse.next({ request: req });
@@ -38,8 +37,11 @@ export async function middleware(req: NextRequest) {
       },
     },
   });
-
   const session = await supabase.auth.getSession();
+
+  const redirectSignIntUrl = new URL('/signin', req.url);
+  const redirectToNewUser = new URL('/new-user', req.url);
+  const redirectToApp = new URL('/app', req.url);
 
   const {
     data: { user },
@@ -80,79 +82,64 @@ export async function middleware(req: NextRequest) {
   const isIn = (list: string[]) => list.some((p) => normalizedAuthPath === p || normalizedAuthPath.startsWith(`${p}/`));
   const isGuestOnlyPath = isIn(onlyForGuests);
   const isPublicPath = isIn(publicForAll);
-
-  const isAuthCallback = normalizedAuthPath === '/auth/callback' || normalizedAuthPath === '/auth/callback/';
-
-  const redirecSignIntUrl = new URL('/signin', req.url);
+  const isAuthCallback = normalizedAuthPath.startsWith('/auth/callback');
 
   const id = user?.id;
 
-  const { data: userData } = await supabase.from('Users').select('id', { count: 'exact' }).eq('id', id).single();
+  const { data: userData } = await supabase.from('Users').select('id, provider').eq('id', id).single();
 
-  if (pathname.startsWith('/new-user') && id && !!userData?.id) return NextResponse.redirect(new URL('/app', req.url));
+  if (((!isPublicPath && !isGuestOnlyPath) || isAuthCallback) && !id) return NextResponse.redirect(redirectSignIntUrl);
 
-  if (!isPublicPath && !isGuestOnlyPath) {
-    if (user?.app_metadata?.provider !== 'email' && !userData?.id) {
-      const avatarUrl = user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
-      const email = user?.user_metadata?.email || user?.email;
-      const provider = user?.app_metadata?.provider;
-      const pseuusername =
-        user?.user_metadata?.custom_claims.global_name ||
-        user?.user_metadata?.full_name ||
-        user?.user_metadata?.full_name;
+  if ((normalizedAuthPath === '/new-user' || isGuestOnlyPath) && !!userData?.id)
+    return NextResponse.redirect(redirectToApp);
 
-      if (!!id) {
-        const res = await fetch(avatarUrl, {
-          headers: {
-            Authorization: `Bearer ${session?.data.session?.provider_token || user?.user_metadata?.provider_id}`,
-          },
-        });
+  if (user?.app_metadata?.provider !== 'email' && !userData?.id && !!id) {
+    const avatarUrl = user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
+    const email = user?.user_metadata?.email || user?.email;
+    const provider = user?.app_metadata?.provider;
+    const pseuusername =
+      user?.user_metadata?.custom_claims.global_name ||
+      user?.user_metadata?.full_name ||
+      user?.user_metadata?.full_name;
 
-        const blob = await res.blob();
+    const res = await fetch(avatarUrl, {
+      headers: {
+        Authorization: `Bearer ${session?.data.session?.provider_token || user?.user_metadata?.provider_id}`,
+      },
+    });
 
-        const pictureName = avatarUrl.split('/');
-        const { data, error: fileError } = await supabase.storage
-          .from('profiles')
-          .upload(`/${id}/${pictureName[pictureName.length - 1]}`, blob, {
-            contentType: blob.type,
-          });
+    const blob = await res.blob();
 
-        console.log('uploaded', data);
+    const pictureName = avatarUrl.split('/');
 
-        if (!fileError || !!data) {
-          const { error } = await supabase.from('Users').insert([
-            {
-              id,
-              username: pseuusername,
-              pseudonym: pseuusername,
-              description: '',
-              profilePhoto: data?.path,
-              email,
-              provider,
-            },
-          ]);
+    const { data, error: fileError } = await supabase.storage
+      .from('profiles')
+      .upload(`/${id}/${pictureName[pictureName.length - 1]}`, blob, {
+        contentType: blob.type,
+      });
 
-          console.log('error', error);
-          if (!error) return NextResponse.redirect(new URL('/app', req.url));
-        } else {
-          console.log('not uploaded file', fileError);
-          return NextResponse.redirect(redirecSignIntUrl);
-        }
-      } else {
-        console.log('!!id', !!id);
-        return NextResponse.redirect(redirecSignIntUrl);
-      }
-    } else if (user?.app_metadata?.provider === 'email' && !userData?.id) {
-      return NextResponse.redirect(new URL('/new-user', req.url));
+    if (!fileError || !!data) {
+      const { error } = await supabase.from('Users').insert([
+        {
+          id,
+          username: pseuusername,
+          pseudonym: pseuusername,
+          description: '',
+          profilePhoto: data?.path,
+          email,
+          provider,
+        },
+      ]);
+
+      if (!error) return NextResponse.redirect(redirectToApp);
     } else {
-      redirecSignIntUrl.searchParams.set('next', pathname);
-      return NextResponse.redirect(redirecSignIntUrl);
+      console.log('not uploaded file', fileError);
+      return NextResponse.redirect(redirectSignIntUrl);
     }
   }
 
-  if (!!userData?.id && isGuestOnlyPath && normalizedAuthPath !== '/new-user') {
-    const redirectUrl = new URL(`/app`, req.url);
-    return NextResponse.redirect(redirectUrl);
+  if (user?.app_metadata?.provider === 'email' && !userData?.id && !!id) {
+    return NextResponse.redirect(redirectToNewUser);
   }
 
   return response;

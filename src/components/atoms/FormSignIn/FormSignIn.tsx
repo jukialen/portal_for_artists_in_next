@@ -35,7 +35,7 @@ export const FormSignIn = ({
   const [show, setShow] = useState(false);
   const [valuesFields, setValuesFields] = useState('');
 
-  const { push, refresh } = useRouter();
+  const { refresh } = useRouter();
 
   const schemaValidation = Yup.object({
     email: SchemaValidation().email,
@@ -46,7 +46,7 @@ export const FormSignIn = ({
   const signIn = async ({ email, password }: UserFormType, { resetForm }: ResetFormType) => {
     const supabase = createClient();
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password: password! });
+    const { error } = await supabase.auth.signInWithPassword({ email, password: password! });
 
     if (!!error && error.status !== 200) {
       setValuesFields(
@@ -59,13 +59,7 @@ export const FormSignIn = ({
     } else {
       resetForm(initialValuesForSignInUp);
       setValuesFields(translated.statusLogin);
-
-      const { count } = await supabase
-        .from('Users')
-        .select('*', { count: 'exact', head: true })
-        .eq('id', data.session?.user.id!);
-
-      count !== 0 ? refresh() : push('/new-user');
+      refresh();
     }
   };
 

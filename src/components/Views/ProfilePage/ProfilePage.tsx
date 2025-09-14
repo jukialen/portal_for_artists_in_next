@@ -7,6 +7,7 @@ import { getI18n, getScopedI18n } from 'locales/server';
 
 import { getUserData } from 'helpers/getUserData';
 
+import { supabaseStorageProfileUrl } from 'constants/links';
 import { FilesUploadType, FileType, FriendsListType, GroupUserType } from 'types/global.types';
 
 import { FriendsButtons } from 'components/atoms/FriendsButtons/FriendsButtons';
@@ -164,7 +165,12 @@ export const ProfilePage = async ({
       <article className={styles.mainData}>
         <div className={styles.logoPseu}>
           <div className={styles.logo}>
-            <Image src={userData?.profilePhoto!} fill alt={`${userData?.profilePhoto} logo`} priority />
+            <Image
+              src={`${supabaseStorageProfileUrl}/${userData?.profilePhoto!}`}
+              fill
+              alt={`${userData?.pseudonym} logo`}
+              priority
+            />
             {myProfile && (
               <UpdateProfilePhotoOnAccount userData={userData!} fileTranslated={fileTranslated} tCurrPrPhoto={tMain} />
             )}

@@ -8,7 +8,6 @@ import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { InputGroup } from 'components/ui/input-group';
 
-import { newUserRed } from 'constants/links';
 import { initialValuesForSignInUp } from 'constants/objects';
 import { ResetFormType, UserFormType } from 'types/global.types';
 
@@ -49,10 +48,10 @@ export const FormSignUp = ({
 
       setIsLoading(true);
 
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password: password!,
-        options: { emailRedirectTo: `${location.origin}/auth/callback?next=${newUserRed}` },
+        options: { emailRedirectTo: `${location.origin}/auth/callback` },
       });
 
       if (!!error) {

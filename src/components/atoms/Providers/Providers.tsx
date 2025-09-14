@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { permanentRedirect, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { Icon } from '@chakra-ui/react';
 
-import { createClient } from '../../../utils/supabase/clientCSR';
+import { createClient } from 'utils/supabase/clientCSR';
 
-import { backUrl, newUserRed } from 'constants/links';
+import { backUrl } from 'constants/links';
 
 import { useI18n } from 'locales/client';
 
@@ -30,7 +30,7 @@ export const Providers = () => {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${backUrl}/api/auth/callback?next=${newUserRed}`,
+          redirectTo: `${backUrl}/api/auth/callback`,
         },
       });
 

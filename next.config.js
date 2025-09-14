@@ -9,7 +9,7 @@ const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com ${projectUrl} https://region1.analytics.google.com ;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    img-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} https://www.google.pl;
+    img-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} ${projectUrlWithOutPrefix} https://www.google.pl;
     font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com;
     object-src 'none';
     base-uri 'self';
