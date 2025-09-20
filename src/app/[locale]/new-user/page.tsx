@@ -31,11 +31,6 @@ export default async function NewUser({ params }: { params: Promise<{ locale: La
   };
 
   const supabase = await createServer();
-  const session = await supabase.auth.getSession();
-  const { data } = await supabase.auth.getClaims();
-
-  console.log('session', session);
-  console.log('data', data);
 
   const {
     data: { user },

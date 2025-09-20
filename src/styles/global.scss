@@ -4,7 +4,16 @@
     'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
 }
 
+@supports (padding: max(0px)) {
+  body,
+  header,
+  footer {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+}
+
 html {
+  height: -webkit-fill-available;
   scrollbar-width: thin;
   scrollbar-color: var(--background) black;
 
@@ -37,6 +46,15 @@ html {
     background: var(--secondary);
     border-radius: 20px;
   }
+}
+
+body {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background-color: var(--background);
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: calc(100vh + env(safe-area-inset-top) + env(safe-area-inset-bottom));
+  min-height: -webkit-fill-available;
 }
 
 h1 {
@@ -82,13 +100,13 @@ button {
   cursor: pointer;
   color: var(--text);
 
-
   &:focus {
     background-color: var(--focus);
     color: var(--background);
   }
 
-  &:hover, &:last-child:hover {
+  &:hover,
+  &:last-child:hover {
     background-color: var(--hover);
     color: var(--background);
   }

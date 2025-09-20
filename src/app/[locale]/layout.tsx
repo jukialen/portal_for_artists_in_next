@@ -31,6 +31,11 @@ export const viewport: Viewport = {
     { media: '(prefers-color-scheme: light)', color: 'hsl(0, 0%, 97%, 0.9)' },
     { media: '(prefers-color-scheme: dark)', color: 'hsla(0, 0%, 97%, 0.1)' },
   ],
+  width: 'device-width',
+  height: 'device-height',
+  initialScale: 1,
+  minimumScale: 1,
+  viewportFit: 'cover',
 };
 
 export function generateStaticParams() {

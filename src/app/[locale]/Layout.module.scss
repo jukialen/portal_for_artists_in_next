@@ -2,7 +2,6 @@
   position: relative;
   display: flex;
   overflow: hidden;
-  background: var(--background);
 
   .container {
     width: 100vw;
@@ -17,8 +16,6 @@
       @media (min-width: 982px) {
         height: 100vh;
         overflow: hidden auto;
-        scrollbar-width: thin;
-        scrollbar-color: var(--background) black;
 
         &:hover {
           scrollbar-color: var(--secondary) black

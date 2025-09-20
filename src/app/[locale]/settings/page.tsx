@@ -17,6 +17,7 @@ import { AccountData } from 'components/organisms/AccountData/AccountData';
 
 import styles from './page.module.scss';
 
+// @ts-ignore
 export const metadata: Metadata = HeadCom('Settings site for unlogged in users.');
 
 export default async function Settings({ params }: { params: Promise<{ locale: LangType }> }) {
@@ -38,9 +39,7 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
 
   return (
     <div className={styles.settings}>
-      <h2 className={styles.settings_title}>{t('title')}</h2>
-
-      <h3>{tSettings('appearance')}</h3>
+      <h2>{tSettings('appearance')}</h2>
 
       <div className={styles.flow}>
         <ModeContainer light={tSettings('Mode.light')} dark={tSettings('Mode.dark')} />

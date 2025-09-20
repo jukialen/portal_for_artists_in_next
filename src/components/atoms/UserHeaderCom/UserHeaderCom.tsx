@@ -8,6 +8,7 @@ import { Dialog } from '@ark-ui/react/dialog';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
+import { supabaseStorageProfileUrl } from 'constants/links';
 import { EventType, Tags, UserType } from 'types/global.types';
 
 import { Avatar } from 'components/atoms/Avatar/Avatar';
@@ -15,7 +16,6 @@ import { Avatar } from 'components/atoms/Avatar/Avatar';
 import styles from './UserHeaderCom.module.scss';
 import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
 import { IoCloseOutline, IoSearch } from 'react-icons/io5';
-import { supabaseStorageProfileUrl } from 'constants/links';
 
 type HeadersType = {
   headers: {
