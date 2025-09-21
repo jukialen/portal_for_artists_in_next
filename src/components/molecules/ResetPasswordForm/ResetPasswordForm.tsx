@@ -10,6 +10,7 @@ import { Separator, Input } from '@chakra-ui/react';
 import { createClient } from 'utils/supabase/clientCSR';
 
 import { backUrl } from 'constants/links';
+import { LangType } from 'types/global.types';
 
 import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
@@ -34,7 +35,7 @@ type ResetPassTrType = {
     buttonAria: string;
     changePassword: string;
   };
-  locale: string;
+  locale: LangType;
 };
 
 export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType) => {

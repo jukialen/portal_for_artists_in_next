@@ -39,7 +39,7 @@ export const viewport: Viewport = {
 };
 
 export function generateStaticParams() {
-  return getStaticParams();
+  return getStaticParams() as { locale: LangType }[];
 }
 
 export default async function RootLayout({ children, params }: ChildrenType) {
