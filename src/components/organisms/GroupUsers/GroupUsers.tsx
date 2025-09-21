@@ -191,7 +191,9 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
       ) : (
         <p className={styles.noGroups}>{tAccount('noAdmin')}</p>
       )}
-      {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && <MoreButton nextElements={nextAdminList} />}
+      {!!lastAdminsVisible && adminsArray.length === maxItems * iAdmins && (
+        <MoreButton nextElementsAction={nextAdminList} />
+      )}
       <h2 className={styles.title}>{tAccount('modsTitle')}</h2>
       <Separator className={styles.divider} />
       {!!moderatorsArray && moderatorsArray.length > 0 ? (
@@ -202,7 +204,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
         <p className={styles.noGroups}>{tAccount('noMods')}</p>
       )}
       {!!lastModeratorsVisible && moderatorsArray.length == maxItems * iModerators && (
-        <MoreButton nextElements={nextModeratorsList} />
+        <MoreButton nextElementsAction={nextModeratorsList} />
       )}
       <h2 className={styles.title}>{tAccount('usersTitle')}</h2>
       <Separator className={styles.divider} />
@@ -214,7 +216,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
         <p className={styles.noGroups}>{tAccount('noUsers')}</p>
       )}
       {!!lastMembersVisible && membersArray.length === maxItems * iMembers && (
-        <MoreButton nextElements={nextMembersList} />
+        <MoreButton nextElementsAction={nextMembersList} />
       )}
     </div>
   );

@@ -25,7 +25,7 @@ export const PhotosGallery = ({ id, pseudonym, author, tGallery, firstGraphics }
   const pathname = usePathname();
   const maxItems = 30;
 
-  const nextElements = async () => {
+  const nextElementsAction = async () => {
     setLoadingFiles(!loadingFiles);
 
     try {
@@ -70,7 +70,7 @@ export const PhotosGallery = ({ id, pseudonym, author, tGallery, firstGraphics }
           )}
         </Suspense>
       </Wrapper>
-      {!!lastVisible && userPhotos.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+      {!!lastVisible && userPhotos.length === maxItems * i && <MoreButton nextElementsAction={nextElementsAction} />}
     </article>
   );
 };

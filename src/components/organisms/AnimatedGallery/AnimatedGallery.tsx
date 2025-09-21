@@ -25,7 +25,7 @@ export const AnimatedGallery = ({ id, pseudonym, author, tGallery, firstAnimatio
   const pathname = usePathname();
   const maxItems = 30;
 
-  const nextElements = async () => {
+  const nextElementsAction = async () => {
     setLoadingFiles(!loadingFiles);
 
     try {
@@ -70,7 +70,9 @@ export const AnimatedGallery = ({ id, pseudonym, author, tGallery, firstAnimatio
           <div>nie ma nic</div>
         )}
 
-        {!!lastVisible && userAnimates.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+        {!!lastVisible && userAnimates.length === maxItems * i && (
+          <MoreButton nextElementsAction={nextElementsAction} />
+        )}
       </Wrapper>
     </article>
   );

@@ -9,7 +9,7 @@ export const HeadCom = (content: string) => {
     },
     appleWebApp: {
       capable: true,
-      statusBarStyle: 'black-translucent',
+      statusBarStyle: 'black-translucent' as const,
       title: 'Pfartists',
     },
     other: {

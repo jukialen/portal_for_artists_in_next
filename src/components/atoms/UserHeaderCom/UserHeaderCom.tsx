@@ -105,40 +105,42 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     }
   };
 
+  const addData = (
+    title: number,
+    searchArray: SearchingValues[],
+    d: {
+      pseudonym?: string;
+      profilePhoto?: string;
+      description?: string;
+      name?: string;
+      logo?: string | null;
+      shortDescription?: string | null;
+      fileUrl?: string | null;
+      tags?: Tags;
+    },
+  ) => {
+    searchArray.push({
+      categoryName: searchOptions[title],
+      data: {
+        name: d.name || d.pseudonym!,
+        description: d.shortDescription || d.description!,
+        fileUrl: d.logo || d.profilePhoto!,
+      },
+    });
+  };
+
+  const noSearchResults = (searchArray: SearchingValues[]) => {
+    for (let i = 0; i < searchOptions.length; ++i) {
+      searchArray.push({
+        categoryName: searchOptions[i],
+        data: translated.notFound,
+      });
+    }
+  };
+
   const searching = async () => {
     const searchArray: SearchingValues[] = [];
 
-    const noResults = () => {
-      for (let i = 0; i < searchOptions.length; ++i) {
-        searchArray.push({
-          categoryName: searchOptions[i],
-          data: translated.notFound,
-        });
-      }
-    };
-
-    const addData = (
-      title: number,
-      d: {
-        pseudonym?: string;
-        profilePhoto?: string;
-        description?: string;
-        name?: string;
-        logo?: string | null;
-        shortDescription?: string | null;
-        fileUrl?: string | null;
-        tags?: Tags;
-      },
-    ) => {
-      searchArray.push({
-        categoryName: searchOptions[title],
-        data: {
-          name: d.name || d.pseudonym!,
-          description: d.shortDescription || d.description!,
-          fileUrl: d.logo || d.profilePhoto!,
-        },
-      });
-    };
     try {
       const { data, error } = await supabase
         .from('Users')
@@ -148,7 +150,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
       if (!!error) searchArray.push({ categoryName: searchOptions[0], data: translated.notFound });
 
       if (!!data && data.length > 0) {
-        for (const s of data!) addData(0, s);
+        for (const s of data!) addData(0, searchArray, s);
 
         for (const du of data!) {
           const { data: da, error: err } = await supabase
@@ -159,7 +161,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
           if (!!err) searchArray.push({ categoryName: searchOptions[1], data: translated.notFound });
 
-          if (!!da && da.length > 0) for (const s of da!) addData(1, s.Users);
+          if (!!da && da.length > 0) for (const s of da!) addData(1, searchArray, s.Users);
         }
       }
 
@@ -170,7 +172,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
       if (!!er) searchArray.push({ categoryName: searchOptions[2], data: translated.notFound });
 
-      if (!!d && d.length > 0) for (const s of d!) addData(2, s);
+      if (!!d && d.length > 0) for (const s of d!) addData(2, searchArray, s);
 
       const { data: dt, error: e } = await supabase
         .from('Files')
@@ -181,16 +183,16 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
         for (let i = 3; i < searchOptions.length; ++i) {
           if (!!e) searchArray.push({ categoryName: searchOptions[i], data: translated.notFound });
 
-          for (const s of dt!) addData(i, s);
+          for (const s of dt!) addData(i, searchArray, s);
         }
       }
 
-      searchArray.length === 0 && noResults();
+      searchArray.length === 0 && noSearchResults(searchArray);
       setResults(searchArray);
       setOpen(true);
     } catch (e) {
       console.error(e);
-      noResults();
+      noSearchResults(searchArray);
       setOpen(true);
     }
   };

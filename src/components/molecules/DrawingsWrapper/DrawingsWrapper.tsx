@@ -32,7 +32,7 @@ export const DrawingsWrapper = ({ pid, pseudonym, filesDrawings }: DrawingsWrapp
     userDrawings.length === maxItems * i &&
     setLastVisible(userDrawings[userDrawings.length - 1].createdAt!);
 
-  const nextElements = async () => {
+  const nextElementsAction = async () => {
     setLoadingFiles(!loadingFiles);
 
     try {
@@ -79,7 +79,7 @@ export const DrawingsWrapper = ({ pid, pseudonym, filesDrawings }: DrawingsWrapp
         <div>nie ma nic</div>
       )}
       {!!lastVisible && !!userDrawings && userDrawings.length === maxItems * i && (
-        <MoreButton nextElements={nextElements} />
+        <MoreButton nextElementsAction={nextElementsAction} />
       )}
     </Wrapper>
   );

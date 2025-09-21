@@ -5,7 +5,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 
 import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
-import { DateObjectType, FileType, IndexType, LangType } from 'types/global.types';
+import { DateObjectType, FileType, IndexType, LangType, Tags } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
 
@@ -18,6 +18,7 @@ const FileContainerClient = dynamic(() =>
 );
 
 import styles from './page.module.scss';
+import { Database } from 'types/database.types';
 
 const downloadDrawings = async ({
   index,

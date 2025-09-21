@@ -1,15 +1,13 @@
-'use server';
-
 import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
 
-import { anonKey, projectUrl } from 'constants/links';
+import { publishableKey, projectUrl } from 'constants/links';
 import { Database } from 'types/database.types';
 
 export async function createServer() {
   const cookieStore = await cookies();
 
-  return createServerClient<Database>(projectUrl!, anonKey!, {
+  return createServerClient<Database>(projectUrl, publishableKey!, {
     cookies: {
       getAll() {
         return cookieStore.getAll();

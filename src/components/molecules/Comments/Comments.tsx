@@ -83,7 +83,7 @@ export const Comments = ({ postId, roleId }: CommentsType) => {
       ) : (
         <p className={styles.noComments}>{tComments('noComments')}</p>
       )}
-      {!!lastVisible && commentsArray.length === maxItems * i && <MoreButton nextElements={nextComments} />}
+      {!!lastVisible && commentsArray.length === maxItems * i && <MoreButton nextElementsAction={nextComments} />}
     </>
   );
 };

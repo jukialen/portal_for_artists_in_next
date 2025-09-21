@@ -53,12 +53,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
 
     const { data } = await supabase
       .from('Groups')
-      .select(
-        `
-      Users (pseudonym, profilePhoto),
-      Roles (role)
-     `,
-      )
+      .select(`Users (pseudonym, profilePhoto), Roles (role)`)
       .eq('name', name)
       .gt('created_at', lastModeratorsVisible)
       .order('created_at', { ascending: false })
@@ -207,7 +202,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
         <p>{translated.members?.noMods}</p>
       )}
       {!!lastModeratorsVisible && moderatorsArray.length === maxItems * iModerators && (
-        <MoreButton nextElements={nextModeratorsList} />
+        <MoreButton nextElementsAction={nextModeratorsList} />
       )}
       <p className={styles.roles}>{translated.members?.anotherMembers}</p>
       <Separator orientation="horizontal" />
@@ -232,7 +227,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
         <p>{translated.members?.noMembers}</p>
       )}
       {!!lastMembersVisible && membersArray.length === maxItems * iMembers && (
-        <MoreButton nextElements={nextMembersList} />
+        <MoreButton nextElementsAction={nextMembersList} />
       )}
     </>
   );

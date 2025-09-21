@@ -82,7 +82,7 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId, groupsPo
             </DCProvider>
           ),
         )}
-      {!!lastVisible && subCommentsArray.length === maxItems * i && <MoreButton nextElements={nextComments} />}
+      {!!lastVisible && subCommentsArray.length === maxItems * i && <MoreButton nextElementsAction={nextComments} />}
     </>
   );
 };

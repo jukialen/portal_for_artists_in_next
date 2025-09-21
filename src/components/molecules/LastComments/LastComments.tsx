@@ -73,7 +73,9 @@ export const LastComments = ({ subCommentId, roleId }: LastCommentsType) => {
             </DCProvider>
           ),
         )}
-      {!!lastVisible && lastCommentsArray.length === maxItems * i && <MoreButton nextElements={nextShowingComments} />}
+      {!!lastVisible && lastCommentsArray.length === maxItems * i && (
+        <MoreButton nextElementsAction={nextShowingComments} />
+      )}
     </>
   );
 };

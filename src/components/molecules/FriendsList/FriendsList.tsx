@@ -73,7 +73,7 @@ export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListCompo
           <p className={styles.noFriends}>{tFriends.noFriends}</p>
         )}
       </section>
-      {!!lastVisible && friendsList.length === maxItems * i && <MoreButton nextElements={nextFriends} />}
+      {!!lastVisible && friendsList.length === maxItems * i && <MoreButton nextElementsAction={nextFriends} />}
     </div>
   );
 };

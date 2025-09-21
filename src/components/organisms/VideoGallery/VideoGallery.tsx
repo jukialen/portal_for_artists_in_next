@@ -28,7 +28,7 @@ export const VideoGallery = ({ id, pseudonym, author, tGallery, firstVideos }: G
 
   const pathname = usePathname();
 
-  const nextElements = async () => {
+  const nextElementsAction = async () => {
     setLoadingFiles(!loadingFiles);
 
     try {
@@ -71,7 +71,7 @@ export const VideoGallery = ({ id, pseudonym, author, tGallery, firstVideos }: G
           <div>nie ma nic</div>
         )}
 
-        {!!lastVisible && userVideos.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+        {!!lastVisible && userVideos.length === maxItems * i && <MoreButton nextElementsAction={nextElementsAction} />}
       </Wrapper>
     </article>
   );

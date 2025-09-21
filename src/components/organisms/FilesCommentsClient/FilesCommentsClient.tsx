@@ -84,7 +84,7 @@ export const FilesCommentsClient = ({ firstFilesComments, fileId, noComments, ps
       ) : (
         <p className={styles.noComments}>{noComments}</p>
       )}
-      {!!lastVisible && commentsArray.length === maxItems * i && <MoreButton nextElements={nextComments} />}
+      {!!lastVisible && commentsArray.length === maxItems * i && <MoreButton nextElementsAction={nextComments} />}
     </>
   );
 };

@@ -8,7 +8,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "git": {
     "pre-commit": "lint-staged"
@@ -22,16 +23,14 @@
     "@chakra-ui/system": "^2.6.2",
     "@emotion/react": "^11.14.0",
     "@next/third-parties": "^15.4.6",
-    "@supabase/auth-js": "supabase/gotrue-js",
-    "@supabase/gotrue-js": "^2.70.0",
-    "@supabase/ssr": "^0.5.2",
-    "@supabase/supabase-js": "^2.39.1",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.57.4",
     "axios": "1.11.0",
     "formik": "^2.4.5",
     "gsap": "^3.13.0",
     "mailersend": "^2.2.0",
     "nanoid": "^5.1.5",
-    "next": "15.3.3",
+    "next": "15.5.3",
     "next-international": "^1.0.1",
     "next-share": "^0.25.0",
     "next-themes": "^0.4.6",
@@ -45,10 +44,9 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@types/gsap": "^3.0.0",
     "@types/node": "^24.2.0",
-    "@types/react": "^19.1.9",
-    "@types/react-dom": "^19.1.7",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
     "@types/web-push": "^3.6.4",
     "eslint": "^9.32.0",
     "eslint-config-next": "^15.4.6",
@@ -58,9 +56,5 @@
     "typescript": "^5.9.2",
     "workbox-cli": "^7.3.0",
     "workbox-webpack-plugin": "^7.3.0"
-  },
-  "resolutions": {
-    "@types/react": "19.0.8",
-    "@types/react-dom": "19.0.3"
   }
 }

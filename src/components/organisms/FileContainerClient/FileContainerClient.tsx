@@ -31,7 +31,7 @@ export const FileContainerClient = ({
 
   const maxItems = 30;
 
-  const nextElements = async () => {
+  const nextElementsAction = async () => {
     try {
       const nextArray: FileType[] = await drawings(index, lastVisible!, maxItems);
 
@@ -65,7 +65,7 @@ export const FileContainerClient = ({
         <div>nie ma nic</div>
       )}
 
-      {!!lastVisible && newFileArray.length === maxItems * i && <MoreButton nextElements={nextElements} />}
+      {!!lastVisible && newFileArray.length === maxItems * i && <MoreButton nextElementsAction={nextElementsAction} />}
     </Wrapper>
   );
 };

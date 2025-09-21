@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { createI18nMiddleware } from 'next-international/middleware';
 
-import { anonKey, projectUrl } from 'constants/links';
+import { publishableKey, projectUrl } from 'constants/links';
 import { cookies } from 'next/headers';
 
 const locales = ['en', 'pl', 'jp'];
@@ -21,7 +21,7 @@ export async function middleware(req: NextRequest) {
   let response = NextResponse.next({ request: req });
   const cookieStore = await cookies();
 
-  const supabase = createServerClient(projectUrl!, anonKey!, {
+  const supabase = createServerClient(projectUrl!, publishableKey!, {
     cookies: {
       getAll() {
         return req.cookies.getAll();
@@ -37,7 +37,10 @@ export async function middleware(req: NextRequest) {
       },
     },
   });
-  const session = await supabase.auth.getSession();
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
   const redirectSignIntUrl = new URL('/signin', req.url);
   const redirectToNewUser = new URL('/new-user', req.url);
@@ -104,7 +107,7 @@ export async function middleware(req: NextRequest) {
 
     const res = await fetch(avatarUrl, {
       headers: {
-        Authorization: `Bearer ${session?.data.session?.provider_token || user?.user_metadata?.provider_id}`,
+        Authorization: `Bearer ${session?.provider_token || user?.user_metadata?.provider_id}`,
       },
     });
 

@@ -50,7 +50,9 @@ export const Posts = ({ groupId, userId, profilePhoto, name, firstPosts }: Group
         <p className={styles.noPosts}>{tPosts('noPosts')}</p>
       )}
 
-      {!!lastVisible && !!postsArray && postsArray.length === maxItems * i && <MoreButton nextElements={nextPosts} />}
+      {!!lastVisible && !!postsArray && postsArray.length === maxItems * i && (
+        <MoreButton nextElementsAction={nextPosts} />
+      )}
     </section>
   );
 };

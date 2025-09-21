@@ -54,7 +54,7 @@ export const GroupList = ({ Groups, groupArray }: { Groups: GroupsType; groupArr
         </div>
       </div>
       {!!lastVisible && !!listArray && listArray.length === maxItems * i && (
-        <MoreButton nextElements={nextGroupsList} />
+        <MoreButton nextElementsAction={nextGroupsList} />
       )}
 
       {!lastVisible && !!listArray && listArray.length >= maxItems * i && (

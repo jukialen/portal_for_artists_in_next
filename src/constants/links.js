@@ -1,7 +1,7 @@
 export const backUrl = process.env.NEXT_PUBLIC_PAGE;
 export const projectUrlWithOutPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL_WITHOUT_PREFIX;
 export const projectUrl = `https://${projectUrlWithOutPrefix}`;
-export const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+export const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 export const access_token = process.env.NEXT_PUBLIC_SUPABASE_ACCESS_TOKEN;
 const supabaseStorageUrl = `${projectUrl}/storage/v1/object/public`;
 export const supabaseStorageProfileUrl = `${supabaseStorageUrl}/profiles`;
