@@ -2,8 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { createI18nMiddleware } from 'next-international/middleware';
 
-import { publishableKey, projectUrl } from 'constants/links';
-import { cookies } from 'next/headers';
+import { publishableKey, projectUrl, backUrl } from 'constants/links';
+import { RoleType } from './types/global.types';
 
 const locales = ['en', 'pl', 'jp'];
 const defaultLocale = 'en';
@@ -19,7 +19,6 @@ const i18nMiddleware = createI18nMiddleware({
 
 export async function middleware(req: NextRequest) {
   let response = NextResponse.next({ request: req });
-  const cookieStore = await cookies();
 
   const supabase = createServerClient(projectUrl!, publishableKey!, {
     cookies: {
@@ -28,7 +27,7 @@ export async function middleware(req: NextRequest) {
       },
       setAll(cookiesToSet) {
         try {
-          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
         } catch {
           // The `setAll` method was called from a Server Component.
           // This can be ignored if you have middleware refreshing
@@ -104,40 +103,19 @@ export async function middleware(req: NextRequest) {
       user?.user_metadata?.custom_claims.global_name ||
       user?.user_metadata?.full_name ||
       user?.user_metadata?.full_name;
+    const providerToken = session?.provider_token;
+    const providerId = user?.user_metadata?.provider_id;
 
-    const res = await fetch(avatarUrl, {
-      headers: {
-        Authorization: `Bearer ${session?.provider_token || user?.user_metadata?.provider_id}`,
-      },
+    const newUser = { avatarUrl, id, email, provider, pseuusername, providerToken, providerId };
+    const response = await fetch(`${backUrl}/api/auth/create-user`, {
+      method: 'POST',
+      body: JSON.stringify(newUser),
     });
 
-    const blob = await res.blob();
-
-    const pictureName = avatarUrl.split('/');
-
-    const { data, error: fileError } = await supabase.storage
-      .from('profiles')
-      .upload(`/${id}/${pictureName[pictureName.length - 1]}`, blob, {
-        contentType: blob.type,
-      });
-
-    if (!fileError || !!data) {
-      const { error } = await supabase.from('Users').insert([
-        {
-          id,
-          username: pseuusername,
-          pseudonym: pseuusername,
-          description: '',
-          profilePhoto: data?.path,
-          email,
-          provider,
-        },
-      ]);
-
-      if (!error) return NextResponse.redirect(redirectToApp);
+    if (response.ok) {
+      return NextResponse.redirect(redirectToApp);
     } else {
-      console.log('not uploaded file', fileError);
-      return NextResponse.redirect(redirectSignIntUrl);
+      return NextResponse.redirect(redirectToNewUser);
     }
   }
 
