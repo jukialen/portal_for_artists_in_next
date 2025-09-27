@@ -23,7 +23,7 @@ import 'styles/_variables.scss';
 
 type ChildrenType = {
   children: ReactNode;
-  params: Promise<{ locale: LangType }>;
+  params: Promise<{ locale: string }>;
 };
 
 export const viewport: Viewport = {
@@ -45,9 +45,11 @@ export function generateStaticParams() {
 export default async function RootLayout({ children, params }: ChildrenType) {
   const { locale } = await params;
 
+  const lang = locale as LangType;
+
   const userMenuComponents = {
     userHeader: <UserHeader />,
-    header: <Header locale={locale} />,
+    header: <Header locale={lang} />,
     aside: <Aside />,
   };
 
@@ -58,8 +60,8 @@ export default async function RootLayout({ children, params }: ChildrenType) {
       {!!GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
 
       <body>
-        <SWStart locale={locale}>
-          <ModeProvider locale={locale}>
+        <SWStart locale={lang}>
+          <ModeProvider locale={lang}>
             <div className={styles.whole__page}>
               {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
 
