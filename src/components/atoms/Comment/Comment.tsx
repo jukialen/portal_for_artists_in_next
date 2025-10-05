@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import Link from 'next/link';
 import { Avatar } from 'components/atoms/Avatar/Avatar';
-import { Tag } from 'components/ui/tag';
 
 import { CommentType } from 'types/global.types';
 
@@ -36,9 +35,7 @@ export const Comment = ({
           <div className={styles.topPartComment}>
             <p className={styles.pseudonym}>
               <Link href={`/user/${authorName}`}>{authorName}</Link>
-              <Tag variant="subtle" colorPalette="blue">
-                {role}
-              </Tag>
+              <span>{role}</span>
             </p>
             <p className={styles.date}>{date}</p>
           </div>

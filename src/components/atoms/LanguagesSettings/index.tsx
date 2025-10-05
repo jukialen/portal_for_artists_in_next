@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@chakra-ui/react';
 
 import { LangType } from 'types/global.types';
 import { useChangeLocale, useI18n } from 'locales/client';
@@ -42,9 +41,9 @@ export const LanguagesSettings = ({ locale }: { locale: LangType }) => {
           {locales.map((_l) => {
             return (
               <li key={_l}>
-                <Button onClick={() => redirectedPathName(_l)} className={styles.languages__version}>
+                <button onClick={() => redirectedPathName(_l)} className={styles.languages__version}>
                   {_l.toLocaleUpperCase()}
-                </Button>
+                </button>
               </li>
             );
           })}

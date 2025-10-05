@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@chakra-ui/react';
 
 import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
@@ -47,11 +46,11 @@ export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) =
         ) : (
           <p className={styles.no__groups}>{t('Groups.noGroups')}</p>
         )}
-        <Button colorScheme="orange" borderColor="transparent" className={styles.listButton} variant="ghost">
+        <button className={styles.listButton}>
           <Link href="/groups/list" aria-label="all group link">
             All groups
           </Link>
-        </Button>
+        </button>
       </div>
     </div>
   );

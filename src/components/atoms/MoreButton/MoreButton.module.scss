@@ -1,4 +1,10 @@
 .nextButton {
+  width: 8rem;
   margin: 2rem 2rem 0;
-  cursor: pointer;
+  border-color: var(--third);
+
+  &:hover {
+    background-color: var(--third);
+    color: var(--text);
+  }
 }

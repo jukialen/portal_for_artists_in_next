@@ -6,8 +6,6 @@ import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { IconButton, Input, Stack, StackSeparator } from '@chakra-ui/react';
-import { InputGroup } from 'components/ui/input-group';
 
 import { ResetFormType, UserFormType } from 'types/global.types';
 
@@ -69,7 +67,7 @@ export const FormSignIn = ({
         <Form className={styles.form}>
           <h2 className={styles.title}>{translated.titleOfLogin}</h2>
 
-          <Input
+          <input
             name="email"
             type="email"
             value={values.email}
@@ -80,25 +78,19 @@ export const FormSignIn = ({
 
           <FormError nameError="email" />
 
-          <Stack separator={<StackSeparator />}>
-            <InputGroup
-              flex="1"
-              className={styles.inputGroup}
-              endElement={
-                <IconButton className={styles.showingPass} onClick={showPass} aria-label="show and hide password">
-                  {show ? <GrFormView /> : <GrFormViewHide />}
-                </IconButton>
-              }>
-              <Input
-                name="password"
-                type={show ? 'text' : 'password'}
-                value={values.password}
-                onChange={handleChange}
-                placeholder={translated.password}
-                className={touched.password && !!errors.password ? styles.inputForm__error : styles.inputForm}
-              />
-            </InputGroup>
-          </Stack>
+          <div className={styles.inputGroup}>
+            <input
+              name="password"
+              type={show ? 'text' : 'password'}
+              value={values.password}
+              onChange={handleChange}
+              placeholder={translated.password}
+              className={touched.password && !!errors.password ? styles.inputForm__error : styles.inputForm}
+            />
+            <button className={styles.showingPass} onClick={showPass} aria-label="show and hide password">
+              {show ? <GrFormView /> : <GrFormViewHide />}
+            </button>
+          </div>
 
           <FormError nameError="password" />
 

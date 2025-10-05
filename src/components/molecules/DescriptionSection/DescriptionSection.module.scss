@@ -26,10 +26,16 @@
       justify-self: center;
       align-items: center;
 
-      .updateField, .updateField__error {
-        border: .1rem solid var(--third);
+      textarea {
+        resize: vertical;
+      }
+
+      .updateField,
+      .updateField__error {
+        resize: vertical;
+        margin-bottom: 0.5rem;
+        border: 0.1rem solid var(--third);
         color: var(--third);
-        margin-bottom: .5rem;
 
         &__error {
           border-color: var(--required);
@@ -38,7 +44,7 @@
 
       .addingButton {
         background-color: var(--third);
-        border: .1rem solid var(--third);
+        border: 0.1rem solid var(--third);
         margin: 1rem 0 2rem;
         border-radius: 0.5rem;
       }
@@ -49,8 +55,8 @@
       height: 2.8rem;
       margin: 1rem auto;
       background: var(--primary);
-      border: .1rem solid var(--primary);
-      border-radius: .75rem;
+      border: 0.1rem solid var(--primary);
+      border-radius: 0.75rem;
       color: black;
       cursor: pointer;
 
@@ -64,7 +70,7 @@
     margin: 2rem 1rem;
 
     &:first-child {
-      margin: .5rem 1rem;
+      margin: 0.5rem 1rem;
     }
 
     &:last-child {
@@ -73,6 +79,6 @@
   }
 
   .regulations__no__item {
-    margin: .5rem 1rem;
+    margin: 0.5rem 1rem;
   }
 }

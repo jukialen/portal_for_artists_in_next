@@ -27,5 +27,9 @@ export const SWStart = ({ children, locale }: childrenType) => {
     }
   }, []);
 
-  return <I18nProviderClient locale={locale}>{children}</I18nProviderClient>;
+  return (
+    <I18nProviderClient locale={locale} fallback="loading...">
+      {children}
+    </I18nProviderClient>
+  );
 };

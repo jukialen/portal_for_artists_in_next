@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, lazy, Suspense } from 'react';
+import { useState, lazy } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from 'utils/supabase/clientCSR';
@@ -8,34 +8,7 @@ import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
-const Button = lazy(() =>
-  import('@chakra-ui/react/button').then((mod) => ({
-    default: mod.Button,
-  })),
-);
-
-const Group = lazy(() =>
-  import('@chakra-ui/react/group').then((mod) => ({
-    default: mod.Group,
-  })),
-);
-
-import { Portal } from '@chakra-ui/react/portal';
-
-const Input = lazy(() =>
-  import('@chakra-ui/react/input').then((mod) => ({
-    default: mod.Input,
-  })),
-);
-
-import {
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverHeader,
-  PopoverRoot,
-  PopoverTrigger,
-} from 'components/ui/popover';
+import { Popover } from '@ark-ui/react/popover';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -176,65 +149,59 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
         <h3 className={styles.title}>{tAccount('aData.subscription')}</h3>
         <div className={styles.flow}>
           <div className={styles.subscription}>{subscriptionPlan.toString()}</div>
-          <PopoverRoot
+          <Popover.Root
             lazyMount
             unmountOnExit
             open={open}
             onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-            <PopoverTrigger asChild>
-              <Button className={`button ${styles.planButton}`} aria-label="Change subscription">
+            <Popover.Trigger asChild>
+              <button className={`button ${styles.planButton}`} aria-label="Change subscription">
                 {tAccount('aData.changeButton')}
-              </Button>
-            </PopoverTrigger>
-            <Portal>
-              <PopoverContent className={styles.subscriptionForm}>
-                <PopoverArrow className={styles.arrow} />
-                <PopoverHeader>{tAccount('aData.Premium.header')}</PopoverHeader>
-                <PopoverBody>
-                  <div className={styles.selectSub}>
-                    <Formik
-                      initialValues={initialPlan}
-                      onSubmit={(values, formikBag) =>
-                        changeSubscription({ newPlan: values.newPlan }, { resetForm: formikBag.resetForm })
-                      }
-                      validateOnChange>
-                      {({ errors, touched }) => (
-                        <Form>
-                          <Field
-                            as="select"
-                            name="newPlan"
-                            className={touched.newPlan && !!errors.newPlan ? styles.req__error : ''}>
-                            {items.map((l, key) => (
-                              <option key={key} role="option" value={l}>
-                                {l}
-                              </option>
-                            ))}
-                          </Field>
-                          {touched.newPlan && !!errors.newPlan && (
-                            <p className={styles.selectSub__error}>{tAccount('aData.Premium.select__error')}</p>
-                          )}
-                          <div className={styles.message}>
-                            {tAccount('aData.Premium.body')}
-                            <Link href="/plans">{tAccount('aData.Premium.bodyLink')}</Link>
-                            {tAccount('aData.Premium.bodyDot')}
-                          </div>
-                          <Suspense fallback={<div>Loading...</div>}>
-                            <Group className={styles.buttonContainer}>
-                              <Button variant="ghost" onClick={() => setOpen(false)}>
-                                {t('cancel')}
-                              </Button>
-                              <Button type="submit">{tAccount('aData.Premium.update')}</Button>
-                            </Group>
-                          </Suspense>
-                        </Form>
-                      )}
-                    </Formik>
-                    {!!valuesFieldsPlan && <Alerts valueFields={valuesFieldsPlan} />}
-                  </div>
-                </PopoverBody>
-              </PopoverContent>
-            </Portal>
-          </PopoverRoot>
+              </button>
+            </Popover.Trigger>
+            <Popover.Content className={styles.subscriptionForm}>
+              <Popover.Arrow className={styles.arrow} />
+              <Popover.Title>{tAccount('aData.Premium.header')}</Popover.Title>
+              <Popover.Description>
+                <div className={styles.selectSub}>
+                  <Formik
+                    initialValues={initialPlan}
+                    onSubmit={(values, formikBag) =>
+                      changeSubscription({ newPlan: values.newPlan }, { resetForm: formikBag.resetForm })
+                    }
+                    validateOnChange>
+                    {({ errors, touched }) => (
+                      <Form>
+                        <Field
+                          as="select"
+                          name="newPlan"
+                          className={touched.newPlan && !!errors.newPlan ? styles.req__error : ''}>
+                          {items.map((l, key) => (
+                            <option key={key} role="option" value={l}>
+                              {l}
+                            </option>
+                          ))}
+                        </Field>
+                        {touched.newPlan && !!errors.newPlan && (
+                          <p className={styles.selectSub__error}>{tAccount('aData.Premium.select__error')}</p>
+                        )}
+                        <div className={styles.message}>
+                          {tAccount('aData.Premium.body')}
+                          <Link href="/plans">{tAccount('aData.Premium.bodyLink')}</Link>
+                          {tAccount('aData.Premium.bodyDot')}
+                        </div>
+                        <div className={styles.buttonContainer}>
+                          <button onClick={() => setOpen(false)}>{t('cancel')}</button>
+                          <button type="submit">{tAccount('aData.Premium.update')}</button>
+                        </div>
+                      </Form>
+                    )}
+                  </Formik>
+                  {!!valuesFieldsPlan && <Alerts valueFields={valuesFieldsPlan} />}
+                </div>
+              </Popover.Description>
+            </Popover.Content>
+          </Popover.Root>
         </div>
       </div>
 
@@ -247,23 +214,20 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.form}>
                 <h3 className={styles.title}>{t('NavForm.email')}</h3>
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Input
-                    name="email"
-                    type="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    placeholder={userData?.email}
-                    className={touched.email && !!errors.email ? styles.input__error : styles.input}
-                  />
-                </Suspense>
+                <input
+                  name="email"
+                  type="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  placeholder={userData?.email}
+                  className={touched.email && !!errors.email ? styles.input__error : styles.input}
+                />
                 <FormError nameError="email" />
                 <button className={`${styles.button} button`} type="submit" aria-label="E-mail address change">
                   {tAccount('aData.changeEmail')}
                 </button>
-                <Suspense fallback={<div>Loading...</div>}>
-                  {!!valuesFields && <Alerts valueFields={valuesFields} />}
-                </Suspense>
+
+                {!!valuesFields && <Alerts valueFields={valuesFields} />}
               </Form>
             )}
           </Formik>
@@ -275,41 +239,35 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
             {({ errors, touched }) => (
               <Form className={styles.form}>
                 <h3 className={styles.title}>{t('NavForm.password')}</h3>
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Input
-                    name="email"
-                    type="email"
-                    placeholder={userData?.email}
-                    className={touched.email && !!errors.email ? styles.input__error : styles.input}
-                  />
-                </Suspense>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder={userData?.email}
+                  className={touched.email && !!errors.email ? styles.input__error : styles.input}
+                />
                 <FormError nameError="email" />
-                <Input
+                <input
                   name="oldPassword"
                   type="password"
                   placeholder={tAccount('aData.oldPassword')}
                   className={touched.oldPassword && !!errors.oldPassword ? styles.input__error : styles.input}
                 />
                 <FormError nameError="oldPassword" />
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Input
-                    name="newPassword"
-                    type="password"
-                    placeholder={tAccount('aData.newPassword')}
-                    className={touched.newPassword && !!errors.newPassword ? styles.input__error : styles.input}
-                  />
-                </Suspense>
+                <input
+                  name="newPassword"
+                  type="password"
+                  placeholder={tAccount('aData.newPassword')}
+                  className={touched.newPassword && !!errors.newPassword ? styles.input__error : styles.input}
+                />
                 <FormError nameError="newPassword" />
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Input
-                    name="repeatNewPassword"
-                    type="password"
-                    placeholder={tAccount('aData.againNewPassword')}
-                    className={
-                      touched.repeatNewPassword && !!errors.repeatNewPassword ? styles.input__error : styles.input
-                    }
-                  />
-                </Suspense>
+                <input
+                  name="repeatNewPassword"
+                  type="password"
+                  placeholder={tAccount('aData.againNewPassword')}
+                  className={
+                    touched.repeatNewPassword && !!errors.repeatNewPassword ? styles.input__error : styles.input
+                  }
+                />
                 <FormError nameError="repeatNewPassword" />
                 <button className="button" type="submit" aria-label={t('PasswordAccount.buttonAria')}>
                   {tAccount('aData.changePassword')}

@@ -2,7 +2,7 @@
   width: 42.5rem;
   max-width: 100vw;
   display: flex;
-  margin: 2rem auto .5rem;
+  margin: 2rem auto 0.5rem;
 
   button {
     margin-left: 2rem;
@@ -14,7 +14,7 @@
   max-width: 100vw;
   display: flex;
   flex-wrap: wrap;
-  margin: 2rem auto .5rem;
+  margin: 2rem auto 0.5rem;
 
   div {
     display: flex;
@@ -22,16 +22,16 @@
 
     p {
       margin-left: 2rem;
-      font-size: .9rem;
+      font-size: 0.9rem;
     }
 
     @media (min-width: 518px) {
       .favoriteButton {
-        margin: .5rem;
+        margin: 0.5rem;
       }
 
       p {
-        margin: auto .5rem;
+        margin: auto 0.5rem;
       }
     }
 
@@ -42,15 +42,17 @@
 
   .button {
     max-width: fit-content;
-    margin: .5rem 2rem;
+    margin: 0.5rem 2rem;
     border-color: var(--third);
-    cursor: pointer;
+    color: var(--text);
   }
-}
 
-
-section .hr {
-  width: calc(42.5rem - 2rem);
+  .joined {
+    max-width: fit-content;
+    margin: 0.5rem 2rem;
+    background: transparent;
+    color: var(--third);
+  }
 }
 
 .tabs {
@@ -68,7 +70,7 @@ section .hr {
     .tab {
       height: 2.5rem;
       font-size: 1rem;
-      margin: .75rem 1rem;
+      margin: 0.75rem 1rem;
       border-radius: 0 1rem/3rem;
       background-color: transparent;
     }

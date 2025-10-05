@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { Separator, Input } from '@chakra-ui/react';
+
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { createClient } from 'utils/supabase/clientCSR';
@@ -12,6 +12,7 @@ import { ResetFormType } from 'types/global.types';
 
 import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { Separator } from 'components/ui/Separator/Separator';
 
 import styles from '../FormForgotten/FormForgotten.module.scss';
 
@@ -65,7 +66,7 @@ export const NewPasswordForm = ({ translate }: { translate: TranslateType }) => 
             <h2 className={styles.title}>{translate.title}</h2>
             <Separator />
             <h3 className={styles.subtitle}>{translate.subtitle}</h3>
-            <Input
+            <input
               name="password"
               type="password"
               value={values.password}

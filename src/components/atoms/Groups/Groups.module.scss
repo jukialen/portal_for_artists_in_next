@@ -25,18 +25,12 @@
     display: block;
 
     .listButton {
-      width: 80%;
-      font-size: 1rem;
-      background-color: var(--secondary);
-      margin: 1rem auto;
-    }
-
-    .listButton {
       display: flex;
       font-size: 1.2rem;
       font-weight: 400;
       border-radius: 2rem;
       color: var(--text);
+      border-color: transparent;
 
       &:hover {
         background-color: var(--hover);

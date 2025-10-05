@@ -2,18 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Button, IconButton, Input } from '@chakra-ui/react';
-import {
-  DialogActionTrigger,
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from 'components/ui/dialog';
+import { Dialog } from '@ark-ui/react/dialog';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
@@ -75,66 +64,43 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
     <>
       <Image src={logo} fill priority alt={`${name} logo`} />
 
-      <DialogRoot
+      <Dialog.Root
         lazyMount
         open={open}
         onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-        <DialogTrigger asChild>
-          <IconButton
-            aria-label="update group logo"
-            colorScheme="yellow"
-            className={styles.updateLogo}
-            onClick={() => setOpen(true)}>
+        <Dialog.Trigger asChild>
+          <button aria-label="update group logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
             <MdCameraEnhance />
-          </IconButton>
-        </DialogTrigger>
-        <DialogContent backgroundColor="#2D3748" color={selectedColor} className={styles.modal}>
-          <DialogHeader>
-            <DialogTitle>logo</DialogTitle>
-          </DialogHeader>
+          </button>
+        </Dialog.Trigger>
+        <Dialog.Content className={styles.modal}>
+          <Dialog.Title>logo</Dialog.Title>
 
-          <DialogBody className={styles.modal}>
-            <Input
+          <Dialog.Description className={styles.modal}>
+            <input
               type="file"
               name="newLogo"
               id="newLogo"
-              padding=".35rem 1rem"
-              margin=".5rem auto 1.5rem"
+              className={!newLogo && required ? styles.input__error : styles.input}
               onChange={changeFile}
-              borderColor={!newLogo && required ? '#bd0000' : '#4F8DFF'}
             />
 
-            <p style={{ color: '#bd0000' }}>{!newLogo && required && translated!.updateLogo!.validateRequired}</p>
+            <p>{!newLogo && required && translated!.updateLogo!.validateRequired}</p>
             {!!newLogo && (
-              <Image
-                src={`${backUrl}/${newLogo.name}`}
-                alt="preview new logo"
-                fill
-                priority
-                width={192}
-                height={192}
-                style={{
-                  margin: '1rem auto',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  borderRadius: '1rem',
-                }}
-              />
+              <Image src={`${backUrl}/${newLogo.name}`} alt="preview new logo" fill priority className={styles.img} />
             )}
 
             {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-          </DialogBody>
-          <DialogFooter>
-            <DialogActionTrigger colorScheme="blue" borderColor="transparent" mr={3}>
-              {translated!.updateLogo!.cancelButton}
-            </DialogActionTrigger>
-            <Button onClick={updateLogo} colorScheme="yellow" borderColor="transparent">
+          </Dialog.Description>
+          <div className={styles.actionButton}>
+            <button className={styles.cancel}>{translated!.updateLogo!.cancelButton}</button>
+            <button className={styles.submit} onClick={updateLogo}>
               {translated!.updateLogo!.submit}
-            </Button>
-          </DialogFooter>
-          <DialogCloseTrigger color={selectedColor} borderColor="transparent" fontSize="md" />
-        </DialogContent>
-      </DialogRoot>
+            </button>
+          </div>
+          <Dialog.CloseTrigger className={styles.closeButton}>Close</Dialog.CloseTrigger>
+        </Dialog.Content>
+      </Dialog.Root>
     </>
   );
 };

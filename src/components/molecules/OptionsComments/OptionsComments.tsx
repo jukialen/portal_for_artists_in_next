@@ -4,29 +4,15 @@ import { ReactNode, useContext, useState } from 'react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Button } from 'components/ui/button';
-import {
-  DialogActionTrigger,
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from 'components/ui/dialog';
-import { IconButton, Textarea } from '@chakra-ui/react';
+import { Dialog } from '@ark-ui/react/dialog';
 
 import { updComment, delComment } from 'utils/comments';
 import { toggleLiked } from 'utils/likes';
 
-import { darkMode } from 'constants/links';
 import { ResetFormType, TableNameType } from 'types/global.types';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { ModeContext } from 'providers/ModeProvider';
 import { DCContext } from 'providers/DeleteCommentProvider';
 
 import styles from './OptionsComments.module.scss';
@@ -67,12 +53,10 @@ export const OptionsComments = ({
   let [likes, setLikes] = useState(l || 0);
   const [moreOptions, setMoreOptions] = useState(false);
   const [com, setCom] = useState(false);
-  const { isMode } = useContext(ModeContext);
   const { changeDel } = useContext(DCContext);
 
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const selectedColor = '#FFD068';
 
   const initialValues = { comment: '' };
 
@@ -148,83 +132,66 @@ export const OptionsComments = ({
     <>
       <div className={styles.options}>
         <div className={styles.likesContainer}>
-          <IconButton
+          <button
             aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
-            colorScheme="blue"
             className={styles.likes}
             onClick={toggleLike}>
             like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />
-          </IconButton>
+          </button>
           <p className={styles.likesCount}>{likes}</p>
         </div>
 
         <div className={styles.buttons}>
           {authorId === userId && (
             <>
-              <IconButton
-                variant="outline"
-                colorScheme="blue"
-                _hover={{ background: 'blue.200' }}
-                className={styles.moreBut}
-                onClick={openMoreOptions}
-                aria-label="open more options">
+              <button className={styles.moreBut} onClick={openMoreOptions} aria-label="open more options">
                 <AiOutlineMore />
-              </IconButton>
+              </button>
               {moreOptions && (
                 <div className={styles.more}>
-                  <Button variant="ghost" colorScheme="red" className={styles.delete} onClick={() => setOpen(!open)}>
+                  <button className={styles.delete} onClick={() => setOpen(!open)}>
                     {tDeletionFile('deleteButton')}
-                  </Button>
-                  <Button asChild className={styles.edit} onClick={() => setOpenEdit(!openEdit)}>
+                  </button>
+                  <button className={styles.edit} onClick={() => setOpenEdit(!openEdit)}>
                     {t('edit')}
-                  </Button>
+                  </button>
                 </div>
               )}
-              <DialogRoot
+              <Dialog.Root
                 lazyMount
+                unmountOnExit
+                onExitComplete={() => console.log('onExitComplete invoked')}
                 open={open}
                 onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-                <DialogTrigger></DialogTrigger>
-                <DialogContent m="auto">
-                  <DialogHeader fontSize="lg" fontWeight="bold">
-                    <DialogTitle>{tComments('deleteCommentTitle')}</DialogTitle>
-                  </DialogHeader>
+                <Dialog.Content className={styles.content}>
+                  <Dialog.Title className={styles.title}>{tComments('deleteCommentTitle')}</Dialog.Title>
+                  <Dialog.Description>{tDeletionFile('question')}</Dialog.Description>
 
-                  <DialogBody>{tDeletionFile('question')}</DialogBody>
-
-                  <DialogFooter>
-                    <DialogActionTrigger borderColor="gray.100" onClick={onClose}>
-                      {tDeletionFile('cancelButton')}
-                    </DialogActionTrigger>
-                    <Button colorScheme="red" borderColor="red.500" onClick={deleteComment} ml={3}>
+                  <div className={styles.actionButton}>
+                    <button className={styles.cancel}>{tDeletionFile('cancelButton')}</button>
+                    <button className={styles.submit} onClick={deleteComment}>
                       {tDeletionFile('deleteButton')}
-                    </Button>
-                  </DialogFooter>
-                  <DialogCloseTrigger color={selectedColor} borderColor="transparent" />
-                </DialogContent>
-              </DialogRoot>
+                    </button>
+                  </div>
+                  <Dialog.CloseTrigger className={styles.closeButton} />
+                </Dialog.Content>
+              </Dialog.Root>
 
-              <DialogRoot lazyMount open={openEdit} onOpenChange={() => setOpenEdit(!openEdit)}>
-                <DialogTrigger></DialogTrigger>
-                <DialogContent m="auto" backgroundColor={`${isMode === darkMode ? '#2D3748' : '#f7f7f7'}`}>
-                  <DialogHeader
-                    fontSize="lg"
-                    fontWeight="bold"
-                    color={`${isMode === darkMode ? '#f7f7f7' : '#2D3748'}`}>
-                    <DialogTitle>{tComments('updateTitle')}</DialogTitle>
-                  </DialogHeader>
+              <Dialog.Root
+                lazyMount
+                unmountOnExit
+                onExitComplete={() => console.log('onExitComplete invoked')}
+                open={openEdit}
+                onOpenChange={() => setOpenEdit(!openEdit)}>
+                <Dialog.Content className={styles.content}>
+                  <Dialog.Title className={styles.title}>{tComments('updateTitle')}</Dialog.Title>
 
-                  <DialogBody>
+                  <Dialog.Description>
                     <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={updateComment}>
                       {({ values, handleChange }) => (
                         <Form>
-                          <div
-                            style={{
-                              width: '95%',
-                              margin: '1rem auto 0',
-                              padding: '0 0.25rem',
-                            }}>
-                            <Textarea
+                          <div className={styles.comment}>
+                            <textarea
                               name="comment"
                               id="comment"
                               value={values.comment}
@@ -232,48 +199,31 @@ export const OptionsComments = ({
                               placeholder={tComments('newComPlaceholder')}
                               aria-label={tComments('newComAria')}
                               required
-                              color="#4F8DFF"
                             />
                           </div>
 
-                          <div
-                            style={{
-                              display: 'flex',
-                              gap: '1rem',
-                              margin: '2rem',
-                              justifyContent: 'space-around',
-                            }}>
-                            <Button
-                              type="submit"
-                              colorScheme="blue"
-                              display="flex"
-                              backgroundColor="#4F8DFF"
-                              borderColor="#4F8DFF"
-                              cursor="pointer">
+                          <div className={styles.actionButton}>
+                            <button type="submit" className={styles.submit}>
                               {tComments('updateButton')}
-                            </Button>
+                            </button>
 
-                            <DialogActionTrigger
-                              backgroundColor="gray.300"
-                              borderColor="gray.300"
-                              onClick={onCloseEdit}
-                              cursor="pointer">
+                            <div className={styles.cancel} onClick={onCloseEdit}>
                               {tDeletionFile('cancelButton')}
-                            </DialogActionTrigger>
+                            </div>
                           </div>
                           <ErrorMessage name="comment" />
                         </Form>
                       )}
                     </Formik>
-                  </DialogBody>
-                  <DialogCloseTrigger color={selectedColor} borderColor="transparent" />
-                </DialogContent>
-              </DialogRoot>
+                  </Dialog.Description>
+                  <Dialog.CloseTrigger className={styles.closeButton} />
+                </Dialog.Content>
+              </Dialog.Root>
             </>
           )}
-          <Button asChild color="blue" className={styles.answer} onClick={openComs}>
+          <button className={styles.answer} onClick={openComs}>
             {tComments('reply')}
-          </Button>
+          </button>
         </div>
       </div>
 

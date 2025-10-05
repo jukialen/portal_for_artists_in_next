@@ -1,8 +1,9 @@
 .icon {
+  width: 3rem;
+  height: 3rem;
   border: .1rem solid transparent;
   background-color: transparent;
   color: var(--text);
-  cursor: pointer;
 }
 
 .container {
@@ -13,7 +14,7 @@
 
   > button {
     width: 9rem;
-    cursor: pointer;
+    border-color: var(--required);
   }
 
   .alert {
@@ -25,4 +26,29 @@
 
 .container__active {
   display: flex;
+}
+
+.content {
+  margin: auto;
+
+  .title {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  .actionButton {
+    .cancel {
+      border-color: var(--background);
+    }
+
+    .submit {
+      border-color: var(--required);
+      margin-left: 3px;
+    }
+  }
+
+  .closeButton {
+    color: var(--primary);
+    border-color: transparent;
+  }
 }

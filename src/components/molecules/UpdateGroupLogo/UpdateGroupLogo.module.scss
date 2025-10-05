@@ -4,17 +4,56 @@
   right: 0;
   width: 2.8rem;
   height: 2.8rem;
-  margin: 0 .5rem;
+  margin: 0 0.5rem;
   font-size: 1.4rem;
-  border: .1rem solid var(--primary);
-  border-radius: .75rem;
+  border: 0.1rem solid var(--primary);
+  border-radius: 0.75rem;
   background-color: var(--primary);
   color: black;
   cursor: pointer;
 }
 
 .modal {
-   background-color: var(--background) !important;
+  background-color: var(--background) !important;
   color: var(--primary) !important;
   margin: auto;
+
+  .input {
+    padding: 0.35rem 1rem;
+    margin: 0.5rem auto 1.5rem;
+    border-color: var(--third);
+
+    &__error {
+      border-color: var(--required);
+    }
+  }
+
+  p {
+    color: var(--third);
+  }
+
+  .img {
+    display: flex;
+    justify-content: center;
+    width: 12rem;
+    height: 12rem;
+    margin: 1rem auto;
+    border-radius: 1rem;
+  }
+
+  .actionButton {
+    .cancel {
+      border-color: var(--background);
+    }
+
+    .submit {
+      border-color: var(--required);
+      margin-left: 3px;
+    }
+  }
+
+  .closeButton {
+    color: var(--primary);
+    border-color: transparent;
+  }
 }

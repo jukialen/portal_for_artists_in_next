@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Separator, Tabs } from '@chakra-ui/react';
+import { Tabs } from '@ark-ui/react/tabs';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
@@ -16,6 +16,7 @@ import { Posts } from 'components/organisms/Posts/Posts';
 
 import styles from './NameGroupPage.module.scss';
 import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
+import { Separator } from '../../ui/Separator/Separator';
 
 export const NameGroupPage = ({
   name,
@@ -54,8 +55,6 @@ export const NameGroupPage = ({
   const checkIcon = '1rem';
   const smallIcon = '1.5rem';
   const zeroPadding = 0;
-  const addingToGroup = { background: activeColor, color: '#000' };
-  const addingToGroupOutline = { background: 'transparent', color: activeColor };
 
   const contentList = [
     translated.groupSections?.general,
@@ -139,6 +138,7 @@ export const NameGroupPage = ({
       setFavorite(!favorite);
     } catch (e) {
       console.error(e);
+      setFavorite(favorite);
     }
   };
   const removeGroup = async () => {
@@ -157,36 +157,28 @@ export const NameGroupPage = ({
       {joined.admin ? (
         <>
           <div className={styles.adminButtons}>
-            <Button colorScheme="blue" className={styles.button} onClick={removeGroup}>
+            <button className={styles.button} onClick={removeGroup}>
               {translated.groupSections?.deleteGroup}
-            </Button>
+            </button>
           </div>
           {!!deleteGroupInfo && <Alerts valueFields={deleteGroupInfo} />}
         </>
       ) : (
         <div className={styles.buttons}>
-          <Button
-            style={join ? addingToGroupOutline : addingToGroup}
-            colorScheme="blue"
-            onClick={toggleToGroup}
-            variant={join ? 'outline' : 'solid'}
-            className={styles.button}>
+          <button onClick={toggleToGroup} className={join ? styles.joined : styles.button}>
             {join ? <IoMdCheckmark size={checkIcon} /> : <IoMdAdd size={smallIcon} />}
             {join ? translated.joinedUser?.joined : translated.joinedUser?.join}
-          </Button>
+          </button>
 
           {join && (
             <div>
-              <Button
-                style={favorite ? addingToGroupOutline : addingToGroup}
-                colorScheme="blue"
+              <button
+                className={`${favorite ? styles.joined : styles.button} ${styles.favoriteButton}`}
                 disabled={!favorite && favoriteLength === 5}
-                onClick={toggleToFavorites}
-                variant={favorite ? 'solid' : 'outline'}
-                className={`${styles.button} ${styles.favoriteButton}`}>
+                onClick={toggleToFavorites}>
                 {favorite ? <IoMdCheckmark size={checkIcon} /> : <IoMdAdd size={smallIcon} />}
                 {favorite ? translated.joinedUser?.addedToFav : translated.joinedUser?.addToFavorite}
-              </Button>
+              </button>
               {!favorite && (
                 <p>{favoriteLength < 5 ? translated.joinedUser?.maxFav : translated.joinedUser?.maximumAchieved}</p>
               )}
@@ -194,7 +186,7 @@ export const NameGroupPage = ({
           )}
         </div>
       )}
-      <Separator orientation="horizontal" className={styles.hr} />
+      <Separator />
 
       <Tabs.Root className={styles.tabs} lazyMount fitted variant="subtle">
         <Tabs.List className={styles.tablist} role="tablist">

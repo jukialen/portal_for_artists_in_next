@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Separator, Input } from '@chakra-ui/react';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
@@ -14,6 +13,7 @@ import { LangType } from 'types/global.types';
 
 import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { Separator } from 'components/ui/Separator/Separator';
 
 import styles from './ResetPasswordForm.module.scss';
 
@@ -90,7 +90,7 @@ export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType) => {
             <h2 className={styles.title}>{reset.title}</h2>
             <Separator />
             <h3 className={styles.subtitle}>{reset.subtitle}</h3>
-            <Input
+            <input
               name="newPassword"
               type="password"
               value={values.newPassword}
@@ -101,7 +101,7 @@ export const ResetPasswordForm = ({ reset, locale }: ResetPassTrType) => {
 
             <FormError nameError="newPassword" />
 
-            <Input
+            <input
               name="repeatPassword"
               type="password"
               value={values.repeatPassword}

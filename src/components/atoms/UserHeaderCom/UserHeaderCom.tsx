@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import type { KeyboardEvent as KeyEvent } from 'react';
+
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Icon, Button, Input, Group, IconButton } from '@chakra-ui/react';
 import { Dialog } from '@ark-ui/react/dialog';
 
 import { createClient } from 'utils/supabase/clientCSR';
@@ -197,7 +198,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     }
   };
 
-  const updateVal = (e: EventType) => setSearchValues(e.target.value);
+  const updateVal = (e: EventType) => setSearchValues(e.currentTarget.value);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -213,7 +214,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     return () => window.removeEventListener('keydown', handleShortcut);
   }, []);
 
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (e: KeyEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       await searching();
@@ -234,47 +235,45 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   const leftPart = () => {
     return (
       <>
-        <Button
+        <button
           onClick={() => push('/app')}
           className={styles.menu_buttons}
           aria-label="this button redirect to groups's section">
           <MdOutlineHome />
           <p>{headers.home}</p>
-        </Button>
-        <Button onClick={() => push('/groups/list')} className={styles.menu_buttons} aria-label="button for groups">
+        </button>
+        <button onClick={() => push('/groups/list')} className={styles.menu_buttons} aria-label="button for groups">
           <MdOutlineGroups />
           <p>{headers.groups}</p>
-        </Button>
-        <Button
+        </button>
+        <button
           onClick={() => push('/friends')}
           className={styles.menu_buttons}
           aria-label="this button redirect to friends's section">
-          <Icon>
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-          </Icon>
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#000000"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
           <p>{headers.friends}</p>
-        </Button>
-        <Button className={styles.menu_buttons} onClick={toggleProfileMenu}>
+        </button>
+        <button className={styles.menu_buttons} onClick={toggleProfileMenu}>
           <Avatar
             fallbackName={userData?.pseudonym!}
             src={`${supabaseStorageProfileUrl}/${userData?.profilePhoto!}`}
             alt=""
           />
           <p>{headers.account}</p>
-        </Button>
+        </button>
       </>
     );
   };
@@ -282,26 +281,26 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   return (
     <>
       <section className={styles.mobileAlaTabbar}>
-        <Group className={styles.leftPart}>{leftPart()}</Group>
-        <Button
+        <div className={styles.leftPart}>{leftPart()}</div>
+        <button
           className={styles.menu_buttons}
           id={styles.searchInput}
           onClick={toggleSearch}
           aria-label="this button shows searching">
           <IoSearch />
-        </Button>
+        </button>
       </section>
 
       <section className={styles.otherAlaTabbar}>
         {leftPart()}
-        <Button className={styles.menu_buttons} onClick={toggleSearch} aria-label="this button shows searching">
+        <button className={styles.menu_buttons} onClick={toggleSearch} aria-label="this button shows searching">
           <IoSearch />
           <p>{headers.search}</p>
-        </Button>
+        </button>
       </section>
 
-      <Group className={`${styles.search} ${search ? styles.search__active : ''}`}>
-        <Input
+      <div className={`${styles.search} ${search ? styles.search__active : ''}`}>
+        <input
           ref={searchInputRef}
           type="search"
           id="search"
@@ -317,10 +316,10 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           </button>
         )}
         <span className={styles.shortcut}>Ctrl/Cmd+k</span>
-        <IconButton colorScheme="pink" className={styles.rightButton} aria-label="search phrases" onClick={searching}>
+        <button className={styles.rightButton} aria-label="search phrases" onClick={searching}>
           <IoSearch />
-        </IconButton>
-      </Group>
+        </button>
+      </div>
 
       <Dialog.Root lazyMount unmountOnExit open={open} onOpenChange={closeInputAndDIalog}>
         <Dialog.Content className={styles.searching}>
@@ -366,9 +365,9 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           </Link>
         </li>
         <li>
-          <Button colorScheme="yellow" onClick={sign__out} type="submit">
+          <button onClick={sign__out} type="submit">
             {headers.signOut}
-          </Button>
+          </button>
         </li>
       </ul>
     </>

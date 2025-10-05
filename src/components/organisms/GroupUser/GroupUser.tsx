@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Separator } from '@chakra-ui/react';
 
 import { backUrl } from 'constants/links';
 import { createClient } from 'utils/supabase/clientCSR';
@@ -8,6 +7,7 @@ import { GroupUsersType } from 'types/global.types';
 
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/atoms/Tile/Tile';
+import { Separator } from 'components/ui/Separator/Separator';
 
 import styles from './GroupUser.module.scss';
 
@@ -135,7 +135,7 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
   return (
     <div className={styles.tilesSection}>
       <h2 className={styles.title}>{tGroupsUser.adminTitle}</h2>
-      <Separator className={styles.divider} />
+      <Separator />
       {adminsArray.length > 0 ? (
         adminsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
@@ -147,7 +147,7 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
         <MoreButton nextElementsAction={nextAdminList} />
       )}
       <h2 className={styles.title}>{tGroupsUser.modsTitle}</h2>
-      <Separator className={styles.divider} />
+      <Separator />
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
@@ -159,7 +159,7 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
         <MoreButton nextElementsAction={nextModeratorsList} />
       )}
       <h2 className={styles.title}>{tGroupsUser.usersTitle}</h2>
-      <Separator className={styles.divider} />
+      <Separator />
       {membersArray.length > 0 ? (
         membersArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />

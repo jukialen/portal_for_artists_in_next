@@ -6,18 +6,8 @@ import { Upload } from 'tus-js-client';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Input, Button, Textarea } from '@chakra-ui/react';
-import {
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from 'components/ui/dialog';
-import { NativeSelectField, NativeSelectRoot } from 'components/ui/native-select';
-import { ProgressValueText, ProgressRoot } from 'components/ui/progress';
+import { Dialog } from '@ark-ui/react/dialog';
+import { Select } from '@ark-ui/react/select';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -26,6 +16,7 @@ import { Tags, EventType, ResetFormType, FilesUploadType } from 'types/global.ty
 
 import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { ProgressBar } from 'components/ui/ProgressBar/ProgressBar';
 
 import styles from './FileUpload.module.scss';
 import { MdUploadFile } from 'react-icons/md';
@@ -187,22 +178,22 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
   };
 
   return (
-    <DialogRoot
+    <Dialog.Root
       lazyMount
       open={open}
       onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-      <DialogTrigger asChild>
-        <Button aria-label="new logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
+      <Dialog.Trigger asChild>
+        <button aria-label="new logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
           {t('newFile')}
           <MdUploadFile />
-        </Button>
-      </DialogTrigger>
+        </button>
+      </Dialog.Trigger>
 
-      <DialogContent className={styles.modelContent}>
-        <DialogHeader className={styles.modelContentHeader}>
-          <DialogTitle>{tAnotherForm('fileTitle')}</DialogTitle>
-        </DialogHeader>
-        <DialogBody className={styles.modal}>
+      <Dialog.Content className={styles.modelContent}>
+        <div className={styles.modelContentHeader}>
+          <Dialog.Title>{tAnotherForm('fileTitle')}</Dialog.Title>
+        </div>
+        <Dialog.Description className={styles.modal}>
           <Formik
             initialValues={initialValues}
             validationSchema={schemaFile}
@@ -210,7 +201,7 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.adding__files}>
                 <div className={styles.select}>
-                  <NativeSelectRoot
+                  <Select.Root
                     onChange={handleChange}
                     className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}
                     aria-required>
@@ -240,7 +231,7 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
                         {tAside('animations')}
                       </option>
                     </NativeSelectField>
-                  </NativeSelectRoot>
+                  </Select.Root>
                 </div>
 
                 <FormError nameError="tags" />
@@ -250,7 +241,7 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
                     {tAnotherForm('file')}
                   </button>
                 ) : (
-                  <Input
+                  <input
                     name="file"
                     type="file"
                     accept={`${filesProfileTypes}, ${filesTypes}`}
@@ -264,7 +255,7 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
                 )}
                 <p className={styles.error}>{!file && required && t('NavForm.validateRequired')}</p>
 
-                <Textarea
+                <textarea
                   name="shortDescription"
                   value={values.shortDescription}
                   onChange={handleChange}
@@ -283,31 +274,23 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
                 )}
 
                 {progressUpload >= 1 && !(valuesFields === tAnotherForm('uploadFile')) && (
-                  <ProgressRoot
-                    defaultValue={0}
-                    colorScheme="green"
-                    animated
-                    striped
-                    bg="blue.400"
-                    className={styles.progressbar}>
-                    <ProgressValueText>{progressUpload}</ProgressValueText>
-                  </ProgressRoot>
+                  <ProgressBar value={progressUpload} />
                 )}
 
                 {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
 
                 <div className={styles.buttons}>
-                  <Button type="submit" onClick={() => setOpen(false)}>
+                  <button type="submit" onClick={() => setOpen(false)}>
                     {t('DeletionFile.cancelButton')}
-                  </Button>
-                  <Button type="submit">{t('Description.submit')}</Button>
+                  </button>
+                  <button type="submit">{t('Description.submit')}</button>
                 </div>
               </Form>
             )}
           </Formik>
-        </DialogBody>
-        <DialogCloseTrigger className={styles.closeButton} />
-      </DialogContent>
-    </DialogRoot>
+        </Dialog.Description>
+        <Dialog.CloseTrigger className={styles.closeButton} />
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };

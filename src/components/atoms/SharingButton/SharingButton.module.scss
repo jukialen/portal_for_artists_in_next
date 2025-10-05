@@ -2,6 +2,11 @@
   position: relative;
   justify-self: flex-start;
 
+  .sharButton {
+    border: 1px solid transparent;
+    font-size: 1.25rem;
+  }
+
   .share__options {
     display: none;
     visibility: hidden;

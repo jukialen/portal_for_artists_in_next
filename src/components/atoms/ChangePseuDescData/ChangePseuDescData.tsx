@@ -5,7 +5,6 @@ import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Input, Textarea } from '@chakra-ui/react';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -148,7 +147,7 @@ export const ChangePseuDescData = ({
                 <label htmlFor={tAnotherForm('profilePhoto')} className={styles.title}>
                   {tAnotherForm('profilePhoto')}
                 </label>
-                <Input
+                <input
                   id="photoInput"
                   name="photo"
                   type="file"
@@ -167,7 +166,7 @@ export const ChangePseuDescData = ({
             <label className={styles.title} htmlFor="newPseudonym">
               {tAnotherForm('pseudonym')}
             </label>
-            <Input
+            <input
               id="newPseudonym"
               name="newPseudonym"
               placeholder={tAnotherForm('pseudonym')}
@@ -185,7 +184,7 @@ export const ChangePseuDescData = ({
             <label className={styles.title} htmlFor="newDescription">
               {tAccount('profile.aboutMe')}
             </label>
-            <Textarea
+            <textarea
               id="newDescription"
               name="newDescription"
               placeholder={tAccount('profile.aboutMe')}

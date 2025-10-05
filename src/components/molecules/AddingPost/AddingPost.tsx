@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Input, Textarea } from '@chakra-ui/react';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { createClient } from 'utils/supabase/clientCSR';
@@ -71,7 +70,7 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
       <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={createNewPost}>
         {({ values, handleChange, errors, touched }) => (
           <Form className={showForm ? styles.form : styles.hiding}>
-            <Input
+            <input
               id="title"
               name="title"
               value={values.title}
@@ -83,12 +82,11 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
 
             <FormError nameError="title" />
 
-            <Textarea
+            <textarea
               id="post"
               name="post"
               value={values.content}
               onChange={handleChange}
-              resize="vertical"
               placeholder={translatedPost.addDescription}
               aria-label={translatedPost.addDesAria}
               className={!!errors.content && touched.content ? styles.description__error : styles.description}
@@ -96,9 +94,9 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
 
             <FormError nameError="content" />
 
-            <Button type="submit" colorScheme="blue.800" className={styles.addingButton}>
+            <button type="submit" className={styles.addingButton}>
               {translatedPost.add}
-            </Button>
+            </button>
 
             {!!valueFields && <Alerts valueFields={valueFields} />}
           </Form>

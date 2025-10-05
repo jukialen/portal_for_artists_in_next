@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@chakra-ui/react';
-import { DrawerBackdrop, DrawerBody, DrawerContent, DrawerRoot } from 'components/ui/drawer';
 
 import { FriendsListArrayType, GroupsType } from 'types/global.types';
 
@@ -56,19 +54,19 @@ export const AsideWrapper = ({
         </button>
       )}
 
-      <DrawerRoot placement="start" open={openDr} onOpenChange={() => setOpenDr(!openDr)}>
-        <DrawerBackdrop />
-        <DrawerContent style={{ width: undefined }} className={styles.drawer}>
-          <DrawerBody className={styles.drawerBody}>
+      <Drawer.Root placement="start" open={openDr} onOpenChange={() => setOpenDr(!openDr)}>
+        <Drawer.Backdrop />
+        <Drawer.Content style={{ width: undefined }} className={styles.drawer}>
+          <Drawer.Body className={styles.drawerBody}>
             <div className={styles.blur}></div>
 
             {asideBody()}
-          </DrawerBody>
-          <Button className={styles.drawer__right} aria-label="right menu button" onClick={() => setOpenDr(false)}>
+          </Drawer.Body>
+          <button className={styles.drawer__right} aria-label="right menu button" onClick={() => setOpenDr(false)}>
             <RiArrowUpSLine />
-          </Button>
-        </DrawerContent>
-      </DrawerRoot>
+          </button>
+        </Drawer.Content>
+      </Drawer.Root>
     </>
   );
 };

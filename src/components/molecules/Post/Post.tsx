@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Button, IconButton } from '@chakra-ui/react';
 import { Avatar } from 'components/atoms/Avatar/Avatar';
 
 import { createClient } from 'utils/supabase/clientCSR';
@@ -18,7 +17,7 @@ import { SharingButton } from 'components/atoms/SharingButton/SharingButton';
 import { Comments } from 'components/molecules/Comments/Comments';
 
 import styles from './Post.module.scss';
-import group from  '../../../../public/group.svg';
+import group from '../../../../public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 export const Post = ({
@@ -95,16 +94,15 @@ export const Post = ({
       <div className={styles.titlePost}>{title}</div>
       <div className={styles.description}>{content}</div>
       <div className={styles.options}>
-        <IconButton
+        <button
           aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
-          colorScheme="teal"
           className={styles.likes}
           onClick={addLike}>
           {like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
-        </IconButton>
-        <Button colorScheme="blue" onClick={showingComments} className={styles.commentsButton} variant="ghost">
+        </button>
+        <button onClick={showingComments} className={styles.commentsButton}>
           {t('Comments.comments')}
-        </Button>
+        </button>
         <SharingButton shareUrl={link} authorName={authorName} name={title} />
       </div>
       <div className={styles.likesShComs}>

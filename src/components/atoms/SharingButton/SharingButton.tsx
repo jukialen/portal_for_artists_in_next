@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Image from 'next/image';
-import { IconButton } from '@chakra-ui/react';
 
 import { Tags } from 'types/global.types';
 
@@ -28,16 +27,9 @@ export const SharingButton = ({ shareUrl, authorName, tags, name }: SharingType)
 
   return (
     <div className={styles.share}>
-      <IconButton
-        variant="solid"
-        colorScheme="teal"
-        aria-label="share button"
-        border="1px solid transparent"
-        fontSize="20px"
-        cursor="pointer"
-        onClick={showShare}>
+      <button className={styles.sharButton} aria-label="share button" onClick={showShare}>
         <AiOutlineShareAlt />
-      </IconButton>
+      </button>
 
       <div className={`${styles.share__options} ${share ? styles.share__options__active : ''}`}>
         <div className={styles.icon}>

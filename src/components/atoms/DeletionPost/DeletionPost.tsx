@@ -1,18 +1,6 @@
 import { useState } from 'react';
 import { createClient } from 'utils/supabase/clientCSR';
-import { IconButton } from '@chakra-ui/react';
-import { Button } from 'components/ui/button';
-import {
-  DialogActionTrigger,
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from 'components/ui/dialog';
+import { Dialog } from '@ark-ui/react/dialog';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -36,7 +24,6 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
   const t = useI18n();
   const tDeletionFile = useScopedI18n('DeletionFile');
   const tDeletionPost = useScopedI18n('DeletionPost');
-  const selectedColor = '#FFD068';
 
   const deletePost = async () => {
     const supabase = createClient();
@@ -61,51 +48,39 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
 
   return (
     <>
-      <IconButton
-        width="3rem"
-        height="3rem"
-        onClick={() => setDel(!del)}
-        className={styles.icon}
-        aria-label="menu button for a post"
-        fontSize="5xl"
-        variant="outline">
+      <button onClick={() => setDel(!del)} className={styles.icon} aria-label="menu button for a post">
         {del ? <RxChevronUp /> : <RxChevronDown />}
-      </IconButton>
+      </button>
 
-      <DialogRoot
+      <Dialog.Root
         lazyMount
+        unmountOnExit
+        onExitComplete={() => console.log('onExitComplete invoked')}
         open={open}
         onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-        <DialogTrigger>
+        <Dialog.Trigger>
           <div className={`${styles.container} ${del ? styles.container__active : ''}`}>
-            <Button
-              loading={deleting}
-              loadingText={tDeletionFile('loadingText')}
-              colorScheme="red"
-              borderColor="red.500"
-              onClick={() => setOpen(true)}>
+            <button onClick={() => setOpen(true)}>
               <RiDeleteBinLine />
-              {tDeletionFile('deletionButton')}
-            </Button>
+              {deleting ? tDeletionFile('loadingText') : tDeletionFile('deletionButton')}
+            </button>
             <div className={styles.alert}>{!!values && <Alerts valueFields={values} />}</div>
           </div>
-        </DialogTrigger>
-        <DialogContent m="auto">
-          <DialogHeader fontSize="lg" fontWeight="bold">
-            <DialogTitle>{tDeletionPost('title')}</DialogTitle>
-          </DialogHeader>
+        </Dialog.Trigger>
+        <Dialog.Content className={styles.content}>
+          <Dialog.Title>{tDeletionPost('title')}</Dialog.Title>
 
-          <DialogBody>{tDeletionFile('question')}</DialogBody>
+          <Dialog.Description>{tDeletionFile('question')}</Dialog.Description>
 
-          <DialogFooter>
-            <DialogActionTrigger borderColor="gray.100">{tDeletionFile('cancelButton')}</DialogActionTrigger>
-            <Button colorScheme="red" borderColor="red.500" onClick={deletePost} ml={3}>
+          <div className={styles.actionButton}>
+            <button className={styles.cancel}>{tDeletionFile('cancelButton')}</button>
+            <button className={styles.submit} onClick={deletePost}>
               {tDeletionFile('deleteButton')}
-            </Button>
-          </DialogFooter>
-          <DialogCloseTrigger color={selectedColor} borderColor="transparent" />
-        </DialogContent>
-      </DialogRoot>
+            </button>
+          </div>
+          <Dialog.CloseTrigger className={styles.closeButton}>Close</Dialog.CloseTrigger>
+        </Dialog.Content>
+      </Dialog.Root>
     </>
   );
 };

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { redirect } from 'next/navigation';
-import { Icon } from '@chakra-ui/react';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
@@ -54,7 +53,7 @@ export const Providers = () => {
         type="submit"
         aria-label="google provider"
         onClick={() => signInWithProvider('google')}>
-        <Icon as={RiGoogleFill} className={styles.svg} />
+        <RiGoogleFill className={styles.svg} />
       </button>
 
       <button
@@ -62,14 +61,14 @@ export const Providers = () => {
         type="submit"
         aria-label="spotify provider"
         onClick={() => signInWithProvider('spotify')}>
-        <Icon as={FaSpotify} className={styles.svg} />
+        <FaSpotify className={styles.svg} />
       </button>
       <button
         className={styles.button}
         type="submit"
         aria-label="discord provider"
         onClick={() => signInWithProvider('discord')}>
-        <Icon as={FaDiscord} className={styles.svg} />
+        <FaDiscord className={styles.svg} />
       </button>
 
       <div className={styles.errorComp}>{!!valuesFields && <Alerts valueFields={valuesFields} />}</div>

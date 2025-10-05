@@ -25,6 +25,9 @@
   }
 
   .inputGroup {
+    display: grid;
+    gap: 1rem;
+
     div button {
       height: 2rem;
       width: 2rem;

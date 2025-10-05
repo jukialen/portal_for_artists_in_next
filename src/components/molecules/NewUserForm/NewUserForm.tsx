@@ -1,13 +1,13 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Form, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Input } from '@chakra-ui/react';
 
 import { convertStringToUnionType } from 'helpers/convertStringToType';
+import { useI18n, useScopedI18n } from 'locales/client';
 
 import { EventType, FilesUploadType, Provider } from 'types/global.types';
 
@@ -16,9 +16,7 @@ import { FormError } from 'components/atoms/FormError/FormError';
 
 import styles from './NewUserForm.module.scss';
 import { createClient } from 'utils/supabase/clientCSR';
-import { validatePhoto } from '../../../utils/client/files';
-import { getScopedI18n } from '../../../locales/server';
-import { useI18n, useScopedI18n } from '../../../locales/client';
+import { validatePhoto } from 'utils/client/files';
 
 type FirstDataType = {
   username: string;
@@ -145,7 +143,7 @@ export const NewUserForm = ({ newUserTranslate, id, email, provider }: NewUserTy
         <Form className={styles.first__data}>
           <h2 className={styles.title}>{newUserTranslate.title}</h2>
 
-          <Input
+          <input
             name="username"
             type="text"
             value={values.username}
@@ -156,7 +154,7 @@ export const NewUserForm = ({ newUserTranslate, id, email, provider }: NewUserTy
 
           <FormError nameError="username" />
 
-          <Input
+          <input
             name="pseudonym"
             type="text"
             value={values.pseudonym}
@@ -167,7 +165,7 @@ export const NewUserForm = ({ newUserTranslate, id, email, provider }: NewUserTy
 
           <FormError nameError="pseudonym" />
 
-          <Input
+          <input
             name="profilePhoto"
             type="file"
             accept=".jpg, .jpeg, .png, .webp, .avif, .heif, .heic"

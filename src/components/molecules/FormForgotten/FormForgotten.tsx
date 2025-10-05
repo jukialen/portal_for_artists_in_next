@@ -5,7 +5,6 @@ import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Separator, Input } from '@chakra-ui/react';
 
 import { backUrl } from 'constants/links';
 import { LangType, ResetFormType, UserFormType } from 'types/global.types';
@@ -14,6 +13,7 @@ import { useI18n } from 'locales/client';
 
 import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
+import { Separator } from 'components/ui/Separator/Separator';
 
 import styles from './FormForgotten.module.scss';
 
@@ -59,7 +59,7 @@ export const FormForgotten = ({ locale }: { locale: LangType }) => {
             <h2 className={styles.title}>{t('Forgotten.title')}</h2>
             <Separator />
             <h3 className={styles.subtitle}>{t('Forgotten.subtitle')}</h3>
-            <Input
+            <input
               name="email"
               type="email"
               value={values.email}

@@ -1,7 +1,6 @@
 'use client';
 
 import { useContext, useState } from 'react';
-import { Button } from '@chakra-ui/react';
 
 import { darkMode } from 'constants/links';
 import { ModeType } from 'types/global.types';
@@ -46,14 +45,14 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
 
         <div className={`${styles.color} ${mode && styles.color__active}`}>
           <li>
-            <Button className={styles.colors__version} onClick={() => newMode('dark')}>
+            <button className={styles.colors__version} onClick={() => newMode('dark')}>
               {dark}
-            </Button>
+            </button>
           </li>
           <li>
-            <Button className={styles.colors__version} onClick={() => newMode('light')}>
+            <button className={styles.colors__version} onClick={() => newMode('light')}>
               {light}
-            </Button>
+            </button>
           </li>
         </div>
       </ul>

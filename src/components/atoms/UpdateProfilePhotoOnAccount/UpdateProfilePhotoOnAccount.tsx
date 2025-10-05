@@ -2,18 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Button, Input } from '@chakra-ui/react';
-import {
-  DialogActionTrigger,
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from 'components/ui/dialog';
+import { Dialog } from '@ark-ui/react/dialog';
 
 import { createClient } from 'utils/supabase/clientCSR';
 import { filesProfileTypes, handleFileSelection, isFileAccessApiSupported, validatePhoto } from 'utils/client/files';
@@ -111,42 +100,42 @@ export const UpdateProfilePhotoOnAccount = ({
   };
 
   return (
-    <DialogRoot
+    <Dialog.Root
       lazyMount
+      unmountOnExit
+      onExitComplete={() => console.log('onExitComplete invoked')}
       open={open}
       onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-      <DialogTrigger asChild>
-        <Button aria-label="update logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
+      <Dialog.Trigger asChild>
+        <button aria-label="update logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
           <MdCameraEnhance />
-        </Button>
-      </DialogTrigger>
-      <DialogContent className={styles.logoContent}>
-        <DialogHeader className={styles.logoHeader}>
-          <DialogTitle>Update logo</DialogTitle>
-        </DialogHeader>
+        </button>
+      </Dialog.Trigger>
+      <Dialog.Content className={styles.logoContent}>
+        <Dialog.Title className={styles.logoHeader}>Update logo</Dialog.Title>
 
-        <DialogBody className={!newLogo && required ? styles.logBody__error : styles.logBody}>
+        <Dialog.Description className={!newLogo && required ? styles.logBody__error : styles.logBody}>
           {isFileAccessApiSupported ? (
             <button onClick={() => handleFile()} className={styles.filePickerButton}>
               {tAnotherForm('file')}
             </button>
           ) : (
-            <Input type="file" name="newLogo" id="newLogo" accept={filesProfileTypes} onChange={changeFile} />
+            <input type="file" name="newLogo" id="newLogo" accept={filesProfileTypes} onChange={changeFile} />
           )}
           {!newLogo && required && <p>{tCurrPrPhoto!.validateRequired}</p>}
           {!!previewUrl && <Image src={previewUrl} alt="preview new logo" fill priority />}
           {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-        </DialogBody>
-        <DialogFooter className={styles.logoFooter}>
-          <DialogActionTrigger className={styles.cancel} onChange={() => setNewLogo(null)}>
+        </Dialog.Description>
+        <div className={styles.logoFooter}>
+          <button className={styles.cancel} onChange={() => setNewLogo(null)}>
             {tCurrPrPhoto!.cancelButton}
-          </DialogActionTrigger>
-          <Button type="submit" className={styles.edit} onClick={updateLogo}>
+          </button>
+          <button type="submit" className={styles.edit} onClick={updateLogo}>
             {tCurrPrPhoto!.submit}
-          </Button>
-        </DialogFooter>
-        <DialogCloseTrigger className={styles.closeTrigger} onChange={() => setNewLogo(null)} />
-      </DialogContent>
-    </DialogRoot>
+          </button>
+        </div>
+        <Dialog.CloseTrigger className={styles.closeTrigger} onChange={() => setNewLogo(null)} />
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };

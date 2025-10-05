@@ -1,34 +1,27 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
-import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from 'components/ui/accordion';
+import { ReactNode } from 'react';
+import { Accordion } from '@ark-ui/react/accordion';
 
 import styles from './AccordionWrapper.module.scss';
+import { LuChevronDown } from 'react-icons/lu';
 
 export const AccordionWrapper = ({
   items,
 }: {
   items: { value: '' | number; head: string; body: string | ReactNode }[];
 }) => {
-  const [value, setValue] = useState(['']);
-
   return (
-    <AccordionRoot
-      collapsible
-      multiple
-      unmountOnExit
-      defaultValue={['']}
-      value={value}
-      onValueChange={(e) => setValue(e.value)}
-      className={styles.accordionRoot}>
-      {items.map((item, index) => (
-        <AccordionItem key={index} value={item.value.toString()} className={styles.accordionItem}>
-          <AccordionItemTrigger className={styles.accordionButton}>
+    <Accordion.Root collapsible multiple unmountOnExit defaultValue={['']} className={styles.accordionRoot}>
+      {items.map((item) => (
+        <Accordion.Item key={item.value} value={item.head} className={styles.accordionItem}>
+          <Accordion.ItemTrigger className={styles.accordionButton}>
             <h2>{item.head}</h2>
-          </AccordionItemTrigger>
-          <AccordionItemContent className={styles.accordionBody}>{item.body}</AccordionItemContent>
-        </AccordionItem>
+          </Accordion.ItemTrigger>
+          <LuChevronDown />
+          <Accordion.ItemContent className={styles.accordionBody}>{item.body}</Accordion.ItemContent>
+        </Accordion.Item>
       ))}
-    </AccordionRoot>
+    </Accordion.Root>
   );
 };

@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Separator } from '@chakra-ui/react';
 
 import { createClient } from 'utils/supabase/clientCSR';
+
+import { Separator } from 'components/ui/Separator/Separator';
 
 import styles from './FriendsButtons.module.scss';
 import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
@@ -116,7 +117,7 @@ export const FriendsButtons = ({
         )}
       </div>
 
-      {id === fid ? null : <Separator orientation="horizontal" width="95%" />}
+      {id === fid ? null : <Separator />}
     </>
   );
 };

@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import NextLink from 'next/link';
 import { createClient } from 'utils/supabase/clientCSR';
-import { Separator, IconButton, Link } from '@chakra-ui/react';
-import { Avatar } from 'components/atoms/Avatar/Avatar';
 
 import { MemberType, nameGroupTranslatedType, UserType } from 'types/global.types';
 
 import { sortMembers } from 'helpers/sorting';
 
+import { Avatar } from 'components/atoms/Avatar/Avatar';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
+import { Separator } from 'components/ui/Separator/Separator';
 
 import styles from './Members.module.scss';
 import group from 'public/group.svg';
@@ -171,30 +171,30 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
     <>
       <h2>Members list</h2>
       <p className={styles.roles}>{translated.members?.admin}</p>
-      <Separator orientation="horizontal" />
+      <Separator />
 
       <div className={styles.usersButton}>
         <Avatar src={profilePhotoAdmin} fallbackName={pseudonymAdmin} alt="administrator profile picture icon" />
         <NextLink href={`/user/${pseudonymAdmin}`} passHref>
-          <Link>{pseudonymAdmin}</Link>
+          {pseudonymAdmin}
         </NextLink>
       </div>
       <p className={styles.roles}>{translated.members?.moderators}</p>
-      <Separator orientation="horizontal" />
+      <Separator />
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
           <div className={styles.usersButton} key={index}>
             <Avatar src={!!profilePhoto ? profilePhoto : group} fallbackName={pseudonym} alt="my profile photo icon" />
             <NextLink href={`/user/${pseudonym}`} passHref>
-              <Link>{pseudonym}</Link>
+              {pseudonym}
             </NextLink>
             {admin && (
-              <IconButton
+              <button
                 type="submit"
                 aria-label={translated.members?.modsAria!}
                 onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, false)}>
                 <LuMinus />
-              </IconButton>
+              </button>
             )}
           </div>
         ))
@@ -205,21 +205,21 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
         <MoreButton nextElementsAction={nextModeratorsList} />
       )}
       <p className={styles.roles}>{translated.members?.anotherMembers}</p>
-      <Separator orientation="horizontal" />
+      <Separator />
       {membersArray.length > 0 ? (
         membersArray.map(({ usersGroupsId, pseudonym, profilePhoto }: MemberType, index) => (
           <div className={styles.usersButton} key={index}>
             <Avatar src={!!profilePhoto ? profilePhoto : group} fallbackName={pseudonym} alt="my profile photo icon" />
             <NextLink href={`/user/${pseudonym}`} passHref>
-              <Link>{pseudonym}</Link>
+              {pseudonym}
             </NextLink>
             {admin && (
-              <IconButton
+              <button
                 type="submit"
                 aria-label={translated.members?.addModAria!}
                 onClick={() => toggleModerators(usersGroupsId!, pseudonym, profilePhoto, index, true)}>
                 <LuPlus />
-              </IconButton>
+              </button>
             )}
           </div>
         ))

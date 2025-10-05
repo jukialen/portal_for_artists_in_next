@@ -1,8 +1,13 @@
 .icon {
+  width: 3rem;
+  height: 3rem;
   position: absolute;
+  font-size: 3rem;
+  border-color: transparent;
   top: 0;
   right: 0;
   z-index: 2;
+  color: var(--text);
 
   &:active {
     color: var(--third);
@@ -16,17 +21,45 @@
   display: none;
   position: absolute;
   justify-content: flex-end;
+
   z-index: 1;
 
   > button {
+    width: 9rem;
     top: 3rem;
     margin: .5rem .1rem 1rem .5rem;
+    border-color: var(--required);
   }
 
   .alert {
     position: absolute;
     top: 6.5rem;
     right: 0;
+  }
+}
+
+.content {
+  margin: auto;
+
+  .title {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  .actionButton {
+    .cancel {
+      border-color: var(--background);
+    }
+
+    .submit {
+      border-color: var(--required);
+      margin-left: 3px;
+    }
+  }
+
+  .closeButton {
+    color: var(--primary);
+    border-color: transparent;
   }
 }
 

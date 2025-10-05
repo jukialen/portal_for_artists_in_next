@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Separator } from '@chakra-ui/react';
 
 import { roles } from 'utils/roles';
 import { createClient } from 'utils/supabase/clientCSR';
@@ -12,6 +11,7 @@ import { useI18n, useScopedI18n } from 'locales/client';
 import { Links } from 'components/atoms/Links/Links';
 import { MoreButton } from 'components/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/atoms/Tile/Tile';
+import { Separator } from 'components/ui/Separator/Separator';
 
 import styles from './GroupUsers.module.scss';
 
@@ -183,7 +183,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
       </section>
 
       <h2 className={styles.title}>{tAccount('adminTitle')}</h2>
-      <Separator className={styles.divider} />
+      <Separator />
       {!!adminsArray && adminsArray.length > 0 ? (
         adminsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
@@ -195,7 +195,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
         <MoreButton nextElementsAction={nextAdminList} />
       )}
       <h2 className={styles.title}>{tAccount('modsTitle')}</h2>
-      <Separator className={styles.divider} />
+      <Separator />
       {!!moderatorsArray && moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
@@ -207,7 +207,7 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
         <MoreButton nextElementsAction={nextModeratorsList} />
       )}
       <h2 className={styles.title}>{tAccount('usersTitle')}</h2>
-      <Separator className={styles.divider} />
+      <Separator />
       {!!membersArray && membersArray.length > 0 ? (
         membersArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />

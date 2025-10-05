@@ -3,19 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from 'utils/supabase/clientCSR';
-import {
-  DialogActionTrigger,
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from 'components/ui/dialog';
-import { Button } from 'components/ui/button';
-import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
+import { Dialog } from '@ark-ui/react/dialog';
+import { Portal } from '@ark-ui/react/portal';
+
+import { useI18n, useScopedI18n } from 'locales/client';
 
 import { UserType } from 'types/global.types';
 
@@ -25,7 +16,6 @@ import styles from './DeleteAccount.module.scss';
 import { AiTwotoneDelete } from 'react-icons/ai';
 
 export const DeleteAccount = ({ userData }: { userData: UserType }) => {
-  const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState('');
   const t = useI18n();
@@ -37,7 +27,6 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
 
   const deletionUser = async () => {
     try {
-      setOpen(false);
       setDeleting(!deleting);
       setValues(tDeletionAccount('deletionAccount'));
 
@@ -71,30 +60,31 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
 
   return (
     <div className={styles.deleteDiv}>
-      <DialogRoot
-        lazyMount
-        open={open}
-        onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-        <DialogTrigger asChild>
-          <Button loading={deleting} loadingText="Deleting" variant="ghost" className={styles.button}>
+      <Dialog.Root lazyMount unmountOnExit>
+        <Dialog.Trigger asChild>
+          <button className={styles.button}>
             <AiTwotoneDelete />
-            {`${tDeletionAccount('button')} account`}
-          </Button>
-        </DialogTrigger>
-        <DialogContent className={styles.content}>
-          <DialogHeader className={styles.header}>
-            <DialogTitle>{tDeletionAccount('title')}</DialogTitle>
-          </DialogHeader>
+            {deleting && tDeletionAccount('deletionAccount')}
+            {!deleting && `${tDeletionAccount('button')} account`}
+          </button>
+        </Dialog.Trigger>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content className={styles.content}>
+              <Dialog.Title className={styles.header}>{tDeletionAccount('title')}</Dialog.Title>
 
-          <DialogBody className={styles.body}>{tDeletionAccount('body')}</DialogBody>
+              <Dialog.Description className={styles.body}>{tDeletionAccount('body')}</Dialog.Description>
 
-          <DialogFooter className={styles.footer}>
-            <DialogActionTrigger>{tDeletionAccount('cancel')}</DialogActionTrigger>
-            <Button onClick={deletionUser}>{tDeletionAccount('button')}</Button>
-          </DialogFooter>
-          <DialogCloseTrigger asChild />
-        </DialogContent>
-      </DialogRoot>
+              <footer className={styles.footer}>
+                <Dialog.CloseTrigger>{tDeletionAccount('cancel')}</Dialog.CloseTrigger>
+                <button onClick={deletionUser}>{tDeletionAccount('button')}</button>
+              </footer>
+              <Dialog.CloseTrigger asChild />
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
       {!!values && <Alerts valueFields={values} />}
     </div>
   );

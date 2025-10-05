@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Button, Input, Textarea } from '@chakra-ui/react';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
@@ -131,7 +130,7 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
         <Form className={styles.container__form}>
           <h2 className={styles.title}>{tr.title}</h2>
 
-          <Input
+          <input
             id="name"
             name="name"
             value={values.name}
@@ -142,7 +141,7 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
 
           <FormError nameError="groupName" />
 
-          <Textarea
+          <textarea
             id="description"
             name="description"
             value={values.description}
@@ -153,7 +152,7 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
 
           <FormError nameError="description" />
 
-          <Input
+          <input
             name="logo"
             type="file"
             accept=".jpg, .jpeg, .png, .webp, .avif"
@@ -162,14 +161,9 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
             className={styles.input}
           />
 
-          <Button
-            colorScheme="transparent"
-            color="black.800"
-            type="submit"
-            className={`button ${styles.submit__button}`}
-            aria-label={tr.ariaLabelButton}>
+          <button type="submit" className={`button ${styles.submit__button}`} aria-label={tr.ariaLabelButton}>
             {tr.send}
-          </Button>
+          </button>
 
           {!!valuesFields && <Alerts valueFields={valuesFields} />}
         </Form>

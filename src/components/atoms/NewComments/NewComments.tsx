@@ -1,7 +1,6 @@
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Button, Textarea } from '@chakra-ui/react';
 import { Avatar } from 'components/atoms/Avatar/Avatar';
 
 import { ResetFormType } from 'types/global.types';
@@ -67,7 +66,7 @@ export const NewComments = ({
           <div className={styles.comments}>
             <Avatar src={profilePhoto} fallbackName="my profile photo icon" alt="my profile photo icon" />
 
-            <Textarea
+            <textarea
               name="comment"
               id="comment"
               value={values.comment}
@@ -79,9 +78,9 @@ export const NewComments = ({
             />
           </div>
 
-          <Button type="submit" colorScheme="blue" display="flex" className={styles.addingButton}>
+          <button type="submit" className={styles.addingButton}>
             {tComments('newComButton')}
-          </Button>
+          </button>
 
           <ErrorMessage name="comment" />
         </Form>

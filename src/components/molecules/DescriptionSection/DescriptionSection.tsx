@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Button, Separator, IconButton, Textarea } from '@chakra-ui/react';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
@@ -12,6 +11,7 @@ import { useI18n, useScopedI18n } from 'locales/client';
 
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 import { FormError } from 'components/atoms/FormError/FormError';
+import { Separator } from 'components/ui/Separator/Separator';
 
 import styles from './DescriptionSection.module.scss';
 import { BiEdit } from 'react-icons/bi';
@@ -102,12 +102,11 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
           <Formik initialValues={initialValuesDes} validationSchema={schemaNewDes} onSubmit={updateDescription}>
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.form}>
-                <Textarea
+                <textarea
                   id="newDescription"
                   name="newDescription"
                   value={values.newDescription}
                   onChange={handleChange}
-                  resize="vertical"
                   placeholder={tDescription('textPlaceholder')}
                   aria-label={tDescription('textAria')}
                   className={
@@ -117,9 +116,9 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
 
                 <FormError nameError="newDescription" />
 
-                <Button type="submit" colorScheme="blue" className={styles.addingButton}>
+                <button type="submit" className={styles.addingButton}>
                   {tDescription('submit')}
-                </Button>
+                </button>
 
                 {!!valuesFields && <Alerts valueFields={valuesFields} />}
               </Form>
@@ -127,12 +126,12 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
           </Formik>
         )}
         {admin && (
-          <IconButton
+          <button
             className={styles.changeButton}
             aria-label={tDescription('iconButton')}
             onClick={() => setOpenDescriptionForm(!openDescriptionForm)}>
             <BiEdit />
-          </IconButton>
+          </button>
         )}
       </div>
 
@@ -147,12 +146,11 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
           <Formik initialValues={initialValuesReg} validationSchema={schemaNewReg} onSubmit={updateRegulations}>
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.form}>
-                <Textarea
+                <textarea
                   id="newRegulation"
                   name="newRegulation"
                   value={values.newRegulation}
                   onChange={handleChange}
-                  resize="vertical"
                   placeholder={tDescription('textPlaceholder')}
                   aria-label={tDescription('textAria')}
                   className={
@@ -162,9 +160,9 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
 
                 <FormError nameError="newRegulation" />
 
-                <Button type="submit" colorScheme="blue" className={styles.addingButton}>
+                <button type="submit" className={styles.addingButton}>
                   {tDescription('submit')}
-                </Button>
+                </button>
 
                 {!!valuesFields && <Alerts valueFields={valuesFields} />}
               </Form>
@@ -172,12 +170,12 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
           </Formik>
         )}
         {admin && (
-          <IconButton
+          <button
             className={styles.changeButton}
             aria-label={tDescription('iconButton')}
             onClick={() => setOpenUpRegulation(!openUpRegulation)}>
             <BiEdit />
-          </IconButton>
+          </button>
         )}
       </div>
     </section>

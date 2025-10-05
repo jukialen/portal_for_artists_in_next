@@ -6,9 +6,7 @@ import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Input } from '@chakra-ui/react/input';
-import { NativeSelectRoot, NativeSelectField } from '@chakra-ui/react/native-select';
-import { Textarea } from '@chakra-ui/react/textarea';
+import { Select, createListCollection } from '@ark-ui/react/select';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -20,6 +18,7 @@ import { FormError } from 'components/atoms/FormError/FormError';
 import { Alerts } from 'components/atoms/Alerts/Alerts';
 
 import styles from './ContactContainer.module.scss';
+import { LuChevronDown } from 'react-icons/lu';
 
 type ContactType = {
   title: string;
@@ -56,6 +55,8 @@ export const ContactContainer = ({ userData }: ContactContainerType) => {
     await resetForm(initialValuesForContact);
   };
 
+  const collection = createListCollection({ items: [tContact('suggestion'), tContact('problem')] });
+
   return (
     <div className={userData?.pseudonym ? styles.site__without__footer : styles.site}>
       <div className={styles.container}>
@@ -74,27 +75,37 @@ export const ContactContainer = ({ userData }: ContactContainerType) => {
           {({ values, handleChange, errors, touched }) => (
             <Form className={styles.form}>
               <div className={styles.select}>
-                <NativeSelectRoot
+                <Select.Root
+                  collection={collection}
                   onChange={handleChange}
+                  value={values.tags ? [values.tags] : []}
                   className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}>
-                  <NativeSelectField
-                    name="tags"
-                    value={values.tags}
-                    placeholder={tContact('chooseTitle')}
-                    onChange={() => console.log('mmm')}>
-                    <option role="option" value={tContact('suggestion')}>
-                      {tContact('suggestion')}
-                    </option>
-                    <option role="option" value={tContact('problem')}>
-                      {tContact('problem')}
-                    </option>
-                  </NativeSelectField>
-                </NativeSelectRoot>
+                  <Select.Control>
+                    <Select.Trigger name="tags" value={values.tags} onChange={() => console.log('mmm')}>
+                      <Select.ValueText placeholder={tContact('chooseTitle')} />
+                      <Select.Indicator>
+                        <LuChevronDown />
+                      </Select.Indicator>
+                    </Select.Trigger>
+                  </Select.Control>
+                  <Select.Positioner>
+                    <Select.Content>
+                      <Select.ItemGroup>
+                        {collection.items.map((item) => (
+                          <Select.Item key={item} item={item}>
+                            <Select.ItemText>{item}</Select.ItemText>
+                            <Select.ItemIndicator>✓</Select.ItemIndicator>
+                          </Select.Item>
+                        ))}
+                      </Select.ItemGroup>
+                    </Select.Content>
+                  </Select.Positioner>
+                </Select.Root>
               </div>
 
               <FormError nameError="tags" />
 
-              <Input
+              <input
                 name="title"
                 value={values.title}
                 onChange={handleChange}
@@ -104,7 +115,7 @@ export const ContactContainer = ({ userData }: ContactContainerType) => {
 
               <FormError nameError="title" />
 
-              <Textarea
+              <textarea
                 name="message"
                 value={values.message}
                 onChange={handleChange}
