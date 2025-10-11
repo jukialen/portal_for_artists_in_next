@@ -6,7 +6,7 @@ import { getI18n } from 'locales/server';
 import { LangType } from 'types/global.types';
 import { HeadCom } from 'constants/HeadCom';
 
-import { NewPasswordForm } from "components/molecules/NewPasswordForm/NewPasswordForm";
+import { NewPasswordForm } from 'components/functional/molecules/NewPasswordForm/NewPasswordForm';
 
 export const metadata: Metadata = HeadCom('The site for resetting password.');
 
@@ -25,8 +25,7 @@ export default async function NewPassword({ params }: { params: Promise<{ locale
     password: t('NavForm.password'),
     buttonAria: t('NewPassword.buttonAria'),
     send: t('AnotherForm.send'),
-  }
-  
-  return <NewPasswordForm translate={translate} />
-  
+  };
+
+  return <NewPasswordForm translate={translate} />;
 }

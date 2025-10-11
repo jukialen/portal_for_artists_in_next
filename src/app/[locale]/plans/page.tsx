@@ -9,8 +9,8 @@ import { LangType } from 'types/global.types';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { PlanBlock } from 'components/molecules/PlanBlock/PlanBlock';
-import { PlanWrapper } from 'components/organisms/PlanWrapper/PlanWrapper';
+import { PlanBlock } from 'components/ui/molecules/PlanBlock/PlanBlock';
+import { PlanWrapper } from 'components/functional/organisms/PlanWrapper/PlanWrapper';
 
 import styles from './page.module.scss';
 

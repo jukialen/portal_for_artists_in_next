@@ -7,7 +7,7 @@ import { getScopedI18n } from 'locales/server';
 import { HeadCom } from 'constants/HeadCom';
 import { ContainerType, LangType } from 'types/global.types';
 
-import { HomeImageContainers } from 'components/atoms/HomeImageContainers/HomeImageContainers';
+import { HomeImageContainers } from 'components/functional/atoms/HomeImageContainers/HomeImageContainers';
 
 import styles from './page.module.scss';
 import dark_mode from '../../../public/dark_mode.png';

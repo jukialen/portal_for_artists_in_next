@@ -73,6 +73,19 @@
       margin: 0.75rem 1rem;
       border-radius: 0 1rem/3rem;
       background-color: transparent;
+      border-color: var(--third);
+
+      &:hover {
+        border-color: var(--hover);
+      }
+
+      &:active {
+        border-color: var(--active);
+      }
+
+      &:focus {
+        border-color: var(--afocus);
+      }
     }
   }
 

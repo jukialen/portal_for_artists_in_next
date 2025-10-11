@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
-import { createServer } from '../../../../utils/supabase/clientSSR';
+import { createServer } from 'utils/supabase/clientSSR';
 
 import { getScopedI18n } from 'locales/server';
 
@@ -8,7 +8,7 @@ import { HeadCom } from 'constants/HeadCom';
 import { backUrl } from 'constants/links';
 import { GroupListType, LangType } from 'types/global.types';
 
-import { GroupList } from 'components/molecules/GroupList/GroupList';
+import { GroupList } from 'components/functional/molecules/GroupList/GroupList';
 
 export const metadata: Metadata = HeadCom('List of all groups');
 

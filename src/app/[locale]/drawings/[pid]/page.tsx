@@ -12,7 +12,7 @@ import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { DrawingsWrapper } from 'components/molecules/DrawingsWrapper/DrawingsWrapper';
+import { DrawingsWrapper } from 'components/wrappers/DrawingsWrapper/DrawingsWrapper';
 
 import styles from './page.module.scss';
 

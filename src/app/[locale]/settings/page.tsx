@@ -9,11 +9,11 @@ import { getI18n, getScopedI18n } from 'locales/server';
 import { HeadCom } from 'constants/HeadCom';
 import { FilesUploadType, LangType } from 'types/global.types';
 
-import { ChangePseuDescData } from 'components/atoms/ChangePseuDescData/ChangePseuDescData';
-import { LanguagesSettings } from 'components/atoms/LanguagesSettings';
-import { ModeContainer } from 'components/atoms/ModeContainer';
-import { DeleteAccount } from 'components/atoms/DeleteAccount/DeleteAccount';
-import { AccountData } from 'components/organisms/AccountData/AccountData';
+import { ChangePseuDescData } from 'components/functional/atoms/ChangePseuDescData/ChangePseuDescData';
+import { LanguagesSettings } from 'components/functional/atoms/LanguagesSettings';
+import { ModeContainer } from 'components/functional/atoms/ModeContainer';
+import { DeleteAccount } from 'components/functional/atoms/DeleteAccount/DeleteAccount';
+import { AccountData } from 'components/functional/organisms/AccountData/AccountData';
 
 import styles from './page.module.scss';
 

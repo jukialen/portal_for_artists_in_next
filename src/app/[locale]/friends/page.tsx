@@ -8,7 +8,7 @@ import { getI18n } from 'locales/server';
 import { getUserData } from 'helpers/getUserData';
 import { getFirstFriends } from 'utils/friends';
 
-import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
+import { FriendsList } from 'components/functional/molecules/FriendsList/FriendsList';
 
 export const metadata: Metadata = HeadCom('Subpage with another categories');
 

@@ -8,15 +8,15 @@ import { createClient } from 'utils/supabase/clientCSR';
 
 import { JoinUser, MemberType, nameGroupTranslatedType, PostsType, UserType } from 'types/global.types';
 
-import { Alerts } from 'components/atoms/Alerts/Alerts';
-import { Members } from 'components/atoms/Members/Members';
-import { AddingPost } from 'components/molecules/AddingPost/AddingPost';
-import { DescriptionSection } from 'components/molecules/DescriptionSection/DescriptionSection';
-import { Posts } from 'components/organisms/Posts/Posts';
+import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
+import { Members } from 'components/functional/atoms/Members/Members';
+import { AddingPost } from 'components/functional/molecules/AddingPost/AddingPost';
+import { DescriptionSection } from 'components/functional/molecules/DescriptionSection/DescriptionSection';
+import { Posts } from 'components/functional/organisms/Posts/Posts';
 
 import styles from './NameGroupPage.module.scss';
 import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
-import { Separator } from '../../ui/Separator/Separator';
+import { Separator } from 'components/ui/atoms/Separator/Separator';
 
 export const NameGroupPage = ({
   name,
@@ -49,12 +49,8 @@ export const NameGroupPage = ({
 
   const { push } = useRouter();
 
-  const selectedColor = '#FFD068';
-  const hoverColor = '#FF5CAE';
-  const activeColor = '#4F8DFF';
   const checkIcon = '1rem';
   const smallIcon = '1.5rem';
-  const zeroPadding = 0;
 
   const contentList = [
     translated.groupSections?.general,
@@ -188,103 +184,66 @@ export const NameGroupPage = ({
       )}
       <Separator />
 
-      <Tabs.Root className={styles.tabs} lazyMount fitted variant="subtle">
+      <Tabs.Root className={styles.tabs} lazyMount unmountOnExit role="tab" defaultValue={contentList[0]}>
         <Tabs.List className={styles.tablist} role="tablist">
-          {contentList.map((content, index) => (
-            <Tabs.Trigger
-              key={index}
-              _hover={{ borderColor: hoverColor }}
-              _active={{ borderColor: activeColor }}
-              _selected={{ borderColor: selectedColor }}
-              borderColor={activeColor}
-              className={styles.tab}
-              role="tab"
-              value={content!}>
-              {content}
-            </Tabs.Trigger>
-          ))}
-          <Tabs.Trigger
-            _hover={{ borderColor: hoverColor }}
-            _active={{ borderColor: activeColor }}
-            _selected={{ borderColor: selectedColor }}
-            borderColor={activeColor}
-            className={styles.tab}
-            role="tab"
-            value={contentList[0]!}>
+          <Tabs.Trigger className={styles.tab} role="tab" value={contentList[0]!}>
             {contentList[0]}
           </Tabs.Trigger>
           {join && (
-            <Tabs.Trigger
-              _hover={{ borderColor: hoverColor }}
-              _active={{ borderColor: activeColor }}
-              _selected={{ borderColor: selectedColor }}
-              borderColor={activeColor}
-              className={styles.tab}
-              role="tab"
-              value={contentList[1]!}>
+            <Tabs.Trigger className={styles.tab} role="tab" value={contentList[1]!}>
               {contentList[1]}
             </Tabs.Trigger>
           )}
-          <Tabs.Trigger
-            _hover={{ borderColor: hoverColor }}
-            _active={{ borderColor: activeColor }}
-            _selected={{ borderColor: selectedColor }}
-            borderColor={activeColor}
-            className={styles.tab}
-            role="tab"
-            value={contentList[2]!}>
+          <Tabs.Trigger className={styles.tab} role="tab" value={contentList[2]!}>
             {contentList[2]}
           </Tabs.Trigger>
-          <Tabs.Indicator rounded="l2" />
+          <Tabs.Indicator />
         </Tabs.List>
-
-        <Tabs.List padding={zeroPadding}>
-          <Tabs.Content value={contentList[0]!} padding={zeroPadding}>
-            <>
-              {join && (
-                <AddingPost
-                  groupId={joined.groupId!}
-                  translatedPost={translated.posts!}
-                  errorTr={translated.error!}
-                  authorId={userData?.id!}
-                  roleId={roleId}
-                />
-              )}
-              {join ? (
-                <Posts
-                  groupId={joined.groupId!}
-                  profilePhoto={userData?.profilePhoto!}
-                  userId={userData?.id!}
-                  name={name}
-                  firstPosts={firstPosts}
-                />
-              ) : (
-                <p className={styles.noPermission}>{translated.groupSections?.noPermission}</p>
-              )}
-            </>
-          </Tabs.Content>
-          {join && (
-            <Tabs.Content value={contentList[1]!} padding={zeroPadding}>
-              <Members
-                admin={joined.admin}
-                groupId={groupId}
-                name={name!}
-                usersGroupsId={usersGroupsId!}
-                members={members}
-                translated={translated}
-                userData={userData}
+        <Tabs.Content value={contentList[0]!}>
+          <>
+            {join && (
+              <AddingPost
+                groupId={joined.groupId!}
+                translatedPost={translated.posts!}
+                errorTr={translated.error!}
+                authorId={userData?.id!}
+                roleId={roleId}
               />
-            </Tabs.Content>
-          )}
-          <Tabs.Content value={contentList[2]!} padding={zeroPadding}>
-            <DescriptionSection
-              description={description}
-              regulation={regulation}
+            )}
+            {join ? (
+              <Posts
+                groupId={joined.groupId!}
+                profilePhoto={userData?.profilePhoto!}
+                userId={userData?.id!}
+                name={name}
+                firstPosts={firstPosts}
+              />
+            ) : (
+              <p className={styles.noPermission}>{translated.groupSections?.noPermission}</p>
+            )}
+          </>
+        </Tabs.Content>
+        {join && (
+          <Tabs.Content value={contentList[1]!}>
+            <Members
               admin={joined.admin}
-              groupId={groupId!}
+              groupId={groupId}
+              name={name!}
+              usersGroupsId={usersGroupsId!}
+              members={members}
+              translated={translated}
+              userData={userData}
             />
           </Tabs.Content>
-        </Tabs.List>
+        )}
+        <Tabs.Content value={contentList[2]!}>
+          <DescriptionSection
+            description={description}
+            regulation={regulation}
+            admin={joined.admin}
+            groupId={groupId!}
+          />
+        </Tabs.Content>
       </Tabs.Root>
     </>
   );

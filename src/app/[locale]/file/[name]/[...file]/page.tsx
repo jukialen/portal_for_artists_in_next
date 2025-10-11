@@ -12,7 +12,7 @@ import { getFileRoleId } from 'utils/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
 const FileContainer = dynamic(() =>
-  import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
+  import('components/functional/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
 
 type PropsType = {

@@ -8,8 +8,8 @@ import { LangType } from 'types/global.types';
 
 import { HeadCom } from 'constants/HeadCom';
 
-import { Providers } from 'components/atoms/Providers/Providers';
-import { FormSignIn } from 'components/atoms/FormSignIn/FormSignIn';
+import { Providers } from 'components/functional/atoms/Providers/Providers';
+import { FormSignIn } from 'components/functional/atoms/FormSignIn/FormSignIn';
 
 import styles from './page.module.scss';
 

@@ -8,8 +8,8 @@ import { HeadCom } from 'constants/HeadCom';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { Providers } from 'components/atoms/Providers/Providers';
-import { FormSignUp } from 'components/atoms/FormSignUp/FormSignUp';
+import { Providers } from 'components/functional/atoms/Providers/Providers';
+import { FormSignUp } from 'components/functional/atoms/FormSignUp/FormSignUp';
 
 import styles from './page.module.scss';
 

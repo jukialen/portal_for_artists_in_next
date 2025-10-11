@@ -10,7 +10,7 @@ import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { UpdateGroupLogo } from 'components/molecules/UpdateGroupLogo/UpdateGroupLogo';
+import { UpdateGroupLogo } from 'components/functional/molecules/UpdateGroupLogo/UpdateGroupLogo';
 import { NameGroupPage } from 'components/Views/NameGroupPage/NameGroupPage';
 
 import styles from './page.module.scss';

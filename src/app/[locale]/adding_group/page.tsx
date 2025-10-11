@@ -8,7 +8,7 @@ import { LangType } from 'types/global.types';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { AddingGroupForm } from 'components/molecules/AddingGroupForm/AddingGroupForm';
+import { AddingGroupForm } from 'components/functional/molecules/AddingGroupForm/AddingGroupForm';
 
 export const metadata: Metadata = HeadCom("User's adding some group");
 

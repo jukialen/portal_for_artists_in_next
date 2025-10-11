@@ -10,27 +10,31 @@ import { getUserData } from 'helpers/getUserData';
 import { supabaseStorageProfileUrl } from 'constants/links';
 import { FilesUploadType, FileType, FriendsListType, GroupUserType } from 'types/global.types';
 
-import { FriendsButtons } from 'components/atoms/FriendsButtons/FriendsButtons';
+import { FriendsButtons } from 'components/functional/atoms/FriendsButtons/FriendsButtons';
 
 const FriendsList = dynamic(() =>
-  import('components/molecules/FriendsList/FriendsList').then((mod) => mod.FriendsList),
+  import('components/functional/molecules/FriendsList/FriendsList').then((mod) => mod.FriendsList),
 );
-const GroupUsers = dynamic(() => import('components/organisms/GroupUsers/GroupUsers').then((mod) => mod.GroupUsers));
+const GroupUsers = dynamic(() =>
+  import('components/functional/organisms/GroupUsers/GroupUsers').then((mod) => mod.GroupUsers),
+);
 const PhotosGallery = dynamic(() =>
-  import('components/organisms/PhotosGallery/PhotosGallery').then((mod) => mod.PhotosGallery),
+  import('components/functional/organisms/PhotosGallery/PhotosGallery').then((mod) => mod.PhotosGallery),
 );
 const AnimatedGallery = dynamic(() =>
-  import('components/organisms/AnimatedGallery/AnimatedGallery').then((mod) => mod.AnimatedGallery),
+  import('components/functional/organisms/AnimatedGallery/AnimatedGallery').then((mod) => mod.AnimatedGallery),
 );
 const VideoGallery = dynamic(() =>
-  import('components/organisms/VideoGallery/VideoGallery').then((mod) => mod.VideoGallery),
+  import('components/functional/organisms/VideoGallery/VideoGallery').then((mod) => mod.VideoGallery),
 );
 const UpdateProfilePhotoOnAccount = dynamic(() =>
-  import('components/atoms/UpdateProfilePhotoOnAccount/UpdateProfilePhotoOnAccount').then(
+  import('components/functional/atoms/UpdateProfilePhotoOnAccount/UpdateProfilePhotoOnAccount').then(
     (main) => main.UpdateProfilePhotoOnAccount,
   ),
 );
-const FilesUpload = dynamic(() => import('components/molecules/FilesUpload/FilesUpload').then((fu) => fu.FilesUpload));
+const FilesUpload = dynamic(() =>
+  import('components/functional/molecules/FilesUpload/FilesUpload').then((fu) => fu.FilesUpload),
+);
 
 import styles from './ProfilePage.module.scss';
 import { RiArrowUpSLine } from 'react-icons/ri';

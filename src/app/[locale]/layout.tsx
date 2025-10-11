@@ -11,10 +11,10 @@ import { getUserData } from 'helpers/getUserData';
 
 import { ModeProvider } from 'providers/ModeProvider';
 
-import { SWStart } from 'components/atoms/SWStart';
-import { Aside } from 'components/organisms/Aside/Aside';
-import { Header } from 'components/organisms/Header/Header';
-import { UserHeader } from 'components/organisms/UserHeader/UserHeader';
+import { SWStart } from 'components/functional/atoms/SWStart';
+import { Aside } from 'components/functional/organisms/Aside/Aside';
+import { Header } from 'components/ui/organisms/Header/Header';
+import { UserHeader } from 'components/functional/organisms/UserHeader/UserHeader';
 
 import styles from './Layout.module.scss';
 import 'styles/reset.scss';

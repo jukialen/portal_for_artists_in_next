@@ -14,7 +14,9 @@ import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 
 const FileContainerClient = dynamic(() =>
-  import('components/organisms/FileContainerClient/FileContainerClient').then((fc) => fc.FileContainerClient),
+  import('components/functional/organisms/FileContainerClient/FileContainerClient').then(
+    (fc) => fc.FileContainerClient,
+  ),
 );
 
 import styles from './page.module.scss';

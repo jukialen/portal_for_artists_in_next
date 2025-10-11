@@ -11,11 +11,11 @@ import { getFirstFriends } from 'utils/friends';
 import { adminList, modsUsersList } from 'utils/groups';
 import { graphics, videosAnimations } from 'app/actions/files';
 
-import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
-import { AnimatedGallery } from 'components/organisms/AnimatedGallery/AnimatedGallery';
-import { GroupUsers } from 'components/organisms/GroupUsers/GroupUsers';
-import { PhotosGallery } from 'components/organisms/PhotosGallery/PhotosGallery';
-import { VideoGallery } from 'components/organisms/VideoGallery/VideoGallery';
+import { FriendsList } from 'components/functional/molecules/FriendsList/FriendsList';
+import { AnimatedGallery } from 'components/functional/organisms/AnimatedGallery/AnimatedGallery';
+import { GroupUsers } from 'components/functional/organisms/GroupUsers/GroupUsers';
+import { PhotosGallery } from 'components/functional/organisms/PhotosGallery/PhotosGallery';
+import { VideoGallery } from 'components/functional/organisms/VideoGallery/VideoGallery';
 
 import styles from './tabs.module.scss';
 import { RiArrowUpSLine } from 'react-icons/ri';

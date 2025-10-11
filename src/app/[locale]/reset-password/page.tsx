@@ -6,7 +6,7 @@ import { LangType } from 'types/global.types';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { ResetPasswordForm } from 'components/molecules/ResetPasswordForm/ResetPasswordForm';
+import { ResetPasswordForm } from 'components/functional/molecules/ResetPasswordForm/ResetPasswordForm';
 
 export const metadata: Metadata = HeadCom('The site for resetting password.');
 

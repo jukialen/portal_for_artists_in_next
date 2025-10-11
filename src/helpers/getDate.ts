@@ -1,5 +1,5 @@
 import { DateObjectType, LangType } from 'types/global.types';
-import { getCurrentLocale } from '../locales/server';
+import { getCurrentLocale } from 'locales/server';
 
 export const getDate = async (dateField: string, dataDateObject: DateObjectType) => {
   const locale: LangType = await getCurrentLocale();

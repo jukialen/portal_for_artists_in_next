@@ -15,10 +15,10 @@ import { dateData } from 'helpers/dateData';
 import { getFileRoleId } from 'utils/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { AppWrapper } from 'components/atoms/AppWrapper/AppWrapper';
-const ZeroFiles = dynamic(() => import('components/atoms/ZeroFiles/ZeroFiles').then((zf) => zf.ZeroFiles));
+import { AppWrapper } from 'components/wrappers/AppWrapper/AppWrapper';
+const ZeroFiles = dynamic(() => import('components/ui/atoms/ZeroFiles/ZeroFiles').then((zf) => zf.ZeroFiles));
 const FileContainer = dynamic(() =>
-  import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
+  import('components/functional/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
 
 import styles from './page.module.scss';

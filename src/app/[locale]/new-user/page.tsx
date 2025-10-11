@@ -6,7 +6,7 @@ import { LangType, Provider } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
 
-import { NewUserForm } from 'components/molecules/NewUserForm/NewUserForm';
+import { NewUserForm } from 'components/functional/molecules/NewUserForm/NewUserForm';
 import { createServer } from 'utils/supabase/clientSSR';
 
 export const metadata: Metadata = HeadCom('Site for new user');

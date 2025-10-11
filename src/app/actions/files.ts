@@ -1,14 +1,14 @@
 'use server';
 
-import { FileType, IndexType, Tags } from '../../types/global.types';
-import { createServer } from '../../utils/supabase/clientSSR';
-import { selectFiles } from '../../constants/selects';
-import { getFileRoleId } from '../../utils/roles';
-import { getDate } from '../../helpers/getDate';
-import { dateData } from '../../helpers/dateData';
+import { FileType, IndexType, Tags } from 'types/global.types';
+import { createServer } from 'utils/supabase/clientSSR';
+import { selectFiles } from 'constants/selects';
+import { getFileRoleId } from 'utils/roles';
+import { getDate } from 'helpers/getDate';
+import { dateData } from 'helpers/dateData';
 
 export const translated = async () => {
-  const { getScopedI18n } = await import('../../locales/server');
+  const { getScopedI18n } = await import('locales/server');
 
   const tComments = await getScopedI18n('Comments');
 

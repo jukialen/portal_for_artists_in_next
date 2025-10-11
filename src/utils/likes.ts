@@ -1,5 +1,5 @@
 //SELECT
-import { backUrl } from '../constants/links';
+import { backUrl } from 'constants/links';
 
 export const likeList = async (
   authorId: string,

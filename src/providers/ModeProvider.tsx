@@ -4,7 +4,7 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 
 import { ModeType } from 'types/global.types';
 
-import { AffixButton } from 'components/atoms/AffixButton/AffixButton';
+import { AffixButton } from 'components/ui/atoms/AffixButton/AffixButton';
 
 export const ModeContext = createContext({
   isMode: '',
