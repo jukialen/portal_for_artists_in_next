@@ -49,12 +49,10 @@ html {
 }
 
 body {
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  width: 100dvw;
+  min-height: 100cdvh;
   background-color: var(--background);
-  background-attachment: fixed;
-  background-size: cover;
-  min-height: calc(100vh + env(safe-area-inset-top) + env(safe-area-inset-bottom));
-  min-height: -webkit-fill-available;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 h1 {

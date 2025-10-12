@@ -1,6 +1,6 @@
 .login {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -8,6 +8,7 @@
   justify-self: center;
   padding-bottom: 4rem;
   margin: -7rem auto -1rem auto;
+  overflow: hidden;
 
   .orientation {
     display: flex;
@@ -72,7 +73,7 @@
   .login {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    height: calc(100vh - 4rem);
+    height: calc(100dvh - 4rem);
 
     .orientation {
       display: flex;
@@ -104,7 +105,7 @@
 
   @media (orientation: landscape) {
     .login {
-      height: 100vh;
+      height: 100dvh;
 
       .orientation {
         width: 33vw;

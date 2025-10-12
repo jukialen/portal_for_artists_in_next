@@ -71,7 +71,7 @@ div button.aside__right {
 
 div.drawer {
   width: 17rem;
-  max-width: 100vh;
+  max-width: 100dvh;
   background-color: transparent;
   margin-bottom: 4.5rem;
 
@@ -143,7 +143,7 @@ div.drawer {
 @media (min-width: 1024px) {
   .aside {
     width: 17rem;
-    height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

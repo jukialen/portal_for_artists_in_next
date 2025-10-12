@@ -2,10 +2,10 @@
   display: flex;
   flex-direction: column;
   max-width: 20rem;
-  margin: -2rem auto 0;
+  margin: 0 auto;
 
   .title {
-    margin: 2.5rem auto .5rem;
+    margin: 2.5rem auto;
     text-align: center;
     font-size: 1.8rem;
   }
@@ -13,35 +13,46 @@
   .inputForm,
   .inputForm__error {
     display: block;
-    width: 17rem;
-    max-width: 90%;
+    width: min(95dvw, 20rem);
     margin: 1rem auto 0.5rem;
+    border-radius: 1rem;
+    padding: 0.75rem 1rem;
     border-color: var(--third);
-    color: var(--text);
+    background-color: transparent;
+    font-size: 1rem;
 
     &::placeholder {
       color: inherit;
     }
   }
 
-  .showingPass {
-    height: 2rem;
-    width: 2rem;
-    margin: 1rem 1.2rem .5rem 0;
-    color: var(--background);
-    background-color: var(--primary);
-    border-color: var(--primary);
-  }
+  .inputGroup {
+    display: grid;
+    gap: 1rem;
+    position: relative;
 
-  .inputForm {
-    border-color: var(--third);
-
-    &:hover {
-      border-color: rgba(79, 141, 255, 0.7);
+    .showingPass {
+      height: 2rem;
+      width: 2rem;
+      position: absolute;
+      top: 1.4rem;
+      right: 0.5rem;
+      border-radius: 0.75rem;
+      color: var(--text);
+      background-color: var(--primary);
+      border-color: var(--primary);
     }
 
-    &__error {
-      border-color: var(--required);
+    .inputForm {
+      border-color: var(--third);
+
+      &:hover {
+        border-color: var(--third__opacity);
+      }
+
+      &__error {
+        border-color: var(--required);
+      }
     }
   }
 

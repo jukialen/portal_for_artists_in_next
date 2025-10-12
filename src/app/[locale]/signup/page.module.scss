@@ -1,6 +1,6 @@
 .create__account {
-  width: 100vw;
-  height: 100vh;
+  width: 100dvw;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -65,7 +65,7 @@
   .create__account {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    height: calc(100vh - 4rem);
+    height: calc(100dvh - 4rem);
 
     .orientation {
       display: flex;
@@ -102,7 +102,7 @@
 
   @media (orientation: landscape) {
     .create__account {
-      height: 100vh;
+      height: 100dvh;
 
       .orientation {
         height: inherit;

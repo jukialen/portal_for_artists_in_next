@@ -92,7 +92,7 @@ export const FormSignUp = ({
 
           <FormError nameError="email" />
 
-          <div>
+          <div className={styles.inputGroup}>
             <input
               name="password"
               type={show ? 'text' : 'password'}
