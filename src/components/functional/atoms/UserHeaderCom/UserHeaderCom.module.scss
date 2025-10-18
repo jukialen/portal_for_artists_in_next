@@ -12,9 +12,9 @@
     border-radius: 2rem;
     border-color: transparent;
     background-color: var(--primary__opacity);
-    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
+    box-shadow: var(--box-shadow);
+    -webkit-backdrop-filter: var(--backdrop-filter);
+    backdrop-filter: var(--backdrop-filter);
   }
 
   .menu_buttons {
@@ -70,9 +70,9 @@
   max-width: 23rem;
   border-radius: 2rem;
   background-color: var(--primary__opacity);
-  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  box-shadow: var(--box-shadow);
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  backdrop-filter: var(--backdrop-filter);
 
   .menu_buttons {
     margin: auto;
@@ -95,7 +95,7 @@
   background-color: var(--secondary__opacity);
   transform: translateY(8.5rem);
   transition: transform 0.9s 0.1s ease-in-out;
-  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
   -webkit-backdrop-filter: blur(3.5px);
   backdrop-filter: blur(3.5px);
 
@@ -147,9 +147,9 @@
   scroll-behavior: smooth;
   overflow: hidden auto;
   z-index: 2;
-  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  box-shadow: var(--box-shadow);
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  backdrop-filter: var(--backdrop-filter);
 
   .closeButton {
     width: inherit;
@@ -218,7 +218,7 @@ div.search__active {
   padding: 0.2rem 0 0.4rem;
   border-radius: 0.5rem 0 0 0.5rem;
   background-color: var(--primary__opacity);
-  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
   -webkit-backdrop-filter: blur(3.5px);
   backdrop-filter: blur(3.5px);
 

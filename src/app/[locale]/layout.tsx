@@ -19,7 +19,7 @@ import { UserHeader } from 'components/functional/organisms/UserHeader/UserHeade
 import styles from './Layout.module.scss';
 import 'styles/reset.scss';
 import 'styles/global.scss';
-import 'styles/_variables.scss';
+import 'styles/_variables.css';
 
 type ChildrenType = {
   children: ReactNode;
