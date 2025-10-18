@@ -59,7 +59,7 @@ export const AsideWrapper = ({
       <Dialog.Root open={openDr} onOpenChange={() => setOpenDr(!openDr)}>
         <Portal>
           <Dialog.Backdrop />
-          <Dialog.Content style={{ width: undefined }} className={styles.drawer}>
+          <Dialog.Content className={styles.drawer}>
             <Dialog.Description className={styles.drawerBody}>
               <div className={styles.blur}></div>
 
