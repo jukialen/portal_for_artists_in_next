@@ -85,9 +85,12 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     translated.videos,
   ];
 
+  const clearInput = () => setSearchValues('');
+
   const toggleSearch = () => {
     if (search) {
       setSearch(false);
+      !!searchValues && clearInput();
     } else {
       setSearch(!search);
       !!searchInputRef.current && searchInputRef.current.focus();
@@ -221,13 +224,11 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     }
   };
 
-  const clearInput = () => setSearchValues('');
-
   const closeInputAndDIalog = (e: Dialog.OpenChangeDetails) => {
     setOpen(e.open);
     if (!e.open) {
       setSearch(false);
-      setSearchValues('');
+      clearInput();
       setResults([]);
     }
   };
@@ -310,11 +311,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           onChange={updateVal}
           onKeyDown={handleKeyDown}
         />
-        {!!searchValues && (
-          <button className={styles.clearPhrase} onClick={clearInput}>
-            <IoCloseOutline />
-          </button>
-        )}
         <span className={styles.shortcut}>Ctrl/Cmd+k</span>
         <button className={styles.rightButton} aria-label="search phrases" onClick={searching}>
           <IoSearch />

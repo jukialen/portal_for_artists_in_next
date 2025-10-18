@@ -1,13 +1,16 @@
 .mobileAlaTabbar,
 .otherAlaTabbar {
   width: 100dvw;
+  height: max-content;
   display: flex;
   justify-content: space-between;
   margin: 0 auto;
 
   .leftPart {
+    display: flex;
     padding: 0 0.3rem;
     border-radius: 2rem;
+    border-color: transparent;
     background-color: var(--primary__opacity);
     box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
     -webkit-backdrop-filter: blur(5px);
@@ -19,10 +22,13 @@
     width: 4.1rem;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    border-radius: 2rem;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
+    border-radius: 2rem;
+    border-color: transparent;
 
     &:active {
       p,
@@ -76,8 +82,10 @@
 .search {
   width: 100%;
   max-width: 31rem;
+  display: grid;
+  grid-template-columns: 1fr 2.5rem;
   position: absolute;
-  bottom: 4.5rem;
+  bottom: 5rem;
   left: 0;
   right: 0;
   margin: auto;
@@ -93,22 +101,25 @@
 
   input::placeholder,
   input {
+    height: 2.5rem;
+    padding: 0 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    background: transparent;
+    border: var(--text);
     color: var(--text);
   }
 
-  div {
-    right: 0;
-    max-width: 9rem;
-
-    .rightButton,
-    svg {
-      background-color: inherit;
-      border-color: transparent;
-      width: 1.6rem;
-      height: 1.6rem;
-      margin-right: 0.3rem;
-      cursor: pointer;
-    }
+  .rightButton {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem;
+    margin-right: 0.3rem;
+    border-radius: 0.75rem;
+    border-color: transparent;
+    cursor: pointer;
   }
 }
 
@@ -116,30 +127,11 @@
   display: none;
 }
 
-.clearPhrase {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 3.9rem;
-  color: var(--text);
-  z-index: 22222;
-
-  svg {
-    width: 1.5rem;
-    height: 1.5rem;
-
-    path {
-      stroke-width: 3rem;
-    }
-  }
-}
-
 .searching {
   width: 100%;
   max-width: 31rem;
   min-height: 10rem;
-  max-height: calc(100dvh - 8rem);
+  max-height: calc(100dvh - 8.8rem);
   position: inherit;
   top: 0;
   left: 0;
@@ -165,9 +157,13 @@
     justify-content: flex-end;
 
     button {
-      margin-right: 0.5rem;
-      margin-top: 0.5rem;
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 0.5rem;
+      border-color: transparent;
 
       svg {
         width: 1.5rem;
@@ -253,7 +249,6 @@ div.search__active {
     button {
       background-color: transparent;
       border: transparent;
-      color: black;
       font-weight: normal;
     }
   }
@@ -284,27 +279,20 @@ ul.menu_profile__active {
 
   .search {
     bottom: unset;
-    top: 3.5rem;
-    transform: translateY(-8rem);
+    top: 8.2rem;
+    transform: translateY(-11rem);
   }
 
   .shortcut {
     display: flex;
     position: absolute;
+    top: 0.59rem;
     right: 3.9rem;
     border: 2px solid var(--opacity);
-    padding: 0.3rem 0.6rem;
+    padding: 0.5rem 1rem;
     background: var(--opacity);
     border-radius: 0.25rem;
     opacity: 0.75;
-  }
-
-  .clearPhrase {
-    right: 11.5rem;
-  }
-
-  .searching {
-    top: 7rem;
   }
 
   .menu_profile {
@@ -324,10 +312,21 @@ ul.menu_profile__active {
 
     .menu_buttons {
       width: unset;
-      gap: revert-layer;
       flex-direction: row;
+      padding: 0.25rem 0.5rem;
       font-size: 1rem;
     }
+  }
+
+  .search {
+    max-width: 38rem;
+    top: -5rem;
+    transform: translateY(9rem);
+  }
+
+  .searching {
+    top: 7.6rem;
+    max-width: 38rem;
   }
 }
 
