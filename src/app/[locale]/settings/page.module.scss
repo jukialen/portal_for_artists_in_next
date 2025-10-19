@@ -1,5 +1,5 @@
 .settings {
-  width: 90vw;
+  width: min(90dvw, 38rem);
   margin: -3rem auto 5rem;
 
   h2 {
@@ -33,11 +33,6 @@
   }
 
   @media (min-width: 768px) {
-    max-width: 31rem;
     margin-top: 3rem;
-  }
-
-  @media (min-width: 1250px) {
-    max-width: 35rem;
   }
 }

@@ -313,8 +313,13 @@ ul.menu_profile__active {
     .menu_buttons {
       width: unset;
       flex-direction: row;
-      padding: 0.25rem 0.5rem;
+      padding: 0.5rem;
       font-size: 1rem;
+
+      svg {
+        width: 1.6rem;
+        height: auto;
+      }
     }
   }
 

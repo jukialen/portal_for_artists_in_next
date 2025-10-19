@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from '../../../../shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 

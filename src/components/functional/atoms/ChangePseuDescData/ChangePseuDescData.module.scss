@@ -22,10 +22,10 @@
 
     .input,
     .description {
-      padding: 0.45rem 1rem;
-      max-width: 17.5rem;
-      height: 2.5rem;
+      width: min(95dvw, 21.5rem);
+      height: 3rem;
       margin: 0.5rem auto;
+      padding: 0.75rem;
       border-color: var(--third);
       border-radius: 1rem;
       color: var(--text__opacity);
@@ -50,10 +50,10 @@
 }
 
 .button {
-  width: 100%;
+  width: min(95dvw, 21.5rem);
   height: 2.5rem;
   margin: 1rem auto;
-  border-radius: 1rem;
+  //border-radius: 1rem;
   font-weight: bold;
   border: 0.1rem solid var(--secondary);
 }

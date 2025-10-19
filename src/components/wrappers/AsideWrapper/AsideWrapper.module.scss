@@ -74,7 +74,9 @@ div button.aside__right {
 div.drawer {
   background-color: transparent;
   margin-bottom: 4.5rem;
-  position: absolute;
+  position: fixed;   /* upewnij się, że jest przyklejony do viewportu */
+  top: 0;
+  left: 0;
   z-index: 1;
 
   .drawerBody {

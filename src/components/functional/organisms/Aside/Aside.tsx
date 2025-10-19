@@ -6,7 +6,7 @@ import { backUrl } from 'constants/links';
 import { FriendsListArrayType, GroupsType } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
-import { getUserData } from '../../../../helpers/getUserData';
+import { getUserData } from 'helpers/getUserData';
 
 const AsideWrapper = dynamic(() =>
   import('components/wrappers/AsideWrapper/AsideWrapper').then((aw) => aw.AsideWrapper),

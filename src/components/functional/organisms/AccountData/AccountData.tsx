@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from '../../../../shemasValidation/schemaValidation';
-
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Popover } from '@ark-ui/react/popover';
 
 import { useI18n, useScopedI18n } from 'locales/client';
@@ -160,8 +159,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
               </button>
             </Popover.Trigger>
             <Popover.Content className={styles.subscriptionForm}>
-              <Popover.Arrow className={styles.arrow} />
-              <Popover.Title>{tAccount('aData.Premium.header')}</Popover.Title>
+              <Popover.Title className={styles.titleSubscription}>{tAccount('aData.Premium.header')}</Popover.Title>
               <Popover.Description>
                 <div className={styles.selectSub}>
                   <Formik

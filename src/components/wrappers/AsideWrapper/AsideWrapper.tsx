@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { Dialog } from '@ark-ui/react/dialog';
+import { Portal } from '@ark-ui/react/portal';
 
 import { FriendsListArrayType, GroupsType } from 'types/global.types';
 
@@ -10,8 +12,6 @@ import { Friends } from 'components/functional/atoms/Friends/Friends';
 
 import styles from './AsideWrapper.module.scss';
 import { RiArrowUpSLine } from 'react-icons/ri';
-import { Dialog } from '@ark-ui/react/dialog';
-import { Portal } from '@ark-ui/react/portal';
 
 export const AsideWrapper = ({
   asideCategory,
