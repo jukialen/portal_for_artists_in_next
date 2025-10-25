@@ -201,7 +201,7 @@
 }
 
 div.search__active {
-  transform: translate(0);
+  transform: translateY(0);
   transition: transform 0.9s 0.1s ease-in-out;
 }
 
@@ -280,6 +280,10 @@ ul.menu_profile__active {
   .search {
     bottom: unset;
     top: 8.2rem;
+    transform: translateY(0);
+  }
+
+  div.search__active {
     transform: translateY(-11rem);
   }
 
@@ -326,6 +330,9 @@ ul.menu_profile__active {
   .search {
     max-width: 38rem;
     top: -5rem;
+  }
+
+  div.search__active {
     transform: translateY(9rem);
   }
 
