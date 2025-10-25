@@ -57,19 +57,19 @@ export const AsideWrapper = ({
       )}
 
       <Dialog.Root open={openDr} onOpenChange={() => setOpenDr(!openDr)}>
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Content className={styles.drawer}>
-            <Dialog.Description className={styles.drawerBody}>
-              <div className={styles.blur}></div>
+        {/*<Portal>*/}
+        <Dialog.Backdrop />
+        <Dialog.Content className={styles.drawer}>
+          <Dialog.Description className={styles.drawerBody}>
+            <div className={styles.blur}></div>
 
-              {asideBody()}
-            </Dialog.Description>
-            <button className={styles.drawer__right} aria-label="right menu button" onClick={() => setOpenDr(false)}>
-              <RiArrowUpSLine />
-            </button>
-          </Dialog.Content>
-        </Portal>
+            {asideBody()}
+          </Dialog.Description>
+          <button className={styles.drawer__right} aria-label="right menu button" onClick={() => setOpenDr(false)}>
+            <RiArrowUpSLine />
+          </button>
+        </Dialog.Content>
+        {/*</Portal>*/}
       </Dialog.Root>
     </>
   );

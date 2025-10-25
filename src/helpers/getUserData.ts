@@ -16,9 +16,6 @@ export const getUserData = async (): Promise<UserType | undefined> => {
 
     let { data: fileData } = await supabase.from('Files').select('fileUrl').eq('authorId', id);
 
-    console.log('data', data);
-    console.log('fileData', fileData);
-
     if (data) {
       return {
         id,

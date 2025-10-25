@@ -11,7 +11,8 @@
 }
 
 .aside,
-div.drawer {
+div.drawer,
+div.drawer__active {
   width: min(100dvw, 20rem);
   background-color: var(--secondary__opacity);
   box-shadow: var(--box-shadow);
@@ -72,9 +73,8 @@ div button.aside__right {
 }
 
 div.drawer {
-  background-color: transparent;
   margin-bottom: 4.5rem;
-  position: fixed;   /* upewnij się, że jest przyklejony do viewportu */
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 1;
@@ -85,6 +85,7 @@ div.drawer {
     flex-direction: column;
     justify-content: flex-start;
     padding-top: 1rem;
+    overflow-y: scroll;
     background-color: var(--secondary__opacity);
     backdrop-filter: blur(2px);
     color: var(--text);
@@ -117,6 +118,17 @@ div.drawer {
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+  }
+
+  [data-part='content'] {
+    transition: transform 0.9s 0.1s ease-in-out;
+
+    &[data-state='open'] {
+      transform: translateY(0);
+    }
+    &[data-state='closed'] {
+      transform: translateY(-20rem);
     }
   }
 }
