@@ -9,15 +9,30 @@
   border: 0.1rem solid var(--primary);
   border-radius: 0.75rem;
   background-color: var(--primary);
-  color: black;
+  color: var(--text);
 }
 
 .logoContent {
+  width: min(100dvw, 25rem);
+  flex-direction: column;
+  position: absolute;
+  top: auto;
+  left: -6.5rem;
   margin: auto;
+  border-radius: 1rem;
   background-color: var(--background);
+  z-index: 1;
+
+  [data-state='open'] {
+    display: flex;
+  }
+
+  [data-state='closed'] {
+    display: none;
+  }
 
   .logoHeader {
-    margin: 2rem 2rem 1.5rem;
+    margin: 2rem;
     color: var(--primary);
   }
 
@@ -34,6 +49,17 @@
       border-radius: 1rem;
       border: 1px solid var(--third);
       color: var(--text__opacity);
+
+      &::-webkit-file-upload-button {
+        border: none;
+        padding: 0.5rem 1rem;
+        margin-right: 0.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background 0.3s;
+        background-color: var(--primary);
+        color: var(--background);
+      }
     }
 
     .filePickerButton {
@@ -56,11 +82,34 @@
   }
 
   .logoFooter {
-    margin: 1rem 2rem 1.5rem;
-  }
+    display: flex;
+    justify-content: flex-end;
+    margin: 2rem;
 
-  .closeTrigger {
-    color: var(--primary);
-    border-color: transparent;
+    button {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      border-color: transparent;
+    }
+
+    .cancel {
+      color: var(--primary);
+    }
+
+    .edit {
+      background-color: var(--third);
+    }
+  }
+}
+
+#logoContentPreview {
+  top: -11rem;
+}
+
+@media (min-width: 768px) {
+  .logoContent {
+    left: 0;
+    top: -5rem;
   }
 }

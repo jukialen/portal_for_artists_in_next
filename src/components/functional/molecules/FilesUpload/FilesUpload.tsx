@@ -57,9 +57,14 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
     shortDescription: SchemaValidation().shortDescription,
   });
 
+  const closePreviewPhoto = () => {
+    setPreviewUrl(null);
+    setFile(null);
+  };
+
   useEffect(() => {
     if (!file) {
-      setPreviewUrl(null);
+      closePreviewPhoto();
       return;
     }
 
@@ -76,7 +81,7 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
       setFile(e.target.files[0]);
       setRequired(false);
     } else {
-      setFile(null);
+      closePreviewPhoto();
       setRequired(true);
     }
   };
@@ -168,7 +173,7 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
       }
 
       setValuesFields(tAnotherForm('uploadFile'));
-      setFile(null);
+      closePreviewPhoto();
       setRequired(false);
       resetForm(initialValues);
     } catch (e) {
@@ -193,12 +198,13 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
   return (
     <Dialog.Root
       lazyMount
+      restoreFocus
       open={open}
       onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
       <Dialog.Trigger asChild>
         <button aria-label="new logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
-          {t('newFile')}
           <MdUploadFile />
+          {t('newFile')}
         </button>
       </Dialog.Trigger>
 
@@ -206,7 +212,7 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
         <div className={styles.modelContentHeader}>
           <Dialog.Title>{tAnotherForm('fileTitle')}</Dialog.Title>
         </div>
-        <Dialog.Description className={styles.modal}>
+        <Dialog.Description>
           <Formik
             initialValues={initialValues}
             validationSchema={schemaFile}
@@ -246,9 +252,9 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
                     className={!file && required ? styles.input__error : styles.input}
                   />
                 )}
-                {!!previewUrl && (
-                  <Image src={previewUrl} alt="preview new logo" fill priority className={styles.filePickerImage} />
-                )}
+
+                {!!previewUrl && <img src={previewUrl} alt="preview new logo" className={styles.filePickerImage} />}
+
                 <p className={styles.error}>{!file && required && t('NavForm.validateRequired')}</p>
 
                 <textarea
@@ -276,16 +282,15 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
                 {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
 
                 <div className={styles.buttons}>
-                  <button type="submit" onClick={() => setOpen(false)}>
+                  <Dialog.CloseTrigger onClick={closePreviewPhoto}>
                     {t('DeletionFile.cancelButton')}
-                  </button>
+                  </Dialog.CloseTrigger>
                   <button type="submit">{t('Description.submit')}</button>
                 </div>
               </Form>
             )}
           </Formik>
         </Dialog.Description>
-        <Dialog.CloseTrigger className={styles.closeButton} />
       </Dialog.Content>
     </Dialog.Root>
   );

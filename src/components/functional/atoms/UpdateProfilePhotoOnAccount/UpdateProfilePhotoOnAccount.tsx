@@ -40,9 +40,14 @@ export const UpdateProfilePhotoOnAccount = ({
 
   const tAnotherForm = useScopedI18n('AnotherForm');
 
+  const closePreviewPhoto = () => {
+    setPreviewUrl(null);
+    setNewLogo(null);
+  };
+
   useEffect(() => {
     if (!newLogo) {
-      setPreviewUrl(null);
+      closePreviewPhoto();
       return;
     }
 
@@ -59,7 +64,7 @@ export const UpdateProfilePhotoOnAccount = ({
       setNewLogo(e.target.files[0]);
       setRequired(false);
     } else {
-      setNewLogo(null);
+      closePreviewPhoto();
       setRequired(true);
     }
   };
@@ -111,7 +116,7 @@ export const UpdateProfilePhotoOnAccount = ({
           <MdCameraEnhance />
         </button>
       </Dialog.Trigger>
-      <Dialog.Content className={styles.logoContent}>
+      <Dialog.Content className={styles.logoContent} id={!!newLogo ? styles.logoContentPreview : ''}>
         <Dialog.Title className={styles.logoHeader}>Update logo</Dialog.Title>
 
         <Dialog.Description className={!newLogo && required ? styles.logBody__error : styles.logBody}>
@@ -127,14 +132,13 @@ export const UpdateProfilePhotoOnAccount = ({
           {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
         </Dialog.Description>
         <div className={styles.logoFooter}>
-          <button className={styles.cancel} onChange={() => setNewLogo(null)}>
+          <Dialog.CloseTrigger className={styles.cancel} onClick={closePreviewPhoto}>
             {tCurrPrPhoto!.cancelButton}
-          </button>
+          </Dialog.CloseTrigger>
           <button type="submit" className={styles.edit} onClick={updateLogo}>
             {tCurrPrPhoto!.submit}
           </button>
         </div>
-        <Dialog.CloseTrigger className={styles.closeTrigger} onChange={() => setNewLogo(null)} />
       </Dialog.Content>
     </Dialog.Root>
   );

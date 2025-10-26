@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Dialog } from '@ark-ui/react/dialog';
-import { Portal } from '@ark-ui/react/portal';
 
 import { FriendsListArrayType, GroupsType } from 'types/global.types';
 
@@ -56,8 +55,7 @@ export const AsideWrapper = ({
         </button>
       )}
 
-      <Dialog.Root open={openDr} onOpenChange={() => setOpenDr(!openDr)}>
-        {/*<Portal>*/}
+      <Dialog.Root immediate open={openDr} onOpenChange={() => setOpenDr(!openDr)}>
         <Dialog.Backdrop />
         <Dialog.Content className={styles.drawer}>
           <Dialog.Description className={styles.drawerBody}>
@@ -69,7 +67,6 @@ export const AsideWrapper = ({
             <RiArrowUpSLine />
           </button>
         </Dialog.Content>
-        {/*</Portal>*/}
       </Dialog.Root>
     </>
   );

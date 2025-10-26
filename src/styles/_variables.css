@@ -16,6 +16,7 @@
   --background__opacity: hsla(0, 0%, 97%, 0.9);
   --required: hsl(0, 100%, 37%);
   --box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
+  --modal-box-shadow: 0 0 1rem 1rem var(--background__opacity);
   --backdrop-filter: blur(5px);
   --opacity: hsl(0, 0%, 100%, 0.36);
   --google__provider: hsl(4, 65%, 55%);

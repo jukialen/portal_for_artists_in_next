@@ -65,9 +65,10 @@
   padding: 0.5rem 1rem;
   margin: 1rem auto;
   font-size: 1.5rem;
-  border: 1px solid var(--text);
   border-radius: 0.5rem;
   justify-content: space-between;
+  border: 1px solid var(--background__opacity);
+  background-color: var(--background__opacity);
 
   span {
     color: var(--text);
