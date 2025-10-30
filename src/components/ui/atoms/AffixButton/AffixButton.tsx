@@ -9,10 +9,8 @@ export const AffixButton = () => {
   const [visible, setVisible] = useState<boolean>(false);
 
   const toggleVisible = () => {
-    if (typeof document !== 'undefined') {
-      const scrolled = document.documentElement.scrollTop;
-      scrolled > 300 ? setVisible(true) : setVisible(false);
-    }
+    const scrolled = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+    setVisible(scrolled > 300);
   };
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -23,8 +21,8 @@ export const AffixButton = () => {
   }, []);
 
   return (
-    <button className={styles.upBox} onClick={scrollToTop}>
-      <IoIosArrowUp className={visible ? styles.up__active : styles.up} aria-label="top of page button" />
+    <button className={visible ? styles.upBox__active : styles.upBox} onClick={scrollToTop}>
+      <IoIosArrowUp className={styles.up} aria-label="top of page button" />
     </button>
   );
 };

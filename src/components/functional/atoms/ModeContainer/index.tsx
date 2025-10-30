@@ -1,6 +1,7 @@
 'use client';
 
 import { useContext, useState } from 'react';
+import dynamic from 'next/dynamic';
 
 import { darkMode } from 'constants/links';
 import { ModeType } from 'types/global.types';
@@ -10,7 +11,9 @@ import { ModeContext } from 'providers/ModeProvider';
 import { useScopedI18n } from 'locales/client';
 
 import styles from './ModeContainer.module.scss';
-import { LuSun } from 'react-icons/lu';
+const LuSun = dynamic(() => import('react-icons/lu').then((mod) => mod.LuSun), {
+  ssr: false,
+});
 import { RxChevronDown } from 'react-icons/rx';
 import { HiMoon } from 'react-icons/hi2';
 

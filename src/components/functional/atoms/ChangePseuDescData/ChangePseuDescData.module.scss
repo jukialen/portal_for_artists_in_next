@@ -9,7 +9,7 @@
     justify-items: flex-start;
 
     &:first-child input {
-      padding: 0.45rem;
+      padding: 0.45rem 0;
       border-radius: 1rem;
 
       color: var(--text__opacity);
@@ -21,23 +21,44 @@
     }
 
     .input,
-    .description {
+    .description,
+    .input__error,
+    .description__error {
       width: min(95dvw, 21.5rem);
       height: 3rem;
       margin: 0.5rem auto;
       padding: 0.75rem;
-      border-color: var(--third);
       border-radius: 1rem;
-      color: var(--text__opacity);
+      resize: vertical;
+      background-color: var(--background);
+      border-color: var(--third);
+      color: var(--text);
 
       &::placeholder {
         color: var(--text__opacity);
       }
 
-      &__error {
-        border-color: var(--required);
-        color: var(--text-required);
+      &::-webkit-file-upload-button {
+        border: none;
+        padding: 0.5rem 1rem;
+        margin-right: 0.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background 0.3s;
+        background-color: var(--primary);
+        color: var(--background);
       }
+    }
+
+    .description {
+      min-height: 3rem;
+    }
+
+    .input__error,
+    .description__error {
+      min-height: 3rem;
+      border-color: var(--required);
+      color: var(--text-required);
     }
   }
 
@@ -47,13 +68,4 @@
     font-size: 1.2rem;
     color: var(--required);
   }
-}
-
-.button {
-  width: min(95dvw, 21.5rem);
-  height: 2.5rem;
-  margin: 1rem auto;
-  //border-radius: 1rem;
-  font-weight: bold;
-  border: 0.1rem solid var(--secondary);
 }

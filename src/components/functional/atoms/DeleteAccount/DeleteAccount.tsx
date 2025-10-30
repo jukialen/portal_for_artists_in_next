@@ -70,19 +70,19 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
         </Dialog.Trigger>
         <Portal>
           <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content className={styles.content}>
-              <Dialog.Title className={styles.header}>{tDeletionAccount('title')}</Dialog.Title>
+          {/*<Dialog.Positioner>*/}
+          <Dialog.Content className={styles.content}>
+            <Dialog.Title className={styles.header}>{tDeletionAccount('title')}</Dialog.Title>
 
-              <Dialog.Description className={styles.body}>{tDeletionAccount('body')}</Dialog.Description>
+            <Dialog.Description className={styles.body}>{tDeletionAccount('body')}</Dialog.Description>
 
-              <footer className={styles.footer}>
-                <Dialog.CloseTrigger>{tDeletionAccount('cancel')}</Dialog.CloseTrigger>
-                <button onClick={deletionUser}>{tDeletionAccount('button')}</button>
-              </footer>
-              <Dialog.CloseTrigger asChild />
-            </Dialog.Content>
-          </Dialog.Positioner>
+            <footer className={styles.footer}>
+              <Dialog.CloseTrigger>{tDeletionAccount('cancel')}</Dialog.CloseTrigger>
+              <button onClick={deletionUser}>{tDeletionAccount('button')}</button>
+            </footer>
+            <Dialog.CloseTrigger asChild />
+          </Dialog.Content>
+          {/*</Dialog.Positioner>*/}
         </Portal>
       </Dialog.Root>
       {!!values && <Alerts valueFields={values} />}

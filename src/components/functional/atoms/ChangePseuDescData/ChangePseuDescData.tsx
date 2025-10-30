@@ -136,10 +136,7 @@ export const ChangePseuDescData = ({
         <Form className={styles.form}>
           <div className={styles.container}>
             {isFileAccessApiSupported ? (
-              <button
-                type="button"
-                onClick={() => handleFile()}
-                className={`${styles.button} ${styles.filePickerButton}`}>
+              <button type="button" onClick={() => handleFile()} className={`${styles.filePickerButton} button`}>
                 {tAnotherForm('profilePhoto')}
               </button>
             ) : (
@@ -200,7 +197,7 @@ export const ChangePseuDescData = ({
           )}
 
           <button
-            className={`${styles.button} button`}
+            className="button"
             type="submit"
             aria-label={tAccount('profile.ariaLabelButton')}
             onChange={() => setPhoto(null)}>
