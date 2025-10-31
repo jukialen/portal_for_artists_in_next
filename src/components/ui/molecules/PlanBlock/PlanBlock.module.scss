@@ -1,5 +1,5 @@
 .box {
-  max-width: 22rem;
+  width: min(95dvw, 25rem);
   min-height: 32rem;
   display: flex;
   flex-direction: column;
@@ -58,20 +58,100 @@
     }
   }
 
-  &:nth-of-type(2) {
-    background-color: var(--secondary);
-  }
-
-  .choosePlan,
-  .chooseSecondPlan {
+  .choosePlan {
     margin: 2.8rem auto 2rem;
     position: relative;
     font-size: 2rem;
+
+    details.openButton {
+      a {
+        &:hover {
+          color: var(--text);
+          background-color: var(--hover);
+        }
+
+        &:focus {
+          background-color: var(--focus);
+          color: var(--background);
+        }
+
+        &:active {
+          background-color: var(--active);
+          color: var(--text);
+        }
+      }
+
+      .choose {
+        width: max-content;
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        list-style: none;
+        background-color: var(--opacity);
+        border-color: transparent;
+        cursor: pointer;
+
+        svg {
+          color: inherit;
+        }
+
+        &:hover {
+          background-color: var(--hover);
+        }
+
+        &:focus {
+          background-color: var(--focus);
+          color: var(--background);
+        }
+
+        &:active {
+          background-color: var(--active);
+          color: var(--text);
+        }
+      }
+
+      .noUsersPlan {
+        width: 100%;
+        display: none;
+        flex-direction: column;
+        gap: 0.5rem;
+        position: absolute;
+        top: -6.5rem;
+        left: 0;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0;
+        border: 1px solid transparent;
+        box-shadow: var(--box-shadow);
+        background: var(--primary);
+
+        a.button {
+          padding: 0.5rem 1rem;
+          font-size: 1.2rem;
+          cursor: pointer;
+        }
+      }
+    }
+
+    details[open] .noUsersPlan {
+      display: flex;
+    }
+  }
+
+  &:nth-of-type(2) {
+    background-color: var(--secondary);
+
+    .choosePlan .openButton .noUsersPlan {
+      background-color: var(--secondary);
+    }
   }
 
   &:first-of-type {
-    .choosePlan {
-      margin-top: 5.4rem;
+    @media (min-width: 1670px) {
+      .choosePlan {
+        margin-top: 5.4rem;
+      }
     }
   }
 }

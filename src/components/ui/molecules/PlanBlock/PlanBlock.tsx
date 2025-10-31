@@ -1,9 +1,10 @@
 import { getUserData } from 'helpers/getUserData';
+import { getI18n } from 'locales/server';
 
-import { ChoosePlanPriButton } from 'components/ui/atoms/ChoosePlanPriButton/ChoosePlanPriButton';
+import { Links } from 'components/ui/atoms/Links/Links';
 
 import styles from './PlanBlock.module.scss';
-import { IoMdCheckmark } from 'react-icons/io';
+import { IoIosArrowRoundForward, IoMdCheckmark } from 'react-icons/io';
 
 type PlanBlockType = {
   amount: number;
@@ -31,6 +32,7 @@ export const PlanBlock = async ({
   support,
 }: PlanBlockType) => {
   const userData = await getUserData();
+  const t = await getI18n();
 
   return (
     <div className={styles.box}>
@@ -74,7 +76,31 @@ export const PlanBlock = async ({
         </ul>
       </div>
       <div className={styles.choosePlan}>
-        <ChoosePlanPriButton pseudonym={userData?.pseudonym} />
+        <details className={styles.openButton}>
+          <summary className={styles.choose}>
+            {userData?.pseudonym ? (
+              <a href="/settings">
+                {t('Plans.choosePlan')}
+                <IoIosArrowRoundForward spacing={20} />
+              </a>
+            ) : (
+              <>
+                {t('Plans.choosePlan')}
+                <IoIosArrowRoundForward spacing={20} />
+              </>
+            )}
+          </summary>
+          {!userData?.pseudonym && (
+            <div className={styles.noUsersPlan}>
+              <Links classLink={styles.button} hrefLink="/signin">
+                {t('Nav.signIn')}
+              </Links>
+              <Links classLink={styles.button} hrefLink="/signup">
+                {t('Nav.signUp')}
+              </Links>
+            </div>
+          )}
+        </details>
       </div>
     </div>
   );

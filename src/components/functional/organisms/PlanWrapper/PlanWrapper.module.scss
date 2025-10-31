@@ -5,17 +5,14 @@
   justify-content: center;
   gap: 2rem;
   margin: auto;
-}
+  align-items: center;
 
-@media (min-width: 1024px) {
-  .plans {
-    flex-direction: row;
-  }
-}
-
-@media (min-width: 1420px) {
-  .plans {
+  @media (min-width: 1420px) {
     width: 78%;
     margin: auto;
+  }
+
+  @media (min-width: 1670px) {
+    flex-direction: row;
   }
 }

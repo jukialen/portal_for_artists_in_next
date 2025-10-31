@@ -22,6 +22,10 @@
     display: flex;
     flex-direction: column;
 
+
+    .box .choosePlan .openButton {
+      background-color: var(--secondary);
+    }
     .toFaq {
       width: fit-content;
       margin: 2rem auto;
@@ -33,12 +37,12 @@
       opacity: .8;
       line-height: 1.6;
     }
+  }
+}
 
-    @media (min-width: 1300px) {
-      .plans__user {
-        flex-direction: row;
-      }
-    }
+@media (min-width: 1670px) {
+  .plansFormats {
+    flex-direction: row;
   }
 }
 
