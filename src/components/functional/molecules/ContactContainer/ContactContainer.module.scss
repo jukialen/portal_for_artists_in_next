@@ -54,47 +54,117 @@
         color: var(--third);
       }
 
-      input,
-      textarea,
-      button {
+      input, textarea, .button {
         margin: 1rem 0;
-        border-color: var(--third);
+        border: 1px solid var(--third);
         color: var(--third);
       }
 
       .select {
-        margin: 1rem 0;
+        width: 100%;
+        margin: 1rem 0 .5rem;
         color: var(--third);
 
         .tags,
         .tags__error {
+          width: inherit;
+          margin: 0.5rem auto;
+          padding: 0.75rem;
+          border-radius: 1rem;
           font-size: 1rem;
+          background-color: var(--background);
           border-color: var(--third);
           color: var(--third);
-          background-color: var(--background);
+          box-shadow: none;
 
-          select {
-            border-color: var(--third);
-          }
-
-          div svg {
-            color: var(--third);
+          &::picker-icon {
+            padding-right: 0.25rem;
           }
 
           &__error {
-            border-color: var(--required);
+            border: 1px solid var(--required);
+            color: var(--required);
           }
 
           option {
-            color: inherit;
+            display: flex;
+            justify-content: flex-start;
+            gap: 1.25rem;
+            border: 1px solid transparent;
+            padding: 10px;
+            transition: 0.4s;
+            color: var(--text);
             background-color: var(--background);
+
+            &:hover {
+              background-color: var(--hover);
+              color: #333;
+            }
+
+            &:focus-visible {
+              background-color: var(--focus);
+              color: var(--background);
+            }
+
+            &:active {
+              background-color: var(--active);
+              color: var(--select__color);
+            }
           }
+        }
+      }
+
+      select,
+      .tags__error::picker(select),
+      .tags::picker(select) {
+        appearance: base-select;
+        background-color: var(--background);
+        border-radius: 1rem;
+        border: 2px ridge var(--opacity);
+        box-shadow: var(--box-shadow);
+      }
+
+      option::checkmark {
+        display: none;
+      }
+
+      .titleInput,
+      .message,
+      .titleInput__error,
+      .message_error {
+        width: 100%;
+        min-height: 3rem;
+        margin: 1rem auto;
+        padding: 0.75rem;
+        border-radius: 1rem;
+        font-size: 1rem;
+        background-color: var(--background);
+        border: 1px solid var(--third);
+        resize: vertical;
+
+        &::-webkit-file-upload-button {
+          border: none;
+          padding: 0.5rem 1rem;
+          margin-right: 0.5rem;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          transition: background 0.3s;
+          background-color: var(--primary);
+          color: var(--background);
+        }
+
+        &__error {
+          border-color: var(--required);
         }
       }
 
       .titleInput__error,
       .message_error {
         border-color: var(--required);
+
+        &::placeholder {
+          color: var(--required);
+        }
       }
 
       .button {
@@ -105,8 +175,22 @@
         cursor: pointer;
         margin-left: 0.25rem;
 
-        &:hover {
-          background-color: var(--third);
+        &:hover,
+        &:last-child:hover {
+          border-color: var(--hover);
+          background-color: var(--hover);
+          color: var(--background);
+        }
+
+        &:focus {
+          border-color: var(--focus);
+          background-color: var(--focus);
+          color: var(--background);
+        }
+
+        &:active {
+          border-color: var(--active) ;
+          background-color: var(--active);
           color: var(--text);
         }
       }

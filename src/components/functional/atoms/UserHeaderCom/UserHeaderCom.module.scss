@@ -298,16 +298,6 @@ ul.menu_profile__active {
     border-radius: 0.25rem;
     opacity: 0.75;
   }
-
-  .menu_profile {
-    bottom: unset;
-    top: 3.5rem;
-    padding: 0.3rem 0;
-
-    li {
-      height: 2.5rem;
-    }
-  }
 }
 
 @media (min-width: 768px) {
@@ -324,6 +314,16 @@ ul.menu_profile__active {
         width: 1.6rem;
         height: auto;
       }
+    }
+  }
+
+  .menu_profile {
+    bottom: unset;
+    top: 4.5rem;
+    padding: 0.3rem 0;
+
+    li {
+      height: 2.5rem;
     }
   }
 

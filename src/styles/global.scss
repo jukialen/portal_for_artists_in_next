@@ -102,19 +102,19 @@ button {
 
   &:hover,
   &:last-child:hover {
-    border-color: var(--hover);
+    border: 1px solid var(--hover);
     background-color: var(--hover);
     color: var(--background) !important;
   }
 
   &:focus {
-    border-color: var(--focus);
+    border: 1px solid var(--focus);
     background-color: var(--focus);
     color: var(--background) !important;
   }
 
   &:active {
-    border-color: var(--active) ;
+    border: 1px solid var(--active) ;
     background-color: var(--active);
     color: var(--text) !important;
   }

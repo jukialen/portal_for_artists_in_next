@@ -23,6 +23,7 @@
   --spotify_provider: hsl(141, 63%, 42%);
   --discord_provider: hsl(234, 82%, 65%);
   --line_provider: hsl(132, 91%, 36%);
+  --select__color: var(--background);
 }
 
 [data-theme='dark'] {
@@ -42,4 +43,5 @@
   --background: hsl(217, 22%, 21%);
   --background__opacity: hsla(0, 0%, 97%, 0.1);
   --required: hsl(0, 100%, 37%);
+  --select__color: var(--text);
 }

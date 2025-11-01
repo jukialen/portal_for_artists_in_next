@@ -5,7 +5,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from '../../../../shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Select, createListCollection } from '@ark-ui/react/select';
 
 import { useI18n, useScopedI18n } from 'locales/client';
@@ -51,7 +51,11 @@ export const ContactContainer = ({ userData }: ContactContainerType) => {
     await resetForm(initialValuesForContact);
   };
 
-  const collection = createListCollection({ items: [tContact('suggestion'), tContact('problem')] });
+  const collection = [
+    { value: '', name: t('chooseTag') },
+    { value: 'Suggestion', name: tContact('suggestion') },
+    { value: 'Problem', name: tContact('problem') },
+  ];
 
   return (
     <div className={userData?.pseudonym ? styles.site__without__footer : styles.site}>
@@ -68,35 +72,21 @@ export const ContactContainer = ({ userData }: ContactContainerType) => {
           </p>
         </div>
         <Formik initialValues={initialValuesForContact} validationSchema={schemaValidation} onSubmit={sendFeedback}>
-          {({ values, handleChange, errors, touched }) => (
+          {({ values, handleChange, handleBlur, errors, touched }) => (
             <Form className={styles.form}>
               <div className={styles.select}>
-                <Select.Root
-                  collection={collection}
+                <select
+                  name="tags"
+                  value={values.tags}
                   onChange={handleChange}
-                  value={values.tags ? [values.tags] : []}
+                  onBlur={handleBlur}
                   className={!!errors.tags && touched.tags ? styles.tags__error : styles.tags}>
-                  <Select.Control>
-                    <Select.Trigger name="tags" value={values.tags} onChange={() => console.log('mmm')}>
-                      <Select.ValueText placeholder={tContact('chooseTitle')} />
-                      <Select.Indicator>
-                        <LuChevronDown />
-                      </Select.Indicator>
-                    </Select.Trigger>
-                  </Select.Control>
-                  <Select.Positioner>
-                    <Select.Content>
-                      <Select.ItemGroup>
-                        {collection.items.map((item) => (
-                          <Select.Item key={item} item={item}>
-                            <Select.ItemText>{item}</Select.ItemText>
-                            <Select.ItemIndicator>✓</Select.ItemIndicator>
-                          </Select.Item>
-                        ))}
-                      </Select.ItemGroup>
-                    </Select.Content>
-                  </Select.Positioner>
-                </Select.Root>
+                  {collection.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <FormError nameError="tags" />
@@ -105,7 +95,7 @@ export const ContactContainer = ({ userData }: ContactContainerType) => {
                 name="title"
                 value={values.title}
                 onChange={handleChange}
-                className={!!errors.title && touched.title ? styles.titleInput__error : ''}
+                className={!!errors.title && touched.title ? styles.titleInput__error : styles.titleInput}
                 placeholder={tContact('titleInput')}
               />
 
@@ -115,7 +105,7 @@ export const ContactContainer = ({ userData }: ContactContainerType) => {
                 name="message"
                 value={values.message}
                 onChange={handleChange}
-                className={!!errors.message && touched.message ? styles.message_error : ''}
+                className={!!errors.message && touched.message ? styles.message_error : styles.message}
                 placeholder={tContact('message')}
               />
 
