@@ -3,9 +3,8 @@ import { setStaticParamsLocale } from 'next-international/server';
 
 import { getUserData } from 'helpers/getUserData';
 
-import { LangType } from 'types/global.types';
-
 import { HeadCom } from 'constants/HeadCom';
+import { LangType } from 'types/global.types';
 
 import { ContactContainer } from 'components/functional/molecules/ContactContainer/ContactContainer';
 
