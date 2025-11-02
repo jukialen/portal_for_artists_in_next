@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useState } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { darkMode } from 'constants/links';
@@ -29,34 +29,40 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
 
   const tSettings = useScopedI18n('Settings');
 
+  const modeIcons: Record<ModeType, ReactNode> = {
+    dark: <LuSun className={styles.icon} aria-label="mode icon" />,
+    light: <HiMoon className={styles.icon} aria-label="mode icon" />,
+  };
+
+  const langItems: { value: ModeType; name: string }[] = [
+    {
+      value: 'dark',
+      name: dark,
+    },
+    { value: 'light', name: light },
+  ];
+
   return (
     <div className={styles.modeContainer}>
       <div>
-        {isMode === darkMode ? (
-          <LuSun className={styles.icon} aria-label="mode icon" />
-        ) : (
-          <HiMoon className={styles.icon} aria-label="mode icon" />
-        )}
+        {modeIcons[isMode === darkMode ? 'dark' : 'light']}
         <p>{tSettings('dark_mode')}</p>
       </div>
 
       <ul className={styles.mode}>
-        <li className={styles.colors__select} onClick={showMode}>
+        <button className={styles.colors__select} onClick={showMode}>
           <p className={styles.languages__version}>{isMode?.toLocaleUpperCase()}</p>
           <RxChevronDown />
-        </li>
+        </button>
 
         <div className={`${styles.color} ${mode && styles.color__active}`}>
-          <li>
-            <button className={styles.colors__version} onClick={() => newMode('dark')}>
-              {dark}
-            </button>
-          </li>
-          <li>
-            <button className={styles.colors__version} onClick={() => newMode('light')}>
-              {light}
-            </button>
-          </li>
+          {langItems.map((item, i) => (
+            <li>
+              <button className={styles.colors__version} onClick={() => newMode(item.value)}>
+                {item.name}
+              </button>
+            </li>
+          ))}
         </div>
       </ul>
     </div>

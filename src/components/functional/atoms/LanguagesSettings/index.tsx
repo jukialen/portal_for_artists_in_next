@@ -32,10 +32,10 @@ export const LanguagesSettings = ({ locale }: { locale: LangType }) => {
       </div>
 
       <ul className={styles.languages}>
-        <li className={styles.languages__select} onClick={showLanguages}>
-          <p>{locale.toLocaleUpperCase()}</p>
+        <button className={styles.languages__select} onClick={showLanguages}>
+          {locale.toLocaleUpperCase()}
           <RxChevronDown />
-        </li>
+        </button>
 
         <div className={`${styles.language} ${isLanguage && styles.language__active}`}>
           {locales.map((_l) => {
