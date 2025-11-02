@@ -5,53 +5,70 @@
   margin: 2rem auto;
 
   .accordionItem {
-    width: 26rem;
-    margin: 1rem 0;
-    background-color: transparent;
+    width: min(90dvw, 30rem);
+    margin: 1rem auto;
+    border-radius: 0.75rem;
+    background-color: var(--background__opacity);
+    box-shadow: var(--box-shadow);
     color: var(--text);
 
     .accordionButton {
+      width: 100%;
+      display: grid;
+      justify-content: space-between;
+      grid-template-columns: 1fr 2.5rem;
+      gap: 1rem;
+      border-radius: 0.75rem;
+      border: 3px groove var(--primary);
+
+      h2 {
+        padding: 0.5rem 0.25rem;
+        text-align: left;
+        font-size: 1.2rem;
+      }
+
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: inherit;
+        margin: 0.5rem;
+        border-radius: 1rem;
+        background-color: var(--primary);
+
+        &:hover,
+        &:active,
+        &:focus {
+          background-color: var(--secondary);
+          color: var(--primary);
+        }
+      }
+
       &:focus {
-       div h2 {
-         color: var(--background);
-       }
+        h2 {
+          color: var(--background);
+        }
+      }
     }
 
-      div {
-        h2 {
-          font-size: 1rem;
-        }
+    .accordionBody {
+      font-size: 1rem;
+      margin: 1rem 0.5rem;
+      line-height: 1.5;
 
-        svg {
-          width: 1.5rem;
-          height: 1.5rem;
-          text-align: inherit;
-          background-color: var(--primary);
-          border-radius: 1rem;
-          margin-right: 0.5rem;
+      a {
+        color: var(--third);
 
-          &:hover,
-          &:active,
-          &:focus {
-            background-color: var(--secondary);
-            color: var(--primary);
-          }
+        &:hover {
+          color: var(--primary);
         }
       }
+    }
 
-      .accordionBody {
-        font-size: 1rem;
-        margin-top: 0.5rem;
-        margin-right: 2rem;
-
-        a {
-          color: var(--third);
-
-          &:hover {
-            color: var(--primary);
-          }
-        }
-      }
+    &:last-of-type {
+      margin-bottom: 8rem;
     }
   }
 }

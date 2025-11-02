@@ -16,6 +16,7 @@ export const ModeProvider = ({ children }: { children: ReactNode }) => {
     typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
   );
 
+
   useEffect(() => {
     const defaultTheme = (): ModeType | null => {
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

@@ -16,9 +16,9 @@ export const AccordionWrapper = ({
       {items.map((item) => (
         <Accordion.Item key={item.value} value={item.head} className={styles.accordionItem}>
           <Accordion.ItemTrigger className={styles.accordionButton}>
-            <h2>{item.head}</h2>
+            <h3>{item.head}</h3>
+            <LuChevronDown />
           </Accordion.ItemTrigger>
-          <LuChevronDown />
           <Accordion.ItemContent className={styles.accordionBody}>{item.body}</Accordion.ItemContent>
         </Accordion.Item>
       ))}
