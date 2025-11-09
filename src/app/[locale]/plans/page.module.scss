@@ -28,7 +28,7 @@
       flex-direction: column;
       justify-content: center;
       gap: 2rem;
-      margin: 3rem auto;
+      margin: 0 auto 3rem;
       align-items: center;
 
       .box .choosePlan .openButton {
@@ -36,11 +36,11 @@
       }
 
       .toFaq {
-        margin: 1rem auto 2rem;
+        margin: 1rem auto;
       }
 
       .formats {
-        margin: 3rem 1rem 8rem;
+        margin: 1rem 1rem 5rem;
         font-size: 0.8rem;
         opacity: 0.8;
         line-height: 1.6;

@@ -11,14 +11,13 @@ type AlertsType = {
 
 type AlertType = {
   status: 'success' | 'info' | 'warning' | 'error';
-  color: 'green.500' | 'blue.500' | 'yellow.500' | 'red.500';
 };
 
 const Icons = {
-  info: <CiCircleInfo color={'blue.500'} />,
-  success: <IoCheckmarkOutline color={'green.500'} />,
-  warning: <CiWarning color={'yellow.500'} />,
-  error: <RiErrorWarningLine color={'red.500'} />,
+  info: <CiCircleInfo />,
+  success: <IoCheckmarkOutline />,
+  warning: <CiWarning />,
+  error: <RiErrorWarningLine />,
 };
 
 export const Alerts = ({ valueFields }: AlertsType) => {
@@ -38,13 +37,13 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case t('Forgotten.success'):
       case t('AnotherForm.uploadFile'):
       case t('Account.profile.successSending'):
-        return { status: 'success', color: 'green.500' };
+        return { status: 'success' };
       case t('DeletionAccount.deletionAccount'):
       case t('DeletionPost.deleting'):
       case t('DeletionFile.deleting'):
-        return { status: 'info', color: 'blue.500' };
+        return { status: 'info' };
       case t('PasswordAccount.differentPasswords'):
-        return { status: 'warning', color: 'yellow.500' };
+        return { status: 'warning' };
       case t('NavForm.unVerified'):
       case 'Nie usunięto pliku.':
       case t('NavForm.notExist'):
@@ -57,17 +56,27 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case t('ResetPassword.wrongValues'):
       case t('NavForm.wrongLoginData'):
       case t('error'):
-        return { status: 'error', color: 'red.500' };
+        return { status: 'error' };
       default:
-        return { status: 'warning', color: 'yellow.500' };
+        return { status: 'warning' };
     }
   };
 
   const status = switchAlert(valueFields).status;
-  const background = switchAlert(valueFields).color;
 
   return (
-    <section className={styles.alert} role="status" style={{ background }}>
+    <section
+      className={styles.alert}
+      role="status"
+      id={
+        status === 'success'
+          ? styles.success
+          : status === 'warning'
+            ? styles.warning
+            : status === 'error'
+              ? styles.error
+              : styles.info
+      }>
       <div className={styles.icon}>{Icons[status]}</div>
       <div>{valueFields}</div>
     </section>

@@ -10,7 +10,6 @@ import { LangType } from 'types/global.types';
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { PlanBlock } from 'components/ui/molecules/PlanBlock/PlanBlock';
-import { PlanWrapper } from 'components/functional/organisms/PlanWrapper/PlanWrapper';
 
 import styles from './page.module.scss';
 
@@ -102,21 +101,21 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
             noAds={goldPlan.noAds}
             support={goldPlan.support}
           />
-        </div>
-        <div className={styles.toFaq}>
-          <p>
-            {t('Contact.toFAQ')}
-            <Link href="/faq">{t('Contact.toFAQHere')}</Link>
-            {t('Contact.dot')}
+          <div className={styles.toFaq}>
+            <p>
+              {t('Contact.toFAQ')}
+              <Link href="/faq">{t('Contact.toFAQHere')}</Link>
+              {t('Contact.dot')}
+            </p>
+          </div>
+          <p className={styles.formats}>
+            {tPlans('formats')}.jpg, .jpeg, .png, .webp, .avif, .mp4, .webm
+            <br />
+            {tPlans('supInfo')}
+            <br />
+            {tPlans('pSupInfo')}
           </p>
         </div>
-        <p className={styles.formats}>
-          {tPlans('formats')}.jpg, .jpeg, .png, .webp, .avif, .mp4, .webm
-          <br />
-          {tPlans('supInfo')}
-          <br />
-          {tPlans('pSupInfo')}
-        </p>
       </div>
     </div>
   );

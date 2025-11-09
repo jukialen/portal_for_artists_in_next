@@ -19,3 +19,23 @@
     line-height: 1;
   }
 }
+
+#success {
+  background-color: var(--fourth);
+  border-color: var(--fourth);
+}
+
+#error {
+  background-color: var(--required);
+  border-color: var(--required);
+}
+
+#warning {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+#info {
+  background-color: var(--third);
+  border-color: var(--third);
+}
