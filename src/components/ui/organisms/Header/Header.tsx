@@ -3,15 +3,11 @@ import Link from 'next/link';
 
 import { getI18n } from 'locales/server';
 
-import { LangType } from 'types/global.types';
-
-import { Nav } from 'components/functional/atoms/Nav/Nav';
-
 import styles from './Header.module.scss';
 import { BiLogInCircle } from 'react-icons/bi';
 import { MdOutlineSettings } from 'react-icons/md';
 
-export const Header = async ({ locale }: { locale: LangType }) => {
+export const Header = async () => {
   const t = await getI18n();
 
   const headers = {
@@ -29,16 +25,16 @@ export const Header = async ({ locale }: { locale: LangType }) => {
           <Image src="/pfartists.png" width={imgSize} height={imgSize} alt="Pfartists logo" quality={100} priority />
         </Link>
       </h1>
-      <div className={styles.desktop_nav}>
-        <Nav headers={headers} locale={locale} />
-      </div>
 
-      <section className={styles.mobileButtons}>
-        <Link href="/signin" className={styles.menu_buttons} id={styles.settings_button} aria-label="sign in/up link">
+      <section className={styles.menuButtons}>
+        <Link href="/signin" className={styles.menu_button} aria-label="sign in link">
           <BiLogInCircle />
           <p>{headers.signIn}</p>
         </Link>
-        <Link href="/settings" className={styles.menu_buttons} aria-label="Settings">
+        <Link href={'/signup'} className={styles.menu_button} id={styles.signupLink} aria-label="Sign up link">
+          <p>{headers.signUp}</p>
+        </Link>
+        <Link href="/settings" className={styles.menu_button} aria-label="Settings">
           <MdOutlineSettings />
           <p>{headers.title}</p>
         </Link>

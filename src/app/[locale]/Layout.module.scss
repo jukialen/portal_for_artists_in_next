@@ -1,16 +1,17 @@
 .whole__page {
+  max-width: 100%;
   position: relative;
   display: flex;
   overflow: hidden;
 
   .container {
-    width: 100vw;
+    width: inherit;
     min-height: 100dvh;
     display: grid;
     grid-template-columns: auto 1fr;
 
     .user__container {
-      width: 100vw;
+      width: 100dvw;
       margin: 0 auto;
 
       @media (min-width: 982px) {

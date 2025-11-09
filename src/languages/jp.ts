@@ -404,7 +404,7 @@ export default {
   unknownError: 'おっと？！何かが間違っていた。',
   error: '遣り返すかインターネット接続が見えてください。',
   edit: 'エディト',
-  cancel: '取り止める',
+  cancel: '取り止めます',
   chooseTag: 'タグが選ぶ',
   newFile: '新しのファイル',
   notFound: '何も見つからない',

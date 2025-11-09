@@ -66,7 +66,7 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
       <h2 className={styles.title}>{tPlans('title')}</h2>
       <h3 className={styles.subTitle}>{tPlans('subTitle')}</h3>
       <div className={styles.plansFormats}>
-        <PlanWrapper pseudonym={user?.pseudonym!}>
+        <div className={styles.plans}>
           <PlanBlock
             amount={freePlan.amount}
             plan={freePlan.plan}
@@ -102,7 +102,7 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
             noAds={goldPlan.noAds}
             support={goldPlan.support}
           />
-        </PlanWrapper>
+        </div>
         <div className={styles.toFaq}>
           <p>
             {t('Contact.toFAQ')}

@@ -11,38 +11,49 @@
   }
 
   .subTitle {
-    opacity: .8;
+    opacity: 0.8;
     margin: 0 auto 1rem;
     text-align: center;
   }
 
   .plansFormats {
     width: 95%;
+    min-height: calc(100dvh - 9rem);
     margin: 4rem auto auto;
     display: flex;
     flex-direction: column;
 
+    .plans {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2rem;
+      margin: 3rem auto;
+      align-items: center;
 
-    .box .choosePlan .openButton {
-      background-color: var(--secondary);
-    }
-    .toFaq {
-      width: fit-content;
-      margin: 2rem auto;
-    }
+      .box .choosePlan .openButton {
+        background-color: var(--secondary);
+      }
 
-    .formats {
-      margin: 0 1rem 4rem;
-      font-size: .8rem;
-      opacity: .8;
-      line-height: 1.6;
+      .toFaq {
+        margin: 1rem auto 2rem;
+      }
+
+      .formats {
+        margin: 3rem 1rem 8rem;
+        font-size: 0.8rem;
+        opacity: 0.8;
+        line-height: 1.6;
+      }
+
+      @media (min-width: 1420px) {
+        width: 78%;
+        margin: auto;
+      }
+
+      @media (min-width: 1670px) {
+        flex-direction: row;
+      }
     }
   }
 }
-
-@media (min-width: 1670px) {
-  .plansFormats {
-    flex-direction: row;
-  }
-}
-

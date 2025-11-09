@@ -93,6 +93,18 @@
         border-color: transparent;
         cursor: pointer;
 
+        a {
+          display: flex;
+          gap: .5rem;
+          align-items: center;
+          color: var(--text);
+
+          svg {
+            width: 1.5rem;
+            height: auto;
+          }
+        }
+
         svg {
           color: inherit;
         }
@@ -129,6 +141,7 @@
         a.button {
           padding: 0.5rem 1rem;
           font-size: 1.2rem;
+          color: var(--text);
           cursor: pointer;
         }
       }

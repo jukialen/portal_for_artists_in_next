@@ -1,5 +1,5 @@
 .header {
-  width: 100%;
+  width: 100dvw;
   position: fixed;
   bottom: 0;
   display: flex;
@@ -19,12 +19,7 @@
     }
   }
 
-  .desktop_nav {
-    display: none;
-  }
-
-  .mobileButtons {
-    width: unset;
+  .menuButtons {
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
@@ -35,8 +30,11 @@
     -webkit-backdrop-filter: var(--backdrop-filter);
     backdrop-filter: var(--backdrop-filter);
 
-    .menu_buttons {
-      width: 3.5rem;
+    #signupLink {
+      display: none;
+    }
+
+    .menu_button {
       height: 3.5rem;
       display: flex;
       flex-direction: column;
@@ -44,7 +42,7 @@
       justify-self: end;
       align-items: center;
       margin: auto 0;
-      padding: 0.2rem 0;
+      padding: 0.2rem 0.5rem;
       border-radius: 2rem;
       color: var(--text);
       cursor: pointer;
@@ -79,36 +77,40 @@
   .header {
     top: 0;
     bottom: unset;
-    display: grid;
-    grid-template-columns: 3rem 1fr auto;
 
     .title {
       width: 3rem;
       height: 3rem;
     }
 
-    #settings_button {
-      display: none;
-    }
-
-    .desktop_nav {
-      display: flex;
-      justify-self: end;
-      align-items: center;
-    }
-
-    .mobileButtons {
+    .menuButtons {
       height: 3rem;
       margin-right: 0.5rem;
-      border-radius: 0 2rem 2rem 0;
+      border-radius: 2rem;
+      justify-self: end;
+      align-items: center;
+      gap: 0;
+      padding: 0;
 
-      .menu_buttons {
-        width: 2.6rem;
-        height: 2.6rem;
-        margin: 0 .3rem;
+      #signupLink {
+        display: flex;
+      }
+
+      .menu_button {
+        width: max-content;
+        height: inherit;
+        margin: 0;
+        padding: .3rem 1rem;
+        align-items: center;
+
+        svg {
+          display: none;
+        }
 
         p {
-          font-size: .65rem;
+          height: inherit;
+          align-content: center;
+          font-size: 1rem;
         }
       }
     }

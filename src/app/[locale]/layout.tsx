@@ -49,7 +49,7 @@ export default async function RootLayout({ children, params }: ChildrenType) {
 
   const userMenuComponents = {
     userHeader: <UserHeader />,
-    header: <Header locale={lang} />,
+    header: <Header />,
     aside: <Aside />,
   };
 
