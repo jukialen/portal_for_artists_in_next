@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Upload } from 'tus-js-client';
 import { Form, Formik } from 'formik';
@@ -239,7 +238,7 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
                 <FormError nameError="tags" />
 
                 {isFileAccessApiSupported ? (
-                  <button onClick={() => handleFile()} className={styles.filePickerButton}>
+                  <button onClick={handleFile} className={styles.filePickerButton}>
                     {tAnotherForm('file')}
                   </button>
                 ) : (

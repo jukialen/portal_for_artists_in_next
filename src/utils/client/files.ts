@@ -19,19 +19,12 @@ export const handleFileSelection = async (
   try {
     const [handle] = await window.showOpenFilePicker({
       types: [
-        !profile
-          ? {
-              description: 'Images',
-              accept: {
-                'image/*': filesProfileTypes.split(', ').concat('.apng'),
-              },
-            }
-          : {
-              description: 'Images',
-              accept: {
-                'image/*': filesProfileTypes.split(', '),
-              },
-            },
+        {
+          description: 'Images',
+          accept: {
+            'image/*': !profile ? filesProfileTypes.split(', ').concat('.apng') : filesProfileTypes.split(', '),
+          },
+        },
         ...(!profile
           ? [
               {
