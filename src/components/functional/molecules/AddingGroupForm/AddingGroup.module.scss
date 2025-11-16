@@ -12,8 +12,13 @@
   .field,
   .field__error {
     width: 20rem;
+    min-height: 2.5rem;
     margin: 0.5rem auto;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
     border-radius: 1rem;
+    resize: vertical;
+    background-color: var(--background);
     border-color: var(--third);
     color: var(--third);
 
@@ -26,13 +31,34 @@
     border-color: var(--required);
   }
 
+  .filePickerButton {
+    width: 20rem;
+    height: 2.5rem;
+    margin: 1rem auto;
+    border-radius: 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+    border: 0.1rem solid var(--secondary);
+  }
+
   .input {
     width: 20rem;
     padding: 0.3rem;
-    margin: .5rem 0 1rem;
+    margin: 0.5rem 0 1rem;
     border-radius: 1rem;
     border-color: var(--third);
     color: var(--text__opacity);
+
+    &::-webkit-file-upload-button {
+      border: none;
+      padding: 0.5rem 1rem;
+      margin-right: 0.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      background-color: var(--primary);
+      color: var(--background);
+    }
   }
 
   .submit__button {

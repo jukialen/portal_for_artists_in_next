@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from '../../../../shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { createClient } from 'utils/supabase/clientCSR';
+import { filesProfileTypes, handleFileSelection, isFileAccessApiSupported } from 'utils/client/files';
+import { useI18n, useScopedI18n } from 'locales/client';
 
-import { EventType, ResetFormType, UserType } from 'types/global.types';
+import { EventType, FilesUploadType, ResetFormType, UserType } from 'types/global.types';
 
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
@@ -50,8 +52,24 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
 
   const supabase = createClient();
 
+  const t = useI18n();
+  const tAnotherForm = useScopedI18n('AnotherForm');
+  const fileTranslated: FilesUploadType = {
+    fileSelectionCancelled: tAnotherForm('fileSelectionCancelled'),
+    errorOpeningFilePicker: tAnotherForm('errorOpeningFilePicker'),
+    validateRequired: t('NavForm.validateRequired'),
+    fileTooLarge: tAnotherForm('fileTooLarge'),
+    unsupportedFileType: tAnotherForm('unsupportedFileType'),
+  };
+
   const handleChangeFile = async (e: EventType) => {
-    e.target.files?.[0] ? setLogoGroup(e.target.files[0]) : setLogoGroup(null);
+    setLogoGroup(e.target.files?.[0] ? e.target.files[0] : null);
+  };
+
+  const handleFile = async () => {
+    const result = await handleFileSelection(fileTranslated, false);
+
+    typeof result === 'string' ? setValuesFields(result) : setLogoGroup(result);
   };
 
   const createGroup = async ({ name, description }: AddingGroupType, { resetForm }: ResetFormType) => {
@@ -152,14 +170,20 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
 
           <FormError nameError="description" />
 
-          <input
-            name="logo"
-            type="file"
-            accept=".jpg, .jpeg, .png, .webp, .avif"
-            onChange={handleChangeFile}
-            placeholder={tr.profilePhoto}
-            className={styles.input}
-          />
+          {isFileAccessApiSupported ? (
+            <button onClick={handleFile} className={styles.filePickerButton}>
+              {tr.profilePhoto}
+            </button>
+          ) : (
+            <input
+              name="logo"
+              type="file"
+              accept={filesProfileTypes}
+              onChange={handleChangeFile}
+              placeholder={tr.profilePhoto}
+              className={styles.input}
+            />
+          )}
 
           <button type="submit" className={`button ${styles.submit__button}`} aria-label={tr.ariaLabelButton}>
             {tr.send}
