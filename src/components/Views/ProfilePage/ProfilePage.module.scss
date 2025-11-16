@@ -59,7 +59,7 @@
 .mobileTabs {
   display: grid;
   grid-template-columns: 1fr 1.4rem;
-  width: 90vw;
+  width: min(90dvw, 36rem);
   height: 3rem;
   align-items: center;
   padding: 0.5rem 1rem;
@@ -95,6 +95,7 @@
     display: flex;
     padding: 1rem 0;
     margin: 1rem auto;
+    gap: 1rem;
 
     .tabForPanels {
       display: block;
@@ -102,6 +103,8 @@
       padding: 0.5rem 1rem;
       font-size: 1.2rem;
       border-radius: 1rem;
+      background-color: var(--background__opacity);
+      border: 1px solid var(--background__opacity);
     }
   }
 

@@ -11,22 +11,19 @@ import { getFirstFriends } from 'utils/friends';
 import { adminList, modsUsersList } from 'utils/groups';
 import { graphics, videosAnimations } from 'app/actions/files';
 
+import { NavigationBar } from 'components/ui/atoms/NavigationBar/NavigationBar';
 import { FriendsList } from 'components/functional/molecules/FriendsList/FriendsList';
 import { AnimatedGallery } from 'components/functional/organisms/AnimatedGallery/AnimatedGallery';
 import { GroupUsers } from 'components/functional/organisms/GroupUsers/GroupUsers';
 import { PhotosGallery } from 'components/functional/organisms/PhotosGallery/PhotosGallery';
 import { VideoGallery } from 'components/functional/organisms/VideoGallery/VideoGallery';
 
-import styles from './tabs.module.scss';
-import { RiArrowUpSLine } from 'react-icons/ri';
-
 interface PropsType {
-  params: Promise<{ locale: LangType; tabs: string }>;
-  searchParams: { back?: string };
+  params: Promise<{ locale: LangType; displayName: string; tabs: string }>;
 }
 
-export default async function Tabs({ params, searchParams }: PropsType) {
-  const { locale, tabs } = await params;
+export default async function Tabs({ params }: PropsType) {
+  const { locale, displayName, tabs } = await params;
   setStaticParamsLocale(locale);
 
   const maxItems = 30;
@@ -45,9 +42,8 @@ export default async function Tabs({ params, searchParams }: PropsType) {
   const firstAdminList = await adminList(id, maxItems);
   const firstModsUsersList = await modsUsersList(maxItems);
 
-  const backUrl = searchParams.back ?? '/app';
-  const author = searchParams.back?.split('/')[2];
   const allowedTabs = ['friends', 'groups', 'photos', 'animations', 'videos'] as const;
+  const backUrl = `/account/${displayName}`;
 
   const tGallery = {
     userPhotosTitle: t('Account.gallery.userPhotosTitle'),
@@ -80,7 +76,7 @@ export default async function Tabs({ params, searchParams }: PropsType) {
           <PhotosGallery
             id={id}
             pseudonym={pseudonym!}
-            author={author!}
+            author={displayName}
             tGallery={tGallery}
             firstGraphics={firstGraphics}
           />
@@ -90,7 +86,7 @@ export default async function Tabs({ params, searchParams }: PropsType) {
           <AnimatedGallery
             id={id}
             pseudonym={pseudonym!}
-            author={author!}
+            author={displayName}
             tGallery={tGallery}
             firstAnimations={firstAnimations}
           />
@@ -100,7 +96,7 @@ export default async function Tabs({ params, searchParams }: PropsType) {
           <VideoGallery
             id={id!}
             pseudonym={pseudonym!}
-            author={author!}
+            author={displayName}
             tGallery={tGallery!}
             firstVideos={firstVideos}
           />
@@ -111,7 +107,7 @@ export default async function Tabs({ params, searchParams }: PropsType) {
         return <GroupUsers id={id!} firstAdminList={firstAdminList!} firstModsUsersList={firstModsUsersList!} />;
       default:
         return (
-          <div className={styles.wrongPage}>
+          <div>
             <span>Wrong page:</span>
             <Link href={backUrl}>Come back</Link>
           </div>
@@ -121,13 +117,7 @@ export default async function Tabs({ params, searchParams }: PropsType) {
 
   return (
     <>
-      <div className={styles.tabs}>
-        <Link className={styles.arrow} href={backUrl}>
-          <RiArrowUpSLine />
-          <h3>{t('backPage')}</h3>
-        </Link>
-        <h2 className={styles.title}>{getLabel(tabs)}</h2>
-      </div>
+      <NavigationBar title={getLabel(tabs)} url={backUrl} />
       {await renderComp()}
     </>
   );

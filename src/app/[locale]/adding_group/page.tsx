@@ -9,6 +9,7 @@ import { LangType } from 'types/global.types';
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { AddingGroupForm } from 'components/functional/molecules/AddingGroupForm/AddingGroupForm';
+import { NavigationBar } from '../../../components/ui/atoms/NavigationBar/NavigationBar';
 
 export const metadata: Metadata = HeadCom("User's adding some group");
 
@@ -17,10 +18,12 @@ export default async function AddingGroup({ params }: { params: Promise<{ locale
   setStaticParamsLocale(locale);
 
   const userData = await getUserData();
+  const url = `account/${userData?.pseudonym}/groups`;
 
   const t = await getI18n();
   const tAddingGroup = await getScopedI18n('AddingGroup');
   const tAnotherForm = await getScopedI18n('AnotherForm');
+  const tAside = await getScopedI18n('Aside');
 
   const AddingGroupTr = {
     title: tAddingGroup('title'),
@@ -33,5 +36,10 @@ export default async function AddingGroup({ params }: { params: Promise<{ locale
     ariaLabelButton: t('NewUser.ariaLabelButton'),
     error: t('error'),
   };
-  return <AddingGroupForm tr={AddingGroupTr} userData={userData!} />;
+  return (
+    <>
+      <NavigationBar title={tAside('addingGroup')} url={url} />
+      <AddingGroupForm tr={AddingGroupTr} userData={userData!} />;
+    </>
+  );
 }

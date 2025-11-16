@@ -42,7 +42,7 @@ import { RiArrowUpSLine } from 'react-icons/ri';
 type ProfilePageType = {
   id: string;
   author: string;
-  myProfile?: boolean;
+  myProfile: boolean;
   firstFriendsList: FriendsListType[] | undefined;
   firstAdminList: GroupUserType[] | undefined;
   firstModsUsersList:
@@ -75,7 +75,7 @@ type ProfilePageType = {
 export const ProfilePage = async ({
   id,
   author,
-  myProfile,
+  myProfile = false,
   firstFriendsList,
   firstAdminList,
   firstModsUsersList,
@@ -216,7 +216,7 @@ export const ProfilePage = async ({
 
       {fileTabList.map((tab) => (
         <Link
-          href={`/account/${author}/${tab!.toLowerCase()}?back=/account/${userData?.pseudonym}`}
+          href={`/account/${myProfile ? userData?.pseudonym : author}/${tab!.toLowerCase()}`}
           className={styles.mobileTabs}
           key={tab}
           aria-label="">

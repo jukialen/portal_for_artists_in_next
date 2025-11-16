@@ -183,7 +183,6 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
       </section>
 
       <h2 className={styles.title}>{tAccount('adminTitle')}</h2>
-      <Separator />
       {!!adminsArray && adminsArray.length > 0 ? (
         adminsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
@@ -195,7 +194,6 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
         <MoreButton nextElementsAction={nextAdminList} />
       )}
       <h2 className={styles.title}>{tAccount('modsTitle')}</h2>
-      <Separator />
       {!!moderatorsArray && moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
@@ -207,7 +205,6 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
         <MoreButton nextElementsAction={nextModeratorsList} />
       )}
       <h2 className={styles.title}>{tAccount('usersTitle')}</h2>
-      <Separator />
       {!!membersArray && membersArray.length > 0 ? (
         membersArray.map(({ name, logo }, index) => (
           <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={logo} />
