@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Dialog } from '@ark-ui/react/dialog';
 
 import { createClient } from 'utils/supabase/clientCSR';
-import { filesProfileTypes, handleFileSelection, isFileAccessApiSupported, validatePhoto } from 'utils/client/files';
+import { filesProfileTypes, handleFileSelection, isFileAccessApiSupported, validateFile } from 'utils/client/files';
 
 import { useScopedI18n } from 'locales/client';
 
@@ -84,7 +84,7 @@ export const UpdateProfilePhotoOnAccount = ({
   const updateLogo = async () => {
     try {
       if (!!newLogo && !required) {
-        if (!(await validatePhoto(fileTranslated, newLogo))) {
+        if (!(await validateFile(fileTranslated, newLogo))) {
           const pathPhoto = `/${userData?.id!}/${newLogo.name}`;
 
           if (!!userData?.profilePhoto) {

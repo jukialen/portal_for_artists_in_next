@@ -182,7 +182,7 @@ export const ProfilePage = async ({
           <h1 className={styles.name}>{userData?.pseudonym}</h1>
         </div>
         <div className={styles.description}>{userData?.description}</div>
-        {myProfile && <FilesUpload userId={userData?.id!} fileTranslated={fileTranslated} />}
+        {myProfile && <FilesUpload userId={userData?.id!} plan={userData?.plan!} fileTranslated={fileTranslated} />}
       </article>
 
       {!myProfile && (

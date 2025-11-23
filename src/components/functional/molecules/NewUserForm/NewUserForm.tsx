@@ -16,7 +16,7 @@ import { FormError } from 'components/ui/atoms/FormError/FormError';
 
 import styles from './NewUserForm.module.scss';
 import { createClient } from 'utils/supabase/clientCSR';
-import { validatePhoto } from 'utils/client/files';
+import { validateFile } from 'utils/client/files';
 
 type FirstDataType = {
   username: string;
@@ -88,7 +88,7 @@ export const NewUserForm = ({ newUserTranslate, id, email, provider }: NewUserTy
     };
     console.log(id);
     try {
-      if (!!photo && (await validatePhoto(fileTranslated, photo))) {
+      if (!!photo && (await validateFile(fileTranslated, photo))) {
         const name = Date.now() + '-' + id + '-' + photo!.name!;
 
         const { data, error } = await supabase.storage.from('profiles').upload(`${id}/${name}`, photo);

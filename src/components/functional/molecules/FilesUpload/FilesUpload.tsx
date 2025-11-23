@@ -5,21 +5,23 @@ import { createClient } from 'utils/supabase/clientCSR';
 import { Upload } from 'tus-js-client';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from '../../../../shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Dialog } from '@ark-ui/react/dialog';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
 import {
+  ACCEPTED_ANIM_VIDEOS_TYPES,
+  ACCEPTED_IMAGE_TYPES,
   filesProfileTypes,
   filesTypes,
   handleFileSelection,
   isFileAccessApiSupported,
-  validatePhoto,
+  validateFile,
 } from 'utils/client/files';
 
 import { access_token, projectUrl } from 'constants/links';
-import { Tags, EventType, ResetFormType, FilesUploadType } from 'types/global.types';
+import { Tags, EventType, ResetFormType, FilesUploadType, Plan } from 'types/global.types';
 
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
@@ -38,7 +40,15 @@ const initialValues: FileDataType = {
   tags: '',
 };
 
-export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTranslated: FilesUploadType }) => {
+export const FilesUpload = ({
+  userId,
+  plan,
+  fileTranslated,
+}: {
+  userId: string;
+  plan: Plan;
+  fileTranslated: FilesUploadType;
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
   const [progressUpload, setProgressUpload] = useState<number>(0);
@@ -98,7 +108,7 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
         return;
       }
 
-      if (!(await validatePhoto(fileTranslated, file, false))) {
+      if (!(await validateFile(fileTranslated, file, plan, false))) {
         const { data, error } = await supabase.storage.from('basic').upload(`/${userId}`, file);
 
         console.log('data', data);
@@ -128,7 +138,7 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
             metadata: {
               bucketName: 'basic',
               objectName: file.name,
-              contentType: 'image/jpg, image/jpeg, image/png, image/webp, image/avif, video/mp4, video/webm',
+              contentType: `${ACCEPTED_IMAGE_TYPES}, ${ACCEPTED_ANIM_VIDEOS_TYPES}`,
               cacheControl: '3600',
             },
             chunkSize: 6 * 1024 * 1024,

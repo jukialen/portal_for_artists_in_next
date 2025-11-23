@@ -8,7 +8,7 @@ import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { filesProfileTypes, isFileAccessApiSupported, validatePhoto, handleFileSelection } from 'utils/client/files';
+import { filesProfileTypes, isFileAccessApiSupported, validateFile, handleFileSelection } from 'utils/client/files';
 
 import { EventType, FilesUploadType, ResetFormType, UserType } from 'types/global.types';
 
@@ -82,7 +82,7 @@ export const ChangePseuDescData = ({
       let updatePhotoInDB = false;
 
       if (!!photo) {
-        const photoError = await validatePhoto(fileTranslated, photo);
+        const photoError = await validateFile(fileTranslated, photo);
         if (photoError) {
           setValuesFields(photoError);
           return;

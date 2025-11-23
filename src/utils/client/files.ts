@@ -1,16 +1,36 @@
 'use client';
 
-import { FilesUploadType } from 'types/global.types';
+import { FilesUploadType, Plan } from 'types/global.types';
 
 const MAX_PHOTO_SIZE = 6291456;
 export const filesProfileTypes = '.jpg, .jpeg, .png, .webp, .avif';
 export const filesTypes = '.apng, .mp4, .webm';
-const ACCEPTED_IMAGE_TYPES = filesProfileTypes.split(', ').map((n) => 'image/' + n.replace('.', ''));
-const ACCEPTED_ANIM_VIDEOS_TYPES = filesTypes
+export const ACCEPTED_IMAGE_TYPES = filesProfileTypes.split(', ').map((n) => 'image/' + n.replace('.', ''));
+export const ACCEPTED_ANIM_VIDEOS_TYPES = filesTypes
   .split(', ')
   .map((a) => `${a.includes('apng') ? 'image/' : 'video/'}` + a.replace('.', ''));
 export const isFileAccessApiSupported =
   typeof window !== 'undefined' && typeof window.showOpenFilePicker === 'function';
+
+const checkPLanForFileSize = (plan: Plan, fileSize: number, fileType: 'PHOTO' | 'VIDEO') => {
+  switch (plan) {
+    case 'FREE':
+      if ((fileSize > 1048576 && fileType === 'PHOTO') || (fileSize > 15728640 && fileType === 'VIDEO')) {
+        return 'too big file';
+      }
+      return null;
+    case 'PREMIUM':
+      if ((fileSize > 3145728 && fileType === 'PHOTO') || (fileSize > 52428800 && fileType === 'VIDEO')) {
+        return 'too big file';
+      }
+      return null;
+    case 'GOLD':
+      if ((fileSize > 5242880 && fileType === 'PHOTO') || (fileSize > 209715200 && fileType === 'VIDEO')) {
+        return 'too big file';
+      }
+      return null;
+  }
+};
 
 export const handleFileSelection = async (
   filesUploadTranslated: FilesUploadType,
@@ -49,21 +69,29 @@ export const handleFileSelection = async (
   }
 };
 
-export const validatePhoto = async (
+export const validateFile = async (
   filesUploadTranslated: FilesUploadType,
   file: File,
+  plan: Plan,
   profile: boolean = true,
-): Promise<string | null> => {
+) => {
   !file && filesUploadTranslated.validateRequired;
+  let error: string | null = null;
 
-  profile && file.size > MAX_PHOTO_SIZE && filesUploadTranslated.fileTooLarge;
+  switch (profile) {
+    case true:
+      error = !ACCEPTED_IMAGE_TYPES.includes(file.type) ? filesUploadTranslated.unsupportedFileType : null;
 
-  if (!profile) {
-    if (!ACCEPTED_IMAGE_TYPES.includes(file.type) && !ACCEPTED_ANIM_VIDEOS_TYPES.includes(file.type)) {
-      return filesUploadTranslated.unsupportedFileType;
-    }
-  } else if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-    return filesUploadTranslated.unsupportedFileType;
+      error = file.size > MAX_PHOTO_SIZE ? filesUploadTranslated.fileTooLarge : null;
+      break;
+    case false:
+      if (!ACCEPTED_IMAGE_TYPES.includes(file.type) && !ACCEPTED_ANIM_VIDEOS_TYPES.includes(file.type)) {
+        const fileType = ACCEPTED_IMAGE_TYPES.includes(file.type) ? 'PHOTO' : 'VIDEO';
+
+        error = checkPLanForFileSize(plan, file.size, fileType);
+        error = filesUploadTranslated.unsupportedFileType;
+      }
+
+      return error;
   }
-  return null;
 };
