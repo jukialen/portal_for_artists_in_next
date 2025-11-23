@@ -85,17 +85,40 @@ export const UpdateProfilePhotoOnAccount = ({
     try {
       if (!!newLogo && !required) {
         if (!(await validatePhoto(fileTranslated, newLogo))) {
-          const { data, error } = await supabase.storage.from('profiles').upload(`/${userData?.id!}`, newLogo, {
-            upsert: !!userData?.profilePhoto,
+          const pathPhoto = `/${userData?.id!}/${newLogo.name}`;
+
+          if (!!userData?.profilePhoto) {
+            const { data: fileList, error: listError } = await supabase.storage.from('profiles').list(userData?.id);
+
+            if (!listError && fileList && fileList.length > 0) {
+              const filesToRemove = fileList.map((file) => `${userData?.id}/${file.name}`);
+
+              await supabase.storage.from('profiles').remove(filesToRemove);
+            }
+
+            const { data, error } = await supabase.storage.from('profiles').upload(pathPhoto, newLogo, {
+              contentType: newLogo.type,
+              upsert: !!userData?.profilePhoto,
+            });
+
+            console.log('data', data);
+
+            if (!!error) console.error(error);
+
+            await supabase.from('Users').update({ profilePhoto: data?.path }).eq('id', userData?.id!);
+
+            !error && setValuesFields(tAnotherForm('uploadFile'));
+            return;
+          }
+
+          const { error } = await supabase.storage.from('profiles').upload(pathPhoto, newLogo, {
+            contentType: newLogo.type,
           });
 
-          if (!!error) console.error(error);
-
-          const { error: er } = await supabase.from('Users').update({ profilePhoto: data?.path });
-
-          if (!!er) console.error(er);
-
-          setValuesFields(tAnotherForm('uploadFile'));
+          !!error && setValuesFields(tAnotherForm('notUploadFile'));
+          return;
+        } else {
+          setRequired(true);
         }
       }
     } catch (e) {
@@ -125,7 +148,7 @@ export const UpdateProfilePhotoOnAccount = ({
               {tAnotherForm('file')}
             </button>
           ) : (
-            <input type="file" name="newLogo" id="newLogo" accept={filesProfileTypes} onChange={changeFile} />
+            <input type="file" name="newLogo" id={styles.newLogo} accept={filesProfileTypes} onChange={changeFile} />
           )}
           {!newLogo && required && <p>{tCurrPrPhoto!.validateRequired}</p>}
           {!!previewUrl && <Image src={previewUrl} alt="preview new logo" fill priority />}

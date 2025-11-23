@@ -1,4 +1,7 @@
 .updateLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -42,7 +45,7 @@
     margin: 1rem 0;
     padding: 0 2rem;
 
-    input,
+    #newLogo,
     .filePickerButton {
       width: 100%;
       padding: 0.35rem 1.5rem;
@@ -76,9 +79,23 @@
     }
   }
 
-  .logBody__error,
-  p {
-    border-color: var(--required);
+  .logBody__error {
+    #newLogo,
+    .filePickerButton {
+      border-color: var(--required);
+      color: var(--text);
+
+      &::-webkit-file-upload-button {
+        background-color: var(--required);
+        color: var(--text);
+      }
+    }
+
+    p {
+      padding: 0.65rem 0.75rem;
+      font-weight: bolder;
+      color: var(--required);
+    }
   }
 
   .logoFooter {
