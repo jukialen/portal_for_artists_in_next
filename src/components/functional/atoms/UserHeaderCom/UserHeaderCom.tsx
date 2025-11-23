@@ -223,7 +223,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
       await searching();
     }
   };
-  console.log('search', search);
 
   const closeInputAndDIalog = (e: Dialog.OpenChangeDetails) => {
     setOpen(e.open);

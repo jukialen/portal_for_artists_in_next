@@ -57,7 +57,7 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
 
         <div className={`${styles.color} ${mode && styles.color__active}`}>
           {langItems.map((item, i) => (
-            <li>
+            <li key={i}>
               <button className={styles.colors__version} onClick={() => newMode(item.value)}>
                 {item.name}
               </button>

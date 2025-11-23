@@ -101,9 +101,10 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
       if (!(await validatePhoto(fileTranslated, file, false))) {
         const { data, error } = await supabase.storage.from('basic').upload(`/${userId}`, file);
 
+        console.log('data', data);
         if (!!error) console.error(error);
 
-        const { error: er } = await supabase.from('Files').insert([
+        const { data: fileData, error: er } = await supabase.from('Files').insert([
           {
             name: Date.now() + '/' + userId + '/' + file!.name!,
             shortDescription,
@@ -112,6 +113,8 @@ export const FilesUpload = ({ userId, fileTranslated }: { userId: string; fileTr
             fileUrl: data?.path!,
           },
         ]);
+
+        console.log('fileData', fileData);
 
         if (!!er) console.error(er);
       } else {
