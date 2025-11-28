@@ -17,6 +17,7 @@ import {
   filesTypes,
   handleFileSelection,
   isFileAccessApiSupported,
+  MAX_PHOTO_SIZE,
   validateFile,
 } from 'utils/client/files';
 
@@ -109,79 +110,91 @@ export const FilesUpload = ({
       }
 
       if (!(await validateFile(fileTranslated, file, plan, false))) {
-        const { data, error } = await supabase.storage.from('basic').upload(`/${userId}`, file);
+        const fileName = userId + '-' + Date.now() + '-' + file!.name!;
+        const filePath = userId + '/' + fileName;
 
-        console.log('data', data);
-        if (!!error) console.error(error);
+        if (file.size <= MAX_PHOTO_SIZE) {
+          const { data, error } = await supabase.storage.from('basic').upload(`/${filePath}`, file);
 
-        const { data: fileData, error: er } = await supabase.from('Files').insert([
-          {
-            name: Date.now() + '/' + userId + '/' + file!.name!,
-            shortDescription,
-            authorId: userId,
-            tags,
-            fileUrl: data?.path!,
-          },
-        ]);
+          console.log('data', data);
+          if (!!error) console.error(error);
 
-        console.log('fileData', fileData);
-
-        if (!!er) console.error(er);
-      } else {
-        return new Promise<void>(async (resolve, reject) => {
-          let upload = new Upload(file, {
-            endpoint: ` ${projectUrl}/storage/v1/upload/resumable`,
-            retryDelays: [0, 3000, 5000, 10000, 20000],
-            headers: { authorization: `Bearer ${access_token}` },
-            uploadDataDuringCreation: true,
-            removeFingerprintOnSuccess: true,
-            metadata: {
-              bucketName: 'basic',
-              objectName: file.name,
-              contentType: `${ACCEPTED_IMAGE_TYPES}, ${ACCEPTED_ANIM_VIDEOS_TYPES}`,
-              cacheControl: '3600',
+          const { data: fileData, error: er } = await supabase.from('Files').insert([
+            {
+              name: fileName,
+              shortDescription,
+              authorId: userId,
+              tags,
+              fileUrl: data?.fullPath!,
             },
-            chunkSize: 6 * 1024 * 1024,
-            onError: function (error) {
-              console.error('Failed because: ' + error);
-              setValuesFields(tAnotherForm('notUploadFile'));
-              reject(error);
-            },
-            onProgress: function (bytesUploaded, bytesTotal) {
-              let percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-              console.log(bytesUploaded, bytesTotal, percentage + '%');
-              setProgressUpload(parseInt(percentage));
-            },
-            onSuccess: async function () {
-              console.log('Download %s from %s', file.name, upload.url);
-              setProgressUpload(100);
-              setValuesFields(tAnotherForm('uploadFile'));
+          ]);
 
-              if (progressUpload === 100) {
-                const { error } = await supabase.from('Files').insert([
-                  {
-                    name: Date.now() + '/' + userId + '/' + file!.name!,
-                    shortDescription,
-                    authorId: userId,
-                    tags,
-                    fileUrl: upload.url!,
-                  },
-                ]);
-                if (!!error) console.error(error);
-              }
-              resolve();
-            },
+          console.log('fileData', fileData);
+
+          if (!!er) console.error(er);
+        } else {
+          return new Promise<void>(async (resolve, reject) => {
+            const {
+              data: { session },
+            } = await supabase.auth.getSession();
+
+            let upload = new Upload(file, {
+              endpoint: ` ${projectUrl}/storage/v1/upload/resumable`,
+              retryDelays: [0, 3000, 5000, 10000, 20000],
+              headers: { authorization: `Bearer ${session?.access_token}` },
+              uploadDataDuringCreation: true,
+              removeFingerprintOnSuccess: true,
+              metadata: {
+                bucketName: 'basic',
+                objectName: filePath,
+                contentType: file.type,
+                cacheControl: '3600',
+              },
+              chunkSize: 6 * 1024 * 1024,
+              onError: function (error) {
+                console.error('Failed because: ' + error);
+                setValuesFields(tAnotherForm('notUploadFile'));
+                reject(error);
+              },
+              onProgress: function (bytesUploaded, bytesTotal) {
+                let percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+                console.log(bytesUploaded, bytesTotal, percentage);
+                setProgressUpload(parseInt(percentage));
+              },
+
+              onSuccess: async function () {
+                console.log('Download %s from %s', file.name, upload.url);
+                setProgressUpload(100);
+                setValuesFields(tAnotherForm('uploadFile'));
+
+                if (progressUpload === 100) {
+                  const { error } = await supabase.from('Files').insert([
+                    {
+                      name: Date.now() + '/' + userId + '/' + file!.name!,
+                      shortDescription,
+                      authorId: userId,
+                      tags,
+                      fileUrl: upload.url!,
+                    },
+                  ]);
+                  if (!!error) console.error(error);
+                }
+                resolve();
+              },
+            });
+
+            // Check if there are any previous uploads to continue.
+            const previousUploads = await upload.findPreviousUploads();
+            // Found previous uploads so we select the first one.
+            if (previousUploads.length) {
+              upload.resumeFromPreviousUpload(previousUploads[0]);
+            }
+            // Start the upload
+            upload.start();
           });
-
-          // Check if there are any previous uploads to continue.
-          const previousUploads = await upload.findPreviousUploads();
-          // Found previous uploads so we select the first one.
-          if (previousUploads.length) {
-            upload.resumeFromPreviousUpload(previousUploads[0]);
-          }
-          // Start the upload
-          upload.start();
-        });
+        }
+      } else {
+        setValuesFields(tAnotherForm('notUploadFile'));
       }
 
       setValuesFields(tAnotherForm('uploadFile'));

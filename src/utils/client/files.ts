@@ -2,7 +2,7 @@
 
 import { FilesUploadType, Plan } from 'types/global.types';
 
-const MAX_PHOTO_SIZE = 6291456;
+export const MAX_PHOTO_SIZE = 6291456;
 export const filesProfileTypes = '.jpg, .jpeg, .png, .webp, .avif';
 export const filesTypes = '.apng, .mp4, .webm';
 export const ACCEPTED_IMAGE_TYPES = filesProfileTypes.split(', ').map((n) => 'image/' + n.replace('.', ''));
