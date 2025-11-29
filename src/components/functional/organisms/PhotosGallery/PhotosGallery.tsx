@@ -17,7 +17,7 @@ const FileContainer = dynamic(() =>
 export const PhotosGallery = ({ id, pseudonym, author, tGallery, firstGraphics }: GalleryType) => {
   const [userPhotos, setUserPhotos] = useState<FileType[]>(firstGraphics!);
   const [lastVisible, setLastVisible] = useState(
-    firstGraphics!.length > 0 ? firstGraphics![firstGraphics!.length - 1].fileId! : null,
+    !!firstGraphics && firstGraphics!.length > 0 ? firstGraphics![firstGraphics!.length - 1].fileId! : null,
   );
   let [i, setI] = useState(1);
   const [loadingFiles, setLoadingFiles] = useState(false);
@@ -49,26 +49,24 @@ export const PhotosGallery = ({ id, pseudonym, author, tGallery, firstGraphics }
       {decodeURIComponent(pathname!) === `/account/${author}` && <h2 className="title">{tGallery?.userPhotosTitle}</h2>}
 
       <Wrapper>
-        <Suspense fallback={<p>Loading...</p>}>
-          {userPhotos.length > 0 ? (
-            userPhotos.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
-              <Suspense key={index} fallback={<p>Loading...</p>}>
-                <FileContainer
-                  fileId={fileId!}
-                  name={name!}
-                  fileUrl={fileUrl}
-                  shortDescription={shortDescription!}
-                  tags={tags!}
-                  authorName={authorName!}
-                  authorBool={authorName === pseudonym}
-                  time={time}
-                />
-              </Suspense>
-            ))
-          ) : (
-            <div>nie ma nic</div>
-          )}
-        </Suspense>
+        {userPhotos && userPhotos.length > 0 ? (
+          userPhotos.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
+            <Suspense key={index} fallback="Loading...">
+              <FileContainer
+                fileId={fileId!}
+                name={name!}
+                fileUrl={fileUrl}
+                shortDescription={shortDescription!}
+                tags={tags!}
+                authorName={authorName!}
+                authorBool={authorName === pseudonym}
+                time={time}
+              />
+            </Suspense>
+          ))
+        ) : (
+          <div>nie ma nic</div>
+        )}
       </Wrapper>
       {!!lastVisible && userPhotos.length === maxItems * i && <MoreButton nextElementsAction={nextElementsAction} />}
     </article>

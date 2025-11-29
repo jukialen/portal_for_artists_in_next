@@ -11,8 +11,6 @@ import { Dialog } from '@ark-ui/react/dialog';
 import { useI18n, useScopedI18n } from 'locales/client';
 
 import {
-  ACCEPTED_ANIM_VIDEOS_TYPES,
-  ACCEPTED_IMAGE_TYPES,
   filesProfileTypes,
   filesTypes,
   handleFileSelection,
@@ -21,7 +19,7 @@ import {
   validateFile,
 } from 'utils/client/files';
 
-import { access_token, projectUrl } from 'constants/links';
+import { projectUrl, supabaseStorageFilesUrl } from 'constants/links';
 import { Tags, EventType, ResetFormType, FilesUploadType, Plan } from 'types/global.types';
 
 import { FormError } from 'components/ui/atoms/FormError/FormError';
@@ -125,13 +123,22 @@ export const FilesUpload = ({
               shortDescription,
               authorId: userId,
               tags,
-              fileUrl: data?.fullPath!,
+              fileUrl: `${supabaseStorageFilesUrl}/${data?.path!}`,
             },
           ]);
 
           console.log('fileData', fileData);
 
-          if (!!er) console.error(er);
+          if (!!er) {
+            const { data: deleteFileData, error: deleteFileError } = await supabase.storage
+              .from('basic')
+              .remove([data?.id!]);
+
+            console.log('deleteFileData', deleteFileData);
+            console.log('deleteFileError', deleteFileError);
+
+            setValuesFields(tAnotherForm('notUploadFile'));
+          }
         } else {
           return new Promise<void>(async (resolve, reject) => {
             const {
@@ -182,7 +189,7 @@ export const FilesUpload = ({
                 resolve();
               },
             });
-
+            console.log('upload', upload);
             // Check if there are any previous uploads to continue.
             const previousUploads = await upload.findPreviousUploads();
             // Found previous uploads so we select the first one.

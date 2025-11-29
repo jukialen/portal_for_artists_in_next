@@ -27,7 +27,6 @@ export async function GET(request: NextRequest) {
     if (data?.length === 0) return NextResponse.json(friendArray);
 
     for (const _f of data!) {
-      const {} = _f;
       friendArray.push({
         pseudonym: _f.pseudonym!,
         fileUrl: !!_f.profilePhoto ? _f.profilePhoto : `${backUrl}/friends.svg`,

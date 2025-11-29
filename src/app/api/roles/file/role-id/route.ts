@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json('no id');
     }
 
-    return NextResponse.json(data.id);
+    return NextResponse.json({ roleId: data.id });
   } catch (e) {
     console.error(e);
     return NextResponse.json('no id');

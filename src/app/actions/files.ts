@@ -35,10 +35,6 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
       for (const file of data!) {
         const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = file;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
-
-        if (roleId === 'no id') return filesArray;
-
         filesArray.push({
           fileId,
           name,
@@ -66,10 +62,6 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
 
       for (const file of data!) {
         const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = file;
-
-        const roleId = await getFileRoleId(fileId, authorId!);
-
-        if (roleId === 'no id') return filesArray;
 
         filesArray.push({
           fileId,

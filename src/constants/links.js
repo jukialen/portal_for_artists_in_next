@@ -5,7 +5,7 @@ export const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 export const access_token = process.env.NEXT_PUBLIC_SUPABASE_ACCESS_TOKEN;
 const supabaseStorageUrl = `${projectUrl}/storage/v1/object/public`;
 export const supabaseStorageProfileUrl = `${supabaseStorageUrl}/profiles`;
-
+export const supabaseStorageFilesUrl = `${supabaseStorageUrl}/basic`;
 export const mailerApiKey = process.env.NEXT_PUBLIC_MAILERSEND_API_KEY;
 export const GTM_ID = process.env.NEXT_PUBLIC_G_TAG;
 

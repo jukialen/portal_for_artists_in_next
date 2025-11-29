@@ -11,7 +11,7 @@ import { FileOptions } from 'components/ui/molecules/FileOptions/FileOptions';
 
 import styles from './FileContainer.module.scss';
 
-export const FileContainer = async ({
+export const FileContainer = ({
   name,
   fileUrl,
   authorName,
@@ -37,13 +37,7 @@ export const FileContainer = async ({
           and watch it with your favorite video player!
         </video>
       ) : (
-        <Image
-          className={styles.item}
-          src={fileUrl}
-          alt={`File ${name} added by ${authorName} in Category: ${tags}`}
-          unoptimized={`${tags}` === 'animations'}
-          priority
-        />
+        <img className={styles.item} src={fileUrl} alt={`File ${name} added by ${authorName} in Category: ${tags}`} />
       )}
       <div className={styles.time}>{time}</div>
 

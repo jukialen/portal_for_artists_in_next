@@ -19,7 +19,11 @@ import { PhotosGallery } from 'components/functional/organisms/PhotosGallery/Pho
 import { VideoGallery } from 'components/functional/organisms/VideoGallery/VideoGallery';
 
 interface PropsType {
-  params: Promise<{ locale: LangType; displayName: string; tabs: string }>;
+  params: Promise<{
+    locale: LangType;
+    displayName: string;
+    tabs: 'friends' | 'groups' | 'photos' | 'animations' | 'videos';
+  }>;
 }
 
 export default async function Tabs({ params }: PropsType) {
@@ -42,7 +46,6 @@ export default async function Tabs({ params }: PropsType) {
   const firstAdminList = await adminList(id, maxItems);
   const firstModsUsersList = await modsUsersList(maxItems);
 
-  const allowedTabs = ['friends', 'groups', 'photos', 'animations', 'videos'] as const;
   const backUrl = `/account/${displayName}`;
 
   const tGallery = {
@@ -64,10 +67,6 @@ export default async function Tabs({ params }: PropsType) {
     animations: tAside('animations'),
     videos: tAside('videos'),
   };
-
-  type TabKey = (typeof allowedTabs)[number];
-
-  const getLabel = (tab: string) => (allowedTabs.includes(tab as TabKey) ? tDash[tab as TabKey] : '');
 
   const renderComp = async () => {
     switch (tabs) {
@@ -117,7 +116,7 @@ export default async function Tabs({ params }: PropsType) {
 
   return (
     <>
-      <NavigationBar title={getLabel(tabs)} url={backUrl} />
+      <NavigationBar title={tDash[tabs]} url={backUrl} />
       {await renderComp()}
     </>
   );

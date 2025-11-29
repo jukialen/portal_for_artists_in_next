@@ -8,12 +8,12 @@
   border-radius: 0.5rem;
   box-shadow: 0 0 0.5rem 0.1rem var(--third);
 
-
   .item {
-    object-fit: contain;
-    background-color: transparent;
     width: 37.5rem;
     height: 37.5rem;
+    display: block;
+    object-fit: contain;
+    background-color: transparent;
   }
 
   .video {
@@ -24,8 +24,16 @@
     max-height: 37.5rem;
   }
 
+  .time {
+    width: 98%;
+    display: block;
+    padding: 1rem;
+    margin: auto;
+    border-top: 1px solid var(--opacity);
+  }
+
   .shortDescription {
-    width: inherit;
-    margin: .5rem 0;
+    width: 93%;
+    margin: .5rem auto;
   }
 }

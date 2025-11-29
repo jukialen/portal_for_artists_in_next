@@ -24,13 +24,11 @@ export const getFileRoleId = async (fileId: string, userId: string) => {
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const roleId: string | 'no id' = await fetch(`${backUrl}/api/roles/file/role-id?${queryString}`, {
+    return await fetch(`${backUrl}/api/roles/file/role-id?${queryString}`, {
       method: 'GET',
     })
       .then((r) => r.json())
       .catch((e) => console.error(e));
-
-    return roleId;
   } catch (e) {
     console.error(e);
     return 'no id';
