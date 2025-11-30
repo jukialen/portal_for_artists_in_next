@@ -17,6 +17,7 @@ export const translated = async () => {
 
 export const graphics = async (maxItems: number, authorId: string, step: 'first' | 'again', lastVisible?: string) => {
   const supabase = await createServer();
+  const inArray: Tags[] = ['realistic', 'manga', 'anime', 'comics', 'photographs'];
 
   const filesArray: FileType[] = [];
 
@@ -26,14 +27,14 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
         .from('Files')
         .select(selectFiles)
         .eq('authorId', authorId)
-        .in('tags', ['realistic', 'manga', 'anime', 'comics', 'photographs'])
+        .in('tags', inArray)
         .order('createdAt', { ascending: false })
         .limit(maxItems);
 
       if (data?.length === 0 || !!error) return filesArray;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = file;
+        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
         filesArray.push({
           fileId,
@@ -42,6 +43,7 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
           fileUrl,
+          tags,
           time: await getDate(updatedAt! || createdAt!, await dateData()),
           createdAt,
           updatedAt: updatedAt || '',
@@ -53,7 +55,7 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
         .from('Files')
         .select(selectFiles)
         .eq('authorId', authorId)
-        .in('tags', ['realistic', 'manga', 'anime', 'comics', 'photographs'])
+        .in('tags', inArray)
         .gt('createdAt', lastVisible)
         .order('createdAt', { ascending: false })
         .limit(maxItems);
@@ -61,7 +63,7 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
       if (data?.length === 0 || !!error) return filesArray;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = file;
+        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
         filesArray.push({
           fileId,
@@ -70,6 +72,7 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
           fileUrl,
+          tags,
           time: await getDate(updatedAt! || createdAt!, await dateData()),
           createdAt,
           updatedAt: updatedAt || '',
