@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { backUrl } from 'constants/links';
@@ -24,7 +23,7 @@ export const FileContainer = ({
   const linkShare = `${backUrl}/file/${name}${fileId}/${authorName}`;
 
   return (
-    <div className={styles.file}>
+    <article className={styles.file}>
       {authorBool && <DeletionFile fileId={fileId} />}
 
       {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
@@ -39,12 +38,16 @@ export const FileContainer = ({
       ) : (
         <img className={styles.item} src={fileUrl} alt={`File ${name} added by ${authorName} in Category: ${tags}`} />
       )}
-      <div className={styles.time}>{time}</div>
+
+      <section className={styles.timePlusTag}>
+        <div className={styles.time}>{time}</div>
+
+        <div className={styles.tags}>{tags}</div>
+      </section>
 
       <div className={styles.shortDescription}>{shortDescription}</div>
-      <div>{tags}</div>
 
       <FileOptions authorName={authorName!} fileUrl={fileUrl} tags={tags!} name={name!} linkShare={linkShare} />
-    </div>
+    </article>
   );
 };

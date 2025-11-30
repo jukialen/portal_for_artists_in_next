@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import Image from 'next/image';
 
@@ -19,8 +21,6 @@ export const SharingButton = ({ shareUrl, authorName, tags, name }: SharingType)
 
   const showShare = () => setShare(!share);
 
-  const icon = 40;
-  const border = 20;
   const titleShare = !!tags
     ? `Share ${authorName}'s post from ${tags} category.`
     : `Share ${authorName}'s post from ${name} group.`;
@@ -32,28 +32,22 @@ export const SharingButton = ({ shareUrl, authorName, tags, name }: SharingType)
       </button>
 
       <div className={`${styles.share__options} ${share ? styles.share__options__active : ''}`}>
-        <div className={styles.icon}>
-          <LineShareButton url={shareUrl} title={titleShare}>
-            <LineIcon size={icon} borderRadius={border} />
-          </LineShareButton>
-        </div>
-        <div className={styles.icon}>
-          <WhatsappShareButton url={shareUrl} title={titleShare}>
-            <WhatsappIcon size={icon} borderRadius={border} />
-          </WhatsappShareButton>
-        </div>
-        <div className={styles.icon}>
-          <WeiboShareButton url={shareUrl} title={titleShare}>
-            <WeiboIcon size={icon} borderRadius={border} />
-          </WeiboShareButton>
-        </div>
-        <div className={styles.icon}>
-          <RWebShare data={{ url: shareUrl, title: titleShare }} onClick={() => console.log('shared successfully!')}>
-            <button className={styles.more}>
-              <Image src="/more.svg" fill alt="button for another options for sharing" />
-            </button>
-          </RWebShare>
-        </div>
+        <LineShareButton url={shareUrl} title={titleShare}>
+          <LineIcon className={styles.icon} />
+        </LineShareButton>
+
+        <WhatsappShareButton url={shareUrl} title={titleShare}>
+          <WhatsappIcon className={styles.icon} />
+        </WhatsappShareButton>
+
+        <WeiboShareButton url={shareUrl} title={titleShare}>
+          <WeiboIcon className={styles.icon} />
+        </WeiboShareButton>
+        <RWebShare data={{ url: shareUrl, title: titleShare }} onClick={() => console.log('shared successfully!')}>
+          <button className={styles.more}>
+            <Image src="/more.svg" fill alt="button for another options for sharing" />
+          </button>
+        </RWebShare>
       </div>
     </div>
   );

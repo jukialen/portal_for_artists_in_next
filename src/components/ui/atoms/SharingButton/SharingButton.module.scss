@@ -3,8 +3,14 @@
   justify-self: flex-start;
 
   .sharButton {
-    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65em;
     font-size: 1.25rem;
+    border-radius: 1rem;
+    border: 1px solid transparent;
+    background: var(--secondary);
   }
 
   .share__options {
@@ -12,35 +18,53 @@
     visibility: hidden;
     position: absolute;
     align-items: center;
-    right: 3rem;
-    bottom: 0;
+    justify-content: center;
+    right: 3.2rem;
+    top: -0.2rem;
     background-color: var(--third);
-    border-radius: .5rem;
+    border-radius: 1rem;
 
-    .icon {
-      width: 2.5rem;
-      height: 2.5rem;
-      margin: 0 .5rem;
-      cursor: pointer;
+    button {
+      width: 3rem;
+      height: 3rem;
+      margin: 0.25rem;
+      border-radius: 1rem;
 
-      > button {
-        height: 2.5rem;
+      .icon,
+      .more {
+        width: inherit;
+        height: inherit;
+        aspect-ratio: 1/1;
+        border-radius: 1rem;
       }
 
-      .more {
-        width: 2.5rem;
-        height: 2.5rem;
-        border: 2px solid #000;
-        border-radius: .7rem;
-        position: relative;
-        background: none;
-        cursor: pointer;
+      &:hover,
+      &:focus,
+      &:active {
+        border-radius: 1rem;
+
+      }
+    }
+
+    .more {
+      border: 2px solid #000;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        border-radius: .5rem;
+        aspect-ratio: 1/1;
+        width: inherit;
+        position: unset !important;
       }
     }
   }
 
   .share__options__active {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     visibility: unset;
   }
 }

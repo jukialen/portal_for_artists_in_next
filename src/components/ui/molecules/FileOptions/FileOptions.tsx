@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 
 import { useScopedI18n } from 'locales/client';
@@ -20,9 +19,6 @@ type FileOptionsType = {
 };
 
 export const FileOptions = ({ authorName, tags, name, linkShare }: FileOptionsType) => {
-  const [open, setOpen] = useState(false);
-  const showOpenComments = () => setOpen(!open);
-
   const tComments = useScopedI18n('Comments');
 
   return (
@@ -34,14 +30,10 @@ export const FileOptions = ({ authorName, tags, name, linkShare }: FileOptionsTy
 
         <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} />
       </div>
-      <button className={styles.comments} onClick={showOpenComments}>
-        {tComments('noComments')}
-      </button>
-      {open && (
-        <Link href={linkShare} className={styles.linkToComments} aria-label="link to this file page">
-          {tComments('comments')}
-        </Link>
-      )}
+
+      <Link href={linkShare} className={styles.linkToComments} aria-label="link to this file page">
+        {tComments('comments')}
+      </Link>
     </div>
   );
 };

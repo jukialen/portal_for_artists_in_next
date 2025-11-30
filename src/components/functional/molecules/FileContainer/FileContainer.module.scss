@@ -4,7 +4,7 @@
   margin: 1rem auto;
   padding: 0.5rem 0;
   position: relative;
-  border: .1rem solid var(--third);
+  border: 0.1rem solid var(--third);
   border-radius: 0.5rem;
   box-shadow: 0 0 0.5rem 0.1rem var(--third);
 
@@ -24,16 +24,25 @@
     max-height: 37.5rem;
   }
 
-  .time {
+  .timePlusTag {
     width: 98%;
-    display: block;
-    padding: 1rem;
-    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     border-top: 1px solid var(--opacity);
+    margin: auto;
+    padding: 1rem;
+
+    .time {
+      display: block;
+    }
+
+    .tags {
+    }
   }
 
   .shortDescription {
     width: 93%;
-    margin: .5rem auto;
+    margin: 0.5rem auto;
   }
 }
