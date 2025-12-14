@@ -1,7 +1,10 @@
 .file {
-  min-width: min(17.5rem, 98%);
+  width: min(34.5rem, 90dvw);
+  height: fit-content;
+  display: grid;
+  grid-template-rows: 1fr 3.25rem 1.5rem 8.5rem;
   justify-self: center;
-  margin: 1rem auto;
+  margin: 1rem 0.3rem;
   padding: 0.5rem 0;
   position: relative;
   border: 0.1rem solid var(--third);
@@ -9,8 +12,8 @@
   box-shadow: 0 0 0.5rem 0.1rem var(--third);
 
   .item {
-    width: 37.5rem;
-    height: 37.5rem;
+    width: inherit;
+    height: 30rem;
     display: block;
     object-fit: contain;
     background-color: transparent;

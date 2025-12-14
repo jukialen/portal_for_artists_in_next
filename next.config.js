@@ -10,6 +10,7 @@ const cspHeader = `
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com ${projectUrl} https://region1.analytics.google.com ;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} ${projectUrlWithOutPrefix} https://www.google.pl;
+    media-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} ${projectUrlWithOutPrefix} https://www.google.pl;
     font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com;
     object-src 'none';
     base-uri 'self';
@@ -24,6 +25,7 @@ const cspHeader = `
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    qualities: [75, 100],
     remotePatterns: [
       {
         protocol: 'https',

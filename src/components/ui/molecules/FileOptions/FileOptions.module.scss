@@ -1,12 +1,12 @@
 .options {
   .bottomPanel {
     display: grid;
-    grid-template-columns: 1fr 4rem;
-    margin-top: 1rem;
+    grid-template-columns: 1fr 3rem;
+    margin: 1rem 1.25rem 0;
     align-items: center;
 
     .author__name {
-      margin: 0.5rem 2rem;
+      margin: 0.5rem 0;
     }
   }
 

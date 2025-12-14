@@ -83,7 +83,7 @@ async function getTop10Pavo(maxItems: number, tag: Tags, dataDateObject: DateObj
 
     if (!!data && data.length > 0) {
       for (const draw of data!) {
-        const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt } = draw;
+        const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt, tags } = draw;
 
         const roleId = await getFileRoleId(fileId, authorId!);
 
@@ -94,6 +94,7 @@ async function getTop10Pavo(maxItems: number, tag: Tags, dataDateObject: DateObj
           authorName: Users?.pseudonym!,
           fileUrl,
           time: await getDate(updatedAt! || createdAt!, dataDateObject),
+          tags,
         });
       }
     }

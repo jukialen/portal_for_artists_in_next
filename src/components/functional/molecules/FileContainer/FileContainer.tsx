@@ -20,8 +20,9 @@ export const FileContainer = ({
   fileId,
   authorBool,
 }: ArticleVideosType) => {
-  const linkShare = `${backUrl}/file/${name}${fileId}/${authorName}`;
-
+  const linkShare = `${backUrl}/file/${name}/${fileId}/${authorName}`;
+  const Tags = tags[0].toUpperCase() + tags.slice(1);
+  console.log('tags', tags);
   return (
     <article className={styles.file}>
       {authorBool && <DeletionFile fileId={fileId} />}
@@ -42,10 +43,12 @@ export const FileContainer = ({
       <section className={styles.timePlusTag}>
         <div className={styles.time}>{time}</div>
 
-        <div className={styles.tags}>{tags}</div>
+        <div className={styles.tags}>{Tags}</div>
       </section>
 
-      <div className={styles.shortDescription}>{shortDescription}</div>
+      <div className={styles.shortDescription}>
+        {shortDescription.length <= 36 ? shortDescription : shortDescription + '...'}
+      </div>
 
       <FileOptions authorName={authorName!} fileUrl={fileUrl} tags={tags!} name={name!} linkShare={linkShare} />
     </article>

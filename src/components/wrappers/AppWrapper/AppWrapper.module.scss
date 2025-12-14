@@ -21,7 +21,7 @@
 
 .content {
   display: grid;
-  grid-gap: 2rem;
+  gap: 1rem;
   grid-auto-flow: column;
   margin: auto;
   box-sizing: border-box;
@@ -64,14 +64,8 @@
   }
 }
 
-@media (min-width: 600px) and (max-width: 1023px) {
-  .wrapper {
-    width: 70vw;
-  }
-}
-
 @media (min-width: 1024px) {
   .wrapper {
-    width: 63vw;
+    width: 72vw;
   }
 }
