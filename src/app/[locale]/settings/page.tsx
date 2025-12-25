@@ -17,7 +17,6 @@ import { AccountData } from 'components/functional/organisms/AccountData/Account
 
 import styles from './page.module.scss';
 
-// @ts-ignore
 export const metadata: Metadata = HeadCom('Settings site for unlogged in users.');
 
 export default async function Settings({ params }: { params: Promise<{ locale: LangType }> }) {

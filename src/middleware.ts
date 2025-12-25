@@ -2,8 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { createI18nMiddleware } from 'next-international/middleware';
 
-import { publishableKey, projectUrl, backUrl } from 'constants/links';
-import { RoleType } from './types/global.types';
+import { publishableKey, projectUrl, backUrl, newUserRed } from 'constants/links';
 
 const locales = ['en', 'pl', 'jp'];
 const defaultLocale = 'en';
@@ -42,7 +41,7 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getSession();
 
   const redirectSignIntUrl = new URL('/signin', req.url);
-  const redirectToNewUser = new URL('/new-user', req.url);
+  const redirectToNewUser = new URL(newUserRed, req.url);
   const redirectToApp = new URL('/app', req.url);
 
   const {
@@ -92,7 +91,7 @@ export async function middleware(req: NextRequest) {
 
   if (((!isPublicPath && !isGuestOnlyPath) || isAuthCallback) && !id) return NextResponse.redirect(redirectSignIntUrl);
 
-  if ((normalizedAuthPath === '/new-user' || isGuestOnlyPath) && !!userData?.id)
+  if ((normalizedAuthPath === newUserRed || isGuestOnlyPath) && !!userData?.id)
     return NextResponse.redirect(redirectToApp);
 
   if (user?.app_metadata?.provider !== 'email' && !userData?.id && !!id) {

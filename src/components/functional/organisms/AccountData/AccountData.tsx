@@ -23,6 +23,7 @@ const Alerts = lazy(() =>
 );
 
 import styles from './AccountData.module.scss';
+import { usePaddle } from '../../../../helpers/Paddle/paddle.client';
 
 type ResetPassword = {
   email: string;
@@ -190,7 +191,11 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                         </div>
                         <div className={styles.buttonContainer}>
                           <button onClick={() => setOpen(false)}>{t('cancel')}</button>
-                          <button type="submit">{tAccount('aData.Premium.update')}</button>
+                          <button
+                            type="submit"
+                            onClick={() => usePaddle('', userData?.id!, userData?.email).openSubscriptionCheckout()}>
+                            {tAccount('aData.Premium.update')}
+                          </button>
                         </div>
                       </Form>
                     )}
