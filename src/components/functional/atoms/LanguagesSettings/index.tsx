@@ -15,7 +15,7 @@ export const LanguagesSettings = ({ locale }: { locale: LangType }) => {
 
   const t = useI18n();
 
-  const locales: LangType[] = ['en', 'jp', 'pl'];
+  const locales: LangType[] = ['en', 'ja', 'pl'];
 
   const redirectedPathName = (locale: LangType) => {
     setLanguage(!isLanguage);

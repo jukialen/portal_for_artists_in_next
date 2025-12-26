@@ -9,6 +9,9 @@ export const usePaddle = (priceId: string, userId: string, email: string) => {
   // Create a local state to store Paddle instance
   const [paddle, setPaddle] = useState<Paddle>();
 
+  console.log('data', priceId, userId, email);
+  console.log('paddle', paddle);
+
   // Download and initialize Paddle instance from CDN
   useEffect(() => {
     initializePaddle({

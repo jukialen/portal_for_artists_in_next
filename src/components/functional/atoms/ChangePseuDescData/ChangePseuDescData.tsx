@@ -82,7 +82,7 @@ export const ChangePseuDescData = ({
       let updatePhotoInDB = false;
 
       if (!!photo) {
-        const photoError = await validateFile(fileTranslated, photo);
+        const photoError = await validateFile(fileTranslated, photo, userData?.plan!);
         if (photoError) {
           setValuesFields(photoError);
           return;

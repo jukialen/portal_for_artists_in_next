@@ -32,7 +32,7 @@ export const getDate = async (dateField: string, dataDateObject: DateObjectType)
   const years = `${year !== currentYear ? year : ''}`;
 
   const simpleYearSeparator = `${year !== currentYear ? dataDateObject.yearDateSeparator : ''}`;
-  const simpleYears = locale === 'jp' ? `${years}${simpleYearSeparator}` : `${simpleYearSeparator}${years}`;
+  const simpleYears = locale === 'ja' ? `${years}${simpleYearSeparator}` : `${simpleYearSeparator}${years}`;
 
   const jpTimes = `${hours}時${minutes}${dataDateObject.minute}`;
   const jpDate = `${simpleYears}${months}月${days}${dataDateObject.day}`;
@@ -55,6 +55,6 @@ export const getDate = async (dateField: string, dataDateObject: DateObjectType)
       return simpleDays;
     }
   } else {
-    return locale === 'jp' ? `${jpDate} ${jpTimes}` : `${date} ${times}`;
+    return locale === 'ja' ? `${jpDate} ${jpTimes}` : `${date} ${times}`;
   }
 };

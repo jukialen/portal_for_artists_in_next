@@ -23,7 +23,7 @@ export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) =
   return (
     <div className={styles.groups}>
       <h3 className={styles.title} onClick={changeOpenGroups}>
-        <p className={locale === 'jp' ? styles.title__jp : ''}>{tAside('groups')}</p>
+        <p className={locale === 'ja' ? styles.title__jp : ''}>{tAside('groups')}</p>
         <RiArrowUpSLine
           style={{
             transform: open ? 'rotate(-180deg)' : 'rotate(0deg)',

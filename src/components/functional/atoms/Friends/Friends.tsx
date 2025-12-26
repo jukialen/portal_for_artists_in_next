@@ -21,7 +21,7 @@ export const Friends = ({ friendsAsideList }: { friendsAsideList: FriendsListArr
   return (
     <div className={styles.friends}>
       <h3 className={styles.title} onClick={changeOpenFriends}>
-        <p className={locale === 'jp' ? styles.title__jp : styles.title__others}>{tAside('friends')}</p>
+        <p className={locale === 'ja' ? styles.title__jp : styles.title__others}>{tAside('friends')}</p>
         <RiArrowUpSLine
           style={{
             transform: open ? 'rotate(-180deg)' : 'rotate(0deg)',

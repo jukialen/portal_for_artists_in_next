@@ -127,9 +127,13 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
 
   const changeSubscription = async ({ newPlan }: SubscriptionType, { resetForm }: ResetFormType) => {
     try {
+      console.log('newPlan', newPlan);
+      console.log('plan', userData?.plan!);
       if (newPlan === userData?.plan!) console.log(true);
+      usePaddle('', userData?.id!, userData?.email).openSubscriptionCheckout();
       const { error } = await supabase.from('Users').update({ plan: newPlan }).eq('id', userData?.id!);
 
+      console.log('error', error);
       if (!!error) {
         setValuesFieldsPlan(t('error'));
         return;
@@ -191,11 +195,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                         </div>
                         <div className={styles.buttonContainer}>
                           <button onClick={() => setOpen(false)}>{t('cancel')}</button>
-                          <button
-                            type="submit"
-                            onClick={() => usePaddle('', userData?.id!, userData?.email).openSubscriptionCheckout()}>
-                            {tAccount('aData.Premium.update')}
-                          </button>
+                          <button type="submit">{tAccount('aData.Premium.update')}</button>
                         </div>
                       </Form>
                     )}

@@ -84,7 +84,7 @@ export const UpdateProfilePhotoOnAccount = ({
   const updateLogo = async () => {
     try {
       if (!!newLogo && !required) {
-        if (!(await validateFile(fileTranslated, newLogo))) {
+        if (!(await validateFile(fileTranslated, newLogo, userData?.plan!))) {
           const pathPhoto = `/${userData?.id!}/${newLogo.name}`;
 
           if (!!userData?.profilePhoto) {

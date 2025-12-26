@@ -16,6 +16,7 @@ import { DeleteAccount } from 'components/functional/atoms/DeleteAccount/DeleteA
 import { AccountData } from 'components/functional/organisms/AccountData/AccountData';
 
 import styles from './page.module.scss';
+import { getAllProducts, getSubscriptionsList, getSubscriptionsOptions } from '../../../helpers/Paddle/paddle.server';
 
 export const metadata: Metadata = HeadCom('Settings site for unlogged in users.');
 
@@ -33,6 +34,8 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
     fileTooLarge: tAnotherForm('fileTooLarge'),
     unsupportedFileType: tAnotherForm('unsupportedFileType'),
   };
+
+  const subscriptionsOptionsList = await getSubscriptionsOptions(locale);
 
   const userData = await getUserData();
 

@@ -1,7 +1,9 @@
 import {
+  CountryCode,
   Environment,
   LogLevel,
   Paddle,
+  Price,
   Product,
   ProductCollection,
   Subscription,
@@ -10,6 +12,15 @@ import {
   TransactionCollection,
 } from '@paddle/paddle-node-sdk';
 import { paddleServerId } from '../../constants/links';
+import { LangType } from '../../types/global.types';
+
+type PlanDataType = {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  billingCycle: 'year' | 'month';
+};
 
 export const paddle = new Paddle(paddleServerId!, {
   environment: process.env.NODE_ENV === 'production' ? Environment.production : Environment.sandbox,
@@ -19,10 +30,12 @@ export const paddle = new Paddle(paddleServerId!, {
 export const getSubscriptionsList = async () => {
   const subscriptionCollection: SubscriptionCollection = paddle.subscriptions.list();
 
+  console.log('subscriptionCollection', subscriptionCollection);
   const allItems: Subscription[] = [];
 
   try {
     for await (const subscription of subscriptionCollection) {
+      console.log('subscription', subscription);
       allItems.push(subscription);
     }
 
@@ -36,13 +49,16 @@ export const getSubscriptionsList = async () => {
 };
 
 export const getAllProducts = async () => {
-  const productCollection: ProductCollection = paddle.products.list();
+  const productCollection: ProductCollection = paddle.products.list({
+    include: ['prices'],
+  });
   const allItems: Product[] = [];
 
   try {
     for await (const product of productCollection) {
       allItems.push(product);
     }
+
     if (allItems.length === 0) {
       console.log('No products were found.');
     }
@@ -50,6 +66,41 @@ export const getAllProducts = async () => {
   } catch (e) {
     console.error('Error within getAllProducts:', e);
     throw e; // If you want to propagate the error
+  }
+};
+
+export const getSubscriptionsOptions = async (locale: LangType) => {
+  const subscriptionData: PlanDataType[] = [];
+
+  const langCode = locale.toUpperCase() as CountryCode;
+  try {
+    const plans: Product[] = await getAllProducts();
+
+    const priceString = (plan: Price) =>
+      locale === 'en'
+        ? `${plan.unitPrice.amount} ${plan.unitPrice.currencyCode}`
+        : (() => {
+            const override = plan.unitPriceOverrides.find(
+              (o) => o.countryCodes.includes(langCode) || o.countryCodes.includes('CN'),
+            );
+            return override
+              ? `${override.unitPrice.amount} ${plan.unitPrice.currencyCode}`
+              : `${plan.unitPrice.amount} ${plan.unitPrice.currencyCode}`;
+          })();
+
+    for (const plan of plans[1].prices!) {
+      subscriptionData.push({
+        id: plan.id,
+        name: plan.name!,
+        description: plan.description,
+        price: priceString(plan),
+        billingCycle: plan.billingCycle?.interval! as 'year' | 'month',
+      });
+    }
+
+    return subscriptionData;
+  } catch (error) {
+    console.error('Error within getSubscriptionsOptions:', error);
   }
 };
 

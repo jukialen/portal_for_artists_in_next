@@ -7,7 +7,7 @@ type Like = { likes: number; liked: boolean };
 type Time = { createdAt?: string; updatedAt?: string };
 
 export type IndexType = 'photographs' | 'videos' | 'animations';
-export type LangType = 'en' | 'pl' | 'jp';
+export type LangType = 'en' | 'pl' | 'ja';
 export type Plan = Database['public']['Enums']['Plan'];
 export type Provider = Database['public']['Enums']['Provider'];
 export type TableNameType = 'Comments' | 'FilesComments' | 'LastComments' | 'SubComments';

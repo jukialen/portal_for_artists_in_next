@@ -100,6 +100,7 @@ export default async function User({ params }: PropsType) {
       fidsFavs={fidsFavs}
       favs={favs}
       fave={fave}
+      myProfile={false}
     />
   );
 }
