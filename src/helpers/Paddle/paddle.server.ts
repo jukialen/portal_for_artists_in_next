@@ -11,16 +11,9 @@ import {
   Transaction,
   TransactionCollection,
 } from '@paddle/paddle-node-sdk';
-import { paddleServerId } from '../../constants/links';
-import { LangType } from '../../types/global.types';
 
-type PlanDataType = {
-  id: string;
-  name: string;
-  description: string;
-  price: string;
-  billingCycle: 'year' | 'month';
-};
+import { paddleServerId } from 'constants/links';
+import { BillingCycleType, LangType, PlanPricingType } from 'types/global.types';
 
 export const paddle = new Paddle(paddleServerId!, {
   environment: process.env.NODE_ENV === 'production' ? Environment.production : Environment.sandbox,
@@ -30,14 +23,10 @@ export const paddle = new Paddle(paddleServerId!, {
 export const getSubscriptionsList = async () => {
   const subscriptionCollection: SubscriptionCollection = paddle.subscriptions.list();
 
-  console.log('subscriptionCollection', subscriptionCollection);
   const allItems: Subscription[] = [];
 
   try {
-    for await (const subscription of subscriptionCollection) {
-      console.log('subscription', subscription);
-      allItems.push(subscription);
-    }
+    for await (const subscription of subscriptionCollection) allItems.push(subscription);
 
     if (allItems.length === 0) console.log('No subscriptions were found.');
 
@@ -70,7 +59,7 @@ export const getAllProducts = async () => {
 };
 
 export const getSubscriptionsOptions = async (locale: LangType) => {
-  const subscriptionData: PlanDataType[] = [];
+  const subscriptionData: PlanPricingType[] = [];
 
   const langCode = locale.toUpperCase() as CountryCode;
   try {
@@ -94,7 +83,7 @@ export const getSubscriptionsOptions = async (locale: LangType) => {
         name: plan.name!,
         description: plan.description,
         price: priceString(plan),
-        billingCycle: plan.billingCycle?.interval! as 'year' | 'month',
+        billingCycle: plan.billingCycle?.interval! as BillingCycleType,
       });
     }
 

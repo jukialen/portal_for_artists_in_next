@@ -51,7 +51,7 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
 
       {!!userData?.id && (
         <>
-          <AccountData userData={userData!} />
+          <AccountData userData={userData!} subscriptionsOptionsList={subscriptionsOptionsList} />
           <h3>{t('Nav.profile')}</h3>
           <ChangePseuDescData userData={userData!} fileTranslated={fileTranslated} />
         </>

@@ -3,13 +3,14 @@ import { setStaticParamsLocale } from 'next-international/server';
 import Link from 'next/link';
 
 import { getUserData } from 'helpers/getUserData';
+import { getSubscriptionsOptions } from 'helpers/Paddle/paddle.server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { LangType } from 'types/global.types';
+import { LangType, PlanDataType, PlanOtherDataType } from 'types/global.types';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { PlanBlock } from 'components/ui/molecules/PlanBlock/PlanBlock';
+import { PlansContainer } from 'components/functional/organisms/Plans/Plans';
 
 import styles from './page.module.scss';
 
@@ -22,23 +23,27 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
   const t = await getI18n();
   const tPlans = await getScopedI18n('Plans');
 
+  const subscriptionsOptionsList = await getSubscriptionsOptions(locale);
+
   const user = await getUserData();
 
-  const freePlan = {
+  const freePlan: PlanDataType = {
     plan: 'FREE',
-    amount: 0,
-    period: tPlans('period'),
+    amountMonth: 0,
+    amountYear: 0,
     grLength: tPlans('grLength'),
     animLength: tPlans('animLength'),
     vidLength: tPlans('vidLength'),
     grAnimSize: tPlans('grAnimSize'),
     vidSize: tPlans('vidSize'),
     noAds: tPlans('noAds'),
+    support: tPlans('support'),
+    choosePlan: tPlans('choosePlan'),
   };
-  const premiumPlan = {
+  const premiumPlan: PlanDataType = {
     plan: 'PREMIUM',
-    amount: 10,
-    period: tPlans('period'),
+    amountMonth: 10,
+    amountYear: 100,
     grLength: tPlans('grLength'),
     animLength: tPlans('animLength'),
     vidLength: tPlans('vidLength'),
@@ -46,11 +51,12 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
     vidSize: tPlans('vidSizeP'),
     noAds: tPlans('noAds'),
     support: tPlans('support'),
+    choosePlan: tPlans('choosePlan'),
   };
-  const goldPlan = {
+  const goldPlan: PlanDataType = {
     plan: 'GOLD',
-    amount: 20,
-    period: tPlans('period'),
+    amountMonth: 20,
+    amountYear: 200,
     grLength: tPlans('grLength'),
     animLength: tPlans('animLength'),
     vidLength: tPlans('vidLength'),
@@ -58,6 +64,20 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
     vidSize: tPlans('vidSizeG'),
     noAds: tPlans('noAds'),
     support: tPlans('pSupport'),
+    choosePlan: tPlans('choosePlan'),
+  };
+
+  const otherData: PlanOtherDataType = {
+    signIn: t('Nav.signIn'),
+    signUp: t('Nav.signUp'),
+    id: user?.id,
+    email: user?.email,
+    pseudonym: user?.pseudonym,
+    subscriptionsOptionsList,
+    plan: user?.plan!,
+    billingCycle: user?.billingCycle!,
+    periodMonth: tPlans('periodMonth'),
+    periodYear: tPlans('periodYear'),
   };
 
   return (
@@ -66,41 +86,8 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
       <h3 className={styles.subTitle}>{tPlans('subTitle')}</h3>
       <div className={styles.plansFormats}>
         <div className={styles.plans}>
-          <PlanBlock
-            amount={freePlan.amount}
-            plan={freePlan.plan}
-            period={freePlan.period}
-            grLength={freePlan.grLength}
-            animLength={freePlan.animLength}
-            vidLength={freePlan.vidLength}
-            grAnimSize={freePlan.grAnimSize}
-            vidSize={freePlan.vidSize}
-            noAds={freePlan.noAds}
-          />
-          <PlanBlock
-            amount={premiumPlan.amount}
-            plan={premiumPlan.plan}
-            period={premiumPlan.period}
-            grLength={premiumPlan.grLength}
-            animLength={premiumPlan.animLength}
-            vidLength={premiumPlan.vidLength}
-            grAnimSize={premiumPlan.grAnimSize}
-            vidSize={premiumPlan.vidSize}
-            noAds={premiumPlan.noAds}
-            support={premiumPlan.support}
-          />
-          <PlanBlock
-            amount={goldPlan.amount}
-            plan={goldPlan.plan}
-            period={goldPlan.period}
-            grLength={goldPlan.grLength}
-            animLength={goldPlan.animLength}
-            vidLength={goldPlan.vidLength}
-            grAnimSize={goldPlan.grAnimSize}
-            vidSize={goldPlan.vidSize}
-            noAds={goldPlan.noAds}
-            support={goldPlan.support}
-          />
+          <PlansContainer dataPlan={[freePlan, premiumPlan, goldPlan]} other={otherData} />
+
           <div className={styles.toFaq}>
             <p>
               {t('Contact.toFAQ')}

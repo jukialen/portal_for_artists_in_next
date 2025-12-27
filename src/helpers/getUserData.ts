@@ -25,6 +25,7 @@ export const getUserData = async (): Promise<UserType | undefined> => {
         email: user?.email!,
         plan: data?.plan!,
         provider: data?.provider!,
+        billingCycle: data?.billingCycle!,
       };
     } else {
       console.log(`Error for getting user data: ${error?.message}, with ${error?.code}`);

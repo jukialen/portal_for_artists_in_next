@@ -4,7 +4,7 @@ import { createI18nMiddleware } from 'next-international/middleware';
 
 import { publishableKey, projectUrl, backUrl, newUserRed } from 'constants/links';
 
-const locales = ['en', 'pl', 'jp'];
+const locales = ['en', 'pl', 'ja'];
 const defaultLocale = 'en';
 const publicForAll = ['/settings', '/terms', '/privacy', '/contact', '/faq', '/plans'];
 const onlyForGuests = ['/', '/signin', '/signup', '/forgotten'];

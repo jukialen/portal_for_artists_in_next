@@ -2,15 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { initializePaddle, Paddle } from '@paddle/paddle-js';
-import { backUrl, paddleClientId } from '../../constants/links';
-import { ModeType } from '../../types/global.types';
 
-export const usePaddle = (priceId: string, userId: string, email: string) => {
+import { backUrl, paddleClientId } from 'constants/links';
+import { ModeType } from 'types/global.types';
+
+export const usePaddle = () => {
   // Create a local state to store Paddle instance
   const [paddle, setPaddle] = useState<Paddle>();
-
-  console.log('data', priceId, userId, email);
-  console.log('paddle', paddle);
 
   // Download and initialize Paddle instance from CDN
   useEffect(() => {
@@ -19,21 +17,33 @@ export const usePaddle = (priceId: string, userId: string, email: string) => {
       token: paddleClientId!,
     }).then((paddleInstance: Paddle | undefined) => {
       if (paddleInstance) {
+        console.log('paddleInstance', paddleInstance);
         setPaddle(paddleInstance);
       }
     });
   }, []);
 
   // Callback to open a checkout
-  const openSubscriptionCheckout = () =>
+  const openSubscriptionCheckout = (priceId: string, userId: string, email: string, previousPage: string) =>
     paddle?.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       settings: {
         allowLogout: false,
         displayMode: 'overlay',
-        successUrl: `${backUrl}/payment/success`,
+        successUrl: `${backUrl}/api/pay/success?previousPage=${previousPage}`,
         variant: 'one-page',
         theme: localStorage.getItem('mode')! as ModeType,
+        allowedPaymentMethods: [
+          'alipay',
+          'apple_pay',
+          'google_pay',
+          'paypal',
+          'card',
+          'kakao_pay',
+          'samsung_pay',
+          'south_korea_local_card',
+          'naver_pay',
+        ],
       },
       customer: { id: userId },
       customData: {
@@ -42,15 +52,26 @@ export const usePaddle = (priceId: string, userId: string, email: string) => {
       },
     });
 
-  const openOneTimeCheckout = () =>
+  const openOneTimeCheckout = (priceId: string, userId: string, email: string) =>
     paddle?.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       settings: {
         allowLogout: false,
         displayMode: 'overlay',
-        successUrl: `${backUrl}/pay/success`,
+        successUrl: `${backUrl}/api/pay/success`,
         variant: 'one-page',
         theme: localStorage.getItem('mode')! as ModeType,
+        allowedPaymentMethods: [
+          'alipay',
+          'apple_pay',
+          'google_pay',
+          'paypal',
+          'card',
+          'kakao_pay',
+          'samsung_pay',
+          'south_korea_local_card',
+          'naver_pay',
+        ],
       },
       customer: { id: userId },
       customData: {

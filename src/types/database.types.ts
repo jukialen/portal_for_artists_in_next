@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "13.0.5"
   }
   graphql_public: {
     Tables: {
@@ -97,7 +97,7 @@ export type Database = {
           createdAt: string
           fileId: string
           fileUrl: string
-          fts_document: unknown | null
+          fts_document: unknown
           groupId: string | null
           name: string
           profileType: boolean
@@ -110,7 +110,7 @@ export type Database = {
           createdAt?: string
           fileId?: string
           fileUrl: string
-          fts_document?: unknown | null
+          fts_document?: unknown
           groupId?: string | null
           name: string
           profileType?: boolean
@@ -123,7 +123,7 @@ export type Database = {
           createdAt?: string
           fileId?: string
           fileUrl?: string
-          fts_document?: unknown | null
+          fts_document?: unknown
           groupId?: string | null
           name?: string
           profileType?: boolean
@@ -528,6 +528,7 @@ export type Database = {
       }
       Users: {
         Row: {
+          billingCycle: Database["public"]["Enums"]["BillingCycleType"]
           createdAt: string
           description: string
           email: string
@@ -540,6 +541,7 @@ export type Database = {
           username: string
         }
         Insert: {
+          billingCycle?: Database["public"]["Enums"]["BillingCycleType"]
           createdAt?: string
           description?: string
           email?: string
@@ -552,6 +554,7 @@ export type Database = {
           username: string
         }
         Update: {
+          billingCycle?: Database["public"]["Enums"]["BillingCycleType"]
           createdAt?: string
           description?: string
           email?: string
@@ -645,6 +648,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      BillingCycleType: "month" | "year"
       Plan: "FREE" | "PREMIUM" | "GOLD"
       Provider: "email" | "google" | "discord" | "spotify"
       Role: "ADMIN" | "MODERATOR" | "USER" | "AUTHOR"
@@ -711,21 +715,48 @@ export type Database = {
       buckets_analytics: {
         Row: {
           created_at: string
+          deleted_at: string | null
           format: string
+          id: string
+          name: string
+          type: Database["storage"]["Enums"]["buckettype"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          format?: string
+          id?: string
+          name: string
+          type?: Database["storage"]["Enums"]["buckettype"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          format?: string
+          id?: string
+          name?: string
+          type?: Database["storage"]["Enums"]["buckettype"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      buckets_vectors: {
+        Row: {
+          created_at: string
           id: string
           type: Database["storage"]["Enums"]["buckettype"]
           updated_at: string
         }
         Insert: {
           created_at?: string
-          format?: string
           id: string
           type?: Database["storage"]["Enums"]["buckettype"]
           updated_at?: string
         }
         Update: {
           created_at?: string
-          format?: string
           id?: string
           type?: Database["storage"]["Enums"]["buckettype"]
           updated_at?: string
@@ -939,6 +970,50 @@ export type Database = {
           },
         ]
       }
+      vector_indexes: {
+        Row: {
+          bucket_id: string
+          created_at: string
+          data_type: string
+          dimension: number
+          distance_metric: string
+          id: string
+          metadata_configuration: Json | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          bucket_id: string
+          created_at?: string
+          data_type: string
+          dimension: number
+          distance_metric: string
+          id?: string
+          metadata_configuration?: Json | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          bucket_id?: string
+          created_at?: string
+          data_type?: string
+          dimension?: number
+          distance_metric?: string
+          id?: string
+          metadata_configuration?: Json | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vector_indexes_bucket_id_fkey"
+            columns: ["bucket_id"]
+            isOneToOne: false
+            referencedRelation: "buckets_vectors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -952,36 +1027,22 @@ export type Database = {
         Args: { bucketid: string; metadata: Json; name: string; owner: string }
         Returns: undefined
       }
+      delete_leaf_prefixes: {
+        Args: { bucket_ids: string[]; names: string[] }
+        Returns: undefined
+      }
       delete_prefix: {
         Args: { _bucket_id: string; _name: string }
         Returns: boolean
       }
-      extension: {
-        Args: { name: string }
-        Returns: string
-      }
-      filename: {
-        Args: { name: string }
-        Returns: string
-      }
-      foldername: {
-        Args: { name: string }
-        Returns: string[]
-      }
-      get_level: {
-        Args: { name: string }
-        Returns: number
-      }
-      get_prefix: {
-        Args: { name: string }
-        Returns: string
-      }
-      get_prefixes: {
-        Args: { name: string }
-        Returns: string[]
-      }
+      extension: { Args: { name: string }; Returns: string }
+      filename: { Args: { name: string }; Returns: string }
+      foldername: { Args: { name: string }; Returns: string[] }
+      get_level: { Args: { name: string }; Returns: number }
+      get_prefix: { Args: { name: string }; Returns: string }
+      get_prefixes: { Args: { name: string }; Returns: string[] }
       get_size_by_bucket: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           bucket_id: string
           size: number
@@ -1018,10 +1079,11 @@ export type Database = {
           updated_at: string
         }[]
       }
-      operation: {
-        Args: Record<PropertyKey, never>
-        Returns: string
+      lock_top_prefixes: {
+        Args: { bucket_ids: string[]; names: string[] }
+        Returns: undefined
       }
+      operation: { Args: never; Returns: string }
       search: {
         Args: {
           bucketname: string
@@ -1088,12 +1150,16 @@ export type Database = {
           levels?: number
           limits?: number
           prefix: string
+          sort_column?: string
+          sort_column_after?: string
+          sort_order?: string
           start_after?: string
         }
         Returns: {
           created_at: string
           id: string
           key: string
+          last_accessed_at: string
           metadata: Json
           name: string
           updated_at: string
@@ -1101,7 +1167,7 @@ export type Database = {
       }
     }
     Enums: {
-      buckettype: "STANDARD" | "ANALYTICS"
+      buckettype: "STANDARD" | "ANALYTICS" | "VECTOR"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1232,6 +1298,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      BillingCycleType: ["month", "year"],
       Plan: ["FREE", "PREMIUM", "GOLD"],
       Provider: ["email", "google", "discord", "spotify"],
       Role: ["ADMIN", "MODERATOR", "USER", "AUTHOR"],
@@ -1251,7 +1318,7 @@ export const Constants = {
   },
   storage: {
     Enums: {
-      buckettype: ["STANDARD", "ANALYTICS"],
+      buckettype: ["STANDARD", "ANALYTICS", "VECTOR"],
     },
   },
 } as const

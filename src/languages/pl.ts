@@ -358,7 +358,8 @@ export default {
   Plans: {
     title: 'Pfartists plany',
     subTitle: 'Wybierz plan który jest najlepszy dla ciebie',
-    period: '/MIESIĘCZNIE',
+    periodMonth: 'miesięcznie',
+    periodYear: 'rocznie',
     grLength: 'Nielimitowana ilość plików graficznych*',
     animLength: 'Nielimitowana ilość animacji*',
     vidLength: 'Nielimitowana ilość filmów*',

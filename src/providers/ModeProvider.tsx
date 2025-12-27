@@ -16,20 +16,17 @@ export const ModeProvider = ({ children }: { children: ReactNode }) => {
     typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
   );
 
-
   useEffect(() => {
     const defaultTheme = (): ModeType | null => {
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const savedMode = localStorage.getItem('mode') as ModeType | null;
 
       const defaultMode = savedMode ?? (systemPrefersDark ? 'dark' : 'light');
-      localStorage.setItem('chakra-ui-color-mode', defaultMode);
       return defaultMode;
     };
 
     const mode: ModeType | null = isMode ?? defaultTheme();
     setMode(mode!);
-    localStorage.setItem('chakra-ui-color-mode', mode!);
     document.documentElement.setAttribute('data-mode', mode!);
     document.documentElement.setAttribute('data-theme', mode!);
     localStorage.setItem('mode', mode!);

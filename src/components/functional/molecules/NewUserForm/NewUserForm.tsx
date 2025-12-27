@@ -88,7 +88,7 @@ export const NewUserForm = ({ newUserTranslate, id, email, provider }: NewUserTy
     };
     console.log(id);
     try {
-      if (!!photo && (await validateFile(fileTranslated, photo))) {
+      if (!!photo && (await validateFile(fileTranslated, photo, 'FREE'))) {
         const name = Date.now() + '-' + id + '-' + photo!.name!;
 
         const { data, error } = await supabase.storage.from('profiles').upload(`${id}/${name}`, photo);

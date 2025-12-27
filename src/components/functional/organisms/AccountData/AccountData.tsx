@@ -11,8 +11,10 @@ import { Popover } from '@ark-ui/react/popover';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
+import { usePaddle } from 'helpers/Paddle/paddle.client';
+
 import { backUrl } from 'constants/links';
-import { NewPlanType, Plan, ResetFormType, UserFormType, UserType } from 'types/global.types';
+import { BillingCycleType, Plan, PlanPricingType, ResetFormType, UserFormType, UserType } from 'types/global.types';
 
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 
@@ -23,7 +25,6 @@ const Alerts = lazy(() =>
 );
 
 import styles from './AccountData.module.scss';
-import { usePaddle } from '../../../../helpers/Paddle/paddle.client';
 
 type ResetPassword = {
   email: string;
@@ -34,16 +35,21 @@ type ResetPassword = {
 
 type SubscriptionType = {
   newPlan: Plan;
+  billCycle: BillingCycleType | null;
 };
 
-type PlanType = NewPlanType | Plan;
-
-export const AccountData = ({ userData }: { userData: UserType }) => {
+export const AccountData = ({
+  userData,
+  subscriptionsOptionsList,
+}: {
+  userData: UserType;
+  subscriptionsOptionsList?: PlanPricingType[];
+}) => {
   const t = useI18n();
   const tAccount = useScopedI18n('Account');
 
   const initialValues = { email: userData?.email || '' };
-  const initialPlan = { newPlan: userData?.plan! };
+  const initialPlan = { newPlan: userData?.plan!, billCycle: null };
   const initialValuesPass = {
     email: initialValues.email,
     oldPassword: '',
@@ -54,12 +60,13 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
   const [valuesFields, setValuesFields] = useState('');
   const [valuesFieldsPass, setValuesFieldsPass] = useState('');
   const [valuesFieldsPlan, setValuesFieldsPlan] = useState('');
-  const [subscriptionPlan, setSubscriptionPlan] = useState<PlanType>(userData?.plan!);
   const [open, setOpen] = useState(false);
 
   const { push } = useRouter();
+  const paddle = usePaddle();
 
   const items: Plan[] = ['FREE', 'PREMIUM', 'GOLD'];
+  const cycles: BillingCycleType[] = ['month', 'year'];
 
   const schemaEmail = Yup.object({
     email: SchemaValidation().email,
@@ -125,24 +132,37 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
     }
   };
 
-  const changeSubscription = async ({ newPlan }: SubscriptionType, { resetForm }: ResetFormType) => {
+  const changeSubscription = async ({ newPlan, billCycle }: SubscriptionType, { resetForm }: ResetFormType) => {
     try {
       console.log('newPlan', newPlan);
       console.log('plan', userData?.plan!);
-      if (newPlan === userData?.plan!) console.log(true);
-      usePaddle('', userData?.id!, userData?.email).openSubscriptionCheckout();
-      const { error } = await supabase.from('Users').update({ plan: newPlan }).eq('id', userData?.id!);
 
-      console.log('error', error);
-      if (!!error) {
+      if (!billCycle) {
         setValuesFieldsPlan(t('error'));
         return;
       }
 
-      setSubscriptionPlan(newPlan);
-      await resetForm(initialPlan);
+      const selectedPlanForPriceId = subscriptionsOptionsList!.find(
+        (p) => p.name.includes(newPlan) && p.billingCycle.includes(billCycle),
+      )?.id;
+
+      console.log('selectedPlanForPriceId', selectedPlanForPriceId);
+
+      console.log('paddle', paddle);
+
+      paddle.openSubscriptionCheckout(selectedPlanForPriceId!, userData?.id!, userData?.email, '/settings');
+
+      // console.log('error', error);
+      // if (!!error) {
+      //   setValuesFieldsPlan(t('error'));
+      //   return;
+      // }
+
+      // setSubscriptionPlan({ newPlan, billCycle });
+      resetForm(initialPlan);
       setOpen(false);
     } catch (e) {
+      console.error('e', e);
       setValuesFieldsPlan(t('error'));
     }
   };
@@ -152,7 +172,7 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
       <div className={styles.form}>
         <h3 className={styles.title}>{tAccount('aData.subscription')}</h3>
         <div className={styles.flow}>
-          <div className={styles.subscription}>{subscriptionPlan.toString()}</div>
+          <div className={styles.subscription}>{userData?.plan!}</div>
           <Popover.Root
             lazyMount
             unmountOnExit
@@ -170,7 +190,10 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                   <Formik
                     initialValues={initialPlan}
                     onSubmit={(values, formikBag) =>
-                      changeSubscription({ newPlan: values.newPlan }, { resetForm: formikBag.resetForm })
+                      changeSubscription(
+                        { newPlan: values.newPlan, billCycle: values.billCycle },
+                        { resetForm: formikBag.resetForm },
+                      )
                     }
                     validateOnChange>
                     {({ errors, touched }) => (
@@ -180,12 +203,25 @@ export const AccountData = ({ userData }: { userData: UserType }) => {
                           name="newPlan"
                           className={touched.newPlan && !!errors.newPlan ? styles.req__error : ''}>
                           {items.map((l, key) => (
-                            <option key={key} role="option" value={l}>
+                            <option key={key} role="option" value={l} disabled={l === userData?.plan!}>
                               {l}
                             </option>
                           ))}
                         </Field>
                         {touched.newPlan && !!errors.newPlan && (
+                          <p className={styles.selectSub__error}>{tAccount('aData.Premium.select__error')}</p>
+                        )}
+                        <Field
+                          as="select"
+                          name="billCycle"
+                          className={touched.billCycle && !!errors.billCycle ? styles.req__error : ''}>
+                          {cycles.map((l, key) => (
+                            <option key={key} role="option" value={l}>
+                              {l}
+                            </option>
+                          ))}
+                        </Field>
+                        {touched.billCycle && !!errors.billCycle && (
                           <p className={styles.selectSub__error}>{tAccount('aData.Premium.select__error')}</p>
                         )}
                         <div className={styles.message}>

@@ -7,8 +7,9 @@ import { projectUrl, projectUrlWithOutPrefix } from './src/constants/links.js';
 
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com ${projectUrl} https://region1.analytics.google.com ;
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com ${projectUrl} https://region1.analytics.google.com 
+    ${process.env.PADDLE_ENDPOINT_CSP};
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com ${process.env.PADDLE_ENDPOINT_CSP} https://sandbox-cdn.paddle.com;
     img-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} ${projectUrlWithOutPrefix} https://www.google.pl;
     media-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} ${projectUrlWithOutPrefix} https://www.google.pl;
     font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com;
@@ -16,8 +17,9 @@ const cspHeader = `
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
-    connect-src 'self' https://www.google.com https://www.gstatic.com https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl};
-    frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl};
+    connect-src 'self' https://www.google.com https://www.gstatic.com https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl} 
+    https://api.paddle.com https://checkout.paddle.com https://events.paddle.com ${process.env.PADDLE_ENDPOINT_CSP} https://www.google.com/pay;
+    frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl} https://checkout.paddle.com https://sandbox-buy.paddle.com https://play.google.com ${process.env.PADDLE_ENDPOINT_CSP} https://www.google.com/pay;
     worker-src 'self'; 
     child-src 'self';
 `;

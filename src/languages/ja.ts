@@ -355,7 +355,8 @@ export default {
   Plans: {
     title: 'Pfartistsのプラン',
     subTitle: '最適なプランをお選びください',
-    period: '/月例',
+    periodMonth: '月例',
+    periodYear: '年次',
     grLength: '無制限のグラフィックスのファイル＊',
     animLength: '無制限のアニメーション＊',
     vidLength: '無制限の映画＊',

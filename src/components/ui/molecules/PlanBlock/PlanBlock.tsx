@@ -1,76 +1,67 @@
-import { getUserData } from 'helpers/getUserData';
-import { getI18n } from 'locales/server';
+'use client';
+
+import { usePaddle } from 'helpers/Paddle/paddle.client';
+
+import { BillingCycleType, Plan, PlanDataType, PlanOtherDataType } from 'types/global.types';
 
 import { Links } from 'components/ui/atoms/Links/Links';
 
 import styles from './PlanBlock.module.scss';
 import { IoIosArrowRoundForward, IoMdCheckmark } from 'react-icons/io';
 
-type PlanBlockType = {
-  amount: number;
-  plan: string;
-  period: string;
-  grLength: string;
-  animLength: string;
-  vidLength: string;
-  grAnimSize: string;
-  vidSize: string;
-  noAds: string;
-  support?: string;
-};
+export const PlanBlock = ({
+  dataPlan,
+  other,
+  billingCycle,
+}: {
+  dataPlan: PlanDataType;
+  other: PlanOtherDataType;
+  billingCycle: BillingCycleType;
+}) => {
+  const paddle = usePaddle();
 
-export const PlanBlock = async ({
-  amount,
-  plan,
-  grLength,
-  period,
-  animLength,
-  vidLength,
-  grAnimSize,
-  vidSize,
-  noAds,
-  support,
-}: PlanBlockType) => {
-  const userData = await getUserData();
-  const t = await getI18n();
+  const updatePlan = async (plan: Plan) => {
+    const selectedPlanForPriceId = other.subscriptionsOptionsList!.find(
+      (p) => p.name.includes(plan) && p.billingCycle.includes(billingCycle || other.billingCycle),
+    )?.id;
+
+    paddle.openSubscriptionCheckout(selectedPlanForPriceId!, other?.id!, other?.email!, '/plans');
+  };
 
   return (
     <div className={styles.box}>
-      <h3 className={styles.box__title}>{plan}</h3>
-      <div className={styles.box__price}>
-        <p className={styles.priceCount}>${amount}</p>
-        <p className={styles.priceTime}>{period}</p>
-      </div>
+      <h3 className={styles.box__title}>{dataPlan.plan}</h3>
+      <p className={styles.priceCount}>${billingCycle === 'month' ? dataPlan.amountMonth : dataPlan.amountYear}</p>
       <div className={styles.list}>
         <ul>
           <li>
             <IoMdCheckmark className={styles.icon} />
-            <p>{grLength}</p>
+            <p>{dataPlan.grLength}</p>
           </li>
           <li>
             <IoMdCheckmark className={styles.icon} />
-            <p>{animLength}</p>
+            <p>{dataPlan.animLength}</p>
           </li>
           <li>
             <IoMdCheckmark className={styles.icon} />
-            <p>{vidLength}</p>
+            <p>{dataPlan.vidLength}</p>
           </li>
           <li>
             <IoMdCheckmark className={styles.icon} />
-            <p>{grAnimSize}</p>
+            <p>{dataPlan.grAnimSize}</p>
           </li>
           <li>
             <IoMdCheckmark className={styles.icon} />
-            <p>{vidSize}</p>
+            <p>{dataPlan.vidSize}</p>
           </li>
           <li>
             <IoMdCheckmark className={styles.icon} />
-            <p>{noAds}</p>
+            <p>{dataPlan.noAds}</p>
           </li>
-          {!!support && (
+          {!!dataPlan.support && (
             <li>
               <IoMdCheckmark className={styles.icon} />
-              <p>{support}</p>
+              <p>{dataPlan.support}</p>
             </li>
           )}
         </ul>
@@ -78,25 +69,25 @@ export const PlanBlock = async ({
       <div className={styles.choosePlan}>
         <details className={styles.openButton}>
           <summary className={styles.choose}>
-            {userData?.pseudonym ? (
-              <a href="/settings">
-                {t('Plans.choosePlan')}
+            {other.pseudonym ? (
+              <a onClick={() => updatePlan(dataPlan.plan)}>
+                {dataPlan.choosePlan}
                 <IoIosArrowRoundForward spacing={20} />
               </a>
             ) : (
               <>
-                {t('Plans.choosePlan')}
+                {dataPlan.choosePlan}
                 <IoIosArrowRoundForward spacing={20} />
               </>
             )}
           </summary>
-          {!userData?.pseudonym && (
+          {!other.pseudonym && (
             <div className={styles.noUsersPlan}>
               <Links classLink={styles.button} hrefLink="/signin">
-                {t('Nav.signIn')}
+                {other.signIn}
               </Links>
               <Links classLink={styles.button} hrefLink="/signup">
-                {t('Nav.signUp')}
+                {other.signUp}
               </Links>
             </div>
           )}

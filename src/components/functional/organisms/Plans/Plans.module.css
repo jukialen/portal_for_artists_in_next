@@ -1,0 +1,31 @@
+.plansContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .cycleButtonContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+
+    .cycleButton,
+    .cycleButton__active {
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.5rem;
+      border: 2px groove var(--primary__opacity);
+      font-size: 1rem;
+    }
+
+    .cycleButton__active {
+      background-color: var(--primary__opacity);
+    }
+  }
+
+  .plansDataContainer {
+    width: min(95dvw, 65rem);
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+  }
+}

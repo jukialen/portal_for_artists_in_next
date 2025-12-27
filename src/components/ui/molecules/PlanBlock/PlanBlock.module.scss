@@ -1,5 +1,5 @@
 .box {
-  width: min(95dvw, 25rem);
+  width: 23rem;
   min-height: 32rem;
   display: flex;
   flex-direction: column;
@@ -8,31 +8,19 @@
   background-color: var(--primary);
 
   &__title {
+    width: inherit;
+    display: flex;
+    justify-content: center;
+    margin: 3rem auto 1rem;
+    font-size: 2.4rem;
     color: black;
-    margin: 2rem auto;
   }
 
-  &__price {
-    height: 4.6rem;
+  .priceCount {
     display: flex;
     margin: 0 auto 2rem;
+      font-size: 1.6rem;
     color: black;
-
-    .priceCount,
-    .priceTime {
-      font-size: 4rem;
-      color: inherit;
-
-      &:nth-of-type(2) {
-        width: inherit;
-        display: flex;
-        align-items: flex-end;
-        margin-left: 0.25rem;
-        font-size: 1rem;
-        opacity: 0.8;
-        padding-bottom: 1rem;
-      }
-    }
   }
 
   .list {
@@ -42,7 +30,7 @@
     ul li {
       display: flex;
       align-items: center;
-      margin: 1rem 0.6rem;
+      margin: 1rem 2rem .6rem 1rem;
 
       svg.icon {
         margin: 0 0.8rem 0 0.3rem;

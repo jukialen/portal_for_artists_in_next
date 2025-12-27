@@ -22,10 +22,6 @@ export type ResetFormType = {
 
 export type ModeType = 'light' | 'dark';
 
-export type NewPlanType = {
-  newPlan?: Plan;
-};
-
 //DATE OBJECT
 export type DateObjectType = {
   second: string;
@@ -36,16 +32,16 @@ export type DateObjectType = {
 };
 
 //USERS
-export type UserType = NewPlanType &
-  Time & {
-    id?: string;
-    pseudonym: string;
-    description?: string;
-    profilePhoto?: string;
-    email: string;
-    plan: Plan;
-    provider?: Database['public']['Enums']['Provider'];
-  };
+export type UserType = Time & {
+  id?: string;
+  pseudonym: string;
+  description?: string;
+  profilePhoto?: string;
+  email: string;
+  plan: Plan;
+  billingCycle: BillingCycleType;
+  provider?: Database['public']['Enums']['Provider'];
+};
 
 export type UserFormType = {
   email: string;
@@ -94,15 +90,6 @@ export type FilesUploadType = {
 };
 
 //FRIENDS
-export type FriendType = Time & {
-  id?: string;
-  usernameId: string;
-  favorite: boolean;
-  pseudonym: string;
-  profilePhoto: string;
-  time?: string;
-};
-
 export type FriendsListArrayType = {
   pseudonym: string;
   profilePhoto: string;
@@ -112,7 +99,7 @@ export type FriendsListArrayType = {
 export type FriendsListType = {
   fileUrl: string;
   pseudonym: string;
-  plan: string;
+  plan: Plan;
   favorite: boolean;
   createdAt: string;
 };
@@ -318,7 +305,7 @@ export type LastCommentType = Comment & {
   subCommentId: string;
 };
 
-//PAGes TYPES
+//PAGES TYPES
 export type ContainerType = {
   question: JSX.Element | string;
   answer: string;
@@ -327,3 +314,50 @@ export type ContainerType = {
   quality: number;
   mode?: boolean;
 };
+
+//PAYMENTS
+export type BillingCycleType = 'year' | 'month';
+
+export type PlanPricingType = {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  billingCycle: BillingCycleType;
+};
+
+//PLANS
+
+export type PlanDataType = {
+  plan: Plan;
+  amountMonth: number;
+  amountYear: number;
+  grLength: string;
+  animLength: string;
+  vidLength: string;
+  grAnimSize: string;
+  vidSize: string;
+  noAds: string;
+  choosePlan: string;
+  support: string;
+};
+
+export type PlanOtherDataType = {
+  signIn: string;
+  signUp: string;
+  id?: string;
+  email?: string;
+  pseudonym?: string;
+  plan: Plan;
+  billingCycle: BillingCycleType;
+  subscriptionsOptionsList: PlanPricingType[] | undefined;
+  periodMonth: string;
+  periodYear: string;
+};
+
+export type PlanBlockType = {
+  dataPlan: PlanDataType[];
+  other: PlanOtherDataType;
+};
+
+export type NewPlanType = { plan: Plan; cycle: BillingCycleType };
