@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { locales } from 'constants/values';
 import { LangType } from 'types/global.types';
 import { useChangeLocale, useI18n } from 'locales/client';
 
@@ -14,8 +15,6 @@ export const LanguagesSettings = ({ locale }: { locale: LangType }) => {
   const changeLocale = useChangeLocale();
 
   const t = useI18n();
-
-  const locales: LangType[] = ['en', 'ja', 'pl'];
 
   const redirectedPathName = (locale: LangType) => {
     setLanguage(!isLanguage);

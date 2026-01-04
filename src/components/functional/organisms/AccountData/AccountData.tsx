@@ -14,7 +14,14 @@ import { useI18n, useScopedI18n } from 'locales/client';
 import { usePaddle } from 'helpers/Paddle/paddle.client';
 
 import { backUrl } from 'constants/links';
-import { BillingCycleType, Plan, PlanPricingType, ResetFormType, UserFormType, UserType } from 'types/global.types';
+import {
+  BillingCycleType,
+  Plan,
+  SubscriptionPricingType,
+  ResetFormType,
+  UserFormType,
+  UserType,
+} from 'types/global.types';
 
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 
@@ -25,6 +32,7 @@ const Alerts = lazy(() =>
 );
 
 import styles from './AccountData.module.scss';
+import { cycles, plans } from 'constants/values';
 
 type ResetPassword = {
   email: string;
@@ -43,7 +51,7 @@ export const AccountData = ({
   subscriptionsOptionsList,
 }: {
   userData: UserType;
-  subscriptionsOptionsList?: PlanPricingType[];
+  subscriptionsOptionsList?: SubscriptionPricingType[];
 }) => {
   const t = useI18n();
   const tAccount = useScopedI18n('Account');
@@ -64,9 +72,6 @@ export const AccountData = ({
 
   const { push } = useRouter();
   const paddle = usePaddle();
-
-  const items: Plan[] = ['FREE', 'PREMIUM', 'GOLD'];
-  const cycles: BillingCycleType[] = ['month', 'year'];
 
   const schemaEmail = Yup.object({
     email: SchemaValidation().email,
@@ -202,7 +207,7 @@ export const AccountData = ({
                           as="select"
                           name="newPlan"
                           className={touched.newPlan && !!errors.newPlan ? styles.req__error : ''}>
-                          {items.map((l, key) => (
+                          {plans.map((l, key) => (
                             <option key={key} role="option" value={l} disabled={l === userData?.plan!}>
                               {l}
                             </option>

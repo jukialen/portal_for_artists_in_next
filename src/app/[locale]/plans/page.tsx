@@ -3,9 +3,11 @@ import { setStaticParamsLocale } from 'next-international/server';
 import Link from 'next/link';
 
 import { getUserData } from 'helpers/getUserData';
-import { getSubscriptionsOptions } from 'helpers/Paddle/paddle.server';
+import { getOneTimeOptions, getSubscriptionsOptions } from 'helpers/Paddle/paddle.server';
+import { getPrice } from 'helpers/Paddle/common';
 
 import { HeadCom } from 'constants/HeadCom';
+import { plans } from 'constants/values';
 import { LangType, PlanDataType, PlanOtherDataType } from 'types/global.types';
 
 import { getI18n, getScopedI18n } from 'locales/server';
@@ -25,12 +27,15 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
 
   const subscriptionsOptionsList = await getSubscriptionsOptions(locale);
 
+  console.log('subscriptionsOptionsList', subscriptionsOptionsList);
+  const oneTimeOptions = await getOneTimeOptions(locale);
+
   const user = await getUserData();
 
   const freePlan: PlanDataType = {
-    plan: 'FREE',
-    amountMonth: 0,
-    amountYear: 0,
+    plan: plans[0],
+    amountMonth: getPrice(subscriptionsOptionsList!, 'month', plans[0], locale),
+    amountYear: getPrice(subscriptionsOptionsList!, 'year', plans[0], locale),
     grLength: tPlans('grLength'),
     animLength: tPlans('animLength'),
     vidLength: tPlans('vidLength'),
@@ -41,9 +46,9 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
     choosePlan: tPlans('choosePlan'),
   };
   const premiumPlan: PlanDataType = {
-    plan: 'PREMIUM',
-    amountMonth: 10,
-    amountYear: 100,
+    plan: plans[1],
+    amountMonth: getPrice(subscriptionsOptionsList!, 'month', plans[1], locale),
+    amountYear: getPrice(subscriptionsOptionsList!, 'year', plans[1], locale),
     grLength: tPlans('grLength'),
     animLength: tPlans('animLength'),
     vidLength: tPlans('vidLength'),
@@ -55,8 +60,8 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
   };
   const goldPlan: PlanDataType = {
     plan: 'GOLD',
-    amountMonth: 20,
-    amountYear: 200,
+    amountMonth: getPrice(subscriptionsOptionsList!, 'month', plans[2], locale),
+    amountYear: getPrice(subscriptionsOptionsList!, 'year', plans[2], locale),
     grLength: tPlans('grLength'),
     animLength: tPlans('animLength'),
     vidLength: tPlans('vidLength'),

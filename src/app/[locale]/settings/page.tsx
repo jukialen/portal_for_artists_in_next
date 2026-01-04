@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { getUserData } from 'helpers/getUserData';
+import { getSubscriptionsOptions } from 'helpers/Paddle/paddle.server';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
@@ -16,7 +17,6 @@ import { DeleteAccount } from 'components/functional/atoms/DeleteAccount/DeleteA
 import { AccountData } from 'components/functional/organisms/AccountData/AccountData';
 
 import styles from './page.module.scss';
-import { getAllProducts, getSubscriptionsList, getSubscriptionsOptions } from '../../../helpers/Paddle/paddle.server';
 
 export const metadata: Metadata = HeadCom('Settings site for unlogged in users.');
 
@@ -35,7 +35,7 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
     unsupportedFileType: tAnotherForm('unsupportedFileType'),
   };
 
-  const subscriptionsOptionsList = await getSubscriptionsOptions(locale);
+  const subscriptionsOptionsList = await getSubscriptionsOptions();
 
   const userData = await getUserData();
 

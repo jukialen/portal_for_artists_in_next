@@ -3,8 +3,8 @@ import { createServerClient } from '@supabase/ssr';
 import { createI18nMiddleware } from 'next-international/middleware';
 
 import { publishableKey, projectUrl, backUrl, newUserRed } from 'constants/links';
+import { locales } from 'constants/values';
 
-const locales = ['en', 'pl', 'ja'];
 const defaultLocale = 'en';
 const publicForAll = ['/settings', '/terms', '/privacy', '/contact', '/faq', '/plans'];
 const onlyForGuests = ['/', '/signin', '/signup', '/forgotten'];

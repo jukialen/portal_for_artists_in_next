@@ -1,4 +1,4 @@
-import { Tags } from 'types/global.types';
+import { BillingCycleType, LangType, Plan, Tags } from 'types/global.types';
 
 export const TagConstants: Tags[] = [
   'realistic',
@@ -12,3 +12,7 @@ export const TagConstants: Tags[] = [
   'profile',
   'group',
 ];
+
+export const locales: LangType[] = ['en', 'pl', 'ja'];
+export const plans: Plan[] = ['FREE', 'PREMIUM', 'GOLD'];
+export const cycles: BillingCycleType[] = ['month', 'year'];

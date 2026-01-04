@@ -1,6 +1,7 @@
-import { ChangeEvent, JSX, ReactNode } from 'react';
+import { ChangeEvent, JSX } from 'react';
 import { Database } from './database.types';
 import { StaticImageData } from 'next/image';
+import { ICustomData } from '@paddle/paddle-node-sdk';
 
 //GENERAL
 type Like = { likes: number; liked: boolean };
@@ -318,20 +319,26 @@ export type ContainerType = {
 //PAYMENTS
 export type BillingCycleType = 'year' | 'month';
 
-export type PlanPricingType = {
+type PlanPricingType = {
   id: string;
-  name: string;
+  name: Plan;
   description: string;
-  price: string;
+  prices: { key: LangType; value: string }[];
+};
+
+export type SubscriptionPricingType = PlanPricingType & {
   billingCycle: BillingCycleType;
 };
 
-//PLANS
+export type OnetimePricingType = PlanPricingType & {
+  customData: ICustomData | null;
+};
 
+//PLANS
 export type PlanDataType = {
   plan: Plan;
-  amountMonth: number;
-  amountYear: number;
+  amountMonth: string;
+  amountYear: string;
   grLength: string;
   animLength: string;
   vidLength: string;
@@ -350,7 +357,7 @@ export type PlanOtherDataType = {
   pseudonym?: string;
   plan: Plan;
   billingCycle: BillingCycleType;
-  subscriptionsOptionsList: PlanPricingType[] | undefined;
+  subscriptionsOptionsList: SubscriptionPricingType[] | undefined;
   periodMonth: string;
   periodYear: string;
 };

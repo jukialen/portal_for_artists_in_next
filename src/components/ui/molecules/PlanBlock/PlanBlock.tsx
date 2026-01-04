@@ -31,7 +31,7 @@ export const PlanBlock = ({
   return (
     <div className={styles.box}>
       <h3 className={styles.box__title}>{dataPlan.plan}</h3>
-      <p className={styles.priceCount}>${billingCycle === 'month' ? dataPlan.amountMonth : dataPlan.amountYear}</p>
+      <p className={styles.priceCount}>{billingCycle === 'month' ? dataPlan.amountMonth : dataPlan.amountYear}</p>
       <div className={styles.list}>
         <ul>
           <li>

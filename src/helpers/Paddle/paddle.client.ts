@@ -7,23 +7,17 @@ import { backUrl, paddleClientId } from 'constants/links';
 import { ModeType } from 'types/global.types';
 
 export const usePaddle = () => {
-  // Create a local state to store Paddle instance
   const [paddle, setPaddle] = useState<Paddle>();
 
-  // Download and initialize Paddle instance from CDN
   useEffect(() => {
     initializePaddle({
       environment: process.env.NODE_ENV === 'production' ? 'production' : 'sandbox',
       token: paddleClientId!,
     }).then((paddleInstance: Paddle | undefined) => {
-      if (paddleInstance) {
-        console.log('paddleInstance', paddleInstance);
-        setPaddle(paddleInstance);
-      }
+      if (paddleInstance) setPaddle(paddleInstance);
     });
   }, []);
 
-  // Callback to open a checkout
   const openSubscriptionCheckout = (priceId: string, userId: string, email: string, previousPage: string) =>
     paddle?.Checkout.open({
       items: [{ priceId, quantity: 1 }],
