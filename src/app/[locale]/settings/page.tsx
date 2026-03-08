@@ -35,7 +35,7 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
     unsupportedFileType: tAnotherForm('unsupportedFileType'),
   };
 
-  const subscriptionsOptionsList = await getSubscriptionsOptions();
+  const subscriptionsOptionsList = await getSubscriptionsOptions(locale);
 
   const userData = await getUserData();
 
@@ -51,7 +51,7 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
 
       {!!userData?.id && (
         <>
-          <AccountData userData={userData!} subscriptionsOptionsList={subscriptionsOptionsList} />
+          <AccountData userData={userData!} subscriptionsOptionsList={subscriptionsOptionsList} locale={locale} />
           <h3>{t('Nav.profile')}</h3>
           <ChangePseuDescData userData={userData!} fileTranslated={fileTranslated} />
         </>

@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { initializePaddle, Paddle } from '@paddle/paddle-js';
 
 import { backUrl, paddleClientId } from 'constants/links';
-import { ModeType } from 'types/global.types';
+import { LangType, ModeType } from 'types/global.types';
 
-export const usePaddle = () => {
+export const usePaddle = (locale: LangType) => {
   const [paddle, setPaddle] = useState<Paddle>();
 
   useEffect(() => {
@@ -26,6 +26,7 @@ export const usePaddle = () => {
         displayMode: 'overlay',
         successUrl: `${backUrl}/api/pay/success?previousPage=${previousPage}`,
         variant: 'one-page',
+        locale,
         theme: localStorage.getItem('mode')! as ModeType,
         allowedPaymentMethods: [
           'alipay',
@@ -45,6 +46,8 @@ export const usePaddle = () => {
         email,
       },
     });
+
+  console.log('Paddle paddle', paddle);
 
   const openOneTimeCheckout = (priceId: string, userId: string, email: string) =>
     paddle?.Checkout.open({

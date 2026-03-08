@@ -6,11 +6,10 @@ export const darkMode = 'dark';
 export const projectUrlWithOutPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL_WITHOUT_PREFIX;
 export const projectUrl = `https://${projectUrlWithOutPrefix}`;
 export const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-export const access_token = process.env.NEXT_PUBLIC_SUPABASE_ACCESS_TOKEN;
 const supabaseStorageUrl = `${projectUrl}/storage/v1/object/public`;
 export const supabaseStorageProfileUrl = `${supabaseStorageUrl}/profiles`;
 export const supabaseStorageFilesUrl = `${supabaseStorageUrl}/basic`;
-
+export const supabaseStorageUrlGroupUrl = `${supabaseStorageUrl}/logos`;
 //EMAILS
 export const mailerApiKey = process.env.NEXT_PUBLIC_MAILERSEND_API_KEY;
 export const GTM_ID = process.env.NEXT_PUBLIC_G_TAG;
@@ -20,3 +19,6 @@ export const feedbackEmailTemplateId = process.env.NEXT_PUBLIC_FEEDBACK_TEMPLATE
 //PADDLE
 export const paddleClientId = process.env.NEXT_PUBLIC_PADDLE_KEY;
 export const paddleServerId = process.env.PADDLE_KEY;
+export const paddleBuyLink = process.env.PADDLE_BUY_LINK;
+export const paddleCspLink = process.env.PADDLE_ENDPOINT_CSP;
+export const paddleStyles = process.env.PADDEL_STYLES;

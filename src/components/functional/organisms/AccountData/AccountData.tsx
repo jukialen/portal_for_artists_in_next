@@ -21,6 +21,7 @@ import {
   ResetFormType,
   UserFormType,
   UserType,
+  LangType,
 } from 'types/global.types';
 
 import { FormError } from 'components/ui/atoms/FormError/FormError';
@@ -32,7 +33,7 @@ const Alerts = lazy(() =>
 );
 
 import styles from './AccountData.module.scss';
-import { cycles, plans } from 'constants/values';
+import { cycles, locales, plans } from 'constants/values';
 
 type ResetPassword = {
   email: string;
@@ -49,15 +50,17 @@ type SubscriptionType = {
 export const AccountData = ({
   userData,
   subscriptionsOptionsList,
+  locale,
 }: {
   userData: UserType;
   subscriptionsOptionsList?: SubscriptionPricingType[];
+  locale: LangType;
 }) => {
   const t = useI18n();
   const tAccount = useScopedI18n('Account');
 
   const initialValues = { email: userData?.email || '' };
-  const initialPlan = { newPlan: userData?.plan!, billCycle: null };
+  const initialPlan = { newPlan: userData?.plan!, billCycle: cycles[0] };
   const initialValuesPass = {
     email: initialValues.email,
     oldPassword: '',
@@ -71,7 +74,7 @@ export const AccountData = ({
   const [open, setOpen] = useState(false);
 
   const { push } = useRouter();
-  const paddle = usePaddle();
+  const paddle = usePaddle(locale);
 
   const schemaEmail = Yup.object({
     email: SchemaValidation().email,
@@ -155,8 +158,9 @@ export const AccountData = ({
 
       console.log('paddle', paddle);
 
-      paddle.openSubscriptionCheckout(selectedPlanForPriceId!, userData?.id!, userData?.email, '/settings');
+      const res = paddle.openSubscriptionCheckout(selectedPlanForPriceId!, userData?.id!, userData?.email, '/settings');
 
+      console.log('res', res);
       // console.log('error', error);
       // if (!!error) {
       //   setValuesFieldsPlan(t('error'));

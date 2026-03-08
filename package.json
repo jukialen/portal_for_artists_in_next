@@ -51,6 +51,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "prettier": "^3.6.2",
+    "supabase": "^2.74.5",
     "typescript": "^5.9.2",
     "workbox-cli": "^7.3.0",
     "workbox-webpack-plugin": "^7.3.0"
