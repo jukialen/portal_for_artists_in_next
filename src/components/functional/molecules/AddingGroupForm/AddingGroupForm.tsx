@@ -6,9 +6,16 @@ import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
 
 import { createClient } from 'utils/supabase/clientCSR';
-import { filesProfileTypes, handleFileSelection, isFileAccessApiSupported } from 'utils/client/files';
+import {
+  filesProfileTypes,
+  handleFileSelection,
+  isFileAccessApiSupported,
+  MAX_PHOTO_SIZE,
+  validateFile,
+} from 'utils/client/files';
 import { useI18n, useScopedI18n } from 'locales/client';
 
+import { supabaseStorageUrlGroupUrl } from 'constants/links';
 import { EventType, FilesUploadType, ResetFormType, UserType } from 'types/global.types';
 
 import { FormError } from 'components/ui/atoms/FormError/FormError';
@@ -62,9 +69,7 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
     unsupportedFileType: tAnotherForm('unsupportedFileType'),
   };
 
-  const handleChangeFile = async (e: EventType) => {
-    setLogoGroup(e.target.files?.[0] ? e.target.files[0] : null);
-  };
+  const handleChangeFile = async (e: EventType) => setLogoGroup(e.target.files?.[0] ? e.target.files[0] : null);
 
   const handleFile = async () => {
     const result = await handleFileSelection(fileTranslated, false);
@@ -75,37 +80,36 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
   const createGroup = async ({ name, description }: AddingGroupType, { resetForm }: ResetFormType) => {
     try {
       if (!!logoGroup) {
-        if (
-          logoGroup.size < 6291456 &&
-          (logoGroup.type === 'image/jpg' ||
-            logoGroup.type === 'image/jpeg' ||
-            logoGroup.type === 'image/png' ||
-            logoGroup.type === ' image/webp' ||
-            logoGroup.type === 'image/avif' ||
-            logoGroup.type === 'video/mp4' ||
-            logoGroup.type === 'video/webm')
-        ) {
-          const { data, error } = await supabase.storage.from('profiles').upload(`/${userData?.id!}`, logoGroup);
+        if (!(await validateFile(fileTranslated, logoGroup, userData.plan, false))) {
+          const fileName = name + '-' + Date.now() + '-' + logoGroup.name;
+          const filePath = name + '/' + fileName;
 
-          const name = Date.now() + '/' + userData?.id! + '/' + logoGroup!.name!;
+          if (logoGroup.size <= MAX_PHOTO_SIZE) {
+            const { data, error } = await supabase.storage.from('logos').upload(`/${filePath}`, logoGroup);
 
-          if (!!error) {
-            setValuesFields(tr.notUploadFile);
-            console.error(error);
-            !!data && (await supabase.storage.from('profiles').remove([`/${userData?.id!}`, name]));
-            return;
+            const logoGroupName = Date.now() + '/' + userData?.id! + '/' + logoGroup!.name!;
+
+            if (!!error) {
+              setValuesFields(tr.notUploadFile);
+              console.error(error);
+              !!data && (await supabase.storage.from('logos').remove([`/${filePath}`, logoGroupName]));
+              return;
+            }
+
+            const { error: er } = await supabase.from('Groups').insert([
+              {
+                name,
+                description,
+                adminId: userData?.id!,
+                logo: `${supabaseStorageUrlGroupUrl}/${data?.path!}`,
+              },
+            ]);
+
+            !!er && setValuesFields(tr.uploadFile);
+
+            await resetForm(initialValues);
+            setLogoGroup(null);
           }
-
-          const { error: er } = await supabase.from('Groups').insert([
-            {
-              name,
-              description,
-              adminId: userData?.id!,
-              logo: data?.path!,
-            },
-          ]);
-
-          !!er && setValuesFields(tr.uploadFile);
         }
       } else {
         const { data, error } = await supabase
