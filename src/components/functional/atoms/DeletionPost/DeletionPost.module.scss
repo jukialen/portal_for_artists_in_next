@@ -1,7 +1,7 @@
 .icon {
   width: 3rem;
   height: 3rem;
-  border: .1rem solid transparent;
+  border: 0.1rem solid transparent;
   background-color: transparent;
   color: var(--text);
 }
@@ -25,11 +25,45 @@
 }
 
 .container__active {
-  display: flex;
+}
+
+[data-scope='dialog'] {
+  [data-part='content'] {
+    margin: auto;
+   background-color: var(--background);
+   border-radius: .5rem;
+   z-index: 2;
+
+    .title {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .actionButton {
+      .cancel {
+        border-color: var(--background);
+      }
+
+      .submit {
+        border-color: var(--required);
+        margin-left: 3px;
+      }
+    }
+
+    [data-state='open'] {
+      display: none;
+    }
+
+    [data-state='closed'] {
+      display: flex;
+    }
+  }
 }
 
 .content {
-  margin: auto;
+ background-color: var(--background);
+ border-radius: .5rem;
+ z-index: 2;
 
   .title {
     font-size: 1.1rem;

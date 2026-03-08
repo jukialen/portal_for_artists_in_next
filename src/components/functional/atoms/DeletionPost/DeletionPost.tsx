@@ -73,7 +73,9 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
           <Dialog.Description>{tDeletionFile('question')}</Dialog.Description>
 
           <div className={styles.actionButton}>
-            <button className={styles.cancel}>{tDeletionFile('cancelButton')}</button>
+            <Dialog.CloseTrigger className={styles.cancel} onClick={() => setDel(!del)}>
+              {tDeletionFile('cancelButton')}
+            </Dialog.CloseTrigger>
             <button className={styles.submit} onClick={deletePost}>
               {tDeletionFile('deleteButton')}
             </button>
