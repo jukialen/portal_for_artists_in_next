@@ -17,6 +17,7 @@ export const newComment = async (commentData: NewCommentsType) => {
       body: JSON.stringify(commentData),
     }).then((r) => r.json());
 
+    console.log('role', role);
     return role;
   } catch (e) {
     console.error(e);

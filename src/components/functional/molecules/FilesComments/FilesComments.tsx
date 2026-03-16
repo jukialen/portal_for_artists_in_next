@@ -1,5 +1,3 @@
-'use server';
-
 import { getScopedI18n } from 'locales/server';
 
 import { getUserData } from '../../../../helpers/getUserData';

@@ -2,7 +2,7 @@
 
 import { usePaddle } from 'helpers/Paddle/paddle.client';
 
-import { BillingCycleType, Plan, PlanDataType, PlanOtherDataType } from 'types/global.types';
+import { BillingCycleType, LangType, Plan, PlanDataType, PlanOtherDataType } from 'types/global.types';
 
 import { Links } from 'components/ui/atoms/Links/Links';
 
@@ -13,12 +13,14 @@ export const PlanBlock = ({
   dataPlan,
   other,
   billingCycle,
+  locale,
 }: {
   dataPlan: PlanDataType;
   other: PlanOtherDataType;
   billingCycle: BillingCycleType;
+  locale: LangType;
 }) => {
-  const paddle = usePaddle();
+  const paddle = usePaddle(locale);
 
   const updatePlan = async (plan: Plan) => {
     const selectedPlanForPriceId = other.subscriptionsOptionsList!.find(

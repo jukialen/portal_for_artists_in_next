@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { FileType, LangType, Tags } from 'types/global.types';
+import { FileType, LangType } from 'types/global.types';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
@@ -33,59 +33,60 @@ export async function generateMetadata({ params }: PropsType): Promise<Metadata>
 }
 
 async function oneFile(fileId: string) {
-  try {
-    const supabase = await createServer();
+  const supabase = await createServer();
 
+  // let postData: FileType = {
+  //   fileUrl: '',
+  //   shortDescription: '',
+  //   tags: 'others',
+  //   authorName: '',
+  //   time: '',
+  //   authorId: '',
+  //   roleId: '',
+  // };
+
+  try {
     const { data, error } = await supabase
       .from('Files')
-      .select('fileUrl, shortDescription, tags, authorId, createdAt, updatedAt')
+      .select(
+        'fileId, fileUrl, shortDescription, tags, authorId, createdAt, updatedAt, Users!authorId (pseudonym, profilePhoto)',
+      )
       .eq('fileId', fileId)
       .limit(1)
       .maybeSingle();
 
-    if (!!error) {
-      console.error(error);
-      return {
-        fileUrl: '',
-        shortDescription: '',
-        tags: 'others',
-        authorName: '',
-        time: '',
-      };
+    if (!!error || !data) {
+      console.error('/[...file] error', error);
+      return;
     }
 
-    const { data: d, error: er } = await supabase
-      .from('Users')
-      .select('pseudonym, profilePhoto')
-      .eq('id', data?.authorId!)
-      .limit(1)
-      .maybeSingle();
+    console.log('[...file] data', data);
+    console.log('fileId', fileId);
+    const role = await getFileRoleId(fileId, data.authorId!);
 
-    if (!!er) {
-      console.error(er);
-      return {
-        fileUrl: '',
-        shortDescription: '',
-        tags: 'others',
-        authorName: '',
-        time: '',
-      };
-    }
+    console.log('/[...file] role', role);
+    const { fileUrl, shortDescription, tags, authorId, createdAt, updatedAt, Users } = data;
 
-    const { fileUrl, shortDescription, tags, createdAt, updatedAt } = data!;
+    const { data: storageData, error: storageError } = await supabase.storage
+      .from('basic')
+      .createSignedUrl(fileUrl, 3600 * 24);
 
-    const postData: FileType = {
-      authorName: d?.pseudonym!,
-      authorProfilePhoto: d?.profilePhoto!,
-      fileUrl,
+    if (storageError) return;
+
+    console.log('storageData', storageData);
+    return {
+      authorName: Users!.pseudonym,
+      authorProfilePhoto: Users!.profilePhoto,
+      fileUrl: storageData?.signedUrl,
       shortDescription: shortDescription!,
       tags,
+      roleId: role.roleId,
+      authorId: authorId!,
       time: await getDate(updatedAt! || createdAt!, await dateData()),
     };
-
-    return postData;
   } catch (e) {
     console.error(e);
+    return;
   }
 }
 
@@ -98,20 +99,23 @@ export default async function Post({ params }: PropsType) {
   const authorPost = await oneFile(fileId);
   const userData = await getUserData();
 
-  const { fileUrl, shortDescription, tags, authorName, time } = authorPost!;
+  console.log('authorPost', authorPost);
 
-  const Tags = tags as Tags;
+  const { fileUrl, shortDescription, tags, authorName, time, authorId, roleId } = authorPost!;
 
   return (
     <FileContainer
-      fileId={fileId!}
-      name={name!}
+      fileId={fileId}
+      name={name}
       fileUrl={fileUrl}
       shortDescription={shortDescription!}
-      tags={Tags!}
-      authorName={authorName!}
+      tags={tags}
+      authorName={authorName}
       authorBool={authorName === userData?.pseudonym!}
       time={time}
+      authorId={authorId}
+      roleId={roleId}
+      commentsBool={true}
     />
   );
 }

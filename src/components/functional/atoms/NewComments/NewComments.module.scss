@@ -1,26 +1,40 @@
 .comments {
-  width: 95%;
+  width: min(34.5rem, 90dvw);
   display: grid;
   grid-template-columns: 3rem 1fr;
   margin: 2rem auto 0;
-  padding: 0 0.25rem;
+  gap: 1rem;
 
   .text {
+    min-height: 5rem;
+    padding: 0.5rem 0.75rem;
+    resize: vertical;
+    border-radius: 0.5rem;
+    border: 2px groove var(--third);
+    background: var(--background);
     color: var(--third);
   }
 
   img {
-    width: 0.625rem;
-    height: 0.625rem;
-    margin-top: .4rem;
+    width: 3rem;
+    aspect-ratio: 1 / 1;
+    margin-top: 0.4rem;
+    height: auto;
   }
 }
 
-.addingButton {
-  display: flex;
-  justify-content: flex-start;
-  background-color: var(--third);
-  border-color: var(--third);
-  margin: 1rem 0 2rem 4rem;
-  cursor: pointer;
+.submitButton {
+  width: min(34.5rem, 90dvw);
+  margin: auto;
+
+  .addingButton {
+    display: flex;
+    justify-content: flex-start;
+    margin: 1.5rem 0 2.5rem 4.1rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--third);
+    border: 1px groove var(--third);
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
 }

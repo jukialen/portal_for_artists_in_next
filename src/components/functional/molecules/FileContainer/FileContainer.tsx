@@ -7,10 +7,13 @@ import { ArticleVideosType } from 'types/global.types';
 
 const DeletionFile = dynamic(() => import('../DeletionFile/DeletionFile').then((df) => df.DeletionFile));
 import { FileOptions } from 'components/ui/molecules/FileOptions/FileOptions';
+import { FilesComments } from 'components/functional/molecules/FilesComments/FilesComments';
 
 import styles from './FileContainer.module.scss';
+import { NewComments } from '../../atoms/NewComments/NewComments';
+import { getUserData } from '../../../../helpers/getUserData';
 
-export const FileContainer = ({
+export const FileContainer = async ({
   name,
   fileUrl,
   authorName,
@@ -19,38 +22,59 @@ export const FileContainer = ({
   time,
   fileId,
   authorBool,
+  authorId,
+  roleId,
+  commentsBool = false,
 }: ArticleVideosType) => {
   const linkShare = `${backUrl}/file/${name}/${fileId}/${authorName}`;
   const Tags = tags[0].toUpperCase() + tags.slice(1);
-  console.log('tags', tags);
+  const userData = await getUserData();
+
+  console.log('fileUrl', fileUrl);
   return (
-    <article className={styles.file}>
-      {authorBool && <DeletionFile fileId={fileId} />}
+    <>
+      <article className={styles.file}>
+        {authorBool && <DeletionFile fileId={fileId} />}
 
-      {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
-        <video preload="metadata" controls className={styles.video} playsInline>
-          <source src={fileUrl} />
-          {/* eslint-disable-next-line react/no-unescaped-entities */}
-          Sorry, your browser doesn\'t support embedded videos,
-          {/* eslint-disable-next-line react/no-unescaped-entities */}
-          but don't worry, you can <Link href={fileUrl}>download it</Link>
-          and watch it with your favorite video player!
-        </video>
-      ) : (
-        <img className={styles.item} src={fileUrl} alt={`File ${name} added by ${authorName} in Category: ${tags}`} />
+        {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
+          <video preload="metadata" controls className={styles.video} playsInline>
+            <source src={fileUrl} />
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
+            Sorry, your browser doesn\'t support embedded videos,
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
+            but don't worry, you can <Link href={fileUrl}>download it</Link>
+            and watch it with your favorite video player!
+          </video>
+        ) : (
+          <img className={styles.item} src={fileUrl} alt={`File ${name} added by ${authorName} in Category: ${tags}`} />
+        )}
+
+        <section className={styles.timePlusTag}>
+          <div className={styles.time}>{time}</div>
+
+          <div className={styles.tags}>{Tags}</div>
+        </section>
+
+        <div className={styles.shortDescription}>
+          {shortDescription.length <= 36 ? shortDescription : shortDescription + '...'}
+        </div>
+
+        <FileOptions
+          authorName={authorName!}
+          fileUrl={fileUrl}
+          tags={tags!}
+          name={name!}
+          linkShare={linkShare}
+          commentsBool={commentsBool}
+          fileId={fileId}
+        />
+      </article>
+      {commentsBool && (
+        <>
+          <NewComments fileId={fileId!} authorId={authorId} profilePhoto={userData?.profilePhoto!} roleId={roleId} />
+          <FilesComments fileId={fileId!} />
+        </>
       )}
-
-      <section className={styles.timePlusTag}>
-        <div className={styles.time}>{time}</div>
-
-        <div className={styles.tags}>{Tags}</div>
-      </section>
-
-      <div className={styles.shortDescription}>
-        {shortDescription.length <= 36 ? shortDescription : shortDescription + '...'}
-      </div>
-
-      <FileOptions authorName={authorName!} fileUrl={fileUrl} tags={tags!} name={name!} linkShare={linkShare} />
-    </article>
+    </>
   );
 };

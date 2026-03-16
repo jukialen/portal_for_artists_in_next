@@ -1,8 +1,6 @@
-'use client';
-
 import Link from 'next/link';
 
-import { useScopedI18n } from 'locales/client';
+import { getScopedI18n } from 'locales/server';
 
 import { Tags } from 'types/global.types';
 
@@ -16,10 +14,12 @@ type FileOptionsType = {
   fileUrl: string;
   tags: Tags;
   name: string;
+  commentsBool: boolean;
+  fileId?: string;
 };
 
-export const FileOptions = ({ authorName, tags, name, linkShare }: FileOptionsType) => {
-  const tComments = useScopedI18n('Comments');
+export const FileOptions = async ({ authorName, tags, name, linkShare, commentsBool, fileId }: FileOptionsType) => {
+  const tComments = await getScopedI18n('Comments');
 
   return (
     <div className={styles.options}>
@@ -31,9 +31,11 @@ export const FileOptions = ({ authorName, tags, name, linkShare }: FileOptionsTy
         <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} />
       </div>
 
-      <Link href={linkShare} className={styles.linkToComments} aria-label="link to this file page">
-        {tComments('comments')}
-      </Link>
+      {!commentsBool && (
+        <Link href={linkShare} className={styles.linkToComments} aria-label="link to this file page">
+          {tComments('comments')}
+        </Link>
+      )}
     </div>
   );
 };

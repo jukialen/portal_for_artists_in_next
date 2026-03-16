@@ -17,9 +17,7 @@ export type Tags = Database['public']['Enums']['Tags'];
 //FORMS & CONTROLLERS ELEMENTS
 export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
 export type RoleType = Database['public']['Enums']['Role'];
-export type ResetFormType = {
-  resetForm: any;
-};
+export type ResetFormType = { resetForm: any };
 
 export type ModeType = 'light' | 'dark';
 
@@ -62,13 +60,15 @@ export type FileType = Time & {
   fileId?: string;
   name?: string;
   shortDescription?: string;
-  tags?: Database['public']['Enums']['Tags'];
+  tags: Tags;
   pseudonym?: string;
   authorProfilePhoto?: string;
   authorName: string;
   profileType?: boolean;
   fileUrl: string;
   time: string;
+  authorId: string;
+  roleId: string;
 };
 
 export type ArticleVideosType = {
@@ -80,6 +80,9 @@ export type ArticleVideosType = {
   authorBool: boolean;
   tags: Database['public']['Enums']['Tags'];
   time: string;
+  authorId: string;
+  roleId: string;
+  commentsBool?: boolean;
 };
 
 export type FilesUploadType = {
@@ -365,6 +368,7 @@ export type PlanOtherDataType = {
 export type PlanBlockType = {
   dataPlan: PlanDataType[];
   other: PlanOtherDataType;
+  locale: LangType;
 };
 
 export type NewPlanType = { plan: Plan; cycle: BillingCycleType };

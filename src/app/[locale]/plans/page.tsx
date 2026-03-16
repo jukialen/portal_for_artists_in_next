@@ -91,7 +91,7 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
       <h3 className={styles.subTitle}>{tPlans('subTitle')}</h3>
       <div className={styles.plansFormats}>
         <div className={styles.plans}>
-          <PlansContainer dataPlan={[freePlan, premiumPlan, goldPlan]} other={otherData} />
+          <PlansContainer dataPlan={[freePlan, premiumPlan, goldPlan]} other={otherData} locale={locale} />
 
           <div className={styles.toFaq}>
             <p>

@@ -114,28 +114,36 @@ export const FilesUpload = ({
         if (file.size <= MAX_PHOTO_SIZE) {
           const { data, error } = await supabase.storage.from('basic').upload(`/${filePath}`, file);
 
-          console.log('data', data);
           if (!!error) console.error(error);
 
-          const { data: fileData, error: er } = await supabase.from('Files').insert([
+          const { data: fileData, error: er } = await supabase
+            .from('Files')
+            .insert([
+              {
+                name: fileName,
+                shortDescription,
+                authorId: userId,
+                tags,
+                fileUrl: data?.path!,
+              },
+            ])
+            .select();
+
+          if (!fileData || fileData.length === 0 || !!error) {
+            console.error(error);
+            return;
+          }
+
+          const { data: roleData, error: roleEr } = await supabase.from('Roles').insert([
             {
-              name: fileName,
-              shortDescription,
-              authorId: userId,
-              tags,
-              fileUrl: `${supabaseStorageFilesUrl}/${data?.path!}`,
+              fileId: fileData[0].fileId,
+              role: 'AUTHOR',
+              userId,
             },
           ]);
 
-          console.log('fileData', fileData);
-
           if (!!er) {
-            const { data: deleteFileData, error: deleteFileError } = await supabase.storage
-              .from('basic')
-              .remove([data?.id!]);
-
-            console.log('deleteFileData', deleteFileData);
-            console.log('deleteFileError', deleteFileError);
+            const { error: deleteFileError } = await supabase.storage.from('basic').remove([data?.id!]);
 
             setValuesFields(tAnotherForm('notUploadFile'));
           }
@@ -175,21 +183,41 @@ export const FilesUpload = ({
                 setValuesFields(tAnotherForm('uploadFile'));
 
                 if (progressUpload === 100) {
-                  const { error } = await supabase.from('Files').insert([
+                  const { data: fileProgressData, error } = await supabase
+                    .from('Files')
+                    .insert([
+                      {
+                        name: Date.now() + '/' + userId + '/' + file!.name!,
+                        shortDescription,
+                        authorId: userId,
+                        tags,
+                        fileUrl: upload.url!,
+                      },
+                    ])
+                    .select();
+
+                  if (!fileProgressData || fileProgressData.length === 0 || !!error) {
+                    console.error(error);
+                    setValuesFields(tAnotherForm('notUploadFile'));
+                    return;
+                  }
+
+                  const { data: roleData, error: roleEr } = await supabase.from('Roles').insert([
                     {
-                      name: Date.now() + '/' + userId + '/' + file!.name!,
-                      shortDescription,
-                      authorId: userId,
-                      tags,
-                      fileUrl: upload.url!,
+                      fileId: fileProgressData[0].fileId,
+                      role: 'AUTHOR',
+                      userId,
                     },
                   ]);
-                  if (!!error) console.error(error);
+
+                  if (roleData) {
+                    setValuesFields(tAnotherForm('notUploadFile'));
+                    return;
+                  }
                 }
                 resolve();
               },
             });
-            console.log('upload', upload);
             // Check if there are any previous uploads to continue.
             const previousUploads = await upload.findPreviousUploads();
             // Found previous uploads so we select the first one.

@@ -44,6 +44,7 @@ export const FileContainerClient = ({
       console.error(e);
     }
   };
+
   return (
     <Wrapper>
       {newFileArray.length > 0 ? (

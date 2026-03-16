@@ -7,6 +7,8 @@ export async function GET(req: NextRequest) {
   const fileId = searchParams.get('fileId')!;
   const userId = searchParams.get('userId')!;
 
+  console.log('GET fileId ', fileId);
+  console.log('GET userId ', userId);
   try {
     const supabase = await createServer();
 
@@ -16,16 +18,18 @@ export async function GET(req: NextRequest) {
       .eq('fileId', fileId)
       .eq('userId', userId)
       .limit(1)
-      .single();
+      .maybeSingle();
 
-    if (!!error) {
+    console.log('GET data', data);
+
+    if (!!error || !data) {
       console.error(error);
-      return NextResponse.json('no id');
+      return NextResponse.json({ roleId: 'no id' });
     }
 
     return NextResponse.json({ roleId: data.id });
   } catch (e) {
     console.error(e);
-    return NextResponse.json('no id');
+    return NextResponse.json({ roleId: 'no id' });
   }
 }

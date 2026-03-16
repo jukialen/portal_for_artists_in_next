@@ -2,10 +2,10 @@
   width: min(34.5rem, 90dvw);
   height: fit-content;
   display: grid;
-  grid-template-rows: 1fr 3.25rem 1.5rem 8.5rem;
+  grid-template-rows: 1fr 3.25rem 1.5rem auto;
   justify-self: center;
-  margin: 1rem 0.3rem;
-  padding: 0.5rem 0;
+  margin: 1rem auto .3rem;
+  padding: 0.5rem 0 1.5rem;
   position: relative;
   border: 0.1rem solid var(--third);
   border-radius: 0.5rem;
@@ -48,4 +48,19 @@
     width: 93%;
     margin: 0.5rem auto;
   }
+
+ .commentsButton {
+  width: 15rem;
+  max-width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.1rem;
+  border-radius: 0.5rem;
+  margin: 1rem auto;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: var(--third);
+  color: var(--text);
+ }
 }

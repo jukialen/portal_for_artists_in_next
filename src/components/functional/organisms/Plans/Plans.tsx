@@ -6,7 +6,7 @@ import { PlanBlock } from 'components/ui/molecules/PlanBlock/PlanBlock';
 
 import styles from './Plans.module.css';
 
-export const PlansContainer = ({ dataPlan, other }: PlanBlockType) => {
+export const PlansContainer = ({ dataPlan, other, locale }: PlanBlockType) => {
   const [cycle, setCycle] = useState<BillingCycleType>(other.billingCycle);
 
   return (
@@ -24,9 +24,9 @@ export const PlansContainer = ({ dataPlan, other }: PlanBlockType) => {
         </button>
       </div>
       <div className={styles.plansDataContainer}>
-        <PlanBlock dataPlan={dataPlan[0]} other={other} billingCycle={cycle} />
-        <PlanBlock dataPlan={dataPlan[1]} other={other} billingCycle={cycle} />
-        <PlanBlock dataPlan={dataPlan[2]} other={other} billingCycle={cycle} />
+        <PlanBlock dataPlan={dataPlan[0]} other={other} billingCycle={cycle} locale={locale} />
+        <PlanBlock dataPlan={dataPlan[1]} other={other} billingCycle={cycle} locale={locale} />
+        <PlanBlock dataPlan={dataPlan[2]} other={other} billingCycle={cycle} locale={locale} />
       </div>
     </section>
   );

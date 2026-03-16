@@ -1,4 +1,6 @@
 .options {
+  height: min-content;
+
   .bottomPanel {
     display: grid;
     grid-template-columns: 1fr 3rem;

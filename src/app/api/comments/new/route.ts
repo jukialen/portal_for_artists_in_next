@@ -15,78 +15,54 @@ export async function POST(req: NextRequest) {
 
     const { content, authorId, postId, roleId, fileId, fileCommentId, commentId, subCommentId } = requestBody;
 
+    console.log('new con data', content, authorId, postId, roleId, fileId, fileCommentId, commentId, subCommentId);
+
+    if (roleId === 'no id') return NextResponse.json({ error: 'no role id', message: '' });
+
     if (!!postId) {
-      const { error } = await supabase.from('Comments').insert([
-        {
-          content: content!,
-          authorId: authorId!,
-          postId: postId!,
-          roleId: roleId!,
-        },
-      ]);
+      const { error } = await supabase.from('Comments').insert([{ content, authorId, postId, roleId: roleId! }]);
 
       if (!!error) {
         console.error(error);
-        return NextResponse.json(null);
+        return NextResponse.json({ error: 'no post id', message: '' });
       }
-      role = await giveRole(roleId!);
     }
 
     if (!!fileId) {
-      const { error } = await supabase.from('FilesComments').insert([
-        {
-          content: content!,
-          authorId: authorId!,
-          fileId: fileId!,
-          roleId: roleId!,
-        },
-      ]);
+      const { error } = await supabase.from('FilesComments').insert([{ content, authorId, fileId, roleId: roleId! }]);
 
       if (!!error) {
-        console.error(error);
-        return NextResponse.json(null);
+        console.error('fileId error', error);
+        return NextResponse.json({ error: 'no file id', message: '' });
       }
-      role = await giveRole(roleId!);
     }
 
     if (!!fileCommentId || !!commentId) {
-      const { error } = await supabase.from('SubComments').insert([
-        {
-          content: content!,
-          authorId: authorId!,
-          commentId: commentId!,
-          fileCommentId: fileCommentId!,
-          roleId: roleId!,
-        },
-      ]);
+      const { error } = await supabase
+        .from('SubComments')
+        .insert([{ content, authorId, commentId, fileCommentId, roleId: roleId! }]);
 
       if (!!error) {
         console.error(error);
-        return NextResponse.json(null);
+        return NextResponse.json({ error: 'no second nested comment id', message: '' });
       }
-      role = await giveRole(roleId!);
     }
 
     if (!!subCommentId) {
-      const { error } = await supabase.from('LastComments').insert([
-        {
-          content: content!,
-          authorId: authorId!,
-          subCommentId: subCommentId!,
-          roleId: roleId!,
-        },
-      ]);
+      const { error } = await supabase
+        .from('LastComments')
+        .insert([{ content, authorId, subCommentId, roleId: roleId! }]);
 
       if (!!error) {
         console.error(error);
-        return NextResponse.json(null);
+        return NextResponse.json({ error: 'no last nested comment id', message: '' });
       }
-      role = await giveRole(roleId!);
-
-      return NextResponse.json(role);
     }
+
+    role = await giveRole(roleId!);
+    return NextResponse.json({ error: '', message: role });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: 'Invalid request body' });
+    return NextResponse.json({ error: 'Invalid request body' });
   }
 }

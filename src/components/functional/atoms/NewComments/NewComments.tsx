@@ -1,12 +1,14 @@
+'use client';
+
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from '../../../../shemasValidation/schemaValidation';
+import { SchemaValidation } from 'shemasValidation/schemaValidation';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
+import { supabaseStorageProfileUrl } from 'constants/links';
 import { ResetFormType } from 'types/global.types';
 
 import { useScopedI18n } from 'locales/client';
-
 import { newComment } from 'utils/comments';
 
 import styles from './NewComments.module.scss';
@@ -36,6 +38,7 @@ export const NewComments = ({
 }: NewComment) => {
   const initialValues = { comment: '' };
 
+  console.log('authorId,\n' + '  postId,\n' + '  roleId,', authorId, postId, roleId);
   const tComments = useScopedI18n('Comments');
 
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
@@ -60,11 +63,15 @@ export const NewComments = ({
   };
 
   return (
-    <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={createNewComment}>
+    <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={createNewComment} validateOnChange>
       {({ values, handleChange }) => (
         <Form>
           <div className={styles.comments}>
-            <Avatar src={profilePhoto} fallbackName="my profile photo icon" alt="my profile photo icon" />
+            <Avatar
+              src={`${supabaseStorageProfileUrl}/${profilePhoto}`}
+              fallbackName="my profile photo icon"
+              alt="my profile photo icon"
+            />
 
             <textarea
               name="comment"
@@ -78,9 +85,11 @@ export const NewComments = ({
             />
           </div>
 
-          <button type="submit" className={styles.addingButton}>
-            {tComments('newComButton')}
-          </button>
+          <div className={styles.submitButton}>
+            <button type="submit" className={styles.addingButton}>
+              {tComments('newComButton')}
+            </button>
+          </div>
 
           <ErrorMessage name="comment" />
         </Form>
