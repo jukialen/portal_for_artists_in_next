@@ -39,8 +39,8 @@ export async function GET(req: NextRequest) {
         .limit(1)
         .single();
 
-      const role = await giveRole(groupsPostsRoleId || roleId);
-      if (!!er || role === undefined) {
+      const { role, message } = await giveRole(groupsPostsRoleId || roleId);
+      if (!!er || role === '' || !!message) {
         console.error(er || 'role is undefined');
         return NextResponse.json(commentArray);
       }

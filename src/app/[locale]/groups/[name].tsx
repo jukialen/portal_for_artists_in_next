@@ -158,7 +158,7 @@ async function getFirstPosts(groupId: string, maxItems: number, dataDateObject: 
 
   if (!!error) {
     console.error(error);
-    return;
+    return postsArray;
   } else {
     for (const post of data!) {
       const { title, content, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;

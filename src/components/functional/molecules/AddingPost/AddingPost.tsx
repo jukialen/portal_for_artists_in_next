@@ -42,17 +42,29 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
   });
 
   const createNewPost = async ({ title, content }: NewPostType, { resetForm }: ResetFormType) => {
-    const { data, error } = await supabase
-      .from('Posts')
-      .insert([{ title, content, groupId, authorId, roleId }])
-      .select('title')
-      .limit(1)
-      .single();
     try {
+      const { data, error } = await supabase
+        .from('Posts')
+        .insert([{ title, content, groupId, authorId, roleId }])
+        .select('title, postId')
+        .single();
+
       if (!!data) {
+        const { data: authorData, error: authorError } = await supabase
+          .from('Roles')
+          .insert([{ groupId, userId: authorId, postId: data.postId }])
+          .select('id')
+          .single();
+
+        if (!!authorError || !authorData) {
+          setValueFields(`Post creation error: ${authorError?.message} with code: ${authorError?.code}`);
+          return;
+        }
+
+        await supabase.from('Posts').update({ roleId: authorData.id }).eq('postId', data.postId);
+
         resetForm(initialValues);
       } else {
-        console.error(`Post creation error: ${error?.message} with code: ${error?.code}`);
         setValueFields(`Post creation error: ${error?.message} with code: ${error?.code}`);
       }
     } catch (e) {

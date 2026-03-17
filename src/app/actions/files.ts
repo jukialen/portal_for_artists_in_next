@@ -36,7 +36,11 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
       for (const file of data!) {
         const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
+        const role = await getFileRoleId(fileId, authorId);
+
         filesArray.push({
+          authorId,
+          roleId: role.roleId,
           fileId,
           name,
           shortDescription: shortDescription!,
@@ -65,7 +69,11 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
       for (const file of data!) {
         const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
+        const role = await getFileRoleId(fileId, authorId);
+
         filesArray.push({
+          authorId,
+          roleId: role.roleId,
           fileId,
           name,
           shortDescription: shortDescription!,
@@ -113,12 +121,16 @@ export const videosAnimations = async (
       if (data?.length === 0 || !!error) return filesArray;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = file;
+        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
+        const role = await getFileRoleId(fileId, authorId!);
 
-        if (roleId === 'no id') return filesArray;
+        if (role.roleId === 'no id') return filesArray;
+
         filesArray.push({
+          authorId,
+          roleId: role.roleId,
+          tags,
           fileId,
           name,
           shortDescription: shortDescription!,
@@ -144,13 +156,16 @@ export const videosAnimations = async (
       if (data?.length === 0 || !!error) return filesArray;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = file;
+        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
+        const role = await getFileRoleId(fileId, authorId!);
 
-        if (roleId === 'no id') return filesArray;
+        if (role.roleId === 'no id') return filesArray;
 
         filesArray.push({
+          authorId,
+          roleId: role.roleId,
+          tags,
           fileId,
           name,
           shortDescription: shortDescription!,
@@ -196,13 +211,15 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
       for (const draw of data!) {
         const { fileId, name, fileUrl, tags, shortDescription, Users, authorId, createdAt, updatedAt } = draw;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
+        const role = await getFileRoleId(fileId, authorId!);
 
-        if (roleId == 'no id') return nextArray;
+        if (role.roleId == 'no id') return nextArray;
 
         nextArray.push({
           authorName: Users?.pseudonym!,
           fileId,
+          authorId: authorId!,
+          roleId: role.roleId,
           name,
           shortDescription: shortDescription!,
           fileUrl,

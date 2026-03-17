@@ -52,20 +52,27 @@ export const AnimatedGallery = ({ id, pseudonym, author, tGallery, firstAnimatio
 
       <Wrapper>
         {userAnimates.length > 0 ? (
-          userAnimates.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
-            <Suspense key={index} fallback={<p>Loading...</p>}>
-              <FileContainer
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorName={authorName!}
-                authorBool={authorName === pseudonym}
-                time={time}
-              />
-            </Suspense>
-          ))
+          userAnimates.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, authorName, time, authorId, roleId }: FileType,
+              index,
+            ) => (
+              <Suspense key={index} fallback={<p>Loading...</p>}>
+                <FileContainer
+                  fileId={fileId!}
+                  name={name!}
+                  fileUrl={fileUrl}
+                  shortDescription={shortDescription!}
+                  tags={tags!}
+                  authorName={authorName!}
+                  authorBool={authorName === pseudonym}
+                  time={time}
+                  authorId={authorId}
+                  roleId={roleId}
+                />
+              </Suspense>
+            ),
+          )
         ) : (
           <div>nie ma nic</div>
         )}

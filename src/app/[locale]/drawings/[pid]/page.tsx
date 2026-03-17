@@ -15,6 +15,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 import { DrawingsWrapper } from 'components/wrappers/DrawingsWrapper/DrawingsWrapper';
 
 import styles from './page.module.scss';
+import { getFileRoleId } from '../../../../utils/roles';
 
 export const metadata: Metadata = HeadCom('Sites with drawings and photos.');
 
@@ -34,7 +35,10 @@ async function getFirstDrawings(pid: Tags, maxItems: number, dataDateObject: Dat
     if (data?.length === 0 || !!error) return filesArray;
 
     for (const file of data) {
-      const { fileId, fileUrl, name, shortDescription, Users, createdAt, updatedAt } = file;
+      const { fileId, fileUrl, name, authorId, shortDescription, tags, Users, createdAt, updatedAt } = file;
+
+      const role = await getFileRoleId(fileId, authorId!);
+      if (role.roleId === 'no id') return filesArray;
 
       filesArray.push({
         fileId,
@@ -42,6 +46,9 @@ async function getFirstDrawings(pid: Tags, maxItems: number, dataDateObject: Dat
         shortDescription: shortDescription!,
         authorName: Users?.pseudonym!,
         fileUrl: fileUrl,
+        authorId: authorId!,
+        roleId: role.roleId,
+        tags,
         time: await getDate(updatedAt! || createdAt!, dataDateObject),
       });
     }

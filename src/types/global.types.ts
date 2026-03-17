@@ -266,9 +266,9 @@ type Comment = Time & {
 
 export type NewCommentsType = {
   authorId: string;
-  profilePhoto?: string;
   roleId: string;
   content: string;
+  profilePhoto?: string;
   fileId?: string;
   postId?: string;
   fileCommentId?: string;

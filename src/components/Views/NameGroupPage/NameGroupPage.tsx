@@ -33,7 +33,7 @@ export const NameGroupPage = ({
   members: MemberType[];
   usersGroupsId: string;
   translated: nameGroupTranslatedType;
-  firstPosts: PostsType[] | undefined;
+  firstPosts: PostsType[];
 }) => {
   const [join, setJoin] = useState(joined.join);
   const [favorite, setFavorite] = useState(joined.favorite);

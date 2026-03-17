@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { FileType, LangType } from 'types/global.types';
+import { LangType } from 'types/global.types';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
@@ -35,16 +35,6 @@ export async function generateMetadata({ params }: PropsType): Promise<Metadata>
 async function oneFile(fileId: string) {
   const supabase = await createServer();
 
-  // let postData: FileType = {
-  //   fileUrl: '',
-  //   shortDescription: '',
-  //   tags: 'others',
-  //   authorName: '',
-  //   time: '',
-  //   authorId: '',
-  //   roleId: '',
-  // };
-
   try {
     const { data, error } = await supabase
       .from('Files')
@@ -60,11 +50,8 @@ async function oneFile(fileId: string) {
       return;
     }
 
-    console.log('[...file] data', data);
-    console.log('fileId', fileId);
     const role = await getFileRoleId(fileId, data.authorId!);
 
-    console.log('/[...file] role', role);
     const { fileUrl, shortDescription, tags, authorId, createdAt, updatedAt, Users } = data;
 
     const { data: storageData, error: storageError } = await supabase.storage
@@ -73,7 +60,6 @@ async function oneFile(fileId: string) {
 
     if (storageError) return;
 
-    console.log('storageData', storageData);
     return {
       authorName: Users!.pseudonym,
       authorProfilePhoto: Users!.profilePhoto,

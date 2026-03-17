@@ -38,14 +38,13 @@ export const NewComments = ({
 }: NewComment) => {
   const initialValues = { comment: '' };
 
-  console.log('authorId,\n' + '  postId,\n' + '  roleId,', authorId, postId, roleId);
   const tComments = useScopedI18n('Comments');
 
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
 
   const createNewComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
-      await newComment({
+      const { role, message } = await newComment({
         content: comment,
         authorId,
         postId,
@@ -55,6 +54,11 @@ export const NewComments = ({
         subCommentId,
         fileCommentId,
       });
+
+      if (!role || !!message) {
+        console.error(message);
+        return;
+      }
 
       resetForm(initialValues);
     } catch (e) {

@@ -18,14 +18,12 @@ type GroupsPropsType = {
   userId: string;
   profilePhoto: string;
   name: string;
-  firstPosts: PostsType[] | undefined;
+  firstPosts: PostsType[];
 };
 
 export const Posts = ({ groupId, userId, profilePhoto, name, firstPosts }: GroupsPropsType) => {
-  const [postsArray, setPostsArray] = useState<PostsType[] | undefined>(firstPosts);
-  const [lastVisible, setLastVisible] = useState(
-    !!firstPosts && firstPosts?.length > 0 ? firstPosts[firstPosts?.length - 1].createdAt : '',
-  );
+  const [postsArray, setPostsArray] = useState<PostsType[]>(firstPosts);
+  const [lastVisible, setLastVisible] = useState(firstPosts.length > 0 ? firstPosts.at(-1)?.createdAt : '');
   let [i, setI] = useState(1);
 
   const tPosts = useScopedI18n('Posts');

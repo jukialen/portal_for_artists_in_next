@@ -31,9 +31,9 @@ export const GET = async (req: NextRequest) => {
     for (const file of data) {
       const { fileId, name, shortDescription, Users, tags, fileUrl, authorId, createdAt, updatedAt } = file;
 
-      const roleId = await getFileRoleId(fileId, authorId!);
+      const role = await getFileRoleId(fileId, authorId!);
 
-      if (roleId === 'no id') return;
+      if (role.roleId === 'no id') return;
 
       nextArray.push({
         fileId,
@@ -44,6 +44,8 @@ export const GET = async (req: NextRequest) => {
         fileUrl,
         tags,
         time: await getDate(updatedAt! || createdAt!, await dateData()),
+        authorId: authorId!,
+        roleId: role.roleId,
       });
     }
 

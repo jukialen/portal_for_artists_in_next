@@ -53,7 +53,7 @@ async function getTop10Drawings(maxItems: number, dataDateObject: DateObjectType
       // @ts-ignore
       if (roleId === 'no id') return filesArray;
 
-      const roleOkId = roleId! as unknown as RoleType;
+      const roleOkId = roleId.roleId as RoleType;
 
       filesArray.push({
         fileId,
@@ -67,8 +67,6 @@ async function getTop10Drawings(maxItems: number, dataDateObject: DateObjectType
         time: await getDate(updatedAt! || createdAt!, dataDateObject),
       });
     }
-
-    console.log('filesArray', filesArray);
     return filesArray;
   } catch (e) {
     console.error('10drawingsE', e);
@@ -118,7 +116,6 @@ async function getTop10Pavo(maxItems: number, tag: Tags, dataDateObject: DateObj
         roleId: roleOkId,
       });
     }
-    console.log('filesArray', filesArray);
 
     return filesArray;
   } catch (e) {
@@ -145,7 +142,6 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
   const animations = await getTop10Pavo(maxItems, tags[1], dataDateObject);
   const videos = await getTop10Pavo(maxItems, tags[2], dataDateObject);
 
-  console.log('photos', photos);
   const appData = (data: FileType[]) =>
     data.map(
       ({ fileId, name, fileUrl, shortDescription, tags, authorName, time, authorId, roleId }: FileType, index) => (

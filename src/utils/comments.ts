@@ -12,15 +12,17 @@ import {
 //POST
 export const newComment = async (commentData: NewCommentsType) => {
   try {
-    const role: RoleType = await fetch(`${backUrl}/api/comments/new`, {
+    const { role, message }: { role: RoleType | ''; message: string } = await fetch(`${backUrl}/api/comments/new`, {
       method: 'POST',
       body: JSON.stringify(commentData),
     }).then((r) => r.json());
 
-    console.log('role', role);
-    return role;
-  } catch (e) {
+    !!message && console.error(`Error: ${message} with role: '${role}'.`);
+
+    return { role, message };
+  } catch (e: any) {
     console.error(e);
+    return { role: '', message: e.message };
   }
 };
 

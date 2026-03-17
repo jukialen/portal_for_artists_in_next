@@ -6,8 +6,6 @@ import { createServer } from 'utils/supabase/clientSSR';
 import { CommentType, FilesCommentsType, RoleType, SubCommentType } from 'types/global.types';
 
 export async function POST(req: NextRequest) {
-  let role: RoleType | undefined;
-
   try {
     const supabase = await createServer();
 
@@ -15,16 +13,14 @@ export async function POST(req: NextRequest) {
 
     const { content, authorId, postId, roleId, fileId, fileCommentId, commentId, subCommentId } = requestBody;
 
-    console.log('new con data', content, authorId, postId, roleId, fileId, fileCommentId, commentId, subCommentId);
-
-    if (roleId === 'no id') return NextResponse.json({ error: 'no role id', message: '' });
+    if (roleId === 'no id') return NextResponse.json({ role: '', message: 'no role id' });
 
     if (!!postId) {
       const { error } = await supabase.from('Comments').insert([{ content, authorId, postId, roleId: roleId! }]);
 
       if (!!error) {
         console.error(error);
-        return NextResponse.json({ error: 'no post id', message: '' });
+        return NextResponse.json({ role: '', message: 'no post id' });
       }
     }
 
@@ -33,7 +29,7 @@ export async function POST(req: NextRequest) {
 
       if (!!error) {
         console.error('fileId error', error);
-        return NextResponse.json({ error: 'no file id', message: '' });
+        return NextResponse.json({ role: '', message: 'no file id' });
       }
     }
 
@@ -44,7 +40,7 @@ export async function POST(req: NextRequest) {
 
       if (!!error) {
         console.error(error);
-        return NextResponse.json({ error: 'no second nested comment id', message: '' });
+        return NextResponse.json({ role: '', message: 'no second nested comment id' });
       }
     }
 
@@ -55,14 +51,14 @@ export async function POST(req: NextRequest) {
 
       if (!!error) {
         console.error(error);
-        return NextResponse.json({ error: 'no last nested comment id', message: '' });
+        return NextResponse.json({ role: '', message: 'no last nested comment id' });
       }
     }
 
-    role = await giveRole(roleId!);
-    return NextResponse.json({ error: '', message: role });
+    const { role, message }: { role: RoleType | ''; message: string } = await giveRole(roleId!);
+    return NextResponse.json({ role, message });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Invalid request body' });
+    return NextResponse.json({ role: '', message: 'Invalid request body' });
   }
 }

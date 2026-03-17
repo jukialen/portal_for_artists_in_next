@@ -21,6 +21,8 @@ const FileContainerClient = dynamic(() =>
 
 import styles from './page.module.scss';
 import { Database } from 'types/database.types';
+import { name } from 'next/dist/server/ci-info';
+import { getFileRoleId } from '../../../utils/roles';
 
 const downloadDrawings = async ({
   index,
@@ -47,9 +49,15 @@ const downloadDrawings = async ({
     if (!!error || data?.length === 0) return filesArray;
 
     for (const draw of data!) {
-      const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = draw;
+      const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, authorId, tags } = draw;
+
+      const role = await getFileRoleId(fileId, authorId!);
+      if (role.roleId === 'no id') return filesArray;
 
       filesArray.push({
+        authorId: authorId!,
+        roleId: role.roleId,
+        tags,
         authorName: Users?.pseudonym!,
         fileId,
         name,

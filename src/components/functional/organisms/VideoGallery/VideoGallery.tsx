@@ -53,20 +53,27 @@ export const VideoGallery = ({ id, pseudonym, author, tGallery, firstVideos }: G
 
       <Wrapper>
         {userVideos.length > 0 ? (
-          userVideos.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
-            <Suspense key={index} fallback={<p>Loading...</p>}>
-              <FileContainer
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorName={authorName!}
-                authorBool={authorName === pseudonym}
-                time={time}
-              />
-            </Suspense>
-          ))
+          userVideos.map(
+            (
+              { fileId, name, fileUrl, shortDescription, tags, authorName, time, authorId, roleId }: FileType,
+              index,
+            ) => (
+              <Suspense key={index} fallback={<p>Loading...</p>}>
+                <FileContainer
+                  fileId={fileId!}
+                  name={name!}
+                  fileUrl={fileUrl}
+                  shortDescription={shortDescription!}
+                  tags={tags!}
+                  authorName={authorName!}
+                  authorBool={authorName === pseudonym}
+                  time={time}
+                  authorId={authorId}
+                  roleId={roleId}
+                />
+              </Suspense>
+            ),
+          )
         ) : (
           <div>nie ma nic</div>
         )}

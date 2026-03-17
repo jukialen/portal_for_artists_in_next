@@ -32,11 +32,11 @@ export async function GET(request: NextRequest) {
     if (data?.length === 0 || !!error) return NextResponse.json(filesArray);
 
     for (const file of data!) {
-      const { fileId, name, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
+      const { fileId, name, shortDescription, tags, Users, authorId, fileUrl, createdAt, updatedAt } = file;
 
-      const roleId = await getFileRoleId(fileId, authorId!);
+      const role = await getFileRoleId(fileId, authorId!);
 
-      roleId === 'no id' && NextResponse.json(filesArray);
+      role.roleId === 'no id' && NextResponse.json(filesArray);
       filesArray.push({
         fileId,
         name,
@@ -46,7 +46,10 @@ export async function GET(request: NextRequest) {
         fileUrl,
         time: await getDate(updatedAt! || createdAt!, await dateData()),
         createdAt,
+        tags,
         updatedAt: updatedAt || undefined,
+        authorId: authorId!,
+        roleId: role.roleId,
       });
     }
     return NextResponse.json(filesArray);

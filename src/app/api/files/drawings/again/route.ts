@@ -37,17 +37,19 @@ export async function GET(req: NextRequest) {
       for (const draw of data!) {
         const { fileId, name, fileUrl, tags, shortDescription, Users, authorId, createdAt, updatedAt } = draw;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
+        const role = await getFileRoleId(fileId, authorId!);
 
-        roleId == 'no id' && NextResponse.json(nextArray);
+        role.roleId == 'no id' && NextResponse.json(nextArray);
 
         nextArray.push({
           authorName: Users?.pseudonym!,
           fileId,
           name,
           shortDescription: shortDescription!,
+          authorId: authorId!,
           fileUrl,
           tags,
+          roleId: role.roleId,
           time: await getDate(updatedAt! || createdAt!, await dateData()),
         });
       }
