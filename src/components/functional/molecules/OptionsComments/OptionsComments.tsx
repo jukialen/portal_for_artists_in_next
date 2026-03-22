@@ -4,7 +4,6 @@ import { ReactNode, useContext, useState } from 'react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Dialog } from '@ark-ui/react/dialog';
 
 import { updComment, delComment } from 'utils/comments';
 import { toggleLiked } from 'utils/likes';
@@ -14,6 +13,8 @@ import { ResetFormType, TableNameType } from 'types/global.types';
 import { useI18n, useScopedI18n } from 'locales/client';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
+
+import { NewComments } from 'components/functional/atoms/NewComments/NewComments';
 
 import styles from './OptionsComments.module.scss';
 import { AiFillLike, AiOutlineLike, AiOutlineMore } from 'react-icons/ai';
@@ -29,6 +30,9 @@ type OptionsType = {
   userId: string;
   liked: boolean;
   likes: number;
+  authorProfilePhoto: string;
+  roleId: string;
+  comment: string;
   tableName: TableNameType;
   children?: ReactNode;
 };
@@ -46,6 +50,9 @@ export const OptionsComments = ({
   userId,
   liked,
   likes: l,
+  authorProfilePhoto,
+  roleId,
+  comment,
   tableName,
   children,
 }: OptionsType) => {
@@ -55,16 +62,11 @@ export const OptionsComments = ({
   const [com, setCom] = useState(false);
   const { changeDel } = useContext(DCContext);
 
-  const [open, setOpen] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-
-  const initialValues = { comment: '' };
+  const initialValues = { comment };
 
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
 
-  const openMoreOptions = () => setMoreOptions(!moreOptions);
-  const onClose = () => setOpen(false);
-  const onCloseEdit = () => setOpenEdit(false);
+  const toggleMoreOptions = () => setMoreOptions(!moreOptions);
   const openComs = () => setCom(!com);
 
   const t = useI18n();
@@ -93,7 +95,6 @@ export const OptionsComments = ({
       !!lastCommentId && (await delComment(tableName, 'lastCommentId', lastCommentId));
 
       changeDel();
-      onClose();
     } catch (e) {
       console.error(e);
     }
@@ -119,10 +120,7 @@ export const OptionsComments = ({
         upd = await updComment(tableName, 'lastCommentId', lastCommentId!, comment);
       }
 
-      if (!!upd) {
-        onCloseEdit();
-        resetForm(initialValues);
-      }
+      if (!!upd) resetForm(initialValues);
     } catch (e) {
       console.error(e);
     }
@@ -134,91 +132,83 @@ export const OptionsComments = ({
         <div className={styles.likesContainer}>
           <button
             aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
-            className={styles.likes}
+            className={like ? styles.isLikes : styles.likes}
             onClick={toggleLike}>
-            like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />
+            {like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
           </button>
-          <p className={styles.likesCount}>{likes}</p>
+          <p className={like ? styles.isLikesCount : styles.likesCount}>{likes}</p>
         </div>
 
         <div className={styles.buttons}>
           {authorId === userId && (
             <>
-              <button className={styles.moreBut} onClick={openMoreOptions} aria-label="open more options">
+              <button className={styles.moreBut} onClick={toggleMoreOptions} aria-label="open more options">
                 <AiOutlineMore />
               </button>
               {moreOptions && (
                 <div className={styles.more}>
-                  <button className={styles.delete} onClick={() => setOpen(!open)}>
+                  <button className={styles.delete} popoverTarget="remove_popover" popoverTargetAction="show">
                     {tDeletionFile('deleteButton')}
                   </button>
-                  <button className={styles.edit} onClick={() => setOpenEdit(!openEdit)}>
+                  <button className={styles.edit} popoverTarget="edit_popover" popoverTargetAction="show">
                     {t('edit')}
                   </button>
                 </div>
               )}
-              <Dialog.Root
-                lazyMount
-                unmountOnExit
-                onExitComplete={() => console.log('onExitComplete invoked')}
-                open={open}
-                onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-                <Dialog.Content className={styles.content}>
-                  <Dialog.Title className={styles.title}>{tComments('deleteCommentTitle')}</Dialog.Title>
-                  <Dialog.Description>{tDeletionFile('question')}</Dialog.Description>
 
-                  <div className={styles.actionButton}>
-                    <button className={styles.cancel}>{tDeletionFile('cancelButton')}</button>
-                    <button className={styles.submit} onClick={deleteComment}>
-                      {tDeletionFile('deleteButton')}
-                    </button>
-                  </div>
-                  <Dialog.CloseTrigger className={styles.closeButton} />
-                </Dialog.Content>
-              </Dialog.Root>
+              <div id="edit_popover" popover="auto" className={styles.content}>
+                <h3 className={styles.title}>{tComments('updateTitle')}</h3>
 
-              <Dialog.Root
-                lazyMount
-                unmountOnExit
-                onExitComplete={() => console.log('onExitComplete invoked')}
-                open={openEdit}
-                onOpenChange={() => setOpenEdit(!openEdit)}>
-                <Dialog.Content className={styles.content}>
-                  <Dialog.Title className={styles.title}>{tComments('updateTitle')}</Dialog.Title>
+                <Formik
+                  initialValues={initialValues}
+                  validationSchema={schemaNew}
+                  onSubmit={updateComment}
+                  enableReinitialize>
+                  {({ values, handleChange }) => (
+                    <Form method="post">
+                      <textarea
+                        name="comment"
+                        id="comment"
+                        value={values.comment}
+                        onChange={handleChange}
+                        className={styles.comment}
+                        placeholder={tComments('newComPlaceholder')}
+                        aria-label={tComments('newComAria')}
+                      />
 
-                  <Dialog.Description>
-                    <Formik initialValues={initialValues} validationSchema={schemaNew} onSubmit={updateComment}>
-                      {({ values, handleChange }) => (
-                        <Form>
-                          <div className={styles.comment}>
-                            <textarea
-                              name="comment"
-                              id="comment"
-                              value={values.comment}
-                              onChange={handleChange}
-                              placeholder={tComments('newComPlaceholder')}
-                              aria-label={tComments('newComAria')}
-                              required
-                            />
-                          </div>
+                      <div className={styles.actionButton}>
+                        <button
+                          type="button"
+                          className={styles.cancel}
+                          onClick={toggleMoreOptions}
+                          popoverTarget="edit_popover"
+                          popoverTargetAction="hide">
+                          {tDeletionFile('cancelButton')}
+                        </button>
 
-                          <div className={styles.actionButton}>
-                            <button type="submit" className={styles.submit}>
-                              {tComments('updateButton')}
-                            </button>
+                        <button type="submit" className={styles.submit} popoverTargetAction="hide">
+                          {tComments('updateButton')}
+                        </button>
+                      </div>
+                      <ErrorMessage name="comment" />
+                    </Form>
+                  )}
+                </Formik>
+              </div>
 
-                            <div className={styles.cancel} onClick={onCloseEdit}>
-                              {tDeletionFile('cancelButton')}
-                            </div>
-                          </div>
-                          <ErrorMessage name="comment" />
-                        </Form>
-                      )}
-                    </Formik>
-                  </Dialog.Description>
-                  <Dialog.CloseTrigger className={styles.closeButton} />
-                </Dialog.Content>
-              </Dialog.Root>
+              <div id="remove_popover" popover="auto" className={styles.removeContent}>
+                <h3 className={styles.title}>{tComments('deleteCommentTitle')}</h3>
+                <h4>{tDeletionFile('question')}</h4>
+
+                <div className={styles.actionButton}>
+                  <button className={styles.cancel} popoverTarget="remove_popover" popoverTargetAction="hide">
+                    {tDeletionFile('cancelButton')}
+                  </button>
+                  <button className={styles.submit} onClick={deleteComment} popoverTargetAction="hide">
+                    {tDeletionFile('deleteButton')}
+                  </button>
+                </div>
+              </div>
             </>
           )}
           <button className={styles.answer} onClick={openComs}>
@@ -226,7 +216,15 @@ export const OptionsComments = ({
           </button>
         </div>
       </div>
-
+      {com && (
+        <NewComments
+          fileId={fileId}
+          fileCommentId={fileCommentId}
+          authorId={authorId}
+          profilePhoto={authorProfilePhoto}
+          roleId={roleId!}
+        />
+      )}
       {!!children && children}
     </>
   );

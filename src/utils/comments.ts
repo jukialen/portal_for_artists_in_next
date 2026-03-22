@@ -49,13 +49,15 @@ export const comments = async (
   }
 };
 
-export const filesComments = async (fileId: string, maxItems: number, step: 'first' | 'again') => {
+export const filesAgainComments = async (fileId: string, maxItems: number) => {
   const params = { fileId, maxItems: maxItems.toString() };
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: FilesCommentsType[] = await fetch(`${backUrl}/api/files-comments/${step}?${queryString}`, {
+    const res: FilesCommentsType[] = await fetch(`${backUrl}/api/files-comments/again?${queryString}`, {
       method: 'GET',
+      credentials: 'include',
+      cache: 'reload',
     })
       .then((r) => r.json())
       .catch((e) => console.error(e));

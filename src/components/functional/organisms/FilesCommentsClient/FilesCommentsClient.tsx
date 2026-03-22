@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { filesComments } from 'utils/comments';
+import { filesAgainComments } from 'utils/comments';
 
 import { FilesCommentsType } from 'types/global.types';
 
@@ -23,7 +23,7 @@ type FilesCommentsClientType = {
 export const FilesCommentsClient = ({ firstFilesComments, fileId, noComments, pseudonym }: FilesCommentsClientType) => {
   const maxItems = 30;
 
-  const [commentsArray, setCommentsArray] = useState<FilesCommentsType[]>(firstFilesComments);
+  const [commentsArray, setCommentsArray] = useState(firstFilesComments);
   const [lastVisible, setLastVisible] = useState(
     firstFilesComments.length === maxItems ? firstFilesComments[firstFilesComments.length - 1].createdAt : '',
   );
@@ -31,7 +31,7 @@ export const FilesCommentsClient = ({ firstFilesComments, fileId, noComments, ps
 
   const nextComments = async () => {
     try {
-      const nextPage = (await filesComments(fileId, maxItems, 'again'))!;
+      const nextPage = (await filesAgainComments(fileId, maxItems))!;
 
       nextPage.length === maxItems && setLastVisible(nextPage[nextPage.length - 1].createdAt!);
 
@@ -46,41 +46,11 @@ export const FilesCommentsClient = ({ firstFilesComments, fileId, noComments, ps
   return (
     <>
       {commentsArray.length > 0 ? (
-        commentsArray.map(
-          (
-            {
-              fileCommentId,
-              fileId,
-              content,
-              authorName,
-              authorProfilePhoto,
-              role,
-              roleId,
-              authorId,
-              date,
-              liked,
-              likes,
-            }: FilesCommentsType,
-            index,
-          ) => (
-            <DCProvider key={index}>
-              <FileComment
-                fileCommentId={fileCommentId}
-                fileId={fileId}
-                content={content}
-                authorName={authorName}
-                authorProfilePhoto={authorProfilePhoto}
-                role={role}
-                roleId={roleId}
-                authorId={authorId}
-                pseudonym={pseudonym}
-                liked={liked}
-                likes={likes}
-                date={date}
-              />
-            </DCProvider>
-          ),
-        )
+        commentsArray.map((fileCommentsData: FilesCommentsType, index) => (
+          <DCProvider key={index}>
+            <FileComment fileCommentsData={fileCommentsData} />
+          </DCProvider>
+        ))
       ) : (
         <p className={styles.noComments}>{noComments}</p>
       )}

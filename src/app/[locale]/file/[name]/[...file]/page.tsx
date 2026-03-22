@@ -85,8 +85,6 @@ export default async function Post({ params }: PropsType) {
   const authorPost = await oneFile(fileId);
   const userData = await getUserData();
 
-  console.log('authorPost', authorPost);
-
   const { fileUrl, shortDescription, tags, authorName, time, authorId, roleId } = authorPost!;
 
   return (

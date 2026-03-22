@@ -1,25 +1,36 @@
 .options {
   display: flex;
   justify-content: space-between;
-  margin: .5rem 0;
+  margin: 0.5rem 0;
 
   .likesContainer {
     display: flex;
     align-items: center;
 
-    .likes {
-      width: 2rem;
-      height: 2rem;
-      margin-left: .5rem;
-      background-color: transparent;
-      color: var(--third);
+    .likes,
+    .isLikes {
+      padding: 0.2rem 0.3rem;
+      margin-left: 0.5rem;
+      border-radius: 0.75rem;
       border-color: transparent;
       cursor: pointer;
+
+      svg {
+        width: 1.2rem;
+      }
     }
 
-    .likesCount {
-      margin-right: .5rem;
+    .isLikes svg {
+      fill: var(--third);
+    }
+
+    .likesCount,
+    .isLikesCount {
+      margin-right: 0.5rem;
       font-size: 1rem;
+    }
+
+    .isLikesCount {
       color: var(--third);
     }
   }
@@ -27,27 +38,38 @@
   .buttons {
     display: flex;
     position: relative;
+    gap: 0.5rem;
 
     .moreBut {
+      height: 2rem;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      padding: 0;
       font-size: 1.6rem;
       background-color: transparent;
       border-color: transparent;
       cursor: pointer;
 
       &:hover {
-        background-color: var(--third);
+        background-color: var(--third) !important;
+        border-color: var(--third) !important;
       }
     }
 
     .more {
       width: max-content;
-      display: flex;
+      height: 2rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       position: absolute;
       right: 110%;
-      background-color: var(--third);
       border-radius: 1rem;
 
-      .edit, .delete {
+      .edit,
+      .delete {
         min-width: 5rem;
         padding: 0 1rem;
         border-color: transparent;
@@ -55,60 +77,109 @@
       }
 
       .edit {
+        anchor-name: --edit-comment;
+        border-radius: 0 1rem 1rem 0;
+        background-color: var(--third);
         color: var(--text);
       }
 
-      .delete:hover {
+      .delete {
         background-color: var(--required);
         border-radius: 1rem 0 0 1rem;
       }
     }
 
-    .content {
-      margin: auto;
+    .content, .removeContent {
+      width: min(90dvw, 30rem);
+      position: fixed;
+      position-anchor: --edit-comment;
+      position-area: self-block-start center;
+      position-try: flip-block;
+      position-try-fallbacks: bottom;
+      gap: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      border: none;
+      background-color: var(--primary__opacity);
+      box-shadow: var(--box-shadow);
+      -webkit-backdrop-filter: var(--backdrop-filter);
+      backdrop-filter: var(--backdrop-filter);
+      z-index: 1;
+      transition:
+        top 0.2s,
+        bottom 0.2s,
+        opacity 0.2s;
+
+      &::backdrop {
+        width: 100%;
+        height: 100dvh;
+        border: none;
+        background-color: var(--background__opacity);
+        box-shadow: var(--box-shadow);
+        -webkit-backdrop-filter: var(--backdrop-filter);
+        backdrop-filter: var(--backdrop-filter);
+      }
+
+      &:popover-open {
+        display: grid;
+      }
 
       .title {
-        font-size: 1.1rem;
+        padding: 1rem 0 0 0.1rem;
         font-weight: bold;
       }
 
-      .comment {
-        width: 95%;
-        margin: 1rem auto 0;
-        padding: 0 0.25rem;
+      form {
+        width: 100%;
+        width: stretch;
+      }
 
-        textarea {
-          color: var(--third);
-        }
+      .comment {
+        width: inherit;
+        min-height: 3rem;
+        margin: 0.5rem 0;
+        padding: 0.25rem 0.35rem;
+        resize: vertical;
+        border-radius: 0.25rem;
+        background-color: var(--opacity);
       }
 
       .actionButton {
         display: flex;
         gap: 1rem;
-        margin: 2rem;
-        justify-content: space-around;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: 1rem;
+
+        .cancel,
+        .submit {
+          padding: 0.5rem 1rem;
+          font-size: 1rem;
+          border-radius: 1rem;
+          border: 1px solid transparent;
+        }
 
         .cancel {
-          background-color: var(--text);
-          border-color: var(--text);
+          background-color: var(--opacity);
         }
 
         .submit {
-          display: flex;
           background-color: var(--third);
-          border-color: var(--third);
-          margin-left: 3px;
-        }
-      }
 
-      .closeButton {
-        color: var(--primary);
-        border-color: transparent;
+          &:has(#remove_popover) {
+            background-color: var(--required);
+          }
+        }
       }
     }
 
+   .removeContent .actionButton .submit {
+    background-color: var(--required);
+   }
+
     .answer {
-      padding: .1rem 1rem;
+      padding: 0.1rem 1rem;
+      border-radius: 1rem;
       border-color: transparent;
       cursor: pointer;
     }

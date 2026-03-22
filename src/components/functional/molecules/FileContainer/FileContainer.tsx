@@ -30,7 +30,6 @@ export const FileContainer = async ({
   const Tags = tags[0].toUpperCase() + tags.slice(1);
   const userData = await getUserData();
 
-  console.log('fileUrl', fileUrl);
   return (
     <>
       <article className={styles.file}>

@@ -1,23 +1,30 @@
 .container {
-  width: 100%;
+  width: min(34.5rem, 90dvw);
   margin: 1rem auto 2rem;
 
   .comment {
+    width: 100%;
     display: grid;
     grid-template-columns: 3rem 1fr;
     align-items: center;
+    justify-items: center;
+
+    img {
+      margin: 0.35rem 0 0.8rem;
+    }
 
     .rightSideComment {
+      width: inherit;
       display: flex;
       flex-direction: column;
-      margin: 0.5rem 0.5rem 0.5rem 0;
+      margin: 0 0.5rem;
 
       .topPartComment {
         display: grid;
         grid-template-columns: 1fr 1fr;
         justify-content: space-between;
         align-items: center;
-        padding: 0 0.5rem 0.5rem 0;
+        padding: 0.35rem 0 1.2rem;
 
         .pseudonym {
           font-size: 1.2rem;
@@ -27,7 +34,7 @@
 
         .date {
           text-align: right;
-          font-size: .9rem;
+          font-size: 0.9rem;
         }
       }
 
@@ -41,4 +48,8 @@
   &__deleted {
     display: none;
   }
+
+ &:last-child {
+  margin-bottom: 8rem;
+ }
 }

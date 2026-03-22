@@ -13,25 +13,21 @@ import { OptionsComments } from 'components/functional/molecules/OptionsComments
 import { SubComments } from 'components/functional/molecules/SubComments/SubComments';
 
 import styles from './FileComment.module.scss';
+import { supabaseStorageProfileUrl } from '../../../../constants/links';
 
-export const FileComment = ({
-  fileCommentId,
-  fileId,
-  content,
-  authorId,
-  authorName,
-  authorProfilePhoto,
-  liked,
-  likes,
-  roleId,
-  date,
-}: FilesCommentsType) => {
+export const FileComment = ({ fileCommentsData }: { fileCommentsData: FilesCommentsType }) => {
   const { del } = useContext(DCContext);
+  const { fileCommentId, fileId, content, authorName, authorProfilePhoto, role, roleId, authorId, date, liked, likes } =
+    fileCommentsData;
 
   return (
     <div className={del ? styles.container__deleted : styles.container}>
       <div className={styles.comment}>
-        <Avatar src={authorProfilePhoto} fallbackName={authorName} alt="author profile photo icon" />
+        <Avatar
+          src={`${supabaseStorageProfileUrl}/${authorProfilePhoto}`}
+          fallbackName={authorName}
+          alt="author profile photo icon"
+        />
         <div className={styles.rightSideComment}>
           <div className={styles.topPartComment}>
             <p className={styles.pseudonym}>
@@ -49,14 +45,10 @@ export const FileComment = ({
         userId={authorId}
         liked={liked}
         likes={likes}
+        authorProfilePhoto={authorProfilePhoto}
+        roleId={roleId!}
+        comment={content}
         tableName="FilesComments">
-        <NewComments
-          fileId={fileId}
-          fileCommentId={fileCommentId}
-          authorId={authorId}
-          profilePhoto={authorProfilePhoto}
-          roleId={roleId!}
-        />
         <SubComments fileCommentId={fileCommentId} fileId={fileId} />
       </OptionsComments>
     </div>
