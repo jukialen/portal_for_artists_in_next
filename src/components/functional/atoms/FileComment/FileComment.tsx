@@ -3,17 +3,16 @@
 import { useContext } from 'react';
 import Link from 'next/link';
 
+import { supabaseStorageProfileUrl } from 'constants/links';
 import { FilesCommentsType } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
 
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
-import { NewComments } from '../NewComments/NewComments';
 import { OptionsComments } from 'components/functional/molecules/OptionsComments/OptionsComments';
 import { SubComments } from 'components/functional/molecules/SubComments/SubComments';
 
 import styles from './FileComment.module.scss';
-import { supabaseStorageProfileUrl } from '../../../../constants/links';
 
 export const FileComment = ({ fileCommentsData }: { fileCommentsData: FilesCommentsType }) => {
   const { del } = useContext(DCContext);

@@ -165,17 +165,14 @@
 
         .submit {
           background-color: var(--third);
-
-          &:has(#remove_popover) {
-            background-color: var(--required);
-          }
         }
       }
     }
 
-   .removeContent .actionButton .submit {
-    background-color: var(--required);
-   }
+    [id^="remove_popover"] .actionButton .submit {
+      background-color: var(--required);
+    }
+
 
     .answer {
       padding: 0.1rem 1rem;

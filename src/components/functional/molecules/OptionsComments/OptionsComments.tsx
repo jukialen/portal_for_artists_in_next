@@ -102,25 +102,20 @@ export const OptionsComments = ({
 
   const updateComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
-      let upd: boolean | undefined;
+      const ids = [
+        [fileId, 'fileId'] as const,
+        [fileCommentId, 'fileCommentId'] as const,
+        [commentId, 'commentId'] as const,
+        [subCommentId, 'subCommentId'] as const,
+        [lastCommentId, 'lastCommentId'] as const,
+      ] as const;
+      const [id, fieldName] = ids.find(([val]) => !!val)!;
 
-      if (!!fileId) {
-        upd = await updComment(tableName, 'fileId', fileId!, comment);
+      if (id && fieldName) {
+        const upd = await updComment(tableName, fieldName, id, comment);
+        if (upd) resetForm(initialValues);
+        return;
       }
-      if (!!fileCommentId) {
-        upd = await updComment(tableName, 'fileCommentId', fileCommentId!, comment);
-      }
-      if (!!commentId) {
-        upd = await updComment(tableName, 'commentId', commentId!, comment);
-      }
-      if (!!subCommentId) {
-        upd = await updComment(tableName, 'subCommentId', subCommentId!, comment);
-      }
-      if (!!lastCommentId) {
-        upd = await updComment(tableName, 'lastCommentId', lastCommentId!, comment);
-      }
-
-      if (!!upd) resetForm(initialValues);
     } catch (e) {
       console.error(e);
     }
@@ -147,16 +142,22 @@ export const OptionsComments = ({
               </button>
               {moreOptions && (
                 <div className={styles.more}>
-                  <button className={styles.delete} popoverTarget="remove_popover" popoverTargetAction="show">
+                  <button
+                    className={styles.delete}
+                    popoverTarget={`remove_popover_${fileCommentId}`}
+                    popoverTargetAction="show">
                     {tDeletionFile('deleteButton')}
                   </button>
-                  <button className={styles.edit} popoverTarget="edit_popover" popoverTargetAction="show">
+                  <button
+                    className={styles.edit}
+                    popoverTarget={`edit_popover_${fileCommentId}`}
+                    popoverTargetAction="show">
                     {t('edit')}
                   </button>
                 </div>
               )}
 
-              <div id="edit_popover" popover="auto" className={styles.content}>
+              <div id={`edit_popover_${fileCommentId}`} popover="auto" className={styles.content}>
                 <h3 className={styles.title}>{tComments('updateTitle')}</h3>
 
                 <Formik
@@ -181,7 +182,7 @@ export const OptionsComments = ({
                           type="button"
                           className={styles.cancel}
                           onClick={toggleMoreOptions}
-                          popoverTarget="edit_popover"
+                          popoverTarget={`edit_popover_${fileCommentId}`}
                           popoverTargetAction="hide">
                           {tDeletionFile('cancelButton')}
                         </button>
@@ -196,12 +197,15 @@ export const OptionsComments = ({
                 </Formik>
               </div>
 
-              <div id="remove_popover" popover="auto" className={styles.removeContent}>
+              <div id={`remove_popover_${fileCommentId}`} popover="auto" className={styles.removeContent}>
                 <h3 className={styles.title}>{tComments('deleteCommentTitle')}</h3>
                 <h4>{tDeletionFile('question')}</h4>
 
                 <div className={styles.actionButton}>
-                  <button className={styles.cancel} popoverTarget="remove_popover" popoverTargetAction="hide">
+                  <button
+                    className={styles.cancel}
+                    popoverTarget={`remove_popover_${fileCommentId}`}
+                    popoverTargetAction="hide">
                     {tDeletionFile('cancelButton')}
                   </button>
                   <button className={styles.submit} onClick={deleteComment} popoverTargetAction="hide">
