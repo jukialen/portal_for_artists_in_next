@@ -14,7 +14,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 
 import { DrawingsWrapper } from 'components/wrappers/DrawingsWrapper/DrawingsWrapper';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 import { getFileRoleId } from '../../../../utils/roles';
 
 export const metadata: Metadata = HeadCom('Sites with drawings and photos.');

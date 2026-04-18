@@ -14,7 +14,7 @@ import { EventType, Tags, UserType } from 'types/global.types';
 
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
-import styles from './UserHeaderCom.module.scss';
+import styles from './UserHeaderCom.module.css';
 import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
 import { IoCloseOutline, IoSearch } from 'react-icons/io5';
 

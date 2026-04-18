@@ -13,7 +13,7 @@ import { DCProvider } from 'providers/DeleteCommentProvider';
 import { Comment } from 'components/functional/atoms/Comment/Comment';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 
-import styles from './Comments.module.scss';
+import styles from './Comments.module.css';
 
 type CommentsType = { postId: string; roleId: string };
 

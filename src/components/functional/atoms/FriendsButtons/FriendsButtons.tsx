@@ -7,7 +7,7 @@ import { createClient } from 'utils/supabase/clientCSR';
 
 import { Separator } from 'components/ui/atoms/Separator/Separator';
 
-import styles from './FriendsButtons.module.scss';
+import styles from './FriendsButtons.module.css';
 import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 
 export const FriendsButtons = ({

@@ -15,7 +15,7 @@ import { EventType, FilesUploadType, ResetFormType, UserType } from 'types/globa
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 
-import styles from './ChangePseuDescData.module.scss';
+import styles from './ChangePseuDescData.module.css';
 
 type ProfileType = {
   newPseudonym: string;

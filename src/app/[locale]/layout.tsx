@@ -16,9 +16,9 @@ import { Aside } from 'components/functional/organisms/Aside/Aside';
 import { Header } from 'components/ui/organisms/Header/Header';
 import { UserHeader } from 'components/functional/organisms/UserHeader/UserHeader';
 
-import styles from './Layout.module.scss';
-import 'styles/reset.scss';
-import 'styles/global.scss';
+import styles from './Layout.module.css';
+import 'styles/reset.css';
+import 'styles/global.css';
 import 'styles/_variables.css';
 
 type ChildrenType = {

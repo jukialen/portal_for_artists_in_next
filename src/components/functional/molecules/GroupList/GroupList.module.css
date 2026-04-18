@@ -9,8 +9,7 @@
     max-width: 100vw;
 
     .title, .noALl {
-      margin: 2rem 0;
-      text-align: center;
+      margin: 2rem 0; text-align: center;
     }
 
     .list {

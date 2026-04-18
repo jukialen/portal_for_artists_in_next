@@ -32,7 +32,7 @@ const Alerts = lazy(() =>
   })),
 );
 
-import styles from './AccountData.module.scss';
+import styles from './AccountData.module.css';
 import { cycles, locales, plans } from 'constants/values';
 
 type ResetPassword = {

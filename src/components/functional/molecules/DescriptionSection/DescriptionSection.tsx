@@ -13,7 +13,7 @@ import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 import { Separator } from 'components/ui/atoms/Separator/Separator';
 
-import styles from './DescriptionSection.module.scss';
+import styles from './DescriptionSection.module.css';
 import { BiEdit } from 'react-icons/bi';
 
 type DescriptionSectionType = {
@@ -44,8 +44,8 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
 
   const supabase = createClient();
 
-  const initialValuesDes = { newDescription: descrip };
-  const initialValuesReg = { newRegulation: regul };
+  const initialValuesForDes = { newDescription: descrip };
+  const initialValuesForReg = { newRegulation: regul };
 
   const schemaNewDes = Yup.object({
     newDescription: SchemaValidation().description,
@@ -64,7 +64,7 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
       .limit(1)
       .single();
     if (status === 200 || 204) {
-      resetForm(initialValuesReg);
+      resetForm(initialValuesForReg);
       setDescrip(data?.description!);
     } else {
       console.error(`statusText: ${statusText} \n Error: ${error}`);
@@ -82,7 +82,7 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
       .single();
 
     if (status === 200 || 204) {
-      resetForm(initialValuesReg);
+      resetForm(initialValuesForReg);
       setRegul(data?.regulation!);
     } else {
       console.error(`statusText: ${statusText} \n Error: ${error}`);
@@ -99,7 +99,7 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
         {!openDescriptionForm ? (
           <p className={styles.items}>{descrip}</p>
         ) : (
-          <Formik initialValues={initialValuesDes} validationSchema={schemaNewDes} onSubmit={updateDescription}>
+          <Formik initialValues={initialValuesForDes} validationSchema={schemaNewDes} onSubmit={updateDescription}>
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.form}>
                 <textarea
@@ -143,7 +143,7 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
             <p className={!!regul ? styles.regulations__item : styles.regulations__no__item}>{regul}</p>
           </div>
         ) : (
-          <Formik initialValues={initialValuesReg} validationSchema={schemaNewReg} onSubmit={updateRegulations}>
+          <Formik initialValues={initialValuesForReg} validationSchema={schemaNewReg} onSubmit={updateRegulations}>
             {({ values, handleChange, errors, touched }) => (
               <Form className={styles.form}>
                 <textarea

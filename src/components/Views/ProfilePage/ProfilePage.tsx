@@ -36,7 +36,7 @@ const FilesUpload = dynamic(() =>
   import('components/functional/molecules/FilesUpload/FilesUpload').then((fu) => fu.FilesUpload),
 );
 
-import styles from './ProfilePage.module.scss';
+import styles from './ProfilePage.module.css';
 import { RiArrowUpSLine } from 'react-icons/ri';
 
 type ProfilePageType = {

@@ -49,22 +49,27 @@ export const comments = async (
   }
 };
 
-export const filesAgainComments = async (fileId: string, maxItems: number) => {
+export const filesAgainComments = async (fileId: string, maxItems: number, stage: 'first' | 'again' = 'first') => {
   const params = { fileId, maxItems: maxItems.toString() };
   const queryString = new URLSearchParams(params).toString();
 
-  try {
-    const res: FilesCommentsType[] = await fetch(`${backUrl}/api/files-comments/again?${queryString}`, {
-      method: 'GET',
-      credentials: 'include',
-      cache: 'reload',
-    })
-      .then((r) => r.json())
-      .catch((e) => console.error(e));
+  const fileComments: FilesCommentsType[] = [];
 
-    return res;
+  try {
+    fileComments.push(
+      await fetch(`${backUrl}/api/files-comments/${stage}?${queryString}`, {
+        method: 'GET',
+        credentials: 'include',
+        cache: 'reload',
+      })
+        .then((r) => r.json())
+        .catch((e) => console.error(e)),
+    );
+
+    return fileComments;
   } catch (e) {
     console.error(e);
+    return fileComments;
   }
 };
 
@@ -128,16 +133,18 @@ export const lastComments = async (
 
 export const updComment = async (
   tableName: TableNameType,
-  nameId: 'commentId' | 'fileId' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
+  nameId: 'commentId' | 'id' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
   id: string,
   content: string,
 ) => {
+  console.log('updateComment called', tableName, nameId, id, content);
   try {
     const up: boolean = await fetch(`${backUrl}/api/comments/update`, {
       method: 'PATCH',
       body: JSON.stringify({ tableName, nameId, id, content }),
     }).then((r) => r.json());
 
+    console.log('updateComment result', up);
     return up;
   } catch (e) {
     console.error(e);
@@ -145,19 +152,19 @@ export const updComment = async (
 };
 
 ///DELETE
-
 export const delComment = async (
   tableName: TableNameType,
-  nameId: 'commentId' | 'fileId' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
+  nameId: 'commentId' | 'id' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
   id: string,
 ) => {
   try {
-    const del: boolean = await fetch(`${backUrl}/api/comments/update`, {
+    const { message, error }: { message; error } = await fetch(`${backUrl}/api/comments/delete`, {
       method: 'DELETE',
       body: JSON.stringify({ tableName, nameId, id }),
     }).then((r) => r.json());
 
-    return del;
+    console.log('deleteComment result', message, error);
+    return { message, error };
   } catch (e) {
     console.error(e);
   }

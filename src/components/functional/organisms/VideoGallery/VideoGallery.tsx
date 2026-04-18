@@ -9,6 +9,8 @@ import { FileType, GalleryType } from 'types/global.types';
 import { videosAnimations } from 'app/actions/files';
 
 import { Wrapper } from 'components/wrappers/Wrapper/Wrapper';
+import LoadingPage from 'components/ui/atoms/LoadingPage/LoadingPage';
+
 const MoreButton = dynamic(() => import('components/ui/atoms/MoreButton/MoreButton').then((mb) => mb.MoreButton), {
   ssr: false,
 });
@@ -58,7 +60,7 @@ export const VideoGallery = ({ id, pseudonym, author, tGallery, firstVideos }: G
               { fileId, name, fileUrl, shortDescription, tags, authorName, time, authorId, roleId }: FileType,
               index,
             ) => (
-              <Suspense key={index} fallback={<p>Loading...</p>}>
+              <Suspense key={index} fallback={<LoadingPage />}>
                 <FileContainer
                   fileId={fileId!}
                   name={name!}

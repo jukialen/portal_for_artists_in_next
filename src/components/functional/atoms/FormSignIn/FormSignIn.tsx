@@ -14,7 +14,7 @@ import { initialValuesForSignInUp } from 'constants/objects';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 
-import styles from './FormSignIn.module.scss';
+import styles from './FormSignIn.module.css';
 import { GrFormView, GrFormViewHide } from 'react-icons/gr';
 
 export const FormSignIn = ({

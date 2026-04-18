@@ -8,7 +8,7 @@ import { GroupsType } from 'types/global.types';
 
 import { Links } from 'components/ui/atoms/Links/Links';
 
-import styles from './Groups.module.scss';
+import styles from './Groups.module.css';
 import { RiArrowUpSLine } from 'react-icons/ri';
 
 export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) => {

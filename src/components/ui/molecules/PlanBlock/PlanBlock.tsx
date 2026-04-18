@@ -6,7 +6,7 @@ import { BillingCycleType, LangType, Plan, PlanDataType, PlanOtherDataType } fro
 
 import { Links } from 'components/ui/atoms/Links/Links';
 
-import styles from './PlanBlock.module.scss';
+import styles from './PlanBlock.module.css';
 import { IoIosArrowRoundForward, IoMdCheckmark } from 'react-icons/io';
 
 export const PlanBlock = ({

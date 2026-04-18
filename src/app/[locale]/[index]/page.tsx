@@ -19,7 +19,7 @@ const FileContainerClient = dynamic(() =>
   ),
 );
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 import { Database } from 'types/database.types';
 import { name } from 'next/dist/server/ci-info';
 import { getFileRoleId } from '../../../utils/roles';

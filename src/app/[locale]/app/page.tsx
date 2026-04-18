@@ -21,7 +21,7 @@ const FileContainer = dynamic(() =>
   import('components/functional/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Main site for logged in users.');
 

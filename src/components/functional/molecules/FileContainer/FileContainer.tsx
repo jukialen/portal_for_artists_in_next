@@ -1,19 +1,24 @@
+'use client';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
+import { getUserData } from 'helpers/getUserData';
+import { useScopedI18n } from 'locales/client';
+import { filesAgainComments } from 'utils/comments';
+
 import { backUrl } from 'constants/links';
 import { TagConstants } from 'constants/values';
-import { ArticleVideosType } from 'types/global.types';
+import { ArticleVideosType, FilesCommentsType, UserType } from 'types/global.types';
 
 const DeletionFile = dynamic(() => import('../DeletionFile/DeletionFile').then((df) => df.DeletionFile));
-import { FileOptions } from 'components/ui/molecules/FileOptions/FileOptions';
-import { FilesComments } from 'components/functional/molecules/FilesComments/FilesComments';
+import { SharingButton } from 'components/ui/atoms/SharingButton/SharingButton';
+import { NewComments } from 'components/functional/atoms/NewComments/NewComments';
+import { FilesCommentsClient } from 'components/functional/organisms/FilesCommentsClient/FilesCommentsClient';
 
-import styles from './FileContainer.module.scss';
-import { NewComments } from '../../atoms/NewComments/NewComments';
-import { getUserData } from '../../../../helpers/getUserData';
+import styles from './FileContainer.module.css';
 
-export const FileContainer = async ({
+export const FileContainer = ({
   name,
   fileUrl,
   authorName,
@@ -28,7 +33,19 @@ export const FileContainer = async ({
 }: ArticleVideosType) => {
   const linkShare = `${backUrl}/file/${name}/${fileId}/${authorName}`;
   const Tags = tags[0].toUpperCase() + tags.slice(1);
-  const userData = await getUserData();
+  const [userData, setUserData] = useState<UserType | undefined>(undefined);
+  const [comments, setComments] = useState<FilesCommentsType[]>([]);
+
+  const tComments = useScopedI18n('Comments');
+  const maxItems = 30;
+
+  useEffect(() => {
+    // Pobieranie danych użytkownika
+    getUserData().then((data) => setUserData(data));
+
+    // Pobieranie komentarzy jeśli są włączone
+    commentsBool && filesAgainComments(fileId, maxItems).then((data) => setComments(data));
+  }, [linkShare, commentsBool, fileId]);
 
   return (
     <>
@@ -55,23 +72,39 @@ export const FileContainer = async ({
         </section>
 
         <div className={styles.shortDescription}>
-          {shortDescription.length <= 36 ? shortDescription : shortDescription + '...'}
+          {shortDescription.length <= 36 ? shortDescription : shortDescription.slice(0, 36) + '...'}
         </div>
 
-        <FileOptions
-          authorName={authorName!}
-          fileUrl={fileUrl}
-          tags={tags!}
-          name={name!}
-          linkShare={linkShare}
-          commentsBool={commentsBool}
-          fileId={fileId}
-        />
+        <div className={styles.options}>
+          <div className={styles.bottomPanel}>
+            <div className={styles.author__name}>
+              <Link href={`/user/${authorName}`}>{authorName}</Link>
+            </div>
+
+            <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} />
+          </div>
+
+          {!commentsBool && (
+            <Link href={linkShare} className={styles.linkToComments} aria-label="link to this file page">
+              {tComments('comments')}
+            </Link>
+          )}
+        </div>
       </article>
       {commentsBool && (
         <>
-          <NewComments fileId={fileId!} authorId={authorId} profilePhoto={userData?.profilePhoto!} roleId={roleId} />
-          <FilesComments fileId={fileId!} />
+          <NewComments
+            fileId={fileId!}
+            authorId={authorId}
+            profilePhoto={userData?.profilePhoto || ''}
+            roleId={roleId}
+          />
+          <FilesCommentsClient
+            firstFilesComments={comments}
+            fileId={fileId}
+            noComments={tComments('noComments')}
+            pseudonym={userData?.pseudonym!}
+          />
         </>
       )}
     </>

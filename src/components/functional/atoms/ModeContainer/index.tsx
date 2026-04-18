@@ -10,7 +10,7 @@ import { ModeContext } from 'providers/ModeProvider';
 
 import { useScopedI18n } from 'locales/client';
 
-import styles from './ModeContainer.module.scss';
+import styles from './ModeContainer.module.css';
 const LuSun = dynamic(() => import('react-icons/lu').then((mod) => mod.LuSun), {
   ssr: false,
 });

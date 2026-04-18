@@ -13,7 +13,7 @@ import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/ui/atoms/Tile/Tile';
 import { Separator } from 'components/ui/atoms/Separator/Separator';
 
-import styles from './GroupUsers.module.scss';
+import styles from './GroupUsers.module.css';
 
 type GroupUsersType = {
   id: string;

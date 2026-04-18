@@ -15,7 +15,7 @@ import { FormError } from 'components/ui/atoms/FormError/FormError';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { Separator } from 'components/ui/atoms/Separator/Separator';
 
-import styles from './ResetPasswordForm.module.scss';
+import styles from './ResetPasswordForm.module.css';
 
 type ResetPasswordType = {
   newPassword: string;

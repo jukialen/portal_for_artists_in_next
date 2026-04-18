@@ -1,6 +1,6 @@
 import { useI18n } from 'locales/client';
 
-import styles from './Alerts.module.scss';
+import styles from './Alerts.module.css';
 import { RiErrorWarningLine } from 'react-icons/ri';
 import { CiCircleInfo, CiWarning } from 'react-icons/ci';
 import { IoCheckmarkOutline } from 'react-icons/io5';

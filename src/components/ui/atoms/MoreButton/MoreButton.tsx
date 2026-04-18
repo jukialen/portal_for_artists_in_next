@@ -4,7 +4,7 @@ import { MouseEventHandler } from 'react';
 
 import { useScopedI18n } from 'locales/client';
 
-import styles from './MoreButton.module.scss';
+import styles from './MoreButton.module.css';
 
 type MoreType = { nextElementsAction: MouseEventHandler };
 

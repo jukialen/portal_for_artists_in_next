@@ -11,7 +11,7 @@ import { DCProvider } from 'providers/DeleteCommentProvider';
 import { FileComment } from 'components/functional/atoms/FileComment/FileComment';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 
-import styles from './FilesCommentsClient.module.scss';
+import styles from './FilesCommentsClient.module.css';
 
 type FilesCommentsClientType = {
   firstFilesComments: FilesCommentsType[];
@@ -31,7 +31,7 @@ export const FilesCommentsClient = ({ firstFilesComments, fileId, noComments, ps
 
   const nextComments = async () => {
     try {
-      const nextPage = (await filesAgainComments(fileId, maxItems))!;
+      const nextPage = (await filesAgainComments(fileId, maxItems, 'again'))!;
 
       nextPage.length === maxItems && setLastVisible(nextPage[nextPage.length - 1].createdAt!);
 

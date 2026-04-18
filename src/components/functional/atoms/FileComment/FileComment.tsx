@@ -12,7 +12,7 @@ import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 import { OptionsComments } from 'components/functional/molecules/OptionsComments/OptionsComments';
 import { SubComments } from 'components/functional/molecules/SubComments/SubComments';
 
-import styles from './FileComment.module.scss';
+import styles from './FileComment.module.css';
 
 export const FileComment = ({ fileCommentsData }: { fileCommentsData: FilesCommentsType }) => {
   const { del } = useContext(DCContext);

@@ -9,7 +9,7 @@ import { nextGroupList } from 'utils/groups';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/ui/atoms/Tile/Tile';
 
-import styles from './GroupList.module.scss';
+import styles from './GroupList.module.css';
 
 type GroupsType = {
   list: {

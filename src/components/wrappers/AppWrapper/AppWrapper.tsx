@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import styles from './AppWrapper.module.scss';
+import styles from './AppWrapper.module.css';
 
 export const AppWrapper = ({ children }: { children: ReactNode}) => {
   return (

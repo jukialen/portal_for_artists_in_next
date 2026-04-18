@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'; // Zmieniony import
+import { NextRequest, NextResponse } from 'next/server';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
@@ -10,23 +10,28 @@ type DelCommentType = {
   id: string;
 };
 
-export async function POST(req: NextRequest) {
+export async function DELETE(req: NextRequest) {
   const supabase = await createServer();
 
   try {
-    const requestBody: DelCommentType = await req.json();
+    const { tableName, nameId, id }: DelCommentType = await req.json();
 
-    const { tableName, nameId, id } = requestBody;
+    const { data, error } = await supabase.from(tableName).delete().eq(nameId, id).select('id');
 
-    const { error } = await supabase.from(tableName).delete().eq(nameId, id);
+    const deletedCount = data?.length ?? 0;
 
-    if (error) {
-      return NextResponse.json({ message: 'Failed to delete comment', error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json(!error);
+    return NextResponse.json(
+      { message: error ? 'Failed to delete comment' : 'Comment was deleted', error: error?.message || '' },
+      { status: error ? 500 : 200 },
+    );
   } catch (e) {
-    console.error('Error in POST handler:', e);
-    return NextResponse.json({ message: 'Invalid request body or internal server error' }, { status: 400 });
+    console.error('Error in DELETE handler:', e);
+    return NextResponse.json(
+      {
+        message: 'Invalid request body or internal server error',
+        error: 'Invalid request body or internal server error',
+      },
+      { status: 400 },
+    );
   }
 }

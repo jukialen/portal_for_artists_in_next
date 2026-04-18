@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { getI18n } from 'locales/server';
 
-import styles from './Header.module.scss';
+import styles from './Header.module.css';
 import { BiLogInCircle } from 'react-icons/bi';
 import { MdOutlineSettings } from 'react-icons/md';
 

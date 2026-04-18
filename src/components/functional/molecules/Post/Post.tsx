@@ -16,7 +16,7 @@ import { NewComments } from 'components/functional/atoms/NewComments/NewComments
 import { SharingButton } from 'components/ui/atoms/SharingButton/SharingButton';
 import { Comments } from '../Comments/Comments';
 
-import styles from './Post.module.scss';
+import styles from './Post.module.css';
 import group from '../../../../../public/group.svg';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 

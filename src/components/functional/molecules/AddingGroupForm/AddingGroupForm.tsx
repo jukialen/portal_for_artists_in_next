@@ -21,7 +21,7 @@ import { EventType, FilesUploadType, ResetFormType, UserType } from 'types/globa
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 
-import styles from './AddingGroup.module.scss';
+import styles from './AddingGroup.module.css';
 
 type AddingGroupType = {
   name: string;

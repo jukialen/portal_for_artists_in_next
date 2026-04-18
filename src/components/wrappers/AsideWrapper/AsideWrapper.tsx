@@ -9,7 +9,7 @@ import { Categories } from 'components/functional/atoms/Categories/Categories';
 import { Groups } from 'components/functional/atoms/Groups/Groups';
 import { Friends } from 'components/functional/atoms/Friends/Friends';
 
-import styles from './AsideWrapper.module.scss';
+import styles from './AsideWrapper.module.css';
 import { RiArrowUpSLine } from 'react-icons/ri';
 
 export const AsideWrapper = ({

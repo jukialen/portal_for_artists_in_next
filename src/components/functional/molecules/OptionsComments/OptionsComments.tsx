@@ -16,7 +16,7 @@ import { DCContext } from 'providers/DeleteCommentProvider';
 
 import { NewComments } from 'components/functional/atoms/NewComments/NewComments';
 
-import styles from './OptionsComments.module.scss';
+import styles from './OptionsComments.module.css';
 import { AiFillLike, AiOutlineLike, AiOutlineMore } from 'react-icons/ai';
 
 type OptionsType = {
@@ -62,6 +62,8 @@ export const OptionsComments = ({
   const [com, setCom] = useState(false);
   const { changeDel } = useContext(DCContext);
 
+  console.log('fileCommentId', fileCommentId);
+
   const initialValues = { comment };
 
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
@@ -88,13 +90,17 @@ export const OptionsComments = ({
 
   const deleteComment = async () => {
     try {
-      !!fileId && (await delComment(tableName, 'fileId', fileId));
-      !!fileCommentId && (await delComment(tableName, 'fileCommentId', fileCommentId));
-      !!commentId && (await delComment(tableName, 'commentId', commentId));
-      !!subCommentId && (await delComment(tableName, 'subCommentId', subCommentId));
-      !!lastCommentId && (await delComment(tableName, 'lastCommentId', lastCommentId));
-
-      changeDel();
+      const ids = [
+        [fileCommentId, 'id'] as const,
+        [commentId, 'commentId'] as const,
+        [subCommentId, 'subCommentId'] as const,
+        [lastCommentId, 'lastCommentId'] as const,
+      ] as const;
+      const [id, fieldName] = ids.find(([val]) => !!val)!;
+      if (id && fieldName) {
+        await delComment(tableName, fieldName, id);
+        changeDel();
+      }
     } catch (e) {
       console.error(e);
     }
@@ -103,8 +109,7 @@ export const OptionsComments = ({
   const updateComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
       const ids = [
-        [fileId, 'fileId'] as const,
-        [fileCommentId, 'fileCommentId'] as const,
+        [fileCommentId, 'id'] as const,
         [commentId, 'commentId'] as const,
         [subCommentId, 'subCommentId'] as const,
         [lastCommentId, 'lastCommentId'] as const,
@@ -113,7 +118,7 @@ export const OptionsComments = ({
 
       if (id && fieldName) {
         const upd = await updComment(tableName, fieldName, id, comment);
-        if (upd) resetForm(initialValues);
+        if (!upd) resetForm(initialValues);
         return;
       }
     } catch (e) {

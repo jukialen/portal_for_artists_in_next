@@ -6,7 +6,7 @@ import { useI18n, useScopedI18n } from 'locales/client';
 
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 
-import styles from './DeletionPost.module.scss';
+import styles from './DeletionPost.module.css';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { RxChevronUp, RxChevronDown } from 'react-icons/rx';
 

@@ -1,6 +1,6 @@
 import { ErrorMessage } from 'formik';
 
-import styles from './FormError.module.scss';
+import styles from './FormError.module.css';
 
 export const FormError = ({ nameError }: { nameError: string }) => {
   return (

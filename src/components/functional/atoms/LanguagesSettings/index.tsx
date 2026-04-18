@@ -6,7 +6,7 @@ import { locales } from 'constants/values';
 import { LangType } from 'types/global.types';
 import { useChangeLocale, useI18n } from 'locales/client';
 
-import styles from './LanguagesSettings.module.scss';
+import styles from './LanguagesSettings.module.css';
 import { MdLanguage } from 'react-icons/md';
 import { RxChevronDown } from 'react-icons/rx';
 

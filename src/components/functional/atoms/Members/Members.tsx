@@ -10,7 +10,7 @@ import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 import { Separator } from 'components/ui/atoms/Separator/Separator';
 
-import styles from './Members.module.scss';
+import styles from './Members.module.css';
 import group from 'public/group.svg';
 import { LuPlus, LuMinus } from 'react-icons/lu';
 

@@ -4,7 +4,7 @@ import Image, { StaticImageData } from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useScopedI18n } from 'locales/client';
 
-import styles from './Categories.module.scss';
+import styles from './Categories.module.css';
 import realistic from '../../../../../public/realistic.jpg';
 import manga from '../../../../../public/manga.jpg';
 import anime from '../../../../../public/anime.jpg';

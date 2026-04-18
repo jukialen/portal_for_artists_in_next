@@ -6,7 +6,7 @@ import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
 
 import { FriendsListArrayType } from 'types/global.types';
 
-import styles from './Friends.module.scss';
+import styles from './Friends.module.css';
 import { RiArrowUpSLine } from 'react-icons/ri';
 
 export const Friends = ({ friendsAsideList }: { friendsAsideList: FriendsListArrayType[] }) => {

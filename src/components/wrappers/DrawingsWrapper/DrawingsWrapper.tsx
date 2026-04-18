@@ -8,6 +8,8 @@ import { FileType, Tags } from 'types/global.types';
 
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 import { Wrapper } from 'components/wrappers/Wrapper/Wrapper';
+import LoadingPage from 'components/ui/atoms/LoadingPage/LoadingPage';
+
 const FileContainer = dynamic(() =>
   import('components/functional/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
@@ -63,7 +65,7 @@ export const DrawingsWrapper = ({ pid, pseudonym, filesDrawings }: DrawingsWrapp
       {userDrawings.length > 0 ? (
         userDrawings.map(
           ({ fileId, name, fileUrl, shortDescription, tags, authorName, time, authorId, roleId }: FileType, index) => (
-            <Suspense key={index} fallback={<p>Loading...</p>}>
+            <Suspense key={index} fallback={<LoadingPage />}>
               <FileContainer
                 fileId={fileId!}
                 name={name!}

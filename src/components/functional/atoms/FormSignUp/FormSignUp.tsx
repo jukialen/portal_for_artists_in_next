@@ -12,7 +12,7 @@ import { ResetFormType, UserFormType } from 'types/global.types';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 
-import styles from './FormSignUp.module.scss';
+import styles from './FormSignUp.module.css';
 import { GrFormView, GrFormViewHide } from 'react-icons/gr';
 
 export const FormSignUp = ({

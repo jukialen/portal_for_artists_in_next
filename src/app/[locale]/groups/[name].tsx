@@ -13,7 +13,7 @@ import { getI18n, getScopedI18n } from 'locales/server';
 import { UpdateGroupLogo } from 'components/functional/molecules/UpdateGroupLogo/UpdateGroupLogo';
 import { NameGroupPage } from 'components/Views/NameGroupPage/NameGroupPage';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 type JoinUser = {
   logo: string;

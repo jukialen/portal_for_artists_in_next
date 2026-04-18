@@ -9,7 +9,7 @@ import { ContainerType, LangType } from 'types/global.types';
 
 import { HomeImageContainers } from 'components/functional/atoms/HomeImageContainers/HomeImageContainers';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 import dark_mode from '../../../public/dark_mode.png';
 import light_mode from '../../../public/light_mode.png';
 import friends from '../../../public/friends.png';

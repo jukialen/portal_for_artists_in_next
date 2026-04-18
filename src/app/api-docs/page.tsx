@@ -2,7 +2,7 @@ import { Json } from 'types/database.types';
 
 import SwaggerUIClient from './swagger-client';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 const fetchSpecs = async (): Promise<Json | null> => {
   try {

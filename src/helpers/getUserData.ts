@@ -1,36 +1,17 @@
-import { createServer } from 'utils/supabase/clientSSR';
-
 import { UserType } from 'types/global.types';
+import { backUrl } from 'constants/links';
 
-export const getUserData = async (): Promise<UserType | undefined> => {
-  const supabase = await createServer();
+export const getUserData = async () => {
+  try {
+    const res = await fetch(`${backUrl}/api/user-data`, {
+      next: { revalidate: 3600 },
+      credentials: 'include',
+    });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const id = user?.id;
-
-  if (id) {
-    const { data, error } = await supabase.from('Users').select('*').eq('id', id).limit(1).maybeSingle();
-
-    let { data: fileData } = await supabase.from('Files').select('fileUrl').eq('authorId', id);
-
-    if (data) {
-      return {
-        id,
-        pseudonym: data?.pseudonym!,
-        description: data?.description!,
-        profilePhoto: `${!fileData ? fileData![0].fileUrl! : data?.profilePhoto!}`,
-        email: user?.email!,
-        plan: data?.plan!,
-        provider: data?.provider!,
-        billingCycle: data?.billingCycle!,
-      };
-    } else {
-      console.log(`Error for getting user data: ${error?.message}, with ${error?.code}`);
-    }
-  } else {
-    console.log('not user');
+    if (!res.ok) return undefined;
+    return (await res.json()) as UserType;
+  } catch (e) {
+    console.error('Error fetching user data:', e);
+    return undefined;
   }
 };

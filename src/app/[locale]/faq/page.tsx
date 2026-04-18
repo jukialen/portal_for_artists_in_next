@@ -10,7 +10,7 @@ import { LangType } from 'types/global.types';
 
 import { AccordionWrapper } from 'components/wrappers/AccordionWrapper/AccordionWrapper';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Faq site');
 

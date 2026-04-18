@@ -6,6 +6,8 @@ import { I18nProviderClient } from 'locales/client';
 
 import { LangType } from 'types/global.types';
 
+import LoadingPage from 'components/ui/atoms/LoadingPage/LoadingPage';
+
 type childrenType = {
   children: ReactNode;
   locale: LangType;
@@ -28,7 +30,7 @@ export const SWStart = ({ children, locale }: childrenType) => {
   }, []);
 
   return (
-    <I18nProviderClient locale={locale} fallback="loading...">
+    <I18nProviderClient locale={locale} fallback={<LoadingPage />}>
       {children}
     </I18nProviderClient>
   );

@@ -16,7 +16,7 @@ import { ModeContainer } from 'components/functional/atoms/ModeContainer';
 import { DeleteAccount } from 'components/functional/atoms/DeleteAccount/DeleteAccount';
 import { AccountData } from 'components/functional/organisms/AccountData/AccountData';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Settings site for unlogged in users.');
 

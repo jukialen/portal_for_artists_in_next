@@ -6,7 +6,6 @@ import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'shemasValidation/schemaValidation';
-import { Select, createListCollection } from '@ark-ui/react/select';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -17,8 +16,7 @@ import { ResetFormType, UserType } from 'types/global.types';
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 
-import styles from './ContactContainer.module.scss';
-import { LuChevronDown } from 'react-icons/lu';
+import styles from './ContactContainer.module.css';
 
 type ContactType = {
   title: string;

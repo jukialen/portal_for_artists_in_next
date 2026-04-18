@@ -4,7 +4,7 @@ import { getUserData } from '../../../../helpers/getUserData';
 
 import { UserHeaderCom } from 'components/functional/atoms/UserHeaderCom/UserHeaderCom';
 
-import styles from './UserHeader.module.scss';
+import styles from './UserHeader.module.css';
 
 export async function UserHeader() {
   const t = await getI18n();

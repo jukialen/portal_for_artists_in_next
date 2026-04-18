@@ -11,7 +11,7 @@ import { ResetFormType } from 'types/global.types';
 import { useScopedI18n } from 'locales/client';
 import { newComment } from 'utils/comments';
 
-import styles from './NewComments.module.scss';
+import styles from './NewComments.module.css';
 
 type NewCommentType = { comment: string };
 

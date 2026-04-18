@@ -12,7 +12,7 @@ import { UserType } from 'types/global.types';
 
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 
-import styles from './DeleteAccount.module.scss';
+import styles from './DeleteAccount.module.css';
 import { AiTwotoneDelete } from 'react-icons/ai';
 
 export const DeleteAccount = ({ userData }: { userData: UserType }) => {

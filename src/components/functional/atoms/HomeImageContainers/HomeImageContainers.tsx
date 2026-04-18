@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 import { ContainerType } from 'types/global.types';
 
-import styles from './HomeImageContainers.module.scss';
+import styles from './HomeImageContainers.module.css';
 
 type HomeImageContainersType = {
   containerData: ContainerType[];

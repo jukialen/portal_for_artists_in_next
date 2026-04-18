@@ -14,7 +14,7 @@ import { AddingPost } from 'components/functional/molecules/AddingPost/AddingPos
 import { DescriptionSection } from 'components/functional/molecules/DescriptionSection/DescriptionSection';
 import { Posts } from 'components/functional/organisms/Posts/Posts';
 
-import styles from './NameGroupPage.module.scss';
+import styles from './NameGroupPage.module.css';
 import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 import { Separator } from 'components/ui/atoms/Separator/Separator';
 

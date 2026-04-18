@@ -10,6 +10,8 @@ import { FileType, GalleryType } from 'types/global.types';
 
 import { Wrapper } from 'components/wrappers/Wrapper/Wrapper';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
+import LoadingPage from 'components/ui/atoms/LoadingPage/LoadingPage';
+
 const FileContainer = dynamic(() =>
   import('components/functional/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
@@ -55,7 +57,7 @@ export const PhotosGallery = ({ id, pseudonym, author, tGallery, firstGraphics }
               { fileId, name, fileUrl, shortDescription, tags, authorName, time, authorId, roleId }: FileType,
               index,
             ) => (
-              <Suspense key={index} fallback="Loading...">
+              <Suspense key={index} fallback={<LoadingPage />}>
                 <FileContainer
                   fileId={fileId!}
                   name={name!}

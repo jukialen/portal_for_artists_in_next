@@ -11,7 +11,7 @@ import { getI18n, getScopedI18n } from 'locales/server';
 import { Providers } from 'components/functional/atoms/Providers/Providers';
 import { FormSignUp } from 'components/functional/atoms/FormSignUp/FormSignUp';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Sign up site');
 

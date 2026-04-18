@@ -11,7 +11,7 @@ import { EventType, nameGroupTranslatedType } from 'types/global.types';
 
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 
-import styles from './UpdateGroupLogo.module.scss';
+import styles from './UpdateGroupLogo.module.css';
 import { MdCameraEnhance } from 'react-icons/md';
 
 type UpdateGorupLogo = {

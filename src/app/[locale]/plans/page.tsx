@@ -14,7 +14,7 @@ import { getI18n, getScopedI18n } from 'locales/server';
 
 import { PlansContainer } from 'components/functional/organisms/Plans/Plans';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Plans site');
 

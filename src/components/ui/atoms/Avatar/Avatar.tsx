@@ -1,6 +1,6 @@
 import { Avatar as ArkAvatar } from '@ark-ui/react/avatar';
 
-import styles from './Avatar.module.scss';
+import styles from './Avatar.module.css';
 
  type AvatarType = {
     src: string;

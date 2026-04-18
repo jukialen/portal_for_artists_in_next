@@ -10,7 +10,7 @@ import { createClient } from 'utils/supabase/clientCSR';
 import { Tile } from 'components/ui/atoms/Tile/Tile';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 
-import styles from './FriendsList.module.scss';
+import styles from './FriendsList.module.css';
 
 type FriendsListComponentType = {
   id: string;
@@ -74,6 +74,6 @@ export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListCompo
         )}
       </section>
       {!!lastVisible && friendsList.length === maxItems * i && <MoreButton nextElementsAction={nextFriends} />}
-    </div>
+    </>
   );
 };

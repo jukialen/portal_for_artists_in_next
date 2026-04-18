@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import { Tags } from 'types/global.types';
 
-import styles from './SharingButton.module.scss';
+import styles from './SharingButton.module.css';
 import { AiOutlineShareAlt } from 'react-icons/ai';
 import { LineIcon, LineShareButton, WeiboIcon, WeiboShareButton, WhatsappIcon, WhatsappShareButton } from 'next-share';
 import { RWebShare } from 'react-web-share';

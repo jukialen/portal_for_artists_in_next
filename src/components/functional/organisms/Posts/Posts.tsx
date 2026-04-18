@@ -11,7 +11,7 @@ import { useScopedI18n } from 'locales/client';
 import { Post } from 'components/functional/molecules/Post/Post';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 
-import styles from './Posts.module.scss';
+import styles from './Posts.module.css';
 
 type GroupsPropsType = {
   groupId: string;

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import styles from './AffixButton.module.scss';
+import styles from './AffixButton.module.css';
 import { IoIosArrowUp } from 'react-icons/io';
 
 export const AffixButton = () => {

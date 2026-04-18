@@ -11,7 +11,7 @@ import { useI18n } from 'locales/client';
 
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 
-import styles from './Providers.module.scss';
+import styles from './Providers.module.css';
 import { FaDiscord, FaSpotify } from 'react-icons/fa';
 import { RiGoogleFill } from 'react-icons/ri';
 

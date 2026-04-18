@@ -26,8 +26,8 @@ import { FormError } from 'components/ui/atoms/FormError/FormError';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { ProgressBar } from 'components/ui/atoms/ProgressBar/ProgressBar';
 
-import styles from './FileUpload.module.scss';
-import { MdUploadFile } from 'react-icons/md';
+import styles from './FileUpload.module.css';
+import { MdUploadFile } from 'react-icons/icons/md';
 
 type FileDataType = {
   shortDescription: string;

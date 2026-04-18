@@ -15,7 +15,7 @@ import { FormError } from 'components/ui/atoms/FormError/FormError';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { Separator } from 'components/ui/atoms/Separator/Separator';
 
-import styles from './FormForgotten.module.scss';
+import styles from './FormForgotten.module.css';
 
 export const FormForgotten = ({ locale }: { locale: LangType }) => {
   const [valuesFields, setValuesFields] = useState('');

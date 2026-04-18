@@ -10,7 +10,7 @@ import { NewComments } from '../NewComments/NewComments';
 
 import { OptionsComments } from 'components/functional/molecules/OptionsComments/OptionsComments';
 
-import styles from './LastComment.module.scss';
+import styles from './LastComment.module.css';
 
 export const LastComment = ({
   lastCommentId,

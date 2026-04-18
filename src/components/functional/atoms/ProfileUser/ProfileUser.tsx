@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import { ProfileType } from 'types/global.types';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 import defaultAvatar from 'public/defaultAvatar.png';
 
 export const ProfileUser = ({ language, pseudonym, description, fileUrl }: ProfileType) => {

@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { Accordion } from '@ark-ui/react/accordion';
 
-import styles from './AccordionWrapper.module.scss';
+import styles from './AccordionWrapper.module.css';
 import { LuChevronDown } from 'react-icons/lu';
 
 export const AccordionWrapper = ({

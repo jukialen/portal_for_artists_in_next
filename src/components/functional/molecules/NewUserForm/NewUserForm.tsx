@@ -14,7 +14,7 @@ import { EventType, FilesUploadType, Provider } from 'types/global.types';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 
-import styles from './NewUserForm.module.scss';
+import styles from './NewUserForm.module.css';
 import { createClient } from 'utils/supabase/clientCSR';
 import { validateFile } from 'utils/client/files';
 

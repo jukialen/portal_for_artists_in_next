@@ -10,7 +10,7 @@ import { ResetFormType } from 'types/global.types';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 
-import styles from './AddingPost.module.scss';
+import styles from './AddingPost.module.css';
 
 type AddingPostType = {
   groupId: string;
