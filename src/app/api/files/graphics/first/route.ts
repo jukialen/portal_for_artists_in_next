@@ -8,7 +8,7 @@ import { dateData } from 'helpers/dateData';
 import { getFileRoleId } from 'utils/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const authorId = searchParams.get('authorId')!;
   const maxItems = searchParams.get('maxItems')!;

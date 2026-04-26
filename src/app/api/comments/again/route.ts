@@ -8,7 +8,7 @@ import { likeList } from 'utils/likes';
 import { giveRole } from 'utils/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   const commentArray: CommentType[] = [];
 
   const { searchParams } = new URL(req.url);

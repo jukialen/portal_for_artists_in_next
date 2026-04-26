@@ -4,7 +4,7 @@ import { StaticImageData } from 'next/image';
 import { ICustomData } from '@paddle/paddle-node-sdk';
 
 //GENERAL
-type Like = { likes: number; liked: boolean };
+export type Like = { likes: number; liked: boolean };
 type Time = { createdAt?: string; updatedAt?: string };
 
 export type IndexType = 'photographs' | 'videos' | 'animations';

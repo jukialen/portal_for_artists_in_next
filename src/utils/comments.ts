@@ -10,12 +10,17 @@ import {
 } from 'types/global.types';
 
 //POST
-export const newComment = async (commentData: NewCommentsType) => {
+export const newComment = async (
+  commentData: NewCommentsType,
+): Promise<{ role: RoleType | ''; message: string }> => {
   try {
-    const { role, message }: { role: RoleType | ''; message: string } = await fetch(`${backUrl}/api/comments/new`, {
-      method: 'POST',
-      body: JSON.stringify(commentData),
-    }).then((r) => r.json());
+    const { role, message }: { role: RoleType | ''; message: string } = await fetch(
+      `${backUrl}/api/comments/new`,
+      {
+        method: 'POST',
+        body: JSON.stringify(commentData),
+      },
+    ).then((r) => r.json());
 
     !!message && console.error(`Error: ${message} with role: '${role}'.`);
 
@@ -32,7 +37,7 @@ export const comments = async (
   maxItems: number,
   groupsPostsRoleId: string,
   step: 'first' | 'again',
-) => {
+): Promise<CommentType[]> => {
   const params = { postId, maxItems: maxItems.toString(), groupsPostsRoleId };
   const queryString = new URLSearchParams(params).toString();
 
@@ -41,35 +46,45 @@ export const comments = async (
       method: 'GET',
     })
       .then((r) => r.json())
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        console.error(e);
+        return [];
+      });
 
-    return res;
+    return res || [];
   } catch (e) {
     console.error(e);
+    return [];
   }
 };
 
-export const filesAgainComments = async (fileId: string, maxItems: number, stage: 'first' | 'again' = 'first') => {
+export const filesAgainComments = async (
+  fileId: string,
+  maxItems: number,
+  stage: 'first' | 'again' = 'first',
+): Promise<FilesCommentsType[]> => {
   const params = { fileId, maxItems: maxItems.toString() };
   const queryString = new URLSearchParams(params).toString();
 
-  const fileComments: FilesCommentsType[] = [];
-
   try {
-    fileComments.push(
-      await fetch(`${backUrl}/api/files-comments/${stage}?${queryString}`, {
+    const res: FilesCommentsType[] = await fetch(
+      `${backUrl}/api/files-comments/${stage}?${queryString}`,
+      {
         method: 'GET',
         credentials: 'include',
         cache: 'reload',
-      })
-        .then((r) => r.json())
-        .catch((e) => console.error(e)),
-    );
+      },
+    )
+      .then((r) => r.json())
+      .catch((e) => {
+        console.error(e);
+        return [];
+      });
 
-    return fileComments;
+    return res || [];
   } catch (e) {
     console.error(e);
-    return fileComments;
+    return [];
   }
 };
 
@@ -80,7 +95,7 @@ export const subComments = async (
   commentId?: string,
   fileCommentId?: string,
   lastVisible?: string,
-) => {
+): Promise<SubCommentType[]> => {
   const params = {
     groupsPostsRoleId: groupsPostsRoleId!,
     commentId: commentId!,
@@ -99,11 +114,15 @@ export const subComments = async (
       method: 'GET',
     })
       .then((r) => r.json())
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        console.error(e);
+        return [];
+      });
 
-    return res;
+    return res || [];
   } catch (e) {
     console.error(e);
+    return [];
   }
 };
 
@@ -112,7 +131,7 @@ export const lastComments = async (
   maxItems: number,
   groupsPostsRoleId: string,
   step: 'first' | 'again',
-) => {
+): Promise<LastCommentType[]> => {
   const params = { subCommentId, maxItems: maxItems.toString(), groupsPostsRoleId };
   const queryString = new URLSearchParams(params).toString();
 
@@ -121,11 +140,15 @@ export const lastComments = async (
       method: 'GET',
     })
       .then((r) => r.json())
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        console.error(e);
+        return [];
+      });
 
-    return res;
+    return res || [];
   } catch (e) {
     console.error(e);
+    return [];
   }
 };
 
@@ -136,7 +159,7 @@ export const updComment = async (
   nameId: 'commentId' | 'id' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
   id: string,
   content: string,
-) => {
+): Promise<boolean> => {
   console.log('updateComment called', tableName, nameId, id, content);
   try {
     const up: boolean = await fetch(`${backUrl}/api/comments/update`, {
@@ -148,6 +171,7 @@ export const updComment = async (
     return up;
   } catch (e) {
     console.error(e);
+    return false;
   }
 };
 
@@ -156,16 +180,20 @@ export const delComment = async (
   tableName: TableNameType,
   nameId: 'commentId' | 'id' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
   id: string,
-) => {
+): Promise<{ message: string; error: string }> => {
   try {
-    const { message, error }: { message; error } = await fetch(`${backUrl}/api/comments/delete`, {
-      method: 'DELETE',
-      body: JSON.stringify({ tableName, nameId, id }),
-    }).then((r) => r.json());
+    const { message, error }: { message: string; error: string } = await fetch(
+      `${backUrl}/api/comments/delete`,
+      {
+        method: 'DELETE',
+        body: JSON.stringify({ tableName, nameId, id }),
+      },
+    ).then((r) => r.json());
 
     console.log('deleteComment result', message, error);
     return { message, error };
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
+    return { message: '', error: e.message };
   }
 };

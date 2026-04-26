@@ -6,7 +6,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 
 import { PostsType } from 'types/global.types';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
   const groupId = searchParams.get('groupId')!;
   const lastVisible = searchParams.get('lastVisible');

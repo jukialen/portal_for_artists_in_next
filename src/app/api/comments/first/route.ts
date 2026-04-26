@@ -9,7 +9,7 @@ import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const postId = searchParams.get('postId');
   const maxItems = searchParams.get('maxItems');

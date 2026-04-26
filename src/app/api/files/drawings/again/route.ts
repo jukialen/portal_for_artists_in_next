@@ -8,7 +8,7 @@ import { getDate } from 'helpers/getDate';
 import { getFileRoleId } from 'utils/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
   const index = searchParams.get('index');
   const lastVisible = searchParams.get('lastVisible');

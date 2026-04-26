@@ -33,7 +33,7 @@ export const FileContainer = ({
 }: ArticleVideosType) => {
   const linkShare = `${backUrl}/file/${name}/${fileId}/${authorName}`;
   const Tags = tags[0].toUpperCase() + tags.slice(1);
-  const [userData, setUserData] = useState<UserType | undefined>(undefined);
+  const [userData, setUserData] = useState<UserType | null>(null);
   const [comments, setComments] = useState<FilesCommentsType[]>([]);
 
   const tComments = useScopedI18n('Comments');

@@ -4,6 +4,9 @@
 import { GenerateSW } from 'workbox-webpack-plugin';
 import path from 'path';
 import {
+  faroHost,
+  faroHostWithoutProtocol,
+  lokiHost,
   paddleBuyLink,
   paddleCspLink,
   paddleStyles,
@@ -23,7 +26,7 @@ const cspHeader = `
     base-uri 'self';
     form-action 'self';
     frame-ancestors none;
-    connect-src 'self' https://www.google.com https://www.gstatic.com https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl} 
+    connect-src 'self' https://www.google.com https://www.gstatic.com https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl}  ${lokiHost} ${faroHost}
     https://api.paddle.com https://checkout.paddle.com https://events.paddle.com ${paddleCspLink} https://www.google.com/pay https://sandbox-checkout.paddle.com;
     frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl} https://checkout.paddle.com 
     ${paddleBuyLink} https://play.google.com ${paddleCspLink} https://www.google.com/pay;
@@ -59,6 +62,12 @@ const nextConfig = {
         hostname: 'res.cloudinary.com',
         port: '',
         pathname: '/pfartists/**',
+      },
+      {
+        protocol: 'https',
+        hostname: faroHostWithoutProtocol,
+        port: '',
+        pathname: '/**',
       },
     ],
     formats: ['image/avif', 'image/webp'],

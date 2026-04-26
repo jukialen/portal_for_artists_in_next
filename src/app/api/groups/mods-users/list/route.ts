@@ -7,7 +7,7 @@ import { GroupUserType } from 'types/global.types';
 import { getUserData } from 'helpers/getUserData';
 import { roles } from 'utils/roles';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const maxItems = searchParams.get('maxItems')!;
 

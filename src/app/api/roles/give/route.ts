@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const supabase = await createServer();
 
   const requestBody: { roleId: string } = await req.json();

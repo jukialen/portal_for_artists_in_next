@@ -10,7 +10,7 @@ import { getFileRoleId } from 'utils/roles';
 
 const tags: Tags[] = ['animations', 'videos'];
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const tag = searchParams.get('tag')!;
   const authorId = searchParams.get('authorId')!;

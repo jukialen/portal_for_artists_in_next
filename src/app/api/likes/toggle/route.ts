@@ -8,7 +8,7 @@ type PostType = {
   fileId: string;
 };
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const supabase = await createServer();
 
   try {

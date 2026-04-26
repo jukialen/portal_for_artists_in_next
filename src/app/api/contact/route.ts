@@ -11,12 +11,11 @@ type MesssageType = {
   message: string;
   tags: Tags;
 };
-
-export async function POST(req: NextRequest) {
-  const sentFrom = new Sender(feedbackEmail!, 'Form Pfartists');
-  const recipients = [new Recipient(feedbackEmail!, 'To Pfartists')];
-
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
+    const sentFrom = new Sender(feedbackEmail!, 'Form Pfartists');
+    const recipients = [new Recipient(feedbackEmail!, 'To Pfartists')];
+
     const messageText: MesssageType = await req.json();
 
     const message = messageText.message.split('\n');

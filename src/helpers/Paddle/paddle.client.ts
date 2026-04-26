@@ -6,7 +6,19 @@ import { initializePaddle, Paddle } from '@paddle/paddle-js';
 import { backUrl, paddleClientId } from 'constants/links';
 import { LangType, ModeType } from 'types/global.types';
 
-export const usePaddle = (locale: LangType) => {
+export const usePaddle = (
+  locale: LangType,
+): {
+  paddle: Paddle | undefined;
+  openSubscriptionCheckout: (
+    priceId: string,
+    userId: string,
+    email: string,
+    previousPage: string,
+  ) => void;
+  openOneTimeCheckout: (priceId: string, userId: string, email: string) => void;
+  closeCheckout: () => void;
+} => {
   const [paddle, setPaddle] = useState<Paddle>();
 
   useEffect(() => {
@@ -18,7 +30,12 @@ export const usePaddle = (locale: LangType) => {
     });
   }, []);
 
-  const openSubscriptionCheckout = (priceId: string, userId: string, email: string, previousPage: string) =>
+  const openSubscriptionCheckout = (
+    priceId: string,
+    userId: string,
+    email: string,
+    previousPage: string,
+  ): void => {
     paddle?.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       settings: {
@@ -46,10 +63,11 @@ export const usePaddle = (locale: LangType) => {
         email,
       },
     });
+  };
 
   console.log('Paddle paddle', paddle);
 
-  const openOneTimeCheckout = (priceId: string, userId: string, email: string) =>
+  const openOneTimeCheckout = (priceId: string, userId: string, email: string): void => {
     paddle?.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       settings: {
@@ -76,8 +94,11 @@ export const usePaddle = (locale: LangType) => {
         email,
       },
     });
+  };
 
-  const closeCheckout = () => paddle?.Checkout.close();
+  const closeCheckout = (): void => {
+    paddle?.Checkout.close();
+  };
 
   return {
     paddle,

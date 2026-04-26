@@ -2,7 +2,7 @@
 
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { SchemaValidation } from 'schemasValidation/schemaValidation';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
 import { supabaseStorageProfileUrl } from 'constants/links';

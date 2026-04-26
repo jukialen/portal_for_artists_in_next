@@ -2,7 +2,7 @@ import YAML from 'js-yaml';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 
-export async function GET() {
+export async function GET(): Promise<Response> {
   try {
     const swaggerPath = join(process.cwd(), 'src/app/api/swagger.yaml');
     const fileContent = await fs.readFile(swaggerPath, 'utf8');
@@ -24,7 +24,7 @@ export async function GET() {
   }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(): Promise<Response> {
   return new Response(null, {
     headers: {
       'Access-Control-Allow-Origin': '*',

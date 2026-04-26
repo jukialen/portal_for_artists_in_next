@@ -8,7 +8,7 @@ import { giveRole } from 'utils/roles';
 import { likeList } from 'utils/likes';
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const subCommentId = searchParams.get('subCommentId')!;
   const maxItems = searchParams.get('maxItems')!;

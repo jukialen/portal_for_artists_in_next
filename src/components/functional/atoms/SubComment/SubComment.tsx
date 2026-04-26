@@ -11,7 +11,7 @@ import { OptionsComments } from 'components/functional/molecules/OptionsComments
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 import { Tag } from 'components/ui/atoms/Tag/Tag';
 
-import styles from './SubComment.module.scss';
+import styles from './SubComment.module.css';
 
 export const SubComment = ({
   subCommentId,

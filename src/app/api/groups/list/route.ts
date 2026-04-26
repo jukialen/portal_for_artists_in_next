@@ -5,7 +5,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 import { backUrl } from 'constants/links';
 import { GroupListType } from 'types/global.types';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const maxItems = searchParams.get('maxItems')!;
   const lastVisible = searchParams.get('lastVisible');

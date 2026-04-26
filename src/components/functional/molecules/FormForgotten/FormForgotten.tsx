@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from '../../../../shemasValidation/schemaValidation';
+import { SchemaValidation } from '../../../../schemasValidation/schemaValidation';
 
 import { backUrl } from 'constants/links';
 import { LangType, ResetFormType, UserFormType } from 'types/global.types';

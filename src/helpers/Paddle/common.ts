@@ -5,7 +5,7 @@ export const getPrice = (
   billingCycle: BillingCycleType,
   name: Plan,
   locale: LangType,
-) => {
+): string => {
   const subscription = subscriptions.find((s) => s.billingCycle === billingCycle || s.name === name);
 
   // console.log('subscription get', locale, name, billingCycle, subscription);

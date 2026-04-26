@@ -5,7 +5,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 

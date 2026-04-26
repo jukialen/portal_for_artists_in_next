@@ -3,7 +3,19 @@ import { useI18n, useScopedI18n } from 'locales/client';
 
 import { TagConstants } from 'constants/values';
 
-export const SchemaValidation = () => {
+type SchemaValidationType = {
+  username: Yup.StringSchema;
+  pseudonym: Yup.StringSchema;
+  email: Yup.StringSchema;
+  password: Yup.StringSchema;
+  description: Yup.StringSchema;
+  tags: Yup.MixedSchema;
+  contactType: Yup.StringSchema;
+  groupName: Yup.StringSchema;
+  shortDescription: Yup.StringSchema;
+};
+
+export const SchemaValidation = (): SchemaValidationType => {
   const t = useI18n();
   const ts = useScopedI18n('NavForm');
 
@@ -48,7 +60,6 @@ export const SchemaValidation = () => {
     .required(ts('validateRequired'))
     .min(5, 'Group name is too short.')
     .max(20, 'Group name is too long.');
-  // .matches(/![#?!@$%^&*-]/g, 'Group name haven\'ts to include special characters.');
 
   const shortDescription = Yup.string().max(100, 'Description cannot be longer than 100 characters.');
 

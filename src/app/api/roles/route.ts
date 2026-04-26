@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const roleId = searchParams.get('roleId')!;
   const userId = searchParams.get('userId')!;
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from('Roles')
       .select('role')
-      .eq('roleId', roleId)
+      .eq('id', roleId)
       .eq('userId', userId)
       .limit(1)
       .maybeSingle();

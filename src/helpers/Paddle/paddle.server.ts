@@ -21,8 +21,12 @@ export const paddle = new Paddle(paddleServerId!, {
   logLevel: LogLevel.verbose,
 });
 
-export const getSubscriptionsListPerUser = async (userId: string) => {
-  const subscriptionCollection: SubscriptionCollection = paddle.subscriptions.list({ customerId: [userId] });
+export const getSubscriptionsListPerUser = async (
+  userId: string,
+): Promise<Subscription[]> => {
+  const subscriptionCollection: SubscriptionCollection = paddle.subscriptions.list({
+    customerId: [userId],
+  });
   const allItems: Subscription[] = [];
 
   try {
@@ -37,7 +41,7 @@ export const getSubscriptionsListPerUser = async (userId: string) => {
   }
 };
 
-const getAllProducts = async () => {
+const getAllProducts = async (): Promise<Product[]> => {
   const productCollection: ProductCollection = paddle.products.list({
     include: ['prices'],
   });
@@ -60,12 +64,18 @@ const getAllProducts = async () => {
   }
 };
 
-const convertPrice = (locale: LangType, price: string) =>
+const convertPrice = (locale: LangType, price: string): string =>
   locale === 'ja' ? price : (parseFloat(price) / 100).toFixed(2).replace('.', ',');
 
-const priceString = (locale: LangType, plan: Price) => {
+const priceString = (
+  locale: LangType,
+  plan: Price,
+): { key: LangType; value: string }[] => {
   const prices: { key: LangType; value: string }[] = [
-    { key: 'en', value: `${convertPrice(locale, plan.unitPrice.amount)} ${plan.unitPrice.currencyCode}` },
+    {
+      key: 'en',
+      value: `${convertPrice(locale, plan.unitPrice.amount)} ${plan.unitPrice.currencyCode}`,
+    },
   ];
 
   plan.unitPriceOverrides.forEach((u) => {
@@ -80,11 +90,14 @@ const priceString = (locale: LangType, plan: Price) => {
   return prices;
 };
 
-export const getSubscriptionsOptions = async (locale: LangType) => {
-  const subscriptionData: SubscriptionPricingType[] = [];
-
+export const getSubscriptionsOptions = async (
+  locale: LangType,
+): Promise<SubscriptionPricingType[]> => {
   try {
-    for (const plan of (await getAllProducts())[1].prices!) {
+    const products = await getAllProducts();
+    const subscriptionData: SubscriptionPricingType[] = [];
+
+    for (const plan of products[1].prices!) {
       subscriptionData.push({
         id: plan.id,
         name: plan.name! as Plan,
@@ -97,14 +110,18 @@ export const getSubscriptionsOptions = async (locale: LangType) => {
     return subscriptionData;
   } catch (error) {
     console.error('Error within getSubscriptionsOptions:', error);
+    return [];
   }
 };
 
-export const getOneTimeOptions = async (locale: LangType) => {
-  const subscriptionData: OnetimePricingType[] = [];
-
+export const getOneTimeOptions = async (
+  locale: LangType,
+): Promise<OnetimePricingType[]> => {
   try {
-    for (const plan of (await getAllProducts())[0].prices!) {
+    const products = await getAllProducts();
+    const subscriptionData: OnetimePricingType[] = [];
+
+    for (const plan of products[0].prices!) {
       subscriptionData.push({
         id: plan.id,
         name: plan.name! as Plan,
@@ -119,10 +136,11 @@ export const getOneTimeOptions = async (locale: LangType) => {
     return subscriptionData;
   } catch (error) {
     console.error('Error within getSubscriptionsOptions:', error);
+    return [];
   }
 };
 
-export const getTransactionsList = async () => {
+export const getTransactionsList = async (): Promise<void> => {
   try {
     const transactionCollection: TransactionCollection = paddle.transactions.list();
 

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { SchemaValidation } from 'schemasValidation/schemaValidation';
 import { Popover } from '@ark-ui/react/popover';
 
 import { useI18n, useScopedI18n } from 'locales/client';

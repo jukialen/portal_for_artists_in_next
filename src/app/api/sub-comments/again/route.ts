@@ -20,7 +20,7 @@ type DataArrayType = {
   Roles: { id: string; role: RoleType } | null;
 };
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const commentId = searchParams.get('commentId');
   const fileCommentId = searchParams.get('fileCommentId');

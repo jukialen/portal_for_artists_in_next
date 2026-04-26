@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "type": "module",
-  "packageManager": "bun@1.1.42",
+  "packageManager": "bun",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@ark-ui/react": "^5.19.0",
+    "@grafana/faro-web-sdk": "^2.4.0",
+    "@grafana/faro-web-tracing": "^2.4.0",
     "@next/third-parties": "^15.4.6",
     "@paddle/paddle-js": "^1.6.1",
     "@paddle/paddle-node-sdk": "^3.5.0",

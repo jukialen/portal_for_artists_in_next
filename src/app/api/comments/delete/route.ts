@@ -9,8 +9,8 @@ type DelCommentType = {
   nameId: 'commentId' | 'fileId' | 'fileCommentId' | 'subCommentId' | 'lastCommentId';
   id: string;
 };
-
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest): Promise<NextResponse> {
+  try {
   const supabase = await createServer();
 
   try {

@@ -5,7 +5,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 
 import { CommentType, FilesCommentsType, RoleType, SubCommentType } from 'types/global.types';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const supabase = await createServer();
 

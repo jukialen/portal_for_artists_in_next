@@ -7,7 +7,7 @@ import { FriendsListType } from 'types/global.types';
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const usernameId = searchParams.get('usernameId')!;
   const maxItems = searchParams.get('maxItems')!;

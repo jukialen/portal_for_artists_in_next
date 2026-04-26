@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
 import { createClient } from 'utils/supabase/clientCSR';
 import {

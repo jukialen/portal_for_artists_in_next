@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 import { string } from 'yup';
 
 //SELECT
-export const roles = async (roleId: string, userId: string) => {
+export const roles = async (roleId: string, userId: string): Promise<RoleType | undefined> => {
   const params = { roleId, userId };
   const queryString = new URLSearchParams(params).toString();
 
@@ -16,15 +16,22 @@ export const roles = async (roleId: string, userId: string) => {
       credentials: 'include',
     })
       .then((r) => r.json())
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        console.error(e);
+        return undefined;
+      });
 
     return role;
   } catch (e) {
     console.error(e);
+    return undefined;
   }
 };
 
-export const getFileRoleId = async (fileId: string, userId: string) => {
+export const getFileRoleId = async (
+  fileId: string,
+  userId: string,
+): Promise<{ roleId: string }> => {
   try {
     const supabase = await createServer();
 
@@ -49,11 +56,18 @@ export const getFileRoleId = async (fileId: string, userId: string) => {
 };
 
 //POST
-export const giveRole = async (roleId: string): Promise<{ role: RoleType | ''; message: string }> => {
+export const giveRole = async (
+  roleId: string,
+): Promise<{ role: RoleType | ''; message: string }> => {
   try {
     const supabase = await createServer();
 
-    const { data, error } = await supabase.from('Roles').select('role').eq('id', roleId).limit(1).single();
+    const { data, error } = await supabase
+      .from('Roles')
+      .select('role')
+      .eq('id', roleId)
+      .limit(1)
+      .single();
 
     if (!!error) return { role: 'USER', message: error.message };
 
@@ -64,7 +78,10 @@ export const giveRole = async (roleId: string): Promise<{ role: RoleType | ''; m
   }
 };
 
-export const groupRole = async (groupsPostsRoleId: string, userId: string) => {
+export const groupRole = async (
+  groupsPostsRoleId: string,
+  userId: string,
+): Promise<RoleType | undefined> => {
   const params = { groupsPostsRoleId, userId };
   const queryString = new URLSearchParams(params).toString();
 
@@ -73,10 +90,14 @@ export const groupRole = async (groupsPostsRoleId: string, userId: string) => {
       method: 'GET',
     })
       .then((r) => r.json())
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        console.error(e);
+        return undefined;
+      });
 
     return role;
   } catch (e) {
     console.error(e);
+    return undefined;
   }
 };

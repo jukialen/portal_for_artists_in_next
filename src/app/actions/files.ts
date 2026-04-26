@@ -7,7 +7,7 @@ import { getFileRoleId } from 'utils/roles';
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
 
-export const translated = async () => {
+export const translated = async (): Promise<string> => {
   const { getScopedI18n } = await import('locales/server');
 
   const tComments = await getScopedI18n('Comments');
@@ -15,7 +15,12 @@ export const translated = async () => {
   return tComments('noComments');
 };
 
-export const graphics = async (maxItems: number, authorId: string, step: 'first' | 'again', lastVisible?: string) => {
+export const graphics = async (
+  maxItems: number,
+  authorId: string,
+  step: 'first' | 'again',
+  lastVisible?: string,
+): Promise<FileType[]> => {
   const supabase = await createServer();
   const inArray: Tags[] = ['realistic', 'manga', 'anime', 'comics', 'photographs'];
 
@@ -90,9 +95,11 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
       return filesArray;
     } else {
       console.log('Incorrect step');
+      return filesArray;
     }
   } catch (e) {
     console.error(e);
+    return filesArray;
   }
 };
 
@@ -102,7 +109,7 @@ export const videosAnimations = async (
   authorId: string,
   step: 'first' | 'again',
   lastVisible?: string,
-) => {
+): Promise<FileType[]> => {
   const supabase = await createServer();
   const tags: Tags[] = ['animations', 'videos'];
 
@@ -180,6 +187,7 @@ export const videosAnimations = async (
       return filesArray;
     } else {
       console.log('Incorrect step');
+      return filesArray;
     }
   } catch (e) {
     console.error('no your videos', e);
@@ -187,7 +195,7 @@ export const videosAnimations = async (
   }
 };
 
-export const drawings = async (index: IndexType, lastVisible: string, maxItems: number) => {
+export const drawings = async (index: IndexType, lastVisible: string, maxItems: number): Promise<FileType[]> => {
   const supabase = await createServer();
 
   const nextArray: FileType[] = [];

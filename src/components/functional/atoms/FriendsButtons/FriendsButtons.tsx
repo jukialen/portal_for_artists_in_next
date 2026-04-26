@@ -49,7 +49,7 @@ export const FriendsButtons = ({
   const addToFriends = async () => {
     try {
       if (friend) {
-        const { error } = await supabase.from('Friends').delete().eq('username', id).eq('friendId', fid);
+        const { error } = await supabase.from('Friends').delete().eq('usernameId', id).eq('friendId', fid);
         if (!!error) {
           console.error(error);
         }
@@ -60,7 +60,7 @@ export const FriendsButtons = ({
         const { data, error } = await supabase
           .from('Friends')
           .insert([{ friendId: fid, usernameId: id }])
-          .eq('username', id)
+          .eq('usernameId', id)
           .eq('friendId', fid);
 
         if (!data || !!error) {
@@ -79,7 +79,7 @@ export const FriendsButtons = ({
       const { data, error } = await supabase
         .from('Friends')
         .update({ favorite: !favorite })
-        .eq('username', id)
+        .eq('usernameId', id)
         .eq('friendId', fid);
 
       if (!data || !!error) console.error(error);

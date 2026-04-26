@@ -1,7 +1,10 @@
 import { DateObjectType, LangType } from 'types/global.types';
 import { getCurrentLocale } from 'locales/server';
 
-export const getDate = async (dateField: string, dataDateObject: DateObjectType) => {
+export const getDate = async (
+  dateField: string,
+  dataDateObject: DateObjectType,
+): Promise<string> => {
   const locale: LangType = await getCurrentLocale();
   const today = new Date(parseInt(dateField));
 

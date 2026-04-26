@@ -43,3 +43,6 @@ public/workbox-*.js.map
 public/worker-*.js.map
 
 certificates
+
+*/GEMINI.md
+/.gemini

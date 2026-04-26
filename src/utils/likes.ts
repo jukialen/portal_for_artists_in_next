@@ -1,5 +1,6 @@
 //SELECT
 import { backUrl } from 'constants/links';
+import { Like } from 'types/global.types';
 
 export const likeList = async (
   authorId: string,
@@ -9,7 +10,7 @@ export const likeList = async (
   fileCommentId?: string,
   subCommentId?: string,
   lastCommentId?: string,
-) => {
+): Promise<Like | null> => {
   try {
     const params = {
       postId: postId!,
@@ -29,19 +30,23 @@ export const likeList = async (
       method: 'GET',
     })
       .then((r) => r.json())
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        console.error(e);
+        return null;
+      });
 
     return likesConst;
   } catch (e) {
     console.error(e);
+    return null;
   }
 };
 
 //PATCH && DELETE
-export const toggleLiked = async (is: boolean, authorId: string, postId?: string, fileId?: string) => {
+export const toggleLiked = async (is: boolean, authorId: string, postId?: string, fileId?: string): Promise<any> => {
   try {
     if (is) {
-      const status: boolean = await fetch(`${backUrl}/api/likes/toggle`, {
+      return await fetch(`${backUrl}/api/likes/toggle`, {
         method: 'POST',
         body: JSON.stringify({
           postId: postId!,
@@ -50,9 +55,10 @@ export const toggleLiked = async (is: boolean, authorId: string, postId?: string
         }),
       })
         .then((r) => r.json())
-        .catch((e) => console.error(e));
-
-      return !status;
+        .catch((e) => {
+          console.error(e);
+          return null;
+        });
     } else {
       const params = {
         postId: postId!,
@@ -61,15 +67,17 @@ export const toggleLiked = async (is: boolean, authorId: string, postId?: string
       };
       const queryString = new URLSearchParams(params).toString();
 
-      const status: boolean = await fetch(`${backUrl}/api/likes/toggle?${queryString}`, {
+      return await fetch(`${backUrl}/api/likes/toggle?${queryString}`, {
         method: 'DELETE',
       })
         .then((r) => r.json())
-        .catch((e) => console.error(e));
-
-      return status;
+        .catch((e) => {
+          console.error(e);
+          return null;
+        });
     }
   } catch (e) {
     console.error(e);
+    return null;
   }
 };

@@ -1,4 +1,6 @@
-export const HeadCom = (content: string) => {
+import { Metadata } from 'next';
+
+export const HeadCom = (content: string): Metadata => {
   return {
     title: content,
     description: content,

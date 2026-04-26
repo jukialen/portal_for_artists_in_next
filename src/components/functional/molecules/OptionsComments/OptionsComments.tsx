@@ -3,7 +3,7 @@
 import { ReactNode, useContext, useState } from 'react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
 import { updComment, delComment } from 'utils/comments';
 import { toggleLiked } from 'utils/likes';

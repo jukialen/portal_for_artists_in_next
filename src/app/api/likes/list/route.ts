@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
   const postId = searchParams.get('postId');
   const fileId = searchParams.get('fileId');

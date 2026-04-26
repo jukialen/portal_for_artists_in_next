@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Form, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from '../../../../shemasValidation/schemaValidation';
+import { SchemaValidation } from '../../../../schemasValidation/schemaValidation';
 
 import { convertStringToUnionType } from '../../../../helpers/convertStringToType';
 import { useI18n, useScopedI18n } from 'locales/client';

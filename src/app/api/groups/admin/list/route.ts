@@ -4,7 +4,7 @@ import { GroupUserType } from 'types/global.types';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id')!;
   const maxItems = searchParams.get('maxItems')!;

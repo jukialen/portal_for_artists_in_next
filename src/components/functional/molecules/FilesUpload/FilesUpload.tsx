@@ -5,7 +5,7 @@ import { createClient } from 'utils/supabase/clientCSR';
 import { Upload } from 'tus-js-client';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from 'shemasValidation/schemaValidation';
+import { SchemaValidation } from 'schemasValidation/schemaValidation';
 import { Dialog } from '@ark-ui/react/dialog';
 
 import { useI18n, useScopedI18n } from 'locales/client';
@@ -27,7 +27,7 @@ import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { ProgressBar } from 'components/ui/atoms/ProgressBar/ProgressBar';
 
 import styles from './FileUpload.module.css';
-import { MdUploadFile } from 'react-icons/icons/md';
+import { MdUploadFile } from 'react-icons/md';
 
 type FileDataType = {
   shortDescription: string;

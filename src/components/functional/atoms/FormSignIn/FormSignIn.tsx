@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from '../../../../shemasValidation/schemaValidation';
+import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
 import { ResetFormType, UserFormType } from 'types/global.types';
 
@@ -16,6 +16,7 @@ import { FormError } from 'components/ui/atoms/FormError/FormError';
 
 import styles from './FormSignIn.module.css';
 import { GrFormView, GrFormViewHide } from 'react-icons/gr';
+import { manualFaroLog } from '../../../../helpers/Grafana/client/methods';
 
 export const FormSignIn = ({
   translated,
@@ -54,7 +55,10 @@ export const FormSignIn = ({
           ? translated.unVerified
           : translated.wrongLoginData,
       );
+
+      manualFaroLog(error.message);
     } else {
+      manualFaroLog(translated.statusLogin);
       resetForm(initialValuesForSignInUp);
       setValuesFields(translated.statusLogin);
       refresh();

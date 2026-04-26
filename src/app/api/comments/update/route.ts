@@ -11,12 +11,11 @@ type UpdateCommentType = {
   content: string;
   authorId: string;
 };
-
-export async function PATCH(req: NextRequest) {
-  const supabase = await createServer();
-  const authorId = await getUserData().then((user) => user?.id!);
-
+export async function PATCH(req: NextRequest): Promise<NextResponse> {
   try {
+    const supabase = await createServer();
+    const authorId = await getUserData().then((user) => user?.id!);
+
     const requestBody: UpdateCommentType = await req.json();
 
     const { tableName, nameId, id, content } = requestBody;
