@@ -7,14 +7,6 @@ import { getFileRoleId } from 'utils/roles';
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
 
-export const translated = async (): Promise<string> => {
-  const { getScopedI18n } = await import('locales/server');
-
-  const tComments = await getScopedI18n('Comments');
-
-  return tComments('noComments');
-};
-
 export const graphics = async (
   maxItems: number,
   authorId: string,

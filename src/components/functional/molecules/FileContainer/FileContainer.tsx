@@ -1,20 +1,26 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 import { getUserData } from 'helpers/getUserData';
 import { useScopedI18n } from 'locales/client';
-import { filesAgainComments } from 'utils/comments';
+import { filesApiComments } from 'utils/comments';
 
 import { backUrl } from 'constants/links';
+import { supabaseStorageProfileUrl } from 'constants/links';
 import { TagConstants } from 'constants/values';
 import { ArticleVideosType, FilesCommentsType, UserType } from 'types/global.types';
 
+import { DCContext, DCProvider } from 'providers/DeleteCommentProvider';
+
 const DeletionFile = dynamic(() => import('../DeletionFile/DeletionFile').then((df) => df.DeletionFile));
-import { SharingButton } from 'components/ui/atoms/SharingButton/SharingButton';
 import { NewComments } from 'components/functional/atoms/NewComments/NewComments';
-import { FilesCommentsClient } from 'components/functional/organisms/FilesCommentsClient/FilesCommentsClient';
+import { OptionsComments } from 'components/functional/molecules/OptionsComments/OptionsComments';
+import { SubComments } from 'components/functional/molecules/SubComments/SubComments';
+import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
+import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
+import { SharingButton } from 'components/ui/atoms/SharingButton/SharingButton';
 
 import styles from './FileContainer.module.css';
 
@@ -31,21 +37,40 @@ export const FileContainer = ({
   roleId,
   commentsBool = false,
 }: ArticleVideosType) => {
+  const maxItems = 30;
   const linkShare = `${backUrl}/file/${name}/${fileId}/${authorName}`;
   const Tags = tags[0].toUpperCase() + tags.slice(1);
+
+  const { del } = useContext(DCContext);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [comments, setComments] = useState<FilesCommentsType[]>([]);
+  const [lastVisible, setLastVisible] = useState(
+    comments.length === maxItems ? comments[comments.length - 1].createdAt : '',
+  );
 
   const tComments = useScopedI18n('Comments');
-  const maxItems = 30;
 
   useEffect(() => {
-    // Pobieranie danych użytkownika
     getUserData().then((data) => setUserData(data));
 
-    // Pobieranie komentarzy jeśli są włączone
-    commentsBool && filesAgainComments(fileId, maxItems).then((data) => setComments(data));
+    commentsBool && filesApiComments(fileId, maxItems).then((data) => setComments(data));
   }, [linkShare, commentsBool, fileId]);
+
+  let [i, setI] = useState(1);
+
+  const nextComments = async () => {
+    try {
+      const nextPage = (await filesApiComments(fileId, maxItems, 'again'))!;
+
+      nextPage.length === maxItems && setLastVisible(nextPage[nextPage.length - 1].createdAt!);
+
+      const nextArray = comments.concat(...nextPage);
+      setComments(nextArray);
+      setI(++i);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <>
@@ -99,12 +124,46 @@ export const FileContainer = ({
             profilePhoto={userData?.profilePhoto || ''}
             roleId={roleId}
           />
-          <FilesCommentsClient
-            firstFilesComments={comments}
-            fileId={fileId}
-            noComments={tComments('noComments')}
-            pseudonym={userData?.pseudonym!}
-          />
+          {comments.length > 0 ? (
+            comments.map((data: FilesCommentsType, index) => (
+              <DCProvider key={index}>
+                <div className={del ? styles.container__deleted : styles.container}>
+                  <div className={styles.comment}>
+                    <Avatar
+                      src={`${supabaseStorageProfileUrl}/${data.authorProfilePhoto}`}
+                      fallbackName={authorName}
+                      alt="author profile photo icon"
+                    />
+                    <div className={styles.rightSideComment}>
+                      <div className={styles.topPartComment}>
+                        <p className={styles.pseudonym}>
+                          <Link href={`/user/${authorName}`}>{authorName}</Link>
+                        </p>
+                        <p className={styles.date}>{data.date}</p>
+                      </div>
+                      <h2 className={styles.text}>{data.content}</h2>
+                    </div>
+                  </div>
+                  <OptionsComments
+                    fileId={fileId}
+                    fileCommentId={data.fileCommentId}
+                    authorId={authorId}
+                    userId={authorId}
+                    liked={data.liked}
+                    likes={data.likes}
+                    authorProfilePhoto={data.authorProfilePhoto}
+                    roleId={roleId!}
+                    comment={data.content}
+                    tableName="FilesComments">
+                    <SubComments fileCommentId={data.fileCommentId} fileId={fileId} />
+                  </OptionsComments>
+                </div>
+              </DCProvider>
+            ))
+          ) : (
+            <p className={styles.noComments}>{tComments('noComments')}</p>
+          )}
+          {!!lastVisible && comments.length === maxItems * i && <MoreButton nextElementsAction={nextComments} />}
         </>
       )}
     </>

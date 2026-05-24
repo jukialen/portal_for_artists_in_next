@@ -16,14 +16,14 @@
   --background__opacity: hsla(0, 0%, 97%, 0.9);
   --required: hsl(0, 100%, 37%);
   --box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
-  --modal-box-shadow: 0 0 1rem 1rem var(--background__opacity);
+  --modal-box-shadow: 0 0 1rem 1rem --background__opacity;
   --backdrop-filter: blur(5px);
   --opacity: hsl(0, 0%, 100%, 0.36);
   --google__provider: hsl(4, 65%, 55%);
   --spotify_provider: hsl(141, 63%, 42%);
   --discord_provider: hsl(234, 82%, 65%);
   --line_provider: hsl(132, 91%, 36%);
-  --select__color: var(--background);
+  --select__color: --background;
 }
 
 [data-theme='dark'] {
@@ -43,5 +43,5 @@
   --background: hsl(217, 22%, 21%);
   --background__opacity: hsla(0, 0%, 97%, 0.1);
   --required: hsl(0, 100%, 37%);
-  --select__color: var(--text);
+  --select__color: --text;
 }

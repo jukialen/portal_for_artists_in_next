@@ -10,17 +10,12 @@ import {
 } from 'types/global.types';
 
 //POST
-export const newComment = async (
-  commentData: NewCommentsType,
-): Promise<{ role: RoleType | ''; message: string }> => {
+export const newComment = async (commentData: NewCommentsType): Promise<{ role: RoleType | ''; message: string }> => {
   try {
-    const { role, message }: { role: RoleType | ''; message: string } = await fetch(
-      `${backUrl}/api/comments/new`,
-      {
-        method: 'POST',
-        body: JSON.stringify(commentData),
-      },
-    ).then((r) => r.json());
+    const { role, message }: { role: RoleType | ''; message: string } = await fetch(`${backUrl}/api/comments/new`, {
+      method: 'POST',
+      body: JSON.stringify(commentData),
+    }).then((r) => r.json());
 
     !!message && console.error(`Error: ${message} with role: '${role}'.`);
 
@@ -58,7 +53,7 @@ export const comments = async (
   }
 };
 
-export const filesAgainComments = async (
+export const filesApiComments = async (
   fileId: string,
   maxItems: number,
   stage: 'first' | 'again' = 'first',
@@ -67,14 +62,11 @@ export const filesAgainComments = async (
   const queryString = new URLSearchParams(params).toString();
 
   try {
-    const res: FilesCommentsType[] = await fetch(
-      `${backUrl}/api/files-comments/${stage}?${queryString}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        cache: 'reload',
-      },
-    )
+    const res: FilesCommentsType[] = await fetch(`${backUrl}/api/files-comments/${stage}?${queryString}`, {
+      method: 'GET',
+      credentials: 'include',
+      cache: 'reload',
+    })
       .then((r) => r.json())
       .catch((e) => {
         console.error(e);
@@ -182,13 +174,10 @@ export const delComment = async (
   id: string,
 ): Promise<{ message: string; error: string }> => {
   try {
-    const { message, error }: { message: string; error: string } = await fetch(
-      `${backUrl}/api/comments/delete`,
-      {
-        method: 'DELETE',
-        body: JSON.stringify({ tableName, nameId, id }),
-      },
-    ).then((r) => r.json());
+    const { message, error }: { message: string; error: string } = await fetch(`${backUrl}/api/comments/delete`, {
+      method: 'DELETE',
+      body: JSON.stringify({ tableName, nameId, id }),
+    }).then((r) => r.json());
 
     console.log('deleteComment result', message, error);
     return { message, error };

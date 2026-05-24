@@ -15,11 +15,15 @@
     color: var(--third);
   }
 
-  img {
+  span, img {
     width: 3rem;
     aspect-ratio: 1 / 1;
     margin-top: 0.4rem;
     height: auto;
+  }
+
+  span {
+    display: inline-block;
   }
 }
 
