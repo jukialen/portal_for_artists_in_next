@@ -5,7 +5,7 @@ import { FileType, IndexType } from 'types/global.types';
 
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
-import { getFileRoleId } from 'utils/roles';
+import { getFileRoleId } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
 export async function GET(req: NextRequest): Promise<NextResponse> {

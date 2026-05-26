@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { setStaticParamsLocale } from 'next-international/server';
-import { createServer } from 'utils/supabase/clientSSR';
 
 import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
@@ -12,6 +11,8 @@ import { getI18n } from 'locales/server';
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
+import { getFileRoleId } from 'utils/server/roles';
+import { createServer } from 'utils/supabase/clientSSR';
 
 const FileContainerClient = dynamic(() =>
   import('components/functional/organisms/FileContainerClient/FileContainerClient').then(
@@ -20,9 +21,6 @@ const FileContainerClient = dynamic(() =>
 );
 
 import styles from './page.module.css';
-import { Database } from 'types/database.types';
-import { name } from 'next/dist/server/ci-info';
-import { getFileRoleId } from '../../../utils/roles';
 
 const downloadDrawings = async ({
   index,

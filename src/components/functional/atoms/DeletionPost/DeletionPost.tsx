@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Dialog } from '@ark-ui/react/dialog';
@@ -58,14 +60,12 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
         onExitComplete={() => console.log('onExitComplete invoked')}
         open={open}
         onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-        <Dialog.Trigger>
-          <div className={`${styles.container} ${del ? styles.container__active : ''}`}>
-            <button onClick={() => setOpen(true)}>
-              <RiDeleteBinLine />
-              {deleting ? tDeletionFile('loadingText') : tDeletionFile('deletionButton')}
-            </button>
-            <div className={styles.alert}>{!!values && <Alerts valueFields={values} />}</div>
-          </div>
+        <Dialog.Trigger className={styles.container}>
+          <button onClick={() => setOpen(true)}>
+            <RiDeleteBinLine />
+            {deleting ? tDeletionFile('loadingText') : tDeletionFile('deletionButton')}
+          </button>
+          <div className={styles.alert}>{!!values && <Alerts valueFields={values} />}</div>
         </Dialog.Trigger>
         <Dialog.Content className={styles.content}>
           <Dialog.Title>{tDeletionPost('title')}</Dialog.Title>

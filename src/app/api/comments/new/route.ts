@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { giveRole } from 'utils/roles';
+import { giveRole } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { CommentType, FilesCommentsType, RoleType, SubCommentType } from 'types/global.types';

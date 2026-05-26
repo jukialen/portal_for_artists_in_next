@@ -6,7 +6,7 @@ import { LangType } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Site with informations about privacy policy.');
 

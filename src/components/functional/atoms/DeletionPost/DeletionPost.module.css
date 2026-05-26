@@ -6,7 +6,7 @@
   color: var(--text);
 }
 
-.container {
+.container[data-part='trigger'] {
   position: absolute;
   top: 4.5rem;
   right: 1rem;
@@ -24,46 +24,11 @@
   }
 }
 
-.container__active {
-}
-
-[data-scope='dialog'] {
-  [data-part='content'] {
-    margin: auto;
-   background-color: var(--background);
-   border-radius: .5rem;
-   z-index: 2;
-
-    .title {
-      font-size: 1.1rem;
-      font-weight: bold;
-    }
-
-    .actionButton {
-      .cancel {
-        border-color: var(--background);
-      }
-
-      .submit {
-        border-color: var(--required);
-        margin-left: 3px;
-      }
-    }
-
-    [data-state='open'] {
-      display: none;
-    }
-
-    [data-state='closed'] {
-      display: flex;
-    }
-  }
-}
-
-.content {
- background-color: var(--background);
- border-radius: .5rem;
- z-index: 2;
+.content[data-part='content'] {
+  margin: auto;
+  background-color: var(--background);
+  border-radius: 0.5rem;
+  z-index: 2;
 
   .title {
     font-size: 1.1rem;
@@ -84,5 +49,13 @@
   .closeButton {
     color: var(--primary);
     border-color: transparent;
+  }
+
+  [data-state='open'] {
+    display: none;
+  }
+
+  [data-state='closed'] {
+    display: flex;
   }
 }

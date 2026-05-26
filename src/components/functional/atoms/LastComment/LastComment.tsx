@@ -1,3 +1,5 @@
+'use client';
+
 import { useContext } from 'react';
 import Link from 'next/link';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
@@ -49,7 +51,10 @@ export const LastComment = ({
         userId={authorId}
         liked={liked}
         likes={likes}
-        tableName="LastComments">
+        tableName="LastComments"
+        authorProfilePhoto={authorProfilePhoto}
+        roleId={roleId!}
+        comment={content}>
         <NewComments
           profilePhoto={authorProfilePhoto!}
           subCommentId={subCommentId}

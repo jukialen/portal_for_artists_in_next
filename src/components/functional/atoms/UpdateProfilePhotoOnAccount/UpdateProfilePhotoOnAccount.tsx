@@ -13,7 +13,7 @@ import { EventType, FilesUploadType, UserType } from 'types/global.types';
 
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 
-import styles from './UpdateProfilePhotoOnAccount.module.scss';
+import styles from './UpdateProfilePhotoOnAccount.module.css';
 import { MdCameraEnhance } from 'react-icons/md';
 
 export const UpdateProfilePhotoOnAccount = ({

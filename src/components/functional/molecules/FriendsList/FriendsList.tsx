@@ -74,6 +74,6 @@ export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListCompo
         )}
       </section>
       {!!lastVisible && friendsList.length === maxItems * i && <MoreButton nextElementsAction={nextFriends} />}
-    </>
+    </div>
   );
 };

@@ -12,7 +12,7 @@ import { getScopedI18n } from 'locales/server';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { dateData } from 'helpers/dateData';
-import { getFileRoleId } from 'utils/roles';
+import { getFileRoleId } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { AppWrapper } from 'components/wrappers/AppWrapper/AppWrapper';

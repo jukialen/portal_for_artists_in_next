@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { LastCommentType } from 'types/global.types';
 
 import { likeList } from 'utils/likes';
-import { giveRole } from 'utils/roles';
+import { giveRole } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { getDate } from 'helpers/getDate';

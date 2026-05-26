@@ -14,7 +14,7 @@ import { FormError } from 'components/ui/atoms/FormError/FormError';
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { Separator } from 'components/ui/atoms/Separator/Separator';
 
-import styles from '../FormForgotten/FormForgotten.module.scss';
+import styles from '../FormForgotten/FormForgotten.module.css';
 
 type TranslateType = {
   success: string;

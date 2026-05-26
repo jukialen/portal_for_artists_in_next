@@ -8,7 +8,7 @@ import { LangType } from 'types/global.types';
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
-import { getFileRoleId } from 'utils/roles';
+import { getFileRoleId } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
 const FileContainer = dynamic(() =>

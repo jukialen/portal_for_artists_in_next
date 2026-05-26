@@ -1,6 +1,6 @@
 import { getI18n, getScopedI18n } from 'locales/server';
 
-import { getUserData } from '../../../../helpers/getUserData';
+import { getUserData } from 'helpers/getUserData';
 
 import { UserHeaderCom } from 'components/functional/atoms/UserHeaderCom/UserHeaderCom';
 

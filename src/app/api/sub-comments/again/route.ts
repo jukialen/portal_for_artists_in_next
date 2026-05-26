@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { RoleType, SubCommentType } from 'types/global.types';
 
-import { groupRole } from 'utils/roles';
+import { groupRole } from 'utils/client/roles';
 import { likeList } from 'utils/likes';
 import { createServer } from 'utils/supabase/clientSSR';
 import { dateData } from 'helpers/dateData';

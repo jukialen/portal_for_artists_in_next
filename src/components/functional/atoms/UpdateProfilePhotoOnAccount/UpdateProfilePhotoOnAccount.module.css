@@ -1,0 +1,131 @@
+.updateLogo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 2.8rem;
+    height: 2.8rem;
+    margin: 0 0.5rem;
+    font-size: 1.4rem;
+    border: 0.1rem solid var(--primary);
+    border-radius: 0.75rem;
+    background-color: var(--primary);
+    color: var(--text);
+}
+
+.logoContent {
+    width: min(100dvw, 25rem);
+    flex-direction: column;
+    position: absolute;
+    top: auto;
+    left: -6.5rem;
+    margin: auto;
+    border-radius: 1rem;
+    background-color: var(--background);
+    z-index: 1;
+
+    [data-state='open'] {
+        display: flex;
+    }
+
+    [data-state='closed'] {
+        display: none;
+    }
+
+    .logoHeader {
+        margin: 2rem;
+        color: var(--primary);
+    }
+
+    .logBody,
+    .logBody__error {
+        width: 100%;
+        margin: 1rem 0;
+        padding: 0 2rem;
+
+        #newLogo,
+        .filePickerButton {
+            width: 100%;
+            padding: 0.35rem 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid var(--third);
+            color: var(--text__opacity);
+
+            &::-webkit-file-upload-button {
+                border: none;
+                padding: 0.5rem 1rem;
+                margin-right: 0.5rem;
+                border-radius: 0.5rem;
+                cursor: pointer;
+                transition: background 0.3s;
+                background-color: var(--primary);
+                color: var(--background);
+            }
+        }
+
+        .filePickerButton {
+            background-color: var(--background);
+        }
+
+        img {
+            margin: 2rem auto 0;
+            display: flex;
+            justify-content: center;
+            border-radius: 1rem;
+            object-fit: contain;
+            position: static !important;
+        }
+    }
+
+    .logBody__error {
+        #newLogo,
+        .filePickerButton {
+            border-color: var(--required);
+            color: var(--text);
+
+            &::-webkit-file-upload-button {
+                background-color: var(--required);
+                color: var(--text);
+            }
+        }
+
+        p {
+            padding: 0.65rem 0.75rem;
+            font-weight: bolder;
+            color: var(--required);
+        }
+    }
+
+    .logoFooter {
+        display: flex;
+        justify-content: flex-end;
+        margin: 2rem;
+
+        button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            border-color: transparent;
+        }
+
+        .cancel {
+            color: var(--primary);
+        }
+
+        .edit {
+            background-color: var(--third);
+        }
+    }
+}
+
+#logoContentPreview {
+    top: -11rem;
+}
+
+@media (min-width: 768px) {
+    .logoContent {
+        left: 0;
+    }
+}

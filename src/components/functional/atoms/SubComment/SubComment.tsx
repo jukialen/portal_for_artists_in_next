@@ -1,3 +1,5 @@
+'use client';
+
 import { useContext } from 'react';
 import Link from 'next/link';
 
@@ -53,7 +55,10 @@ export const SubComment = ({
         userId={authorId}
         liked={liked}
         likes={likes}
-        tableName="SubComments">
+        tableName="SubComments"
+        authorProfilePhoto={authorProfilePhoto}
+        roleId={roleId!}
+        comment={content}>
         <NewComments
           profilePhoto={profilePhoto!}
           subCommentId={subCommentId}

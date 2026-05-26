@@ -3,7 +3,7 @@
 import { FileType, IndexType, Tags } from 'types/global.types';
 import { createServer } from 'utils/supabase/clientSSR';
 import { selectFiles } from 'constants/selects';
-import { getFileRoleId } from 'utils/roles';
+import { getFileRoleId } from 'utils/server/roles';
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
 

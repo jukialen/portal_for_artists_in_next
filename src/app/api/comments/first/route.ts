@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { CommentType } from 'types/global.types';
 
 import { likeList } from 'utils/likes';
-import { giveRole } from 'utils/roles';
+import { giveRole } from 'utils/server/roles';
 
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';

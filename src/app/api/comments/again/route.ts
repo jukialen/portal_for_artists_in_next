@@ -5,7 +5,7 @@ import { CommentType } from 'types/global.types';
 import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { likeList } from 'utils/likes';
-import { giveRole } from 'utils/roles';
+import { giveRole } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
 export async function GET(req: NextRequest): Promise<NextResponse> {

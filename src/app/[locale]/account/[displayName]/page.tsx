@@ -32,6 +32,7 @@ export default async function Account({ params }: { params: Promise<{ locale: La
     <ProfilePage
       id={id}
       author={displayName}
+      userData={userData}
       firstAdminList={firstAdminList}
       firstFriendsList={firstFriendsList}
       firstModsUsersList={firstModsUsersList}

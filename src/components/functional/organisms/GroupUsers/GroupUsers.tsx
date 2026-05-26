@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { roles } from 'utils/roles';
+import { roles } from 'utils/client/roles';
 import { createClient } from 'utils/supabase/clientCSR';
 
 import { backUrl } from 'constants/links';
@@ -11,7 +11,6 @@ import { useI18n, useScopedI18n } from 'locales/client';
 import { Links } from 'components/ui/atoms/Links/Links';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/ui/atoms/Tile/Tile';
-import { Separator } from 'components/ui/atoms/Separator/Separator';
 
 import styles from './GroupUsers.module.css';
 

@@ -11,14 +11,10 @@ type DelCommentType = {
 };
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
-  const supabase = await createServer();
-
-  try {
+    const supabase = await createServer();
     const { tableName, nameId, id }: DelCommentType = await req.json();
 
-    const { data, error } = await supabase.from(tableName).delete().eq(nameId, id).select('id');
-
-    const deletedCount = data?.length ?? 0;
+    const { error } = await supabase.from(tableName).delete().eq(nameId, id).select('id');
 
     return NextResponse.json(
       { message: error ? 'Failed to delete comment' : 'Comment was deleted', error: error?.message || '' },

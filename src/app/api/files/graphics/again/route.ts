@@ -6,7 +6,7 @@ import { FileType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 import { dateData } from 'helpers/dateData';
-import { getFileRoleId } from 'utils/roles';
+import { getFileRoleId } from 'utils/server/roles';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
