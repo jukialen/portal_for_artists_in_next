@@ -1,3 +1,5 @@
+'use client';
+
 import * as Yup from 'yup';
 import { useI18n, useScopedI18n } from 'locales/client';
 

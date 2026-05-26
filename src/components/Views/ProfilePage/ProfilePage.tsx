@@ -1,14 +1,14 @@
+'use client';
+
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Tabs } from '@ark-ui/react/tabs';
 
-import { getI18n, getScopedI18n } from 'locales/server';
-
-import { getUserData } from 'helpers/getUserData';
+import { useI18n, useScopedI18n } from 'locales/client';
 
 import { supabaseStorageProfileUrl } from 'constants/links';
-import { FilesUploadType, FileType, FriendsListType, GroupUserType } from 'types/global.types';
+import { FilesUploadType, FileType, FriendsListType, GroupUserType, UserType } from 'types/global.types';
 
 import { FriendsButtons } from 'components/functional/atoms/FriendsButtons/FriendsButtons';
 
@@ -43,6 +43,7 @@ type ProfilePageType = {
   id: string;
   author: string;
   myProfile: boolean;
+  userData: UserType | null;
   firstFriendsList: FriendsListType[] | undefined;
   firstAdminList: GroupUserType[] | undefined;
   firstModsUsersList:
@@ -72,10 +73,11 @@ type ProfilePageType = {
     | undefined;
 };
 
-export const ProfilePage = async ({
+export const ProfilePage = ({
   id,
   author,
   myProfile = false,
+  userData,
   firstFriendsList,
   firstAdminList,
   firstModsUsersList,
@@ -86,10 +88,10 @@ export const ProfilePage = async ({
   favs,
   fave,
 }: ProfilePageType) => {
-  const t = await getI18n();
-  const tAnotherForm = await getScopedI18n('AnotherForm');
-  const tAside = await getScopedI18n('Aside');
-  const tMenu = await getScopedI18n('Account.aMenu');
+  const t = useI18n();
+  const tAnotherForm = useScopedI18n('AnotherForm');
+  const tAside = useScopedI18n('Aside');
+  const tMenu = useScopedI18n('Account.aMenu');
 
   const tDash = {
     friends: tMenu('friends'),
@@ -132,8 +134,7 @@ export const ProfilePage = async ({
     addedMax: t('Friends.addedMax'),
   };
 
-  const userData = await getUserData();
-  const pseudonym = userData?.pseudonym!;
+  const pseudonym = userData?.pseudonym || 'Na pseudonym';
 
   const fileComps = [
     <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} key="0" />,
@@ -191,12 +192,12 @@ export const ProfilePage = async ({
           fid={fidsFavs?.pseudonymId!}
           pseudonym={userData?.pseudonym!}
           favLength={favs!}
-          fav={fave!.favorite}
-          friendBool={fave!.favorite}
+          fav={fave?.favorite || false}
+          friendBool={fave?.favorite || false}
           translated={tFriends}
         />
       )}
-      <Tabs.Root className={styles.tabsMenu} defaultValue={fileTabList[0]} defaultChecked lazyMount unmountOnExit>
+      <Tabs.Root className={styles.tabsMenu} defaultValue={fileTabList[0]} lazyMount unmountOnExit>
         <Tabs.List className={styles.topTabList}>
           {fileTabList.map((tab) => (
             <Tabs.Trigger key={tab} className={styles.tabForPanels} value={tab!}>

@@ -13,24 +13,23 @@ export const ModeContext = createContext({
 
 export const ModeProvider = ({ children }: { children: ReactNode }) => {
   const [isMode, setMode] = useState<ModeType>(
-    typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+    typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+      : 'light',
   );
 
   useEffect(() => {
-    const defaultTheme = (): ModeType | null => {
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (typeof document !== 'undefined') {
       const savedMode = localStorage.getItem('mode') as ModeType | null;
+      const mode = savedMode ?? isMode;
 
-      const defaultMode = savedMode ?? (systemPrefersDark ? 'dark' : 'light');
-      return defaultMode;
-    };
-
-    const mode: ModeType | null = isMode ?? defaultTheme();
-    setMode(mode!);
-    document.documentElement.setAttribute('data-mode', mode!);
-    document.documentElement.setAttribute('data-theme', mode!);
-    localStorage.setItem('mode', mode!);
-  }, [isMode]);
+      setMode(mode);
+      document.documentElement.setAttribute('data-mode', mode);
+      if (typeof localStorage !== 'undefined') localStorage.setItem('mode', mode);
+    }
+  }, []);
 
   const changeMode = (mode: ModeType) => {
     setMode(mode);

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import NextLink from 'next/link';
 import { createClient } from 'utils/supabase/clientCSR';

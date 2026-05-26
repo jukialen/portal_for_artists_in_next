@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'Portal for Artists - API Documentation',
@@ -9,10 +10,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ApiDocsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ApiDocsLayout({ children }: { children: ReactNode }) {
   return children;
 }

@@ -6,7 +6,7 @@ import { TableNameType } from 'types/global.types';
 
 type DelCommentType = {
   tableName: TableNameType;
-  nameId: 'commentId' | 'fileId' | 'fileCommentId' | 'subCommentId' | 'lastCommentId';
+  nameId: 'authorId' | 'roleId';
   id: string;
 };
 export async function DELETE(req: NextRequest): Promise<NextResponse> {

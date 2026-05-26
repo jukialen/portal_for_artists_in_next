@@ -91,7 +91,7 @@ export default async function User({ params }: PropsType) {
     <ProfilePage
       id={fidsFavs?.pseudonymId!}
       author={pseudonym}
-      userData={userData}
+      userData={userData!}
       firstAdminList={adminGroups}
       firstFriendsList={firstFriends}
       firstModsUsersList={firstModsUsersList}

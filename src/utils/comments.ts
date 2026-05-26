@@ -170,7 +170,7 @@ export const updComment = async (
 ///DELETE
 export const delComment = async (
   tableName: TableNameType,
-  nameId: 'commentId' | 'id' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
+  nameId: 'authorId' | 'roleId',
   id: string,
 ): Promise<{ message: string; error: string }> => {
   try {
