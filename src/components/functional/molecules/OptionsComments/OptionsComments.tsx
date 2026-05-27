@@ -90,15 +90,9 @@ export const OptionsComments = ({
 
   const deleteComment = async () => {
     try {
-      const ids = [
-        [fileCommentId, 'id'] as const,
-        [commentId, 'commentId'] as const,
-        [subCommentId, 'subCommentId'] as const,
-        [lastCommentId, 'lastCommentId'] as const,
-      ] as const;
-      const [id, fieldName] = ids.find(([val]) => !!val)!;
-      if (id && fieldName) {
-        await delComment(tableName, fieldName, id);
+      const fieldName = [fileCommentId, commentId, subCommentId, lastCommentId].find((val) => !!val)!;
+      if (fieldName) {
+        await delComment(tableName, fieldName);
         changeDel();
       }
     } catch (e) {
@@ -108,16 +102,10 @@ export const OptionsComments = ({
 
   const updateComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
-      const ids = [
-        [fileCommentId, 'id'] as const,
-        [commentId, 'commentId'] as const,
-        [subCommentId, 'subCommentId'] as const,
-        [lastCommentId, 'lastCommentId'] as const,
-      ] as const;
-      const [id, fieldName] = ids.find(([val]) => !!val)!;
+      const fieldName = [fileCommentId, commentId, subCommentId, lastCommentId].find((val) => !!val)!;
 
-      if (id && fieldName) {
-        const upd = await updComment(tableName, fieldName, id, comment);
+      if (fieldName) {
+        const upd = await updComment(tableName, fieldName, comment);
         if (!upd) resetForm(initialValues);
         return;
       }

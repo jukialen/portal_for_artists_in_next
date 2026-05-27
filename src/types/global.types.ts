@@ -264,6 +264,7 @@ type Comment = Time & {
   likes: number;
 };
 
+////INSERT
 export type NewCommentsType = {
   authorId: string;
   roleId: string;
@@ -276,6 +277,7 @@ export type NewCommentsType = {
   subCommentId?: string;
 };
 
+////SELECT
 export type CommentType = Comment & {
   authorName: string;
   authorProfilePhoto: string;

@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Tabs } from '@ark-ui/react/tabs';
+import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 
 import { createClient } from 'utils/supabase/clientCSR';
-
 import { JoinUser, MemberType, nameGroupTranslatedType, PostsType, UserType } from 'types/global.types';
 
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
@@ -13,10 +13,9 @@ import { Members } from 'components/functional/atoms/Members/Members';
 import { AddingPost } from 'components/functional/molecules/AddingPost/AddingPost';
 import { DescriptionSection } from 'components/functional/molecules/DescriptionSection/DescriptionSection';
 import { Posts } from 'components/functional/organisms/Posts/Posts';
+import { Separator } from 'components/ui/atoms/Separator/Separator';
 
 import styles from './NameGroupPage.module.css';
-import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
-import { Separator } from 'components/ui/atoms/Separator/Separator';
 
 export const NameGroupPage = ({
   name,
@@ -41,16 +40,10 @@ export const NameGroupPage = ({
   const [deleteGroupInfo, setDeleteGroupInfo] = useState('');
   const [roleId, setRoleId] = useState(joined.roleId);
 
-  const description = joined.description;
-  const regulation = joined.regulation !== '' ? joined.regulation.split('\n').join('\n') : translated?.noRegulation!;
-  const groupId = joined.groupId;
-
+  const { description, regulation: rawReg, groupId } = joined;
+  const regulation = rawReg !== '' ? rawReg.split('\n').join('\n') : translated?.noRegulation!;
   const supabase = createClient();
-
   const { push } = useRouter();
-
-  const checkIcon = '1rem';
-  const smallIcon = '1.5rem';
 
   const contentList = [
     translated.groupSections?.general,
@@ -61,46 +54,31 @@ export const NameGroupPage = ({
   const toggleToGroup = async () => {
     try {
       if (!join) {
-        const { data, error } = await supabase
+        const { data } = await supabase
           .from('Roles')
-          .insert([{ groupId, name, userId: userData?.id!, role: 'USER' }])
+          .insert([{ groupId, userId: userData?.id!, role: 'USER' }])
           .select('id')
-          .limit(1)
           .single();
-
-        if (!!data) {
+        if (data) {
           setRoleId(data.id);
-
-          await supabase
-            .from('UsersGroups')
-            .insert([{ name, groupId, description, userId: userData?.id!, roleId: data?.id! }])
-            .select();
-        } else {
-          console.error(`Unexpected error occurred. \n\n Error: ${error?.message} \n\n Code: ${error?.code}`);
+          await supabase.from('UsersGroups').insert([{ name, groupId, userId: userData?.id!, roleId: data.id }]);
         }
       } else {
-        let { data, error } = await supabase
+        const { data } = await supabase
           .from('UsersGroups')
           .delete()
           .eq('usersGroupsId', usersGroupsId)
           .eq('userId', userData?.id!)
           .select('roleId')
-          .limit(1)
           .single();
-
-        if (!!data) {
-          const { error: er } = await supabase.from('Roles').delete().eq('id', data.roleId).select();
-
-          !!error && console.error(`Unexpected error occurred. \n\n Error: ${er?.message} \n\n Code: ${er?.code}`);
-        } else {
-          console.error(`Unexpected error occurred. \n\n Error: ${error?.message} \n\n Code: ${error?.code}`);
-        }
+        if (data) await supabase.from('Roles').delete().eq('id', data.roleId);
       }
       setJoin(!join);
     } catch (e) {
       console.error(e);
     }
   };
+
   const toggleToFavorites = async () => {
     try {
       if (favorite) {
@@ -108,120 +86,110 @@ export const NameGroupPage = ({
           .from('UsersGroups')
           .update({ favorite: false })
           .eq('usersGroupsId', usersGroupsId);
-
-        if (!!error) {
-          console.error(`Unexpected error occurred. \n\n Error: ${error?.code}`);
-        } else {
-          setFavoriteLength(favoriteLength - 1);
-        }
+        if (!error) setFavoriteLength((prev) => prev - 1);
       } else {
-        const { count } = await supabase.from('UsersGroups').select().eq('userId', userData?.id!);
-
+        const { count } = await supabase
+          .from('UsersGroups')
+          .select('*', { count: 'exact', head: true })
+          .eq('userId', userData?.id!);
         if (count === null || count < 5) {
-          const { error } = await supabase
-            .from('UsersGroups')
-            .update({ favorite: true })
-            .eq('usersGroupsId', usersGroupsId);
-          if (!!error) {
-            console.error(`Unexpected error occurred. \n\n Error: ${error?.code}`);
-          } else {
-            setFavoriteLength((count! && count + 1) || 1);
-          }
-        } else {
-          setFavoriteLength(5);
-        }
+          await supabase.from('UsersGroups').update({ favorite: true }).eq('usersGroupsId', usersGroupsId);
+          setFavoriteLength((prev) => (prev ?? 0) + 1);
+        } else setFavoriteLength(5);
       }
       setFavorite(!favorite);
     } catch (e) {
       console.error(e);
-      setFavorite(favorite);
     }
   };
-  const removeGroup = async () => {
-    const { error } = await supabase.from('Groups').delete().eq('groupId', groupId).eq('name', name);
 
+  const removeGroup = async () => {
     try {
+      const { error } = await supabase.from('Groups').delete().eq('groupId', groupId).eq('name', name);
+      if (error) throw error;
       push('/app');
     } catch (e) {
-      console.error(`Error occurred: ${error?.message} with status ${error?.code}`);
+      console.error(e);
       setDeleteGroupInfo(translated.error!);
     }
   };
 
+  const GroupButton = ({ active, onClick, disabled, label, fav }: any) => (
+    <div className={fav ? styles.favoriteWrapper : ''}>
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        className={`${active ? styles.joined : styles.button} ${fav ? styles.favoriteButton : ''}`}>
+        {active ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}
+        {label}
+      </button>
+      {fav && !active && (
+        <p>{favoriteLength < 5 ? translated.joinedUser?.maxFav : translated.joinedUser?.maximumAchieved}</p>
+      )}
+    </div>
+  );
+
   return (
     <>
       {joined.admin ? (
-        <>
-          <div className={styles.adminButtons}>
-            <button className={styles.button} onClick={removeGroup}>
-              {translated.groupSections?.deleteGroup}
-            </button>
-          </div>
+        <div className={styles.adminButtons}>
+          <button className={styles.button} onClick={removeGroup}>
+            {translated.groupSections?.deleteGroup}
+          </button>
           {!!deleteGroupInfo && <Alerts valueFields={deleteGroupInfo} />}
-        </>
+        </div>
       ) : (
         <div className={styles.buttons}>
-          <button onClick={toggleToGroup} className={join ? styles.joined : styles.button}>
-            {join ? <IoMdCheckmark size={checkIcon} /> : <IoMdAdd size={smallIcon} />}
-            {join ? translated.joinedUser?.joined : translated.joinedUser?.join}
-          </button>
-
+          <GroupButton
+            active={join}
+            onClick={toggleToGroup}
+            label={join ? translated.joinedUser?.joined : translated.joinedUser?.join}
+          />
           {join && (
-            <div>
-              <button
-                className={`${favorite ? styles.joined : styles.button} ${styles.favoriteButton}`}
-                disabled={!favorite && favoriteLength === 5}
-                onClick={toggleToFavorites}>
-                {favorite ? <IoMdCheckmark size={checkIcon} /> : <IoMdAdd size={smallIcon} />}
-                {favorite ? translated.joinedUser?.addedToFav : translated.joinedUser?.addToFavorite}
-              </button>
-              {!favorite && (
-                <p>{favoriteLength < 5 ? translated.joinedUser?.maxFav : translated.joinedUser?.maximumAchieved}</p>
-              )}
-            </div>
+            <GroupButton
+              active={favorite}
+              onClick={toggleToFavorites}
+              disabled={!favorite && favoriteLength === 5}
+              label={favorite ? translated.joinedUser?.addedToFav : translated.joinedUser?.addToFavorite}
+              fav
+            />
           )}
         </div>
       )}
       <Separator />
 
-      <Tabs.Root className={styles.tabs} lazyMount unmountOnExit role="tab" defaultValue={contentList[0]}>
-        <Tabs.List className={styles.tablist} role="tablist">
-          <Tabs.Trigger className={styles.tab} role="tab" value={contentList[0]!}>
-            {contentList[0]}
-          </Tabs.Trigger>
-          {join && (
-            <Tabs.Trigger className={styles.tab} role="tab" value={contentList[1]!}>
-              {contentList[1]}
-            </Tabs.Trigger>
+      <Tabs.Root className={styles.tabs} lazyMount unmountOnExit defaultValue={contentList[0]}>
+        <Tabs.List className={styles.tablist}>
+          {contentList.map((tab, i) =>
+            i === 1 && !join ? null : (
+              <Tabs.Trigger key={tab} className={styles.tab} value={tab!}>
+                {tab}
+              </Tabs.Trigger>
+            ),
           )}
-          <Tabs.Trigger className={styles.tab} role="tab" value={contentList[2]!}>
-            {contentList[2]}
-          </Tabs.Trigger>
           <Tabs.Indicator />
         </Tabs.List>
         <Tabs.Content value={contentList[0]!}>
-          <>
-            {join && (
+          {join ? (
+            <>
               <AddingPost
-                groupId={joined.groupId!}
+                groupId={groupId!}
                 translatedPost={translated.posts!}
                 errorTr={translated.error!}
                 authorId={userData?.id!}
                 roleId={roleId}
               />
-            )}
-            {join ? (
               <Posts
-                groupId={joined.groupId!}
+                groupId={groupId!}
                 profilePhoto={userData?.profilePhoto!}
                 userId={userData?.id!}
                 name={name}
                 firstPosts={firstPosts}
               />
-            ) : (
-              <p className={styles.noPermission}>{translated.groupSections?.noPermission}</p>
-            )}
-          </>
+            </>
+          ) : (
+            <p className={styles.noPermission}>{translated.groupSections?.noPermission}</p>
+          )}
         </Tabs.Content>
         {join && (
           <Tabs.Content value={contentList[1]!}>

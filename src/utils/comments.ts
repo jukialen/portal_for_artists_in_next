@@ -146,17 +146,12 @@ export const lastComments = async (
 
 //PATCH
 
-export const updComment = async (
-  tableName: TableNameType,
-  nameId: 'commentId' | 'id' | 'fileCommentId' | 'subCommentId' | 'lastCommentId',
-  id: string,
-  content: string,
-): Promise<boolean> => {
-  console.log('updateComment called', tableName, nameId, id, content);
+export const updComment = async (tableName: TableNameType, id: string, content: string): Promise<boolean> => {
+  console.log('updateComment called', tableName, id, content);
   try {
     const up: boolean = await fetch(`${backUrl}/api/comments/update`, {
       method: 'PATCH',
-      body: JSON.stringify({ tableName, nameId, id, content }),
+      body: JSON.stringify({ tableName, id, content }),
     }).then((r) => r.json());
 
     console.log('updateComment result', up);
@@ -168,15 +163,11 @@ export const updComment = async (
 };
 
 ///DELETE
-export const delComment = async (
-  tableName: TableNameType,
-  nameId: 'authorId' | 'roleId',
-  id: string,
-): Promise<{ message: string; error: string }> => {
+export const delComment = async (tableName: TableNameType, id: string): Promise<{ message: string; error: string }> => {
   try {
     const { message, error }: { message: string; error: string } = await fetch(`${backUrl}/api/comments/delete`, {
       method: 'DELETE',
-      body: JSON.stringify({ tableName, nameId, id }),
+      body: JSON.stringify({ tableName, id }),
     }).then((r) => r.json());
 
     console.log('deleteComment result', message, error);
