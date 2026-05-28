@@ -21,9 +21,7 @@ export const paddle = new Paddle(paddleServerId!, {
   logLevel: LogLevel.verbose,
 });
 
-export const getSubscriptionsListPerUser = async (
-  userId: string,
-): Promise<Subscription[]> => {
+export const getSubscriptionsListPerUser = async (userId: string): Promise<Subscription[]> => {
   const subscriptionCollection: SubscriptionCollection = paddle.subscriptions.list({
     customerId: [userId],
   });
@@ -67,10 +65,7 @@ const getAllProducts = async (): Promise<Product[]> => {
 const convertPrice = (locale: LangType, price: string): string =>
   locale === 'ja' ? price : (parseFloat(price) / 100).toFixed(2).replace('.', ',');
 
-const priceString = (
-  locale: LangType,
-  plan: Price,
-): { key: LangType; value: string }[] => {
+const priceString = (locale: LangType, plan: Price): { key: LangType; value: string }[] => {
   const prices: { key: LangType; value: string }[] = [
     {
       key: 'en',
@@ -90,50 +85,34 @@ const priceString = (
   return prices;
 };
 
-export const getSubscriptionsOptions = async (
-  locale: LangType,
-): Promise<SubscriptionPricingType[]> => {
+export const getSubscriptionsOptions = async (locale: LangType): Promise<SubscriptionPricingType[]> => {
   try {
-    const products = await getAllProducts();
-    const subscriptionData: SubscriptionPricingType[] = [];
-
-    for (const plan of products[1].prices!) {
-      subscriptionData.push({
+    return (
+      (await getAllProducts())[1]?.prices?.map((plan) => ({
         id: plan.id,
         name: plan.name! as Plan,
         description: plan.description,
         prices: priceString(locale, plan),
         billingCycle: plan.billingCycle?.interval! as BillingCycleType,
-      });
-    }
-
-    return subscriptionData;
+      })) ?? []
+    );
   } catch (error) {
     console.error('Error within getSubscriptionsOptions:', error);
     return [];
   }
 };
 
-export const getOneTimeOptions = async (
-  locale: LangType,
-): Promise<OnetimePricingType[]> => {
+export const getOneTimeOptions = async (locale: LangType): Promise<OnetimePricingType[]> => {
   try {
-    const products = await getAllProducts();
-    const subscriptionData: OnetimePricingType[] = [];
-
-    for (const plan of products[0].prices!) {
-      subscriptionData.push({
+    return (
+      (await getAllProducts())[0].prices?.map((plan) => ({
         id: plan.id,
         name: plan.name! as Plan,
         description: plan.description,
         prices: priceString(locale, plan),
         customData: plan.customData!,
-      });
-    }
-
-    console.log('subscriptionData', subscriptionData);
-
-    return subscriptionData;
+      })) ?? []
+    );
   } catch (error) {
     console.error('Error within getSubscriptionsOptions:', error);
     return [];
