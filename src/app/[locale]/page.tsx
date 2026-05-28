@@ -24,17 +24,12 @@ import authorButton from '../../../public/authorButton.png';
 import top from '../../../public/top.jpg';
 import minimalism from '../../../public/minimalism.png';
 import likes from '../../../public/likes.png';
-import { sendLokiLog } from '../../helpers/Grafana/server/methods';
 
 export const metadata: Metadata = HeadCom('Main site.');
 
 export default async function Home({ params }: { params: Promise<{ locale: LangType }> }) {
   const { locale } = await params;
   setStaticParamsLocale(locale);
-
-  const headersList = await headers();
-  const traceparent = headersList.get('traceparent');
-  const traceId = traceparent?.split('-')[1] ?? 'no-trace';
 
   const t = await getScopedI18n('Main');
   const width = 450;

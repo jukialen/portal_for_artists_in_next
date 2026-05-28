@@ -3,7 +3,7 @@ import { faroConfig } from './config';
 
 export const manualFaroLog = (message: string) => faroConfig()?.api.pushLog([message], { level: LogLevel.INFO });
 
-export const errorContextFaroLog = (message: string, orderId: string) => {
+export const errorFaroLog = (message: string, orderId: string) => {
   return faroConfig()?.api.pushError(new Error(message), { context: { orderId } });
 };
 

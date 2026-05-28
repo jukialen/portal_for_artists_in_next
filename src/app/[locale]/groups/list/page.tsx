@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 import { createServer } from 'utils/supabase/clientSSR';
