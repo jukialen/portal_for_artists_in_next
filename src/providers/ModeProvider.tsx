@@ -26,7 +26,7 @@ export const ModeProvider = ({ children }: { children: ReactNode }) => {
       const mode = savedMode ?? isMode;
 
       setMode(mode);
-      document.documentElement.setAttribute('data-mode', mode);
+      document.documentElement.setAttribute('data-theme', mode);
       if (typeof localStorage !== 'undefined') localStorage.setItem('mode', mode);
     }
   }, []);
