@@ -34,7 +34,7 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
     light: <HiMoon className={styles.icon} aria-label="mode icon" />,
   };
 
-  const langItems: { value: ModeType; name: string }[] = [
+  const modeItems: { value: ModeType; name: string }[] = [
     {
       value: 'dark',
       name: dark,
@@ -56,7 +56,7 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
         </button>
 
         <div className={`${styles.color} ${mode && styles.color__active}`}>
-          {langItems.map((item, i) => (
+          {modeItems.map((item, i) => (
             <li key={i}>
               <button className={styles.colors__version} onClick={() => newMode(item.value)}>
                 {item.name}

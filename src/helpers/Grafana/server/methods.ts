@@ -20,8 +20,6 @@ export const sendLokiLog = async (message: string, traceId: string, type: LogTyp
         ],
       }),
     });
-
-    console.log('res', res);
   } catch (err) {
     console.error('[Logger] Loki error:', err);
   }
