@@ -2,6 +2,7 @@
 import { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { getUserData } from 'helpers/getUserData';
 import { useScopedI18n } from 'locales/client';
@@ -87,7 +88,14 @@ export const FileContainer = ({
             and watch it with your favorite video player!
           </video>
         ) : (
-          <img className={styles.item} src={fileUrl} alt={`File ${name} added by ${authorName} in Category: ${tags}`} />
+          <Image
+            className={styles.item}
+            src={fileUrl}
+            alt={`File ${name} added by ${authorName} in Category: ${tags}`}
+            width={552}
+            height={480}
+            unoptimized
+          />
         )}
 
         <section className={styles.timePlusTag}>
@@ -131,13 +139,13 @@ export const FileContainer = ({
                   <div className={styles.comment}>
                     <Avatar
                       src={`${supabaseStorageProfileUrl}/${data.authorProfilePhoto}`}
-                      fallbackName={authorName}
+                      fallbackName={data.authorName}
                       alt="author profile photo icon"
                     />
                     <div className={styles.rightSideComment}>
                       <div className={styles.topPartComment}>
                         <p className={styles.pseudonym}>
-                          <Link href={`/user/${authorName}`}>{authorName}</Link>
+                          <Link href={`/user/${data.authorName}`}>{data.authorName}</Link>
                         </p>
                         <p className={styles.date}>{data.date}</p>
                       </div>

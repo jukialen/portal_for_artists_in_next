@@ -26,20 +26,22 @@ export const DeletionFile = ({ fileId }: { fileId: string }) => {
 
     try {
       setOpen(false);
-      setDeleting(!deleting);
+      setDeleting(true);
       setValues(tDeletionFile('deleting'));
       const { error } = await supabase.from('Files').delete().eq('fileId', fileId);
 
       if (!!error) {
         setValues(t('error'));
+        setDeleting(false);
         return;
       }
 
       setValues(tDeletionFile('deleted'));
-      setDeleting(!deleting);
+      setDeleting(false);
     } catch (e) {
       console.error(e);
       setValues(t('error'));
+      setDeleting(false);
     }
   };
 
@@ -49,34 +51,28 @@ export const DeletionFile = ({ fileId }: { fileId: string }) => {
         {del ? <RxChevronUp /> : <RxChevronDown />}
       </button>
 
-      <Dialog.Root
-        lazyMount
-        unmountOnExit
-        onExitComplete={() => console.log('onExitComplete invoked')}
-        open={open}
-        onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
+      <Dialog.Root lazyMount unmountOnExit open={open} onOpenChange={(details) => setOpen(details.open)}>
         <Dialog.Trigger asChild>
-          <div className={`${styles.container} ${del ? styles.container__active : ''}`}>
-            <button onClick={() => setOpen(true)}>
+          <div className={styles.container} style={{ display: del ? 'flex' : 'none' }}>
+            <button type="button">
               <RiDeleteBinLine />
               {deleting ? tDeletionFile('loadingText') : tDeletionFile('deletionButton')}
             </button>
             <div className={styles.alert}>{!!values && <Alerts valueFields={values} />}</div>
           </div>
         </Dialog.Trigger>
+
         <Dialog.Content className={styles.content}>
           <Dialog.Title className={styles.title}>{tDeletionFile('title')}</Dialog.Title>
 
           <Dialog.Description>{tDeletionFile('question')}</Dialog.Description>
 
           <div className={styles.actionButton}>
-            <button className={styles.cancel}>{tDeletionFile('cancelButton')}</button>
-            <button className={styles.submit} onClick={deleteFile}>
+            <Dialog.CloseTrigger className={styles.cancel}>{tDeletionFile('cancelButton')}</Dialog.CloseTrigger>
+            <button type="button" className={styles.container} onClick={deleteFile}>
               {tDeletionFile('deleteButton')}
             </button>
           </div>
-
-          <Dialog.CloseTrigger className={styles.closeButton} />
         </Dialog.Content>
       </Dialog.Root>
     </>

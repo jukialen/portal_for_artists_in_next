@@ -1,6 +1,5 @@
 .file {
   width: min(34.5rem, 90dvw);
-  height: fit-content;
   display: grid;
   grid-template-rows: 1fr 3.25rem 1.5rem auto;
   justify-self: center;
