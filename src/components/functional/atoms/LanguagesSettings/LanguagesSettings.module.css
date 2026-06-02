@@ -28,6 +28,7 @@
     padding: 0;
     font-weight: bold;
     cursor: pointer;
+    color: currentColor;
 
     .languages__select {
       display: flex;
@@ -38,67 +39,51 @@
       font-size: 1rem;
       border-radius: 0.5rem;
       border: 0.1rem solid var(--secondary);
-      color: var(--text);
+      background-color: transparent;
 
       &:hover {
         background-color: var(--secondary);
       }
-
-      &:active, &:active svg {
-        color: var(--select__color) !important;
-      }
-
-      &:hover svg, &:focus svg {
-        color: var(--background);
-      }
     }
 
-    .language {
-      display: none;
+    .language, .language__active {
+      width: inherit;
+      flex-direction: column;
+      position: absolute;
+      top: 2.5rem;
+      border-radius: 0.5rem;
+      border: 0.2rem groove var(--secondary__opacity);
+      background-color: var(--background__opacity);
+      box-shadow: var(--box-shadow);
+      -webkit-backdrop-filter: var(--backdrop-filter);
+      backdrop-filter: var(--backdrop-filter);
+      z-index: 2;
 
-      &__active {
-        height: min-content;
-        display: flex;
-        flex-direction: column;
-        background-color: var(--background);
-        position: absolute;
-        top: -3rem;
-        gap: 0 0.5rem;
-        border: 0.1rem solid var(--secondary);
-        border-radius: 0.4rem;
-        z-index: 2;
-      }
-
-      li {
-        position: relative;
-        width: 6rem;
+      .languages__version {
+        width: 100%;
         height: 2.5em;
-        display: inline-flex;
+        display: flex;
         justify-content: center;
         align-items: center;
         padding: 0.25rem 0;
         font-size: 1rem;
 
-        .languages__version {
-          width: inherit;
-          height: inherit;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 0.5rem;
-          background-color: var(--background);
-          color: var(--text);
-          font-size: 1rem;
-          border-color: transparent;
+        &:first-child {
+          border-radius: 0.5rem 0.5rem 0 0;
+        }
 
-          &:hover,
-          &:active {
-            filter: invert(0.2);
-            font-weight: bold;
-            border-radius: 0.4rem;
-          }
+        &:last-child {
+          border-radius: 0 0 0.5rem 0.5rem;
         }
       }
+    }
+
+    .language {
+      display: none;
+    }
+
+    .language__active {
+      display: flex;
     }
   }
 }

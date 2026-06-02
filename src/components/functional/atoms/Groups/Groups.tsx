@@ -48,11 +48,11 @@ export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) =
         ) : (
           <p className={styles.no__groups}>{t('Groups.noGroups')}</p>
         )}
-        <button className={styles.listButton}>
-          <Link href="/groups/list" aria-label="all group link">
+        <div className={styles.listLink}>
+          <Link href="/groups/list" className={styles.listButton} aria-label="all group link">
             All groups
           </Link>
-        </button>
+        </div>
       </div>
     </div>
   );

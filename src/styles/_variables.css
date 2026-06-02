@@ -15,6 +15,7 @@
   --background: hsl(0, 0%, 97%);
   --background__opacity: hsla(0, 0%, 97%, 0.9);
   --required: hsl(0, 100%, 37%);
+  --required__opacity: hsla(0, 100%, 37%, 0.5);
   --box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
   --modal-box-shadow: 0 0 1rem 1rem --background__opacity;
   --backdrop-filter: blur(5px);
@@ -43,5 +44,6 @@
   --background: hsl(217, 22%, 21%);
   --background__opacity: hsla(0, 0%, 97%, 0.1);
   --required: hsl(0, 100%, 37%);
+  --required__opacity: hsla(0, 100%, 37%, 0.5);
   --select__color: --text;
 }

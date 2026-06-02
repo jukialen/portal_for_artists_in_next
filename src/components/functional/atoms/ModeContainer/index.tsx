@@ -55,13 +55,11 @@ export const ModeContainer = ({ light, dark }: { light: string; dark: string }) 
           <RxChevronDown />
         </button>
 
-        <div className={`${styles.color} ${mode && styles.color__active}`}>
-          {modeItems.map((item, i) => (
-            <li key={i}>
-              <button className={styles.colors__version} onClick={() => newMode(item.value)}>
-                {item.name}
-              </button>
-            </li>
+        <div className={mode ? styles.color__active : styles.color}>
+          {modeItems.map((_i) => (
+            <button key={_i.name} className={styles.colors__version} onClick={() => newMode(_i.value)}>
+              {_i.name}
+            </button>
           ))}
         </div>
       </ul>

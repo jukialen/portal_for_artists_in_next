@@ -16,6 +16,8 @@ html {
   height: -webkit-fill-available;
   scrollbar-width: thin;
   scrollbar-color: var(--background) black;
+  color: var(--text);
+  background-color: var(--background);
 
   &:hover {
     scrollbar-color: var(--secondary) black;
@@ -54,69 +56,69 @@ body {
   background-color: var(--background);
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   overflow-x: hidden;
-}
 
-h1 {
-  font-size: 3rem;
-}
-
-h2 {
-  font-size: 2rem;
-}
-
-h3 {
-  font-size: 1.5rem;
-}
-
-h4 {
-  font-size: 1.2rem;
-}
-
-a {
-  text-decoration: none;
-  color: var(--primary);
-  cursor: pointer;
-
-  &:visited {
-    color: var(--visited);
+  h1 {
+    font-size: 3rem;
   }
 
-  &:focus {
-    color: var(--focus);
+  h2 {
+    font-size: 2rem;
   }
 
-  &:hover {
-    color: var(--hover);
+  h3 {
+    font-size: 1.5rem;
   }
 
-  &:active {
-    color: var(--active);
-  }
-}
-
-button {
-  background-color: transparent;
-  cursor: pointer;
-  color: var(--text);
-
-
-  &:hover,
-  &:last-child:hover {
-    border: 1px solid var(--hover) !important;
-    background-color: var(--hover) !important;
-    color: var(--background) !important;
+  h4 {
+    font-size: 1.2rem;
   }
 
-  &:focus {
-    border: 1px solid var(--focus) !important;
-    background-color: var(--focus) !important;
-    color: var(--background) !important;
+  a, a:is([href], [class]) {
+    text-decoration: none;
+    color: var(--primary);
+    cursor: pointer;
+
+    &:visited {
+      color: var(--visited);
+    }
+
+    &:focus {
+      color: var(--focus);
+    }
+
+    &:hover {
+      color: var(--hover);
+    }
+
+    &:active {
+      color: var(--active);
+    }
   }
 
-  &:active {
-    border: 1px solid var(--active) !important;
-    background-color: var(--active) !important;
-    color: var(--text) !important;
+  button,
+  button[class] {
+    background-color: transparent;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--hover);
+      background-color: var(--hover);
+    }
+
+    &:focus {
+      border-color: var(--focus);
+      background-color: var(--focus);
+    }
+
+    &:active {
+      border-color: var(--active);
+      background-color: var(--active);
+      color: revert;
+
+      svg {
+        color: inherit;
+      }
+    }
   }
 }
 
@@ -144,10 +146,10 @@ h5,
 h6,
 svg:not([class]),
 svg[class*='_icon'],
-button a {
-  color: var(--text);
+button {
+  color: currentColor;
 }
 
 button[class*='__choosePlan']:focus svg {
-  color: var(--backgorund);
+  color: var(--background);
 }

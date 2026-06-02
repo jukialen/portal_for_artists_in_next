@@ -45,7 +45,6 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
 
       <div className={styles.flow}>
         <ModeContainer light={tSettings('Mode.light')} dark={tSettings('Mode.dark')} />
-
         <LanguagesSettings locale={locale} />
       </div>
 

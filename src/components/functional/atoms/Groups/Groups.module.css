@@ -24,19 +24,11 @@
   .groups__container {
     display: block;
 
-    .listButton {
-      display: flex;
+    .listLink {
+      width: fit-content;
       font-size: 1.2rem;
-      font-weight: 400;
-      border-radius: 2rem;
       margin: 1.5rem auto 1.5rem;
       padding: .5rem 1rem;
-      color: var(--text);
-      border-color: transparent;
-
-      &:hover {
-        background-color: var(--hover);
-      }
     }
 
     .container {

@@ -107,3 +107,7 @@ blockquote,
 q {
   quotes: '' '';
 }
+
+button {
+  border-width: 0;
+}

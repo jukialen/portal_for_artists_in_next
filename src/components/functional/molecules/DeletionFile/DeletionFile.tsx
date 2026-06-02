@@ -54,7 +54,7 @@ export const DeletionFile = ({ fileId }: { fileId: string }) => {
       <Dialog.Root lazyMount unmountOnExit open={open} onOpenChange={(details) => setOpen(details.open)}>
         <Dialog.Trigger asChild>
           <div className={styles.container} style={{ display: del ? 'flex' : 'none' }}>
-            <button type="button">
+            <button className={styles.openDialog}>
               <RiDeleteBinLine />
               {deleting ? tDeletionFile('loadingText') : tDeletionFile('deletionButton')}
             </button>

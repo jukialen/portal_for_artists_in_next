@@ -36,16 +36,12 @@ export const LanguagesSettings = ({ locale }: { locale: LangType }) => {
           <RxChevronDown />
         </button>
 
-        <div className={`${styles.language} ${isLanguage && styles.language__active}`}>
-          {locales.map((_l) => {
-            return (
-              <li key={_l}>
-                <button onClick={() => redirectedPathName(_l)} className={styles.languages__version}>
-                  {_l.toLocaleUpperCase()}
-                </button>
-              </li>
-            );
-          })}
+        <div className={isLanguage ? styles.language__active : styles.language}>
+          {locales.map((_l) => (
+            <button key={_l} className={styles.languages__version} onClick={() => redirectedPathName(_l)}>
+              {_l.toLocaleUpperCase()}
+            </button>
+          ))}
         </div>
       </ul>
     </div>
