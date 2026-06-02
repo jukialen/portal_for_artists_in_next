@@ -1,4 +1,6 @@
 import { createServer } from 'utils/supabase/clientSSR';
+import { sendLokiLog } from 'helpers/Grafana/server/methods';
+import { getTraceId } from 'helpers/getHeaders';
 
 import { RoleType } from 'types/global.types';
 
@@ -15,12 +17,9 @@ export const getFileRoleId = async (fileId: string, userId: string): Promise<{ r
       .limit(1)
       .maybeSingle();
 
-    if (!!error || !data) {
-      console.error(error);
-      return { roleId: 'no id' };
-    }
+    if (!!error || !data) await sendLokiLog(error?.message!, await getTraceId(), 'error');
 
-    return { roleId: data.id };
+    return { roleId: !!error || !data ? 'no id' : data.id };
   } catch (e) {
     console.error(e);
     return { roleId: 'no id' };
