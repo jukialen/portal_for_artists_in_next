@@ -5,10 +5,10 @@ import { createServer } from 'utils/supabase/clientSSR';
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const supabase = await createServer();
 
-  const requestBody: { roleId: string } = await req.json();
+  const { roleId }: { roleId: string } = await req.json();
 
   try {
-    const { data, error } = await supabase.from('Roles').select('role').eq('id', requestBody.roleId).limit(1).single();
+    const { data, error } = await supabase.from('Roles').select('role').eq('id', roleId).limit(1).single();
 
     if (!!error) return NextResponse.json({ message: error.message }, { status: 400 });
 

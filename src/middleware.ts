@@ -17,7 +17,19 @@ const i18nMiddleware = createI18nMiddleware({
 });
 
 export async function middleware(req: NextRequest) {
-  let response = NextResponse.next({ request: req });
+  const { pathname } = req.nextUrl;
+
+  if (
+    pathname.startsWith('/sw.js') ||
+    pathname.startsWith('/workbox-') ||
+    pathname.includes('.') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next')
+  ) {
+    return NextResponse.next();
+  }
+
+  let response = !pathname.startsWith('/auth') ? i18nMiddleware(req) : NextResponse.next({ request: req });
 
   const supabase = createServerClient(projectUrl!, publishableKey!, {
     cookies: {
@@ -48,12 +60,6 @@ export async function middleware(req: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = req.nextUrl;
-
-  if (!pathname.startsWith('/auth')) {
-    response = i18nMiddleware(req);
-  }
-
   let pathWithoutLocalePrefix = pathname;
 
   for (const locale of locales) {
@@ -71,9 +77,7 @@ export async function middleware(req: NextRequest) {
 
   if (pathname === '/') pathWithoutLocalePrefix = '/';
 
-  if (!pathWithoutLocalePrefix.startsWith('/')) {
-    pathWithoutLocalePrefix = `/${pathWithoutLocalePrefix}`;
-  }
+  if (!pathWithoutLocalePrefix.startsWith('/')) pathWithoutLocalePrefix = `/${pathWithoutLocalePrefix}`;
 
   const normalizedAuthPath =
     pathWithoutLocalePrefix.endsWith('/') && pathWithoutLocalePrefix !== '/'
@@ -99,7 +103,7 @@ export async function middleware(req: NextRequest) {
     const email = user?.user_metadata?.email || user?.email;
     const provider = user?.app_metadata?.provider;
     const pseuusername =
-      user?.user_metadata?.custom_claims.global_name ||
+      user?.user_metadata?.global_name ||
       user?.user_metadata?.full_name ||
       user?.user_metadata?.full_name;
     const providerToken = session?.provider_token;
@@ -127,6 +131,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|sw.js|api|workbox-.*\\.js|favicon.png|robots.txt|.well-known|.*\\.(?:svg|png|ico|json|webmanifest|jpg|jpeg|gif|webp|avif|heif|heic)$).*)',
+    '/((?!_next/static|_next/image|favicon.png|robots.txt|.well-known|.*\\.(?:svg|png|ico|json|webmanifest|jpg|jpeg|gif|webp|avif|heif|heic)$).*)',
   ],
 };
