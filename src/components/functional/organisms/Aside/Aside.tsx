@@ -1,5 +1,3 @@
-import dynamic from 'next/dynamic';
-
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { backUrl } from 'constants/links';
@@ -8,9 +6,12 @@ import { FriendsListArrayType, GroupsType } from 'types/global.types';
 import { getScopedI18n } from 'locales/server';
 import { getUserData } from 'helpers/getUserData';
 
-const AsideWrapper = dynamic(() =>
-  import('components/wrappers/AsideWrapper/AsideWrapper').then((aw) => aw.AsideWrapper),
-);
+import { RiArrowUpSLine } from 'react-icons/ri';
+import { Categories } from 'components/functional/atoms/Categories/Categories';
+import { Groups } from 'components/functional/atoms/Groups/Groups';
+import { Friends } from 'components/functional/atoms/Friends/Friends';
+
+import styles from './Aside.module.css';
 
 async function getFriendsList(userId: string, maxItems: number) {
   const favoriteFriendArray: FriendsListArrayType[] = [];
@@ -71,11 +72,42 @@ export async function Aside() {
   const friendsAsideList = await getFriendsList(userData?.id!, maxItems);
   const groupsAsideList = await getGroupsList(userData?.id!, maxItems);
 
+  const asideBody = () => {
+    return (
+      <div className={styles.rolling}>
+        <details className={styles.categoriesDetails}>
+          <summary className={styles.h3}>
+            <h3>{tAside('category')}</h3>
+            <RiArrowUpSLine className={styles.categoryArrow} />
+          </summary>
+          <div className={styles.container}>
+            <Categories />
+          </div>
+        </details>
+
+        <Groups groupsAsideList={groupsAsideList!} />
+        <Friends friendsAsideList={friendsAsideList!} />
+      </div>
+    );
+  };
+
   return (
-    <AsideWrapper
-      asideCategory={tAside('category')}
-      friendsAsideList={friendsAsideList!}
-      groupsAsideList={groupsAsideList!}
-    />
+    <>
+      <aside className={styles.aside}>{asideBody()}</aside>
+      <button popoverTarget="mobile-drawer" className={styles.aside__right} style={{ anchorName: '--drawer-trigger' }}>
+        <RiArrowUpSLine />
+      </button>
+      {/* MOBILE DRAWER - używa Popover API */}
+      <div id="mobile-drawer" popover="auto" className={styles.drawer} style={{ positionAnchor: '--drawer-trigger' }}>
+        <div className={styles.drawerBody}>
+          <div className={styles.blur}></div>
+          {asideBody()}
+        </div>
+
+        <button popoverTarget="mobile-drawer" popoverTargetAction="hide" className={styles.drawer__right}>
+          <RiArrowUpSLine />
+        </button>
+      </div>
+    </>
   );
 }

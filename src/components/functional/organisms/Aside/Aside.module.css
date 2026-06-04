@@ -6,10 +6,6 @@
   display: flex;
 }
 
-.hidden__categories {
-  display: none;
-}
-
 .aside,
 div.drawer,
 div.drawer__active {
@@ -21,6 +17,14 @@ div.drawer__active {
 
   .rolling {
     margin-bottom: 4rem;
+
+    .categoriesDetails {
+      padding-bottom: 1.5rem;
+
+      &[open] .categoryArrow {
+        transform: rotate(-180deg);
+      }
+    }
 
     .h3 {
       width: 100%;
@@ -36,21 +40,17 @@ div.drawer__active {
         padding-left: 1rem;
       }
 
-      svg {
+      .categoryArrow {
         width: 1.5rem;
         height: auto;
         display: inline-block;
         transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
       }
     }
-
-    .afterHidden {
-      margin-bottom: 2rem;
-    }
   }
 }
 
-div button.aside__right {
+button.aside__right {
   width: 2.5rem;
   height: 3.5rem;
   position: fixed;
@@ -60,11 +60,11 @@ div button.aside__right {
   bottom: 5rem;
   font-size: 2rem;
   border-radius: 0 0.5rem 0.5rem 0;
-  background-color: var(--primary__opacity);
   color: var(--text);
   cursor: pointer;
   z-index: 1;
   border-color: transparent;
+  background-color: var(--primary__opacity);
   box-shadow: var(--box-shadow);
   -webkit-backdrop-filter: var(--backdrop-filter);
   backdrop-filter: var(--backdrop-filter);
@@ -79,26 +79,51 @@ div.drawer {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  inset-block: 0;
+  inset-inline-start: 0;
+  transform: translateX(-100%);
+  transition:
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    display 0.5s allow-discrete,
+    overlay 0.5s allow-discrete;
 
   .drawerBody {
-    height: calc(100dvh - 8.3rem);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding-top: 1rem;
-    overflow-y: scroll;
-    background-color: var(--secondary__opacity);
-    backdrop-filter: blur(2px);
-    color: var(--text);
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 1rem;
+      overflow: hidden scroll;
+      background-color: var(--secondary__opacity);
+      backdrop-filter: blur(2px);
+      color: var(--text);
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary__opacity) transparent;
 
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      opacity: 0.2;
-      pointer-events: none;
-    }
+      &::-webkit-scrollbar {
+          width: 0.4rem;
+      }
+
+      &::-webkit-scrollbar-track {
+          background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+          background: var(--primary__opacity);
+          border-radius: 1rem;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+          background: var(--third);
+      }
+
+      &::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          opacity: 0.2;
+          pointer-events: none;
+      }
   }
 
   .drawer__right {
@@ -109,7 +134,7 @@ div.drawer {
     border-color: transparent;
     border-radius: 0;
     position: sticky;
-    bottom: 4.5rem;
+    bottom: 3.5rem;
     background-color: var(--secondary);
     opacity: 0.8;
 
@@ -123,16 +148,25 @@ div.drawer {
     }
   }
 
-  [data-part='content'] {
-    transition: transform 0.9s 0.1s ease-in-out;
-
-    &[data-state='open'] {
-      transform: translateY(0);
-    }
-    &[data-state='closed'] {
-      transform: translateY(-20rem);
-    }
+  &:popover-open {
+    transform: translateX(0);
   }
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  &:popover-open::backdrop {
+    opacity: 1;
+  }
+}
+
+body:has(#mobile-drawer:popover-open) .aside__right {
+  opacity: 0;
+  pointer-events: none;
 }
 
 @media (min-width: 768px) {
@@ -140,7 +174,6 @@ div.drawer {
     margin-bottom: 0;
 
     .drawerBody {
-      height: 100dvh;
       padding-top: 3.5rem;
     }
 
@@ -157,6 +190,8 @@ div.drawer {
 
   div button.aside__right {
     bottom: 0;
+    anchor-name: --drawer-trigger;
+    transition: opacity 0.3s ease;
   }
 }
 
