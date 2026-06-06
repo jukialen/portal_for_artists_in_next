@@ -1,59 +1,44 @@
-'use client';
-
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { useCurrentLocale, useI18n, useScopedI18n } from 'locales/client';
+import { getI18n, getScopedI18n } from 'locales/server';
 
 import { GroupsType } from 'types/global.types';
 
 import { Links } from 'components/ui/atoms/Links/Links';
 
 import styles from './Groups.module.css';
-import { RiArrowUpSLine } from 'react-icons/ri';
+import { RiArrowDownSLine } from 'react-icons/ri';
 
-export const Groups = ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) => {
-  const [open, setOpen] = useState(false);
-
-  const locale = useCurrentLocale();
-  const t = useI18n();
-  const tAside = useScopedI18n('Aside');
-
-  const changeOpenGroups = () => setOpen(!open);
+export const Groups = async ({ groupsAsideList }: { groupsAsideList: GroupsType[] }) => {
+  const t = await getI18n();
+  const tAside = await getScopedI18n('Aside');
 
   return (
-    <div className={styles.groups}>
-      <h3 className={styles.title} onClick={changeOpenGroups}>
-        <p className={locale === 'ja' ? styles.title__jp : ''}>{tAside('groups')}</p>
-        <RiArrowUpSLine
-          style={{
-            transform: open ? 'rotate(-180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.3s cubic-bezier(0.65, 0, 0.35, 1)',
-            display: 'inline-block',
-          }}
-        />
-      </h3>
-
-      <div className={open ? styles.groups__container : styles.hiddenGroups}>
-        {!!groupsAsideList && groupsAsideList.length > 0 ? (
-          groupsAsideList.map(({ name, logo, description }, index) => (
-            <div className={styles.container} key={index}>
-              <Image src={logo} alt={`${name} logo`} fill priority />
-              <Links hrefLink={`/groups/${name}`} classLink={styles.container__item} arial-label={description}>
-                <h4>{name}</h4>
+    <article className={styles.groups}>
+      <details className={styles.title}>
+        <summary className={styles.withIcon}>
+          <h3 className={styles.title__others}>{tAside('groups')}</h3>
+          <RiArrowDownSLine className={styles.categoryArrow} />
+        </summary>
+        <section className={styles.container}>
+          {!!groupsAsideList && groupsAsideList.length > 0 ? (
+            groupsAsideList.map(({ name, logo, description }, index) => (
+              <Links hrefLink={`/groups/${name}`} classLink={styles.image} arial-label={description}>
+                <Image src={logo} key={index} className={styles.link} alt={`${name} logo`} fill priority />
+                <h4 className={styles.name}>{name}</h4>
               </Links>
-            </div>
-          ))
-        ) : (
-          <p className={styles.no__groups}>{t('Groups.noGroups')}</p>
-        )}
-        <div className={styles.listLink}>
-          <Link href="/groups/list" className={styles.listButton} aria-label="all group link">
-            All groups
-          </Link>
-        </div>
-      </div>
-    </div>
+            ))
+          ) : (
+            <p className={styles.no__groups}>{t('Groups.noGroups')}</p>
+          )}
+          <div className={styles.listLink}>
+            <Link href="/groups/list" className={styles.listButton} aria-label="all group link">
+              All groups
+            </Link>
+          </div>
+        </section>
+      </details>
+    </article>
   );
 };

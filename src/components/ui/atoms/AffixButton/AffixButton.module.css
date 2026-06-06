@@ -8,7 +8,7 @@ button.upBox,
   padding: 0.25rem;
   border-radius: 50%;
   border: 2px ridge var(--primary__opacity);
-  background-color: var(--primary__opacity) ;
+  background-color: var(--primary__opacity) !important;
   box-shadow: var(--box-shadow);
   -webkit-backdrop-filter: var(--backdrop-filter);
   backdrop-filter: var(--backdrop-filter);

@@ -6,7 +6,7 @@ import { FriendsListArrayType, GroupsType } from 'types/global.types';
 import { getScopedI18n } from 'locales/server';
 import { getUserData } from 'helpers/getUserData';
 
-import { RiArrowUpSLine } from 'react-icons/ri';
+import { RiArrowDownSLine } from 'react-icons/ri';
 import { Categories } from 'components/functional/atoms/Categories/Categories';
 import { Groups } from 'components/functional/atoms/Groups/Groups';
 import { Friends } from 'components/functional/atoms/Friends/Friends';
@@ -72,13 +72,13 @@ export async function Aside() {
   const friendsAsideList = await getFriendsList(userData?.id!, maxItems);
   const groupsAsideList = await getGroupsList(userData?.id!, maxItems);
 
-  const asideBody = () => {
+  function AsideBody() {
     return (
       <div className={styles.rolling}>
         <details className={styles.categoriesDetails}>
           <summary className={styles.h3}>
             <h3>{tAside('category')}</h3>
-            <RiArrowUpSLine className={styles.categoryArrow} />
+            <RiArrowDownSLine className={styles.categoryArrow} />
           </summary>
           <div className={styles.container}>
             <Categories />
@@ -89,23 +89,25 @@ export async function Aside() {
         <Friends friendsAsideList={friendsAsideList!} />
       </div>
     );
-  };
+  }
 
   return (
     <>
-      <aside className={styles.aside}>{asideBody()}</aside>
+      <aside className={styles.aside}>
+        <AsideBody />
+      </aside>
       <button popoverTarget="mobile-drawer" className={styles.aside__right} style={{ anchorName: '--drawer-trigger' }}>
-        <RiArrowUpSLine />
+        <RiArrowDownSLine />
       </button>
       {/* MOBILE DRAWER - używa Popover API */}
       <div id="mobile-drawer" popover="auto" className={styles.drawer} style={{ positionAnchor: '--drawer-trigger' }}>
         <div className={styles.drawerBody}>
           <div className={styles.blur}></div>
-          {asideBody()}
+          <AsideBody />
         </div>
 
         <button popoverTarget="mobile-drawer" popoverTargetAction="hide" className={styles.drawer__right}>
-          <RiArrowUpSLine />
+          <RiArrowDownSLine />
         </button>
       </div>
     </>

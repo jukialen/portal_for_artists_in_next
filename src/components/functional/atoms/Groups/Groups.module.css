@@ -1,58 +1,88 @@
 .groups {
-  margin-bottom: 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  font-size: 1.4rem;
+
+  details,
+  section {
+    width: 100%;
+  }
 
   .title {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 3rem;
-    align-items: center;
-    justify-items: center;
-    margin-bottom: 1rem;
-    cursor: pointer;
+    margin: 0.4rem auto;
 
-    p, .title__others {
+    &[open] .categoryArrow {
+      transform: rotate(-180deg);
+    }
+
+    .withIcon {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 3rem;
+      align-items: center;
+      justify-items: center;
+      padding: 0.5rem 0;
+      list-style: none;
+      cursor: pointer;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      .categoryArrow {
+        width: 1.5rem;
+        height: auto;
+        display: inline-block;
+        justify-self: center;
+        transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+      }
+    }
+
+    .title__others {
       width: 100%;
       padding-left: 1rem;
     }
   }
 
-  p.title__jp {
-    padding-left: 0;
-    font-size: 1.3rem;
-  }
+  .container {
+    display: flex;
+    flex-direction: column;
 
-  .groups__container {
-    display: block;
-
-    .listLink {
-      width: fit-content;
-      font-size: 1.2rem;
-      margin: 1.5rem auto 1.5rem;
-      padding: .5rem 1rem;
-    }
-
-    .container {
+    .link {
       display: flex;
       align-items: center;
-      margin: .5rem;
+      margin: 0.75rem 0.5rem;
+      font-size: 1.2rem;
 
-      img {
-        width: 2.375rem;
-        height: 2.375rem;
-        border-radius: .5rem;
+      .image {
+        width: 2.5rem;
+        height: 2.5rem;
+        position: relative;
+        border-radius: 0.6rem;
+        font-size: 1rem;
       }
 
-      &__item {
-        display: inline-flex;
-        padding-left: 0.6rem;
+      .name {
+        margin-left: 0.5rem;
       }
     }
+  }
 
-    .no__groups {
-      font-size: 1rem;
-      text-align: center;
-      padding: .5rem 0;
-    }
+  .no__groups {
+    padding: 1rem 0;
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  .listLink {
+    width: fit-content;
+    font-size: 1.2rem;
+    margin: 1.5rem auto 1.5rem;
+    padding: 0.5rem 1rem;
   }
 }
 

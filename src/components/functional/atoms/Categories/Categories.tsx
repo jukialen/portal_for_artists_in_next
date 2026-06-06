@@ -1,10 +1,6 @@
-'use client';
-
-import { useState } from 'react';
 import Link from 'next/link';
 import Image, { StaticImageData } from 'next/image';
-import { usePathname } from 'next/navigation';
-import { useScopedI18n } from 'locales/client';
+import { getScopedI18n } from 'locales/server';
 
 import styles from './Categories.module.css';
 import realistic from '../../../../../public/realistic.jpg';
@@ -14,15 +10,10 @@ import comics from '../../../../../public/comics.jpg';
 import photograph from '../../../../../public/photograph.jpg';
 import animations from '../../../../../public/animations.jpg';
 import videos from '../../../../../public/videos.jpg';
-import { RiArrowUpSLine } from 'react-icons/ri';
+import { RiArrowDownSLine } from 'react-icons/ri';
 
-export const Categories = () => {
-  const pathname = usePathname();
-  const [arrowIcon, setArrowIcon] = useState(false);
-
-  const tAside = useScopedI18n('Aside');
-
-  const changeOpenCategories = () => setArrowIcon(!arrowIcon);
+export const Categories = async () => {
+  const tAside = await getScopedI18n('Aside');
 
   type ImgSourceType = {
     name: 'realistic' | 'manga' | 'anime' | 'comics';
@@ -36,20 +27,13 @@ export const Categories = () => {
   ];
 
   return (
-    <ol className={styles.categories}>
-      <li className={styles.shadow}>
-        <Link href={pathname!} className={styles.withIcon} onClick={changeOpenCategories}>
+    <article className={styles.categories}>
+      <details className={styles.shadow}>
+        <summary className={styles.withIcon}>
           <p>{tAside('drawings')}</p>
-          <RiArrowUpSLine
-            style={{
-              transform: arrowIcon ? 'rotate(-180deg)' : 'rotate(0deg)',
-              transition: 'transform 0.3s cubic-bezier(0.65, 0, 0.35, 1)',
-              display: 'inline-block',
-            }}
-          />
-        </Link>
-
-        <ol className={arrowIcon ? '' : styles.hiddenElement}>
+          <RiArrowDownSLine className={styles.categoryArrow} />
+        </summary>
+        <section>
           {imgDrawingSources.map((s) => (
             <Link href={`/drawings/${s.name}`} className={`${styles.containerImgLink} ${styles.drawings}`} key={s.name}>
               <Image src={s.source} alt={tAside(s.name)} />
@@ -59,8 +43,8 @@ export const Categories = () => {
           <Link href="https://www.freepik.com/vectors/poster" className={`${styles.source} ${styles.drawings}`}>
             Poster vector created by gstudioimagen1 - www.freepik.com
           </Link>
-        </ol>
-      </li>
+        </section>
+      </details>
 
       <Link href="/photographs" className={`${styles.containerImgLink} ${styles.photographs}`}>
         <Image src={photograph} alt={`${tAside('photographs')} Photo by Rirri on Unsplash`} />
@@ -74,6 +58,6 @@ export const Categories = () => {
         <Image src={videos} alt={`${tAside('photographs')} Photo by Jakob Owens on Unsplash`} />
         <p className={styles.link}>{tAside('videos')}</p>
       </Link>
-    </ol>
+    </article>
   );
 };

@@ -10,6 +10,7 @@
 div.drawer,
 div.drawer__active {
   width: min(100dvw, 20rem);
+  height: 100dvh;
   background-color: var(--secondary__opacity);
   box-shadow: var(--box-shadow);
   -webkit-backdrop-filter: var(--backdrop-filter);
@@ -24,27 +25,32 @@ div.drawer__active {
       &[open] .categoryArrow {
         transform: rotate(-180deg);
       }
-    }
 
-    .h3 {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 3rem;
-      justify-items: center;
-      align-items: center;
-      margin: 2rem 0 0.25rem;
-      cursor: pointer;
-
-      h3 {
+      .h3 {
         width: 100%;
-        padding-left: 1rem;
-      }
+        display: grid;
+        grid-template-columns: 1fr 3rem;
+        justify-items: center;
+        align-items: center;
+        margin: 2rem 0 0.25rem;
+        cursor: pointer;
+        list-style: none; /* Ukrywa strzałkę */
 
-      .categoryArrow {
-        width: 1.5rem;
-        height: auto;
-        display: inline-block;
-        transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+        &::-webkit-details-marker {
+          display: none; /* Ukrywa strzałkę w Safari */
+        }
+
+        h3 {
+          width: 100%;
+          padding-left: 1rem;
+        }
+
+        .categoryArrow {
+          width: 1.5rem;
+          height: auto;
+          display: inline-block;
+          transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+        }
       }
     }
   }
@@ -64,13 +70,14 @@ button.aside__right {
   cursor: pointer;
   z-index: 1;
   border-color: transparent;
-  background-color: var(--primary__opacity);
+  background-color: var(--primary__opacity) !important;
   box-shadow: var(--box-shadow);
   -webkit-backdrop-filter: var(--backdrop-filter);
   backdrop-filter: var(--backdrop-filter);
+  transition: opacity 0.5s ease; /* Płynne pojawianie się przycisku */
 
   svg {
-    transform: rotate(90deg);
+    transform: rotate(-90deg);
   }
 }
 
@@ -134,14 +141,16 @@ div.drawer {
     border-color: transparent;
     border-radius: 0;
     position: sticky;
-    bottom: 3.5rem;
-    background-color: var(--secondary);
-    opacity: 0.8;
+    bottom: 0;
+    background-color: var(--secondary__opacity);
+    box-shadow: var(--box-shadow);
+    -webkit-backdrop-filter: var(--backdrop-filter);
+    backdrop-filter: var(--backdrop-filter);
 
     svg {
       width: 2.5rem;
       height: 100%;
-      transform: rotate(-90deg);
+      transform: rotate(90deg);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -150,17 +159,28 @@ div.drawer {
 
   &:popover-open {
     transform: translateX(0);
+
+    @starting-style {
+      transform: translateX(-100%);
+    }
   }
 
   &::backdrop {
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
     opacity: 0;
-    transition: opacity 0.5s;
+    transition:
+      opacity 0.5s,
+      display 0.5s allow-discrete,
+      overlay 0.5s allow-discrete;
   }
 
   &:popover-open::backdrop {
     opacity: 1;
+
+    @starting-style {
+      opacity: 0;
+    }
   }
 }
 
@@ -191,7 +211,6 @@ body:has(#mobile-drawer:popover-open) .aside__right {
   div button.aside__right {
     bottom: 0;
     anchor-name: --drawer-trigger;
-    transition: opacity 0.3s ease;
   }
 }
 
