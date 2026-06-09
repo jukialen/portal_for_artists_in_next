@@ -5,17 +5,13 @@ import { initializePaddle, Paddle } from '@paddle/paddle-js';
 
 import { backUrl, paddleClientId } from 'constants/links';
 import { LangType, ModeType } from 'types/global.types';
+import { manualFaroLog } from '../Grafana/client/methods';
 
 export const usePaddle = (
   locale: LangType,
 ): {
   paddle: Paddle | undefined;
-  openSubscriptionCheckout: (
-    priceId: string,
-    userId: string,
-    email: string,
-    previousPage: string,
-  ) => void;
+  openSubscriptionCheckout: (priceId: string, userId: string, email: string, previousPage: string) => void;
   openOneTimeCheckout: (priceId: string, userId: string, email: string) => void;
   closeCheckout: () => void;
 } => {
@@ -25,17 +21,17 @@ export const usePaddle = (
     initializePaddle({
       environment: process.env.NODE_ENV === 'production' ? 'production' : 'sandbox',
       token: paddleClientId!,
-    }).then((paddleInstance: Paddle | undefined) => {
-      if (paddleInstance) setPaddle(paddleInstance);
-    });
+    })
+      .then((paddleInstance: Paddle | undefined) => {
+        if (paddleInstance) setPaddle(paddleInstance);
+        else manualFaroLog('Paddle initialized successfully but returned undefined.');
+      })
+      .catch((error) => {
+        manualFaroLog('Error during Paddle initialization:' + error.message);
+      });
   }, []);
 
-  const openSubscriptionCheckout = (
-    priceId: string,
-    userId: string,
-    email: string,
-    previousPage: string,
-  ): void => {
+  const openSubscriptionCheckout = (priceId: string, userId: string, email: string, previousPage: string): void => {
     paddle?.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       settings: {
