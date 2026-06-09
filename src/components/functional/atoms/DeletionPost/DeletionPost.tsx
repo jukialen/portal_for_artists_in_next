@@ -55,6 +55,7 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
       </button>
 
       <Dialog.Root
+        id={`deletion-post-${postId}`}
         lazyMount
         unmountOnExit
         onExitComplete={() => console.log('onExitComplete invoked')}

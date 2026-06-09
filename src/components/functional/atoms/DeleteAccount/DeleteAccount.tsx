@@ -60,7 +60,7 @@ export const DeleteAccount = ({ userData }: { userData: UserType }) => {
 
   return (
     <div className={styles.deleteDiv}>
-      <Dialog.Root lazyMount unmountOnExit>
+      <Dialog.Root id={`delete-account-${userData.id}`} lazyMount unmountOnExit>
         <Dialog.Trigger asChild>
           <button className={styles.button}>
             <AiTwotoneDelete />

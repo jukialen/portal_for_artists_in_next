@@ -257,6 +257,7 @@ export const FilesUpload = ({
 
   return (
     <Dialog.Root
+      id={`files-upload-${userId}`}
       lazyMount
       restoreFocus
       open={open}

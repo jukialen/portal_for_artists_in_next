@@ -129,6 +129,7 @@ export const UpdateProfilePhotoOnAccount = ({
 
   return (
     <Dialog.Root
+      id={`update-profile-photo-${userData.id}`}
       lazyMount
       unmountOnExit
       onExitComplete={() => console.log('onExitComplete invoked')}

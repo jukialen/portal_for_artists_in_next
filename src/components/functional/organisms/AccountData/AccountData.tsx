@@ -158,9 +158,9 @@ export const AccountData = ({
 
       console.log('paddle', paddle);
 
-      const res = paddle.openSubscriptionCheckout(selectedPlanForPriceId!, userData?.id!, userData?.email, '/settings');
+      paddle.openSubscriptionCheckout(selectedPlanForPriceId!, userData?.id!, userData?.email, '/settings');
 
-      console.log('res', res);
+      // console.log('res', res);
       // console.log('error', error);
       // if (!!error) {
       //   setValuesFieldsPlan(t('error'));

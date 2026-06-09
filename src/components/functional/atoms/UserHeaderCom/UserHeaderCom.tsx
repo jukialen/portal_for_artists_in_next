@@ -317,7 +317,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
         </button>
       </div>
 
-      <Dialog.Root lazyMount unmountOnExit open={open} onOpenChange={closeInputAndDIalog}>
+      <Dialog.Root id="user-header-search" lazyMount unmountOnExit open={open} onOpenChange={closeInputAndDIalog}>
         <Dialog.Content className={styles.searching}>
           <div className={styles.closeButton}>
             <Dialog.CloseTrigger>

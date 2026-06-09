@@ -65,6 +65,7 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
       <Image src={logo} fill priority alt={`${name} logo`} />
 
       <Dialog.Root
+        id={`update-group-logo-${name}`}
         lazyMount
         open={open}
         onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
