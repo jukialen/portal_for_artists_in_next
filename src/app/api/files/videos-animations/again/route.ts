@@ -5,7 +5,6 @@ import { selectFiles } from 'constants/selects';
 import { FileType, Tags } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
-import { dateData } from 'helpers/dateData';
 import { getFileRoleId } from 'utils/server/roles';
 
 const tags: Tags[] = ['animations', 'videos'];
@@ -48,7 +47,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         authorProfilePhoto: Users?.profilePhoto!,
         fileUrl,
         tags,
-        time: await getDate(updatedAt! || createdAt!, await dateData()),
+        time: await getDate(updatedAt! || createdAt!),
         createdAt,
         updatedAt: updatedAt || '',
         authorId: authorId!,

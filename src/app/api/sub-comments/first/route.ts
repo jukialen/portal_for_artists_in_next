@@ -6,7 +6,6 @@ import { groupRole } from 'utils/client/roles';
 import { likeList } from 'utils/likes';
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 
@@ -85,7 +84,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         authorId,
         likes: (await likeList(authorId, undefined, undefined, commentId!, fileCommentId!))!.likes,
         liked: (await likeList(authorId, undefined, undefined, commentId!, fileCommentId!))!.liked,
-        date: await getDate(updatedAt! || createdAt!, await dateData()),
+        date: await getDate(updatedAt! || createdAt!),
         groupsPostsRoleId: groupsPostsRoleId!,
       });
     }

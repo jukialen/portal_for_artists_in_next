@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { FilesCommentsType } from 'types/global.types';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { likeList } from 'utils/likes';
@@ -45,7 +44,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         authorId,
         likes: (await likeList(authorId, undefined, fileId))!.likes,
         liked: (await likeList(authorId, undefined, fileId))!.liked,
-        date: await getDate(updatedAt! || createdAt!, await dateData()),
+        date: await getDate(updatedAt! || createdAt!),
       });
     }
 

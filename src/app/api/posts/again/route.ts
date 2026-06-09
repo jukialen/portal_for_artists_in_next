@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { createServer } from 'utils/supabase/clientSSR';
 
@@ -59,7 +58,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         authorId,
         groupId,
         roleId: rData?.id || Roles?.id!,
-        date: await getDate(updatedAt! || createdAt!, await dateData()),
+        date: await getDate(updatedAt! || createdAt!),
         idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
       });
     }

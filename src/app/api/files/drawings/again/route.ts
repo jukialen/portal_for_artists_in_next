@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { selectFiles } from 'constants/selects';
 import { FileType, IndexType } from 'types/global.types';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getFileRoleId } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
@@ -50,7 +49,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           fileUrl,
           tags,
           roleId: role.roleId,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          time: await getDate(updatedAt! || createdAt!),
         });
       }
 

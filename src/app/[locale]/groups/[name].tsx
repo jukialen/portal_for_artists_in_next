@@ -3,11 +3,10 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { HeadCom } from 'constants/HeadCom';
-import { DateObjectType, LangType, MemberType, PostsType } from 'types/global.types';
+import { LangType, MemberType, PostsType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
 import { getDate } from 'helpers/getDate';
-import { dateData } from 'helpers/dateData';
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { UpdateGroupLogo } from 'components/functional/molecules/UpdateGroupLogo/UpdateGroupLogo';
@@ -144,7 +143,7 @@ async function members(usersGroupsId: string, name: string, stringError: string)
     return [{ usersGroupsId, pseudonym: '', profilePhoto: '', role: 'USER' }];
   }
 }
-async function getFirstPosts(groupId: string, maxItems: number, dataDateObject: DateObjectType) {
+async function getFirstPosts(groupId: string, maxItems: number) {
   const postsArray: PostsType[] = [];
 
   const supabase = await createServer();
@@ -180,7 +179,7 @@ async function getFirstPosts(groupId: string, maxItems: number, dataDateObject: 
         authorId,
         groupId,
         roleId: Roles?.id!,
-        date: await getDate(updatedAt! || createdAt!, dataDateObject),
+        date: await getDate(updatedAt || createdAt!),
         idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
       });
     }
@@ -245,7 +244,7 @@ export default async function Groups({ params }: PropsType) {
 
   const joined = await joinedUser(name, tOther('unknownError'));
   const membersGroups = await members(joined.usersGroupsId, name, tOther('unknownError'));
-  const firstPosts = await getFirstPosts(joined.groupId, 30, await dateData());
+  const firstPosts = await getFirstPosts(joined.groupId, 30);
 
   return (
     <>

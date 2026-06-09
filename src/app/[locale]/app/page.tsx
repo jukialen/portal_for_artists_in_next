@@ -1,17 +1,15 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import { NextResponse } from 'next/server';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
-import { DateObjectType, FileType, LangType, RoleType, Tags } from 'types/global.types';
+import { FileType, LangType, RoleType, Tags } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
 
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
-import { dateData } from 'helpers/dateData';
 import { getFileRoleId } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
@@ -25,7 +23,7 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Main site for logged in users.');
 
-async function getTop10Drawings(maxItems: number, dataDateObject: DateObjectType) {
+async function getTop10Drawings(maxItems: number) {
   try {
     const filesArray: FileType[] = [];
 
@@ -64,7 +62,7 @@ async function getTop10Drawings(maxItems: number, dataDateObject: DateObjectType
         fileUrl: storageData?.signedUrl,
         tags,
         roleId: roleOkId,
-        time: await getDate(updatedAt! || createdAt!, dataDateObject),
+        time: await getDate(updatedAt || createdAt!),
       });
     }
     return filesArray;
@@ -73,7 +71,7 @@ async function getTop10Drawings(maxItems: number, dataDateObject: DateObjectType
   }
 }
 
-async function getTop10Pavo(maxItems: number, tag: Tags, dataDateObject: DateObjectType) {
+async function getTop10Pavo(maxItems: number, tag: Tags) {
   try {
     const filesArray: FileType[] = [];
 
@@ -110,7 +108,7 @@ async function getTop10Pavo(maxItems: number, tag: Tags, dataDateObject: DateObj
         shortDescription: shortDescription!,
         authorName: Users?.pseudonym!,
         fileUrl: storageData?.signedUrl,
-        time: await getDate(updatedAt! || createdAt!, dataDateObject),
+        time: await getDate(updatedAt || createdAt!),
         authorId: authorId!,
         tags,
         roleId: roleOkId,
@@ -130,17 +128,15 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
   const tApp = await getScopedI18n('App');
   const tZero = await getScopedI18n('ZeroFiles');
 
-  const dataDateObject = await dateData();
-
   const maxItems = 10;
   const tags: Tags[] = ['photographs', 'animations', 'videos'];
   const userData = await getUserData();
   const pseudonym = userData?.pseudonym!;
 
-  const drawings = await getTop10Drawings(maxItems, dataDateObject);
-  const photos = await getTop10Pavo(maxItems, tags[0], dataDateObject);
-  const animations = await getTop10Pavo(maxItems, tags[1], dataDateObject);
-  const videos = await getTop10Pavo(maxItems, tags[2], dataDateObject);
+  const drawings = await getTop10Drawings(maxItems);
+  const photos = await getTop10Pavo(maxItems, tags[0]);
+  const animations = await getTop10Pavo(maxItems, tags[1]);
+  const videos = await getTop10Pavo(maxItems, tags[2]);
 
   const appData = (data: FileType[]) =>
     data.map(

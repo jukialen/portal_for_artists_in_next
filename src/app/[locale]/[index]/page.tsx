@@ -4,11 +4,10 @@ import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
-import { DateObjectType, FileType, IndexType, LangType, Tags } from 'types/global.types';
+import { FileType, IndexType, LangType } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/server/roles';
@@ -22,16 +21,7 @@ const FileContainerClient = dynamic(() =>
 
 import styles from './page.module.css';
 
-const downloadDrawings = async ({
-  index,
-  maxItems,
-  dataDateObject,
-}: {
-  index: IndexType;
-  locale: LangType;
-  maxItems: number;
-  dataDateObject: DateObjectType;
-}) => {
+const downloadDrawings = async ({ index, maxItems }: { index: IndexType; locale: LangType; maxItems: number }) => {
   const filesArray: FileType[] = [];
 
   try {
@@ -61,7 +51,7 @@ const downloadDrawings = async ({
         name,
         shortDescription: shortDescription!,
         fileUrl,
-        time: await getDate(updatedAt! || createdAt!, dataDateObject),
+        time: await getDate(updatedAt || createdAt!),
       });
     }
 
@@ -88,7 +78,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
   const maxItems = 30;
   const userData = await getUserData();
 
-  const filesArray = await downloadDrawings({ index, locale, maxItems, dataDateObject: await dateData() });
+  const filesArray = await downloadDrawings({ index, locale, maxItems });
 
   return (
     <article className={styles.categories__index__in__account}>

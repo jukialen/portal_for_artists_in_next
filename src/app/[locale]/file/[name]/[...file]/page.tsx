@@ -5,7 +5,6 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { HeadCom } from 'constants/HeadCom';
 import { LangType } from 'types/global.types';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/server/roles';
@@ -19,7 +18,7 @@ type PropsType = {
   params: Promise<{
     locale: LangType;
     name: string;
-    file: string[];
+    file: string;
     noComments: string;
   }>;
 };
@@ -68,7 +67,7 @@ async function oneFile(fileId: string) {
       tags,
       roleId: role.roleId,
       authorId: authorId!,
-      time: await getDate(updatedAt! || createdAt!, await dateData()),
+      time: await getDate(updatedAt! || createdAt!),
     };
   } catch (e) {
     console.error(e);
@@ -82,7 +81,7 @@ export default async function Post({ params }: PropsType) {
 
   const fileId = file[0];
 
-  const authorPost = await oneFile(fileId);
+  const authorPost = await oneFile(file);
   const userData = await getUserData();
 
   const { fileUrl, shortDescription, tags, authorName, time, authorId, roleId } = authorPost!;

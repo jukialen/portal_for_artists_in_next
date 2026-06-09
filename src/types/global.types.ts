@@ -21,15 +21,6 @@ export type ResetFormType = { resetForm: any };
 
 export type ModeType = 'light' | 'dark';
 
-//DATE OBJECT
-export type DateObjectType = {
-  second: string;
-  minute: string;
-  hour: string;
-  day: string;
-  yearDateSeparator: string;
-};
-
 //USERS
 export type UserType = Time & {
   id?: string;

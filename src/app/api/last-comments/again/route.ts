@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { LastCommentType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
-import { dateData } from 'helpers/dateData';
 import { giveRole } from 'utils/server/roles';
 import { likeList } from 'utils/likes';
 import { createServer } from 'utils/supabase/clientSSR';
@@ -56,7 +55,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         authorId,
         likes: (await likeList(authorId, undefined, undefined, undefined, undefined, undefined, lastCommentId))!.likes,
         liked: (await likeList(authorId, undefined, undefined, undefined, undefined, undefined, lastCommentId))!.liked,
-        date: await getDate(updatedAt! || createdAt!, await dateData()),
+        date: await getDate(updatedAt! || createdAt!),
       });
     }
 

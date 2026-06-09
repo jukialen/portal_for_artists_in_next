@@ -5,7 +5,6 @@ import { createServer } from 'utils/supabase/clientSSR';
 import { selectFiles } from 'constants/selects';
 import { getFileRoleId } from 'utils/server/roles';
 import { getDate } from 'helpers/getDate';
-import { dateData } from 'helpers/dateData';
 
 export const graphics = async (
   maxItems: number,
@@ -45,7 +44,7 @@ export const graphics = async (
           authorProfilePhoto: Users?.profilePhoto!,
           fileUrl,
           tags,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
         });
@@ -78,7 +77,7 @@ export const graphics = async (
           authorProfilePhoto: Users?.profilePhoto!,
           fileUrl,
           tags,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
         });
@@ -136,7 +135,7 @@ export const videosAnimations = async (
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
           fileUrl,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || undefined,
         });
@@ -171,7 +170,7 @@ export const videosAnimations = async (
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
           fileUrl,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
         });
@@ -224,7 +223,7 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
           shortDescription: shortDescription!,
           fileUrl,
           tags,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          time: await getDate(updatedAt! || createdAt!),
         });
       }
 

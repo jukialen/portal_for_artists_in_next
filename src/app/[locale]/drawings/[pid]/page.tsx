@@ -3,11 +3,10 @@ import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
-import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
+import { FileType, LangType, Tags } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/server/roles';
@@ -19,7 +18,7 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Sites with drawings and photos.');
 
-async function getFirstDrawings(pid: Tags, maxItems: number, dataDateObject: DateObjectType) {
+async function getFirstDrawings(pid: Tags, maxItems: number) {
   const filesArray: FileType[] = [];
 
   try {
@@ -49,7 +48,7 @@ async function getFirstDrawings(pid: Tags, maxItems: number, dataDateObject: Dat
         authorId: authorId!,
         roleId: role.roleId,
         tags,
-        time: await getDate(updatedAt! || createdAt!, dataDateObject),
+        time: await getDate(updatedAt || createdAt!),
       });
     }
 
@@ -71,11 +70,10 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
     category: t('Aside.category'),
   };
 
-  const dataDateObject = await dateData();
   const userData = await getUserData();
   const pseudonym = userData?.pseudonym!;
 
-  const drawings = await getFirstDrawings(pid, 30, dataDateObject);
+  const drawings = await getFirstDrawings(pid, 30);
 
   return (
     <>

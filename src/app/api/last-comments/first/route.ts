@@ -7,7 +7,6 @@ import { giveRole } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { getDate } from 'helpers/getDate';
-import { dateData } from 'helpers/dateData';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
@@ -58,7 +57,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         authorId,
         likes: (await likeList(authorId, undefined, undefined, undefined, undefined, undefined, lastCommentId))!.likes,
         liked: (await likeList(authorId, undefined, undefined, undefined, undefined, undefined, lastCommentId))!.liked,
-        date: await getDate(updatedAt! || createdAt!, await dateData()),
+        date: await getDate(updatedAt! || createdAt!),
         subCommentId,
       });
     }

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { CommentType } from 'types/global.types';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { likeList } from 'utils/likes';
 import { giveRole } from 'utils/server/roles';
@@ -56,7 +55,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         authorId,
         likes: (await likeList(authorId, postId!))!.likes,
         liked: (await likeList(authorId, postId!))!.liked,
-        date: await getDate(updatedAt! || createdAt!, await dateData()),
+        date: await getDate(updatedAt! || createdAt!),
       });
     }
 

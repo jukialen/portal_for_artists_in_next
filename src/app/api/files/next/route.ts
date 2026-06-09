@@ -2,7 +2,6 @@ import { selectFiles } from 'constants/selects';
 import { FileType, Tags } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
-import { dateData } from 'helpers/dateData';
 
 import { getFileRoleId } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
@@ -43,7 +42,7 @@ export const GET = async (req: NextRequest) => {
         authorProfilePhoto: Users?.profilePhoto!,
         fileUrl,
         tags,
-        time: await getDate(updatedAt! || createdAt!, await dateData()),
+        time: await getDate(updatedAt! || createdAt!),
         authorId: authorId!,
         roleId: role.roleId,
       });

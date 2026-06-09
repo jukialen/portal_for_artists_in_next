@@ -3,9 +3,8 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { notFound } from 'next/navigation';
 
 import { HeadCom } from 'constants/HeadCom';
-import { DateObjectType, LangType, PostsType } from 'types/global.types';
+import { LangType, PostsType } from 'types/global.types';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { createServer } from 'utils/supabase/clientSSR';
@@ -27,7 +26,7 @@ export async function generateMetadata({ params }: PropsType): Promise<Metadata>
   return { ...HeadCom(`${authorName} user post subpage for group ${name}`) };
 }
 
-async function postOne(postId: string, name: string, dataDateObject: DateObjectType) {
+async function postOne(postId: string, name: string) {
   let postsArray: PostsType = {
     authorId: '',
     authorName: '',
@@ -71,7 +70,7 @@ async function postOne(postId: string, name: string, dataDateObject: DateObjectT
       authorId,
       groupId,
       roleId: Roles?.id!,
-      date: await getDate(updatedAt! || createdAt!, dataDateObject),
+      date: await getDate(updatedAt || createdAt!),
       idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
     };
   }
@@ -86,7 +85,7 @@ export default async function PostFromGroup({ params }: PropsType) {
 
   const userData = await getUserData();
 
-  const postOnGroup = await postOne(postId, name, await dateData());
+  const postOnGroup = await postOne(postId, name);
 
   if (!postOnGroup) return notFound();
 
