@@ -27,23 +27,19 @@ export const getUserData = async (): Promise<UserType | null> => {
 
   const { data, error } = await supabase.from('Users').select('*').eq('id', id).limit(1).maybeSingle();
 
-  if (error) {
+  if (!data || error) {
     await sendLokiLog('no user data', await getTraceId(), 'error');
     return null;
   }
 
-  const { data: fileData, error: fileError } = await supabase.from('Files').select('fileUrl').eq('authorId', id);
-
-  return data && !fileError
-    ? {
-        id,
-        pseudonym: data?.pseudonym,
-        description: data?.description,
-        profilePhoto: `${!fileData || fileData.length === 0 ? data?.profilePhoto : fileData[0].fileUrl}`,
-        email: email!,
-        plan: data?.plan,
-        provider: data?.provider,
-        billingCycle: data?.billingCycle,
-      }
-    : null;
+  return {
+    id,
+    pseudonym: data?.pseudonym,
+    description: data?.description,
+    profilePhoto: data?.profilePhoto,
+    email: email!,
+    plan: data?.plan,
+    provider: data?.provider,
+    billingCycle: data?.billingCycle,
+  };
 };

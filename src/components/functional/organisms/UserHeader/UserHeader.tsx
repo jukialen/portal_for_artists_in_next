@@ -42,6 +42,7 @@ export async function UserHeader() {
 
   const userData = await getUserData();
 
+  console.log(userData);
   return (
     <header className={styles.header}>
       <UserHeaderCom headers={UserHeaderTranslate} userData={userData!} translated={translated} />
