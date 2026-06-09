@@ -19,7 +19,7 @@
   }
 
   .video {
-    width: inherit;
+    width: 99.5%;
     height: max-content;
     min-height: 20rem;
     max-width: 37.5rem;

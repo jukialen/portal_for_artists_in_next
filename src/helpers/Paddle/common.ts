@@ -6,11 +6,25 @@ export const getPrice = (
   name: Plan,
   locale: LangType,
 ): string => {
-  const subscription = subscriptions.find((s) => s.billingCycle === billingCycle || s.name === name);
+  if (name === 'FREE') {
+    switch (locale) {
+      case 'pl':
+        return '0 PLN';
+      case 'ja':
+        return '0 JPY';
+      default:
+        return '0 USD';
+    }
+  }
 
-  // console.log('subscription get', locale, name, billingCycle, subscription);
-  const priceItem = subscription!.prices.find((p) => p.key === (locale === 'ja' ? 'jp' : locale));
+  const subscription = subscriptions.find((s) => s.billingCycle === billingCycle && s.name === name);
 
-  // console.log('priceItem get', priceItem);
-  return priceItem?.value!;
+  if (!subscription) return '';
+
+  console.log('subscription get', locale, name, billingCycle, subscription);
+  const priceItem =
+    subscription.prices.find((p) => p.key === locale) || subscription.prices.find((p) => p.key === 'en');
+
+  console.log('priceItem get', priceItem);
+  return priceItem?.value || '';
 };

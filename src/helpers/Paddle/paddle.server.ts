@@ -1,6 +1,4 @@
 import {
-  CountryCode,
-  CurrencyCode,
   Environment,
   LogLevel,
   Paddle,
@@ -54,7 +52,6 @@ const getAllProducts = async (): Promise<Product[]> => {
       console.log('No products were found.');
     }
 
-    console.log('All products were found.', allItems);
     return allItems;
   } catch (e) {
     console.error('Error within getAllProducts:', e);
@@ -62,22 +59,29 @@ const getAllProducts = async (): Promise<Product[]> => {
   }
 };
 
-const convertPrice = (locale: LangType, price: string): string =>
-  locale === 'ja' ? price : (parseFloat(price) / 100).toFixed(2).replace('.', ',');
+const zeroDecimalCurrencies = ['JPY', 'KRW', 'CNY', 'VND'];
+
+const convertPrice = (currencyCode: string, price: string): string => {
+  if (zeroDecimalCurrencies.includes(currencyCode.toUpperCase())) {
+    return price;
+  }
+  const amount = parseFloat(price) / 100;
+  return Number.isInteger(amount) ? amount.toString() : amount.toFixed(2).replace('.', ',');
+};
 
 const priceString = (locale: LangType, plan: Price): { key: LangType; value: string }[] => {
   const prices: { key: LangType; value: string }[] = [
     {
       key: 'en',
-      value: `${convertPrice(locale, plan.unitPrice.amount)} ${plan.unitPrice.currencyCode}`,
+      value: `${convertPrice(plan.unitPrice.currencyCode, plan.unitPrice.amount)} ${plan.unitPrice.currencyCode}`,
     },
   ];
 
   plan.unitPriceOverrides.forEach((u) => {
     u.countryCodes.forEach((code) => {
       prices.push({
-        key: code.toLowerCase() === 'JP' ? 'ja' : (code.toLowerCase() as LangType),
-        value: `${convertPrice(locale, u.unitPrice.amount)} ${u.unitPrice.currencyCode}`,
+        key: code.toLowerCase() === 'jp' ? 'ja' : (code.toLowerCase() as LangType),
+        value: `${convertPrice(u.unitPrice.currencyCode, u.unitPrice.amount)} ${u.unitPrice.currencyCode}`,
       });
     });
   });

@@ -61,8 +61,6 @@ export const usePaddle = (
     });
   };
 
-  console.log('Paddle paddle', paddle);
-
   const openOneTimeCheckout = (priceId: string, userId: string, email: string): void => {
     paddle?.Checkout.open({
       items: [{ priceId, quantity: 1 }],

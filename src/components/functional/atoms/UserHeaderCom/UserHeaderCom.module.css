@@ -30,12 +30,15 @@
     border-radius: 2rem;
     border-color: transparent;
 
+    &:has(div) {
+      font-size: 0.6rem;
+    }
     &:active {
       p,
       svg {
-        color: var(--text);
-        fill: var(--text);
-        stroke: var(--text);
+        color: currentColor;
+        stroke: currentColor;
+        fill: currentColor;
       }
     }
 

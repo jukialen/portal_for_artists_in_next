@@ -24,6 +24,7 @@
     flex-direction: column;
 
     .plans {
+      width: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -44,15 +45,6 @@
         font-size: 0.8rem;
         opacity: 0.8;
         line-height: 1.6;
-      }
-
-      @media (min-width: 1420px) {
-        width: 78%;
-        margin: auto;
-      }
-
-      @media (min-width: 1670px) {
-        flex-direction: row;
       }
     }
   }

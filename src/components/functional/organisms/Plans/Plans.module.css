@@ -1,9 +1,12 @@
 .plansContainer {
   display: flex;
   flex-direction: column;
+  width: inherit;
+  align-items: center;
   gap: 1rem;
 
   .cycleButtonContainer {
+    width: 96%;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -23,9 +26,19 @@
   }
 
   .plansDataContainer {
-    width: min(95dvw, 65rem);
+    width: 100%;
+    max-width: 65rem;
+    overflow-x: auto;
+  }
+
+  .plansWrapper {
     display: flex;
     gap: 2rem;
-    overflow-x: auto;
+    width: max-content;
+    padding: 1rem;
+
+    @media (min-width: 1024px) {
+      padding-right: 3rem;
+    }
   }
 }

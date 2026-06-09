@@ -27,7 +27,6 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
 
   const subscriptionsOptionsList = await getSubscriptionsOptions(locale);
 
-  console.log('subscriptionsOptionsList', subscriptionsOptionsList);
   const oneTimeOptions = await getOneTimeOptions(locale);
 
   const user = await getUserData();
