@@ -12,14 +12,14 @@
 
   .subTitle {
     opacity: 0.8;
-    margin: 0 auto 1rem;
+    margin: 1rem auto;
     text-align: center;
   }
 
   .plansFormats {
     width: 95%;
     min-height: calc(100dvh - 9rem);
-    margin: 4rem auto auto;
+    margin-top: 2rem;
     display: flex;
     flex-direction: column;
 
