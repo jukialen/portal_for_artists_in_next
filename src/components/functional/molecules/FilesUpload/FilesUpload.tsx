@@ -19,7 +19,7 @@ import {
   validateFile,
 } from 'utils/client/files';
 
-import { projectUrl, supabaseStorageFilesUrl } from 'constants/links';
+import { projectUrl } from 'constants/links';
 import { Tags, EventType, ResetFormType, FilesUploadType, Plan } from 'types/global.types';
 
 import { FormError } from 'components/ui/atoms/FormError/FormError';
@@ -258,13 +258,12 @@ export const FilesUpload = ({
   return (
     <Dialog.Root
       id={`files-upload-${userId}`}
-      lazyMount
       restoreFocus
       open={open}
       onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
       <Dialog.Trigger asChild>
         <button aria-label="new logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
-          <MdUploadFile />
+          <MdUploadFile className={styles.icon} />
           {t('newFile')}
         </button>
       </Dialog.Trigger>

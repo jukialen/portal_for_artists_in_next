@@ -4,11 +4,12 @@
 }
 
 .logoPseu {
+  width: min(90dvw, 36rem);
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
   justify-items: center;
-  margin: 2rem auto 1.5rem;
+  margin: 2rem auto 3rem;
 
   .logo {
     width: 11.25rem;
@@ -51,7 +52,9 @@
     grid-template-columns: 11.25rem 1fr;
 
     .name {
-      margin-left: 1rem;
+      width: 100%;
+      justify-content: flex-start;
+      margin-left: 3rem;
     }
   }
 }
@@ -105,6 +108,10 @@
       border-radius: 1rem;
       background-color: var(--background__opacity);
       border: 1px solid var(--background__opacity);
+
+      &[data-selected] {
+        background-color: var(--third__opacity);
+      }
     }
   }
 

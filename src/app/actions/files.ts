@@ -6,6 +6,13 @@ import { selectFiles } from 'constants/selects';
 import { getFileRoleId } from 'utils/server/roles';
 import { getDate } from 'helpers/getDate';
 
+const signedUrl = async (fileUrl: string) => {
+  const supabase = await createServer();
+  const { data } = await supabase.storage.from('basic').createSignedUrl(fileUrl, 1000 * 60 * 5);
+
+  return !!data ? data.signedUrl : '/#';
+};
+
 export const graphics = async (
   maxItems: number,
   authorId: string,
@@ -42,7 +49,7 @@ export const graphics = async (
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl,
+          fileUrl: await signedUrl(fileUrl),
           tags,
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
@@ -75,7 +82,7 @@ export const graphics = async (
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl,
+          fileUrl: await signedUrl(fileUrl),
           tags,
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
@@ -134,7 +141,7 @@ export const videosAnimations = async (
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl,
+          fileUrl: await signedUrl(fileUrl),
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || undefined,
@@ -169,7 +176,7 @@ export const videosAnimations = async (
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl,
+          fileUrl: await signedUrl(fileUrl),
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
@@ -221,7 +228,7 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
           roleId: role.roleId,
           name,
           shortDescription: shortDescription!,
-          fileUrl,
+          fileUrl: await signedUrl(fileUrl),
           tags,
           time: await getDate(updatedAt! || createdAt!),
         });

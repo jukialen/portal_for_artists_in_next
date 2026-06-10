@@ -197,7 +197,8 @@ export const ProfilePage = ({
           translated={tFriends}
         />
       )}
-      <Tabs.Root className={styles.tabsMenu} defaultValue={fileTabList[0]} lazyMount unmountOnExit>
+
+      <Tabs.Root className={styles.tabsMenu} defaultValue={fileTabList[0]} unmountOnExit>
         <Tabs.List className={styles.topTabList}>
           {fileTabList.map((tab) => (
             <Tabs.Trigger key={tab} className={styles.tabForPanels} value={tab!}>
@@ -215,13 +216,13 @@ export const ProfilePage = ({
         </div>
       </Tabs.Root>
 
-      {fileTabList.map((tab) => (
+      {Object.entries(tDash).map(([key, value]) => (
         <Link
-          href={`/account/${myProfile ? userData?.pseudonym : author}/${tab!.toLowerCase()}`}
+          href={`/account/${myProfile ? userData?.pseudonym : author}/${key}`}
           className={styles.mobileTabs}
-          key={tab}
+          key={key}
           aria-label="">
-          <span>{tab}</span>
+          <span>{value}</span>
           <RiArrowUpSLine />
         </Link>
       ))}

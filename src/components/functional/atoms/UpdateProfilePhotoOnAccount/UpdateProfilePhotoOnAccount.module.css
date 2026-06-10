@@ -3,15 +3,18 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: -0.5rem;
+    right: -0.5rem;
     width: 2.8rem;
     height: 2.8rem;
     margin: 0 0.5rem;
     font-size: 1.4rem;
     border: 0.1rem solid var(--primary);
     border-radius: 0.75rem;
-    background-color: var(--primary);
+    background-color: var(--primary__opacity) !important;
+    box-shadow: var(--box-shadow);
+    -webkit-backdrop-filter: var(--backdrop-filter);
+    backdrop-filter: var(--backdrop-filter);
     color: var(--text);
 }
 
