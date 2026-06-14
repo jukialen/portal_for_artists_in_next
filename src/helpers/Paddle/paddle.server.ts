@@ -91,8 +91,9 @@ const priceString = (locale: LangType, plan: Price): { key: LangType; value: str
 
 export const getSubscriptionsOptions = async (locale: LangType): Promise<SubscriptionPricingType[]> => {
   try {
+    const products = await getAllProducts();
     return (
-      (await getAllProducts())[1]?.prices?.map((plan) => ({
+      products[1]?.prices?.map((plan) => ({
         id: plan.id,
         name: plan.name! as Plan,
         description: plan.description,
@@ -108,8 +109,9 @@ export const getSubscriptionsOptions = async (locale: LangType): Promise<Subscri
 
 export const getOneTimeOptions = async (locale: LangType): Promise<OnetimePricingType[]> => {
   try {
+    const products = await getAllProducts();
     return (
-      (await getAllProducts())[0].prices?.map((plan) => ({
+      products[0]?.prices?.map((plan) => ({
         id: plan.id,
         name: plan.name! as Plan,
         description: plan.description,
@@ -118,7 +120,7 @@ export const getOneTimeOptions = async (locale: LangType): Promise<OnetimePricin
       })) ?? []
     );
   } catch (error) {
-    console.error('Error within getSubscriptionsOptions:', error);
+    console.error('Error within getOneTimeOptions:', error);
     return [];
   }
 };
