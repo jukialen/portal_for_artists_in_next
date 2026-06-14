@@ -24,8 +24,8 @@ export const Groups = async ({ groupsAsideList }: { groupsAsideList: GroupsType[
         <section className={styles.container}>
           {!!groupsAsideList && groupsAsideList.length > 0 ? (
             groupsAsideList.map(({ name, logo, description }, index) => (
-              <Links hrefLink={`/groups/${name}`} classLink={styles.image} arial-label={description}>
-                <Image src={logo} key={index} className={styles.link} alt={`${name} logo`} fill priority />
+              <Links hrefLink={`/groups/${name}`} classLink={styles.image} arial-label={description} key={index}>
+                <Image src={logo} className={styles.link} alt={`${name} logo`} fill priority />
                 <h4 className={styles.name}>{name}</h4>
               </Links>
             ))

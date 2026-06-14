@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack && workbox generateSW workbox-config.js",
+    "build": "next build --turbopack && node build-sw.js",
     "start": "next start",
     "postinstall": "touch public/sw.js",
     "lint": "eslint",
