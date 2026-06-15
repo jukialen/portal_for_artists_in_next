@@ -15,7 +15,7 @@ import { paddleServerId } from 'constants/links';
 import { BillingCycleType, LangType, OnetimePricingType, Plan, SubscriptionPricingType } from 'types/global.types';
 
 export const paddle = new Paddle(paddleServerId!, {
-  environment: process.env.NODE_ENV === 'production' ? Environment.production : Environment.sandbox,
+  environment: Environment.sandbox,
   logLevel: LogLevel.verbose,
 });
 
