@@ -373,6 +373,7 @@ export default {
     formats: '＊対応フォーマット： ',
     supInfo: '＊＊四営業日以内にメールにてご連絡ください。',
     pSupInfo: '＊＊＊二営業日以内にメールにてご連絡ください。さらにSlackにアクセス。',
+    unavailable: '入手不可能',
   },
   EmailVerification: {
     sendedSuccess: 'メールをご確認の上、その中にあるリンクをクリックしてください。',

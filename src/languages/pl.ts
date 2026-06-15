@@ -376,6 +376,7 @@ export default {
     formats: '* wspierane formaty: ',
     supInfo: '** kontakt przez e-mail w ciągu 4 dni roboczych',
     pSupInfo: '*** kontakt przez emailw ciągu 2 dni roboczych. Dodatkowo dostęp do grupy na Slacku',
+    unavailable: 'Niedostępne',
   },
   EmailVerification: {
     sendedSuccess: 'Proszę sprawdzić swoją skrzynkę e-mailową i kliknąć w link w nim zawarty.',

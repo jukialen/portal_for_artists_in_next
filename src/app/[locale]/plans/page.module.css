@@ -17,14 +17,14 @@
   }
 
   .plansFormats {
-    width: 95%;
+    width: 100%;
     min-height: calc(100dvh - 9rem);
     margin-top: 2rem;
     display: flex;
     flex-direction: column;
 
     .plans {
-      width: 100%;
+      width: inherit;
       display: flex;
       flex-direction: column;
       justify-content: center;

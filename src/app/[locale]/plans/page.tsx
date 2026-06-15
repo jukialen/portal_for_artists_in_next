@@ -33,8 +33,8 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
 
   const freePlan: PlanDataType = {
     plan: plans[0],
-    amountMonth: getPrice(subscriptionsOptionsList!, 'month', plans[0], locale),
-    amountYear: getPrice(subscriptionsOptionsList!, 'year', plans[0], locale),
+    amountMonth: await getPrice(subscriptionsOptionsList!, 'month', plans[0], locale),
+    amountYear: await getPrice(subscriptionsOptionsList!, 'year', plans[0], locale),
     grLength: tPlans('grLength'),
     animLength: tPlans('animLength'),
     vidLength: tPlans('vidLength'),
@@ -46,8 +46,8 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
   };
   const premiumPlan: PlanDataType = {
     plan: plans[1],
-    amountMonth: getPrice(subscriptionsOptionsList!, 'month', plans[1], locale),
-    amountYear: getPrice(subscriptionsOptionsList!, 'year', plans[1], locale),
+    amountMonth: await getPrice(subscriptionsOptionsList!, 'month', plans[1], locale),
+    amountYear: await getPrice(subscriptionsOptionsList!, 'year', plans[1], locale),
     grLength: tPlans('grLength'),
     animLength: tPlans('animLength'),
     vidLength: tPlans('vidLength'),
@@ -59,8 +59,8 @@ export default async function Plans({ params }: { params: Promise<{ locale: Lang
   };
   const goldPlan: PlanDataType = {
     plan: 'GOLD',
-    amountMonth: getPrice(subscriptionsOptionsList!, 'month', plans[2], locale),
-    amountYear: getPrice(subscriptionsOptionsList!, 'year', plans[2], locale),
+    amountMonth: await getPrice(subscriptionsOptionsList!, 'month', plans[2], locale),
+    amountYear: await getPrice(subscriptionsOptionsList!, 'year', plans[2], locale),
     grLength: tPlans('grLength'),
     animLength: tPlans('animLength'),
     vidLength: tPlans('vidLength'),

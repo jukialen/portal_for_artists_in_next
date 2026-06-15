@@ -374,6 +374,7 @@ export default {
     formats: '* supported formats: ',
     supInfo: '** contact through e-mail within 4 working days',
     pSupInfo: '*** contact through e-mail within 2 working days. Additionally access to Slack.',
+    unavailable: 'Unavailable',
   },
   EmailVerification: {
     sendedSuccess: 'Please check your email and click the link in it.',
