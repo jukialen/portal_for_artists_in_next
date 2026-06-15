@@ -59,22 +59,23 @@ div.drawer__active {
 button.aside__right {
   width: 2.5rem;
   height: 3.5rem;
-  position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
   bottom: 5rem;
+  anchor-name: --drawer-trigger;
   font-size: 2rem;
   border-radius: 0 0.5rem 0.5rem 0;
   color: var(--text);
-  cursor: pointer;
-  z-index: 1;
   border-color: transparent;
   background-color: var(--primary__opacity) !important;
   box-shadow: var(--box-shadow);
   -webkit-backdrop-filter: var(--backdrop-filter);
   backdrop-filter: var(--backdrop-filter);
   transition: opacity 0.5s ease; /* Płynne pojawianie się przycisku */
+  cursor: pointer;
+  z-index: 1;
 
   svg {
     transform: rotate(-90deg);
@@ -86,6 +87,7 @@ div.drawer {
   position: fixed;
   top: 0;
   left: 0;
+  position-anchor: --drawer-trigger;
   inset-block: 0;
   inset-inline-start: 0;
   transform: translateX(-100%);

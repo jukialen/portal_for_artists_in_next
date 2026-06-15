@@ -18,13 +18,113 @@
       font-size: 1.9rem;
     }
 
-    .collapse {
-      margin: 0 auto;
-    }
+    .accordionItem {
+      width: min(90dvw, 30rem);
+      margin: 1rem auto;
+      border-radius: 0.75rem;
+      background-color: var(--background__opacity);
+      box-shadow: var(--box-shadow);
+      color: var(--text);
 
-    .answers__faq {
-      margin: 1rem auto 2rem;
-      line-height: 1.6;
+      &::details-content {
+        height: 0;
+        opacity: 0;
+        overflow: clip;
+        transition:
+          height 0.25s ease,
+          opacity 0.25s ease,
+          content-visibility 0.25s ease allow-discrete;
+      }
+
+      &[open]::details-content {
+        height: auto;
+        opacity: 1;
+      }
+
+      &[open] {
+        .accordionButton {
+          box-shadow: var(--box-shadow);
+
+          h3 {
+            opacity: 0.75;
+          }
+        }
+
+        .chevron {
+          transform: rotate(180deg);
+        }
+      }
+
+      .accordionButton {
+        display: grid;
+        grid-template-columns: 1fr 2.5rem;
+        align-items: center;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        list-style: none;
+
+        &::-webkit-details-marker {
+          display: none;
+        }
+
+        h3 {
+          padding: 0.75rem 1rem;
+          text-align: left;
+          line-height: 1.6;
+          font-size: 1.2rem;
+        }
+
+        .chevron {
+          width: 1.5rem;
+          height: 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: inherit;
+          margin: 0.5rem;
+          border-radius: 1rem;
+          background-color: var(--primary);
+          transition: transform 0.2s ease;
+
+          &:hover,
+          &:active,
+          &:focus {
+            background-color: var(--secondary);
+            color: var(--primary);
+          }
+        }
+
+        &:hover {
+          background-color: var(--primary__opacity);
+        }
+
+        &:focus {
+          background-color: var(--focus);
+
+          h3 {
+            color: var(--background);
+          }
+        }
+
+        &:active {
+          background-color: var(--active);
+
+          h3 {
+            color: currentColor;
+          }
+        }
+      }
+
+      .accordionBody {
+        padding: 1rem;
+        line-height: 1.6;
+      }
+    }
+  }
+
+  @media (orientation: portrait) and (max-width: 767px) {
+    .accordionItem:last-child {
+      margin-bottom: 9rem;
     }
   }
 
@@ -38,5 +138,16 @@
     (orientation: landscape) and (min-height: 768px) and (max-height: 820px),
     (width: 1114px) {
     min-height: calc(100dvh - 5rem);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

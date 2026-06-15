@@ -1,3 +1,7 @@
+:root {
+  interpolate-size: allow-keywords;
+}
+
 * {
   box-sizing: border-box;
   font-family:
@@ -73,7 +77,8 @@ body {
     font-size: 1.2rem;
   }
 
-  a, a:is([href], [class]) {
+  a,
+  a:is([href], [class]) {
     text-decoration: none;
     color: var(--primary);
     cursor: pointer;

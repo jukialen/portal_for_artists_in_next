@@ -96,11 +96,11 @@ export async function Aside() {
       <aside className={styles.aside}>
         <AsideBody />
       </aside>
-      <button popoverTarget="mobile-drawer" className={styles.aside__right} style={{ anchorName: '--drawer-trigger' }}>
+      <button popoverTarget="mobile-drawer" className={styles.aside__right}>
         <RiArrowDownSLine />
       </button>
       {/* MOBILE DRAWER - używa Popover API */}
-      <div id="mobile-drawer" popover="auto" className={styles.drawer} style={{ positionAnchor: '--drawer-trigger' }}>
+      <div id="mobile-drawer" popover="auto" className={styles.drawer}>
         <div className={styles.drawerBody}>
           <div className={styles.blur}></div>
           <AsideBody />
