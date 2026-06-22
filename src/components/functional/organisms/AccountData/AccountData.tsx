@@ -198,7 +198,7 @@ export const AccountData = ({
                 <div className={styles.selectSub}>
                   <Formik
                     initialValues={initialPlan}
-                    onSubmit={(values, formikBag) =>
+                    onSubmit={(values: { newPlan: Plan; billCycle: BillingCycleType }, formikBag: ResetFormType) =>
                       changeSubscription(
                         { newPlan: values.newPlan, billCycle: values.billCycle },
                         { resetForm: formikBag.resetForm },
@@ -207,29 +207,35 @@ export const AccountData = ({
                     validateOnChange>
                     {({ errors, touched }) => (
                       <Form>
-                        <Field
-                          as="select"
-                          name="newPlan"
-                          className={touched.newPlan && !!errors.newPlan ? styles.req__error : ''}>
-                          {plans.map((l, key) => (
-                            <option key={key} role="option" value={l} disabled={l === userData?.plan!}>
-                              {l}
-                            </option>
-                          ))}
-                        </Field>
+                        <div className={styles.selectWrapper}>
+                          <Field
+                            as="select"
+                            name="newPlan"
+                            className={touched.newPlan && !!errors.newPlan ? styles.req__error : styles.planSelect}>
+                            {plans.map((l, key) => (
+                              <option key={key} role="option" value={l} disabled={l === userData?.plan!}>
+                                {l}
+                              </option>
+                            ))}
+                          </Field>
+                        </div>
                         {touched.newPlan && !!errors.newPlan && (
                           <p className={styles.selectSub__error}>{tAccount('aData.Premium.select__error')}</p>
                         )}
-                        <Field
-                          as="select"
-                          name="billCycle"
-                          className={touched.billCycle && !!errors.billCycle ? styles.req__error : ''}>
-                          {cycles.map((l, key) => (
-                            <option key={key} role="option" value={l}>
-                              {l}
-                            </option>
-                          ))}
-                        </Field>
+                        <div className={styles.selectWrapper}>
+                          <Field
+                            as="select"
+                            name="billCycle"
+                            className={
+                              touched.billCycle && !!errors.billCycle ? styles.req__error : styles.billCycleSelect
+                            }>
+                            {cycles.map((l, key) => (
+                              <option key={key} role="option" value={l}>
+                                {l}
+                              </option>
+                            ))}
+                          </Field>
+                        </div>
                         {touched.billCycle && !!errors.billCycle && (
                           <p className={styles.selectSub__error}>{tAccount('aData.Premium.select__error')}</p>
                         )}

@@ -113,6 +113,34 @@ div.subscriptionForm {
         margin-bottom: 0.5rem;
       }
 
+      .selectWrapper {
+        position: relative;
+        width: 100%; /* dostosuj do swoich potrzeb */
+
+        .planSelect, .billCycleSelect {
+        width: 100%;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-right: 40px;
+      }
+
+        &:after {
+          content: "";
+          -webkit-mask-image: url('/arrow.svg');
+          mask-image: url('/arrow.svg');
+          width: 2rem;
+          height: 2rem;
+          rotate: -90deg;
+          position: absolute;
+          top: .05rem;
+          right: 0;
+          pointer-events: none;
+          background-color: var(--text);
+        }
+      }
+
+
       .req__error {
         border-color: var(--required);
 
