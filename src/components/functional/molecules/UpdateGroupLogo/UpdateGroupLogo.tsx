@@ -17,11 +17,10 @@ import { MdCameraEnhance } from 'react-icons/md';
 type UpdateGorupLogo = {
   logo: string;
   name: string;
-  selectedColor: string;
   translated: nameGroupTranslatedType;
 };
 
-export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: UpdateGorupLogo) => {
+export const UpdateGroupLogo = ({ logo, name, translated }: UpdateGorupLogo) => {
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
@@ -61,47 +60,43 @@ export const UpdateGroupLogo = ({ logo, name, selectedColor, translated }: Updat
   };
 
   return (
-    <>
-      <Image src={logo} fill priority alt={`${name} logo`} />
+    <Dialog.Root
+      id={`update-group-logo-${name}`}
+      lazyMount
+      open={open}
+      onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
+      <Dialog.Trigger asChild>
+        <button aria-label="update group logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
+          <MdCameraEnhance />
+        </button>
+      </Dialog.Trigger>
+      <Dialog.Content className={styles.modal}>
+        <Dialog.Title>logo</Dialog.Title>
 
-      <Dialog.Root
-        id={`update-group-logo-${name}`}
-        lazyMount
-        open={open}
-        onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-        <Dialog.Trigger asChild>
-          <button aria-label="update group logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
-            <MdCameraEnhance />
+        <Dialog.Description className={styles.modal}>
+          <input
+            type="file"
+            name="newLogo"
+            id="newLogo"
+            className={!newLogo && required ? styles.input__error : styles.input}
+            onChange={changeFile}
+          />
+
+          <p>{!newLogo && required && translated!.updateLogo!.validateRequired}</p>
+          {!!newLogo && (
+            <Image src={`${backUrl}/${newLogo.name}`} alt="preview new logo" fill priority className={styles.img} />
+          )}
+
+          {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+        </Dialog.Description>
+        <div className={styles.actionButton}>
+          <button className={styles.cancel}>{translated!.updateLogo!.cancelButton}</button>
+          <button className={styles.submit} onClick={updateLogo}>
+            {translated!.updateLogo!.submit}
           </button>
-        </Dialog.Trigger>
-        <Dialog.Content className={styles.modal}>
-          <Dialog.Title>logo</Dialog.Title>
-
-          <Dialog.Description className={styles.modal}>
-            <input
-              type="file"
-              name="newLogo"
-              id="newLogo"
-              className={!newLogo && required ? styles.input__error : styles.input}
-              onChange={changeFile}
-            />
-
-            <p>{!newLogo && required && translated!.updateLogo!.validateRequired}</p>
-            {!!newLogo && (
-              <Image src={`${backUrl}/${newLogo.name}`} alt="preview new logo" fill priority className={styles.img} />
-            )}
-
-            {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-          </Dialog.Description>
-          <div className={styles.actionButton}>
-            <button className={styles.cancel}>{translated!.updateLogo!.cancelButton}</button>
-            <button className={styles.submit} onClick={updateLogo}>
-              {translated!.updateLogo!.submit}
-            </button>
-          </div>
-          <Dialog.CloseTrigger className={styles.closeButton}>Close</Dialog.CloseTrigger>
-        </Dialog.Content>
-      </Dialog.Root>
-    </>
+        </div>
+        <Dialog.CloseTrigger className={styles.closeButton}>Close</Dialog.CloseTrigger>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };

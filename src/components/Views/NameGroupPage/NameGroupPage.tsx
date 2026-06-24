@@ -114,49 +114,46 @@ export const NameGroupPage = ({
     }
   };
 
-  const GroupButton = ({ active, onClick, disabled, label, fav }: any) => (
-    <div className={fav ? styles.favoriteWrapper : ''}>
-      <button
-        onClick={onClick}
-        disabled={disabled}
-        className={`${active ? styles.joined : styles.button} ${fav ? styles.favoriteButton : ''}`}>
-        {active ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}
-        {label}
-      </button>
-      {fav && !active && (
-        <p>{favoriteLength < 5 ? translated.joinedUser?.maxFav : translated.joinedUser?.maximumAchieved}</p>
-      )}
-    </div>
-  );
-
   return (
     <>
-      {joined.admin ? (
-        <div className={styles.adminButtons}>
-          <button className={styles.button} onClick={removeGroup}>
-            {translated.groupSections?.deleteGroup}
+      <div className={styles.nameGroupLogoAndData}>
+        <h2 className={styles.nameGroup}>{name}</h2>
+        {joined.admin ? (
+          <div className={styles.adminButtons}>
+            <button className={styles.button} onClick={removeGroup}>
+              {translated.groupSections?.deleteGroup}
+            </button>
+            {!!deleteGroupInfo && <Alerts valueFields={deleteGroupInfo} />}
+          </div>
+        ) : join ? (
+          <button className={styles.joined} popoverTarget="join_popover" popoverTargetAction="toggle">
+            {join ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}
+            {join ? translated.joinedUser?.joined : translated.joinedUser?.join}
           </button>
-          {!!deleteGroupInfo && <Alerts valueFields={deleteGroupInfo} />}
-        </div>
-      ) : (
-        <div className={styles.buttons}>
-          <GroupButton
-            active={join}
-            onClick={toggleToGroup}
-            label={join ? translated.joinedUser?.joined : translated.joinedUser?.join}
-          />
-          {join && (
-            <GroupButton
-              active={favorite}
-              onClick={toggleToFavorites}
-              disabled={!favorite && favoriteLength === 5}
-              label={favorite ? translated.joinedUser?.addedToFav : translated.joinedUser?.addToFavorite}
-              fav
-            />
-          )}
-        </div>
-      )}
-      <Separator />
+        ) : (
+          <button onClick={toggleToGroup} className={styles.joined}>
+            {join ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}
+            {join ? translated.joinedUser?.joined : translated.joinedUser?.join}
+          </button>
+        )}
+      </div>
+
+      <div id="join_popover" className={styles.buttons} popover="auto">
+        <button
+          onClick={toggleToFavorites}
+          disabled={!favorite && favoriteLength === 5}
+          className={styles.button}
+          popoverTarget="join_popover"
+          popoverTargetAction="hide">
+          {favorite ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}
+          {favorite ? translated.joinedUser?.addedToFav : translated.joinedUser?.addToFavorite}
+        </button>
+        {<p>{favoriteLength < 5 ? translated.joinedUser?.maxFav : translated.joinedUser?.maximumAchieved}</p>}
+        <Separator />
+        <button onClick={toggleToGroup} className={styles.leaveGroup}>
+          Opuść grupe
+        </button>
+      </div>
 
       <Tabs.Root className={styles.tabs} lazyMount unmountOnExit defaultValue={contentList[0]}>
         <Tabs.List className={styles.tablist}>

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from 'next-international/server';
 import { createServer } from 'utils/supabase/clientSSR';
+import Image from 'next/image';
 
 import { HeadCom } from 'constants/HeadCom';
 import { LangType, MemberType, PostsType } from 'types/global.types';
@@ -13,6 +14,7 @@ import { UpdateGroupLogo } from 'components/functional/molecules/UpdateGroupLogo
 import { NameGroupPage } from 'components/Views/NameGroupPage/NameGroupPage';
 
 import styles from './page.module.css';
+import { backUrl } from '../../../../constants/links';
 
 type JoinUser = {
   logo: string;
@@ -51,6 +53,28 @@ const emptyObject: JoinUser = {
   roleId: '',
   usersGroupsId: '',
 };
+
+async function groupData(name: string) {
+  const supabase = await createServer();
+
+  const myUser = await getUserData();
+
+  const { data, error } = await supabase
+    .from('Groups')
+    .select('description, logo, regulation, adminId')
+    .eq('name', name)
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  return {
+    logo: data?.logo ?? `${backUrl}/group.svg`,
+    description: data?.description,
+    regulation: data?.regulation,
+    admin: myUser?.id === data?.adminId,
+  };
+}
 
 async function joinedUser(name: string, stringError: string): Promise<JoinUser> {
   const supabase = await createServer();
@@ -240,8 +264,7 @@ export default async function Groups({ params }: PropsType) {
 
   const userData = await getUserData();
 
-  const selectedColor = '#FFD068';
-
+  const gData = await groupData(name);
   const joined = await joinedUser(name, tOther('unknownError'));
   const membersGroups = await members(joined.usersGroupsId, name, tOther('unknownError'));
   const firstPosts = await getFirstPosts(joined.groupId, 30);
@@ -250,11 +273,10 @@ export default async function Groups({ params }: PropsType) {
     <>
       <article className={styles.mainContainer}>
         <div className={styles.logo}>
-          {joined.admin && (
-            <UpdateGroupLogo logo={joined.logo} name={name} selectedColor={selectedColor} translated={translated} />
-          )}
+          <Image src={gData.logo} fill priority alt={`${name} logo`} />
+          {gData.admin && <UpdateGroupLogo logo={gData.logo} name={name} translated={translated} />}
         </div>
-        <h2 className={styles.nameGroup}>{name}</h2>
+
         <NameGroupPage
           name={name}
           userData={userData!}

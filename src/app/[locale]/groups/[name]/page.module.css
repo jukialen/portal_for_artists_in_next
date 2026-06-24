@@ -2,7 +2,7 @@
   width: 42.5rem;
   max-width: 95vw;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: center;
   justify-items: center;
   margin: 2rem auto 1rem;
@@ -11,20 +11,13 @@
   .logo {
     padding: 0 1.5rem;
     position: relative;
+    width: min(23rem, 95%);
 
     img {
-      width: 11.25rem;
-      height: 11.25rem;
+      position: static !important;
       border: 1rem solid transparent;
       border-radius: 3rem;
     }
-  }
-
-  .nameGroup {
-    display: flex;
-    align-items: flex-end;
-    padding: 1rem 0;
-    line-height: 1.4;
   }
 }
 
