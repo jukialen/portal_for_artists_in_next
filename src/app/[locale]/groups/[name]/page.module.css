@@ -9,9 +9,10 @@
   gap: 1rem;
 
   .logo {
+    width: min(23rem, 95%);
+    margin: auto;
     padding: 0 1.5rem;
     position: relative;
-    width: min(23rem, 95%);
 
     img {
       position: static !important;

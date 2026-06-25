@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Dialog } from '@ark-ui/react/dialog';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
@@ -24,7 +23,6 @@ export const UpdateGroupLogo = ({ logo, name, translated }: UpdateGorupLogo) => 
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
   const [valuesFields, setValuesFields] = useState<string>('');
-  const [open, setOpen] = useState(false);
 
   const supabase = createClient();
 
@@ -40,15 +38,27 @@ export const UpdateGroupLogo = ({ logo, name, translated }: UpdateGorupLogo) => 
 
   const updateLogo = async () => {
     try {
+      console.log('!!newLogo && !required', !!newLogo && !required);
+      console.log('name', name);
+
       if (!!newLogo && !required) {
-        const { data, error } = await supabase.storage.from('logos').upload('', newLogo, {
+        const { data, error } = await supabase.storage.from('logos').upload(`/${name}/${newLogo.name}`, newLogo, {
           upsert: !!logo,
         });
+
+        console.log('data', data);
+        console.log('error', error);
 
         !!data && setValuesFields(translated!.updateLogo!.upload);
         !!error && setValuesFields(translated!.updateLogo!.notUpload);
 
-        await supabase.from('Groups').update({ logo: data?.path! });
+        const { data: upRec, error: erRec } = await supabase
+          .from('Groups')
+          .update({ logo: data?.path! })
+          .eq('name', name);
+
+        console.log('upRec', upRec);
+        console.log('erRec', erRec);
       } else {
         console.log('no logo selected');
         setValuesFields('no logo selected');
@@ -59,44 +69,40 @@ export const UpdateGroupLogo = ({ logo, name, translated }: UpdateGorupLogo) => 
     }
   };
 
+  const popoverId = `update-group-logo-${name}`;
+
   return (
-    <Dialog.Root
-      id={`update-group-logo-${name}`}
-      lazyMount
-      open={open}
-      onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-      <Dialog.Trigger asChild>
-        <button aria-label="update group logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
-          <MdCameraEnhance />
-        </button>
-      </Dialog.Trigger>
-      <Dialog.Content className={styles.modal}>
-        <Dialog.Title>logo</Dialog.Title>
+    <>
+      <button aria-label="update group logo" className={styles.updateLogo} popoverTarget={popoverId}>
+        <MdCameraEnhance />
+      </button>
+      <div id={popoverId} popover="auto" className={styles.modal}>
+        <h2>Logo</h2>
 
-        <Dialog.Description className={styles.modal}>
-          <input
-            type="file"
-            name="newLogo"
-            id="newLogo"
-            className={!newLogo && required ? styles.input__error : styles.input}
-            onChange={changeFile}
-          />
+        <input
+          type="file"
+          name="newLogo"
+          id="newLogo"
+          className={!newLogo && required ? styles.input__error : styles.input}
+          onChange={changeFile}
+        />
 
-          <p>{!newLogo && required && translated!.updateLogo!.validateRequired}</p>
-          {!!newLogo && (
-            <Image src={`${backUrl}/${newLogo.name}`} alt="preview new logo" fill priority className={styles.img} />
-          )}
+        <p>{!newLogo && required && translated!.updateLogo!.validateRequired}</p>
+        {!!newLogo && (
+          <Image src={`${backUrl}/${newLogo.name}`} alt="preview new logo" fill priority className={styles.img} />
+        )}
 
-          {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-        </Dialog.Description>
+        <div className={styles.alert}>{valuesFields !== '' && <Alerts valueFields={valuesFields} />}</div>
+
         <div className={styles.actionButton}>
-          <button className={styles.cancel}>{translated!.updateLogo!.cancelButton}</button>
-          <button className={styles.submit} onClick={updateLogo}>
+          <button className={styles.cancel} popoverTarget={popoverId} popoverTargetAction="hide">
+            {translated!.updateLogo!.cancelButton}
+          </button>
+          <button className={styles.submit} onClick={updateLogo} popoverTarget={popoverId} popoverTargetAction="hide">
             {translated!.updateLogo!.submit}
           </button>
         </div>
-        <Dialog.CloseTrigger className={styles.closeButton}>Close</Dialog.CloseTrigger>
-      </Dialog.Content>
-    </Dialog.Root>
+      </div>
+    </>
   );
 };

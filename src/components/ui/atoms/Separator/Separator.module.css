@@ -1,5 +1,5 @@
 .separator {
     border: none;
     height: 1px;
-    background-color: var(--opacity);
+    background-color: var(--text__opacity);
 }

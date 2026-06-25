@@ -2,6 +2,7 @@
 /** @type {import("next").NextConfig} */
 
 import {
+  backUrl,
   faroHost,
   faroHostWithoutProtocol,
   lokiHost,
@@ -37,6 +38,7 @@ const nextConfig = {
   images: {
     qualities: [75, 100],
     remotePatterns: [
+      new URL(`${backUrl}/**`),
       {
         protocol: 'https',
         hostname: 'cdn-cookieyes.com',

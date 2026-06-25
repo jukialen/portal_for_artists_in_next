@@ -4,6 +4,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 import Image from 'next/image';
 
 import { HeadCom } from 'constants/HeadCom';
+import { backUrl } from 'constants/links';
 import { LangType, MemberType, PostsType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
@@ -14,12 +15,8 @@ import { UpdateGroupLogo } from 'components/functional/molecules/UpdateGroupLogo
 import { NameGroupPage } from 'components/Views/NameGroupPage/NameGroupPage';
 
 import styles from './page.module.css';
-import { backUrl } from '../../../../constants/links';
 
 type JoinUser = {
-  logo: string;
-  description: string;
-  regulation: string;
   join: boolean;
   favorite: boolean;
   favoriteLength: number;
@@ -42,9 +39,6 @@ export async function generateMetadata({ params }: PropsType): Promise<Metadata>
 }
 
 const emptyObject: JoinUser = {
-  logo: '',
-  description: '',
-  regulation: '',
   join: false,
   favorite: false,
   favoriteLength: 0,
@@ -68,28 +62,24 @@ async function groupData(name: string) {
 
   if (error) throw error;
 
+  const url = await supabase.storage.from('logos').createSignedUrl(data?.logo!, 3600, { download: false });
+
   return {
-    logo: data?.logo ?? `${backUrl}/group.svg`,
-    description: data?.description,
-    regulation: data?.regulation,
+    logo: url.data?.signedUrl || `${backUrl}/group.svg`,
+    description: data?.description || '',
+    regulation: data?.regulation || '',
     admin: myUser?.id === data?.adminId,
   };
 }
 
-async function joinedUser(name: string, stringError: string): Promise<JoinUser> {
+async function joinedUser(name: string, stringError: string) {
   const supabase = await createServer();
 
   const myUser = await getUserData();
 
   const userGroupData = await supabase
     .from('UsersGroups')
-    .select(
-      `
-      groupId, roleId, favorite, usersGroupsId,
-      Groups!name ( logo, name, description, regulation, adminId),
-      Roles (role)
-     `,
-    )
+    .select(`groupId, roleId, favorite, usersGroupsId, Roles!roleId (role)`)
     .eq('name', name)
     .eq('userId', myUser?.id!)
     .limit(1)
@@ -103,14 +93,11 @@ async function joinedUser(name: string, stringError: string): Promise<JoinUser> 
 
   try {
     if (!!userGroupData.data) {
-      const { groupId, usersGroupsId, roleId, favorite, Groups, Roles } = userGroupData.data;
+      const { groupId, usersGroupsId, roleId, favorite, Roles } = userGroupData.data;
 
       const joinedUser = !!userGroupData;
 
       return {
-        logo: Groups?.logo!,
-        description: Groups?.description!,
-        regulation: Groups?.regulation!,
         join: joinedUser,
         favorite,
         favoriteLength: favoriteLengthGroups.count!,
@@ -180,35 +167,35 @@ async function getFirstPosts(groupId: string, maxItems: number) {
     .limit(maxItems);
 
   if (!!error) {
-    console.error(error);
-    return postsArray;
-  } else {
-    for (const post of data!) {
-      const { title, content, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
-
-      const { data: lData, count } = await supabase.from('Liked').select('id, userId').match({ postId, authorId });
-
-      const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
-
-      postsArray.push({
-        authorName: Users?.pseudonym!,
-        authorProfilePhoto: Users?.profilePhoto!,
-        liked: indexCurrentUser >= 0,
-        postId,
-        title,
-        content,
-        likes: count || 0,
-        shared,
-        commented,
-        authorId,
-        groupId,
-        roleId: Roles?.id!,
-        date: await getDate(updatedAt || createdAt!),
-        idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
-      });
-    }
+    // console.error(error);
     return postsArray;
   }
+
+  for (const post of data!) {
+    const { title, content, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
+
+    const { data: lData, count } = await supabase.from('Liked').select('id, userId').match({ postId, authorId });
+
+    const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
+
+    postsArray.push({
+      authorName: Users?.pseudonym!,
+      authorProfilePhoto: Users?.profilePhoto!,
+      liked: indexCurrentUser >= 0,
+      postId,
+      title,
+      content,
+      likes: count || 0,
+      shared,
+      commented,
+      authorId,
+      groupId,
+      roleId: Roles?.id!,
+      date: await getDate(updatedAt || createdAt!),
+      idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
+    });
+  }
+  return postsArray;
 }
 
 export default async function Groups({ params }: PropsType) {
@@ -268,7 +255,6 @@ export default async function Groups({ params }: PropsType) {
   const joined = await joinedUser(name, tOther('unknownError'));
   const membersGroups = await members(joined.usersGroupsId, name, tOther('unknownError'));
   const firstPosts = await getFirstPosts(joined.groupId, 30);
-
   return (
     <>
       <article className={styles.mainContainer}>
@@ -280,7 +266,7 @@ export default async function Groups({ params }: PropsType) {
         <NameGroupPage
           name={name}
           userData={userData!}
-          joined={joined}
+          joined={{ ...gData, ...joined }}
           usersGroupsId={joined.usersGroupsId}
           members={membersGroups}
           translated={translated}
