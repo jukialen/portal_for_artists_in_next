@@ -1,9 +1,8 @@
 .container {
-  width: 90%;
+  width: inherit;
   margin: 1rem auto;
 
   .title {
-    width: 90%;
     margin: 1rem;
   }
 
@@ -11,11 +10,6 @@
     display: grid;
     grid-template-columns: 1fr 4rem;
     margin: 1rem auto;
-
-    .items {
-      margin: 1rem 1rem 2rem;
-      width: inherit;
-    }
 
     .form {
       display: flex;
@@ -36,10 +30,10 @@
         margin-bottom: 0.5rem;
         border: 0.1rem solid var(--third);
         color: var(--third);
+      }
 
-        &__error {
-          border-color: var(--required);
-        }
+      .updateField__error {
+        border-color: var(--required);
       }
 
       .addingButton {
@@ -66,19 +60,13 @@
     }
   }
 
-  .regulations__item {
-    margin: 2rem 1rem;
-
-    &:first-child {
-      margin: 0.5rem 1rem;
-    }
-
-    &:last-child {
-      margin: 2rem 1rem 0;
-    }
+  .items, .regulations__item {
+    width: inherit;
+    margin: 0 1rem 1.5rem;
+    line-height: 1.5;
   }
 
-  .regulations__no__item {
-    margin: 0.5rem 1rem;
+  .regulations__item {
+    margin-bottom: 8rem;
   }
 }

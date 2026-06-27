@@ -10,21 +10,23 @@ import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/ui/atoms/Tile/Tile';
 
 import styles from './GroupList.module.css';
+import { Links } from '../../../ui/atoms/Links/Links';
 
 type GroupsType = {
   list: {
     title: string;
     all: string;
   };
+  addingGroup: string;
   noGroups: string;
 };
 
-export const GroupList = ({ Groups, groupArray }: { Groups: GroupsType; groupArray: GroupListType[] | undefined }) => {
+export const GroupList = ({ Groups, groupArray }: { Groups: GroupsType; groupArray: GroupListType[] }) => {
   const maxItems = 30;
 
-  const [listArray, setListArray] = useState<GroupListType[] | undefined>(groupArray);
+  const [listArray, setListArray] = useState<GroupListType[]>(groupArray);
   const [lastVisible, setLastVisible] = useState(
-    !!groupArray && groupArray.length === maxItems ? groupArray[groupArray.length - 1].name : '',
+    groupArray.length === maxItems ? groupArray[groupArray.length - 1].name : '',
   );
   let [i, setI] = useState(1);
 
@@ -42,9 +44,14 @@ export const GroupList = ({ Groups, groupArray }: { Groups: GroupsType; groupArr
   return (
     <section className={styles.container}>
       <div className={styles.container__section}>
-        <h2 className={styles.title}>{Groups.list.title}</h2>
+        <article className={styles.titleContainer}>
+          <h2 className={styles.title}>{Groups.list.title}</h2>
+          <Links hrefLink="/adding_group" classLink={`${styles.addGroup__link} button`} aria-label={Groups.addingGroup}>
+            {Groups.addingGroup}
+          </Links>
+        </article>
         <div className={styles.list}>
-          {!!listArray && listArray.length > 0 ? (
+          {listArray.length > 0 ? (
             listArray.map(({ name, fileUrl }, index) => (
               <Tile key={index} name={name} link={`/groups/${name}`} fileUrl={fileUrl} />
             ))

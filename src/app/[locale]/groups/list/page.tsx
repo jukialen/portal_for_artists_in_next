@@ -32,15 +32,17 @@ async function getGroupsList(maxItems: number) {
     }
 
     for (const g of data) {
+      const url = await supabase.storage.from('logos').createSignedUrl(g?.logo!, 3600, { download: false });
       groupArray.push({
         name: g.name!,
-        fileUrl: !!g.logo ? g.logo : `${backUrl}/group.svg`,
+        fileUrl: !!g.logo ? url.data?.signedUrl! : `${backUrl}/group.svg`,
       });
     }
 
     return groupArray;
   } catch (e) {
     console.error('Error getting groups list', e);
+    return groupArray;
   }
 }
 
@@ -49,6 +51,7 @@ export default async function List({ params }: { params: Promise<{ locale: LangT
   setStaticParamsLocale(locale);
 
   const tGroups = await getScopedI18n('Groups');
+  const tAside = await getScopedI18n('Aside');
 
   const Groups = {
     list: {
@@ -56,6 +59,7 @@ export default async function List({ params }: { params: Promise<{ locale: LangT
       all: tGroups('list.all'),
     },
     noGroups: tGroups('noGroups'),
+    addingGroup: tAside('addingGroup'),
   };
 
   const groupArray = await getGroupsList(30);

@@ -9,16 +9,23 @@
     line-height: 1.4;
   }
 
-  .adminButtons {
-    width: 42.5rem;
-    max-width: 100vw;
+  .adminButton {
+    anchor-name: --delete-group;
+    position-area: self-block-start center;
+    position-try: flip-block;
+    position-try-fallbacks: bottom;
     display: flex;
-    margin: 2rem auto 0.5rem;
-
-    button {
-      margin-left: 2rem;
-      border-color: transparent;
-    }
+    align-self: flex-end;
+    gap: 0.5rem;
+    align-items: center;
+    margin: auto 0;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+    background: transparent;
+    border-color: transparent;
+    border: 1px groove var(--secondary__opacity);
+    color: var(--third);
   }
 
   .joined {
@@ -40,7 +47,7 @@
   }
 }
 
-.buttons {
+.buttons, .deletingbuttons {
   flex-direction: column;
   gap: 0.5rem;
   align-items: center;
@@ -60,10 +67,10 @@
   opacity: 0;
   transform: translateY(-0.625rem);
   transition:
-          opacity 0.2s ease,
-          transform 0.2s ease,
-          display 0.2s allow-discrete,
-          overlay 0.2s allow-discrete;
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    display 0.2s allow-discrete,
+    overlay 0.2s allow-discrete;
 
   &:popover-open {
     display: flex;
@@ -83,7 +90,7 @@
     padding: 0.5rem 1rem;
     font-size: 1rem;
     border-radius: 1rem;
-    border-color: var(--third);
+    border: 2px groove var(--third);
     color: var(--text);
   }
 
@@ -96,54 +103,74 @@
     color: var(--text__opacity);
   }
 
-  hr {
-    width: 100%;
-  }
-
   .leaveGroup {
-    margin-top: -.5rem;
-    padding: .5rem 1rem;
-    border-radius: .5rem;
+    margin-top: -0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
     font-size: 0.9rem;
     color: var(--required);
   }
 }
 
+.deletingbuttons {
+  position-anchor: --delete-group;
+  width: 20rem;
+  padding: 1rem;
+  gap: 1rem;
+
+  .deleteTitle, .deleteSubTitle {
+    width: calc(100% - 2rem);
+    max-width: unset;
+    text-align: left;
+    margin: auto;
+  }
+
+  .deleteTitle {
+    font-size: 1.25rem;
+    color: var(--text);
+  }
+
+  .deleteSubTitle {
+    font-size: 1rem;
+    color: var(--required);
+  }
+
+  .button {
+    border-color: var(--required);
+    color: var(--required);
+  }
+}
+
 .tabs {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
   align-self: center;
   justify-self: center;
-  width: 42.5rem;
-  max-width: 100vw;
   margin: 0 auto;
-  gap: 2rem;
 
-  .tablist {
-    flex-wrap: wrap;
+  .tablist .tab {
+    height: 2.5rem;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0 1rem/3rem;
+    background-color: transparent;
+    border-color: var(--third);
 
-    .tab {
-      height: 2.5rem;
-      font-size: 1rem;
-      margin: 0.75rem 1rem;
-      border-radius: 0 1rem/3rem;
-      background-color: transparent;
-      border-color: var(--third);
+    &[data-selected] {
+      background: var(--secondary__opacity);
+    }
 
-      &[data-selected] {
-        background: var(--secondary__opacity);
+    &:hover {
+      border-color: var(--hover);
+    }
 
-      }
+    &:active {
+      border-color: var(--active);
+    }
 
-      &:hover {
-        border-color: var(--hover);
-      }
-
-      &:active {
-        border-color: var(--active);
-      }
-
-      &:focus {
-        border-color: var(--focus);
-      }
+    &:focus {
+      border-color: var(--focus);
     }
   }
 
@@ -153,5 +180,7 @@
     margin: 2rem auto;
     font-size: 1.2rem;
     text-align: center;
+    padding: 1rem 2rem;
+    line-height: 1.5;
   }
 }

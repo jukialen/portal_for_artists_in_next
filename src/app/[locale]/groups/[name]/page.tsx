@@ -55,7 +55,7 @@ async function groupData(name: string) {
 
   const { data, error } = await supabase
     .from('Groups')
-    .select('description, logo, regulation, adminId')
+    .select('groupId, description, logo, regulation, adminId')
     .eq('name', name)
     .limit(1)
     .maybeSingle();
@@ -69,6 +69,7 @@ async function groupData(name: string) {
     description: data?.description || '',
     regulation: data?.regulation || '',
     admin: myUser?.id === data?.adminId,
+    groupId: data?.groupId || '',
   };
 }
 
@@ -266,7 +267,7 @@ export default async function Groups({ params }: PropsType) {
         <NameGroupPage
           name={name}
           userData={userData!}
-          joined={{ ...gData, ...joined }}
+          joined={{ ...joined, ...gData }}
           usersGroupsId={joined.usersGroupsId}
           members={membersGroups}
           translated={translated}

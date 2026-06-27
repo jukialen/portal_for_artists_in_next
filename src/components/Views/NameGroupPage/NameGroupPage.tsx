@@ -16,6 +16,7 @@ import { Posts } from 'components/functional/organisms/Posts/Posts';
 import { Separator } from 'components/ui/atoms/Separator/Separator';
 
 import styles from './NameGroupPage.module.css';
+import { errorFaroLog, manualFaroLog } from '../../../helpers/Grafana/client/methods';
 
 export const NameGroupPage = ({
   name,
@@ -78,7 +79,6 @@ export const NameGroupPage = ({
       console.error(e);
     }
   };
-
   const toggleToFavorites = async () => {
     try {
       if (favorite) {
@@ -105,12 +105,42 @@ export const NameGroupPage = ({
 
   const removeGroup = async () => {
     try {
-      const { error } = await supabase.from('Groups').delete().eq('groupId', groupId).eq('name', name);
-      if (error) throw error;
+      const { data, error } = await supabase
+        .from('Groups')
+        .delete()
+        .eq('groupId', groupId)
+        .eq('adminId', userData?.id!)
+        .select('name');
+
+      if (data?.length === 0 || !!error) {
+        setDeleteGroupInfo(error!.message);
+        errorFaroLog(error!.message, `DELETE(group): ${name} with id ${groupId}`);
+        return error;
+      }
+
+      const { error: userGroupError } = await supabase.from('UsersGroups').delete().eq('groupId', groupId);
+
+      if (userGroupError) {
+        setDeleteGroupInfo(userGroupError.message);
+        errorFaroLog(userGroupError.message, `DELETE(group): ${name} with id ${groupId} for group data`);
+        return userGroupError;
+      }
+
+      const logoPathname = new URL(joined.logo).pathname.split('?')[0].split('/').filter(Boolean).slice(-2).join('/');
+
+      const { error: storageError } = await supabase.storage.from('logos').remove([logoPathname]);
+
+      if (storageError) {
+        setDeleteGroupInfo(storageError.message);
+        errorFaroLog(storageError.message, `DELETE(logo): group id ${groupId}. group name: ${name}`);
+        return storageError;
+      }
+
       push('/app');
     } catch (e) {
       console.error(e);
       setDeleteGroupInfo(translated.error!);
+      throw e;
     }
   };
 
@@ -119,12 +149,9 @@ export const NameGroupPage = ({
       <div className={styles.nameGroupLogoAndData}>
         <h2 className={styles.nameGroup}>{name}</h2>
         {joined.admin ? (
-          <div className={styles.adminButtons}>
-            <button className={styles.button} onClick={removeGroup}>
-              {translated.groupSections?.deleteGroup}
-            </button>
-            {!!deleteGroupInfo && <Alerts valueFields={deleteGroupInfo} />}
-          </div>
+          <button className={styles.adminButton} popoverTarget="delete_popover" popoverTargetAction="toggle">
+            {translated.groupSections?.deleteGroup}
+          </button>
         ) : join ? (
           <button className={styles.joined} popoverTarget="join_popover" popoverTargetAction="toggle">
             {join ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}
@@ -137,6 +164,20 @@ export const NameGroupPage = ({
           </button>
         )}
       </div>
+
+      <div id="delete_popover" className={styles.deletingbuttons} popover="auto">
+        <p className={styles.deleteTitle}>Na pewno chcesz usunąć grupe?</p>
+        <p className={styles.deleteSubTitle}>Tej akcji nie można cofnąć.</p>
+        <button
+          onClick={removeGroup}
+          className={styles.button}
+          popoverTarget="delete_popover"
+          popoverTargetAction="hide">
+          {translated.groupSections?.deleteGroup}
+        </button>
+      </div>
+
+      {!!deleteGroupInfo && <Alerts valueFields={deleteGroupInfo} />}
 
       <div id="join_popover" className={styles.buttons} popover="auto">
         <button
@@ -167,7 +208,7 @@ export const NameGroupPage = ({
           <Tabs.Indicator />
         </Tabs.List>
         <Tabs.Content value={contentList[0]!}>
-          {join ? (
+          {joined.admin || join ? (
             <>
               <AddingPost
                 groupId={groupId!}
@@ -188,19 +229,20 @@ export const NameGroupPage = ({
             <p className={styles.noPermission}>{translated.groupSections?.noPermission}</p>
           )}
         </Tabs.Content>
-        {join && (
-          <Tabs.Content value={contentList[1]!}>
-            <Members
-              admin={joined.admin}
-              groupId={groupId}
-              name={name!}
-              usersGroupsId={usersGroupsId!}
-              members={members}
-              translated={translated}
-              userData={userData}
-            />
-          </Tabs.Content>
-        )}
+        {joined.admin ||
+          (join && (
+            <Tabs.Content value={contentList[1]!}>
+              <Members
+                admin={joined.admin}
+                groupId={groupId}
+                name={name!}
+                usersGroupsId={usersGroupsId!}
+                members={members}
+                translated={translated}
+                userData={userData}
+              />
+            </Tabs.Content>
+          ))}
         <Tabs.Content value={contentList[2]!}>
           <DescriptionSection
             description={description}

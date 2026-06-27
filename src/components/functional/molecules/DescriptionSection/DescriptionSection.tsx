@@ -141,9 +141,7 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
       <Separator />
       <div className={styles.field}>
         {!openUpRegulation ? (
-          <div className={styles.items}>
-            <p className={!!regul ? styles.regulations__item : styles.regulations__no__item}>{regul}</p>
-          </div>
+          <p className={styles.regulations__item}>{regul}</p>
         ) : (
           <Formik initialValues={initialValuesForReg} validationSchema={schemaNewReg} onSubmit={updateRegulations}>
             {({ values, handleChange, errors, touched }) => (

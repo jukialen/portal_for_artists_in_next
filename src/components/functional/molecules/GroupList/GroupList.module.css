@@ -6,30 +6,47 @@
 
   .container__section {
     width: 44rem;
-    max-width: 100vw;
+    max-width: 100%;
 
-    .title, .noALl {
-      margin: 2rem 0; text-align: center;
+    .titleContainer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+
+      .title {
+        margin: 2rem 0;
+        text-align: center;
+      }
+
+      .addGroup__link {
+        width: fit-content;
+        height: 2.5rem;
+        margin: 0;
+        border-color: var(--third);
+      }
     }
 
     .list {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      margin-top: 3rem;
     }
 
     .more {
       display: flex;
       width: 6rem;
       margin: 2rem auto;
-      border: .1rem solid var(--third);
+      border: 0.1rem solid var(--third);
       cursor: pointer;
     }
-
   }
+
   .noALl {
+    margin: 1rem 2rem 0;
     font-size: 1.2rem;
-    margin-top: 1rem;
+    text-align: center;
   }
 
   @media (min-width: 1108px) {
@@ -44,4 +61,3 @@
     }
   }
 }
-
