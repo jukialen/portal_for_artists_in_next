@@ -134,7 +134,7 @@ export const ProfilePage = ({
     addedMax: t('Friends.addedMax'),
   };
 
-  const pseudonym = userData?.pseudonym || 'Na pseudonym';
+  const pseudonym = decodeURIComponent(userData?.pseudonym) || 'Na pseudonym';
 
   const fileComps = [
     <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} key="0" />,

@@ -35,12 +35,13 @@ export const NameGroupPage = ({
   translated: nameGroupTranslatedType;
   firstPosts: PostsType[];
 }) => {
-  const [join, setJoin] = useState(joined.join);
+  const [join, setJoin] = useState(joined.admin || joined.join);
   const [favorite, setFavorite] = useState(joined.favorite);
   const [favoriteLength, setFavoriteLength] = useState(joined.favoriteLength);
   const [deleteGroupInfo, setDeleteGroupInfo] = useState('');
   const [roleId, setRoleId] = useState(joined.roleId);
 
+  console.log('join', join);
   const { description, regulation: rawReg, groupId } = joined;
   const regulation = rawReg !== '' ? rawReg.split('\n').join('\n') : translated?.noRegulation!;
   const supabase = createClient();
@@ -147,7 +148,7 @@ export const NameGroupPage = ({
   return (
     <>
       <div className={styles.nameGroupLogoAndData}>
-        <h2 className={styles.nameGroup}>{name}</h2>
+        <h2 className={styles.nameGroup}>{decodeURIComponent(name)}</h2>
         {joined.admin ? (
           <button className={styles.adminButton} popoverTarget="delete_popover" popoverTargetAction="toggle">
             {translated.groupSections?.deleteGroup}

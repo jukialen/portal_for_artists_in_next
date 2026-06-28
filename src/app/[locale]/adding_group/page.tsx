@@ -35,6 +35,7 @@ export default async function AddingGroup({ params }: { params: Promise<{ locale
     notUploadFile: t('AnotherForm.notUploadFile'),
     ariaLabelButton: t('NewUser.ariaLabelButton'),
     error: t('error'),
+    success: t('AddingGroup.success'),
   };
   return (
     <>

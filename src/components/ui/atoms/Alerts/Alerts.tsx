@@ -39,6 +39,7 @@ export const Alerts = ({ valueFields }: AlertsType) => {
       case t('Forgotten.success'):
       case t('AnotherForm.uploadFile'):
       case t('Account.profile.successSending'):
+      case t('AddingGroup.success'):
         return { status: 'success' };
       case t('DeletionAccount.deletionAccount'):
       case t('DeletionPost.deleting'):

@@ -190,6 +190,7 @@ export default {
   AddingGroup: {
     title: 'Stwórz grupę',
     name: 'Nazwa grupy',
+    success: 'Grupa została utworzona pomyślnie! 😄',
   },
   Groups: {
     join: 'Dołącz',

@@ -81,18 +81,21 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
     try {
       if (!!logoGroup) {
         if (!(await validateFile(fileTranslated, logoGroup, userData.plan, false))) {
-          const fileName = name + '-' + Date.now() + '-' + logoGroup.name;
-          const filePath = name + '/' + fileName;
+          const sanitizeString = (str: string) => {
+            return str
+              .replace(/\s+/g, '-')
+              .replace(/[^a-zA-Z0-9.\-_]/g, '')
+              .toLowerCase();
+          };
+          const fileName = sanitizeString(name + '-' + Date.now() + '-' + logoGroup.name);
+          const filePath = sanitizeString(name) + '/' + fileName;
 
           if (logoGroup.size <= MAX_PHOTO_SIZE) {
-            const { data, error } = await supabase.storage.from('logos').upload(`/${filePath}`, logoGroup);
+            const { data, error } = await supabase.storage.from('logos').upload(filePath, logoGroup);
 
-            const logoGroupName = Date.now() + '/' + userData?.id! + '/' + logoGroup!.name!;
-
-            if (!!error) {
+            if (!!error || !data) {
               setValuesFields(tr.notUploadFile);
               console.error(error);
-              !!data && (await supabase.storage.from('logos').remove([`/${filePath}`, logoGroupName]));
               return;
             }
 
@@ -101,11 +104,14 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
                 name,
                 description,
                 adminId: userData?.id!,
-                logo: `${supabaseStorageUrlGroupUrl}/${data?.path!}`,
+                logo: data?.path!,
               },
             ]);
 
-            !!er && setValuesFields(tr.uploadFile);
+            if (!!er) {
+              setValuesFields(tr.uploadFile);
+              return await supabase.storage.from('logos').remove([filePath]);
+            }
 
             await resetForm(initialValues);
             setLogoGroup(null);
@@ -136,9 +142,11 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
 
         if (!!rError) {
           setValuesFields(tr.error);
-          return;
+          return await supabase.from('Groups').delete().eq('groupId', data.groupId);
         }
-        await resetForm(initialValues);
+
+        setValuesFields(tr.success);
+        return await resetForm(initialValues);
       }
     } catch (e) {
       console.error(e);
@@ -175,7 +183,7 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
           <FormError nameError="description" />
 
           {isFileAccessApiSupported ? (
-            <button onClick={handleFile} className={styles.filePickerButton}>
+            <button type="button" onClick={handleFile} className={styles.filePickerButton}>
               {tr.profilePhoto}
             </button>
           ) : (
@@ -193,7 +201,7 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
             {tr.send}
           </button>
 
-          {!!valuesFields && <Alerts valueFields={valuesFields} />}
+          <div className={styles.alert}>{!!valuesFields && <Alerts valueFields={valuesFields} />}</div>
         </Form>
       )}
     </Formik>

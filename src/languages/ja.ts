@@ -189,6 +189,7 @@ export default {
   AddingGroup: {
     title: 'Create a group',
     name: 'Group name',
+    success: 'グループの作成に成功しました！ 😄',
   },
   Groups: {
     join: '付ける',

@@ -62,10 +62,12 @@ async function groupData(name: string) {
 
   if (error) throw error;
 
-  const url = await supabase.storage.from('logos').createSignedUrl(data?.logo!, 3600, { download: false });
+  const url = data?.logo
+    ? (await supabase.storage.from('logos').createSignedUrl(data?.logo, 3600, { download: false })).data?.signedUrl
+    : `${backUrl}/group.svg`;
 
   return {
-    logo: url.data?.signedUrl || `${backUrl}/group.svg`,
+    logo: url,
     description: data?.description || '',
     regulation: data?.regulation || '',
     admin: myUser?.id === data?.adminId,
@@ -251,11 +253,13 @@ export default async function Groups({ params }: PropsType) {
   };
 
   const userData = await getUserData();
+  const decodedName = decodeURIComponent(name);
 
-  const gData = await groupData(name);
-  const joined = await joinedUser(name, tOther('unknownError'));
-  const membersGroups = await members(joined.usersGroupsId, name, tOther('unknownError'));
+  const gData = await groupData(decodedName);
+  const joined = await joinedUser(decodedName, tOther('unknownError'));
+  const membersGroups = await members(joined.usersGroupsId, decodedName, tOther('unknownError'));
   const firstPosts = await getFirstPosts(joined.groupId, 30);
+
   return (
     <>
       <article className={styles.mainContainer}>
@@ -265,7 +269,7 @@ export default async function Groups({ params }: PropsType) {
         </div>
 
         <NameGroupPage
-          name={name}
+          name={decodedName}
           userData={userData!}
           joined={{ ...joined, ...gData }}
           usersGroupsId={joined.usersGroupsId}

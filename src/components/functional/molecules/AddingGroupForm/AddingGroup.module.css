@@ -72,4 +72,9 @@
       opacity: 0.8;
     }
   }
+
+  .alert {
+    width: 100%;
+    position: relative;
+  }
 }
