@@ -41,7 +41,6 @@ export const NameGroupPage = ({
   const [deleteGroupInfo, setDeleteGroupInfo] = useState('');
   const [roleId, setRoleId] = useState(joined.roleId);
 
-  console.log('join', join);
   const { description, regulation: rawReg, groupId } = joined;
   const regulation = rawReg !== '' ? rawReg.split('\n').join('\n') : translated?.noRegulation!;
   const supabase = createClient();

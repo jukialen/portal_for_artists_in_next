@@ -1,46 +1,77 @@
-.showForm {
-  width: 10rem;
-  height: 2.5rem;
+.newPostContainer {
+  width: min(95%, 38rem);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-  border: .2rem solid var(--third);
-  border-radius: 10rem;
-  font-size: 1rem;
-  margin-left: 1rem;
-  cursor: pointer;
-}
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem 0 3rem;
 
-.form {
-  display: flex;
-  flex-direction: column;
+  .showForm {
+    width: 10rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    border-radius: 10rem;
+    border: 0.2rem solid var(--third);
+    background-color: transparent;
+    cursor: pointer;
+  }
 
-  .title, .title__error, .description, .description__error {
-    max-width: 90%;
-    margin: 1rem auto;
-    padding: 0.3rem 0.5rem;
-    border-color: var(--third);
-    color: var(--third);
+  .form {
+    width: inherit;
+    flex: 2 1 20rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    margin: auto;
 
-    &__error {
+    .title,
+    .title__error,
+    .description,
+    .description__error,
+    .addingButton {
+      padding: 0.5rem;
+      border: 1px groove var(--third);
+      border-radius: 0.5rem;
+      background-color: var(--background);
+      color: var(--third);
+    }
+
+    .title__error,
+    .description__error {
       border-color: var(--required);
+    }
+
+    .description,
+    .description__error {
+      min-height: 3rem;
+      resize: vertical;
+    }
+
+    .addingButton {
+      background-color: var(--third);
+      color: var(--text);
+    }
+
+    .alert {
+      width: inherit;
+      position: absolute;
+      right: 1rem;
+      top: -5rem;
+
     }
   }
 
-  .title, .title__error {
-    margin: 2rem auto 1rem;
+  .hiding {
+    display: none;
   }
 
-  .addingButton {
-    margin: 1rem auto;
-    background: var(--third);
-    border-color: var(--third);
-    cursor: pointer;
+  @media (orientation: landscape) or (min-width: 768px) {
+    .title,
+    .title__error {
+      margin-top: 0.3rem;
+    }
   }
-}
-
-
-.hiding {
-  display: none;
 }

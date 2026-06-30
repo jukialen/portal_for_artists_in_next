@@ -62,16 +62,26 @@ async function groupData(name: string) {
 
   if (error) throw error;
 
+  const { data: authorData, error: authorError } = await supabase
+    .from('Roles')
+    .select('id')
+    .eq('userId', data?.adminId || myUser?.id!)
+    .limit(1)
+    .maybeSingle();
+
+  if (authorError || !authorData) throw authorError;
+
   const url = data?.logo
     ? (await supabase.storage.from('logos').createSignedUrl(data?.logo, 3600, { download: false })).data?.signedUrl
     : `${backUrl}/group.svg`;
 
   return {
-    logo: url,
+    logo: url!,
     description: data?.description || '',
     regulation: data?.regulation || '',
     admin: myUser?.id === data?.adminId,
     groupId: data?.groupId || '',
+    roleId: authorData?.id!,
   };
 }
 

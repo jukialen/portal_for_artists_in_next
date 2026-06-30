@@ -65,9 +65,12 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
       .select('description')
       .limit(1)
       .single();
+
+    console.log(status, statusText, data, error);
     if (status === 200 || 204) {
       resetForm(initialValuesForReg);
       setDescrip(data?.description!);
+      setOpenDescriptionForm(!openDescriptionForm);
     } else {
       console.error(`statusText: ${statusText} \n Error: ${error}`);
       setValuesFields(`${t('unknownError')}. \n Error: ${error}`);
@@ -83,9 +86,11 @@ export const DescriptionSection = ({ description, regulation, admin, groupId }: 
       .limit(1)
       .single();
 
+    console.log(status, statusText, data, error);
     if (status === 200 || 204) {
       resetForm(initialValuesForReg);
       setRegul(data?.regulation!);
+      setOpenUpRegulation(!openUpRegulation);
     } else {
       console.error(`statusText: ${statusText} \n Error: ${error}`);
       setValuesFields(`${t('unknownError')}. \n Error: ${error}`);

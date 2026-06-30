@@ -39,7 +39,7 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
   const supabase = createClient();
 
   const schemaNew = Yup.object({
-    post: SchemaValidation().description,
+    content: SchemaValidation().description,
     title: SchemaValidation().description,
   });
 
@@ -54,7 +54,7 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
       if (!!data) {
         const { data: authorData, error: authorError } = await supabase
           .from('Roles')
-          .insert([{ groupId, userId: authorId, postId: data.postId }])
+          .insert([{ groupId, userId: authorId, postId: data.postId, role: 'AUTHOR' }])
           .select('id')
           .single();
 
@@ -63,9 +63,18 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
           return;
         }
 
-        await supabase.from('Posts').update({ roleId: authorData.id }).eq('postId', data.postId);
+        const { data: postData, error: postError } = await supabase
+          .from('Posts')
+          .update({ roleId: authorData.id })
+          .eq('postId', data.postId);
+
+        if (!postData || postError) {
+          setValueFields(postError?.message!);
+          throw postError;
+        }
 
         resetForm(initialValues);
+        setShowForm(!showForm);
       } else {
         setValueFields(`Post creation error: ${error?.message} with code: ${error?.code}`);
       }
@@ -76,7 +85,7 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
   };
 
   return (
-    <>
+    <section className={styles.newPostContainer}>
       <button className={styles.showForm} onClick={() => setShowForm(!showForm)}>
         {translatedPost.add}
       </button>
@@ -97,8 +106,8 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
             <FormError nameError="title" />
 
             <textarea
-              id="post"
-              name="post"
+              id="content"
+              name="content"
               value={values.content}
               onChange={handleChange}
               placeholder={translatedPost.addDescription}
@@ -112,10 +121,10 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
               {translatedPost.add}
             </button>
 
-            {!!valueFields && <Alerts valueFields={valueFields} />}
+            <div className={styles.alert}>{!!valueFields && <Alerts valueFields={valueFields} />}</div>
           </Form>
         )}
       </Formik>
-    </>
+    </section>
   );
 };

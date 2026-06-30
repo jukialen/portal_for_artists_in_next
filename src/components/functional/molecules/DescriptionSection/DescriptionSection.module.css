@@ -12,10 +12,9 @@
     margin: 1rem auto;
 
     .form {
+      width: 95%;
       display: flex;
       flex-direction: column;
-      width: 95%;
-      max-width: 30rem;
       margin: 1rem;
       justify-self: center;
       align-items: center;
@@ -26,8 +25,14 @@
 
       .updateField,
       .updateField__error {
-        resize: vertical;
+        width: stretch;
+        width: 100%;
+        min-height: 3.5rem;
         margin-bottom: 0.5rem;
+        padding: .5rem;
+        resize: vertical;
+        border-radius: 0.5rem;
+        background-color: var(--background);
         border: 0.1rem solid var(--third);
         color: var(--third);
       }
@@ -37,10 +42,12 @@
       }
 
       .addingButton {
-        background-color: var(--third);
-        border: 0.1rem solid var(--third);
+        align-self: normal;
         margin: 1rem 0 2rem;
+        padding: .5rem 1rem;
         border-radius: 0.5rem;
+        border: 0.1rem solid var(--third);
+        background-color: var(--third);
       }
     }
 
