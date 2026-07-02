@@ -4,7 +4,7 @@ import { createServer } from 'utils/supabase/clientSSR';
 import Image from 'next/image';
 
 import { HeadCom } from 'constants/HeadCom';
-import { backUrl } from 'constants/links';
+import { backUrl, supabaseStorageProfileUrl } from 'constants/links';
 import { LangType, MemberType, PostsType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
@@ -15,6 +15,7 @@ import { UpdateGroupLogo } from 'components/functional/molecules/UpdateGroupLogo
 import { NameGroupPage } from 'components/Views/NameGroupPage/NameGroupPage';
 
 import styles from './page.module.css';
+import { getLinkUrl } from '../../../../helpers/getLinkUrl';
 
 type JoinUser = {
   join: boolean;
@@ -71,12 +72,10 @@ async function groupData(name: string) {
 
   if (authorError || !authorData) throw authorError;
 
-  const url = data?.logo
-    ? (await supabase.storage.from('logos').createSignedUrl(data?.logo, 3600, { download: false })).data?.signedUrl
-    : `${backUrl}/group.svg`;
+  const logo = await getLinkUrl('logos', `${backUrl}/group.svg`, data?.logo);
 
   return {
-    logo: url!,
+    logo,
     description: data?.description || '',
     regulation: data?.regulation || '',
     admin: myUser?.id === data?.adminId,
@@ -174,7 +173,7 @@ async function getFirstPosts(groupId: string, maxItems: number) {
 
   const { data, error } = await supabase
     .from('Posts')
-    .select('*, Users (pseudonym, profilePhoto), Roles (id)')
+    .select('*, Users (pseudonym, profilePhoto), Roles!roleId (id)')
     .eq('groupId', groupId)
     .order('createdAt', { ascending: false })
     .limit(maxItems);
@@ -193,7 +192,7 @@ async function getFirstPosts(groupId: string, maxItems: number) {
 
     postsArray.push({
       authorName: Users?.pseudonym!,
-      authorProfilePhoto: Users?.profilePhoto!,
+      authorProfilePhoto: supabaseStorageProfileUrl + '/' + Users?.profilePhoto!,
       liked: indexCurrentUser >= 0,
       postId,
       title,
@@ -268,7 +267,7 @@ export default async function Groups({ params }: PropsType) {
   const gData = await groupData(decodedName);
   const joined = await joinedUser(decodedName, tOther('unknownError'));
   const membersGroups = await members(joined.usersGroupsId, decodedName, tOther('unknownError'));
-  const firstPosts = await getFirstPosts(joined.groupId, 30);
+  const firstPosts = await getFirstPosts(joined.groupId || gData.groupId, 30);
 
   return (
     <>

@@ -2,8 +2,13 @@
   width: 3rem;
   height: 3rem;
   border: 0.1rem solid transparent;
-  background-color: transparent;
+  border-radius: .5rem;
   color: var(--text);
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .container[data-part='trigger'] {

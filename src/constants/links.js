@@ -8,7 +8,6 @@ export const projectUrl = `https://${projectUrlWithOutPrefix}`;
 export const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const supabaseStorageUrl = `${projectUrl}/storage/v1/object/public`;
 export const supabaseStorageProfileUrl = `${supabaseStorageUrl}/profiles`;
-export const supabaseStorageFilesUrl = `${supabaseStorageUrl}/basic`;
 export const supabaseStorageUrlGroupUrl = `${supabaseStorageUrl}/logos`;
 //EMAILS
 export const mailerApiKey = process.env.NEXT_PUBLIC_MAILERSEND_API_KEY;

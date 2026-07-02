@@ -3,10 +3,11 @@
   justify-self: flex-start;
 
   .sharButton {
+    width: 3rem;
+    aspect-ratio: 1/1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.65em;
     font-size: 1.25rem;
     border-radius: 1rem;
     border: 1px solid transparent;
@@ -21,8 +22,10 @@
     justify-content: center;
     right: 3.2rem;
     top: -0.2rem;
-    background-color: var(--third);
     border-radius: 1rem;
+    background-color: var(--third__opacity);
+    box-shadow: var(--box-shadow);
+    backdrop-filter: var(--backdrop-filter);
 
     button {
       width: 3rem;
