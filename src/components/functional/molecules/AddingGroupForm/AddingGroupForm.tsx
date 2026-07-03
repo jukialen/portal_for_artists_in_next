@@ -39,6 +39,7 @@ type AddingGroupTr = {
     notUploadFile: string;
     ariaLabelButton: string;
     error: string;
+    success: string;
   };
   userData: UserType;
 };

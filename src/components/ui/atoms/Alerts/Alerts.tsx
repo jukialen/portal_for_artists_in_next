@@ -1,5 +1,7 @@
 'use client';
 
+import { CSSProperties } from 'react';
+
 import { useI18n } from 'locales/client';
 
 import styles from './Alerts.module.css';
@@ -66,10 +68,12 @@ export const Alerts = ({ valueFields }: AlertsType) => {
   };
 
   const status = switchAlert(valueFields).status;
-
+  const calculatedTime = valueFields.length * 0.06;
+  const duration = Math.max(3, Math.min(calculatedTime, 10));
   return (
     <section
       className={styles.alert}
+      style={{ '--duration': `${duration}s` } as CSSProperties}
       role="status"
       id={
         status === 'success'

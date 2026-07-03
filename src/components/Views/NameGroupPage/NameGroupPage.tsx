@@ -147,7 +147,7 @@ export const NameGroupPage = ({
   return (
     <>
       <div className={styles.nameGroupLogoAndData}>
-        <h2 className={styles.nameGroup}>{decodeURIComponent(name)}</h2>
+        <h1 className={styles.nameGroup}>{decodeURIComponent(name)}</h1>
         {joined.admin ? (
           <button className={styles.adminButton} popoverTarget="delete_popover" popoverTargetAction="toggle">
             {translated.groupSections?.deleteGroup}

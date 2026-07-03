@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { createClient } from 'utils/supabase/clientCSR';
-import { Dialog } from '@ark-ui/react/dialog';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -13,13 +12,13 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { RxChevronUp, RxChevronDown } from 'react-icons/rx';
 
 type DeletionPostType = {
-  postId: string;
   groupId: string;
+  postId: string;
+  roleId: string;
+  userId: string;
 };
 
-export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
-  const [open, setOpen] = useState(false);
-  const [deleting, setDeleting] = useState(false);
+export const DeletePost = ({ groupId, postId, roleId, userId }: DeletionPostType) => {
   const [values, setValues] = useState('');
   const [del, setDel] = useState(false);
 
@@ -31,17 +30,36 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
     const supabase = createClient();
 
     try {
-      setOpen(false);
-      setDeleting(!deleting);
       setValues(tDeletionPost('deleting'));
-      const { error } = await supabase.from('Posts').delete().eq('postId', postId).eq('groupId', groupId);
+      const { error } = await supabase
+        .from('Roles')
+        .delete()
+        .eq('postId', postId)
+        .eq('groupId', groupId)
+        .eq('userId', userId);
 
       if (!!error) {
-        setValues('');
+        setValues(t('error'));
         return;
       }
+
+      const { error: postError } = await supabase
+        .from('Posts')
+        .delete()
+        .eq('postId', postId)
+        .eq('groupId', groupId)
+        .eq('authorId', userId);
+
+      if (!!postError) {
+        setValues(t('error'));
+        const { error } = await supabase
+          .from('Roles')
+          .insert([{ postId, groupId, userId, role: 'AUTHOR' }])
+          .eq('id', roleId);
+        return;
+      }
+
       setValues(tDeletionPost('deleted'));
-      setDeleting(!deleting);
     } catch (e) {
       console.error(e);
       setValues(t('error'));
@@ -54,36 +72,36 @@ export const DeletePost = ({ postId, groupId }: DeletionPostType) => {
         {del ? <RxChevronUp /> : <RxChevronDown />}
       </button>
 
-      <Dialog.Root
-        id={`deletion-post-${postId}`}
-        lazyMount
-        unmountOnExit
-        onExitComplete={() => console.log('onExitComplete invoked')}
-        open={open}
-        onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-        <Dialog.Trigger className={styles.container}>
-          <button onClick={() => setOpen(true)}>
-            <RiDeleteBinLine />
-            {deleting ? tDeletionFile('loadingText') : tDeletionFile('deletionButton')}
+      <button
+        className={del ? styles.container__active : styles.container}
+        popoverTarget={`deletion-post-${postId}`}
+        popoverTargetAction="toggle">
+        <RiDeleteBinLine />
+        {tDeletionFile('deletionButton')}
+      </button>
+      <div className={styles.alert}>{!!values && <Alerts valueFields={values} />}</div>
+      <div id={`deletion-post-${postId}`} className={styles.content} popover="auto">
+        <h4 className={styles.title}>{tDeletionPost('title')}</h4>
+
+        <p>{tDeletionFile('question')}</p>
+
+        <div className={styles.actionButton}>
+          <button
+            className={styles.cancel}
+            onClick={() => setDel(!del)}
+            popoverTarget={`deletion-post-${postId}`}
+            popoverTargetAction="hide">
+            {tDeletionFile('cancelButton')}
           </button>
-          <div className={styles.alert}>{!!values && <Alerts valueFields={values} />}</div>
-        </Dialog.Trigger>
-        <Dialog.Content className={styles.content}>
-          <Dialog.Title>{tDeletionPost('title')}</Dialog.Title>
-
-          <Dialog.Description>{tDeletionFile('question')}</Dialog.Description>
-
-          <div className={styles.actionButton}>
-            <Dialog.CloseTrigger className={styles.cancel} onClick={() => setDel(!del)}>
-              {tDeletionFile('cancelButton')}
-            </Dialog.CloseTrigger>
-            <button className={styles.submit} onClick={deletePost}>
-              {tDeletionFile('deleteButton')}
-            </button>
-          </div>
-          <Dialog.CloseTrigger className={styles.closeButton}>Close</Dialog.CloseTrigger>
-        </Dialog.Content>
-      </Dialog.Root>
+          <button
+            className={styles.submit}
+            onClick={deletePost}
+            popoverTarget={`deletion-post-${postId}`}
+            popoverTargetAction="hide">
+            {tDeletionFile('deleteButton')}
+          </button>
+        </div>
+      </div>
     </>
   );
 };

@@ -13,6 +13,10 @@
   left: 0;
   z-index: 1;
   border: 1px solid var(--opacity);
+  opacity: 1;
+  visibility: visible;
+  --duration: 3s;
+  animation: fadeOutAndHide var(--duration) forwards ease-in-out;
 
   .icon {
     font-size: 1.25rem;
@@ -38,4 +42,31 @@
 #info {
   background-color: var(--third);
   border-color: var(--third);
+}
+
+@keyframes fadeOutAndHide {
+  0% {
+    opacity: 0;
+    transform: translateY(-0.625rem);
+  }
+  5% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  95% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  99% {
+    opacity: 0;
+    visibility: visible;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+  }
 }

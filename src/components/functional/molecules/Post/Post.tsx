@@ -87,12 +87,12 @@ export const Post = ({
         <Avatar src={authorProfilePhoto || group} fallbackName={authorName} alt="my profile photo icon" />
         <div className={styles.username}>
           <Link href={`/user/${authorName}`}>{authorName}</Link>
-          <div className={styles.time}>{date}</div>
+          <h4 className={styles.time}>{date}</h4>
         </div>
-        {userId === authorId && <DeletePost postId={postId!} groupId={groupId} />}
+        {userId === authorId && <DeletePost postId={postId!} groupId={groupId} userId={userId} roleId={roleId} />}
       </div>
-      <div className={styles.titlePost}>{title}</div>
-      <div className={styles.description}>{content}</div>
+      <h2 className={styles.titlePost}>{title}</h2>
+      <h3 className={styles.description}>{content}</h3>
       <div className={styles.options}>
         <button
           aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}

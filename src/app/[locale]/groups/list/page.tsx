@@ -1,3 +1,5 @@
+import { getLinkUrl } from '../../../../helpers/getLinkUrl';
+
 export const dynamic = 'force-dynamic';
 
 import { Metadata } from 'next';
@@ -32,14 +34,9 @@ async function getGroupsList(maxItems: number) {
     }
 
     for (const g of data) {
-      const url = g.logo
-        ? (await supabase.storage.from('logos').createSignedUrl(g.logo, 3600, { download: false })).data?.signedUrl
-        : `${backUrl}/group.svg`;
+      const fileUrl = await getLinkUrl('logos', `${backUrl}/group.svg`, g.logo);
 
-      groupArray.push({
-        name: g.name!,
-        fileUrl: url,
-      });
+      groupArray.push({ name: g.name!, fileUrl });
     }
 
     return groupArray;
