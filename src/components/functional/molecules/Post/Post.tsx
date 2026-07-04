@@ -103,7 +103,7 @@ export const Post = ({
         <button onClick={showingComments} className={styles.commentsButton}>
           {t('Comments.comments')}
         </button>
-        <SharingButton shareUrl={link} authorName={authorName} name={title} />
+        <SharingButton shareUrl={link} authorName={authorName} name={title} shared={shared} postId={postId!} />
       </div>
       <div className={styles.likesShComs}>
         <p className={likeCount < 100 ? (likeCount < 10 ? styles.leftpadding : styles.leftSmallpadding) : ''}>
@@ -111,18 +111,6 @@ export const Post = ({
         </p>
         <p>
           {commented} {commented === 1 ? 'comment' : 'comments'}
-        </p>
-        <p
-          className={
-            shared < 1000
-              ? shared < 100
-                ? shared < 10
-                  ? styles.rightPadding
-                  : styles.rightSmallpadding
-                : styles.rightVerySmallpadding
-              : ''
-          }>
-          {shared}
         </p>
       </div>
       <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>

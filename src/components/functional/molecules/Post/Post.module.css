@@ -29,12 +29,14 @@
 
   .titlePost {
     font-size: 1.5rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.8rem;
     color: var(--primary);
   }
 
   .description {
     font-size: 1.2rem;
+    line-height: 1.2;
+    white-space: pre-line;
   }
 
   .options {

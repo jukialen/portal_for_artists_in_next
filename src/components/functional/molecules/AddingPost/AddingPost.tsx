@@ -51,6 +51,8 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
         .select('title, postId')
         .single();
 
+      console.log('ata, error', data, error);
+
       if (!!data) {
         const { data: authorData, error: authorError } = await supabase
           .from('Roles')
@@ -59,6 +61,7 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
           .single();
 
         if (!!authorError || !authorData) {
+          console.log('authorError.  authorData', authorError, authorData);
           setValueFields(`Post creation error: ${authorError?.message} with code: ${authorError?.code}`);
           return;
         }
@@ -66,9 +69,11 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
         const { data: postData, error: postError } = await supabase
           .from('Posts')
           .update({ roleId: authorData.id })
-          .eq('postId', data.postId);
+          .eq('postId', data.postId)
+          .select();
 
         if (!postData || postError) {
+          console.log('postData || postError', postData, postError);
           setValueFields(postError?.message!);
           throw postError;
         }
@@ -76,10 +81,11 @@ export const AddingPost = ({ groupId, authorId, roleId, translatedPost, errorTr 
         resetForm(initialValues);
         setShowForm(!showForm);
       } else {
+        console.log(`Post creation error: ${error?.message} with code: ${error?.code}`);
         setValueFields(`Post creation error: ${error?.message} with code: ${error?.code}`);
       }
     } catch (e) {
-      console.error(e);
+      console.error('error', e);
       setValueFields(errorTr);
     }
   };
