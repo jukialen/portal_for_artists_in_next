@@ -5,8 +5,8 @@ import Image from 'next/image';
 import { Dialog } from '@ark-ui/react/dialog';
 
 import { createClient } from 'utils/supabase/clientCSR';
-import { filesProfileTypes, handleFileSelection, isFileAccessApiSupported, validateFile } from 'utils/client/files';
-
+import { handleFileSelection, isFileAccessApiSupported } from 'utils/client/files';
+import { filesProfileTypes, validateFile } from 'utils/common/files';
 import { useScopedI18n } from 'locales/client';
 
 import { EventType, FilesUploadType, UserType } from 'types/global.types';

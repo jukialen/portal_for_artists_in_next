@@ -13,3 +13,4 @@ export const actionFaroLog = (message: string, pathname: string, timeSpent: numb
     time_spent_ms: String(timeSpent),
   });
 };
+

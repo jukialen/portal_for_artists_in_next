@@ -10,14 +10,8 @@ import { Dialog } from '@ark-ui/react/dialog';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import {
-  filesProfileTypes,
-  filesTypes,
-  handleFileSelection,
-  isFileAccessApiSupported,
-  MAX_PHOTO_SIZE,
-  validateFile,
-} from 'utils/client/files';
+import { handleFileSelection, isFileAccessApiSupported } from 'utils/client/files';
+import { filesProfileTypes, filesTypes, MAX_PHOTO_SIZE, validateFile } from 'utils/common/files';
 
 import { projectUrl } from 'constants/links';
 import { Tags, EventType, ResetFormType, FilesUploadType, Plan } from 'types/global.types';

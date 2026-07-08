@@ -6,16 +6,10 @@ import * as Yup from 'yup';
 import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
 import { createClient } from 'utils/supabase/clientCSR';
-import {
-  filesProfileTypes,
-  handleFileSelection,
-  isFileAccessApiSupported,
-  MAX_PHOTO_SIZE,
-  validateFile,
-} from 'utils/client/files';
+import { handleFileSelection, isFileAccessApiSupported } from 'utils/client/files';
+import { filesProfileTypes, MAX_PHOTO_SIZE, validateFile } from 'utils/common/files';
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { supabaseStorageUrlGroupUrl } from 'constants/links';
 import { EventType, FilesUploadType, ResetFormType, UserType } from 'types/global.types';
 
 import { FormError } from 'components/ui/atoms/FormError/FormError';

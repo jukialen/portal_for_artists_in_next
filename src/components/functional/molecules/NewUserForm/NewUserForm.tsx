@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Form, Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { SchemaValidation } from '../../../../schemasValidation/schemaValidation';
+import { createClient } from 'utils/supabase/clientCSR';
+import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
-import { convertStringToUnionType } from '../../../../helpers/convertStringToType';
+import { convertStringToUnionType } from 'helpers/convertStringToType';
+import { validateFile } from 'utils/common/files';
 import { useI18n, useScopedI18n } from 'locales/client';
 
 import { EventType, FilesUploadType, Provider } from 'types/global.types';
@@ -15,8 +17,6 @@ import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { FormError } from 'components/ui/atoms/FormError/FormError';
 
 import styles from './NewUserForm.module.css';
-import { createClient } from 'utils/supabase/clientCSR';
-import { validateFile } from 'utils/client/files';
 
 type FirstDataType = {
   username: string;

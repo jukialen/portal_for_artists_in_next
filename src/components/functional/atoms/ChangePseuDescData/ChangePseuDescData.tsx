@@ -8,7 +8,8 @@ import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { filesProfileTypes, isFileAccessApiSupported, validateFile, handleFileSelection } from 'utils/client/files';
+import { isFileAccessApiSupported, handleFileSelection } from 'utils/client/files';
+import { filesProfileTypes, validateFile } from 'utils/common/files';
 
 import { EventType, FilesUploadType, ResetFormType, UserType } from 'types/global.types';
 
