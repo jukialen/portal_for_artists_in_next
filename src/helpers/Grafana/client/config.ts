@@ -1,13 +1,20 @@
 'use client';
 
 import { getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
+import type { Faro } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
 import { faroHost } from 'constants/links';
 
-export const faroConfig = () => {
+let faroInstance: Faro | null = null;
+
+export const faroConfig = (): Faro | null => {
   if (typeof window === 'undefined') return null; // guard SSR
 
-  return initializeFaro({
+  if (faroInstance) {
+    return faroInstance;
+  }
+
+  faroInstance = initializeFaro({
     url: faroHost,
     app: {
       name: 'Pfartists',
@@ -33,4 +40,7 @@ export const faroConfig = () => {
       new TracingInstrumentation(),
     ],
   });
+
+  return faroInstance;
 };
+
