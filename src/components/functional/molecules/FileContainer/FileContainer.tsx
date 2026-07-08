@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { getUserData } from 'helpers/getUserData';
-import { useScopedI18n } from 'locales/client';
+import { useI18n, useScopedI18n } from 'locales/client';
+import { createClient } from 'utils/supabase/clientCSR';
 import { filesApiComments } from 'utils/comments';
 
 import { backUrl } from 'constants/links';
@@ -24,6 +25,7 @@ import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 import { SharingButton } from 'components/ui/atoms/SharingButton/SharingButton';
 
 import styles from './FileContainer.module.css';
+import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
 export const FileContainer = ({
   name,
@@ -37,6 +39,9 @@ export const FileContainer = ({
   authorId,
   roleId,
   commentsBool = false,
+  idLiked,
+  likes = 0,
+  liked = false,
 }: ArticleVideosType) => {
   const maxItems = 30;
   const linkShare = `${backUrl}/file/${name}/${fileId}/${authorName}`;
@@ -48,8 +53,14 @@ export const FileContainer = ({
   const [lastVisible, setLastVisible] = useState(
     comments.length === maxItems ? comments[comments.length - 1].createdAt : '',
   );
+  const [showComments, setShowComments] = useState(false);
+  let [like, setLike] = useState(liked);
+  let [likeCount, setLikeCount] = useState(likes);
 
   const tComments = useScopedI18n('Comments');
+  const t = useI18n();
+
+  const showingComments = () => setShowComments(!showComments);
 
   useEffect(() => {
     getUserData().then((data) => setUserData(data));
@@ -73,57 +84,89 @@ export const FileContainer = ({
     }
   };
 
+  const addLike = async () => {
+    const supabase = createClient();
+
+    console.log('like', like);
+    if (like) {
+      const { error } = await supabase.from('Liked').delete().eq('id', idLiked!);
+
+      if (!!error) {
+        console.error(`Error: ${error?.message} with status ${error?.code}`);
+      } else {
+        setLike(false);
+        setLikeCount(likeCount - 1);
+        console.log('likeCount - 1', likeCount);
+      }
+    } else {
+      const { error } = await supabase.from('Liked').insert([{ fileId, userId: authorId }]);
+
+      if (!!error) {
+        console.error(`Error: ${error?.message} with status ${error?.code}`);
+      } else {
+        setLike(true);
+        setLikeCount(likeCount + 1);
+        console.log('likeCount + 1', likeCount);
+      }
+    }
+  };
+
   return (
-    <>
-      <article className={styles.file}>
-        {authorBool && <DeletionFile fileId={fileId} />}
+    <article className={styles.file}>
+      {authorBool && <DeletionFile fileId={fileId} />}
 
-        {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
-          <video preload="metadata" controls className={styles.video} playsInline>
-            <source src={fileUrl} />
-            {/* eslint-disable-next-line react/no-unescaped-entities */}
-            Sorry, your browser doesn\'t support embedded videos,
-            {/* eslint-disable-next-line react/no-unescaped-entities */}
-            but don't worry, you can <Link href={fileUrl}>download it</Link>
-            and watch it with your favorite video player!
-          </video>
-        ) : (
-          <Image
-            className={styles.item}
-            src={fileUrl}
-            alt={`File ${name} added by ${authorName} in Category: ${tags}`}
-            width={552}
-            height={480}
-            unoptimized
-          />
-        )}
+      {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
+        <video preload="metadata" controls className={styles.video} playsInline>
+          <source src={fileUrl} />
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
+          Sorry, your browser doesn\'t support embedded videos,
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
+          but don't worry, you can <Link href={fileUrl}>download it</Link>
+          and watch it with your favorite video player!
+        </video>
+      ) : (
+        <Image
+          className={styles.item}
+          src={fileUrl}
+          alt={`File ${name} added by ${authorName} in Category: ${tags}`}
+          width={552}
+          height={480}
+          unoptimized
+        />
+      )}
 
-        <section className={styles.timePlusTag}>
-          <div className={styles.time}>{time}</div>
+      <section className={styles.timePlusTag}>
+        <div className={styles.time}>{time}</div>
 
-          <div className={styles.tags}>{Tags}</div>
-        </section>
+        <Link href={`/${tags}`} className={styles.tags}>
+          {Tags}
+        </Link>
+      </section>
 
-        <div className={styles.shortDescription}>
-          {shortDescription.length <= 36 ? shortDescription : shortDescription.slice(0, 36) + '...'}
-        </div>
+      <div className={styles.shortDescription}>
+        {shortDescription.length <= 36 ? shortDescription : shortDescription.slice(0, 36) + '...'}
+      </div>
 
-        <div className={styles.options}>
-          <div className={styles.bottomPanel}>
-            <div className={styles.author__name}>
-              <Link href={`/user/${authorName}`}>{authorName}</Link>
-            </div>
-
-            <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} />
-          </div>
-
-          {!commentsBool && (
-            <Link href={linkShare} className={styles.linkToComments} aria-label="link to this file page">
-              {tComments('comments')}
-            </Link>
-          )}
-        </div>
-      </article>
+      <div className={styles.options}>
+        <Link href={`/user/${authorName}`} className={styles.author_name}>
+          {authorName}
+        </Link>
+        <button
+          aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
+          className={styles.likes}
+          onClick={addLike}>
+          {like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
+        </button>
+        <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} shared={1000000} />
+        <p></p>
+        <p className={styles.likesCount}>{likeCount}</p>
+        <p></p>
+      </div>
+      {!commentsBool && (
+        <Link href={linkShare} className={styles.linkToComments} aria-label="link to this file page">
+          {tComments('comments')}
+        </Link>
+      )}
       {commentsBool && (
         <>
           <NewComments
@@ -174,6 +217,6 @@ export const FileContainer = ({
           {!!lastVisible && comments.length === maxItems * i && <MoreButton nextElementsAction={nextComments} />}
         </>
       )}
-    </>
+    </article>
   );
 };

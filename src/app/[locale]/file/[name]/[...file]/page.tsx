@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import { notFound } from 'next/navigation';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
@@ -18,7 +19,7 @@ type PropsType = {
   params: Promise<{
     locale: LangType;
     name: string;
-    file: string;
+    file: string[];
     noComments: string;
   }>;
 };
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: PropsType): Promise<Metadata>
   return { ...HeadCom(`${authorName} user post subpage`) };
 }
 
-async function oneFile(fileId: string) {
+async function oneFile(fileId: string, userId: string) {
   const supabase = await createServer();
 
   try {
@@ -59,6 +60,15 @@ async function oneFile(fileId: string) {
 
     if (storageError) return;
 
+    const { data: likeData, error: errorLike } = await supabase
+      .from('Liked')
+      .select('id, userId')
+      .eq('fileId', data.fileId);
+
+    if (errorLike || likeData?.length === 0) console.log('likeData', likeData);
+
+    const liked = likeData?.find((f) => f.userId === userId);
+
     return {
       authorName: Users!.pseudonym,
       authorProfilePhoto: Users!.profilePhoto,
@@ -68,6 +78,9 @@ async function oneFile(fileId: string) {
       roleId: role.roleId,
       authorId: authorId!,
       time: await getDate(updatedAt! || createdAt!),
+      likes: likeData?.length || 0,
+      liked: !!liked,
+      idLiked: !!liked ? liked?.id : '',
     };
   } catch (e) {
     console.error(e);
@@ -79,12 +92,14 @@ export default async function Post({ params }: PropsType) {
   const { locale, name, file } = await params;
   setStaticParamsLocale(locale);
 
+  const userData = await getUserData();
   const fileId = file[0];
 
-  const authorPost = await oneFile(file);
-  const userData = await getUserData();
+  const authorPost = await oneFile(fileId, userData?.id!);
 
-  const { fileUrl, shortDescription, tags, authorName, time, authorId, roleId } = authorPost!;
+  if (!authorPost) return notFound();
+
+  const { fileUrl, shortDescription, tags, authorName, time, authorId, roleId, likes, liked, idLiked } = authorPost;
 
   return (
     <FileContainer
@@ -99,6 +114,9 @@ export default async function Post({ params }: PropsType) {
       authorId={authorId}
       roleId={roleId}
       commentsBool={true}
+      likes={likes}
+      liked={liked}
+      idLiked={idLiked}
     />
   );
 }

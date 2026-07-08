@@ -3,7 +3,7 @@
   display: grid;
   grid-template-rows: 1fr 3.25rem 1.5rem auto;
   justify-self: center;
-  margin: 1rem auto 0.3rem;
+  margin: 1rem auto 8.5rem;
   padding: 0.5rem 0 1.5rem;
   position: relative;
   border: 0.1rem solid var(--third);
@@ -49,33 +49,67 @@
   }
 
   .options {
-    height: min-content;
+    display: grid;
+    grid-template-columns: 1fr 5rem 5rem;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 1rem 1.25rem;
 
-    .bottomPanel {
-      display: grid;
-      grid-template-columns: 1fr 3rem;
-      margin: 1rem 1.25rem 0;
-      align-items: center;
+    &:last-of-type div,
+    button {
+      justify-self: center;
+    }
 
-      .author__name {
-        margin: 0.5rem 0;
+    .author_name {
+      font-size: 1.2rem;
+    }
+
+    .likes {
+      width: 3rem;
+      height: 3rem;
+      margin: auto;
+      background-color: transparent;
+      color: var(--third);
+      border-color: transparent;
+      cursor: pointer;
+    }
+
+    .likesCount {
+      width: 100%;
+      display: inline-flex;
+      justify-content: center;
+      padding: 0.5rem;
+      color: var(--third);
+    }
+
+    .commentsButton {
+      width: calc(100% - 1.5rem);
+      height: 100%;
+      margin: auto;
+      font-size: 1.2rem;
+      border-color: transparent;
+      border-radius: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--third);
+        color: currentColor;
       }
     }
-
-    .linkToComments {
-      width: 15rem;
-      max-width: 70%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 0.1rem;
-      border-radius: 0.5rem;
-      margin: 1rem auto;
-      padding: 0.75rem;
-      font-size: 1rem;
-      background-color: var(--third);
-      color: var(--text);
-    }
+  }
+  .linkToComments {
+    width: 15rem;
+    max-width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0.1rem;
+    border-radius: 0.5rem;
+    margin: 1rem auto;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: var(--third);
+    color: var(--text);
   }
 }
 
@@ -138,5 +172,5 @@
 .noComments {
   display: flex;
   justify-content: center;
-  margin-bottom: 6rem;
+  margin-bottom: 2rem;
 }
