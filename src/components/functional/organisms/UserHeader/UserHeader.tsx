@@ -12,11 +12,11 @@ export async function UserHeader() {
   const tAside = await getScopedI18n('Aside');
 
   const UserHeaderTranslate = {
-    home: tNav('home'),
-    groups: tNav('groups'),
-    friends: tNav('friends'),
-    search: tNav('search'),
     account: tNav('account'),
+    friends: tNav('friends'),
+    groups: tNav('groups'),
+    home: tNav('home'),
+    search: tNav('search'),
     profile: tNav('profile'),
     title: t('Settings.title'),
     signOut: tNav('signOut'),
