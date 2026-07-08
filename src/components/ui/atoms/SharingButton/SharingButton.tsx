@@ -17,7 +17,7 @@ type SharingType = {
   tags?: Tags;
   name?: string;
   shared: number;
-  postId: string;
+  postId?: string;
 };
 
 export const SharingButton = ({ shareUrl, authorName, tags, name, shared, postId }: SharingType) => {
@@ -29,7 +29,7 @@ export const SharingButton = ({ shareUrl, authorName, tags, name, shared, postId
     try {
       const supabase = createClient();
       const newShareCount = shareCount + 1;
-      const { error } = await supabase.from('Posts').update({ shared: newShareCount }).eq('postId', postId);
+      const { error } = await supabase.from('Posts').update({ shared: newShareCount }).eq('postId', postId!);
 
       if (error) throw error;
 
@@ -52,12 +52,9 @@ export const SharingButton = ({ shareUrl, authorName, tags, name, shared, postId
         {shareCount}
       </p>
       <div className={`${styles.share__options} ${share ? styles.share__options__active : ''}`}>
-        <LineShareButton
-          url={shareUrl}
-          title={titleShare}
-          onClick={toggleCount}
-          children={<LineIcon className={styles.icon} />}
-        />
+        <LineShareButton url={shareUrl} title={titleShare} onClick={toggleCount}>
+          <LineIcon className={styles.icon} />
+        </LineShareButton>
 
         <WhatsappShareButton url={shareUrl} title={titleShare} onClick={toggleCount}>
           <WhatsappIcon className={styles.icon} />

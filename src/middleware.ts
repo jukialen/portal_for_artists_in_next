@@ -4,6 +4,7 @@ import { createI18nMiddleware } from 'next-international/middleware';
 
 import { publishableKey, projectUrl, backUrl, newUserRed } from 'constants/links';
 import { locales } from 'constants/values';
+import { staticExtensions } from 'utils/common/files';
 
 const defaultLocale = 'en';
 const publicForAll = ['/settings', '/terms', '/privacy', '/contact', '/faq', '/plans'];
@@ -22,7 +23,7 @@ export async function middleware(req: NextRequest) {
   if (
     pathname.startsWith('/sw.js') ||
     pathname.startsWith('/workbox-') ||
-    pathname.includes('.') ||
+    staticExtensions.some((ext) => pathname.endsWith(ext)) ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next')
   ) {
@@ -103,9 +104,7 @@ export async function middleware(req: NextRequest) {
     const email = user?.user_metadata?.email || user?.email;
     const provider = user?.app_metadata?.provider;
     const pseuusername =
-      user?.user_metadata?.global_name ||
-      user?.user_metadata?.full_name ||
-      user?.user_metadata?.full_name;
+      user?.user_metadata?.global_name || user?.user_metadata?.full_name || user?.user_metadata?.full_name;
     const providerToken = session?.provider_token;
     const providerId = user?.user_metadata?.provider_id;
 
