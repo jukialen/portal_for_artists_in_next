@@ -60,6 +60,9 @@ export type FileType = Time & {
   time: string;
   authorId: string;
   roleId: string;
+  idLiked: string;
+  likes: number;
+  liked: boolean;
 };
 
 export type ArticleVideosType = {
@@ -74,6 +77,9 @@ export type ArticleVideosType = {
   authorId: string;
   roleId: string;
   commentsBool?: boolean;
+  idLiked: string;
+  likes: number;
+  liked: boolean;
 };
 
 export type FilesUploadType = {
