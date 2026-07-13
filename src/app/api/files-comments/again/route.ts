@@ -31,10 +31,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!data || data?.length === 0 || !!error) return NextResponse.json(filesArray);
 
     for (const again of data!) {
-      const { id, fileId, content, Users, Roles, roleId, authorId, createdAt, updatedAt } = again;
+      const { id: fileCommentId, fileId, content, Users, Roles, roleId, authorId, createdAt, updatedAt } = again;
 
       filesArray.push({
-        fileCommentId: id,
+        fileCommentId,
         fileId,
         content,
         authorName: Users?.pseudonym!,
@@ -42,8 +42,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         role: Roles?.role!,
         roleId,
         authorId,
-        likes: (await likeList(authorId, undefined, fileId))!.likes,
-        liked: (await likeList(authorId, undefined, fileId))!.liked,
+        likes: (await likeList(authorId, fileId)).likes,
+        liked: (await likeList(authorId, fileId)).liked,
+        idLiked: (await likeList(authorId, fileId)).idLiked,
         date: await getDate(updatedAt! || createdAt!),
       });
     }

@@ -27,22 +27,23 @@ import { SharingButton } from 'components/ui/atoms/SharingButton/SharingButton';
 import styles from './FileContainer.module.css';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
 
-export const FileContainer = ({
-  name,
-  fileUrl,
-  authorName,
-  shortDescription,
-  tags,
-  time,
-  fileId,
-  authorBool,
-  authorId,
-  roleId,
-  commentsBool = false,
-  idLiked,
-  likes = 0,
-  liked = false,
-}: ArticleVideosType) => {
+export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => {
+  const {
+    name,
+    fileUrl,
+    authorName,
+    shortDescription,
+    tags,
+    time,
+    fileId,
+    authorBool,
+    authorId,
+    roleId,
+    commentsBool = false,
+    idLiked,
+    likes = 0,
+    liked = false,
+  } = fileData;
   const maxItems = 30;
   const linkShare = `${backUrl}/file/${name}/${fileId}/${authorName}`;
   const Tags = tags[0].toUpperCase() + tags.slice(1);
@@ -65,14 +66,14 @@ export const FileContainer = ({
   useEffect(() => {
     getUserData().then((data) => setUserData(data));
 
-    commentsBool && filesApiComments(fileId, maxItems).then((data) => setComments(data));
+    commentsBool && filesApiComments(fileId!, maxItems).then((data) => setComments(data));
   }, [linkShare, commentsBool, fileId]);
 
   let [i, setI] = useState(1);
 
   const nextComments = async () => {
     try {
-      const nextPage = (await filesApiComments(fileId, maxItems, 'again'))!;
+      const nextPage = (await filesApiComments(fileId!, maxItems, 'again'))!;
 
       nextPage.length === maxItems && setLastVisible(nextPage[nextPage.length - 1].createdAt!);
 
@@ -84,10 +85,9 @@ export const FileContainer = ({
     }
   };
 
-  const addLike = async () => {
+  const toggleLike = async () => {
     const supabase = createClient();
 
-    console.log('like', like);
     if (like) {
       const { error } = await supabase.from('Liked').delete().eq('id', idLiked!);
 
@@ -96,7 +96,6 @@ export const FileContainer = ({
       } else {
         setLike(false);
         setLikeCount(likeCount - 1);
-        console.log('likeCount - 1', likeCount);
       }
     } else {
       const { error } = await supabase.from('Liked').insert([{ fileId, userId: authorId }]);
@@ -106,14 +105,13 @@ export const FileContainer = ({
       } else {
         setLike(true);
         setLikeCount(likeCount + 1);
-        console.log('likeCount + 1', likeCount);
       }
     }
   };
 
   return (
     <article className={styles.file}>
-      {authorBool && <DeletionFile fileId={fileId} />}
+      {authorBool && <DeletionFile fileId={fileId!} />}
 
       {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
         <video preload="metadata" controls className={styles.video} playsInline>
@@ -144,7 +142,7 @@ export const FileContainer = ({
       </section>
 
       <div className={styles.shortDescription}>
-        {shortDescription.length <= 36 ? shortDescription : shortDescription.slice(0, 36) + '...'}
+        {shortDescription!.length <= 36 ? shortDescription : shortDescription!.slice(0, 36) + '...'}
       </div>
 
       <div className={styles.options}>
@@ -154,7 +152,7 @@ export const FileContainer = ({
         <button
           aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
           className={styles.likes}
-          onClick={addLike}>
+          onClick={toggleLike}>
           {like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
         </button>
         <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} shared={1000000} />

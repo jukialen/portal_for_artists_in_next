@@ -6,6 +6,7 @@ import { getDate } from 'helpers/getDate';
 import { getFileRoleId } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
 import { NextRequest, NextResponse } from 'next/server';
+import { likeList } from '../../../../utils/likes';
 
 export const GET = async (req: NextRequest) => {
   const supabase = await createServer();
@@ -45,6 +46,9 @@ export const GET = async (req: NextRequest) => {
         time: await getDate(updatedAt! || createdAt!),
         authorId: authorId!,
         roleId: role.roleId,
+        liked: (await likeList(authorId!, fileId))!.liked,
+        likes: (await likeList(authorId!, fileId))!.likes,
+        idLiked: (await likeList(authorId!, fileId))!.idLiked,
       });
     }
 

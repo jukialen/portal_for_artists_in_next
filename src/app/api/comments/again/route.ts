@@ -53,8 +53,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         role,
         roleId: groupsPostsRoleId || roleId,
         authorId,
-        likes: (await likeList(authorId, postId!))!.likes,
-        liked: (await likeList(authorId, postId!))!.liked,
+        likes: (await likeList(authorId, commentId)).likes,
+        liked: (await likeList(authorId, commentId)).liked,
+        idLiked: (await likeList(authorId, commentId)).idLiked,
         date: await getDate(updatedAt! || createdAt!),
       });
     }

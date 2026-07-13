@@ -49,24 +49,11 @@ export const FileContainerClient = ({
   return (
     <Wrapper>
       {newFileArray.length > 0 ? (
-        newFileArray.map(
-          ({ fileId, name, fileUrl, shortDescription, tags, authorName, time, authorId, roleId }: FileType, index) => (
-            <Suspense key={index} fallback={<LoadingPage />}>
-              <FileContainer
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorName={authorName!}
-                authorBool={authorName === pseudonym}
-                time={time}
-                authorId={authorId}
-                roleId={roleId}
-              />
-            </Suspense>
-          ),
-        )
+        newFileArray.map((file: FileType, index) => (
+          <Suspense key={index} fallback={<LoadingPage />}>
+            <FileContainer fileData={{ ...file, authorBool: file.authorName === pseudonym }} />
+          </Suspense>
+        ))
       ) : (
         <div>nie ma nic</div>
       )}

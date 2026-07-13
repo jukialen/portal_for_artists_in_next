@@ -1,10 +1,12 @@
 'use server';
 
-import { FileType, IndexType, Tags } from 'types/global.types';
+import { FileType, IndexType, Like, Tags } from 'types/global.types';
 import { createServer } from 'utils/supabase/clientSSR';
 import { selectFiles } from 'constants/selects';
 import { getFileRoleId } from 'utils/server/roles';
 import { getDate } from 'helpers/getDate';
+import { name } from 'next/dist/server/ci-info';
+import { likeList } from '../../utils/likes';
 
 const signedUrl = async (fileUrl: string) => {
   const supabase = await createServer();
@@ -39,6 +41,8 @@ export const graphics = async (
       for (const file of data!) {
         const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
+        const likeData = await likeList(authorId, fileId);
+
         const role = await getFileRoleId(fileId, authorId);
 
         filesArray.push({
@@ -54,6 +58,9 @@ export const graphics = async (
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
+          idLiked: likeData?.idLiked,
+          liked: likeData?.liked,
+          likes: likeData?.likes,
         });
       }
       return filesArray;
@@ -74,6 +81,8 @@ export const graphics = async (
 
         const role = await getFileRoleId(fileId, authorId);
 
+        const likeData = await likeList(authorId, fileId);
+
         filesArray.push({
           authorId,
           roleId: role.roleId,
@@ -87,6 +96,9 @@ export const graphics = async (
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
+          idLiked: likeData?.idLiked,
+          liked: likeData?.liked,
+          likes: likeData?.likes,
         });
       }
 
@@ -130,6 +142,8 @@ export const videosAnimations = async (
 
         const role = await getFileRoleId(fileId, authorId!);
 
+        const likeData = await likeList(authorId, fileId);
+
         if (role.roleId === 'no id') return filesArray;
 
         filesArray.push({
@@ -145,6 +159,9 @@ export const videosAnimations = async (
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || undefined,
+          idLiked: likeData?.idLiked,
+          liked: likeData?.liked,
+          likes: likeData?.likes,
         });
       }
       return filesArray;
@@ -165,6 +182,8 @@ export const videosAnimations = async (
 
         const role = await getFileRoleId(fileId, authorId!);
 
+        const likeData = await likeList(authorId, fileId);
+
         if (role.roleId === 'no id') return filesArray;
 
         filesArray.push({
@@ -180,6 +199,9 @@ export const videosAnimations = async (
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
+          idLiked: likeData?.idLiked,
+          liked: likeData?.liked,
+          likes: likeData?.likes,
         });
       }
       return filesArray;
@@ -219,6 +241,8 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
 
         const role = await getFileRoleId(fileId, authorId!);
 
+        const likeData = await likeList(authorId!, fileId);
+
         if (role.roleId == 'no id') return nextArray;
 
         nextArray.push({
@@ -231,6 +255,9 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
           fileUrl: await signedUrl(fileUrl),
           tags,
           time: await getDate(updatedAt! || createdAt!),
+          idLiked: likeData?.idLiked,
+          liked: likeData?.liked,
+          likes: likeData?.likes,
         });
       }
 

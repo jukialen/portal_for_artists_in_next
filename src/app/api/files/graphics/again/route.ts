@@ -6,6 +6,7 @@ import { FileType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 import { getFileRoleId } from 'utils/server/roles';
+import { likeList } from '../../../../../utils/likes';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
@@ -49,6 +50,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         updatedAt: updatedAt || '',
         authorId: authorId!,
         roleId: role.roleId,
+        liked: (await likeList(authorId!, fileId)).liked,
+        likes: (await likeList(authorId!, fileId)).likes,
+        idLiked: (await likeList(authorId!, fileId)).idLiked,
       });
     }
     return NextResponse.json(filesArray);

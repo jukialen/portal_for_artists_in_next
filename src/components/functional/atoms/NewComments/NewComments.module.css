@@ -1,5 +1,5 @@
 .comments {
-  width: min(34.5rem, 90dvw);
+  width: calc(100% - 2.5rem);
   display: grid;
   grid-template-columns: 3rem 1fr;
   margin: 2rem auto 0;
@@ -21,24 +21,23 @@
     margin-top: 0.4rem;
     height: auto;
   }
-
-  span {
-    display: inline-block;
-  }
 }
 
 .submitButton {
-  width: min(34.5rem, 90dvw);
+  width: calc(100% - 2.5rem);
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 1rem;
   margin: auto;
 
   .addingButton {
+    width: max-content;
     display: flex;
-    justify-content: flex-start;
-    margin: 1.5rem 0 2.5rem 4.1rem;
+    margin: 1.5rem 0 2.5rem;
     padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
     background-color: var(--third);
     border: 1px groove var(--third);
-    border-radius: 0.5rem;
     cursor: pointer;
   }
 }

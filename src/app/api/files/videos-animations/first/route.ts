@@ -6,6 +6,7 @@ import { FileType, Tags } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 import { getFileRoleId } from 'utils/server/roles';
+import { name } from 'next/dist/server/ci-info';
 
 const tags: Tags[] = ['animations', 'videos'];
 
@@ -37,6 +38,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
       role.roleId === 'no id' && NextResponse.json(filesArray);
       filesArray.push({
+        idLiked: '',
+        liked: false,
+        likes: 0,
         fileId,
         name,
         shortDescription: shortDescription!,

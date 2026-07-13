@@ -44,6 +44,17 @@ export const NewComments = ({
 
   const createNewComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
+      console.log('comment', {
+        comment,
+        authorId,
+        postId,
+        roleId,
+        commentId,
+        fileId,
+        subCommentId,
+        fileCommentId,
+      });
+
       const { role, message } = await newComment({
         content: comment,
         authorId,
@@ -90,6 +101,7 @@ export const NewComments = ({
           </div>
 
           <div className={styles.submitButton}>
+            <p></p>
             <button type="submit" className={styles.addingButton}>
               {tComments('newComButton')}
             </button>

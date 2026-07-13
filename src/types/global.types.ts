@@ -4,7 +4,7 @@ import { StaticImageData } from 'next/image';
 import { ICustomData } from '@paddle/paddle-node-sdk';
 
 //GENERAL
-export type Like = { likes: number; liked: boolean };
+export type Like = { likes: number; liked: boolean; idLiked: string };
 type Time = { createdAt?: string; updatedAt?: string };
 
 export type IndexType = 'photographs' | 'videos' | 'animations';
@@ -47,17 +47,14 @@ export type ProfileType = {
 };
 
 //FILES
-export type FileType = Time & {
+type File = {
   fileId?: string;
   name?: string;
   shortDescription?: string;
   tags: Tags;
-  pseudonym?: string;
-  authorProfilePhoto?: string;
-  authorName: string;
-  profileType?: boolean;
-  fileUrl: string;
   time: string;
+  fileUrl: string;
+  authorName: string;
   authorId: string;
   roleId: string;
   idLiked: string;
@@ -65,21 +62,16 @@ export type FileType = Time & {
   liked: boolean;
 };
 
-export type ArticleVideosType = {
-  fileId: string;
-  name: string;
-  fileUrl: string;
-  shortDescription: string;
-  authorName: string;
+export type FileType = Time &
+  File & {
+    pseudonym?: string;
+    authorProfilePhoto?: string;
+    profileType?: boolean;
+  };
+
+export type ArticleVideosType = File & {
   authorBool: boolean;
-  tags: Database['public']['Enums']['Tags'];
-  time: string;
-  authorId: string;
-  roleId: string;
   commentsBool?: boolean;
-  idLiked: string;
-  likes: number;
-  liked: boolean;
 };
 
 export type FilesUploadType = {
@@ -257,6 +249,7 @@ type Comment = Time & {
   date?: string;
   pseudonym?: string;
   content: string;
+  idLiked: string;
   liked: boolean;
   likes: number;
 };

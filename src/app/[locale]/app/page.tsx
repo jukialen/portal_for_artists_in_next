@@ -7,11 +7,11 @@ import { selectFiles } from 'constants/selects';
 import { FileType, LangType, RoleType, Tags } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
-
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
+import { likeList } from 'utils/likes';
 
 import { AppWrapper } from 'components/wrappers/AppWrapper/AppWrapper';
 const ZeroFiles = dynamic(() => import('components/ui/atoms/ZeroFiles/ZeroFiles').then((zf) => zf.ZeroFiles));
@@ -63,6 +63,9 @@ async function getTop10Drawings(maxItems: number) {
         tags,
         roleId: roleOkId,
         time: await getDate(updatedAt || createdAt!),
+        liked: (await likeList(authorId!, fileId)).liked,
+        likes: (await likeList(authorId!, fileId)).likes,
+        idLiked: (await likeList(authorId!, fileId)).idLiked,
       });
     }
     return filesArray;
@@ -112,6 +115,9 @@ async function getTop10Pavo(maxItems: number, tag: Tags) {
         authorId: authorId!,
         tags,
         roleId: roleOkId,
+        liked: (await likeList(authorId!, fileId)).liked,
+        likes: (await likeList(authorId!, fileId)).likes,
+        idLiked: (await likeList(authorId!, fileId)).idLiked,
       });
     }
 
@@ -139,23 +145,9 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
   const videos = await getTop10Pavo(maxItems, tags[2]);
 
   const appData = (data: FileType[]) =>
-    data.map(
-      ({ fileId, name, fileUrl, shortDescription, tags, authorName, time, authorId, roleId }: FileType, index) => (
-        <FileContainer
-          fileId={fileId!}
-          name={name!}
-          fileUrl={fileUrl}
-          shortDescription={shortDescription!}
-          tags={tags!}
-          authorName={authorName!}
-          authorBool={authorName === pseudonym!}
-          time={time}
-          authorId={authorId}
-          roleId={roleId}
-          key={index}
-        />
-      ),
-    );
+    data.map((d: FileType, index) => (
+      <FileContainer fileData={{ ...d, authorBool: d.authorName === pseudonym! }} key={index} />
+    ));
 
   return (
     <>

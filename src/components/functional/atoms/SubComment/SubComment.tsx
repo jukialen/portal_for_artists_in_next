@@ -15,22 +15,24 @@ import { Tag } from 'components/ui/atoms/Tag/Tag';
 
 import styles from './SubComment.module.css';
 
-export const SubComment = ({
-  subCommentId,
-  content,
-  authorProfilePhoto,
-  authorName,
-  role,
-  roleId,
-  authorId,
-  date,
-  fileId,
-  postId,
-  profilePhoto,
-  liked,
-  likes,
-}: SubCommentType) => {
+export const SubComment = ({ subCommentsData }: { subCommentsData: SubCommentType }) => {
   const { del } = useContext(DCContext);
+
+  const {
+    subCommentId,
+    content,
+    authorProfilePhoto,
+    authorName,
+    role,
+    roleId,
+    authorId,
+    date,
+    fileId,
+    postId,
+    profilePhoto,
+    liked,
+    likes,
+  } = subCommentsData;
 
   return (
     <div className={del ? styles.container__deleted : styles.container}>

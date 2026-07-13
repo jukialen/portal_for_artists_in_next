@@ -14,20 +14,21 @@ import { OptionsComments } from 'components/functional/molecules/OptionsComments
 
 import styles from './LastComment.module.css';
 
-export const LastComment = ({
-  lastCommentId,
-  content,
-  authorProfilePhoto,
-  authorName,
-  role,
-  roleId,
-  authorId,
-  subCommentId,
-  date,
-  liked,
-  likes,
-}: LastCommentType) => {
+export const LastComment = ({ lastCommentData }: { lastCommentData: LastCommentType }) => {
   const { del } = useContext(DCContext);
+  const {
+    lastCommentId,
+    content,
+    authorProfilePhoto,
+    authorName,
+    role,
+    roleId,
+    authorId,
+    subCommentId,
+    date,
+    liked,
+    likes,
+  } = lastCommentData;
 
   return (
     <div className={del ? styles.container__deleted : styles.container}>

@@ -41,40 +41,11 @@ export const LastComments = ({ subCommentId, roleId }: LastCommentsType) => {
   return (
     <>
       {lastCommentsArray.length > 0 &&
-        lastCommentsArray.map(
-          (
-            {
-              lastCommentId,
-              subCommentId,
-              content,
-              authorName,
-              authorProfilePhoto,
-              authorId,
-              role,
-              roleId,
-              date,
-              liked,
-              likes,
-            }: LastCommentType,
-            index,
-          ) => (
-            <DCProvider key={index}>
-              <LastComment
-                lastCommentId={lastCommentId}
-                content={content}
-                authorName={authorName}
-                authorProfilePhoto={authorProfilePhoto}
-                role={role}
-                roleId={roleId}
-                authorId={authorId}
-                subCommentId={subCommentId}
-                liked={liked}
-                likes={likes}
-                date={date}
-              />
-            </DCProvider>
-          ),
-        )}
+        lastCommentsArray.map((lastComment: LastCommentType, index) => (
+          <DCProvider key={index}>
+            <LastComment lastCommentData={{ ...lastComment, roleId, subCommentId }} />
+          </DCProvider>
+        ))}
       {!!lastVisible && lastCommentsArray.length === maxItems * i && (
         <MoreButton nextElementsAction={nextShowingComments} />
       )}

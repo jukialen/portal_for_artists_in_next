@@ -10,6 +10,7 @@ import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
+import { likeList } from '../../../../../utils/likes';
 
 const FileContainer = dynamic(() =>
   import('components/functional/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
@@ -60,15 +61,6 @@ async function oneFile(fileId: string, userId: string) {
 
     if (storageError) return;
 
-    const { data: likeData, error: errorLike } = await supabase
-      .from('Liked')
-      .select('id, userId')
-      .eq('fileId', data.fileId);
-
-    if (errorLike || likeData?.length === 0) console.log('likeData', likeData);
-
-    const liked = likeData?.find((f) => f.userId === userId);
-
     return {
       authorName: Users!.pseudonym,
       authorProfilePhoto: Users!.profilePhoto,
@@ -78,9 +70,9 @@ async function oneFile(fileId: string, userId: string) {
       roleId: role.roleId,
       authorId: authorId!,
       time: await getDate(updatedAt! || createdAt!),
-      likes: likeData?.length || 0,
-      liked: !!liked,
-      idLiked: !!liked ? liked?.id : '',
+      liked: (await likeList(authorId!, fileId)).liked,
+      likes: (await likeList(authorId!, fileId)).likes,
+      idLiked: (await likeList(authorId!, fileId)).idLiked,
     };
   } catch (e) {
     console.error(e);
@@ -99,24 +91,9 @@ export default async function Post({ params }: PropsType) {
 
   if (!authorPost) return notFound();
 
-  const { fileUrl, shortDescription, tags, authorName, time, authorId, roleId, likes, liked, idLiked } = authorPost;
-
   return (
     <FileContainer
-      fileId={fileId}
-      name={name}
-      fileUrl={fileUrl}
-      shortDescription={shortDescription!}
-      tags={tags}
-      authorName={authorName}
-      authorBool={authorName === userData?.pseudonym!}
-      time={time}
-      authorId={authorId}
-      roleId={roleId}
-      commentsBool={true}
-      likes={likes}
-      liked={liked}
-      idLiked={idLiked}
+      fileData={{ ...authorPost, authorBool: authorPost.authorName === userData?.pseudonym!, commentsBool: true }}
     />
   );
 }

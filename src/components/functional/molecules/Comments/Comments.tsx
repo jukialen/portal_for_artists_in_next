@@ -46,40 +46,11 @@ export const Comments = ({ postId, roleId }: CommentsType) => {
   return (
     <>
       {commentsArray.length > 0 ? (
-        commentsArray.map(
-          (
-            {
-              commentId,
-              content,
-              authorName,
-              authorProfilePhoto,
-              role,
-              roleId,
-              authorId,
-              postId,
-              date,
-              liked,
-              likes,
-            }: CommentType,
-            index,
-          ) => (
-            <DCProvider key={index}>
-              <Comment
-                commentId={commentId}
-                content={content}
-                authorName={authorName}
-                authorProfilePhoto={authorProfilePhoto}
-                role={role}
-                roleId={roleId}
-                authorId={authorId}
-                postId={postId}
-                date={date}
-                liked={liked}
-                likes={likes}
-              />
-            </DCProvider>
-          ),
-        )
+        commentsArray.map((comment: CommentType, index) => (
+          <DCProvider key={index}>
+            <Comment commentData={{ ...comment, roleId }} />
+          </DCProvider>
+        ))
       ) : (
         <p className={styles.noComments}>{tComments('noComments')}</p>
       )}

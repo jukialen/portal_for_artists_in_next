@@ -63,24 +63,11 @@ export const DrawingsWrapper = ({ pid, pseudonym, filesDrawings }: DrawingsWrapp
   return (
     <Wrapper>
       {userDrawings.length > 0 ? (
-        userDrawings.map(
-          ({ fileId, name, fileUrl, shortDescription, tags, authorName, time, authorId, roleId }: FileType, index) => (
-            <Suspense key={index} fallback={<LoadingPage />}>
-              <FileContainer
-                fileId={fileId!}
-                name={name!}
-                fileUrl={fileUrl}
-                shortDescription={shortDescription!}
-                tags={tags!}
-                authorName={authorName!}
-                authorBool={authorName === pseudonym}
-                time={time}
-                authorId={authorId}
-                roleId={roleId}
-              />
-            </Suspense>
-          ),
-        )
+        userDrawings.map((drawings: FileType, index) => (
+          <Suspense key={index} fallback={<LoadingPage />}>
+            <FileContainer fileData={{ ...drawings, authorBool: drawings.authorName === pseudonym }} />
+          </Suspense>
+        ))
       ) : (
         <div>nie ma nic</div>
       )}

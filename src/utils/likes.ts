@@ -1,3 +1,5 @@
+'use server';
+
 //SELECT
 import { backUrl } from 'constants/links';
 import { Like } from 'types/global.types';
@@ -10,35 +12,20 @@ export const likeList = async (
   fileCommentId?: string,
   subCommentId?: string,
   lastCommentId?: string,
-): Promise<Like | null> => {
+): Promise<Like> => {
   try {
-    const params = {
-      postId: postId!,
-      fileId: fileId!,
-      fileCommentId: fileCommentId!,
-      commentId: commentId!,
-      authorId,
-      subCommentId: subCommentId!,
-      lastCommentId: lastCommentId!,
-    };
-    const queryString = new URLSearchParams(params).toString();
+    const params = { postId, fileId, fileCommentId, commentId, authorId, subCommentId, lastCommentId };
+    const validParams = Object.entries(params).filter(([_, value]) => value != null) as [string, string][];
+    const queryString = new URLSearchParams(validParams).toString();
 
-    const likesConst: {
-      likes: number;
-      liked: boolean;
-    } = await fetch(`${backUrl}/api/likes/list?${queryString}`, {
-      method: 'GET',
-    })
-      .then((r) => r.json())
-      .catch((e) => {
-        console.error(e);
-        return null;
-      });
-
-    return likesConst;
+    return await fetch(`${backUrl}/api/likes/list?${queryString}`, { method: 'GET' }).then((r) => r.json());
   } catch (e) {
     console.error(e);
-    return null;
+    return {
+      idLiked: '',
+      likes: 0,
+      liked: false,
+    };
   }
 };
 
@@ -53,12 +40,7 @@ export const toggleLiked = async (is: boolean, authorId: string, postId?: string
           fileId: fileId!,
           authorId,
         }),
-      })
-        .then((r) => r.json())
-        .catch((e) => {
-          console.error(e);
-          return null;
-        });
+      }).then((r) => r.json());
     } else {
       const params = {
         postId: postId!,
@@ -69,15 +51,10 @@ export const toggleLiked = async (is: boolean, authorId: string, postId?: string
 
       return await fetch(`${backUrl}/api/likes/toggle?${queryString}`, {
         method: 'DELETE',
-      })
-        .then((r) => r.json())
-        .catch((e) => {
-          console.error(e);
-          return null;
-        });
+      }).then((r) => r.json());
     }
   } catch (e) {
     console.error(e);
-    return null;
+    return { idLiked: '', likes: 0, liked: false };
   }
 };

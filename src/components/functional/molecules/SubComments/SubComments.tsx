@@ -49,41 +49,11 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId, groupsPo
   return (
     <>
       {subCommentsArray.length > 0 &&
-        subCommentsArray.map(
-          (
-            {
-              subCommentId,
-              content,
-              authorName,
-              authorProfilePhoto,
-              role,
-              roleId,
-              authorId,
-              date,
-              liked,
-              likes,
-            }: SubCommentType,
-            index,
-          ) => (
-            <DCProvider key={index}>
-              <SubComment
-                subCommentId={subCommentId}
-                content={content}
-                authorName={authorName}
-                authorProfilePhoto={authorProfilePhoto}
-                role={role}
-                roleId={roleId}
-                authorId={authorId}
-                fileCommentId={fileCommentId}
-                fileId={fileId}
-                postId={postId}
-                likes={likes}
-                liked={liked}
-                date={date}
-              />
-            </DCProvider>
-          ),
-        )}
+        subCommentsArray.map((subComments: SubCommentType, index) => (
+          <DCProvider key={index}>
+            <SubComment subCommentsData={{ ...subComments, fileCommentId, fileId, postId }} />
+          </DCProvider>
+        ))}
       {!!lastVisible && subCommentsArray.length === maxItems * i && <MoreButton nextElementsAction={nextComments} />}
     </>
   );

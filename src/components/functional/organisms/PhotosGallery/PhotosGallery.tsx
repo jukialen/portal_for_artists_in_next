@@ -52,27 +52,11 @@ export const PhotosGallery = ({ id, pseudonym, author, tGallery, firstGraphics }
 
       <Wrapper>
         {userPhotos && userPhotos.length > 0 ? (
-          userPhotos.map(
-            (
-              { fileId, name, fileUrl, shortDescription, tags, authorName, time, authorId, roleId }: FileType,
-              index,
-            ) => (
-              <Suspense key={index} fallback={<LoadingPage />}>
-                <FileContainer
-                  fileId={fileId!}
-                  name={name!}
-                  fileUrl={fileUrl}
-                  shortDescription={shortDescription!}
-                  tags={tags!}
-                  authorName={authorName!}
-                  authorBool={authorName === pseudonym}
-                  time={time}
-                  authorId={authorId}
-                  roleId={roleId}
-                />
-              </Suspense>
-            ),
-          )
+          userPhotos.map((photos: FileType, index) => (
+            <Suspense key={index} fallback={<LoadingPage />}>
+              <FileContainer fileData={{ ...photos, authorBool: photos.authorName === pseudonym }} />
+            </Suspense>
+          ))
         ) : (
           <div>nie ma nic</div>
         )}

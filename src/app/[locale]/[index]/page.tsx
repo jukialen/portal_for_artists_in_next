@@ -20,6 +20,7 @@ const FileContainerClient = dynamic(() =>
 );
 
 import styles from './page.module.css';
+import { likeList } from '../../../utils/likes';
 
 const downloadDrawings = async ({ index, maxItems }: { index: IndexType; locale: LangType; maxItems: number }) => {
   const filesArray: FileType[] = [];
@@ -43,15 +44,18 @@ const downloadDrawings = async ({ index, maxItems }: { index: IndexType; locale:
       if (role.roleId === 'no id') return filesArray;
 
       filesArray.push({
-        authorId: authorId!,
-        roleId: role.roleId,
-        tags,
-        authorName: Users?.pseudonym!,
         fileId,
-        name,
         shortDescription: shortDescription!,
         fileUrl,
+        tags,
+        name,
+        authorName: Users?.pseudonym!,
+        authorId: authorId!,
+        roleId: role.roleId,
         time: await getDate(updatedAt || createdAt!),
+        liked: (await likeList(authorId!, fileId)).liked,
+        likes: (await likeList(authorId!, fileId)).likes,
+        idLiked: (await likeList(authorId!, fileId)).idLiked,
       });
     }
 

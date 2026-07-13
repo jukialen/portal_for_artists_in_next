@@ -11,6 +11,7 @@ import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/server/roles';
 import { createServer } from 'utils/supabase/clientSSR';
+import { likeList } from 'utils/likes';
 
 import { DrawingsWrapper } from 'components/wrappers/DrawingsWrapper/DrawingsWrapper';
 
@@ -49,6 +50,9 @@ async function getFirstDrawings(pid: Tags, maxItems: number) {
         roleId: role.roleId,
         tags,
         time: await getDate(updatedAt || createdAt!),
+        liked: (await likeList(authorId!, fileId)).liked,
+        likes: (await likeList(authorId!, fileId)).likes,
+        idLiked: (await likeList(authorId!, fileId)).idLiked,
       });
     }
 

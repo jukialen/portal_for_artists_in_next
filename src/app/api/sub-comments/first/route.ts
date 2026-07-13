@@ -82,8 +82,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         role: gRole!,
         roleId: !!commentId ? groupsPostsRoleId || roleId : roleId,
         authorId,
-        likes: (await likeList(authorId, undefined, undefined, commentId!, fileCommentId!))!.likes,
-        liked: (await likeList(authorId, undefined, undefined, commentId!, fileCommentId!))!.liked,
+        liked: (await likeList(authorId, subCommentId)).liked,
+        likes: (await likeList(authorId, subCommentId)).likes,
+        idLiked: (await likeList(authorId, subCommentId)).idLiked,
         date: await getDate(updatedAt! || createdAt!),
         groupsPostsRoleId: groupsPostsRoleId!,
       });

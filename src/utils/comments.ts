@@ -1,3 +1,5 @@
+'use server';
+
 import { backUrl } from 'constants/links';
 import {
   CommentType,
@@ -66,12 +68,7 @@ export const filesApiComments = async (
       method: 'GET',
       credentials: 'include',
       cache: 'reload',
-    })
-      .then((r) => r.json())
-      .catch((e) => {
-        console.error(e);
-        return [];
-      });
+    }).then((r) => r.json());
 
     return res || [];
   } catch (e) {
