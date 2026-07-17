@@ -54,22 +54,18 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
   const [lastVisible, setLastVisible] = useState(
     comments.length === maxItems ? comments[comments.length - 1].createdAt : '',
   );
-  const [showComments, setShowComments] = useState(false);
+  let [i, setI] = useState(1);
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
 
   const tComments = useScopedI18n('Comments');
   const t = useI18n();
 
-  const showingComments = () => setShowComments(!showComments);
-
   useEffect(() => {
     getUserData().then((data) => setUserData(data));
 
     commentsBool && filesApiComments(fileId!, maxItems).then((data) => setComments(data));
   }, [linkShare, commentsBool, fileId]);
-
-  let [i, setI] = useState(1);
 
   const nextComments = async () => {
     try {

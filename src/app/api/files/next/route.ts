@@ -46,9 +46,9 @@ export const GET = async (req: NextRequest) => {
         time: await getDate(updatedAt! || createdAt!),
         authorId: authorId!,
         roleId: role.roleId,
-        liked: (await likeList(authorId!, fileId))!.liked,
-        likes: (await likeList(authorId!, fileId))!.likes,
-        idLiked: (await likeList(authorId!, fileId))!.idLiked,
+        liked: (await likeList(authorId!, 'fileId', fileId))!.liked,
+        likes: (await likeList(authorId!, 'fileId', fileId))!.likes,
+        idLiked: (await likeList(authorId!, 'fileId', fileId))!.idLiked,
       });
     }
 

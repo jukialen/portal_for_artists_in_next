@@ -5,7 +5,7 @@ import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
 import { FileType, LangType, Tags } from 'types/global.types';
 
-import { getI18n } from 'locales/server';
+import { getScopedI18n } from 'locales/server';
 
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
@@ -50,9 +50,9 @@ async function getFirstDrawings(pid: Tags, maxItems: number) {
         roleId: role.roleId,
         tags,
         time: await getDate(updatedAt || createdAt!),
-        liked: (await likeList(authorId!, fileId)).liked,
-        likes: (await likeList(authorId!, fileId)).likes,
-        idLiked: (await likeList(authorId!, fileId)).idLiked,
+        liked: (await likeList(authorId!, 'fileId', fileId)).liked,
+        likes: (await likeList(authorId!, 'fileId', fileId)).likes,
+        idLiked: (await likeList(authorId!, 'fileId', fileId)).idLiked,
       });
     }
 
@@ -68,11 +68,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
   const { locale, pid } = await params;
   setStaticParamsLocale(locale);
 
-  const t = await getI18n();
-
-  const tDrawingsCategories = {
-    category: t('Aside.category'),
-  };
+  const tAside = await getScopedI18n('Aside');
 
   const userData = await getUserData();
   const pseudonym = userData?.pseudonym!;
@@ -82,7 +78,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
   return (
     <>
       <em className={styles.title}>
-        {tDrawingsCategories.category}: {pid}
+        {tAside('category')}: {pid}
       </em>
 
       <DrawingsWrapper pid={pid} pseudonym={pseudonym} filesDrawings={drawings} />

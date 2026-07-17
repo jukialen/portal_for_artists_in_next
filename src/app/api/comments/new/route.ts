@@ -11,6 +11,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const requestBody: CommentType & FilesCommentsType & SubCommentType = await req.json();
 
+    console.log('comment api', requestBody);
+
     const { content, authorId, postId, roleId, fileId, fileCommentId, commentId, subCommentId } = requestBody;
 
     if (roleId === 'no id') return NextResponse.json({ role: '', message: 'no role id' });
@@ -25,6 +27,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     if (!!fileId) {
+      console.log('fileId', fileId);
       const { error } = await supabase.from('FilesComments').insert([{ content, authorId, fileId, roleId: roleId! }]);
 
       if (!!error) {
@@ -56,6 +59,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     const { role, message }: { role: RoleType | ''; message: string } = await giveRole(roleId!);
+    console.log('{ role, message }', { role, message });
     return NextResponse.json({ role, message });
   } catch (error) {
     console.error(error);

@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PropsType): Promise<Metadata>
   return { ...HeadCom(`${authorName} user post subpage`) };
 }
 
-async function oneFile(fileId: string, userId: string) {
+async function oneFile(fileId: string) {
   const supabase = await createServer();
 
   try {
@@ -70,9 +70,10 @@ async function oneFile(fileId: string, userId: string) {
       roleId: role.roleId,
       authorId: authorId!,
       time: await getDate(updatedAt! || createdAt!),
-      liked: (await likeList(authorId!, fileId)).liked,
-      likes: (await likeList(authorId!, fileId)).likes,
-      idLiked: (await likeList(authorId!, fileId)).idLiked,
+      liked: (await likeList(authorId!, 'fileId', fileId)).liked,
+      likes: (await likeList(authorId!, 'fileId', fileId)).likes,
+      idLiked: (await likeList(authorId!, 'fileId', fileId)).idLiked,
+      fileId,
     };
   } catch (e) {
     console.error(e);
@@ -81,13 +82,13 @@ async function oneFile(fileId: string, userId: string) {
 }
 
 export default async function Post({ params }: PropsType) {
-  const { locale, name, file } = await params;
+  const { locale, file } = await params;
   setStaticParamsLocale(locale);
 
   const userData = await getUserData();
   const fileId = file[0];
 
-  const authorPost = await oneFile(fileId, userData?.id!);
+  const authorPost = await oneFile(fileId);
 
   if (!authorPost) return notFound();
 

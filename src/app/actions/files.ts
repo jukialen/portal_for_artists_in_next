@@ -41,7 +41,7 @@ export const graphics = async (
       for (const file of data!) {
         const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
-        const likeData = await likeList(authorId, fileId);
+        const likeData = await likeList(authorId, 'fileId', fileId);
 
         const role = await getFileRoleId(fileId, authorId);
 
@@ -81,7 +81,7 @@ export const graphics = async (
 
         const role = await getFileRoleId(fileId, authorId);
 
-        const likeData = await likeList(authorId, fileId);
+        const likeData = await likeList(authorId, 'fileId', fileId);
 
         filesArray.push({
           authorId,
@@ -142,7 +142,7 @@ export const videosAnimations = async (
 
         const role = await getFileRoleId(fileId, authorId!);
 
-        const likeData = await likeList(authorId, fileId);
+        const likeData = await likeList(authorId, 'fileId', fileId);
 
         if (role.roleId === 'no id') return filesArray;
 
@@ -182,7 +182,7 @@ export const videosAnimations = async (
 
         const role = await getFileRoleId(fileId, authorId!);
 
-        const likeData = await likeList(authorId, fileId);
+        const likeData = await likeList(authorId, 'fileId', fileId);
 
         if (role.roleId === 'no id') return filesArray;
 
@@ -241,7 +241,7 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
 
         const role = await getFileRoleId(fileId, authorId!);
 
-        const likeData = await likeList(authorId!, fileId);
+        const likeData = await likeList(authorId!, 'fileId', fileId);
 
         if (role.roleId == 'no id') return nextArray;
 

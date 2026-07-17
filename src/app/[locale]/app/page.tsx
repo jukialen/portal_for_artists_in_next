@@ -49,7 +49,7 @@ async function getTop10Drawings(maxItems: number) {
 
       const roleId = await getFileRoleId(fileId, authorId!);
       // @ts-ignore
-      if (roleId === 'no id') return filesArray;
+      if (roleId.roleId === 'no id') return filesArray;
 
       const roleOkId = roleId.roleId as RoleType;
 
@@ -63,9 +63,9 @@ async function getTop10Drawings(maxItems: number) {
         tags,
         roleId: roleOkId,
         time: await getDate(updatedAt || createdAt!),
-        liked: (await likeList(authorId!, fileId)).liked,
-        likes: (await likeList(authorId!, fileId)).likes,
-        idLiked: (await likeList(authorId!, fileId)).idLiked,
+        liked: (await likeList(authorId!, 'fileId', fileId)).liked,
+        likes: (await likeList(authorId!, 'fileId', fileId)).likes,
+        idLiked: (await likeList(authorId!, 'fileId', fileId)).idLiked,
       });
     }
     return filesArray;
@@ -100,8 +100,7 @@ async function getTop10Pavo(maxItems: number, tag: Tags) {
 
       const roleId = await getFileRoleId(fileId, authorId!);
 
-      // @ts-ignore
-      if (roleId === 'no id') return filesArray;
+      if (roleId.roleId === 'no id') return filesArray;
 
       const roleOkId = roleId! as unknown as RoleType;
 
@@ -115,9 +114,9 @@ async function getTop10Pavo(maxItems: number, tag: Tags) {
         authorId: authorId!,
         tags,
         roleId: roleOkId,
-        liked: (await likeList(authorId!, fileId)).liked,
-        likes: (await likeList(authorId!, fileId)).likes,
-        idLiked: (await likeList(authorId!, fileId)).idLiked,
+        liked: (await likeList(authorId!, 'fileId', fileId)).liked,
+        likes: (await likeList(authorId!, 'fileId', fileId)).likes,
+        idLiked: (await likeList(authorId!, 'fileId', fileId)).idLiked,
       });
     }
 

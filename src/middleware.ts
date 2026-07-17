@@ -24,13 +24,16 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith('/sw.js') ||
     pathname.startsWith('/workbox-') ||
     staticExtensions.some((ext) => pathname.endsWith(ext)) ||
-    pathname.startsWith('/api') ||
+    // pathname.startsWith('/api') ||
     pathname.startsWith('/_next')
   ) {
     return NextResponse.next();
   }
 
-  let response = !pathname.startsWith('/auth') ? i18nMiddleware(req) : NextResponse.next({ request: req });
+  let response =
+    !pathname.startsWith('/auth') && !pathname.startsWith('/api')
+      ? i18nMiddleware(req)
+      : NextResponse.next({ request: req });
 
   const supabase = createServerClient(projectUrl!, publishableKey!, {
     cookies: {
@@ -60,6 +63,8 @@ export async function middleware(req: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (pathname.startsWith('/api')) return response;
 
   let pathWithoutLocalePrefix = pathname;
 

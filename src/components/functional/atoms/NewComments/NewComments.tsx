@@ -67,7 +67,7 @@ export const NewComments = ({
       });
 
       if (!role || !!message) {
-        console.error(message);
+        // console.error(message);
         return;
       }
 
