@@ -12,16 +12,59 @@ import {
 } from 'types/global.types';
 import { createServer } from './supabase/clientSSR';
 import { likeList } from './likes';
-import { getDate } from '../helpers/getDate';
+import { getDate } from 'helpers/getDate';
+import { giveRole } from './server/roles';
 import { getUserData } from '../helpers/getUserData';
 
 //POST
 export const newComment = async (commentData: NewCommentsType): Promise<{ role: RoleType | ''; message: string }> => {
   try {
-    const { role, message }: { role: RoleType | ''; message: string } = await fetch(`${backUrl}/api/comments/new`, {
-      method: 'POST',
-      body: JSON.stringify(commentData),
-    }).then((r) => r.json());
+    const { content, authorId, postId, roleId, fileId, fileCommentId, commentId, subCommentId } = commentData;
+    const supabase = await createServer();
+
+    if (roleId === 'no id') return { role: '', message: 'no role id' };
+
+    if (!!postId) {
+      const { error } = await supabase.from('Comments').insert([{ content, authorId, postId, roleId: roleId! }]);
+
+      if (!!error) {
+        console.error(error);
+        return { role: '', message: 'no post id' };
+      }
+    }
+
+    if (!!fileId) {
+      const { error } = await supabase.from('FilesComments').insert([{ content, authorId, fileId, roleId: roleId! }]);
+
+      if (!!error) {
+        console.error('fileId error', error);
+        return { role: '', message: 'no file id' };
+      }
+    }
+
+    if (!!fileCommentId || !!commentId) {
+      const { error } = await supabase
+        .from('SubComments')
+        .insert([{ content, authorId, commentId, fileCommentId, roleId: roleId! }]);
+
+      if (!!error) {
+        console.error(error);
+        return { role: '', message: 'no second nested comment id' };
+      }
+    }
+
+    if (!!subCommentId) {
+      const { error } = await supabase
+        .from('LastComments')
+        .insert([{ content, authorId, subCommentId, roleId: roleId! }]);
+
+      if (!!error) {
+        console.error(error);
+        return { role: '', message: 'no last nested comment id' };
+      }
+    }
+
+    const { role, message }: { role: RoleType | ''; message: string } = await giveRole(roleId!);
 
     !!message && console.error(`Error: ${message} with role: '${role}'.`);
 
@@ -37,22 +80,83 @@ export const comments = async (
   postId: string,
   maxItems: number,
   groupsPostsRoleId: string,
-  step: 'first' | 'again',
+  step: 'first' | 'again' = 'first',
 ): Promise<CommentType[]> => {
-  const params = { postId, maxItems: maxItems.toString(), groupsPostsRoleId };
-  const queryString = new URLSearchParams(params).toString();
+  const supabase = await createServer();
+
+  let array: {
+    authorId: string;
+    commentId: string;
+    content: string;
+    createdAt: string;
+    postId: string;
+    roleId: string;
+    updatedAt: string | null;
+    Users: {
+      pseudonym: string;
+      profilePhoto: string;
+    };
+    Roles: {
+      role: RoleType;
+    };
+  }[] = [];
+
+  const commentArray: CommentType[] = [];
+
+  const tableName = 'Comments';
 
   try {
-    const res: CommentType[] = await fetch(`${backUrl}/api/comments/${step}?${queryString}`, {
-      method: 'GET',
-    })
-      .then((r) => r.json())
-      .catch((e) => {
-        console.error(e);
-        return [];
-      });
+    if (step === 'first') {
+      const { data, error } = await supabase
+        .from(tableName)
+        .select('*, Roles!roleId (role), Users!authorId (pseudonym, profilePhoto)')
+        .eq('postId', postId!)
+        .order('createdAt', { ascending: false })
+        .limit(maxItems);
 
-    return res || [];
+      if (!!error || data?.length === 0) {
+        console.error(error);
+        return [];
+      }
+
+      array = data;
+    } else {
+      const { data, error } = await supabase
+        .from(tableName)
+        .select('*, Roles!roleId (role), Users (pseudonym, profilePhoto)')
+        .gt('postId', postId)
+        .order('createdAt', { ascending: false })
+        .limit(maxItems);
+
+      if (!!error || data?.length === 0) {
+        console.error(error);
+        return [];
+      }
+
+      array = data;
+    }
+
+    for (const first of array) {
+      const { commentId, content, roleId, authorId, postId, createdAt, updatedAt, Roles, Users } = first;
+
+      commentArray.push({
+        commentId,
+        content,
+        authorName: Users.pseudonym!,
+        authorProfilePhoto: Users.profilePhoto!,
+        role: Roles.role,
+        roleId: groupsPostsRoleId || roleId,
+        authorId,
+        postId,
+        idLiked: (await likeList(authorId, 'postId', postId))!.idLiked,
+        likes: (await likeList(authorId, 'postId', postId))!.likes,
+        liked: (await likeList(authorId, 'postId', postId))!.liked,
+        date: await getDate(updatedAt! || createdAt!),
+        tableName,
+      });
+    }
+
+    return commentArray;
   } catch (e) {
     console.error(e);
     return [];
@@ -77,49 +181,61 @@ export const filesApiComments = async (
       authorId: string;
       createdAt: string;
       updatedAt: string | null;
+      Users: {
+        pseudonym: string;
+        profilePhoto: string;
+      };
+      Roles: {
+        role: RoleType;
+      };
     }[];
+
+    const tableName = 'FilesComments';
 
     if (stage === 'first') {
       const { data, error } = await supabase
-        .from('FilesComments')
-        .select('id, fileId, content, roleId, authorId, createdAt, updatedAt')
+        .from(tableName)
+        .select(
+          'id, fileId, content, roleId, Roles!roleId (role), authorId, createdAt, updatedAt, Users!authorId (pseudonym, profilePhoto)',
+        )
         .eq('fileId', fileId)
         .order('createdAt', { ascending: false })
-        .limit(Number(maxItems));
+        .limit(maxItems);
 
       if (!data || data?.length === 0 || !!error) return filesArray;
       commentsData = data;
     } else {
       const { data, error } = await supabase
-        .from('FilesComments')
+        .from(tableName)
         .select(
-          'id, fileId, content, roleId, Roles (role), authorId, createdAt, updatedAt, Users (pseudonym, profilePhoto)',
+          'id, fileId, content, roleId, Roles!roleId (role), authorId, createdAt, updatedAt, Users!authorId (pseudonym, profilePhoto)',
         )
         .gt('fileId', fileId)
         .order('createdAt', { ascending: false })
-        .limit(Number(maxItems));
+        .limit(maxItems);
+
       if (!data || data?.length === 0 || !!error) return filesArray;
 
       commentsData = data;
     }
-    const userData = await getUserData();
 
     for (const d of commentsData) {
-      const { id: fileCommentId, fileId, content, roleId, authorId, createdAt, updatedAt } = d;
+      const { id: fileCommentId, fileId, content, roleId, authorId, createdAt, updatedAt, Roles, Users } = d;
 
       filesArray.push({
         fileCommentId,
         fileId,
         content,
-        authorName: '',
-        authorProfilePhoto: userData?.profilePhoto!,
-        role: 'USER',
+        authorName: Users.pseudonym,
+        authorProfilePhoto: Users.profilePhoto,
+        role: Roles.role,
         roleId,
         authorId,
         likes: (await likeList(authorId, 'fileCommentId', fileCommentId)).likes,
         liked: (await likeList(authorId, 'fileCommentId', fileCommentId)).liked,
         idLiked: (await likeList(authorId, 'fileCommentId', fileCommentId)).idLiked,
         date: await getDate(updatedAt! || createdAt!),
+        tableName,
       });
     }
 
@@ -197,15 +313,20 @@ export const lastComments = async (
 //PATCH
 
 export const updComment = async (tableName: TableNameType, id: string, content: string): Promise<boolean> => {
-  console.log('updateComment called', tableName, id, content);
   try {
-    const up: boolean = await fetch(`${backUrl}/api/comments/update`, {
-      method: 'PATCH',
-      body: JSON.stringify({ tableName, id, content }),
-    }).then((r) => r.json());
+    const supabase = await createServer();
+    const author = await getUserData();
 
-    console.log('updateComment result', up);
-    return up;
+    const queryMap = {
+      Comments: () => supabase.from('Comments').update({ content }).eq('commentId', id),
+      FilesComments: () => supabase.from('FilesComments').update({ content }).eq('id', id),
+      SubComments: () => supabase.from('SubComments').update({ content }).eq('subCommentId', id),
+      LastComments: () => supabase.from('LastComments').update({ content }).eq('lastCommentId', id),
+    };
+
+    const { error } = await queryMap[tableName]().eq('authorId', author?.id!);
+
+    return !!error;
   } catch (e) {
     console.error(e);
     return false;
@@ -215,13 +336,19 @@ export const updComment = async (tableName: TableNameType, id: string, content: 
 ///DELETE
 export const delComment = async (tableName: TableNameType, id: string): Promise<{ message: string; error: string }> => {
   try {
-    const { message, error }: { message: string; error: string } = await fetch(`${backUrl}/api/comments/delete`, {
-      method: 'DELETE',
-      body: JSON.stringify({ tableName, id }),
-    }).then((r) => r.json());
+    const supabase = await createServer();
 
-    console.log('deleteComment result', message, error);
-    return { message, error };
+    const author = await getUserData();
+
+    const queryMap = {
+      Comments: () => supabase.from('Comments').delete().eq('commentId', id),
+      FilesComments: () => supabase.from('FilesComments').delete().eq('id', id),
+      SubComments: () => supabase.from('SubComments').delete().eq('subCommentId', id),
+      LastComments: () => supabase.from('LastComments').delete().eq('lastCommentId', id),
+    };
+
+    const { error } = await queryMap[tableName]().eq('authorId', author?.id!);
+    return { message: error ? 'Failed to delete comment' : 'Comment was deleted', error: error?.message || '' };
   } catch (e: any) {
     console.error(e);
     return { message: '', error: e.message };

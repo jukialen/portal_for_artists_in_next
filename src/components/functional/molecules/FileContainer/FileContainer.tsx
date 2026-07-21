@@ -12,7 +12,7 @@ import { filesApiComments } from 'utils/comments';
 import { backUrl } from 'constants/links';
 import { supabaseStorageProfileUrl } from 'constants/links';
 import { TagConstants } from 'constants/values';
-import { ArticleVideosType, FilesCommentsType, UserType } from 'types/global.types';
+import { ArticleVideosType, CommentType, UserType } from 'types/global.types';
 
 import { DCContext, DCProvider } from 'providers/DeleteCommentProvider';
 
@@ -26,6 +26,7 @@ import { SharingButton } from 'components/ui/atoms/SharingButton/SharingButton';
 
 import styles from './FileContainer.module.css';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
+import { Comment } from '../../atoms/Comment/Comment';
 
 export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => {
   const {
@@ -50,7 +51,7 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
 
   const { del } = useContext(DCContext);
   const [userData, setUserData] = useState<UserType | null>(null);
-  const [comments, setComments] = useState<FilesCommentsType[]>([]);
+  const [comments, setComments] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState(
     comments.length === maxItems ? comments[comments.length - 1].createdAt : '',
   );
@@ -170,41 +171,7 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
             roleId={roleId}
           />
           {comments.length > 0 ? (
-            comments.map((data: FilesCommentsType, index) => (
-              <DCProvider key={index}>
-                <div className={del ? styles.container__deleted : styles.container}>
-                  <div className={styles.comment}>
-                    <Avatar
-                      src={`${supabaseStorageProfileUrl}/${data.authorProfilePhoto}`}
-                      fallbackName={data.authorName}
-                      alt="author profile photo icon"
-                    />
-                    <div className={styles.rightSideComment}>
-                      <div className={styles.topPartComment}>
-                        <p className={styles.pseudonym}>
-                          <Link href={`/user/${data.authorName}`}>{data.authorName}</Link>
-                        </p>
-                        <p className={styles.date}>{data.date}</p>
-                      </div>
-                      <h2 className={styles.text}>{data.content}</h2>
-                    </div>
-                  </div>
-                  <OptionsComments
-                    fileId={fileId}
-                    fileCommentId={data.fileCommentId}
-                    authorId={authorId}
-                    userId={authorId}
-                    liked={data.liked}
-                    likes={data.likes}
-                    authorProfilePhoto={data.authorProfilePhoto}
-                    roleId={roleId!}
-                    comment={data.content}
-                    tableName="FilesComments">
-                    <SubComments fileCommentId={data.fileCommentId} fileId={fileId} />
-                  </OptionsComments>
-                </div>
-              </DCProvider>
-            ))
+            comments.map((data) => <Comment commentData={data} />)
           ) : (
             <p className={styles.noComments}>{tComments('noComments')}</p>
           )}
@@ -214,3 +181,37 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
     </article>
   );
 };
+
+// <DCProvider key={index}>
+//   <div className={del ? styles.container__deleted : styles.container}>
+//     <div className={styles.comment}>
+//       <Avatar
+//         src={`${supabaseStorageProfileUrl}/${data.authorProfilePhoto}`}
+//         fallbackName={data.authorName}
+//         alt="author profile photo icon"
+//       />
+//       <div className={styles.rightSideComment}>
+//         <div className={styles.topPartComment}>
+//           <p className={styles.pseudonym}>
+//             <Link href={`/user/${data.authorName}`}>{data.authorName}</Link>
+//           </p>
+//           <p className={styles.date}>{data.date}</p>
+//         </div>
+//         <h2 className={styles.text}>{data.content}</h2>
+//       </div>
+//     </div>
+//     <OptionsComments
+//       fileId={fileId}
+//       fileCommentId={data.fileCommentId}
+//       authorId={authorId}
+//       userId={authorId}
+//       liked={data.liked}
+//       likes={data.likes}
+//       authorProfilePhoto={data.authorProfilePhoto}
+//       roleId={roleId!}
+//       comment={data.content}
+//       tableName="FilesComments">
+//       <SubComments fileCommentId={data.fileCommentId} fileId={fileId} />
+//     </OptionsComments>
+//   </div>
+// </DCProvider>

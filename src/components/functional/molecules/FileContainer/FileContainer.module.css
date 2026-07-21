@@ -114,32 +114,32 @@
 }
 
 .container {
-  width: min(34.5rem, 90dvw);
+  width: 99.8%;
   margin: 1rem auto 2rem;
 
   .comment {
-    width: 100%;
+    width: inherit;
     display: grid;
     grid-template-columns: 3rem 1fr;
-    align-items: center;
     justify-items: center;
+    box-shadow: var(--box-shadow);
+    backdrop-filter: var(--backdrop-filter);
 
     img {
-      margin: 0.35rem 0 0.8rem;
+      margin: 0 auto;
     }
 
     .rightSideComment {
       width: inherit;
       display: flex;
       flex-direction: column;
-      margin: 0 0.5rem;
+      padding-right: 0.5rem;
 
       .topPartComment {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.35rem 0 1.2rem;
+        grid-template-rows: 2.5rem;
+        align-items: flex-start;
 
         .pseudonym {
           font-size: 1.2rem;

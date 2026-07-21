@@ -44,17 +44,6 @@ export const NewComments = ({
 
   const createNewComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
-      console.log('comment', {
-        comment,
-        authorId,
-        postId,
-        roleId,
-        commentId,
-        fileId,
-        subCommentId,
-        fileCommentId,
-      });
-
       const { role, message } = await newComment({
         content: comment,
         authorId,
@@ -66,10 +55,7 @@ export const NewComments = ({
         fileCommentId,
       });
 
-      if (!role || !!message) {
-        // console.error(message);
-        return;
-      }
+      if (!role || !!message) return;
 
       resetForm(initialValues);
     } catch (e) {

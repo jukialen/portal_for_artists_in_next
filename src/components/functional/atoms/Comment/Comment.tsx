@@ -6,7 +6,7 @@ import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
 import { CommentType } from 'types/global.types';
 
-import { DCContext } from 'providers/DeleteCommentProvider';
+import { DCContext, DCProvider } from 'providers/DeleteCommentProvider';
 
 import { NewComments } from '../NewComments/NewComments';
 import { SubComments } from 'components/functional/molecules/SubComments/SubComments';
@@ -21,39 +21,41 @@ export const Comment = ({ commentData }: { commentData: CommentType }) => {
     commentData;
 
   return (
-    <div className={del ? styles.container__deleted : styles.container}>
-      <div className={styles.comment}>
-        <Avatar src={authorProfilePhoto} fallbackName={authorName} alt="author profile photo icon" />
-        <div className={styles.rightSideComment}>
-          <div className={styles.topPartComment}>
-            <p className={styles.pseudonym}>
-              <Link href={`/user/${authorName}`}>{authorName}</Link>
-              <span>{role}</span>
-            </p>
-            <p className={styles.date}>{date}</p>
+    <DCProvider>
+      <div className={del ? styles.container__deleted : styles.container}>
+        <div className={styles.comment}>
+          <Avatar src={authorProfilePhoto} fallbackName={authorName} alt="author profile photo icon" />
+          <div className={styles.rightSideComment}>
+            <div className={styles.topPartComment}>
+              <p className={styles.pseudonym}>
+                <Link href={`/user/${authorName}`}>{authorName}</Link>
+                <span>{role}</span>
+              </p>
+              <p className={styles.date}>{date}</p>
+            </div>
+            <h2 className={styles.text}>{content}</h2>
           </div>
-          <h2 className={styles.text}>{content}</h2>
         </div>
-      </div>
-      <OptionsComments
-        commentId={commentId}
-        authorId={authorId}
-        userId={authorId}
-        tableName="Comments"
-        liked={liked}
-        likes={likes}
-        authorProfilePhoto={authorProfilePhoto}
-        roleId={roleId!}
-        comment={content}>
-        <NewComments
-          profilePhoto={authorProfilePhoto}
+        <OptionsComments
           commentId={commentId}
-          postId={postId}
           authorId={authorId}
+          userId={authorId}
+          tableName="Comments"
+          liked={liked}
+          likes={likes}
+          authorProfilePhoto={authorProfilePhoto}
           roleId={roleId!}
-        />
-        <SubComments commentId={commentId} postId={postId} />
-      </OptionsComments>
-    </div>
+          comment={content}>
+          <NewComments
+            profilePhoto={authorProfilePhoto}
+            commentId={commentId}
+            postId={postId}
+            authorId={authorId}
+            roleId={roleId!}
+          />
+          <SubComments commentId={commentId} postId={postId} />
+        </OptionsComments>
+      </div>
+    </DCProvider>
   );
 };

@@ -1,7 +1,10 @@
 .options {
+  width: inherit;
   display: flex;
   justify-content: space-between;
-  margin: 0.5rem 0;
+  padding: 0.5rem 0;
+  box-shadow: var(--box-shadow);
+  backdrop-filter: var(--backdrop-filter);
 
   .likesContainer {
     display: flex;

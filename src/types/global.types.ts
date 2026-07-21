@@ -271,8 +271,13 @@ export type NewCommentsType = {
 export type CommentType = Comment & {
   authorName: string;
   authorProfilePhoto: string;
-  commentId: string;
-  postId: string;
+  commentId?: string;
+  postId?: string;
+  fileCommentId?: string;
+  fileId?: string;
+  subCommentId?: string;
+  lastCommentId?: string;
+  tableName: TableNameType;
 };
 
 export type FilesCommentsType = Comment & {
@@ -280,6 +285,7 @@ export type FilesCommentsType = Comment & {
   authorProfilePhoto: string;
   fileCommentId: string;
   fileId: string;
+  tableName: TableNameType;
 };
 
 export type SubCommentType = Comment & {
