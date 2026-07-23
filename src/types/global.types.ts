@@ -11,7 +11,8 @@ export type IndexType = 'photographs' | 'videos' | 'animations';
 export type LangType = 'en' | 'pl' | 'ja';
 export type Plan = Database['public']['Enums']['Plan'];
 export type Provider = Database['public']['Enums']['Provider'];
-export type TableNameType = 'Comments' | 'FilesComments' | 'LastComments' | 'SubComments';
+export type CommentsTableNameType = 'Comments' | 'FilesComments' | 'LastComments' | 'SubComments';
+export type ColumnCommentsTableNameType = 'fileCommentId' | 'commentId' | 'subCommentId' | 'lastCommentId';
 export type Tags = Database['public']['Enums']['Tags'];
 
 //FORMS & CONTROLLERS ELEMENTS
@@ -277,7 +278,7 @@ export type CommentType = Comment & {
   fileId?: string;
   subCommentId?: string;
   lastCommentId?: string;
-  tableName: TableNameType;
+  tableName: CommentsTableNameType;
 };
 
 export type FilesCommentsType = Comment & {
@@ -285,7 +286,7 @@ export type FilesCommentsType = Comment & {
   authorProfilePhoto: string;
   fileCommentId: string;
   fileId: string;
-  tableName: TableNameType;
+  tableName: CommentsTableNameType;
 };
 
 export type SubCommentType = Comment & {

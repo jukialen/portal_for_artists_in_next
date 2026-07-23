@@ -1,33 +1,49 @@
 .container {
   width: 100%;
-  margin: 1rem auto 2rem;
+  margin: 1rem 0 0;
+  box-shadow: var(--box-shadow);
+  backdrop-filter: var(--backdrop-filter);
 
   .comment {
     display: grid;
-    grid-template-columns: 3rem 1fr;
+    grid-template-columns: 2.5rem 1fr;
     align-items: center;
+    padding: 0.5rem;
 
     .rightSideComment {
       display: flex;
       flex-direction: column;
-      margin: 0.5rem 0.5rem 0.5rem 0;
+      gap: .5rem;
 
       .topPartComment {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: auto auto 1fr;
+        gap: .3rem;
         justify-content: space-between;
         align-items: center;
-        padding: 0 0.5rem 0.5rem 0;
 
         .pseudonym {
           font-size: 1.2rem;
           text-align: inherit;
           font-style: oblique;
+
+          &:hover {
+            scale: 1.1;
+            transition: scale 1.2s ease-in-out;
+          }
+        }
+
+        .role {
+          padding: 0.25rem 0.5rem;
+          font-size: 0.8rem;
+          border-radius: 0.5rem;
+          background-color: var(--secondary__opacity);
+          color: var(--secondary);
         }
 
         .date {
           text-align: right;
-          font-size: .9rem;
+          font-size: 0.9rem;
         }
       }
 
@@ -35,6 +51,17 @@
         font-size: 1rem;
         text-align: inherit;
       }
+    }
+
+    &[data-part='image'] {
+      width: 2.5rem;
+      height: 2.5rem;
+      align-items: flex-start;
+    }
+    div:has([data-part='image']) {
+      display: flex;
+      height: 100%;
+      justify-content: center;
     }
   }
 

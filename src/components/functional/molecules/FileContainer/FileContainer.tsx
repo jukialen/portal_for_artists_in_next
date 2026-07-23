@@ -59,6 +59,7 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
 
+  console.log('comments', comments);
   const tComments = useScopedI18n('Comments');
   const t = useI18n();
 
@@ -164,14 +165,9 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
       )}
       {commentsBool && (
         <>
-          <NewComments
-            fileId={fileId!}
-            authorId={authorId}
-            profilePhoto={userData?.profilePhoto || ''}
-            roleId={roleId}
-          />
+          <NewComments fileId={fileId!} authorId={authorId} profilePhoto={userData?.profilePhoto!} roleId={roleId} />
           {comments.length > 0 ? (
-            comments.map((data) => <Comment commentData={data} />)
+            comments.map((data, i) => <Comment commentData={data} key={i} />)
           ) : (
             <p className={styles.noComments}>{tComments('noComments')}</p>
           )}
@@ -181,37 +177,3 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
     </article>
   );
 };
-
-// <DCProvider key={index}>
-//   <div className={del ? styles.container__deleted : styles.container}>
-//     <div className={styles.comment}>
-//       <Avatar
-//         src={`${supabaseStorageProfileUrl}/${data.authorProfilePhoto}`}
-//         fallbackName={data.authorName}
-//         alt="author profile photo icon"
-//       />
-//       <div className={styles.rightSideComment}>
-//         <div className={styles.topPartComment}>
-//           <p className={styles.pseudonym}>
-//             <Link href={`/user/${data.authorName}`}>{data.authorName}</Link>
-//           </p>
-//           <p className={styles.date}>{data.date}</p>
-//         </div>
-//         <h2 className={styles.text}>{data.content}</h2>
-//       </div>
-//     </div>
-//     <OptionsComments
-//       fileId={fileId}
-//       fileCommentId={data.fileCommentId}
-//       authorId={authorId}
-//       userId={authorId}
-//       liked={data.liked}
-//       likes={data.likes}
-//       authorProfilePhoto={data.authorProfilePhoto}
-//       roleId={roleId!}
-//       comment={data.content}
-//       tableName="FilesComments">
-//       <SubComments fileCommentId={data.fileCommentId} fileId={fileId} />
-//     </OptionsComments>
-//   </div>
-// </DCProvider>

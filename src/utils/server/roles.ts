@@ -17,8 +17,6 @@ export const getFileRoleId = async (fileId: string, userId: string): Promise<{ r
       .limit(1)
       .maybeSingle();
 
-    console.log('data role', data, fileId, userId);
-
     if (!!error || !data) {
       const { data: newRoleId, error } = await supabase
         .from('Roles')

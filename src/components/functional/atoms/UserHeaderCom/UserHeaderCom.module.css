@@ -33,6 +33,7 @@
     &:has(div) {
       font-size: 0.6rem;
     }
+
     &:active {
       p,
       svg {
@@ -315,7 +316,9 @@ ul.menu_profile__active {
       flex-direction: row;
       padding: 0.5rem;
       font-size: 1rem;
-
+      &:has(div) {
+        font-size: 1rem;
+      }
       svg {
         width: 1.6rem;
         height: auto;

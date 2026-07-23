@@ -55,14 +55,8 @@ export const LastComment = ({ lastCommentData }: { lastCommentData: LastCommentT
         tableName="LastComments"
         authorProfilePhoto={authorProfilePhoto}
         roleId={roleId!}
-        comment={content}>
-        <NewComments
-          profilePhoto={authorProfilePhoto!}
-          subCommentId={subCommentId}
-          authorId={authorId}
-          roleId={roleId!}
-        />
-      </OptionsComments>
+        comment={content}
+      />
     </div>
   );
 };

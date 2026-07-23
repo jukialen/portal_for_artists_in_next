@@ -4,7 +4,7 @@
   grid-template-rows: 1fr 3.25rem 1.5rem auto;
   justify-self: center;
   margin: 1rem auto 8.5rem;
-  padding: 0.5rem 0 1.5rem;
+  padding: 0.5rem 0 2rem;
   position: relative;
   border: 0.1rem solid var(--third);
   border-radius: 0.5rem;
@@ -97,6 +97,7 @@
       }
     }
   }
+
   .linkToComments {
     width: 15rem;
     max-width: 70%;
@@ -110,62 +111,6 @@
     font-size: 1rem;
     background-color: var(--third);
     color: var(--text);
-  }
-}
-
-.container {
-  width: 99.8%;
-  margin: 1rem auto 2rem;
-
-  .comment {
-    width: inherit;
-    display: grid;
-    grid-template-columns: 3rem 1fr;
-    justify-items: center;
-    box-shadow: var(--box-shadow);
-    backdrop-filter: var(--backdrop-filter);
-
-    img {
-      margin: 0 auto;
-    }
-
-    .rightSideComment {
-      width: inherit;
-      display: flex;
-      flex-direction: column;
-      padding-right: 0.5rem;
-
-      .topPartComment {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 2.5rem;
-        align-items: flex-start;
-
-        .pseudonym {
-          font-size: 1.2rem;
-          text-align: inherit;
-          font-style: oblique;
-        }
-
-        .date {
-          text-align: right;
-          font-size: 0.9rem;
-        }
-      }
-
-      .text {
-        font-size: 1rem;
-        text-align: inherit;
-      }
-    }
-  }
-
-  &__deleted {
-    display: none;
-  }
-
-  &:last-child {
-    margin-bottom: 8rem;
   }
 }
 

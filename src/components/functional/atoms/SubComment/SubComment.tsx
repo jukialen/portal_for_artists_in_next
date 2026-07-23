@@ -58,6 +58,7 @@ export const SubComment = ({ subCommentsData }: { subCommentsData: SubCommentTyp
         liked={liked}
         likes={likes}
         tableName="SubComments"
+        fieldName="subCommentId"
         authorProfilePhoto={authorProfilePhoto}
         roleId={roleId!}
         comment={content}>

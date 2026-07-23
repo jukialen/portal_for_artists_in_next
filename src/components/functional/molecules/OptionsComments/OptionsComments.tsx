@@ -8,7 +8,7 @@ import { SchemaValidation } from 'schemasValidation/schemaValidation';
 import { updComment, delComment } from 'utils/comments';
 import { toggleLiked } from 'utils/likes';
 
-import { ResetFormType, TableNameType } from 'types/global.types';
+import { ResetFormType, CommentsTableNameType, ColumnCommentsTableNameType } from 'types/global.types';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -33,7 +33,8 @@ type OptionsType = {
   authorProfilePhoto: string;
   roleId: string;
   comment: string;
-  tableName: TableNameType;
+  tableName: CommentsTableNameType;
+  fieldName: ColumnCommentsTableNameType;
   children?: ReactNode;
 };
 
@@ -54,6 +55,7 @@ export const OptionsComments = ({
   roleId,
   comment,
   tableName,
+  fieldName,
   children,
 }: OptionsType) => {
   const [like, setLike] = useState(liked);
@@ -61,8 +63,6 @@ export const OptionsComments = ({
   const [moreOptions, setMoreOptions] = useState(false);
   const [com, setCom] = useState(false);
   const { changeDel } = useContext(DCContext);
-
-  console.log('fileCommentId', fileCommentId);
 
   const initialValues = { comment };
 
@@ -102,13 +102,11 @@ export const OptionsComments = ({
 
   const updateComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
-      const fieldName = [fileCommentId, commentId, subCommentId, lastCommentId].find((val) => !!val)!;
+      // const fieldName = [fileCommentId, commentId, subCommentId, lastCommentId].find((val) => !!val)!;
 
-      if (fieldName) {
-        const upd = await updComment(tableName, fieldName, comment);
-        if (!upd) resetForm(initialValues);
-        return;
-      }
+      const upd = await updComment(tableName, fieldName, comment);
+      if (!upd) resetForm(initialValues);
+      return;
     } catch (e) {
       console.error(e);
     }
@@ -117,15 +115,13 @@ export const OptionsComments = ({
   return (
     <>
       <div className={styles.options}>
-        <div className={styles.likesContainer}>
-          <button
-            aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
-            className={like ? styles.isLikes : styles.likes}
-            onClick={toggleLike}>
-            {like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
-          </button>
+        <button
+          aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
+          className={like ? styles.isLikes : styles.likes}
+          onClick={toggleLike}>
+          {like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
           <p className={like ? styles.isLikesCount : styles.likesCount}>{likes}</p>
-        </div>
+        </button>
 
         <div className={styles.buttons}>
           {authorId === userId && (

@@ -8,7 +8,7 @@ import {
   NewCommentsType,
   RoleType,
   SubCommentType,
-  TableNameType,
+  CommentsTableNameType,
 } from 'types/global.types';
 import { createServer } from './supabase/clientSSR';
 import { likeList } from './likes';
@@ -178,15 +178,13 @@ export const filesApiComments = async (
       fileId: string;
       content: string;
       roleId: string;
+      Roles: { role: RoleType };
       authorId: string;
       createdAt: string;
       updatedAt: string | null;
       Users: {
         pseudonym: string;
         profilePhoto: string;
-      };
-      Roles: {
-        role: RoleType;
       };
     }[];
 
@@ -312,7 +310,7 @@ export const lastComments = async (
 
 //PATCH
 
-export const updComment = async (tableName: TableNameType, id: string, content: string): Promise<boolean> => {
+export const updComment = async (tableName: CommentsTableNameType, id: string, content: string): Promise<boolean> => {
   try {
     const supabase = await createServer();
     const author = await getUserData();
@@ -334,7 +332,10 @@ export const updComment = async (tableName: TableNameType, id: string, content: 
 };
 
 ///DELETE
-export const delComment = async (tableName: TableNameType, id: string): Promise<{ message: string; error: string }> => {
+export const delComment = async (
+  tableName: CommentsTableNameType,
+  id: string,
+): Promise<{ message: string; error: string }> => {
   try {
     const supabase = await createServer();
 

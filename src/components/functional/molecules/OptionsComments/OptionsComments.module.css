@@ -2,18 +2,14 @@
   width: inherit;
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0;
-  box-shadow: var(--box-shadow);
-  backdrop-filter: var(--backdrop-filter);
-
-  .likesContainer {
-    display: flex;
-    align-items: center;
+  padding: 0.5rem;
 
     .likes,
     .isLikes {
+      display: flex;
+      gap: 0.3rem;
+      align-items: center;
       padding: 0.2rem 0.3rem;
-      margin-left: 0.5rem;
       border-radius: 0.75rem;
       border-color: transparent;
       cursor: pointer;
@@ -21,22 +17,22 @@
       svg {
         width: 1.2rem;
       }
+
+      .likesCount,
+      .isLikesCount {
+        margin-right: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .isLikesCount {
+        color: var(--third);
+      }
     }
 
     .isLikes svg {
       fill: var(--third);
     }
 
-    .likesCount,
-    .isLikesCount {
-      margin-right: 0.5rem;
-      font-size: 1rem;
-    }
-
-    .isLikesCount {
-      color: var(--third);
-    }
-  }
 
   .buttons {
     display: flex;

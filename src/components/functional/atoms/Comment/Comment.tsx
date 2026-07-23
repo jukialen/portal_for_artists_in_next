@@ -4,11 +4,11 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
+import { supabaseStorageProfileUrl } from 'constants/links';
 import { CommentType } from 'types/global.types';
 
 import { DCContext, DCProvider } from 'providers/DeleteCommentProvider';
 
-import { NewComments } from '../NewComments/NewComments';
 import { SubComments } from 'components/functional/molecules/SubComments/SubComments';
 import { OptionsComments } from 'components/functional/molecules/OptionsComments/OptionsComments';
 
@@ -21,41 +21,37 @@ export const Comment = ({ commentData }: { commentData: CommentType }) => {
     commentData;
 
   return (
-    <DCProvider>
-      <div className={del ? styles.container__deleted : styles.container}>
-        <div className={styles.comment}>
-          <Avatar src={authorProfilePhoto} fallbackName={authorName} alt="author profile photo icon" />
-          <div className={styles.rightSideComment}>
-            <div className={styles.topPartComment}>
-              <p className={styles.pseudonym}>
-                <Link href={`/user/${authorName}`}>{authorName}</Link>
-                <span>{role}</span>
-              </p>
-              <p className={styles.date}>{date}</p>
-            </div>
-            <h2 className={styles.text}>{content}</h2>
+    <div className={del ? styles.container__deleted : styles.container}>
+      <div className={styles.comment}>
+        <Avatar
+          src={`${supabaseStorageProfileUrl}/${authorProfilePhoto}`}
+          fallbackName={authorName}
+          alt="author profile photo icon"
+        />
+        <div className={styles.rightSideComment}>
+          <div className={styles.topPartComment}>
+            <Link href={`/user/${authorName}`} className={styles.pseudonym}>
+              {authorName}
+            </Link>
+            <span className={styles.role}>{role}</span>
+            <p className={styles.date}>{date}</p>
           </div>
+          <h2 className={styles.text}>{content}</h2>
         </div>
-        <OptionsComments
-          commentId={commentId}
-          authorId={authorId}
-          userId={authorId}
-          tableName="Comments"
-          liked={liked}
-          likes={likes}
-          authorProfilePhoto={authorProfilePhoto}
-          roleId={roleId!}
-          comment={content}>
-          <NewComments
-            profilePhoto={authorProfilePhoto}
-            commentId={commentId}
-            postId={postId}
-            authorId={authorId}
-            roleId={roleId!}
-          />
-          <SubComments commentId={commentId} postId={postId} />
-        </OptionsComments>
       </div>
-    </DCProvider>
+      <OptionsComments
+        commentId={commentId}
+        authorId={authorId}
+        userId={authorId}
+        tableName="Comments"
+        fieldName="commentId"
+        liked={liked}
+        likes={likes}
+        authorProfilePhoto={authorProfilePhoto}
+        roleId={roleId!}
+        comment={content}>
+        <SubComments commentId={commentId} postId={postId} />
+      </OptionsComments>
+    </div>
   );
 };
