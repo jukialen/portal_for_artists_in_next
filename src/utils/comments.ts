@@ -15,6 +15,18 @@ import { likeList } from './likes';
 import { getDate } from 'helpers/getDate';
 import { giveRole } from './server/roles';
 import { getUserData } from '../helpers/getUserData';
+import { groupRole } from './client/roles';
+
+type DataArrayType = {
+  subCommentId: string;
+  content: string;
+  roleId: string;
+  authorId: string;
+  createdAt: string;
+  updatedAt: string | null;
+  Users: { id: string; pseudonym: string; profilePhoto: string | null } | null;
+  Roles: { id: string; role: RoleType } | null;
+};
 
 //POST
 export const newComment = async (commentData: NewCommentsType): Promise<{ role: RoleType | ''; message: string }> => {
@@ -138,6 +150,7 @@ export const comments = async (
 
     for (const first of array) {
       const { commentId, content, roleId, authorId, postId, createdAt, updatedAt, Roles, Users } = first;
+      const likesData = await likeList(authorId, 'postId', postId);
 
       commentArray.push({
         commentId,
@@ -148,9 +161,9 @@ export const comments = async (
         roleId: groupsPostsRoleId || roleId,
         authorId,
         postId,
-        idLiked: (await likeList(authorId, 'postId', postId))!.idLiked,
-        likes: (await likeList(authorId, 'postId', postId))!.likes,
-        liked: (await likeList(authorId, 'postId', postId))!.liked,
+        idLiked: likesData.idLiked,
+        likes: likesData.likes,
+        liked: likesData.liked,
         date: await getDate(updatedAt! || createdAt!),
         tableName,
       });
@@ -219,6 +232,7 @@ export const filesApiComments = async (
 
     for (const d of commentsData) {
       const { id: fileCommentId, fileId, content, roleId, authorId, createdAt, updatedAt, Roles, Users } = d;
+      const likesData = await likeList(authorId, 'fileCommentId', fileCommentId);
 
       filesArray.push({
         fileCommentId,
@@ -229,9 +243,9 @@ export const filesApiComments = async (
         role: Roles.role,
         roleId,
         authorId,
-        likes: (await likeList(authorId, 'fileCommentId', fileCommentId)).likes,
-        liked: (await likeList(authorId, 'fileCommentId', fileCommentId)).liked,
-        idLiked: (await likeList(authorId, 'fileCommentId', fileCommentId)).idLiked,
+        likes: likesData.likes,
+        liked: likesData.liked,
+        idLiked: likesData.idLiked,
         date: await getDate(updatedAt! || createdAt!),
         tableName,
       });
@@ -245,37 +259,77 @@ export const filesApiComments = async (
 };
 
 export const subComments = async (
-  maxItems: number,
-  step: 'first' | 'again',
-  groupsPostsRoleId?: string,
+  step: 'first' | 'again' = 'first',
+  maxItems: number = 30,
   commentId?: string,
   fileCommentId?: string,
+  groupsPostsRoleId?: string,
   lastVisible?: string,
 ): Promise<SubCommentType[]> => {
-  const params = {
-    groupsPostsRoleId: groupsPostsRoleId!,
-    commentId: commentId!,
-    fileCommentId: fileCommentId!,
-    maxItems: maxItems.toString(),
-  };
+  const userData = await getUserData();
 
-  const lastParams = {
-    ...params,
-    lastVisible: lastVisible!,
-  };
-  const queryString = new URLSearchParams(!!lastParams ? lastParams : params).toString();
+  const subArray: SubCommentType[] = [];
+
+  let dataArray: DataArrayType[] = [];
+
+  const supabase = await createServer();
 
   try {
-    const res: SubCommentType[] = await fetch(`${backUrl}/api/sub-comments/${step}?${queryString}`, {
-      method: 'GET',
-    })
-      .then((r) => r.json())
-      .catch((e) => {
-        console.error(e);
-        return [];
-      });
+    if (step === 'first') {
+      const { data, error } = await supabase
+        .from('SubComments')
+        .select(
+          'subCommentId, content, roleId, authorId, createdAt, updatedAt, Users (id, pseudonym, profilePhoto), Roles (id, role)',
+        )
+        .eq(commentId ? 'commentId' : 'fileCommentId', commentId || fileCommentId!)
+        .order('createdAt', { ascending: false })
+        .limit(maxItems);
 
-    return res || [];
+      if (!data || data?.length === 0 || !!error) return subArray;
+
+      dataArray = data;
+    } else {
+      const { data, error } = await supabase
+        .from('SubComments')
+        .select(
+          'subCommentId, content, roleId, authorId, createdAt, updatedAt, Users (id, pseudonym, profilePhoto), Roles (id, role)',
+        )
+        .eq(commentId ? 'commentId' : 'fileCommentId', commentId || fileCommentId!)
+        .gt('createdAt', lastVisible)
+        .order('createdAt', { ascending: false })
+        .limit(maxItems);
+
+      if (!data || data?.length === 0 || !!error) return subArray;
+
+      dataArray = data;
+    }
+
+    for (const again of dataArray) {
+      const { subCommentId, content, Users, Roles, roleId, authorId, createdAt, updatedAt } = again;
+
+      const gRole = !!groupsPostsRoleId ? await groupRole(groupsPostsRoleId, Users?.id!) : Roles?.role!;
+
+      const likesData = await likeList(authorId, 'subCommentId', subCommentId);
+
+      subArray.push({
+        subCommentId,
+        content,
+        commentId: commentId!,
+        fileCommentId: fileCommentId!,
+        authorName: Users?.pseudonym!,
+        authorProfilePhoto: userData?.profilePhoto!,
+        role: gRole!,
+        roleId: !!commentId ? groupsPostsRoleId || roleId : roleId,
+        authorId,
+        likes: likesData.likes,
+        liked: likesData.liked,
+        idLiked: likesData.idLiked,
+        date: await getDate(updatedAt! || createdAt!),
+        groupsPostsRoleId: groupsPostsRoleId!,
+      });
+    }
+
+    return subArray;
   } catch (e) {
     console.error(e);
     return [];

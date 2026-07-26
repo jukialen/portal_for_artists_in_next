@@ -27,21 +27,20 @@ export const SubComments = ({ fileCommentId, commentId, fileId, postId, groupsPo
   const maxItems = 30;
 
   useEffect(() => {
-    subComments(maxItems, 'first', groupsPostsRoleId, commentId, fileCommentId, '').then((t) => {
-      setSubCommentsArray(t!);
-      t!.length === maxItems &&
-        setLastVisible(t![t!.length - 1].commentId ? t![t!.length - 1].commentId! : t![t!.length - 1].fileCommentId!);
+    subComments('first', maxItems, commentId, fileCommentId).then((d) => {
+      setSubCommentsArray(d);
+      setLastVisible(d.at(-1)?.createdAt! || '');
     });
   }, [commentId, fileCommentId, groupsPostsRoleId]);
 
   const nextComments = async () => {
     lastVisible !== '' &&
-      subComments(maxItems, 'again', groupsPostsRoleId, commentId, fileCommentId, lastVisible).then((t) => {
+      subComments('again', maxItems, commentId, fileCommentId, groupsPostsRoleId, lastVisible).then((t) => {
         const nextArray = subCommentsArray.concat(...t!);
         setSubCommentsArray(nextArray);
         if (t!.length === maxItems) {
           setLastVisible(t![t!.length - 1].commentId ? t![t!.length - 1].commentId! : t![t!.length - 1].fileCommentId!);
-          setI(++i);
+          setI((prev) => prev + 1);
         }
       });
   };

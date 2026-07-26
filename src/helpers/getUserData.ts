@@ -1,6 +1,6 @@
 'use server';
 
-import { UserType } from 'types/global.types';
+import type { UserType } from 'types/global.types';
 
 import { createServer } from 'utils/supabase/clientSSR';
 import { sendLokiLog } from './Grafana/server/methods';

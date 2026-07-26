@@ -10,7 +10,6 @@ import { createClient } from 'utils/supabase/clientCSR';
 import { filesApiComments } from 'utils/comments';
 
 import { backUrl } from 'constants/links';
-import { supabaseStorageProfileUrl } from 'constants/links';
 import { TagConstants } from 'constants/values';
 import { ArticleVideosType, CommentType, UserType } from 'types/global.types';
 
@@ -18,9 +17,6 @@ import { DCContext, DCProvider } from 'providers/DeleteCommentProvider';
 
 const DeletionFile = dynamic(() => import('../DeletionFile/DeletionFile').then((df) => df.DeletionFile));
 import { NewComments } from 'components/functional/atoms/NewComments/NewComments';
-import { OptionsComments } from 'components/functional/molecules/OptionsComments/OptionsComments';
-import { SubComments } from 'components/functional/molecules/SubComments/SubComments';
-import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 import { SharingButton } from 'components/ui/atoms/SharingButton/SharingButton';
 
@@ -59,7 +55,6 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
 
-  console.log('comments', comments);
   const tComments = useScopedI18n('Comments');
   const t = useI18n();
 

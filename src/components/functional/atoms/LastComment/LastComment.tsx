@@ -8,7 +8,6 @@ import { Tag } from 'components/ui/atoms/Tag/Tag';
 import { LastCommentType } from 'types/global.types';
 
 import { DCContext } from 'providers/DeleteCommentProvider';
-import { NewComments } from '../NewComments/NewComments';
 
 import { OptionsComments } from 'components/functional/molecules/OptionsComments/OptionsComments';
 
@@ -56,6 +55,7 @@ export const LastComment = ({ lastCommentData }: { lastCommentData: LastCommentT
         authorProfilePhoto={authorProfilePhoto}
         roleId={roleId!}
         comment={content}
+        fieldName="lastCommentId"
       />
     </div>
   );

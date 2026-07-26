@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build --turbopack && node build-sw.js",
     "start": "next start",
     "postinstall": "touch public/sw.js",

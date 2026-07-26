@@ -18,21 +18,8 @@ import styles from './SubComment.module.css';
 export const SubComment = ({ subCommentsData }: { subCommentsData: SubCommentType }) => {
   const { del } = useContext(DCContext);
 
-  const {
-    subCommentId,
-    content,
-    authorProfilePhoto,
-    authorName,
-    role,
-    roleId,
-    authorId,
-    date,
-    fileId,
-    postId,
-    profilePhoto,
-    liked,
-    likes,
-  } = subCommentsData;
+  const { subCommentId, content, authorProfilePhoto, authorName, role, roleId, authorId, date, postId, liked, likes } =
+    subCommentsData;
 
   return (
     <div className={del ? styles.container__deleted : styles.container}>
@@ -62,14 +49,6 @@ export const SubComment = ({ subCommentsData }: { subCommentsData: SubCommentTyp
         authorProfilePhoto={authorProfilePhoto}
         roleId={roleId!}
         comment={content}>
-        <NewComments
-          profilePhoto={profilePhoto!}
-          subCommentId={subCommentId}
-          fileId={fileId}
-          postId={postId}
-          authorId={authorId}
-          roleId={roleId!}
-        />
         <LastComments subCommentId={subCommentId} roleId={roleId!} />
       </OptionsComments>
     </div>
