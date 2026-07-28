@@ -213,6 +213,8 @@ export const OptionsComments = ({
         <NewComments
           fileId={fileId}
           fileCommentId={fileCommentId}
+          commentId={commentId}
+          subCommentId={subCommentId}
           authorId={authorId}
           profilePhoto={authorProfilePhoto}
           roleId={roleId!}

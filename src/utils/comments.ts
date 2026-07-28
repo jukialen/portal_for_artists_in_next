@@ -279,7 +279,7 @@ export const subComments = async (
       const { data, error } = await supabase
         .from('SubComments')
         .select(
-          'subCommentId, content, roleId, authorId, createdAt, updatedAt, Users (id, pseudonym, profilePhoto), Roles (id, role)',
+          'subCommentId, content, roleId, authorId, createdAt, updatedAt, Users (id, pseudonym, profilePhoto), Roles!roleId (id, role)',
         )
         .eq(commentId ? 'commentId' : 'fileCommentId', commentId || fileCommentId!)
         .order('createdAt', { ascending: false })

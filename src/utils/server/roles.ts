@@ -47,9 +47,6 @@ export const giveRole = async (roleId: string): Promise<{ role: RoleType | ''; m
 
     const { data, error } = await supabase.from('Roles').select('role').eq('id', roleId).limit(1).maybeSingle();
 
-    console.log('data giveRole', data);
-    console.log('error giveRole', error);
-
     if (!!error) return { role: 'USER', message: error.message };
 
     return { role: data?.role || 'USER', message: '' };

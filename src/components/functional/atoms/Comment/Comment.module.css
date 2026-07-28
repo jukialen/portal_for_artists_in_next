@@ -33,14 +33,6 @@
           }
         }
 
-        .role {
-          padding: 0.25rem 0.5rem;
-          font-size: 0.8rem;
-          border-radius: 0.5rem;
-          background-color: var(--secondary__opacity);
-          color: var(--secondary);
-        }
-
         .date {
           text-align: right;
           font-size: 0.9rem;
