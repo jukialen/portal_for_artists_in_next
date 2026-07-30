@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useContext, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'schemasValidation/schemaValidation';
@@ -8,11 +8,9 @@ import { SchemaValidation } from 'schemasValidation/schemaValidation';
 import { updComment, delComment } from 'utils/comments';
 import { toggleLiked } from 'utils/likes';
 
-import { ResetFormType, CommentsTableNameType, ColumnCommentsTableNameType } from 'types/global.types';
+import { ResetFormType, CommentsTableNameType, ColumnCommentsTableNameType, CommentType } from 'types/global.types';
 
 import { useI18n, useScopedI18n } from 'locales/client';
-
-import { DCContext } from 'providers/DeleteCommentProvider';
 
 import { NewComments } from 'components/functional/atoms/NewComments/NewComments';
 
@@ -35,6 +33,7 @@ type OptionsType = {
   comment: string;
   tableName: CommentsTableNameType;
   fieldName: ColumnCommentsTableNameType;
+  onReplyAdded?: (newComment: CommentType) => void;
   children?: ReactNode;
 };
 
@@ -57,12 +56,15 @@ export const OptionsComments = ({
   tableName,
   fieldName,
   children,
+  onReplyAdded,
 }: OptionsType) => {
+  const [del, setDel] = useState(false);
   const [like, setLike] = useState(liked);
   let [likes, setLikes] = useState(l || 0);
   const [moreOptions, setMoreOptions] = useState(false);
   const [com, setCom] = useState(false);
-  const { changeDel } = useContext(DCContext);
+
+  const changeDel = () => setDel(!del);
 
   const initialValues = { comment };
 
@@ -204,9 +206,11 @@ export const OptionsComments = ({
               </div>
             </>
           )}
-          <button className={styles.answer} onClick={openComs}>
-            {tComments('reply')}
-          </button>
+          {!lastCommentId && (
+            <button className={styles.answer} onClick={openComs}>
+              {tComments('reply')}
+            </button>
+          )}
         </div>
       </div>
       {com && (
@@ -218,9 +222,10 @@ export const OptionsComments = ({
           authorId={authorId}
           profilePhoto={authorProfilePhoto}
           roleId={roleId!}
+          onCommentAdded={onReplyAdded}
         />
       )}
-      {!!children && children}
+      <div className={com ? styles.repliesContainer : styles.hidden}>{!!children && children}</div>
     </>
   );
 };

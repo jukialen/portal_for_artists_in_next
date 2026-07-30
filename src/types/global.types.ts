@@ -242,42 +242,44 @@ export type GalleryType = {
 };
 
 // COMMENTS
-type Comment = Time & {
-  authorId: string;
-  fileUrl?: string;
+
+export type CommentsColumnIds = {
+  commentId?: string;
+  fileCommentId?: string;
+  subCommentId?: string;
+  lastCommentId?: string;
+  postId?: string;
+  fileId?: string;
   roleId?: string;
-  role: RoleType;
-  date?: string;
-  pseudonym?: string;
-  content: string;
-  idLiked: string;
-  liked: boolean;
-  likes: number;
 };
 
+type Comment = CommentsColumnIds &
+  Time & {
+    authorId: string;
+    fileUrl?: string;
+    role: RoleType;
+    date?: string;
+    pseudonym?: string;
+    content: string;
+    idLiked: string;
+    liked: boolean;
+    likes: number;
+  };
+
 ////INSERT
-export type NewCommentsType = {
+export type NewCommentsType = CommentsColumnIds & {
   authorId: string;
   roleId: string;
   content: string;
   profilePhoto?: string;
   fileId?: string;
-  postId?: string;
-  fileCommentId?: string;
-  commentId?: string;
-  subCommentId?: string;
 };
 
 ////SELECT
 export type CommentType = Comment & {
   authorName: string;
   authorProfilePhoto: string;
-  commentId?: string;
-  postId?: string;
-  fileCommentId?: string;
   fileId?: string;
-  subCommentId?: string;
-  lastCommentId?: string;
   tableName: CommentsTableNameType;
 };
 
@@ -297,7 +299,6 @@ export type SubCommentType = Comment & {
   commentId?: string;
   fileCommentId?: string;
   fileId?: string;
-  postId?: string;
   groupsPostsRoleId?: string;
 };
 

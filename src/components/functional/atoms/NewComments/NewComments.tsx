@@ -6,7 +6,7 @@ import { SchemaValidation } from 'schemasValidation/schemaValidation';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
 import { supabaseStorageProfileUrl } from 'constants/links';
-import { ResetFormType } from 'types/global.types';
+import { CommentType, ResetFormType } from 'types/global.types';
 
 import { useScopedI18n } from 'locales/client';
 import { newComment } from 'utils/comments';
@@ -24,6 +24,7 @@ type NewComment = {
   commentId?: string;
   subCommentId?: string;
   fileCommentId?: string;
+  onCommentAdded?: (newComment: CommentType) => void;
 };
 
 export const NewComments = ({
@@ -35,6 +36,7 @@ export const NewComments = ({
   subCommentId,
   fileCommentId,
   profilePhoto,
+  onCommentAdded,
 }: NewComment) => {
   const initialValues = { comment: '' };
 
@@ -51,12 +53,29 @@ export const NewComments = ({
         roleId,
         commentId,
         fileId,
-        subCommentId,
         fileCommentId,
+        subCommentId,
       });
 
       if (!role || !!message) return;
 
+      onCommentAdded?.({
+        authorName: '',
+        idLiked: '',
+        liked: false,
+        likes: 0,
+        role,
+        tableName: 'Comments',
+        fileId,
+        authorId,
+        postId,
+        roleId,
+        commentId,
+        subCommentId,
+        fileCommentId,
+        authorProfilePhoto: profilePhoto,
+        content: comment,
+      });
       resetForm(initialValues);
     } catch (e) {
       console.error(e);

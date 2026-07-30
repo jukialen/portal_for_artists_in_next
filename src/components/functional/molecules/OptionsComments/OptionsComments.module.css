@@ -181,3 +181,13 @@
     }
   }
 }
+
+.repliesContainer {
+  width: 97.5%;
+  justify-self: flex-end;
+  border-left: .1rem solid var(--third);
+}
+
+.hidden {
+  display: none;
+}

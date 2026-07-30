@@ -1,5 +1,5 @@
 'use client';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,8 +12,6 @@ import { filesApiComments } from 'utils/comments';
 import { backUrl } from 'constants/links';
 import { TagConstants } from 'constants/values';
 import { ArticleVideosType, CommentType, UserType } from 'types/global.types';
-
-import { DCContext, DCProvider } from 'providers/DeleteCommentProvider';
 
 const DeletionFile = dynamic(() => import('../DeletionFile/DeletionFile').then((df) => df.DeletionFile));
 import { NewComments } from 'components/functional/atoms/NewComments/NewComments';
@@ -45,7 +43,7 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
   const linkShare = `${backUrl}/file/${name}/${fileId}/${authorName}`;
   const Tags = tags[0].toUpperCase() + tags.slice(1);
 
-  const { del } = useContext(DCContext);
+  const [del, setDel] = useState(false);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [comments, setComments] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState(
@@ -54,6 +52,8 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
   let [i, setI] = useState(1);
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
+
+  const changeDel = () => setDel(!del);
 
   const tComments = useScopedI18n('Comments');
   const t = useI18n();

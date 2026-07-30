@@ -1,22 +1,28 @@
 'use client';
 
-import { useContext } from 'react';
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
 import { supabaseStorageProfileUrl } from 'constants/links';
 import { CommentType } from 'types/global.types';
 
-import { DCContext, DCProvider } from 'providers/DeleteCommentProvider';
-
-import { SubComments } from 'components/functional/molecules/SubComments/SubComments';
+const Comments = dynamic(() => import('components/functional/molecules/Comments/Comments').then((mod) => mod.Comments));
 import { OptionsComments } from 'components/functional/molecules/OptionsComments/OptionsComments';
 import { Tag } from 'components/ui/atoms/Tag/Tag';
 
 import styles from './Comment.module.css';
 
-export const Comment = ({ commentData }: { commentData: CommentType }) => {
-  const { del } = useContext(DCContext);
+type CommentProps = {
+  commentData: CommentType;
+  onReplyAdded?: (newComment: CommentType) => void;
+};
+
+export const Comment = ({ commentData, onReplyAdded }: CommentProps) => {
+  const [del, setDel] = useState(false);
+
+  const changeDel = () => setDel(!del);
 
   const {
     commentId,
@@ -28,6 +34,8 @@ export const Comment = ({ commentData }: { commentData: CommentType }) => {
     roleId,
     authorId,
     postId,
+    subCommentId,
+    lastCommentId,
     date,
     liked,
     likes,
@@ -54,17 +62,26 @@ export const Comment = ({ commentData }: { commentData: CommentType }) => {
       </div>
       <OptionsComments
         commentId={commentId}
+        fileCommentId={fileCommentId}
+        subCommentId={subCommentId}
+        lastCommentId={lastCommentId}
         authorId={authorId}
         userId={authorId}
         tableName="Comments"
         fieldName="commentId"
         liked={liked}
         likes={likes}
-        fileCommentId={fileCommentId}
         authorProfilePhoto={authorProfilePhoto}
         roleId={roleId!}
-        comment={content}>
-        <SubComments commentId={commentId} fileCommentId={fileCommentId} postId={postId} />
+        comment={content}
+        onReplyAdded={onReplyAdded}>
+        <Comments
+          commentId={commentId}
+          fileCommentId={fileCommentId}
+          subCommentId={subCommentId}
+          lastCommentId={lastCommentId}
+          postId={postId}
+        />
       </OptionsComments>
     </div>
   );

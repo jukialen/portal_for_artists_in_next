@@ -89,9 +89,15 @@ export const newComment = async (commentData: NewCommentsType): Promise<{ role: 
 
 //GET
 export const comments = async (
-  postId: string,
   maxItems: number,
-  groupsPostsRoleId: string,
+  postId?: string,
+  commentId?: string,
+  fileCommentId?: string,
+  subCommentId?: string,
+  lastCommentId?: string,
+  fileId?: string,
+  lastVisible?: string,
+  groupsPostsRoleId?: string,
   step: 'first' | 'again' = 'first',
 ): Promise<CommentType[]> => {
   const supabase = await createServer();
@@ -115,14 +121,37 @@ export const comments = async (
 
   const commentArray: CommentType[] = [];
 
-  const tableName = 'Comments';
+  const tableName: CommentsTableNameType = postId
+    ? 'Comments'
+    : fileId
+      ? 'FilesComments'
+      : fileCommentId || commentId
+        ? 'SubComments'
+        : 'LastComments';
+
+  const columnValue = postId || fileId || commentId || fileCommentId || subCommentId || lastCommentId;
+
+  const columnIdName = postId
+    ? 'postId'
+    : fileId
+      ? 'fileId'
+      : commentId
+        ? 'commentId'
+        : fileCommentId
+          ? 'fileCommentId'
+          : subCommentId
+            ? 'subCommentId'
+            : 'lastCommentId';
+
+  console.log('tableName', tableName);
+  console.log('columnIdName', columnIdName);
 
   try {
     if (step === 'first') {
       const { data, error } = await supabase
         .from(tableName)
         .select('*, Roles!roleId (role), Users!authorId (pseudonym, profilePhoto)')
-        .eq('postId', postId!)
+        .eq(columnIdName as any, columnValue)
         .order('createdAt', { ascending: false })
         .limit(maxItems);
 
@@ -136,7 +165,8 @@ export const comments = async (
       const { data, error } = await supabase
         .from(tableName)
         .select('*, Roles!roleId (role), Users (pseudonym, profilePhoto)')
-        .gt('postId', postId)
+        .eq(columnIdName as any, columnValue)
+        .gt('createdAt', lastVisible)
         .order('createdAt', { ascending: false })
         .limit(maxItems);
 
