@@ -12,7 +12,13 @@ export type LangType = 'en' | 'pl' | 'ja';
 export type Plan = Database['public']['Enums']['Plan'];
 export type Provider = Database['public']['Enums']['Provider'];
 export type CommentsTableNameType = 'Comments' | 'FilesComments' | 'LastComments' | 'SubComments';
-export type ColumnCommentsTableNameType = 'fileCommentId' | 'commentId' | 'subCommentId' | 'lastCommentId';
+export type ColumnCommentsTableNameType =
+  | 'postId'
+  | 'fileId'
+  | 'fileCommentId'
+  | 'commentId'
+  | 'subCommentId'
+  | 'lastCommentId';
 export type Tags = Database['public']['Enums']['Tags'];
 
 //FORMS & CONTROLLERS ELEMENTS

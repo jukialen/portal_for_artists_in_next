@@ -6,6 +6,7 @@ import { SchemaValidation } from 'schemasValidation/schemaValidation';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
 import { supabaseStorageProfileUrl } from 'constants/links';
+import { selectCommentsData } from 'constants/values';
 import { CommentType, ResetFormType } from 'types/global.types';
 
 import { useScopedI18n } from 'locales/client';
@@ -59,13 +60,15 @@ export const NewComments = ({
 
       if (!role || !!message) return;
 
-      onCommentAdded?.({
-        authorName: '',
-        idLiked: '',
+      const { tableName } = selectCommentsData(postId, fileId, commentId, fileCommentId, subCommentId);
+
+      onReplyAddedAction?.({
+        authorName: 'dafaefw',
+        idLiked: '19/02/2027',
         liked: false,
         likes: 0,
         role,
-        tableName: 'Comments',
+        tableName,
         fileId,
         authorId,
         postId,

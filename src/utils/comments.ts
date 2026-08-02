@@ -16,6 +16,7 @@ import { getDate } from 'helpers/getDate';
 import { giveRole } from './server/roles';
 import { getUserData } from '../helpers/getUserData';
 import { groupRole } from './client/roles';
+import { selectCommentsData } from '../constants/values';
 
 type DataArrayType = {
   subCommentId: string;
@@ -121,36 +122,25 @@ export const comments = async (
 
   const commentArray: CommentType[] = [];
 
-  const tableName: CommentsTableNameType = postId
-    ? 'Comments'
-    : fileId
-      ? 'FilesComments'
-      : fileCommentId || commentId
-        ? 'SubComments'
-        : 'LastComments';
-
-  const columnValue = postId || fileId || commentId || fileCommentId || subCommentId || lastCommentId;
-
-  const columnIdName = postId
-    ? 'postId'
-    : fileId
-      ? 'fileId'
-      : commentId
-        ? 'commentId'
-        : fileCommentId
-          ? 'fileCommentId'
-          : subCommentId
-            ? 'subCommentId'
-            : 'lastCommentId';
+  const { tableName, columnValue, columnIdName } = selectCommentsData(
+    postId,
+    fileId,
+    commentId,
+    fileCommentId,
+    subCommentId,
+    lastCommentId,
+  );
 
   console.log('tableName', tableName);
   console.log('columnIdName', columnIdName);
 
   try {
+    const selectQuery = '*, Roles!roleId (role), Users!authorId (pseudonym, profilePhoto)';
+
     if (step === 'first') {
       const { data, error } = await supabase
         .from(tableName)
-        .select('*, Roles!roleId (role), Users!authorId (pseudonym, profilePhoto)')
+        .select(selectQuery)
         .eq(columnIdName as any, columnValue)
         .order('createdAt', { ascending: false })
         .limit(maxItems);
@@ -160,11 +150,11 @@ export const comments = async (
         return [];
       }
 
-      array = data;
+      array = data as unknown as typeof array;
     } else {
       const { data, error } = await supabase
         .from(tableName)
-        .select('*, Roles!roleId (role), Users (pseudonym, profilePhoto)')
+        .select(selectQuery)
         .eq(columnIdName as any, columnValue)
         .gt('createdAt', lastVisible)
         .order('createdAt', { ascending: false })
@@ -175,7 +165,7 @@ export const comments = async (
         return [];
       }
 
-      array = data;
+      array = data as unknown as typeof array;
     }
 
     for (const first of array) {
@@ -264,6 +254,7 @@ export const filesApiComments = async (
       const { id: fileCommentId, fileId, content, roleId, authorId, createdAt, updatedAt, Roles, Users } = d;
       const likesData = await likeList(authorId, 'fileCommentId', fileCommentId);
 
+      const role = await giveRole(roleId);
       filesArray.push({
         fileCommentId,
         fileId,

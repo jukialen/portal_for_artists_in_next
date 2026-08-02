@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
 import { supabaseStorageProfileUrl } from 'constants/links';
+import { selectCommentsData } from 'constants/values';
 import { CommentType } from 'types/global.types';
 
 const Comments = dynamic(() => import('components/functional/molecules/Comments/Comments').then((mod) => mod.Comments));
@@ -16,15 +17,17 @@ import styles from './Comment.module.css';
 
 type CommentProps = {
   commentData: CommentType;
-  onReplyAdded?: (newComment: CommentType) => void;
+  onReplyAddedAction?: (newComment: CommentType) => void;
 };
 
-export const Comment = ({ commentData, onReplyAdded }: CommentProps) => {
+export const Comment = ({ commentData, onReplyAddedAction }: CommentProps) => {
   const [del, setDel] = useState(false);
+  const [newReply, setNewReply] = useState<CommentType | null>(null);
 
   const changeDel = () => setDel(!del);
 
   const {
+    fileId,
     commentId,
     fileCommentId,
     content,
@@ -40,6 +43,15 @@ export const Comment = ({ commentData, onReplyAdded }: CommentProps) => {
     liked,
     likes,
   } = commentData;
+
+  const { tableName, columnIdName } = selectCommentsData(
+    postId,
+    fileId,
+    commentId,
+    fileCommentId,
+    subCommentId,
+    lastCommentId,
+  );
 
   return (
     <div className={del ? styles.container__deleted : styles.container}>
@@ -67,20 +79,21 @@ export const Comment = ({ commentData, onReplyAdded }: CommentProps) => {
         lastCommentId={lastCommentId}
         authorId={authorId}
         userId={authorId}
-        tableName="Comments"
-        fieldName="commentId"
+        tableName={tableName}
+        fieldName={columnIdName}
         liked={liked}
         likes={likes}
         authorProfilePhoto={authorProfilePhoto}
         roleId={roleId!}
         comment={content}
-        onReplyAdded={onReplyAdded}>
+        onReplyAddedAction={setNewReply}>
         <Comments
           commentId={commentId}
           fileCommentId={fileCommentId}
           subCommentId={subCommentId}
           lastCommentId={lastCommentId}
           postId={postId}
+          newReply={newReply}
         />
       </OptionsComments>
     </div>
