@@ -15,7 +15,8 @@
     color: var(--third);
   }
 
-  span, img {
+  span,
+  img {
     width: 3rem;
     aspect-ratio: 1 / 1;
     margin-top: 0.4rem;
@@ -23,21 +24,14 @@
   }
 }
 
-.submitButton {
-  width: calc(100% - 2.5rem);
-  display: grid;
-  grid-template-columns: 3rem 1fr;
-  gap: 1rem;
-  margin: auto;
-
-  .addingButton {
-    width: max-content;
-    display: flex;
-    margin: 1.5rem 0 2.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    background-color: var(--third);
-    border: 1px groove var(--third);
-    cursor: pointer;
-  }
+.addingButton {
+  width: max-content;
+  display: flex;
+  justify-content: flex-end;
+  margin: 1.5rem 0 2.5rem 5.3rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--third__opacity) !important;
+  border: 1px groove var(--third);
+  cursor: pointer;
 }

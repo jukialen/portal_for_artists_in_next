@@ -108,12 +108,9 @@ export const NewComments = ({
             />
           </div>
 
-          <div className={styles.submitButton}>
-            <p></p>
-            <button type="submit" className={styles.addingButton}>
-              {tComments('newComButton')}
-            </button>
-          </div>
+          <button type="submit" className={styles.addingButton}>
+            {tComments('newComButton')}
+          </button>
 
           <ErrorMessage name="comment" />
         </Form>
