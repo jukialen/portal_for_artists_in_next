@@ -2,10 +2,9 @@
 
 import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
-import { Json } from 'types/database.types';
 
 interface SwaggerUIClientProps {
-  spec: Json;
+  spec: string | object | undefined;
 }
 
 export default function SwaggerUIClient({ spec }: SwaggerUIClientProps) {
