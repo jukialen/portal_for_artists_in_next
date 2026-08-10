@@ -27,8 +27,8 @@ export const cycles: BillingCycleType[] = ['month', 'year'];
 export const selectCommentsData = (
   postId?: string,
   fileId?: string,
-  commentId?: string,
-  fileCommentId?: string,
+  commentId?: string | null,
+  fileCommentId?: string | null,
   subCommentId?: string,
   lastCommentId?: string,
 ) => {
@@ -53,6 +53,33 @@ export const selectCommentsData = (
           : subCommentId
             ? 'subCommentId'
             : 'lastCommentId';
+
+  return { tableName, columnValue, columnIdName };
+};
+
+export const updDelCommentsData = (
+  commentId?: string | null,
+  fileCommentId?: string | null,
+  subCommentId?: string,
+  lastCommentId?: string,
+) => {
+  const tableName: CommentsTableNameType = commentId
+    ? 'Comments'
+    : fileCommentId
+      ? 'FilesComments'
+      : subCommentId
+        ? 'SubComments'
+        : 'LastComments';
+
+  const columnValue = commentId || fileCommentId || subCommentId || lastCommentId;
+
+  const columnIdName: 'commentId' | 'subCommentId' | 'lastCommentId' | 'id' = commentId
+    ? 'commentId'
+    : fileCommentId
+      ? 'id'
+      : subCommentId
+        ? 'subCommentId'
+        : 'lastCommentId';
 
   return { tableName, columnValue, columnIdName };
 };

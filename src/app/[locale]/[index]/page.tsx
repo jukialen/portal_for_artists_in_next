@@ -11,6 +11,7 @@ import { getI18n } from 'locales/server';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/server/roles';
+import { likeList } from 'utils/server/likes';
 import { createServer } from 'utils/supabase/clientSSR';
 
 const FileContainerClient = dynamic(() =>
@@ -20,7 +21,6 @@ const FileContainerClient = dynamic(() =>
 );
 
 import styles from './page.module.css';
-import { likeList } from '../../../utils/likes';
 
 const downloadDrawings = async ({ index, maxItems }: { index: IndexType; locale: LangType; maxItems: number }) => {
   const filesArray: FileType[] = [];

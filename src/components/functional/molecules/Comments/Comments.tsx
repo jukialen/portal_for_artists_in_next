@@ -21,26 +21,17 @@ export const Comments = ({
   postId,
   fileId,
   roleId,
+  newReply,
 }: CommentsColumnIds) => {
   const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState('');
-  let [i, setI] = useState(1);
+  const [i, setI] = useState(1);
 
   const tComments = useScopedI18n('Comments');
   const maxItems = 30;
 
   useEffect(() => {
-    comments(maxItems, postId, commentId, fileCommentId, subCommentId, lastCommentId, fileId, lastVisible, roleId).then(
-      (t) => {
-        setCommentsArray(t!);
-        !!t && t.length === maxItems && setLastVisible(t[t.length - 1].createdAt!);
-      },
-    );
-  }, [postId, roleId, commentId, fileCommentId, subCommentId, lastCommentId, fileId]);
-
-  const nextComments = () =>
-    lastVisible !== '' &&
-    comments(
+    comments({
       maxItems,
       postId,
       commentId,
@@ -49,22 +40,35 @@ export const Comments = ({
       lastCommentId,
       fileId,
       lastVisible,
-      roleId,
-      'again',
-    ).then((t) => {
+      groupsPostsRoleId: roleId,
+    }).then((t) => {
+      setCommentsArray(t!);
+      !!t && t.length === maxItems && setLastVisible(t[t.length - 1].createdAt!);
+    });
+  }, []);
+
+  const nextComments = () =>
+    lastVisible !== '' &&
+    comments({
+      maxItems,
+      step: 'again',
+      postId,
+      commentId,
+      fileCommentId,
+      subCommentId,
+      lastCommentId,
+      fileId,
+      lastVisible,
+      groupsPostsRoleId: roleId,
+    }).then((t) => {
       const nextArray = commentsArray.concat(...t!);
 
       setCommentsArray(nextArray);
       if (t!.length === maxItems) {
-        setLastVisible(t![t!.length - 1].postId!);
+        setLastVisible(t![t!.length - 1].createdAt!);
         setI((prev) => prev + 1);
       }
     });
-
-  const handleAddReply = (newReply: CommentType) => {
-    // Dodajesz odpowiedź do listy podkomentarzy
-    setCommentsArray((prev) => [...prev, newReply]);
-  };
 
   return (
     <>

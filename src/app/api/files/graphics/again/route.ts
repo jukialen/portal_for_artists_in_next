@@ -6,7 +6,7 @@ import { FileType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 import { getFileRoleId } from 'utils/server/roles';
-import { likeList } from '../../../../../utils/likes';
+import { likeList } from 'utils/server/likes';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);

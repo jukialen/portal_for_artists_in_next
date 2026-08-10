@@ -1,12 +1,12 @@
 'use server';
 
-import { FileType, IndexType, Like, Tags } from 'types/global.types';
-import { createServer } from 'utils/supabase/clientSSR';
 import { selectFiles } from 'constants/selects';
-import { getFileRoleId } from 'utils/server/roles';
+import { FileType, IndexType, Tags } from 'types/global.types';
+
 import { getDate } from 'helpers/getDate';
-import { name } from 'next/dist/server/ci-info';
-import { likeList } from '../../utils/likes';
+import { createServer } from 'utils/supabase/clientSSR';
+import { getFileRoleId } from 'utils/server/roles';
+import { likeList } from 'utils/server/likes';
 
 const signedUrl = async (fileUrl: string) => {
   const supabase = await createServer();

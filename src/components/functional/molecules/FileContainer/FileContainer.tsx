@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { getUserData } from 'helpers/getUserData';
 import { useI18n, useScopedI18n } from 'locales/client';
 import { createClient } from 'utils/supabase/clientCSR';
-import { filesApiComments } from 'utils/comments';
+import { comments } from 'utils/comments';
 
 import { backUrl } from 'constants/links';
 import { TagConstants } from 'constants/values';
@@ -15,12 +15,12 @@ import { ArticleVideosType, CommentType, UserType } from 'types/global.types';
 
 const DeletionFile = dynamic(() => import('../DeletionFile/DeletionFile').then((df) => df.DeletionFile));
 import { NewComments } from 'components/functional/atoms/NewComments/NewComments';
+import { Comment } from 'components/functional/atoms/Comment/Comment';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 import { SharingButton } from 'components/ui/atoms/SharingButton/SharingButton';
 
 import styles from './FileContainer.module.css';
 import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
-import { Comment } from '../../atoms/Comment/Comment';
 
 export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => {
   const {
@@ -43,17 +43,14 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
   const linkShare = `${backUrl}/file/${name}/${fileId}/${authorName}`;
   const Tags = tags[0].toUpperCase() + tags.slice(1);
 
-  const [del, setDel] = useState(false);
   const [userData, setUserData] = useState<UserType | null>(null);
-  const [comments, setComments] = useState<CommentType[]>([]);
+  const [commentsData, setCommentsData] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState(
-    comments.length === maxItems ? comments[comments.length - 1].createdAt : '',
+    commentsData.length === maxItems ? commentsData[commentsData.length - 1].createdAt : '',
   );
   let [i, setI] = useState(1);
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
-
-  const changeDel = () => setDel(!del);
 
   const tComments = useScopedI18n('Comments');
   const t = useI18n();
@@ -61,17 +58,17 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
   useEffect(() => {
     getUserData().then((data) => setUserData(data));
 
-    commentsBool && filesApiComments(fileId!, maxItems).then((data) => setComments(data));
+    commentsBool && comments({ maxItems, fileId }).then((data) => setCommentsData(data));
   }, [linkShare, commentsBool, fileId]);
 
   const nextComments = async () => {
     try {
-      const nextPage = (await filesApiComments(fileId!, maxItems, 'again'))!;
+      const nextPage = (await comments({ maxItems, step: 'again', fileId }))!;
 
       nextPage.length === maxItems && setLastVisible(nextPage[nextPage.length - 1].createdAt!);
 
-      const nextArray = comments.concat(...nextPage);
-      setComments(nextArray);
+      const nextArray = commentsData.concat(...nextPage);
+      setCommentsData(nextArray);
       setI(++i);
     } catch (e) {
       console.error(e);
@@ -161,8 +158,8 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
       {commentsBool && (
         <>
           <NewComments fileId={fileId!} authorId={authorId} profilePhoto={userData?.profilePhoto!} roleId={roleId} />
-          {comments.length > 0 ? (
-            comments.map((data, i) => <Comment commentData={data} key={i} />)
+          {commentsData.length > 0 ? (
+            commentsData.map((data, i) => <Comment commentData={data} key={i} />)
           ) : (
             <p className={styles.noComments}>{tComments('noComments')}</p>
           )}

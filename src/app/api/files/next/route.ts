@@ -1,12 +1,12 @@
+import { NextRequest, NextResponse } from 'next/server';
+
 import { selectFiles } from 'constants/selects';
 import { FileType, Tags } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
-
 import { getFileRoleId } from 'utils/server/roles';
+import { likeList } from 'utils/server/likes';
 import { createServer } from 'utils/supabase/clientSSR';
-import { NextRequest, NextResponse } from 'next/server';
-import { likeList } from '../../../../utils/likes';
 
 export const GET = async (req: NextRequest) => {
   const supabase = await createServer();

@@ -32,30 +32,28 @@ export default async function Login({ params }: { params: Promise<{ locale: Lang
   };
 
   return (
-    <>
-      <div className={styles.login}>
-        <div className={styles.orientation}>
-          <FormSignIn translated={translated} />
+    <div className={styles.login}>
+      <div className={styles.orientation}>
+        <FormSignIn translated={translated} />
 
-          <Link href={'/forgotten'} className={styles.forgotten}>
-            {tNavForm('forgottenPasswordLink')}
-          </Link>
-        </div>
-        <div className={styles.orientation}>
-          <div className={styles.dividerWithText}>
-            <hr />
-            <h4 className={styles.provider__title}>{tNavForm('providerTitleLogin')}</h4>
-            <hr />
-          </div>
-
-          <Providers />
-
-          <p className={styles.changeForm}>
-            {tNavForm('changeToLogin')}
-            <Link href={'/signup'}>{t('Nav.signUp')}</Link>
-          </p>
-        </div>
+        <Link href={'/forgotten'} className={styles.forgotten}>
+          {tNavForm('forgottenPasswordLink')}
+        </Link>
       </div>
-    </>
+      <div className={styles.orientation}>
+        <div className={styles.dividerWithText}>
+          <hr />
+          <h4 className={styles.provider__title}>{tNavForm('providerTitleLogin')}</h4>
+          <hr />
+        </div>
+
+        <Providers />
+
+        <p className={styles.changeForm}>
+          {tNavForm('changeToLogin')}
+          <Link href={'/signup'}>{t('Nav.signUp')}</Link>
+        </p>
+      </div>
+    </div>
   );
 }

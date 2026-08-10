@@ -5,8 +5,8 @@ import { FileType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 import { getFileRoleId } from 'utils/server/roles';
+import { likeList } from 'utils/server/likes';
 import { createServer } from 'utils/supabase/clientSSR';
-import { likeList } from '../../../../../utils/likes';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);

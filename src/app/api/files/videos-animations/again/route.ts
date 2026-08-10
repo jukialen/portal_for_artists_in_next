@@ -6,7 +6,7 @@ import { FileType, Tags } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 import { getFileRoleId } from 'utils/server/roles';
-import { likeList } from '../../../../../utils/likes';
+import { likeList } from 'utils/server/likes';
 
 const tags: Tags[] = ['animations', 'videos'];
 

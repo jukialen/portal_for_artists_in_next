@@ -1,33 +1,47 @@
 'use server';
 
-import { backUrl } from 'constants/links';
-import {
-  CommentType,
-  FilesCommentsType,
-  LastCommentType,
-  NewCommentsType,
-  RoleType,
-  SubCommentType,
-  CommentsTableNameType,
-} from 'types/global.types';
+import { Database } from 'types/database.types';
+import { CommentType, FilesCommentsType, NewCommentsType, RoleType, CommentsTableNameType } from 'types/global.types';
 import { createServer } from './supabase/clientSSR';
-import { likeList } from './likes';
-import { getDate } from 'helpers/getDate';
-import { giveRole } from './server/roles';
-import { getUserData } from '../helpers/getUserData';
-import { groupRole } from './client/roles';
-import { selectCommentsData } from '../constants/values';
 
-type DataArrayType = {
-  subCommentId: string;
-  content: string;
-  roleId: string;
-  authorId: string;
-  createdAt: string;
-  updatedAt: string | null;
-  Users: { id: string; pseudonym: string; profilePhoto: string | null } | null;
-  Roles: { id: string; role: RoleType } | null;
+import { getDate } from 'helpers/getDate';
+import { getUserData } from 'helpers/getUserData';
+import { likeList } from 'utils/server/likes';
+import { giveRole, groupRole } from 'utils/server/roles';
+
+import { selectCommentsData, updDelCommentsData } from '../constants/values';
+
+type JoinedCommentRow<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'] & {
+  Users: {
+    pseudonym: string;
+    profilePhoto: string;
+  };
+  Roles: {
+    role: RoleType;
+  };
 };
+
+interface CommentsData {
+  maxItems?: number;
+  step?: 'first' | 'again';
+  postId?: string;
+  commentId?: string | null;
+  fileCommentId?: string | null;
+  subCommentId?: string;
+  lastCommentId?: string;
+  fileId?: string;
+  lastVisible?: string;
+  groupsPostsRoleId?: string;
+}
+
+interface UpdateCommentsData {
+  postId?: string;
+  commentId?: string | null;
+  fileCommentId?: string | null;
+  subCommentId?: string;
+  lastCommentId?: string;
+  fileId?: string;
+}
 
 //POST
 export const newComment = async (commentData: NewCommentsType): Promise<{ role: RoleType | ''; message: string }> => {
@@ -89,37 +103,18 @@ export const newComment = async (commentData: NewCommentsType): Promise<{ role: 
 };
 
 //GET
-export const comments = async (
-  maxItems: number,
-  postId?: string,
-  commentId?: string,
-  fileCommentId?: string,
-  subCommentId?: string,
-  lastCommentId?: string,
-  fileId?: string,
-  lastVisible?: string,
-  groupsPostsRoleId?: string,
-  step: 'first' | 'again' = 'first',
-): Promise<CommentType[]> => {
-  const supabase = await createServer();
-
-  let array: {
-    authorId: string;
-    commentId: string;
-    content: string;
-    createdAt: string;
-    postId: string;
-    roleId: string;
-    updatedAt: string | null;
-    Users: {
-      pseudonym: string;
-      profilePhoto: string;
-    };
-    Roles: {
-      role: RoleType;
-    };
-  }[] = [];
-
+export const comments = async ({
+  maxItems = 30,
+  step = 'first',
+  postId,
+  commentId,
+  fileCommentId,
+  subCommentId,
+  lastCommentId,
+  fileId,
+  lastVisible,
+  groupsPostsRoleId,
+}: CommentsData): Promise<CommentType[]> => {
   const commentArray: CommentType[] = [];
 
   const { tableName, columnValue, columnIdName } = selectCommentsData(
@@ -131,45 +126,42 @@ export const comments = async (
     lastCommentId,
   );
 
+  if (columnIdName === 'lastCommentId') return commentArray;
+
+  const supabase = await createServer();
+
   console.log('tableName', tableName);
   console.log('columnIdName', columnIdName);
+  console.log('columnValue', columnValue);
 
   try {
     const selectQuery = '*, Roles!roleId (role), Users!authorId (pseudonym, profilePhoto)';
 
-    if (step === 'first') {
-      const { data, error } = await supabase
-        .from(tableName)
-        .select(selectQuery)
-        .eq(columnIdName as any, columnValue)
-        .order('createdAt', { ascending: false })
-        .limit(maxItems);
+    let query = supabase
+      .from(tableName)
+      .select(selectQuery)
+      .eq(columnIdName as any, columnValue)
+      .order('createdAt', { ascending: false })
+      .limit(maxItems);
 
-      if (!!error || data?.length === 0) {
-        console.error(error);
-        return [];
-      }
+    if (step !== 'first' && lastVisible) query = query.gt('createdAt', lastVisible);
 
-      array = data as unknown as typeof array;
-    } else {
-      const { data, error } = await supabase
-        .from(tableName)
-        .select(selectQuery)
-        .eq(columnIdName as any, columnValue)
-        .gt('createdAt', lastVisible)
-        .order('createdAt', { ascending: false })
-        .limit(maxItems);
+    const { data, error } = await query;
 
-      if (!!error || data?.length === 0) {
-        console.error(error);
-        return [];
-      }
-
-      array = data as unknown as typeof array;
+    if (!!error || data?.length === 0) {
+      console.error(error);
+      return [];
     }
 
-    for (const first of array) {
-      const { commentId, content, roleId, authorId, postId, createdAt, updatedAt, Roles, Users } = first;
+    if (tableName === 'FilesComments')
+      return await filesApiComments(tableName, data as JoinedCommentRow<typeof tableName>[]);
+    if (tableName === 'SubComments')
+      return await subComments(tableName, data as JoinedCommentRow<typeof tableName>[], groupsPostsRoleId);
+    if (tableName === 'LastComments')
+      return await lastComments(tableName, data as JoinedCommentRow<typeof tableName>[], groupsPostsRoleId);
+
+    for (const a of data as JoinedCommentRow<'Comments'>[]) {
+      const { commentId, content, roleId, authorId, postId, createdAt, updatedAt, Roles, Users } = a;
       const likesData = await likeList(authorId, 'postId', postId);
 
       commentArray.push({
@@ -196,65 +188,17 @@ export const comments = async (
   }
 };
 
-export const filesApiComments = async (
-  fileId: string,
-  maxItems: number,
-  stage: 'first' | 'again' = 'first',
-): Promise<FilesCommentsType[]> => {
+const filesApiComments = async (
+  tableName: CommentsTableNameType,
+  commentsData: JoinedCommentRow<'FilesComments'>[],
+) => {
   try {
-    const supabase = await createServer();
-
     const filesArray: FilesCommentsType[] = [];
-
-    let commentsData: {
-      id: string;
-      fileId: string;
-      content: string;
-      roleId: string;
-      Roles: { role: RoleType };
-      authorId: string;
-      createdAt: string;
-      updatedAt: string | null;
-      Users: {
-        pseudonym: string;
-        profilePhoto: string;
-      };
-    }[];
-
-    const tableName = 'FilesComments';
-
-    if (stage === 'first') {
-      const { data, error } = await supabase
-        .from(tableName)
-        .select(
-          'id, fileId, content, roleId, Roles!roleId (role), authorId, createdAt, updatedAt, Users!authorId (pseudonym, profilePhoto)',
-        )
-        .eq('fileId', fileId)
-        .order('createdAt', { ascending: false })
-        .limit(maxItems);
-
-      if (!data || data?.length === 0 || !!error) return filesArray;
-      commentsData = data;
-    } else {
-      const { data, error } = await supabase
-        .from(tableName)
-        .select(
-          'id, fileId, content, roleId, Roles!roleId (role), authorId, createdAt, updatedAt, Users!authorId (pseudonym, profilePhoto)',
-        )
-        .gt('fileId', fileId)
-        .order('createdAt', { ascending: false })
-        .limit(maxItems);
-
-      if (!data || data?.length === 0 || !!error) return filesArray;
-
-      commentsData = data;
-    }
 
     for (const d of commentsData) {
       const { id: fileCommentId, fileId, content, roleId, authorId, createdAt, updatedAt, Roles, Users } = d;
       const likesData = await likeList(authorId, 'fileCommentId', fileCommentId);
 
-      const role = await giveRole(roleId);
       filesArray.push({
         fileCommentId,
         fileId,
@@ -279,127 +223,96 @@ export const filesApiComments = async (
   }
 };
 
-export const subComments = async (
-  step: 'first' | 'again' = 'first',
-  maxItems: number = 30,
-  commentId?: string,
-  fileCommentId?: string,
+const subComments = async (
+  tableName: CommentsTableNameType,
+  commentsData: JoinedCommentRow<'SubComments'>[],
   groupsPostsRoleId?: string,
-  lastVisible?: string,
-): Promise<SubCommentType[]> => {
-  const userData = await getUserData();
+) => {
+  const subArray: CommentType[] = [];
 
-  const subArray: SubCommentType[] = [];
+  for (const c of commentsData) {
+    const { subCommentId, commentId, fileCommentId, content, Users, Roles, roleId, authorId, createdAt, updatedAt } = c;
 
-  let dataArray: DataArrayType[] = [];
+    const likesData = await likeList(authorId, 'subCommentId', subCommentId);
+    const gRole = !!groupsPostsRoleId ? await groupRole(groupsPostsRoleId, authorId!) : Roles?.role!;
 
-  const supabase = await createServer();
-
-  try {
-    if (step === 'first') {
-      const { data, error } = await supabase
-        .from('SubComments')
-        .select(
-          'subCommentId, content, roleId, authorId, createdAt, updatedAt, Users (id, pseudonym, profilePhoto), Roles!roleId (id, role)',
-        )
-        .eq(commentId ? 'commentId' : 'fileCommentId', commentId || fileCommentId!)
-        .order('createdAt', { ascending: false })
-        .limit(maxItems);
-
-      if (!data || data?.length === 0 || !!error) return subArray;
-
-      dataArray = data;
-    } else {
-      const { data, error } = await supabase
-        .from('SubComments')
-        .select(
-          'subCommentId, content, roleId, authorId, createdAt, updatedAt, Users (id, pseudonym, profilePhoto), Roles (id, role)',
-        )
-        .eq(commentId ? 'commentId' : 'fileCommentId', commentId || fileCommentId!)
-        .gt('createdAt', lastVisible)
-        .order('createdAt', { ascending: false })
-        .limit(maxItems);
-
-      if (!data || data?.length === 0 || !!error) return subArray;
-
-      dataArray = data;
-    }
-
-    for (const again of dataArray) {
-      const { subCommentId, content, Users, Roles, roleId, authorId, createdAt, updatedAt } = again;
-
-      const gRole = !!groupsPostsRoleId ? await groupRole(groupsPostsRoleId, Users?.id!) : Roles?.role!;
-
-      const likesData = await likeList(authorId, 'subCommentId', subCommentId);
-
-      subArray.push({
-        subCommentId,
-        content,
-        commentId: commentId!,
-        fileCommentId: fileCommentId!,
-        authorName: Users?.pseudonym!,
-        authorProfilePhoto: userData?.profilePhoto!,
-        role: gRole!,
-        roleId: !!commentId ? groupsPostsRoleId || roleId : roleId,
-        authorId,
-        likes: likesData.likes,
-        liked: likesData.liked,
-        idLiked: likesData.idLiked,
-        date: await getDate(updatedAt! || createdAt!),
-        groupsPostsRoleId: groupsPostsRoleId!,
-      });
-    }
-
-    return subArray;
-  } catch (e) {
-    console.error(e);
-    return [];
+    subArray.push({
+      subCommentId,
+      content,
+      commentId,
+      fileCommentId,
+      authorName: Users?.pseudonym!,
+      authorProfilePhoto: Users?.profilePhoto!,
+      role: gRole!,
+      roleId: groupsPostsRoleId || roleId,
+      authorId,
+      likes: likesData.likes,
+      liked: likesData.liked,
+      idLiked: likesData.idLiked,
+      date: await getDate(updatedAt! || createdAt!),
+      tableName,
+    });
   }
+
+  return subArray;
 };
 
-export const lastComments = async (
-  subCommentId: string,
-  maxItems: number,
-  groupsPostsRoleId: string,
-  step: 'first' | 'again',
-): Promise<LastCommentType[]> => {
-  const params = { subCommentId, maxItems: maxItems.toString(), groupsPostsRoleId };
-  const queryString = new URLSearchParams(params).toString();
+const lastComments = async (
+  tableName: CommentsTableNameType,
+  commentsData: JoinedCommentRow<'LastComments'>[],
+  groupsPostsRoleId?: string,
+) => {
+  const lastCommentArray: CommentType[] = [];
 
-  try {
-    const res: LastCommentType[] = await fetch(`${backUrl}/api/last-comments/${step}?${queryString}`, {
-      method: 'GET',
-    })
-      .then((r) => r.json())
-      .catch((e) => {
-        console.error(e);
-        return [];
-      });
+  for (const c of commentsData) {
+    const { lastCommentId, subCommentId, content, Users, Roles, roleId, authorId, createdAt, updatedAt } = c;
 
-    return res || [];
-  } catch (e) {
-    console.error(e);
-    return [];
+    const likesData = await likeList(authorId, 'lastCommentId', subCommentId);
+    const gRole = !!groupsPostsRoleId ? await groupRole(groupsPostsRoleId, authorId!) : Roles?.role!;
+
+    lastCommentArray.push({
+      lastCommentId,
+      content,
+      authorName: Users?.pseudonym!,
+      authorProfilePhoto: Users?.profilePhoto!,
+      role: gRole,
+      roleId: groupsPostsRoleId || roleId,
+      authorId,
+      likes: likesData!.likes,
+      liked: likesData!.liked,
+      idLiked: likesData!.idLiked,
+      date: await getDate(updatedAt! || createdAt!),
+      subCommentId,
+      tableName,
+    });
   }
+
+  return lastCommentArray;
 };
 
 //PATCH
 
-export const updComment = async (tableName: CommentsTableNameType, id: string, content: string): Promise<boolean> => {
+export const updComment = async (
+  { commentId, fileCommentId, subCommentId, lastCommentId }: UpdateCommentsData,
+  content: string,
+): Promise<boolean> => {
   try {
     const supabase = await createServer();
-    const author = await getUserData();
 
-    const queryMap = {
-      Comments: () => supabase.from('Comments').update({ content }).eq('commentId', id),
-      FilesComments: () => supabase.from('FilesComments').update({ content }).eq('id', id),
-      SubComments: () => supabase.from('SubComments').update({ content }).eq('subCommentId', id),
-      LastComments: () => supabase.from('LastComments').update({ content }).eq('lastCommentId', id),
-    };
+    const { tableName, columnValue, columnIdName } = updDelCommentsData(
+      commentId,
+      fileCommentId,
+      subCommentId,
+      lastCommentId,
+    );
 
-    const { error } = await queryMap[tableName]().eq('authorId', author?.id!);
+    const { error } = await supabase
+      .from(tableName)
+      .update({ content })
+      .eq(columnIdName as any, columnValue);
 
-    return !!error;
+    console.log('error', error);
+    return !error;
   } catch (e) {
     console.error(e);
     return false;
@@ -407,23 +320,29 @@ export const updComment = async (tableName: CommentsTableNameType, id: string, c
 };
 
 ///DELETE
-export const delComment = async (
-  tableName: CommentsTableNameType,
-  id: string,
-): Promise<{ message: string; error: string }> => {
+export const delComment = async ({
+  commentId,
+  fileCommentId,
+  subCommentId,
+  lastCommentId,
+}: UpdateCommentsData): Promise<{ message: string; error: string }> => {
   try {
     const supabase = await createServer();
-
     const author = await getUserData();
 
-    const queryMap = {
-      Comments: () => supabase.from('Comments').delete().eq('commentId', id),
-      FilesComments: () => supabase.from('FilesComments').delete().eq('id', id),
-      SubComments: () => supabase.from('SubComments').delete().eq('subCommentId', id),
-      LastComments: () => supabase.from('LastComments').delete().eq('lastCommentId', id),
-    };
+    const { tableName, columnValue, columnIdName } = updDelCommentsData(
+      commentId,
+      fileCommentId,
+      subCommentId,
+      lastCommentId,
+    );
 
-    const { error } = await queryMap[tableName]().eq('authorId', author?.id!);
+    const { error } = await supabase
+      .from(tableName)
+      .delete()
+      .eq(columnIdName as any, columnValue)
+      .eq('authorId', author?.id!);
+
     return { message: error ? 'Failed to delete comment' : 'Comment was deleted', error: error?.message || '' };
   } catch (e: any) {
     console.error(e);

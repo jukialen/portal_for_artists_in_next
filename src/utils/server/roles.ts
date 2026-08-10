@@ -1,3 +1,5 @@
+'use server';
+
 import { createServer } from 'utils/supabase/clientSSR';
 import { sendLokiLog } from 'helpers/Grafana/server/methods';
 import { getTraceId } from 'helpers/getHeaders';
@@ -40,8 +42,46 @@ export const getFileRoleId = async (fileId: string, userId: string): Promise<{ r
   }
 };
 
+export const roles = async (roleId: string, userId: string): Promise<RoleType | undefined> => {
+  try {
+    const supabase = await createServer();
+
+    const { data, error } = await supabase
+      .from('Roles')
+      .select('role')
+      .eq('id', roleId)
+      .eq('userId', userId)
+      .limit(1)
+      .maybeSingle();
+
+    return !error ? data?.role! : 'USER';
+  } catch (e) {
+    console.error(e);
+    return undefined;
+  }
+};
+
+export const groupRole = async (groupsPostsRoleId: string, userId: string): Promise<RoleType> => {
+  try {
+    const supabase = await createServer();
+
+    const { data, error } = await supabase
+      .from('Roles')
+      .select('role')
+      .eq('id', groupsPostsRoleId)
+      .eq('userId', userId)
+      .limit(1)
+      .single();
+
+    return !error ? data?.role : 'USER';
+  } catch (e) {
+    console.error(e);
+    return 'USER';
+  }
+};
+
 //POST
-export const giveRole = async (roleId: string): Promise<{ role: RoleType | ''; message: string }> => {
+export const giveRole = async (roleId: string): Promise<{ role: RoleType; message: string }> => {
   try {
     const supabase = await createServer();
 
@@ -52,6 +92,6 @@ export const giveRole = async (roleId: string): Promise<{ role: RoleType | ''; m
     return { role: data?.role || 'USER', message: '' };
   } catch (e: any) {
     console.error(e);
-    return { role: '', message: e.message };
+    return { role: 'USER', message: e.message };
   }
 };

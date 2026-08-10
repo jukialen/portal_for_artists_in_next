@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { roles } from 'utils/client/roles';
+import { roles } from 'utils/server/roles';
 import { createClient } from 'utils/supabase/clientCSR';
 
 import { backUrl } from 'constants/links';

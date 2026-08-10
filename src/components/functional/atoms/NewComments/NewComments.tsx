@@ -1,16 +1,21 @@
 'use client';
 
+import { useState } from 'react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'schemasValidation/schemaValidation';
-import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
 import { supabaseStorageProfileUrl } from 'constants/links';
 import { selectCommentsData } from 'constants/values';
 import { CommentType, ResetFormType } from 'types/global.types';
 
-import { useScopedI18n } from 'locales/client';
+import { useI18n, useScopedI18n } from 'locales/client';
+import { getUserData } from 'helpers/getUserData';
 import { newComment } from 'utils/comments';
+import { toggleLiked } from 'utils/server/likes';
+
+import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
+import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
 import styles from './NewComments.module.css';
 
@@ -22,10 +27,10 @@ type NewComment = {
   roleId: string;
   postId?: string;
   fileId?: string;
-  commentId?: string;
+  commentId?: string | null;
   subCommentId?: string;
-  fileCommentId?: string;
-  onCommentAdded?: (newComment: CommentType) => void;
+  fileCommentId?: string | null;
+  onReplyAddedAction?: (newComment: CommentType) => void;
 };
 
 export const NewComments = ({
@@ -37,16 +42,34 @@ export const NewComments = ({
   subCommentId,
   fileCommentId,
   profilePhoto,
-  onCommentAdded,
+  onReplyAddedAction,
 }: NewComment) => {
-  const initialValues = { comment: '' };
+  const [valuesFields, setValuesFields] = useState('');
 
+  const t = useI18n();
   const tComments = useScopedI18n('Comments');
 
+  const initialValues = { comment: '' };
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
 
   const createNewComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
+      const userData = await getUserData();
+      const newLike = await toggleLiked({
+        is: false,
+        authorId: userData?.id!,
+        postId,
+        fileId,
+        commentId,
+        subCommentId,
+        fileCommentId,
+      });
+
+      if (!newLike.changed || !newLike.idLiked) {
+        setValuesFields(t('error'));
+        return;
+      }
+
       const { role, message } = await newComment({
         content: comment,
         authorId,
@@ -63,8 +86,8 @@ export const NewComments = ({
       const { tableName } = selectCommentsData(postId, fileId, commentId, fileCommentId, subCommentId);
 
       onReplyAddedAction?.({
-        authorName: 'dafaefw',
-        idLiked: '19/02/2027',
+        authorName: userData?.pseudonym!,
+        idLiked: newLike.idLiked,
         liked: false,
         likes: 0,
         role,
@@ -113,6 +136,7 @@ export const NewComments = ({
           </button>
 
           <ErrorMessage name="comment" />
+          {valuesFields && <Alerts valueFields={valuesFields} />}
         </Form>
       )}
     </Formik>

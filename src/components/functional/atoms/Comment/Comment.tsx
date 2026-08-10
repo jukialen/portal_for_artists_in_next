@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
@@ -9,22 +8,16 @@ import { supabaseStorageProfileUrl } from 'constants/links';
 import { selectCommentsData } from 'constants/values';
 import { CommentType } from 'types/global.types';
 
-const Comments = dynamic(() => import('components/functional/molecules/Comments/Comments').then((mod) => mod.Comments));
 import { OptionsComments } from 'components/functional/molecules/OptionsComments/OptionsComments';
 import { Tag } from 'components/ui/atoms/Tag/Tag';
 
 import styles from './Comment.module.css';
 
-type CommentProps = {
-  commentData: CommentType;
-  onReplyAddedAction?: (newComment: CommentType) => void;
-};
+export const Comment = ({ commentData }: { commentData: CommentType }) => {
+  const [isDeleted, setIsDeleted] = useState(false);
+  const [currentContent, setCurrentContent] = useState(commentData.content);
 
-export const Comment = ({ commentData, onReplyAddedAction }: CommentProps) => {
-  const [del, setDel] = useState(false);
-  const [newReply, setNewReply] = useState<CommentType | null>(null);
-
-  const changeDel = () => setDel(!del);
+  if (isDeleted) return null;
 
   const {
     fileId,
@@ -54,7 +47,7 @@ export const Comment = ({ commentData, onReplyAddedAction }: CommentProps) => {
   );
 
   return (
-    <div className={del ? styles.container__deleted : styles.container}>
+    <div className={styles.container}>
       <div className={styles.comment}>
         <Avatar
           src={`${supabaseStorageProfileUrl}/${authorProfilePhoto}`}
@@ -69,7 +62,7 @@ export const Comment = ({ commentData, onReplyAddedAction }: CommentProps) => {
             <Tag value={role} />
             <p className={styles.date}>{date}</p>
           </div>
-          <h2 className={styles.text}>{content}</h2>
+          <h2 className={styles.text}>{currentContent}</h2>
         </div>
       </div>
       <OptionsComments
@@ -85,17 +78,10 @@ export const Comment = ({ commentData, onReplyAddedAction }: CommentProps) => {
         likes={likes}
         authorProfilePhoto={authorProfilePhoto}
         roleId={roleId!}
-        comment={content}
-        onReplyAddedAction={setNewReply}>
-        <Comments
-          commentId={commentId}
-          fileCommentId={fileCommentId}
-          subCommentId={subCommentId}
-          lastCommentId={lastCommentId}
-          postId={postId}
-          newReply={newReply}
-        />
-      </OptionsComments>
+        comment={currentContent}
+        onDeleteSuccessAction={() => setIsDeleted(true)}
+        onUpdateSuccessAction={(newText) => setCurrentContent(newText)}
+      />
     </div>
   );
 };

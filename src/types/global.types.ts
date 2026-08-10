@@ -250,16 +250,17 @@ export type GalleryType = {
 // COMMENTS
 
 export type CommentsColumnIds = {
-  commentId?: string;
-  fileCommentId?: string;
+  commentId?: string | null;
+  fileCommentId?: string | null;
   subCommentId?: string;
   lastCommentId?: string;
   postId?: string;
   fileId?: string;
   roleId?: string;
+  newReply?: CommentType | null;
 };
 
-type Comment = CommentsColumnIds &
+export type Comment = CommentsColumnIds &
   Time & {
     authorId: string;
     fileUrl?: string;

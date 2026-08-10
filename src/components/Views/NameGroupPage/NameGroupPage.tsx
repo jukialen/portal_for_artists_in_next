@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Tabs } from '@ark-ui/react/tabs';
 import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 
+import { errorFaroLog } from 'helpers/Grafana/client/methods';
+
 import { createClient } from 'utils/supabase/clientCSR';
 import { JoinUser, MemberType, nameGroupTranslatedType, PostsType, UserType } from 'types/global.types';
 
@@ -16,7 +18,6 @@ import { Posts } from 'components/functional/organisms/Posts/Posts';
 import { Separator } from 'components/ui/atoms/Separator/Separator';
 
 import styles from './NameGroupPage.module.css';
-import { errorFaroLog, manualFaroLog } from '../../../helpers/Grafana/client/methods';
 
 export const NameGroupPage = ({
   name,
