@@ -32,27 +32,39 @@ export const selectCommentsData = (
   subCommentId?: string,
   lastCommentId?: string,
 ) => {
-  const tableName: CommentsTableNameType = postId
-    ? 'Comments'
-    : fileId
-      ? 'FilesComments'
-      : commentId || fileCommentId
-        ? 'SubComments'
-        : 'LastComments';
+  let tableName: CommentsTableNameType;
+  let columnValue: string | undefined;
+  let columnIdName: ColumnCommentsTableNameType;
 
-  const columnValue = postId || fileId || commentId || fileCommentId || subCommentId || lastCommentId;
-
-  const columnIdName: ColumnCommentsTableNameType = postId
-    ? 'postId'
-    : fileId
-      ? 'fileId'
-      : commentId
-        ? 'commentId'
-        : fileCommentId
-          ? 'fileCommentId'
-          : subCommentId
-            ? 'subCommentId'
-            : 'lastCommentId';
+  if (lastCommentId) {
+    tableName = 'LastComments';
+    columnValue = lastCommentId;
+    columnIdName = 'lastCommentId';
+  } else if (subCommentId) {
+    tableName = 'LastComments';
+    columnValue = subCommentId;
+    columnIdName = 'subCommentId';
+  } else if (fileCommentId) {
+    tableName = 'SubComments';
+    columnValue = fileCommentId;
+    columnIdName = 'fileCommentId';
+  } else if (commentId) {
+    tableName = 'SubComments';
+    columnValue = commentId;
+    columnIdName = 'commentId';
+  } else if (fileId) {
+    tableName = 'FilesComments';
+    columnValue = fileId;
+    columnIdName = 'fileId';
+  } else if (postId) {
+    tableName = 'Comments';
+    columnValue = postId;
+    columnIdName = 'postId';
+  } else {
+    tableName = 'Comments';
+    columnValue = '';
+    columnIdName = 'postId';
+  }
 
   return { tableName, columnValue, columnIdName };
 };

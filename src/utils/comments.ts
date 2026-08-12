@@ -130,10 +130,6 @@ export const comments = async ({
 
   const supabase = await createServer();
 
-  console.log('tableName', tableName);
-  console.log('columnIdName', columnIdName);
-  console.log('columnValue', columnValue);
-
   try {
     const selectQuery = '*, Roles!roleId (role), Users!authorId (pseudonym, profilePhoto)';
 
