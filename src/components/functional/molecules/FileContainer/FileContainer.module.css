@@ -1,7 +1,7 @@
 .file {
   width: min(34.5rem, 90dvw);
   display: grid;
-  grid-template-rows: 1fr 3.25rem 1.5rem auto;
+  grid-template-rows: 1fr 3.25rem auto auto;
   justify-self: center;
   margin: 1rem auto 8.5rem;
   padding: 0.5rem 0 2rem;
@@ -46,6 +46,7 @@
   .shortDescription {
     width: 93%;
     margin: 0.5rem auto;
+    font-size: 1.5rem;
   }
 
   .options {
@@ -62,6 +63,7 @@
 
     .author_name {
       font-size: 1.2rem;
+      color: var(--secondary);
     }
 
     .likes {

@@ -62,7 +62,7 @@ export const Comment = ({ commentData }: { commentData: CommentType }) => {
             <Tag value={role} />
             <p className={styles.date}>{date}</p>
           </div>
-          <h2 className={styles.text}>{currentContent}</h2>
+          <p className={styles.text}>{currentContent}</p>
         </div>
       </div>
       <OptionsComments

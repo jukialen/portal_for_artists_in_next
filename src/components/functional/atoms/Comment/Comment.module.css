@@ -40,8 +40,8 @@
       }
 
       .text {
-        font-size: 1rem;
-        text-align: inherit;
+        line-height: 1.4;
+        white-space: pre-line;
       }
     }
 

@@ -131,9 +131,9 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
         </Link>
       </section>
 
-      <div className={styles.shortDescription}>
+      <h2 className={styles.shortDescription}>
         {shortDescription!.length <= 36 ? shortDescription : shortDescription!.slice(0, 36) + '...'}
-      </div>
+      </h2>
 
       <div className={styles.options}>
         <Link href={`/user/${authorName}`} className={styles.author_name}>

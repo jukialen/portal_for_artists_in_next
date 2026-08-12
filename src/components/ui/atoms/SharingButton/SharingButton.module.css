@@ -1,6 +1,5 @@
 .share {
   position: relative;
-  justify-self: flex-start;
 
   .sharButton {
     width: 3rem;
