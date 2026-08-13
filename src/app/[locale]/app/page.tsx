@@ -98,11 +98,12 @@ async function getTop10Pavo(maxItems: number, tag: Tags) {
 
       if (storageError) return filesArray;
 
-      const roleId = await getFileRoleId(fileId, authorId!);
+      const { roleId } = await getFileRoleId(fileId, authorId!);
 
-      if (roleId.roleId === 'no id') return filesArray;
-
+      if (roleId === 'no id') return filesArray;
       const roleOkId = roleId! as unknown as RoleType;
+
+      const likesData = await likeList(authorId!, 'fileId', fileId);
 
       filesArray.push({
         fileId,
@@ -114,9 +115,9 @@ async function getTop10Pavo(maxItems: number, tag: Tags) {
         authorId: authorId!,
         tags,
         roleId: roleOkId,
-        liked: (await likeList(authorId!, 'fileId', fileId)).liked,
-        likes: (await likeList(authorId!, 'fileId', fileId)).likes,
-        idLiked: (await likeList(authorId!, 'fileId', fileId)).idLiked,
+        liked: likesData.liked,
+        likes: likesData.likes,
+        idLiked: likesData.idLiked,
       });
     }
 

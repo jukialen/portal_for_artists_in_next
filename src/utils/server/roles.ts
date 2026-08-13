@@ -13,7 +13,7 @@ export const getFileRoleId = async (fileId: string, userId: string): Promise<{ r
 
     const { data, error } = await supabase
       .from('Roles')
-      .select('id')
+      .select('id, role')
       .eq('fileId', fileId)
       .eq('userId', userId)
       .limit(1)

@@ -46,13 +46,23 @@ interface UpdateCommentsData {
 //POST
 export const newComment = async (commentData: NewCommentsType): Promise<{ role: RoleType | ''; message: string }> => {
   try {
-    const { content, authorId, postId, roleId, fileId, fileCommentId, commentId, subCommentId } = commentData;
+    const { content, authorId, postId, fileId, fileCommentId, commentId, subCommentId } = commentData;
     const supabase = await createServer();
+    const userData = await getUserData();
 
-    if (roleId === 'no id') return { role: '', message: 'no role id' };
+    const role: RoleType = authorId === userData?.id! ? 'AUTHOR' : 'USER';
+
+    const { data, error: roleError } = await supabase
+      .from('Roles')
+      .insert([{ role, userId: userData?.id!, postId, fileId, fileCommentId, commentId, subCommentId }])
+      .select('id')
+      .limit(1)
+      .maybeSingle();
+
+    if (!data || !!roleError) return { role: '', message: 'no role' };
 
     if (!!postId) {
-      const { error } = await supabase.from('Comments').insert([{ content, authorId, postId, roleId: roleId! }]);
+      const { error } = await supabase.from('Comments').insert([{ content, authorId, postId, roleId: data.id }]);
 
       if (!!error) {
         console.error(error);
@@ -61,7 +71,7 @@ export const newComment = async (commentData: NewCommentsType): Promise<{ role: 
     }
 
     if (!!fileId) {
-      const { error } = await supabase.from('FilesComments').insert([{ content, authorId, fileId, roleId: roleId! }]);
+      const { error } = await supabase.from('FilesComments').insert([{ content, authorId, fileId, roleId: data.id }]);
 
       if (!!error) {
         console.error('fileId error', error);
@@ -72,7 +82,7 @@ export const newComment = async (commentData: NewCommentsType): Promise<{ role: 
     if (!!fileCommentId || !!commentId) {
       const { error } = await supabase
         .from('SubComments')
-        .insert([{ content, authorId, commentId, fileCommentId, roleId: roleId! }]);
+        .insert([{ content, authorId, commentId, fileCommentId, roleId: data.id }]);
 
       if (!!error) {
         console.error(error);
@@ -83,7 +93,7 @@ export const newComment = async (commentData: NewCommentsType): Promise<{ role: 
     if (!!subCommentId) {
       const { error } = await supabase
         .from('LastComments')
-        .insert([{ content, authorId, subCommentId, roleId: roleId! }]);
+        .insert([{ content, authorId, subCommentId, roleId: data.id }]);
 
       if (!!error) {
         console.error(error);
@@ -91,11 +101,7 @@ export const newComment = async (commentData: NewCommentsType): Promise<{ role: 
       }
     }
 
-    const { role, message }: { role: RoleType | ''; message: string } = await giveRole(roleId!);
-
-    !!message && console.error(`Error: ${message} with role: '${role}'.`);
-
-    return { role, message };
+    return { role, message: '' };
   } catch (e: any) {
     console.error(e);
     return { role: '', message: e.message };
@@ -160,12 +166,13 @@ export const comments = async ({
       const { commentId, content, roleId, authorId, postId, createdAt, updatedAt, Roles, Users } = a;
       const likesData = await likeList(authorId, 'postId', postId);
 
+      const gRole = !!groupsPostsRoleId ? await groupRole(groupsPostsRoleId, authorId!) : Roles?.role!;
       commentArray.push({
         commentId,
         content,
         authorName: Users.pseudonym!,
         authorProfilePhoto: Users.profilePhoto!,
-        role: Roles.role,
+        role: gRole,
         roleId: groupsPostsRoleId || roleId,
         authorId,
         postId,

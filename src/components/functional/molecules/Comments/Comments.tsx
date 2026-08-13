@@ -21,7 +21,6 @@ export const Comments = ({
   postId,
   fileId,
   roleId,
-  newReply,
 }: CommentsColumnIds) => {
   const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState('');

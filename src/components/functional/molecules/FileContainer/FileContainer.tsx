@@ -43,6 +43,7 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
   const linkShare = `${backUrl}/file/${name}/${fileId}/${authorName}`;
   const Tags = tags[0].toUpperCase() + tags.slice(1);
 
+  const [newReply, setNewReply] = useState<CommentType | null>(null);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [commentsData, setCommentsData] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState(
@@ -54,6 +55,14 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
 
   const tComments = useScopedI18n('Comments');
   const t = useI18n();
+
+  useEffect(() => {
+    if (newReply) {
+      setCommentsData((prev) => [newReply, ...prev]);
+      commentsData.length >= maxItems * i && setI((prev) => prev + 1);
+      setNewReply(null);
+    }
+  }, [newReply]);
 
   useEffect(() => {
     getUserData().then((data) => setUserData(data));
@@ -69,7 +78,7 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
 
       const nextArray = commentsData.concat(...nextPage);
       setCommentsData(nextArray);
-      setI(++i);
+      setI((prev) => prev + 1);
     } catch (e) {
       console.error(e);
     }
@@ -157,7 +166,13 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
       )}
       {commentsBool && (
         <>
-          <NewComments fileId={fileId!} authorId={authorId} profilePhoto={userData?.profilePhoto!} roleId={roleId} />
+          <NewComments
+            fileId={fileId!}
+            authorId={authorId}
+            profilePhoto={userData?.profilePhoto!}
+            roleId={roleId}
+            onReplyAddedAction={setNewReply}
+          />
           {commentsData.length > 0 ? (
             commentsData.map((data, i) => <Comment commentData={data} key={i} />)
           ) : (

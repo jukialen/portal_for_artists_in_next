@@ -23,7 +23,6 @@ export const Comment = ({ commentData }: { commentData: CommentType }) => {
     fileId,
     commentId,
     fileCommentId,
-    content,
     authorName,
     authorProfilePhoto,
     role,
@@ -55,11 +54,11 @@ export const Comment = ({ commentData }: { commentData: CommentType }) => {
           alt="author profile photo icon"
         />
         <div className={styles.rightSideComment}>
-          <div className={styles.topPartComment}>
+          <div className={role === 'AUTHOR' ? styles.authorTopPartComment : styles.topPartComment}>
             <Link href={`/user/${authorName}`} className={styles.pseudonym}>
               {authorName}
             </Link>
-            <Tag value={role} />
+            {role === 'AUTHOR' && <Tag value={role} />}
             <p className={styles.date}>{date}</p>
           </div>
           <p className={styles.text}>{currentContent}</p>

@@ -15,10 +15,8 @@
       flex-direction: column;
       gap: 0.5rem;
 
-      .topPartComment {
-        display: grid;
-        grid-template-columns: auto auto 1fr;
-        gap: 0.3rem;
+      .authorTopPartComment, .topPartComment {
+        display: flex;
         justify-content: space-between;
         align-items: center;
 
@@ -37,6 +35,12 @@
           text-align: right;
           font-size: 0.8rem;
         }
+      }
+
+      .authorTopPartComment {
+        display: grid;
+        grid-template-columns: auto auto 1fr;
+        gap: 0.3rem;
       }
 
       .text {

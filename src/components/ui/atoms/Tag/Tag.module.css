@@ -1,7 +1,22 @@
-.tag {
+.admin, .moderator, .author, .tag {
   padding: 0.25rem 0.5rem;
   font-size: 0.65rem;
   border-radius: 0.5rem;
   background-color: var(--secondary__opacity);
   color: var(--secondary);
+}
+
+.admin {
+  background-color: var(--primary__opacity);
+  color: var(--primary);
+}
+
+.moderator {
+  background-color: var(--third__opacity);
+  color: var(--third);
+}
+
+.author {
+  background-color: var(--focus);
+  color: var(--fourth);
 }
