@@ -9,7 +9,7 @@ import { useI18n, useScopedI18n } from 'locales/client';
 import { createClient } from 'utils/supabase/clientCSR';
 import { comments } from 'utils/comments';
 
-import { backUrl, supabaseStorageUrlFilesUrl } from 'constants/links';
+import { backUrl } from 'constants/links';
 import { TagConstants } from 'constants/values';
 import { ArticleVideosType, CommentType, UserType } from 'types/global.types';
 

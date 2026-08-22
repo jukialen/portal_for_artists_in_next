@@ -61,13 +61,6 @@ export default async function User({ params }: PropsType) {
   const userData = await getUserData();
   const id = userData?.id!;
 
-  const tProfile = {
-    userAvatar: t('Account.profile.userAvatar'),
-    defaultAvatar: t('Account.profile.defaultAvatar'),
-    pseudonym: t('AnotherForm.pseudonym'),
-    aboutMe: t('Account.profile.aboutMe'),
-  };
-
   const maxItems = 30;
   const fidsFavs = await getFidAndFavs(pseudonymName);
   const firstFriends = await getFirstFriends(fidsFavs?.pseudonymId!, maxItems);

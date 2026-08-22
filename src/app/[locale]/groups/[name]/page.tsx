@@ -270,23 +270,21 @@ export default async function Groups({ params }: PropsType) {
   const firstPosts = await getFirstPosts(joined.groupId || gData.groupId, 30);
 
   return (
-    <>
-      <article className={styles.mainContainer}>
-        <div className={styles.logo}>
-          <Image src={gData.logo} fill priority alt={`${name} logo`} />
-          {gData.admin && <UpdateGroupLogo logo={gData.logo} name={name} translated={translated} />}
-        </div>
+    <article className={styles.mainContainer}>
+      <div className={styles.logo}>
+        <Image src={gData.logo} fill priority alt={`${name} logo`} />
+        {gData.admin && <UpdateGroupLogo logo={gData.logo} name={name} translated={translated} />}
+      </div>
 
-        <NameGroupPage
-          name={decodedName}
-          userData={userData!}
-          joined={{ ...joined, ...gData }}
-          usersGroupsId={joined.usersGroupsId}
-          members={membersGroups}
-          translated={translated}
-          firstPosts={firstPosts}
-        />
-      </article>
-    </>
+      <NameGroupPage
+        name={decodedName}
+        userData={userData!}
+        joined={{ ...joined, ...gData }}
+        usersGroupsId={joined.usersGroupsId}
+        members={membersGroups}
+        translated={translated}
+        firstPosts={firstPosts}
+      />
+    </article>
   );
 }
