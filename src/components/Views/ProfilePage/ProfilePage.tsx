@@ -55,14 +55,14 @@ type ProfilePageType = {
   firstGraphics: FileType[] | undefined;
   firstAnimations: FileType[] | undefined;
   firstVideos: FileType[] | undefined;
-  fidsFavs?: null | {
+  fidsFavs?: {
     friendIds: {
       friendId: string;
       favorite: boolean;
     }[];
-    pseudonymId: any;
-    profilePhotoUser: any;
-    descriptionUser: any;
+    pseudonymId: string;
+    profilePhotoUser: string;
+    descriptionUser: string;
   };
   favs?: number;
   fave?:
@@ -171,16 +171,16 @@ export const ProfilePage = ({
         <div className={styles.logoPseu}>
           <div className={styles.logo}>
             <Image
-              src={`${supabaseStorageProfileUrl}/${userData?.profilePhoto!}`}
+              src={`${supabaseStorageProfileUrl}/${myProfile ? userData?.profilePhoto : fidsFavs?.profilePhotoUser}`}
               fill
-              alt={`${userData?.pseudonym} logo`}
+              alt={`${pseudonym} logo`}
               priority
             />
             {myProfile && (
               <UpdateProfilePhotoOnAccount userData={userData!} fileTranslated={fileTranslated} tCurrPrPhoto={tMain} />
             )}
           </div>
-          <h1 className={styles.name}>{userData?.pseudonym}</h1>
+          <h1 className={styles.name}>{author}</h1>
         </div>
         <div className={styles.description}>{userData?.description}</div>
         {myProfile && <FilesUpload userId={userData?.id!} plan={userData?.plan!} fileTranslated={fileTranslated} />}

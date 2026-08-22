@@ -3,7 +3,7 @@
   display: grid;
   grid-template-rows: 1fr 3.25rem auto auto;
   justify-self: center;
-  margin: 1rem auto 8.5rem;
+  margin: 1rem auto;
   padding: 0.5rem 0 2rem;
   position: relative;
   border: 0.1rem solid var(--third);

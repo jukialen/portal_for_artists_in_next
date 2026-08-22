@@ -70,8 +70,8 @@
   font-size: 1.5rem;
   border-radius: 0.5rem;
   justify-content: space-between;
-  border: 1px solid var(--background__opacity);
-  background-color: var(--background__opacity);
+  border: 1px solid var(--primary__opacity);
+  background-color: var(--primary__opacity);
 
   span {
     color: var(--text);
