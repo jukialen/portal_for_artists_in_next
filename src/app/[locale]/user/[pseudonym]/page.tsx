@@ -18,23 +18,25 @@ import { ProfilePage } from 'components/Views/ProfilePage/ProfilePage';
 async function getFidAndFavs(pseudonym: string) {
   const supabase = await createServer();
 
+  const friendIds: { friendId: string; favorite: boolean }[] = [];
+  const defaultData = { friendIds, pseudonymId: '', profilePhotoUser: '', descriptionUser: '' };
+
   const { data: d, error } = await supabase
     .from('Users')
     .select('id, description, profilePhoto')
     .eq('pseudonym', pseudonym)
     .limit(1)
     .single();
-  if (!d || !!error) console.error('no user');
+
+  if (!d || !!error) return defaultData;
 
   const { data, error: er } = await supabase.from('Friends').select('friendId, favorite').eq('usernameId', d?.id!);
 
-  if (data?.length === 0 || !!er) return null;
-
-  const friendIds: { friendId: string; favorite: boolean }[] = [];
+  if (data?.length === 0 || !!er) return defaultData;
 
   data.forEach((item) => friendIds.push({ friendId: item.friendId, favorite: item.favorite }));
 
-  return { friendIds, pseudonymId: d?.id, profilePhotoUser: d?.profilePhoto, descriptionUser: d?.description };
+  return { friendIds, pseudonymId: d?.id!, profilePhotoUser: d?.profilePhoto, descriptionUser: d?.description };
 }
 
 type PropsType = {
@@ -90,7 +92,7 @@ export default async function User({ params }: PropsType) {
   return (
     <ProfilePage
       id={fidsFavs?.pseudonymId!}
-      author={pseudonym}
+      author={pseudonymName}
       userData={userData!}
       firstAdminList={adminGroups}
       firstFriendsList={firstFriends}
