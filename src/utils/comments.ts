@@ -7,7 +7,7 @@ import { createServer } from './supabase/clientSSR';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
 import { likeList } from 'utils/server/likes';
-import { giveRole, groupRole } from 'utils/server/roles';
+import { groupRole } from 'utils/server/roles';
 
 import { selectCommentsData, updDelCommentsData } from '../constants/values';
 
@@ -62,19 +62,25 @@ export const newComment = async (commentData: NewCommentsType): Promise<{ role: 
     if (!data || !!roleError) return { role: '', message: 'no role' };
 
     if (!!postId) {
-      const { error } = await supabase.from('Comments').insert([{ content, authorId, postId, roleId: data.id }]);
+      const { error } = await supabase
+        .from('Comments')
+        .insert([{ content, authorId: userData?.id!, postId, roleId: data.id }]);
 
       if (!!error) {
         console.error(error);
+        await supabase.from('Roles').delete().eq('id', data.id);
         return { role: '', message: 'no post id' };
       }
     }
 
     if (!!fileId) {
-      const { error } = await supabase.from('FilesComments').insert([{ content, authorId, fileId, roleId: data.id }]);
+      const { error } = await supabase
+        .from('FilesComments')
+        .insert([{ content, authorId: userData?.id!, fileId, roleId: data.id }]);
 
       if (!!error) {
         console.error('fileId error', error);
+        await supabase.from('Roles').delete().eq('id', data.id);
         return { role: '', message: 'no file id' };
       }
     }
@@ -82,10 +88,11 @@ export const newComment = async (commentData: NewCommentsType): Promise<{ role: 
     if (!!fileCommentId || !!commentId) {
       const { error } = await supabase
         .from('SubComments')
-        .insert([{ content, authorId, commentId, fileCommentId, roleId: data.id }]);
+        .insert([{ content, authorId: userData?.id!, commentId, fileCommentId, roleId: data.id }]);
 
       if (!!error) {
         console.error(error);
+        await supabase.from('Roles').delete().eq('id', data.id);
         return { role: '', message: 'no second nested comment id' };
       }
     }
@@ -93,10 +100,11 @@ export const newComment = async (commentData: NewCommentsType): Promise<{ role: 
     if (!!subCommentId) {
       const { error } = await supabase
         .from('LastComments')
-        .insert([{ content, authorId, subCommentId, roleId: data.id }]);
+        .insert([{ content, authorId: userData?.id!, subCommentId, roleId: data.id }]);
 
       if (!!error) {
         console.error(error);
+        await supabase.from('Roles').delete().eq('id', data.id);
         return { role: '', message: 'no last nested comment id' };
       }
     }

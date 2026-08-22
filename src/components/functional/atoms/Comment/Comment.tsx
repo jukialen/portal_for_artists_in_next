@@ -70,7 +70,6 @@ export const Comment = ({ commentData }: { commentData: CommentType }) => {
         subCommentId={subCommentId}
         lastCommentId={lastCommentId}
         authorId={authorId}
-        userId={authorId}
         tableName={tableName}
         fieldName={columnIdName}
         liked={liked}

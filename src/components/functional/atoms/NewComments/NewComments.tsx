@@ -55,6 +55,20 @@ export const NewComments = ({
   const createNewComment = async ({ comment }: NewCommentType, { resetForm }: ResetFormType) => {
     try {
       const userData = await getUserData();
+
+      const { role, message } = await newComment({
+        content: comment,
+        authorId,
+        postId,
+        roleId,
+        commentId,
+        fileId,
+        fileCommentId,
+        subCommentId,
+      });
+
+      if (!role || !!message) return;
+
       const newLike = await toggleLiked({
         is: false,
         authorId: userData?.id!,
@@ -69,19 +83,6 @@ export const NewComments = ({
         setValuesFields(t('error'));
         return;
       }
-
-      const { role, message } = await newComment({
-        content: comment,
-        authorId,
-        postId,
-        roleId,
-        commentId,
-        fileId,
-        fileCommentId,
-        subCommentId,
-      });
-
-      if (!role || !!message) return;
 
       const { tableName } = selectCommentsData(postId, fileId, commentId, fileCommentId, subCommentId);
 

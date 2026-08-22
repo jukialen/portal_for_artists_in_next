@@ -49,6 +49,7 @@ export const Post = ({
   } = postOnGroup;
 
   const [showComments, setShowComments] = useState(false);
+  const [newReply, setNewReply] = useState<any>(null);
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
 
@@ -114,8 +115,8 @@ export const Post = ({
         </p>
       </div>
       <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-        <NewComments authorId={authorId} profilePhoto={profilePhoto} roleId={roleId} postId={postId} />
-        <Comments postId={postId!} roleId={roleId} />
+        <NewComments authorId={authorId} profilePhoto={profilePhoto} roleId={roleId} postId={postId} onReplyAddedAction={setNewReply} />
+        <Comments postId={postId!} roleId={roleId} newReply={newReply} />
       </article>
     </article>
   );

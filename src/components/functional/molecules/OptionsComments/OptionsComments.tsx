@@ -1,14 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
+import { getUserData } from 'helpers/getUserData';
 import { updComment, delComment } from 'utils/comments';
 import { toggleLiked } from 'utils/server/likes';
 
-import { ResetFormType, CommentsTableNameType, ColumnCommentsTableNameType, CommentType } from 'types/global.types';
+import {
+  ResetFormType,
+  CommentsTableNameType,
+  ColumnCommentsTableNameType,
+  CommentType,
+  UserType,
+} from 'types/global.types';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -26,7 +33,6 @@ type OptionsType = {
   lastCommentId?: string;
   postId?: string;
   authorId: string;
-  userId: string;
   liked: boolean;
   likes: number;
   authorProfilePhoto: string;
@@ -48,7 +54,6 @@ export const OptionsComments = ({
   lastCommentId,
   postId,
   authorId,
-  userId,
   liked,
   likes: l,
   authorProfilePhoto,
@@ -62,9 +67,11 @@ export const OptionsComments = ({
   const [moreOptions, setMoreOptions] = useState(false);
   const [com, setCom] = useState(false);
   const [newReply, setNewReply] = useState<CommentType | null>(null);
+  const [userData, setUserData] = useState<UserType | null>(null);
 
-  const toggleMoreOptions = () => setMoreOptions(!moreOptions);
-  const openComs = () => setCom(!com);
+  useEffect(() => {
+    getUserData().then((data) => setUserData(data));
+  }, []);
 
   const initialValues = { comment };
   const schemaNew = Yup.object({ comment: SchemaValidation().description });
@@ -76,6 +83,8 @@ export const OptionsComments = ({
   const popoverEditId = `edit_popover_${fileCommentId || commentId || subCommentId || lastCommentId}`;
   const popoverRemoveId = `remove_popover_${fileCommentId || commentId || subCommentId || lastCommentId}`;
 
+  const toggleMoreOptions = () => setMoreOptions(!moreOptions);
+  const openComs = () => setCom(!com);
   const toggleLike = async () => {
     try {
       const toggle = await toggleLiked({ is: like, authorId, postId, fileId, fileCommentId, commentId, subCommentId });
@@ -130,7 +139,7 @@ export const OptionsComments = ({
         </button>
 
         <div className={styles.buttons}>
-          {authorId === userId && (
+          {authorId === userData?.id && (
             <>
               <button className={styles.moreBut} onClick={toggleMoreOptions} aria-label="open more options">
                 <AiOutlineMore />
@@ -186,14 +195,16 @@ export const OptionsComments = ({
                 <h3 className={styles.title}>{tComments('deleteCommentTitle')}</h3>
                 <h4>{tDeletionFile('question')}</h4>
 
-                <div className={styles.actionButton}>
-                  <button className={styles.cancel} popoverTarget={popoverRemoveId} popoverTargetAction="hide">
-                    {tDeletionFile('cancelButton')}
-                  </button>
-                  <button className={styles.submit} onClick={deleteComment} popoverTargetAction="hide">
-                    {tDeletionFile('deleteButton')}
-                  </button>
-                </div>
+                {authorId == userData?.id! && (
+                  <div className={styles.actionButton}>
+                    <button className={styles.cancel} popoverTarget={popoverRemoveId} popoverTargetAction="hide">
+                      {tDeletionFile('cancelButton')}
+                    </button>
+                    <button className={styles.submit} onClick={deleteComment} popoverTargetAction="hide">
+                      {tDeletionFile('deleteButton')}
+                    </button>
+                  </div>
+                )}
               </div>
             </>
           )}
@@ -211,7 +222,7 @@ export const OptionsComments = ({
           commentId={commentId}
           subCommentId={subCommentId}
           authorId={authorId}
-          profilePhoto={authorProfilePhoto}
+          profilePhoto={userData?.profilePhoto!}
           roleId={roleId!}
           onReplyAddedAction={setNewReply}
         />

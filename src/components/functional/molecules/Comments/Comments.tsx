@@ -21,6 +21,7 @@ export const Comments = ({
   postId,
   fileId,
   roleId,
+  newReply,
 }: CommentsColumnIds) => {
   const [commentsArray, setCommentsArray] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState('');
@@ -45,6 +46,13 @@ export const Comments = ({
       !!t && t.length === maxItems && setLastVisible(t[t.length - 1].createdAt!);
     });
   }, []);
+
+  useEffect(() => {
+    if (newReply) {
+      setCommentsArray((prev) => [newReply, ...prev]);
+      setI((prevI) => (commentsArray.length >= maxItems * prevI ? prevI + 1 : prevI));
+    }
+  }, [newReply]);
 
   const nextComments = () =>
     lastVisible !== '' &&
