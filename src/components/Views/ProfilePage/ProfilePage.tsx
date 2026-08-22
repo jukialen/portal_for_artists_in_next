@@ -10,7 +10,9 @@ import { useI18n, useScopedI18n } from 'locales/client';
 import { supabaseStorageProfileUrl } from 'constants/links';
 import { FilesUploadType, FileType, FriendsListType, GroupUserType, UserType } from 'types/global.types';
 
-import { FriendsButtons } from 'components/functional/atoms/FriendsButtons/FriendsButtons';
+const FriendsButtons = dynamic(() =>
+  import('components/functional/atoms/FriendsButtons/FriendsButtons').then((p) => p.FriendsButtons),
+);
 
 const FriendsList = dynamic(() =>
   import('components/functional/molecules/FriendsList/FriendsList').then((mod) => mod.FriendsList),
@@ -121,7 +123,6 @@ export const ProfilePage = ({
     fileTooLarge: tAnotherForm('fileTooLarge'),
     unsupportedFileType: tAnotherForm('unsupportedFileType'),
   };
-
   const fileTabList = [tDash?.friends, tDash?.groups, tDash?.photos, tDash?.animations, tDash?.videos];
   const tFriends = {
     friends: t('Nav.friends'),
@@ -134,7 +135,7 @@ export const ProfilePage = ({
     addedMax: t('Friends.addedMax'),
   };
 
-  const pseudonym = decodeURIComponent(userData?.pseudonym!) || 'Na pseudonym';
+  const pseudonym = decodeURIComponent(userData?.pseudonym!);
 
   const fileComps = [
     <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} key="0" />,
@@ -171,9 +172,9 @@ export const ProfilePage = ({
         <div className={styles.logoPseu}>
           <div className={styles.logo}>
             <Image
-              src={`${supabaseStorageProfileUrl}/${myProfile ? userData?.profilePhoto : fidsFavs?.profilePhotoUser}`}
+              src={myProfile ? userData?.profilePhoto! : fidsFavs?.profilePhotoUser!}
               fill
-              alt={`${pseudonym} logo`}
+              alt={myProfile ? 'my logo' : `${author} logo`}
               priority
             />
             {myProfile && (
@@ -183,10 +184,10 @@ export const ProfilePage = ({
           <h1 className={styles.name}>{author}</h1>
         </div>
         <div className={styles.description}>{userData?.description}</div>
-        {myProfile && <FilesUpload userId={userData?.id!} plan={userData?.plan!} fileTranslated={fileTranslated} />}
+        {!myProfile && <FilesUpload userId={userData?.id!} plan={userData?.plan!} fileTranslated={fileTranslated} />}
       </article>
 
-      {!myProfile && (
+      {myProfile && (
         <FriendsButtons
           id={id}
           fid={fidsFavs?.pseudonymId!}
@@ -218,7 +219,7 @@ export const ProfilePage = ({
 
       {Object.entries(tDash).map(([key, value]) => (
         <Link
-          href={`/account/${myProfile ? userData?.pseudonym : author}/${key}`}
+          href={`/account/${myProfile ? pseudonym : author}/${key}`}
           className={styles.mobileTabs}
           key={key}
           aria-label="">

@@ -3,11 +3,12 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { HeadCom } from 'constants/HeadCom';
-
+import { backUrl } from 'constants/links';
 import { LangType } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
 
+import { getLinkUrl } from 'helpers/getLinkUrl';
 import { getUserData } from 'helpers/getUserData';
 import { graphics, videosAnimations } from 'app/actions/files';
 import { getFirstFriends } from 'utils/friends';
@@ -36,7 +37,9 @@ async function getFidAndFavs(pseudonym: string) {
 
   data.forEach((item) => friendIds.push({ friendId: item.friendId, favorite: item.favorite }));
 
-  return { friendIds, pseudonymId: d?.id!, profilePhotoUser: d?.profilePhoto, descriptionUser: d?.description };
+  const photoLink = await getLinkUrl('profiles', `${backUrl}/friends.svg`, d?.profilePhoto);
+
+  return { friendIds, pseudonymId: d?.id!, profilePhotoUser: photoLink, descriptionUser: d?.description };
 }
 
 type PropsType = {

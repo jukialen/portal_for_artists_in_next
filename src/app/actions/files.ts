@@ -37,6 +37,7 @@ export const graphics = async (
 
         const likeData = await likeList(authorId, 'fileId', fileId);
         const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
+
         const role = await getFileRoleId(fileId, authorId);
 
         filesArray.push({
