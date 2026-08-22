@@ -58,7 +58,12 @@ export const DeletionFile = ({
         {del ? <RxChevronUp /> : <RxChevronDown />}
       </button>
 
-      <Dialog.Root id={`deletion-file-${fileId}`} lazyMount unmountOnExit open={open} onOpenChange={(details) => setOpen(details.open)}>
+      <Dialog.Root
+        id={`deletion-file-${fileId}`}
+        lazyMount
+        unmountOnExit
+        open={open}
+        onOpenChange={(details) => setOpen(details.open)}>
         <Dialog.Trigger asChild>
           <div className={styles.container} style={{ display: del ? 'flex' : 'none' }}>
             <button className={styles.openDialog}>

@@ -1,4 +1,4 @@
-import { getLinkUrl } from '../../../../helpers/getLinkUrl';
+import { getLinkUrl } from 'helpers/getLinkUrl';
 
 export const dynamic = 'force-dynamic';
 
