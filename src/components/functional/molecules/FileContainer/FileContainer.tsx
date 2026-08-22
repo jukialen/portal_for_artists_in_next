@@ -9,7 +9,7 @@ import { useI18n, useScopedI18n } from 'locales/client';
 import { createClient } from 'utils/supabase/clientCSR';
 import { comments } from 'utils/comments';
 
-import { backUrl } from 'constants/links';
+import { backUrl, supabaseStorageUrlFilesUrl } from 'constants/links';
 import { TagConstants } from 'constants/values';
 import { ArticleVideosType, CommentType, UserType } from 'types/global.types';
 
@@ -44,6 +44,7 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
   const Tags = tags[0].toUpperCase() + tags.slice(1);
 
   const [newReply, setNewReply] = useState<CommentType | null>(null);
+  const [deleted, setDeleted] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [commentsData, setCommentsData] = useState<CommentType[]>([]);
   const [lastVisible, setLastVisible] = useState(
@@ -109,8 +110,8 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
   };
 
   return (
-    <article className={styles.file}>
-      {authorBool && <DeletionFile fileId={fileId!} />}
+    <article className={deleted ? styles.file__deleted : styles.file}>
+      {authorBool && <DeletionFile fileId={fileId!} onDeletionAction={setDeleted} />}
 
       {tags === TagConstants[TagConstants.findIndex((v) => v === 'videos')] ? (
         <video preload="metadata" controls className={styles.video} playsInline>

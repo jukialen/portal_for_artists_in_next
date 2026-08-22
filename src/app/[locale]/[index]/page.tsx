@@ -9,6 +9,7 @@ import { FileType, IndexType, LangType } from 'types/global.types';
 import { getI18n } from 'locales/server';
 
 import { getDate } from 'helpers/getDate';
+import { getLinkUrl } from 'helpers/getLinkUrl';
 import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/server/roles';
 import { likeList } from 'utils/server/likes';
@@ -41,12 +42,13 @@ const downloadDrawings = async ({ index, maxItems }: { index: IndexType; locale:
       const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, authorId, tags } = draw;
 
       const role = await getFileRoleId(fileId, authorId!);
+      const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
       if (role.roleId === 'no id') return filesArray;
 
       filesArray.push({
         fileId,
         shortDescription: shortDescription!,
-        fileUrl,
+        fileUrl: photoLink,
         tags,
         name,
         authorName: Users?.pseudonym!,

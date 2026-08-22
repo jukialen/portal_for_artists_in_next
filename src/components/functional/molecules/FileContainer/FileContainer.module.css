@@ -1,4 +1,4 @@
-.file {
+.file, .file__deleted {
   width: min(34.5rem, 90dvw);
   display: grid;
   grid-template-rows: 1fr 3.25rem auto auto;
@@ -11,7 +11,7 @@
   box-shadow: 0 0 0.5rem 0.1rem var(--third);
 
   .item {
-    width: 100%;
+    width: inherit;
     height: 30rem;
     display: block;
     object-fit: contain;
@@ -37,9 +37,6 @@
 
     .time {
       display: block;
-    }
-
-    .tags {
     }
   }
 
@@ -120,4 +117,9 @@
   display: flex;
   justify-content: center;
   margin-bottom: 2rem;
+}
+
+.file__deleted {
+  display: none;
+  visibility: hidden;
 }

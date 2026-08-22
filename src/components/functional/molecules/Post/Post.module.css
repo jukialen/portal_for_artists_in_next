@@ -1,4 +1,4 @@
-.container {
+.container, .container__deleted {
   width: 95vw;
   max-width: 42.5rem;
   margin: 1.5rem auto;
@@ -122,4 +122,9 @@
     flex-direction: column;
     margin: 1rem auto;
   }
+}
+
+.container__deleted {
+  display: none;
+  visibility: hidden;
 }

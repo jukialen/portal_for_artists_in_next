@@ -12,7 +12,13 @@ import styles from './DeletionFile.module.css';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { RxChevronUp, RxChevronDown } from 'react-icons/rx';
 
-export const DeletionFile = ({ fileId }: { fileId: string }) => {
+export const DeletionFile = ({
+  fileId,
+  onDeletionAction,
+}: {
+  fileId: string;
+  onDeletionAction?: (val: boolean) => void;
+}) => {
   const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [values, setValues] = useState<string>('');
@@ -38,6 +44,7 @@ export const DeletionFile = ({ fileId }: { fileId: string }) => {
 
       setValues(tDeletionFile('deleted'));
       setDeleting(false);
+      onDeletionAction?.(true);
     } catch (e) {
       console.error(e);
       setValues(t('error'));

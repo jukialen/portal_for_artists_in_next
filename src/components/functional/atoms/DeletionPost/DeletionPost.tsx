@@ -16,9 +16,10 @@ type DeletionPostType = {
   postId: string;
   roleId: string;
   userId: string;
+  onDeletionAction?: (val: boolean) => void;
 };
 
-export const DeletePost = ({ groupId, postId, roleId, userId }: DeletionPostType) => {
+export const DeletePost = ({ groupId, postId, roleId, userId, onDeletionAction }: DeletionPostType) => {
   const [values, setValues] = useState('');
   const [del, setDel] = useState(false);
 
@@ -60,6 +61,7 @@ export const DeletePost = ({ groupId, postId, roleId, userId }: DeletionPostType
       }
 
       setValues(tDeletionPost('deleted'));
+      onDeletionAction?.(true);
     } catch (e) {
       console.error(e);
       setValues(t('error'));

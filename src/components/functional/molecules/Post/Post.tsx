@@ -50,6 +50,7 @@ export const Post = ({
 
   const [showComments, setShowComments] = useState(false);
   const [newReply, setNewReply] = useState<any>(null);
+  const [deleted, setDeleted] = useState(false);
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
 
@@ -83,14 +84,22 @@ export const Post = ({
   const t = useI18n();
 
   return (
-    <article className={styles.container}>
+    <article className={deleted ? styles.container__deleted : styles.container}>
       <div className={styles.avatarWithUsername}>
         <Avatar src={authorProfilePhoto || group} fallbackName={authorName} alt="my profile photo icon" />
         <div className={styles.username}>
           <Link href={`/user/${authorName}`}>{authorName}</Link>
           <h4 className={styles.time}>{date}</h4>
         </div>
-        {userId === authorId && <DeletePost postId={postId!} groupId={groupId} userId={userId} roleId={roleId} />}
+        {userId === authorId && (
+          <DeletePost
+            postId={postId!}
+            groupId={groupId}
+            userId={userId}
+            roleId={roleId}
+            onDeletionAction={setDeleted}
+          />
+        )}
       </div>
       <h2 className={styles.titlePost}>{title}</h2>
       <h3 className={styles.description}>{content}</h3>
@@ -115,7 +124,13 @@ export const Post = ({
         </p>
       </div>
       <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
-        <NewComments authorId={authorId} profilePhoto={profilePhoto} roleId={roleId} postId={postId} onReplyAddedAction={setNewReply} />
+        <NewComments
+          authorId={authorId}
+          profilePhoto={profilePhoto}
+          roleId={roleId}
+          postId={postId}
+          onReplyAddedAction={setNewReply}
+        />
         <Comments postId={postId!} roleId={roleId} newReply={newReply} />
       </article>
     </article>

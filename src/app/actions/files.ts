@@ -4,16 +4,10 @@ import { selectFiles } from 'constants/selects';
 import { FileType, IndexType, Tags } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
+import { getLinkUrl } from 'helpers/getLinkUrl';
 import { createServer } from 'utils/supabase/clientSSR';
 import { getFileRoleId } from 'utils/server/roles';
 import { likeList } from 'utils/server/likes';
-
-const signedUrl = async (fileUrl: string) => {
-  const supabase = await createServer();
-  const { data } = await supabase.storage.from('basic').createSignedUrl(fileUrl, 1000 * 60 * 5);
-
-  return !!data ? data.signedUrl : '/#';
-};
 
 export const graphics = async (
   maxItems: number,
@@ -42,7 +36,7 @@ export const graphics = async (
         const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
         const likeData = await likeList(authorId, 'fileId', fileId);
-
+        const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
         const role = await getFileRoleId(fileId, authorId);
 
         filesArray.push({
@@ -53,7 +47,7 @@ export const graphics = async (
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl: await signedUrl(fileUrl),
+          fileUrl: photoLink,
           tags,
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
@@ -79,9 +73,9 @@ export const graphics = async (
       for (const file of data!) {
         const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
-        const role = await getFileRoleId(fileId, authorId);
-
         const likeData = await likeList(authorId, 'fileId', fileId);
+        const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
+        const role = await getFileRoleId(fileId, authorId);
 
         filesArray.push({
           authorId,
@@ -91,7 +85,7 @@ export const graphics = async (
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl: await signedUrl(fileUrl),
+          fileUrl: photoLink,
           tags,
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
@@ -140,9 +134,9 @@ export const videosAnimations = async (
       for (const file of data!) {
         const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
-        const role = await getFileRoleId(fileId, authorId!);
-
         const likeData = await likeList(authorId, 'fileId', fileId);
+        const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
+        const role = await getFileRoleId(fileId, authorId!);
 
         if (role.roleId === 'no id') return filesArray;
 
@@ -155,7 +149,7 @@ export const videosAnimations = async (
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl: await signedUrl(fileUrl),
+          fileUrl: photoLink,
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || undefined,
@@ -180,9 +174,9 @@ export const videosAnimations = async (
       for (const file of data!) {
         const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
-        const role = await getFileRoleId(fileId, authorId!);
-
         const likeData = await likeList(authorId, 'fileId', fileId);
+        const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
+        const role = await getFileRoleId(fileId, authorId!);
 
         if (role.roleId === 'no id') return filesArray;
 
@@ -195,7 +189,7 @@ export const videosAnimations = async (
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl: await signedUrl(fileUrl),
+          fileUrl: photoLink,
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
@@ -239,9 +233,9 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
       for (const draw of data!) {
         const { fileId, name, fileUrl, tags, shortDescription, Users, authorId, createdAt, updatedAt } = draw;
 
-        const role = await getFileRoleId(fileId, authorId!);
-
         const likeData = await likeList(authorId!, 'fileId', fileId);
+        const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
+        const role = await getFileRoleId(fileId, authorId!);
 
         if (role.roleId == 'no id') return nextArray;
 
@@ -252,7 +246,7 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
           roleId: role.roleId,
           name,
           shortDescription: shortDescription!,
-          fileUrl: await signedUrl(fileUrl),
+          fileUrl: photoLink,
           tags,
           time: await getDate(updatedAt! || createdAt!),
           idLiked: likeData?.idLiked,

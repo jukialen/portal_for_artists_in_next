@@ -8,6 +8,7 @@ import { FileType, LangType, RoleType, Tags } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
 import { getDate } from 'helpers/getDate';
+import { getLinkUrl } from 'helpers/getLinkUrl';
 import { getUserData } from 'helpers/getUserData';
 import { getFileRoleId } from 'utils/server/roles';
 import { likeList } from 'utils/server/likes';
@@ -41,11 +42,7 @@ async function getTop10Drawings(maxItems: number) {
     for (const draw of data) {
       const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt, tags } = draw;
 
-      const { data: storageData, error: storageError } = await supabase.storage
-        .from('basic')
-        .createSignedUrl(fileUrl, 3600 * 24);
-
-      if (storageError) return filesArray;
+      const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
 
       const roleId = await getFileRoleId(fileId, authorId!);
       // @ts-ignore
@@ -59,7 +56,7 @@ async function getTop10Drawings(maxItems: number) {
         shortDescription: shortDescription!,
         authorName: Users?.pseudonym!,
         authorId: authorId!,
-        fileUrl: storageData?.signedUrl,
+        fileUrl: photoLink,
         tags,
         roleId: roleOkId,
         time: await getDate(updatedAt || createdAt!),
