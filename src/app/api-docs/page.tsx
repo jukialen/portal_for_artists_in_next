@@ -4,7 +4,7 @@ import SwaggerUIClient from './swagger-client';
 
 import styles from './page.module.css';
 
-const fetchSpecs = async (): Promise<Json | null> => {
+const fetchSpecs = async (): Promise<string | object | undefined> => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_PAGE}/api/docs`, { next: { revalidate: 3600 } });
 
@@ -13,7 +13,7 @@ const fetchSpecs = async (): Promise<Json | null> => {
     return await res.json();
   } catch (error) {
     console.error('Failed to fetch API specifications:', error);
-    return null;
+    return undefined;
   }
 };
 
