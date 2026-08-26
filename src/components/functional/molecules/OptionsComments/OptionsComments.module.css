@@ -193,7 +193,17 @@
 }
 
 .repliesContainer {
-  width: 97.5%;
-  justify-self: flex-end;
-  border-left: 0.1rem solid var(--third);
+  width: calc(100% - 1rem);
+  position: relative;
+  margin-left: 1rem;
+
+  &::before {
+    content: '';
+    width: 3px;
+    position: absolute;
+    top: 0;
+    left: -3px;
+    bottom: 0;
+    background-color: var(--third);
+  }
 }

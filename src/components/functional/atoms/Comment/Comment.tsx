@@ -74,7 +74,6 @@ export const Comment = ({ commentData }: { commentData: CommentType }) => {
         fieldName={columnIdName}
         liked={liked}
         likes={likes}
-        authorProfilePhoto={authorProfilePhoto}
         roleId={roleId!}
         comment={currentContent}
         onDeleteSuccessAction={() => setIsDeleted(true)}

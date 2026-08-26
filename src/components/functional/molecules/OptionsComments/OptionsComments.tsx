@@ -35,7 +35,6 @@ type OptionsType = {
   authorId: string;
   liked: boolean;
   likes: number;
-  authorProfilePhoto: string;
   roleId: string;
   comment: string;
   tableName: CommentsTableNameType;
@@ -56,7 +55,6 @@ export const OptionsComments = ({
   authorId,
   liked,
   likes: l,
-  authorProfilePhoto,
   roleId,
   comment,
   onDeleteSuccessAction,
