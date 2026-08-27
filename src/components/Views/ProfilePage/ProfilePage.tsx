@@ -7,7 +7,6 @@ import { Tabs } from '@ark-ui/react/tabs';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { supabaseStorageProfileUrl } from 'constants/links';
 import { FilesUploadType, FileType, FriendsListType, GroupUserType, UserType } from 'types/global.types';
 
 const FriendsButtons = dynamic(() =>
@@ -44,8 +43,9 @@ import { RiArrowUpSLine } from 'react-icons/ri';
 type ProfilePageType = {
   id: string;
   author: string;
-  myProfile: boolean;
+  myProfile?: boolean;
   userData: UserType | null;
+  photo: string;
   firstFriendsList: FriendsListType[] | undefined;
   firstAdminList: GroupUserType[] | undefined;
   firstModsUsersList:
@@ -67,12 +67,10 @@ type ProfilePageType = {
     descriptionUser: string;
   };
   favs?: number;
-  fave?:
-    | {
-        friendId: string;
-        favorite: boolean;
-      }
-    | undefined;
+  fave?: {
+    friendId: string;
+    favorite: boolean;
+  };
 };
 
 export const ProfilePage = ({
@@ -80,6 +78,7 @@ export const ProfilePage = ({
   author,
   myProfile = false,
   userData,
+  photo,
   firstFriendsList,
   firstAdminList,
   firstModsUsersList,
@@ -143,7 +142,7 @@ export const ProfilePage = ({
     <PhotosGallery
       id={id}
       pseudonym={pseudonym!}
-      author={author!}
+      author={author}
       tGallery={tGallery}
       firstGraphics={firstGraphics}
       key="2"
@@ -171,26 +170,22 @@ export const ProfilePage = ({
       <article className={styles.mainData}>
         <div className={styles.logoPseu}>
           <div className={styles.logo}>
-            <Image
-              src={myProfile ? userData?.profilePhoto! : fidsFavs?.profilePhotoUser!}
-              fill
-              alt={myProfile ? 'my logo' : `${author} logo`}
-              priority
-            />
+            <Image src={photo} fill alt={myProfile ? 'my logo' : `${author} logo`} priority />
             {myProfile && (
               <UpdateProfilePhotoOnAccount userData={userData!} fileTranslated={fileTranslated} tCurrPrPhoto={tMain} />
             )}
           </div>
-          <h1 className={styles.name}>{author}</h1>
+          <h1 className={styles.name}>{pseudonym}</h1>
         </div>
         <div className={styles.description}>{userData?.description}</div>
-        {!myProfile && <FilesUpload userId={userData?.id!} plan={userData?.plan!} fileTranslated={fileTranslated} />}
+        {myProfile && <FilesUpload userId={userData?.id!} plan={userData?.plan!} fileTranslated={fileTranslated} />}
       </article>
 
-      {myProfile && (
+      {!myProfile && (
         <FriendsButtons
-          id={id}
-          fid={fidsFavs?.pseudonymId!}
+          id={userData?.id!}
+          fid={id}
+          author={author}
           pseudonym={userData?.pseudonym!}
           favLength={favs!}
           fav={fave?.favorite || false}

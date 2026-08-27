@@ -12,6 +12,7 @@ import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 
 export const FriendsButtons = ({
   id,
+  author,
   fid,
   friendBool,
   fav,
@@ -20,6 +21,7 @@ export const FriendsButtons = ({
   translated,
 }: {
   id: string;
+  author: string;
   fid: string;
   friendBool: boolean;
   fav: boolean;
@@ -38,7 +40,7 @@ export const FriendsButtons = ({
 }) => {
   const { push } = useRouter();
 
-  fid === id && push(`/account/${pseudonym}`);
+  author === pseudonym && push(`/account/${pseudonym}`);
 
   const [friend, setFriend] = useState(friendBool);
   const [favorite, setFavorite] = useState(fav);

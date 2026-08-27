@@ -119,11 +119,7 @@ export async function middleware(req: NextRequest) {
       body: JSON.stringify(newUser),
     });
 
-    if (response.ok) {
-      return NextResponse.redirect(redirectToApp);
-    } else {
-      return NextResponse.redirect(redirectToNewUser);
-    }
+    return NextResponse.redirect(response.ok ? redirectToApp : redirectToNewUser);
   }
 
   if (user?.app_metadata?.provider === 'email' && !userData?.id && !!id) {

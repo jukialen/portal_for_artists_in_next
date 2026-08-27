@@ -64,6 +64,8 @@ export default async function User({ params }: PropsType) {
   const userData = await getUserData();
   const id = userData?.id!;
 
+  const photo = await getLinkUrl('profiles', `${backUrl}/#`, userData?.profilePhoto!);
+
   const maxItems = 30;
   const fidsFavs = await getFidAndFavs(pseudonymName);
   const firstFriends = await getFirstFriends(fidsFavs?.pseudonymId!, maxItems);
@@ -83,12 +85,16 @@ export default async function User({ params }: PropsType) {
     return favs;
   };
   const favs = favLength();
-  const fave = fidsFavs?.friendIds.find((f) => f.friendId === id);
+  const fave = fidsFavs?.friendIds.find((f) => f.friendId === id) || {
+    friendId: '',
+    favorite: false,
+  };
 
   return (
     <ProfilePage
       id={fidsFavs?.pseudonymId!}
       author={pseudonymName}
+      photo={photo}
       userData={userData!}
       firstAdminList={adminGroups}
       firstFriendsList={firstFriends}
@@ -99,7 +105,6 @@ export default async function User({ params }: PropsType) {
       fidsFavs={fidsFavs}
       favs={favs}
       fave={fave}
-      myProfile={false}
     />
   );
 }

@@ -153,7 +153,7 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
           aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
           className={styles.likes}
           onClick={toggleLike}>
-          {like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
+          {like ? <AiFillLike /> : <AiOutlineLike />}
         </button>
         <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} shared={1000000} />
         <p></p>

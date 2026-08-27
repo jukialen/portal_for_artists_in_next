@@ -42,7 +42,7 @@ export const getFileRoleId = async (fileId: string, userId: string): Promise<{ r
   }
 };
 
-export const roles = async (roleId: string, userId: string): Promise<RoleType | undefined> => {
+export const roles = async (roleId: string, userId: string): Promise<RoleType> => {
   try {
     const supabase = await createServer();
 
@@ -57,7 +57,7 @@ export const roles = async (roleId: string, userId: string): Promise<RoleType | 
     return !error ? data?.role! : 'USER';
   } catch (e) {
     console.error(e);
-    return undefined;
+    return 'USER';
   }
 };
 

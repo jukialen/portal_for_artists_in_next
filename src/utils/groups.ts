@@ -46,6 +46,7 @@ export const adminList = async (id: string, maxItems: number): Promise<GroupUser
 
   try {
     const supabase = await createServer();
+    console.log('admin id', id);
 
     const { data, error } = await supabase
       .from('Groups')
@@ -54,10 +55,7 @@ export const adminList = async (id: string, maxItems: number): Promise<GroupUser
       .order('name', { ascending: true })
       .limit(maxItems);
 
-    if (data?.length === 0 || !!error) {
-      console.error(error);
-      return adminArray;
-    }
+    if (data?.length === 0 || !!error) return adminArray;
 
     for (const _group of data!) {
       const groupLogo = await getLinkUrl('logos', `${backUrl}/group.svg`, _group.logo);
@@ -93,10 +91,7 @@ export const modsUsersList = async (
       .order('name', { ascending: true })
       .limit(maxItems);
 
-    if (data?.length === 0 || !!error) {
-      console.error(error);
-      return { members: memberArray, moderators: moderatorArray };
-    }
+    if (data?.length === 0 || !!error) return { members: memberArray, moderators: moderatorArray };
 
     for (const d of data) {
       const role = await roles(d.roleId, user?.id!);

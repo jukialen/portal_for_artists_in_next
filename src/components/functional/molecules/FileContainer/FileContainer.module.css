@@ -71,6 +71,11 @@
       color: var(--third);
       border-color: transparent;
       cursor: pointer;
+
+      svg {
+        width: 100%;
+        height: auto;
+      }
     }
 
     .likesCount {
