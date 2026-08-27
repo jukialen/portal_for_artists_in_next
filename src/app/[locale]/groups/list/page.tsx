@@ -16,7 +16,7 @@ import { GroupList } from 'components/functional/molecules/GroupList/GroupList';
 
 export const metadata: Metadata = HeadCom('List of all groups');
 
-async function getGroupsList(maxItems: number) {
+async function getGroupsList(maxItems: number = 30) {
   const groupArray: GroupListType[] = [];
 
   try {
@@ -62,7 +62,7 @@ export default async function List({ params }: { params: Promise<{ locale: LangT
     addingGroup: tAside('addingGroup'),
   };
 
-  const groupArray = await getGroupsList(30);
+  const groupArray = await getGroupsList();
 
   return <GroupList Groups={Groups} groupArray={groupArray} />;
 }
