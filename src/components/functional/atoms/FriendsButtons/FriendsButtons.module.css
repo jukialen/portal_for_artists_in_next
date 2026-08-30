@@ -13,11 +13,10 @@
     border-radius: 0.5rem;
     cursor: pointer;
 
-    p {
-      margin-left: .5rem;
-      font-size: 1rem;
-    }
   }
+    p {
+      margin-left: 1rem;
+    }
 
   .addButton {
     color: black;

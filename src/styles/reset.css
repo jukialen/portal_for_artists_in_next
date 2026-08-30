@@ -111,3 +111,11 @@ q {
 button {
   border-width: 0;
 }
+
+input {
+  color: var(--text);
+
+  &::placeholder {
+    color: var(--text__opacity);
+  }
+}

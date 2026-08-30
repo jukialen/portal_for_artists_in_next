@@ -12,7 +12,7 @@ import { likeList } from 'utils/server/likes';
 export const graphics = async (
   maxItems: number,
   authorId: string,
-  step: 'first' | 'again',
+  step: 'first' | 'again' = 'first',
   lastVisible?: string,
 ): Promise<FileType[]> => {
   const supabase = await createServer();
@@ -112,7 +112,7 @@ export const videosAnimations = async (
   tag: 0 | 1,
   maxItems: number,
   authorId: string,
-  step: 'first' | 'again',
+  step: 'first' | 'again' = 'first',
   lastVisible?: string,
 ): Promise<FileType[]> => {
   const supabase = await createServer();

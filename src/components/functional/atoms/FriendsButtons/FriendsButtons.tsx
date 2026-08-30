@@ -12,21 +12,17 @@ import { IoMdAdd, IoMdCheckmark } from 'react-icons/io';
 
 export const FriendsButtons = ({
   id,
-  author,
   fid,
   friendBool,
   fav,
   favLength,
-  pseudonym,
   translated,
 }: {
   id: string;
-  author: string;
   fid: string;
   friendBool: boolean;
   fav: boolean;
   favLength: number;
-  pseudonym: string;
   translated: {
     friends: string;
     noFriends: string;
@@ -38,10 +34,6 @@ export const FriendsButtons = ({
     addedMax: string;
   };
 }) => {
-  const { push } = useRouter();
-
-  author === pseudonym && push(`/account/${pseudonym}`);
-
   const [friend, setFriend] = useState(friendBool);
   const [favorite, setFavorite] = useState(fav);
   const [favoriteLength, setFavoriteLength] = useState(favLength);
@@ -52,22 +44,14 @@ export const FriendsButtons = ({
     try {
       if (friend) {
         const { error } = await supabase.from('Friends').delete().eq('usernameId', id).eq('friendId', fid);
-        if (!!error) {
-          console.error(error);
-        }
+        if (!!error) console.error(error);
 
         setFavorite(false);
         setFriend(!friend);
       } else {
-        const { data, error } = await supabase
-          .from('Friends')
-          .insert([{ friendId: fid, usernameId: id }])
-          .eq('usernameId', id)
-          .eq('friendId', fid);
+        const { data, error } = await supabase.from('Friends').insert([{ friendId: fid, usernameId: id }]);
 
-        if (!data || !!error) {
-          console.error(error);
-        }
+        if (!data || !!error) console.error(error);
 
         setFriend(true);
       }
@@ -84,10 +68,10 @@ export const FriendsButtons = ({
         .eq('usernameId', id)
         .eq('friendId', fid);
 
-      if (!data || !!error) console.error(error);
+      if (!data || !!error) return;
 
-      setFavorite(!favorite);
-      setFavoriteLength(favorite ? favLength - 1 : favLength + 1);
+      setFavorite((prev) => !prev);
+      setFavoriteLength((prev) => (favorite ? prev - 1 : prev + 1));
     } catch (e) {
       console.error(e);
     }
@@ -96,26 +80,20 @@ export const FriendsButtons = ({
   return (
     <>
       <div className={styles.friendsButtons}>
-        {id === fid ? null : (
-          <button className={friend ? styles.addedButton : styles.addButton} onClick={addToFriends}>
-            {friend ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}
-            <p>{friend ? translated.added : translated.add}</p>
-          </button>
-        )}
+        <button className={friend ? styles.addedButton : styles.addButton} onClick={addToFriends}>
+          {friend ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}
+          {friend ? translated.added : translated.add}
+        </button>
 
-        {id === fid ? null : !friend ? null : (
-          <div>
-            <button
-              className={friend && favorite ? styles.addedButton : styles.addButton}
-              onClick={toggleFavorites}
-              disabled={favoriteLength === 5}>
-              {favorite && favoriteLength !== 5 ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}
-              <p>{friend && favorite ? translated.addedFav : translated.addFav}</p>
-            </button>
-            {!favorite && (
-              <p>{!friend ? '' : !favorite && favoriteLength < 5 ? translated.max : translated.addedMax}</p>
-            )}
-          </div>
+        <button
+          className={friend && favorite ? styles.addedButton : styles.addButton}
+          onClick={toggleFavorites}
+          disabled={favoriteLength === 5}>
+          {favorite && favoriteLength !== 5 ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}
+          {friend && favorite ? translated.addedFav : translated.addFav}
+        </button>
+        {friend && !favorite && (
+          <p>{!friend ? '' : !favorite && favoriteLength < 5 ? translated.max : translated.addedMax}</p>
         )}
       </div>
 

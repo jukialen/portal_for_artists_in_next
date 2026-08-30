@@ -39,6 +39,8 @@ const FilesUpload = dynamic(() =>
 
 import styles from './ProfilePage.module.css';
 import { RiArrowUpSLine } from 'react-icons/ri';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 type ProfilePageType = {
   id: string;
@@ -57,19 +59,10 @@ type ProfilePageType = {
   firstGraphics: FileType[] | undefined;
   firstAnimations: FileType[] | undefined;
   firstVideos: FileType[] | undefined;
-  fidsFavs?: {
-    friendIds: {
-      friendId: string;
-      favorite: boolean;
-    }[];
-    pseudonymId: string;
-    profilePhotoUser: string;
-    descriptionUser: string;
-  };
   favs?: number;
-  fave?: {
-    friendId: string;
+  faved?: {
     favorite: boolean;
+    pseudonym: string;
   };
 };
 
@@ -85,10 +78,16 @@ export const ProfilePage = ({
   firstGraphics,
   firstAnimations,
   firstVideos,
-  fidsFavs,
   favs,
-  fave,
+  faved,
 }: ProfilePageType) => {
+  const pseudonym = decodeURIComponent(userData?.pseudonym!);
+  const { push } = useRouter();
+
+  useEffect(() => {
+    id === userData?.id! && push(`/account/${pseudonym}`);
+  }, [id, userData?.id]);
+
   const t = useI18n();
   const tAnotherForm = useScopedI18n('AnotherForm');
   const tAside = useScopedI18n('Aside');
@@ -134,8 +133,6 @@ export const ProfilePage = ({
     addedMax: t('Friends.addedMax'),
   };
 
-  const pseudonym = decodeURIComponent(userData?.pseudonym!);
-
   const fileComps = [
     <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} key="0" />,
     <GroupUsers id={id} firstAdminList={firstAdminList!} firstModsUsersList={firstModsUsersList!} key="1" />,
@@ -175,7 +172,7 @@ export const ProfilePage = ({
               <UpdateProfilePhotoOnAccount userData={userData!} fileTranslated={fileTranslated} tCurrPrPhoto={tMain} />
             )}
           </div>
-          <h1 className={styles.name}>{pseudonym}</h1>
+          <h1 className={styles.name}>{author}</h1>
         </div>
         <div className={styles.description}>{userData?.description}</div>
         {myProfile && <FilesUpload userId={userData?.id!} plan={userData?.plan!} fileTranslated={fileTranslated} />}
@@ -185,11 +182,9 @@ export const ProfilePage = ({
         <FriendsButtons
           id={userData?.id!}
           fid={id}
-          author={author}
-          pseudonym={userData?.pseudonym!}
-          favLength={favs!}
-          fav={fave?.favorite || false}
-          friendBool={fave?.favorite || false}
+          favLength={favs || 0}
+          fav={faved?.favorite!}
+          friendBool={!!faved?.pseudonym || false}
           translated={tFriends}
         />
       )}
@@ -214,7 +209,7 @@ export const ProfilePage = ({
 
       {Object.entries(tDash).map(([key, value]) => (
         <Link
-          href={`/account/${myProfile ? pseudonym : author}/${key}`}
+          href={`/${myProfile ? 'account' : 'user'}/${myProfile ? pseudonym : author}/${key}`}
           className={styles.mobileTabs}
           key={key}
           aria-label="">
