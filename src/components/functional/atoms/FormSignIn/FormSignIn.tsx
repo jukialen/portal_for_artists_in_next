@@ -77,6 +77,7 @@ export const FormSignIn = ({
             value={values.email}
             onChange={handleChange}
             placeholder={translated.email}
+            autoComplete="email"
             className={touched.email && !!errors.email ? styles.inputForm__error : styles.inputForm}
           />
 
@@ -86,6 +87,7 @@ export const FormSignIn = ({
             <input
               name="password"
               type={show ? 'text' : 'password'}
+              autoComplete="current-password"
               value={values.password}
               onChange={handleChange}
               placeholder={translated.password}

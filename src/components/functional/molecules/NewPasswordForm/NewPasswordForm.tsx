@@ -70,6 +70,7 @@ export const NewPasswordForm = ({ translate }: { translate: TranslateType }) => 
               type="password"
               value={values.password}
               onChange={handleChange}
+              autoComplete="new-password"
               className={touched.password && !!errors.password ? styles.inputForm__error : styles.inputForm}
               placeholder={translate.password}
             />
