@@ -61,7 +61,7 @@ async function groupData(name: string) {
     .limit(1)
     .maybeSingle();
 
-  if (error) throw error;
+  if (!data || error) throw error;
 
   const { data: authorData, error: authorError } = await supabase
     .from('Roles')
@@ -72,7 +72,7 @@ async function groupData(name: string) {
 
   if (authorError || !authorData) throw authorError;
 
-  const logo = await getLinkUrl('logos', `${backUrl}/group.svg`, data?.logo);
+  const logo = await getLinkUrl('logos', `${backUrl}/group.svg`, data.logo);
 
   return {
     logo,

@@ -26,7 +26,7 @@ export const nextGroupList = async (maxItems: number, lastVisible: string): Prom
     }
 
     for (const g of data) {
-      const groupLogo = await getLinkUrl('logos', `${backUrl}/group.svg`, g.logo);
+      const groupLogo = await getLinkUrl('logos', `${backUrl}/group.svg`, g?.logo!);
 
       groupArray.push({
         name: g.name!,
@@ -46,7 +46,6 @@ export const adminList = async (id: string, maxItems: number): Promise<GroupUser
 
   try {
     const supabase = await createServer();
-    console.log('admin id', id);
 
     const { data, error } = await supabase
       .from('Groups')
@@ -57,7 +56,7 @@ export const adminList = async (id: string, maxItems: number): Promise<GroupUser
 
     if (data?.length === 0 || !!error) return adminArray;
 
-    for (const _group of data!) {
+    for (const _group of data) {
       const groupLogo = await getLinkUrl('logos', `${backUrl}/group.svg`, _group.logo);
 
       adminArray.push({

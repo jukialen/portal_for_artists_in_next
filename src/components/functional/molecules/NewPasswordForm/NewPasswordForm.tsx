@@ -45,7 +45,6 @@ export const NewPasswordForm = ({ translate }: { translate: TranslateType }) => 
         password,
       });
 
-      console.log('Reset data', data, '\n', 'error', error);
       if (error?.status !== 200) {
         setValuesFields(error?.message!);
       }

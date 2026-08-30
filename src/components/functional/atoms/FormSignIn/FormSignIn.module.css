@@ -49,10 +49,10 @@
       &:hover {
         border-color: var(--third__opacity);
       }
+    }
 
-      &__error {
-        border-color: var(--required);
-      }
+    .inputForm__error {
+      border-color: var(--required);
     }
   }
 
