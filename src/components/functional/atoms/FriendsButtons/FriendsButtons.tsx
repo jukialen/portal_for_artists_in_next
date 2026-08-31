@@ -43,13 +43,19 @@ export const FriendsButtons = ({
   const addToFriends = async () => {
     try {
       if (friend) {
-        const { error } = await supabase.from('Friends').delete().eq('usernameId', id).eq('friendId', fid);
+        const { error } = await supabase
+          .from('Friends')
+          .delete()
+          .or(`and(usernameId.eq.${id},friendId.eq.${fid}),` + `and(usernameId.eq.${fid},friendId.eq.${id})`);
         if (!!error) console.error(error);
 
         setFavorite(false);
         setFriend(!friend);
       } else {
-        const { data, error } = await supabase.from('Friends').insert([{ friendId: fid, usernameId: id }]);
+        const { data, error } = await supabase.from('Friends').insert([
+          { friendId: fid, usernameId: id },
+          { friendId: id, usernameId: fid },
+        ]);
 
         if (!data || !!error) console.error(error);
 
@@ -65,12 +71,11 @@ export const FriendsButtons = ({
       const { data, error } = await supabase
         .from('Friends')
         .update({ favorite: !favorite })
-        .eq('usernameId', id)
-        .eq('friendId', fid);
+        .or(`and(usernameId.eq.${id},friendId.eq.${fid}),` + `and(usernameId.eq.${fid},friendId.eq.${id})`);
 
       if (!data || !!error) return;
 
-      setFavorite((prev) => !prev);
+      setFavorite(!favorite);
       setFavoriteLength((prev) => (favorite ? prev - 1 : prev + 1));
     } catch (e) {
       console.error(e);
@@ -86,7 +91,7 @@ export const FriendsButtons = ({
         </button>
 
         <button
-          className={friend && favorite ? styles.addedButton : styles.addButton}
+          className={favorite ? styles.addedButton : styles.addButton}
           onClick={toggleFavorites}
           disabled={favoriteLength === 5}>
           {favorite && favoriteLength !== 5 ? <IoMdCheckmark size="1rem" /> : <IoMdAdd size="1.5rem" />}

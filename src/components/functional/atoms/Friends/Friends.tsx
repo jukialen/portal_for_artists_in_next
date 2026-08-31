@@ -20,18 +20,16 @@ export const Friends = async ({ friendsAsideList }: { friendsAsideList: FriendsL
           <RiArrowDownSLine className={styles.categoryArrow} />
         </summary>
 
-        <section className={styles.container}>
-          {!!friendsAsideList && friendsAsideList.length > 0 ? (
-            friendsAsideList.map(({ pseudonym, profilePhoto }, index) => (
-              <Link href={`/user/${pseudonym}`} key={index} className={styles.link}>
-                <Image src={profilePhoto} className={styles.image} fill alt={`${pseudonym}'s profile photo`} />
-                <h4 className={styles.pseudonym}>{pseudonym}</h4>
-              </Link>
-            ))
-          ) : (
-            <p className={styles.noFavFriends}>{t('Friends.noFavFriends')}</p>
-          )}
-        </section>
+        {!!friendsAsideList && friendsAsideList.length > 0 ? (
+          friendsAsideList.map(({ pseudonym, profilePhoto }, index) => (
+            <Link href={`/user/${pseudonym}`} key={index} className={styles.link}>
+              <img src={profilePhoto} className={styles.image} alt={`${pseudonym}'s profile photo`} />
+              <h4>{pseudonym}</h4>
+            </Link>
+          ))
+        ) : (
+          <p className={styles.noFavFriends}>{t('Friends.noFavFriends')}</p>
+        )}
       </details>
     </article>
   );

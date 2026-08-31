@@ -4,6 +4,7 @@ import { backUrl } from 'constants/links';
 import { FriendsListArrayType, GroupsType } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
+import { getLinkUrl } from 'helpers/getLinkUrl';
 import { getUserData } from 'helpers/getUserData';
 
 import { RiArrowDownSLine } from 'react-icons/ri';
@@ -28,13 +29,15 @@ async function getFriendsList(userId: string, maxItems: number) {
 
   if (!data || !!error) return favoriteFriendArray;
 
-  for (const _f of data!) {
+  for (const { Users } of data) {
     favoriteFriendArray.push({
-      pseudonym: _f.Users?.pseudonym!,
-      profilePhoto: !!_f.Users?.profilePhoto ? _f.Users?.profilePhoto : `${backUrl}/friends.svg`,
+      pseudonym: Users?.pseudonym!,
+      profilePhoto: await getLinkUrl('profiles', `${backUrl}/friends.svg`, Users?.profilePhoto),
       favorites: data.length,
     });
   }
+
+  return favoriteFriendArray;
 }
 
 async function getGroupsList(id: string, maxItems: number) {
@@ -59,6 +62,8 @@ async function getGroupsList(id: string, maxItems: number) {
         logo: !!d.Groups.logo ? d.Groups.logo : `${backUrl}/group.svg`,
       });
     }
+
+    return groupList;
   } catch (e) {
     console.error(e);
   }
