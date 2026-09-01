@@ -6,7 +6,7 @@ import { LangType } from 'types/global.types';
 import { getI18n } from 'locales/server';
 
 import { getUserData } from 'helpers/getUserData';
-import { getFirstFriends } from 'utils/friends';
+import { getFirstFriends } from 'app/actions/friends';
 
 import { FriendsList } from 'components/functional/molecules/FriendsList/FriendsList';
 

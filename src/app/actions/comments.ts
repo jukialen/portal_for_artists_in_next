@@ -1,15 +1,14 @@
 'use server';
 
+import { selectCommentsData, updDelCommentsData } from 'constants/values';
 import { Database } from 'types/database.types';
 import { CommentType, FilesCommentsType, NewCommentsType, RoleType, CommentsTableNameType } from 'types/global.types';
-import { createServer } from './supabase/clientSSR';
 
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
-import { likeList } from 'utils/server/likes';
-import { groupRole } from 'utils/server/roles';
-
-import { selectCommentsData, updDelCommentsData } from '../constants/values';
+import { likeList } from './likes';
+import { groupRole } from './roles';
+import { createServer } from 'utils/supabase/clientSSR';
 
 type JoinedCommentRow<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'] & {
   Users: {

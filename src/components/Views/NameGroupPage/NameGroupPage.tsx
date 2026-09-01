@@ -82,6 +82,8 @@ export const NameGroupPage = ({
   };
   const toggleToFavorites = async () => {
     try {
+      console.log('usersGroupsId', usersGroupsId);
+
       if (favorite) {
         const { error } = await supabase
           .from('UsersGroups')

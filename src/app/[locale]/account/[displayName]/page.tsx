@@ -8,8 +8,8 @@ import { LangType } from 'types/global.types';
 import { getUserData } from 'helpers/getUserData';
 import { getLinkUrl } from 'helpers/getLinkUrl';
 import { graphics, videosAnimations } from 'app/actions/files';
-import { getFirstFriends } from 'utils/friends';
-import { adminList, modsUsersList } from 'utils/groups';
+import { getFirstFriends } from 'app/actions/friends';
+import { adminList, modsUsersList } from 'app/actions/groups';
 
 import { ProfilePage } from 'components/Views/ProfilePage/ProfilePage';
 

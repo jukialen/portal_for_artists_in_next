@@ -1,9 +1,8 @@
-import Image from 'next/image';
-import Link from 'next/link';
-
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { FriendsListArrayType } from 'types/global.types';
+
+import { ContainerLink } from 'components/ui/atoms/ContainerLink/ContainerLink';
 
 import styles from './Friends.module.css';
 import { RiArrowDownSLine } from 'react-icons/ri';
@@ -22,10 +21,14 @@ export const Friends = async ({ friendsAsideList }: { friendsAsideList: FriendsL
 
         {!!friendsAsideList && friendsAsideList.length > 0 ? (
           friendsAsideList.map(({ pseudonym, profilePhoto }, index) => (
-            <Link href={`/user/${pseudonym}`} key={index} className={styles.link}>
-              <img src={profilePhoto} className={styles.image} alt={`${pseudonym}'s profile photo`} />
-              <h4>{pseudonym}</h4>
-            </Link>
+            <ContainerLink
+              link={`/user/${pseudonym}`}
+              name={pseudonym}
+              description=""
+              logo={profilePhoto}
+              alt={`${pseudonym}'s profile photo`}
+              key={index}
+            />
           ))
         ) : (
           <p className={styles.noFavFriends}>{t('Friends.noFavFriends')}</p>

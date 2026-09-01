@@ -52,24 +52,7 @@
     display: flex;
     flex-direction: column;
 
-    .link {
-      display: flex;
-      align-items: center;
-      margin: 0.75rem 0.5rem;
-      font-size: 1.2rem;
 
-      .image {
-        width: 2.5rem;
-        height: 2.5rem;
-        position: relative;
-        border-radius: 0.6rem;
-        font-size: 1rem;
-      }
-
-      .name {
-        margin-left: 0.5rem;
-      }
-    }
   }
 
   .no__groups {
@@ -78,11 +61,17 @@
     font-size: 1rem;
   }
 
-  .listLink {
-    width: fit-content;
-    font-size: 1.2rem;
-    margin: 1.5rem auto 1.5rem;
+  .listButton {
+    margin: 0.5rem auto 0;
     padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    box-shadow: var(--box-shadow);
+
+    &:hover {
+      background-color: var(--third);
+      color: var(--text);
+    }
   }
 }
 

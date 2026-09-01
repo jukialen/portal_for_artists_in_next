@@ -140,7 +140,7 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
       <Separator />
       {adminsArray.length > 0 ? (
         adminsArray.map(({ name, logo }, index) => (
-          <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
+          <Tile key={index} name={name} link={`/groups/${name!}`} fileUrl={logo} />
         ))
       ) : (
         <p className={styles.noGroups}>{tGroupsUser.accountAdminTitle}</p>
@@ -152,7 +152,7 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
       <Separator />
       {moderatorsArray.length > 0 ? (
         moderatorsArray.map(({ name, logo }, index) => (
-          <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
+          <Tile key={index} name={name} link={`/groups/${name!}`} fileUrl={logo} />
         ))
       ) : (
         <p className={styles.noGroups}>{tGroupsUser.accountNoMods}</p>
@@ -164,7 +164,7 @@ export const GroupUser = ({ id, firstAdminArray, firstModsArray, firstMembersArr
       <Separator />
       {membersArray.length > 0 ? (
         membersArray.map(({ name, logo }, index) => (
-          <Tile key={index} name={name!} link={`/groups/${name!}`} fileUrl={logo} />
+          <Tile key={index} name={name} link={`/groups/${name!}`} fileUrl={logo} />
         ))
       ) : (
         <p className={styles.noGroups}>{tGroupsUser.accountNoUsers}</p>

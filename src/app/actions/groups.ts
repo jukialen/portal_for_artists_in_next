@@ -2,10 +2,11 @@
 
 import { backUrl } from 'constants/links';
 import { GroupListType, GroupUserType } from 'types/global.types';
-import { createServer } from './supabase/clientSSR';
+
+import { createServer } from 'utils/supabase/clientSSR';
 import { getLinkUrl } from 'helpers/getLinkUrl';
-import { getUserData } from '../helpers/getUserData';
-import { roles } from './server/roles';
+import { getUserData } from 'helpers/getUserData';
+import { roles } from './roles';
 
 export const nextGroupList = async (maxItems: number, lastVisible: string): Promise<GroupListType[]> => {
   const groupArray: GroupListType[] = [];

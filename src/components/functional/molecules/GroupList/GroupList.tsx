@@ -4,13 +4,13 @@ import { useState } from 'react';
 
 import { GroupListType } from 'types/global.types';
 
-import { nextGroupList } from 'utils/groups';
+import { nextGroupList } from 'app/actions/groups';
 
+import { Links } from 'components/ui/atoms/Links/Links';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';
 import { Tile } from 'components/ui/atoms/Tile/Tile';
 
 import styles from './GroupList.module.css';
-import { Links } from '../../../ui/atoms/Links/Links';
 
 type GroupsType = {
   list: {

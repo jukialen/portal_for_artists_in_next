@@ -7,8 +7,8 @@ import { LangType } from 'types/global.types';
 
 import { getUserData } from 'helpers/getUserData';
 
-import { getFirstFriends } from 'utils/friends';
-import { adminList, modsUsersList } from 'utils/groups';
+import { getFirstFriends } from 'app/actions/friends';
+import { adminList, modsUsersList } from 'app/actions/groups';
 import { graphics, videosAnimations } from 'app/actions/files';
 
 import { NavigationBar } from 'components/ui/atoms/NavigationBar/NavigationBar';

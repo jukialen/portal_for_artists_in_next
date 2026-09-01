@@ -55,11 +55,11 @@ async function getGroupsList(id: string, maxItems: number) {
   try {
     if (!data || !!error) return groupList;
 
-    for (const d of data!) {
+    for (const { Groups } of data!) {
       groupList.push({
-        name: d.Groups.name,
-        description: d.Groups.description!,
-        logo: !!d.Groups.logo ? d.Groups.logo : `${backUrl}/group.svg`,
+        name: Groups.name,
+        description: Groups.description!,
+        logo: await getLinkUrl('logos', `${backUrl}/group.svg`, Groups.logo),
       });
     }
 

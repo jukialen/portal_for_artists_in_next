@@ -5,8 +5,8 @@ import { selectFiles } from 'constants/selects';
 import { FileType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
-import { getFileRoleId } from 'utils/server/roles';
-import { likeList } from 'utils/server/likes';
+import { getFileRoleId } from 'app/actions/roles';
+import { likeList } from 'app/actions/likes';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);

@@ -36,7 +36,7 @@ async function getGroupsList(maxItems: number = 30) {
     for (const g of data) {
       const fileUrl = await getLinkUrl('logos', `${backUrl}/group.svg`, g.logo);
 
-      groupArray.push({ name: g.name!, fileUrl });
+      groupArray.push({ name: g.name, fileUrl });
     }
 
     return groupArray;

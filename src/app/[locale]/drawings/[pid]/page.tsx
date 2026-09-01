@@ -9,8 +9,8 @@ import { getScopedI18n } from 'locales/server';
 
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
-import { getFileRoleId } from 'utils/server/roles';
-import { likeList } from 'utils/server/likes';
+import { getFileRoleId } from 'app/actions/roles';
+import { likeList } from 'app/actions/likes';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { DrawingsWrapper } from 'components/wrappers/DrawingsWrapper/DrawingsWrapper';

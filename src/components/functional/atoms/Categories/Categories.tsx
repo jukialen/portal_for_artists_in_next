@@ -1,6 +1,8 @@
 import Link from 'next/link';
-import Image, { StaticImageData } from 'next/image';
+import { StaticImageData } from 'next/image';
 import { getScopedI18n } from 'locales/server';
+
+import { ContainerLink } from 'components/ui/atoms/ContainerLink/ContainerLink';
 
 import styles from './Categories.module.css';
 import realistic from '../../../../../public/realistic.jpg';
@@ -34,11 +36,15 @@ export const Categories = async () => {
           <RiArrowDownSLine className={styles.categoryArrow} />
         </summary>
         <section>
-          {imgDrawingSources.map((s) => (
-            <Link href={`/drawings/${s.name}`} className={`${styles.containerImgLink} ${styles.drawings}`} key={s.name}>
-              <Image src={s.source} alt={tAside(s.name)} />
-              <p className={styles.link}>{tAside(s.name)}</p>
-            </Link>
+          {imgDrawingSources.map((s, i) => (
+            <ContainerLink
+              link={`/drawings/${s.name}`}
+              name={tAside(s.name)}
+              description=""
+              logo={s.source}
+              alt={tAside(s.name)}
+              key={i}
+            />
           ))}
           <Link href="https://www.freepik.com/vectors/poster" className={`${styles.source} ${styles.drawings}`}>
             Poster vector created by gstudioimagen1 - www.freepik.com
@@ -46,18 +52,29 @@ export const Categories = async () => {
         </section>
       </details>
 
-      <Link href="/photographs" className={`${styles.containerImgLink} ${styles.photographs}`}>
-        <Image src={photograph} alt={`${tAside('photographs')} Photo by Rirri on Unsplash`} />
-        <p className={styles.link}>{tAside('photographs')}</p>
-      </Link>
-      <Link href="/animations" className={styles.containerImgLink}>
-        <Image src={animations} alt={`${tAside('photographs')} Photo by Sebastian Svenson on Unsplash`} />
-        <p className={styles.link}>{tAside('animations')}</p>
-      </Link>
-      <Link href="/videos" className={styles.containerImgLink}>
-        <Image src={videos} alt={`${tAside('photographs')} Photo by Jakob Owens on Unsplash`} />
-        <p className={styles.link}>{tAside('videos')}</p>
-      </Link>
+      <ContainerLink
+        link="/photographs"
+        name={tAside('photographs')}
+        description=""
+        logo={photograph}
+        alt={`${tAside('photographs')} Photo by Rirri on Unsplash`}
+      />
+
+      <ContainerLink
+        link="/animations"
+        name={tAside('animations')}
+        description=""
+        logo={animations}
+        alt={`${tAside('photographs')} Photo by Sebastian Svenson on Unsplash`}
+      />
+
+      <ContainerLink
+        link="/videos"
+        name={tAside('videos')}
+        description=""
+        logo={videos}
+        alt={`${tAside('photographs')} Photo by Jakob Owens on Unsplash`}
+      />
     </article>
   );
 };

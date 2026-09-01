@@ -21,6 +21,14 @@ export type ColumnCommentsTableNameType =
   | 'lastCommentId';
 export type Tags = Database['public']['Enums']['Tags'];
 
+export type ContainerLinkType = {
+  link: string;
+  name: string;
+  description: string;
+  logo: string | StaticImageData;
+  alt: string;
+};
+
 //FORMS & CONTROLLERS ELEMENTS
 export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
 export type RoleType = Database['public']['Enums']['Role'];
@@ -248,7 +256,6 @@ export type GalleryType = {
 };
 
 // COMMENTS
-
 export type CommentsColumnIds = {
   commentId?: string | null;
   fileCommentId?: string | null;

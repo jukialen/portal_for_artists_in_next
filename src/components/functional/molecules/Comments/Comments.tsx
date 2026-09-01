@@ -6,7 +6,7 @@ import { useScopedI18n } from 'locales/client';
 
 import { CommentsColumnIds, CommentType } from 'types/global.types';
 
-import { comments } from 'utils/comments';
+import { comments } from 'app/actions/comments';
 
 import { Comment } from 'components/functional/atoms/Comment/Comment';
 import { MoreButton } from 'components/ui/atoms/MoreButton/MoreButton';

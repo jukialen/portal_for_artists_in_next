@@ -6,8 +6,8 @@ import * as Yup from 'yup';
 import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
 import { getUserData } from 'helpers/getUserData';
-import { updComment, delComment } from 'utils/comments';
-import { toggleLiked } from 'utils/server/likes';
+import { updComment, delComment } from 'app/actions/comments';
+import { toggleLiked } from 'app/actions/likes';
 
 import {
   ResetFormType,

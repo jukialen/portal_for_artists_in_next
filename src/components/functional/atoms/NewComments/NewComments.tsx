@@ -11,8 +11,8 @@ import { CommentType, ResetFormType } from 'types/global.types';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 import { getUserData } from 'helpers/getUserData';
-import { newComment } from 'utils/comments';
-import { toggleLiked } from 'utils/server/likes';
+import { newComment } from 'app/actions/comments';
+import { toggleLiked } from 'app/actions/likes';
 
 import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';

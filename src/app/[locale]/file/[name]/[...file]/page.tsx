@@ -8,8 +8,8 @@ import { LangType } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
-import { getFileRoleId } from 'utils/server/roles';
-import { likeList } from 'utils/server/likes';
+import { getFileRoleId } from 'app/actions/roles';
+import { likeList } from 'app/actions/likes';
 import { createServer } from 'utils/supabase/clientSSR';
 
 const FileContainer = dynamic(() =>

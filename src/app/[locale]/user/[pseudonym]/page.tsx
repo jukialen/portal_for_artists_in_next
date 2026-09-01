@@ -10,8 +10,7 @@ import { getDate } from 'helpers/getDate';
 import { getLinkUrl } from 'helpers/getLinkUrl';
 import { getUserData } from 'helpers/getUserData';
 import { graphics, videosAnimations } from 'app/actions/files';
-
-import { adminList, modsUsersList } from 'utils/groups';
+import { adminList, modsUsersList } from 'app/actions/groups';
 
 import { ProfilePage } from 'components/Views/ProfilePage/ProfilePage';
 

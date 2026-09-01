@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 
-import { roles } from 'utils/server/roles';
+import { getLinkUrl } from 'helpers/getLinkUrl';
+import { roles } from 'app/actions/roles';
 import { createClient } from 'utils/supabase/clientCSR';
 
 import { backUrl } from 'constants/links';
@@ -72,11 +73,11 @@ export const GroupUsers = ({ id, firstAdminList, firstModsUsersList }: GroupUser
         return;
       }
 
-      for (const _group of data!) {
+      for (const { groupId, logo, name } of data!) {
         nextAdminArray.push({
-          name: _group.name,
-          logo: !!_group.logo ? _group.logo : `${backUrl}/group.svg`,
-          groupId: _group.groupId,
+          name,
+          logo: await getLinkUrl('logos', `${backUrl}/group.svg`, logo),
+          groupId,
         });
       }
 

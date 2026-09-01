@@ -6,8 +6,8 @@ import { FileType, IndexType, Tags } from 'types/global.types';
 import { getDate } from 'helpers/getDate';
 import { getLinkUrl } from 'helpers/getLinkUrl';
 import { createServer } from 'utils/supabase/clientSSR';
-import { getFileRoleId } from 'utils/server/roles';
-import { likeList } from 'utils/server/likes';
+import { getFileRoleId } from 'app/actions/roles';
+import { likeList } from 'app/actions/likes';
 
 export const graphics = async (
   maxItems: number,

@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { getUserData } from 'helpers/getUserData';
 import { useI18n, useScopedI18n } from 'locales/client';
 import { createClient } from 'utils/supabase/clientCSR';
-import { comments } from 'utils/comments';
+import { comments } from 'app/actions/comments';
 
 import { backUrl } from 'constants/links';
 import { TagConstants } from 'constants/values';

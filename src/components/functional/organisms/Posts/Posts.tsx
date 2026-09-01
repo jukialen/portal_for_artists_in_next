@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { againPosts } from 'utils/posts';
+import { againPosts } from 'app/actions/posts';
 
 import { PostsType } from 'types/global.types';
 
