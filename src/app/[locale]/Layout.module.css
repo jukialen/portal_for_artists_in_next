@@ -5,28 +5,51 @@
   overflow: hidden;
 
   .container {
-    width: inherit;
-    min-height: 100dvh;
+    width: 100%;
+    height: 100dvh;
     display: grid;
     grid-template-columns: auto 1fr;
 
+    .main__container,
     .user__container {
       width: 100dvw;
-      margin: 0 auto;
-    }
+      min-height: calc(100dvh - 3rem);
+      display: flex;
+      flex-direction: column;
+      margin: 2rem auto 1rem;
+      padding-top: 3rem;
+      overflow: hidden auto;
 
-    .main__container {
-      width: 100vw;
-      margin: 0 auto;
-    }
-  }
+      &:hover {
+        scrollbar-color: var(--secondary) black;
+      }
 
-  .workspace {
-    min-height: 91dvh;
-    display: flex;
-    flex-direction: column;
-    margin: 2rem auto 1rem;
-    padding-top: 3rem;
+      &:active {
+        scrollbar-color: var(--secondary) black;
+      }
+
+      &::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: black;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: var(--background);
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background: var(--secondary);
+        border-radius: 20px;
+      }
+
+      &::-webkit-scrollbar-thumb:active {
+        background-color: var(--secondary);
+        border-radius: 20px;
+      }
+    }
   }
 }
 
@@ -34,59 +57,8 @@
   font-size: x-large;
 }
 
-@media (min-width: 852px) {
-  .whole__page .workspace {
-    margin-top: 4rem;
-  }
-}
-
-@media (min-width: 982px) {
-  .whole__page .container .user__container {
-    height: 100dvh;
-    overflow: hidden auto;
-
-    &:hover {
-      scrollbar-color: var(--secondary) black
-    }
-
-    &:active {
-      scrollbar-color: var(--secondary) black
-    }
-
-    &::-webkit-scrollbar {
-      width: 10px
-    }
-
-    &::-webkit-scrollbar-track {
-      background-color: black
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--background);
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: var(--secondary);
-      border-radius: 20px;
-    }
-
-    &::-webkit-scrollbar-thumb:active {
-      background: var(--secondary);
-      border-radius: 20px;
-    }
-  }
-}
-
 @media (min-width: 1024px) {
-  .whole__page .container {
-    .user__container {
-      width: min-content;
-      overflow-y: scroll;
-
-      .workspace {
-        width: calc(100vw - 17rem);
-      }
-
-    }
+  .whole__page .container .user__container {
+    width: calc(100dvw - 16rem);
   }
 }

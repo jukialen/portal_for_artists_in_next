@@ -1,5 +1,5 @@
 .wrapper {
-  width: 37rem;
+  width: 97%;
   max-width: 100dvw;
   margin: 4rem auto;
   position: relative;
@@ -30,7 +30,7 @@
   overflow-x: auto;
   scrollbar-width: auto;
   scrollbar-color: var(--primary) var(--fourth);
-  padding: 0 0.3rem;
+  padding: 0 3.7% 0 0.3rem;
 
   > div {
     width: 27rem;
@@ -64,8 +64,8 @@
   }
 }
 
-@media (min-width: 1024px) {
-  .wrapper {
-    width: 72vw;
+@media (min-width: 1024px)  {
+  .wrapper .content {
+    padding: 0 3.7rem 0 0.3rem;
   }
 }

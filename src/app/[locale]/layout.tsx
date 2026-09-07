@@ -68,9 +68,7 @@ export default async function RootLayout({ children, params }: ChildrenType) {
               <div className={styles.container}>
                 {!!user && userMenuComponents.aside}
 
-                <main className={!!user ? styles.user__container : styles.main__container}>
-                  <section className={styles.workspace}>{children}</section>
-                </main>
+                <main className={!!user ? styles.user__container : styles.main__container}>{children}</main>
               </div>
             </div>
           </ModeProvider>
