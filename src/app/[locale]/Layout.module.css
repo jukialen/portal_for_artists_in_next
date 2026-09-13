@@ -59,6 +59,6 @@
 
 @media (min-width: 1024px) {
   .whole__page .container .user__container {
-    width: calc(100dvw - 16rem);
+    width: inherit;
   }
 }
