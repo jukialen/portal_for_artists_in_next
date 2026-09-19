@@ -56,31 +56,21 @@ async function groupData(name: string) {
 
   const { data, error } = await supabase
     .from('Groups')
-    .select('groupId, description, logo, regulation, adminId')
+    .select('groupId, description, logo, regulation, adminId, Users!adminId (pseudonym, profilePhoto)')
     .eq('name', name)
     .limit(1)
     .maybeSingle();
 
   if (!data || error) throw error;
 
-  const { data: authorData, error: authorError } = await supabase
-    .from('Roles')
-    .select('id')
-    .eq('userId', data?.adminId || myUser?.id!)
-    .limit(1)
-    .maybeSingle();
-
-  if (authorError || !authorData) throw authorError;
-
-  const logo = await getLinkUrl('logos', `${backUrl}/group.svg`, data.logo);
-
   return {
-    logo,
+    logo: await getLinkUrl('logos', `${backUrl}/group.svg`, data.logo),
     description: data?.description || '',
     regulation: data?.regulation || '',
     admin: myUser?.id === data?.adminId,
     groupId: data?.groupId || '',
-    roleId: authorData?.id!,
+    adminName: data.Users.pseudonym,
+    adminPhoto: await getLinkUrl('profiles', `${backUrl}/group.svg`, data.Users.profilePhoto),
   };
 }
 
@@ -130,40 +120,44 @@ async function joinedUser(name: string, stringError: string) {
 async function members(usersGroupsId: string, name: string, stringError: string): Promise<MemberType[]> {
   const supabase = await createServer();
 
-  const usersGroupData = await supabase
-    .from('Groups')
-    .select(
-      `
-      Users (pseudonym, profilePhoto),
-      Roles (role)
-     `,
-    )
-    .eq('name', name)
-    .limit(30);
-
-  const usersInGroup: MemberType[] = [];
+  const usersInGroup: MemberType[] = [{ usersGroupsId: '', pseudonym: '', profilePhoto: '', role: 'USER' }];
 
   try {
-    if (!!usersGroupData.data) {
-      for (const user of usersGroupData.data) {
-        const { Users, Roles } = user;
+    const [usersRes, modsRes] = await Promise.all([
+      supabase
+        .from('UsersGroups')
+        .select(`Users!userId (pseudonym, profilePhoto), Roles!roleId!inner (role)`)
+        .eq('name', name)
+        .eq('Roles.role', 'USER')
+        .limit(30),
 
-        usersInGroup.push({
-          usersGroupsId,
-          pseudonym: Users[0].pseudonym!,
-          profilePhoto: Users[0].profilePhoto!,
-          role: Roles[0].role,
-        });
-      }
+      supabase
+        .from('UsersGroups')
+        .select(`Users!userId (pseudonym, profilePhoto), Roles!roleId!inner (role)`)
+        .eq('name', name)
+        .eq('Roles.role', 'MODERATOR')
+        .limit(30),
+    ]);
 
-      return usersInGroup;
-    } else {
-      return [{ usersGroupsId, pseudonym: '', profilePhoto: '', role: 'USER' }];
+    const combinedData = [...(usersRes.data || []), ...(modsRes.data || [])];
+
+    if (combinedData.length === 0) return usersInGroup;
+
+    for (const user of combinedData) {
+      const { Users, Roles } = user;
+
+      usersInGroup.push({
+        usersGroupsId,
+        pseudonym: Users.pseudonym!,
+        profilePhoto: await getLinkUrl('profiles', `${backUrl}/friends.svg`, user.Users.profilePhoto!),
+        role: Roles.role,
+      });
     }
+
+    return usersInGroup;
   } catch (e) {
     console.error(stringError);
-
-    return [{ usersGroupsId, pseudonym: '', profilePhoto: '', role: 'USER' }];
+    return usersInGroup;
   }
 }
 async function getFirstPosts(groupId: string, maxItems: number) {
@@ -266,7 +260,13 @@ export default async function Groups({ params }: PropsType) {
 
   const gData = await groupData(decodedName);
   const joined = await joinedUser(decodedName, tOther('unknownError'));
-  const membersGroups = await members(joined.usersGroupsId, decodedName, tOther('unknownError'));
+  const membersGroups = (await members(joined.usersGroupsId, decodedName, tOther('unknownError'))).concat({
+    usersGroupsId: joined.usersGroupsId,
+    role: 'ADMIN',
+    pseudonym: gData.adminName,
+    profilePhoto: gData.adminPhoto,
+  });
+
   const firstPosts = await getFirstPosts(joined.groupId || gData.groupId, 30);
 
   return (

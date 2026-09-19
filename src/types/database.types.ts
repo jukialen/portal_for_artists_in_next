@@ -308,7 +308,15 @@ export type Database = {
           regulation?: string | null
           updatedAt?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "Groups_adminId_fkey"
+            columns: ["adminId"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       LastComments: {
         Row: {

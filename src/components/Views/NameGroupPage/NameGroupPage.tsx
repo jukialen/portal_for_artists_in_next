@@ -199,7 +199,7 @@ export const NameGroupPage = ({
         </button>
       </div>
 
-      <Tabs.Root className={styles.tabs} lazyMount unmountOnExit defaultValue={contentList[0]}>
+      <Tabs.Root className={styles.tabs} lazyMount defaultValue={contentList[0]}>
         <Tabs.List className={styles.tablist}>
           {contentList.map((tab, i) =>
             i === 1 && !join ? null : (

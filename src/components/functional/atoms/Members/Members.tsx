@@ -33,20 +33,24 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
 
   members.sort(sortMembers());
 
-  const adminData = members.filter((e) => e.role === 'ADMIN')[0];
-  const pseudonymAdmin = adminData.pseudonym;
-  const profilePhotoAdmin = adminData.profilePhoto!;
+  const adminData = members.find((e) => e.role === 'ADMIN');
+  const pseudonymAdmin = adminData?.pseudonym || '';
+  const profilePhotoAdmin = adminData?.profilePhoto || '';
 
   const modList = members.filter((e) => e.role === 'MODERATOR');
+  const userList = members.filter((e) => e.role === 'USER');
 
   const [moderatorsArray, setModeratorsArray] = useState<MemberType[]>(modList || []);
   const [lastModeratorsVisible, setModeratorsLastVisible] = useState<MemberType | null>(
     modList.length === maxItems ? modList[modList.length - 1] : null,
   );
+  let noMoreMods = false;
+  let noMoreUsers = false;
+
   let [iModerators, setIModerators] = useState(1);
-  const [membersArray, setMembersArray] = useState<MemberType[]>(members);
+  const [membersArray, setMembersArray] = useState<MemberType[]>(userList);
   const [lastMembersVisible, setMembersLastVisible] = useState<MemberType | null>(
-    members.length === maxItems ? members[members.length - 1] : null,
+    userList.length === maxItems ? userList[userList.length - 1] : null,
   );
   let [iMembers, setIMembers] = useState(1);
 
@@ -54,20 +58,25 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
     const nextModeratorArray: MemberType[] = [];
 
     const { data } = await supabase
-      .from('Groups')
-      .select(`Users (pseudonym, profilePhoto), Roles (role)`)
+      .from('UsersGroups')
+      .select(`Users!userId (pseudonym, profilePhoto), Roles!roleId!inner (role)`)
       .eq('name', name)
-      .gt('created_at', lastModeratorsVisible)
-      .order('created_at', { ascending: false })
+      .eq('Roles.role', 'MODERATOR')
+      .gt('createdAt', lastModeratorsVisible)
+      .order('createdAt', { ascending: false })
       .limit(30);
 
     try {
-      for (const mod of data!) {
+      if (!data || data.length === 0) return (noMoreMods = true);
+
+      noMoreMods = false;
+
+      for (const mod of data) {
         nextModeratorArray.push({
           usersGroupsId,
-          pseudonym: mod.Users[0].pseudonym,
-          profilePhoto: mod.Users[0].profilePhoto!,
-          role: mod.Roles[0].role,
+          pseudonym: mod.Users.pseudonym,
+          profilePhoto: mod.Users.profilePhoto!,
+          role: mod.Roles.role,
         });
       }
       const nextArray = moderatorsArray.concat(...nextModeratorArray).sort(sortMembers());
@@ -83,25 +92,30 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
     const nextMemberArray: MemberType[] = [];
 
     const { data } = await supabase
-      .from('Groups')
+      .from('UsersGroups')
       .select(
         `
-        Users (pseudonym, profilePhoto),
-        Roles (role)
+        Users!userId (pseudonym, profilePhoto),
+        Roles!roleId!inner (role)
        `,
       )
       .eq('name', name)
-      .gt('created_at', lastMembersVisible)
-      .order('created_at', { ascending: false })
+      .eq('Roles.role', 'USER')
+      .gt('createdAt', lastMembersVisible)
+      .order('createdAt', { ascending: false })
       .limit(30);
 
     try {
-      for (const mod of data!) {
+      if (!data || data.length === 0) return (noMoreUsers = true);
+
+      noMoreUsers = false;
+
+      for (const us of data) {
         nextMemberArray.push({
           usersGroupsId,
-          pseudonym: mod.Users[0].pseudonym,
-          profilePhoto: mod.Users[0].profilePhoto!,
-          role: mod.Roles[0].role,
+          pseudonym: us.Users.pseudonym,
+          profilePhoto: us.Users.profilePhoto!,
+          role: us.Roles.role,
         });
       }
 
@@ -174,7 +188,6 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
       <h2>Members list</h2>
       <p className={styles.roles}>{translated.members?.admin}</p>
       <Separator />
-
       <div className={styles.usersButton}>
         <Avatar src={profilePhotoAdmin} fallbackName={pseudonymAdmin} alt="administrator profile picture icon" />
         <NextLink href={`/user/${pseudonymAdmin}`} passHref>
@@ -203,7 +216,8 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
       ) : (
         <p>{translated.members?.noMods}</p>
       )}
-      {!!lastModeratorsVisible && moderatorsArray.length === maxItems * iModerators && (
+
+      {!noMoreMods && !!lastModeratorsVisible && moderatorsArray.length === maxItems * iModerators && (
         <MoreButton nextElementsAction={nextModeratorsList} />
       )}
       <p className={styles.roles}>{translated.members?.anotherMembers}</p>
@@ -228,7 +242,7 @@ export const Members = ({ admin, groupId, name, usersGroupsId, members, translat
       ) : (
         <p>{translated.members?.noMembers}</p>
       )}
-      {!!lastMembersVisible && membersArray.length === maxItems * iMembers && (
+      {!noMoreUsers && !!lastMembersVisible && membersArray.length === maxItems * iMembers && (
         <MoreButton nextElementsAction={nextMembersList} />
       )}
     </>
