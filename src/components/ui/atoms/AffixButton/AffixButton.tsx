@@ -12,7 +12,6 @@ export const AffixButton = () => {
     const scrolled = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
     setVisible(scrolled > 300);
   };
-
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   useEffect(() => {

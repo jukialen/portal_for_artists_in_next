@@ -62,14 +62,12 @@ export default async function RootLayout({ children, params }: ChildrenType) {
       <body>
         <SWStart locale={lang}>
           <ModeProvider>
-            <div className={styles.whole__page} suppressHydrationWarning>
-              {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
+            {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
 
-              <div className={styles.container}>
-                {!!user && userMenuComponents.aside}
+            <div className={!!user ? styles.container__user : styles.container}>
+              {!!user && userMenuComponents.aside}
 
-                <main className={!!user ? styles.user__container : styles.main__container}>{children}</main>
-              </div>
+              <main className={!!user ? styles.user__container : styles.main__container}>{children}</main>
             </div>
           </ModeProvider>
         </SWStart>

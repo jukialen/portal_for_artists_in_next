@@ -41,6 +41,7 @@
       }
 
       .formats {
+        width: 95%;
         margin: 1rem 1rem 5rem;
         font-size: 0.8rem;
         opacity: 0.8;

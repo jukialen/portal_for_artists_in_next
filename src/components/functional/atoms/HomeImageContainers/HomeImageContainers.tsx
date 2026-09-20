@@ -35,53 +35,56 @@ export const HomeImageContainers = ({ containerData, width, height }: HomeImageC
             start: 'top 80%',
             end: '80% 80%',
             scrub: 3,
+            scroller: 'main',
           },
         },
       );
     });
   }, []);
 
-  const containers = containerData.map((item, index) => (
-    <article className={item.mode ? styles.main__container__mode : styles.main__container} key={index}>
-      <div className={styles.container}>
-        <h4 className={styles.question}>{item.question}</h4>
-        <p className={styles.answer}>{item.answer}</p>
-      </div>
+  return (
+    <>
+      {containerData.map((item, index) => (
+        <article className={item.mode ? styles.main__container__mode : styles.main__container} key={index}>
+          <div className={styles.container}>
+            <h4 className={styles.question}>{item.question}</h4>
+            <p className={styles.answer}>{item.answer}</p>
+          </div>
 
-      {item.mode ? (
-        <div className={styles.image}>
-          <div className={styles.modeImage}>
+          {item.mode ? (
+            <div className={styles.image}>
+              <div className={styles.modeImage}>
+                <Image
+                  src={item.imageSource[0]}
+                  width={width}
+                  height={height}
+                  loading="lazy"
+                  alt={item.imageAlt[0]}
+                  quality={item.quality}
+                />
+                <Image
+                  src={item.imageSource[1]}
+                  width={width}
+                  height={height}
+                  loading="lazy"
+                  alt={item.imageAlt[1]}
+                  quality={item.quality}
+                />
+              </div>
+            </div>
+          ) : (
             <Image
               src={item.imageSource[0]}
               width={width}
               height={height}
+              className={styles.image}
               loading="lazy"
               alt={item.imageAlt[0]}
               quality={item.quality}
             />
-            <Image
-              src={item.imageSource[1]}
-              width={width}
-              height={height}
-              loading="lazy"
-              alt={item.imageAlt[1]}
-              quality={item.quality}
-            />
-          </div>
-        </div>
-      ) : (
-        <Image
-          src={item.imageSource[0]}
-          width={width}
-          height={height}
-          className={styles.image}
-          loading="lazy"
-          alt={item.imageAlt[0]}
-          quality={item.quality}
-        />
-      )}
-    </article>
-  ));
-
-  return <>{containers}</>;
+          )}
+        </article>
+      ))}
+    </>
+  );
 };

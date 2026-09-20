@@ -1,6 +1,6 @@
 .main__container,
 .main__container__mode {
-  max-width: 56.25rem;
+  width: min(100%, 56.25rem);
   display: grid;
   grid-template-columns: 1fr;
   justify-content: center;
@@ -45,11 +45,22 @@
       10px 10px 19px var(--third__opacity),
       -10px -10px 19px var(--third__opacity);
 
+    img {
+      width: 100%;
+      height: auto;
+    }
+
     .modeImage {
+      width: inherit;
       display: flex;
       flex-direction: column;
       border-radius: inherit;
       box-shadow: inherit;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
 
       img:nth-child(2) {
         border-radius: inherit;
@@ -60,10 +71,6 @@
 
 .main__container__mode .modeImage {
   border-radius: 0 0 2rem 2rem;
-}
-
-.main__container:last-of-type {
-  margin-bottom: 12.5rem;
 }
 
 @media (min-width: 824px) {
@@ -89,6 +96,10 @@
       width: 100%;
       margin: 0;
       border-radius: 0 2rem 2rem 0;
+    }
+
+    &:last-of-type {
+      margin-bottom: 7.5rem;
     }
   }
 
