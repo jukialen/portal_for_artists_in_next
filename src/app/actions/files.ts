@@ -53,7 +53,6 @@ export const graphics = async (
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
-          idLiked: likeData?.idLiked,
           liked: likeData?.liked,
           likes: likeData?.likes,
         });
@@ -91,7 +90,6 @@ export const graphics = async (
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
-          idLiked: likeData?.idLiked,
           liked: likeData?.liked,
           likes: likeData?.likes,
         });
@@ -154,7 +152,6 @@ export const videosAnimations = async (
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || undefined,
-          idLiked: likeData?.idLiked,
           liked: likeData?.liked,
           likes: likeData?.likes,
         });
@@ -194,7 +191,6 @@ export const videosAnimations = async (
           time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
-          idLiked: likeData?.idLiked,
           liked: likeData?.liked,
           likes: likeData?.likes,
         });
@@ -250,7 +246,6 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
           fileUrl: photoLink,
           tags,
           time: await getDate(updatedAt! || createdAt!),
-          idLiked: likeData?.idLiked,
           liked: likeData?.liked,
           likes: likeData?.likes,
         });

@@ -1,4 +1,5 @@
-.file, .file__deleted {
+.file,
+.file__deleted {
   width: min(34.5rem, 90dvw);
   display: grid;
   grid-template-rows: 1fr 3.25rem auto auto;
@@ -71,6 +72,14 @@
       color: var(--third);
       border-color: transparent;
       cursor: pointer;
+      transition: transform 0.4s ease-in-out;
+      transform-origin: left center -0.5rem;
+
+      &:hover,
+      &:active {
+        transform: perspective(40rem) scale(1.2) rotateZ(-20deg) rotateY(15deg);
+        padding: 0;
+      }
 
       svg {
         width: 100%;
@@ -84,6 +93,11 @@
       justify-content: center;
       padding: 0.5rem;
       color: var(--third);
+
+      .animatedNumber {
+        display: inline-block;
+        animation: pop-number 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
     }
 
     .commentsButton {
@@ -127,4 +141,16 @@
 .file__deleted {
   display: none;
   visibility: hidden;
+}
+
+@keyframes pop-number {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

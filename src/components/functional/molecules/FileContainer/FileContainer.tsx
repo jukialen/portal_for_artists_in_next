@@ -35,7 +35,6 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
     authorId,
     roleId,
     commentsBool = false,
-    idLiked,
     likes = 0,
     liked = false,
   } = fileData;
@@ -87,9 +86,10 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
 
   const toggleLike = async () => {
     const supabase = createClient();
+    const currentUserId = (await getUserData())?.id!;
 
     if (like) {
-      const { error } = await supabase.from('Liked').delete().eq('id', idLiked!);
+      const { error } = await supabase.from('Liked').delete().match({ fileId, userId: currentUserId });
 
       if (!!error) {
         console.error(`Error: ${error?.message} with status ${error?.code}`);
@@ -157,7 +157,11 @@ export const FileContainer = ({ fileData }: { fileData: ArticleVideosType }) => 
         </button>
         <SharingButton shareUrl={linkShare} authorName={authorName!} tags={tags} name={name} shared={1000000} />
         <p></p>
-        <p className={styles.likesCount}>{likeCount}</p>
+        <p className={styles.likesCount}>
+          <span key={likeCount} className={styles.animatedNumber}>
+            {likeCount}
+          </span>
+        </p>
         <p></p>
       </div>
       {!commentsBool && (

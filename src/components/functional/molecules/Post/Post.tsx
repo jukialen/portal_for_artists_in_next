@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
+import { getUserData } from 'helpers/getUserData';
 import { createClient } from 'utils/supabase/clientCSR';
 
 import { backUrl } from 'constants/links';
@@ -45,7 +46,6 @@ export const Post = ({
     authorName,
     authorProfilePhoto,
     roleId,
-    idLiked,
   } = postOnGroup;
 
   const [showComments, setShowComments] = useState(false);
@@ -53,28 +53,25 @@ export const Post = ({
   const [deleted, setDeleted] = useState(false);
   let [like, setLike] = useState(liked);
   let [likeCount, setLikeCount] = useState(likes);
-
   const link = `${backUrl}/groups/${name}/${authorName}/${postId}`;
   const supabase = createClient();
 
   const showingComments = () => setShowComments(!showComments);
 
   const addLike = async () => {
-    if (like) {
-      const { error } = await supabase.from('Liked').delete().eq('id', idLiked!);
+    const currentUserId = (await getUserData())?.id!;
 
-      if (!!error) {
-        console.error(`Error: ${error?.message} with status ${error?.code}`);
-      } else {
+    if (like) {
+      const { error } = await supabase.from('Liked').delete().match({ postId, userId: currentUserId });
+
+      if (!error) {
         setLike(false);
         setLikeCount(likeCount - 1);
       }
     } else {
-      const { error } = await supabase.from('Liked').insert([{ postId, userId: authorId }]);
+      const { data, error } = await supabase.from('Liked').insert([{ postId, userId: currentUserId }]);
 
-      if (!!error) {
-        console.error(`Error: ${error?.message} with status ${error?.code}`);
-      } else {
+      if (!!data || !error) {
         setLike(true);
         setLikeCount(likeCount + 1);
       }
@@ -117,7 +114,9 @@ export const Post = ({
       </div>
       <div className={styles.likesShComs}>
         <p className={likeCount < 100 ? (likeCount < 10 ? styles.leftpadding : styles.leftSmallpadding) : ''}>
-          {likeCount}
+          <span key={likeCount} className={styles.animatedNumber}>
+            {likeCount}
+          </span>
         </p>
         <p>
           {commented} {commented === 1 ? 'comment' : 'comments'}

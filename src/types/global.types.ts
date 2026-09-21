@@ -4,7 +4,7 @@ import { StaticImageData } from 'next/image';
 import { ICustomData } from '@paddle/paddle-node-sdk';
 
 //GENERAL
-export type Like = { likes: number; liked: boolean; idLiked: string };
+export type Like = { likes: number; liked: boolean };
 type Time = { createdAt?: string; updatedAt?: string };
 
 export type IndexType = 'photographs' | 'videos' | 'animations';
@@ -62,7 +62,7 @@ export type ProfileType = {
 };
 
 //FILES
-type File = {
+type File = Like & {
   fileId?: string;
   name?: string;
   shortDescription?: string;
@@ -72,9 +72,6 @@ type File = {
   authorName: string;
   authorId: string;
   roleId: string;
-  idLiked: string;
-  likes: number;
-  liked: boolean;
 };
 
 export type FileType = Time &
@@ -229,7 +226,6 @@ export type PostsType = Time &
     groupId: string;
     roleId: string;
     date?: string;
-    idLiked: string;
   };
 
 //GALLERY
@@ -268,16 +264,14 @@ export type CommentsColumnIds = {
 };
 
 export type Comment = CommentsColumnIds &
-  Time & {
+  Time &
+  Like & {
     authorId: string;
     fileUrl?: string;
     role: RoleType;
     date?: string;
     pseudonym?: string;
     content: string;
-    idLiked: string;
-    liked: boolean;
-    likes: number;
   };
 
 ////INSERT

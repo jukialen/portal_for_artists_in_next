@@ -25,21 +25,19 @@ export const likeList = async (
 
     const { data, error } = await supabase
       .from('Liked')
-      .select('id, userId')
+      .select('userId')
       .eq(columnName, columnValue!)
       .eq('userId', authorId!);
 
     if (error) await sendLokiLog(error.message, await getTraceId(), 'error');
 
     return {
-      idLiked: data?.find((d) => d.userId === authorId)?.id || '',
       likes: data?.length || 0,
       liked: data?.some((d) => d.userId === authorId) || false,
     };
   } catch (e) {
     console.error(e);
     return {
-      idLiked: '',
       likes: 0,
       liked: false,
     };

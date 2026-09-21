@@ -183,7 +183,6 @@ export const comments = async ({
         roleId: groupsPostsRoleId || roleId,
         authorId,
         postId,
-        idLiked: likesData.idLiked,
         likes: likesData.likes,
         liked: likesData.liked,
         date: await getDate(updatedAt! || createdAt!),
@@ -220,7 +219,6 @@ const filesApiComments = async (
         authorId,
         likes: likesData.likes,
         liked: likesData.liked,
-        idLiked: likesData.idLiked,
         date: await getDate(updatedAt! || createdAt!),
         tableName,
       });
@@ -258,7 +256,6 @@ const subComments = async (
       authorId,
       likes: likesData.likes,
       liked: likesData.liked,
-      idLiked: likesData.idLiked,
       date: await getDate(updatedAt! || createdAt!),
       tableName,
     });
@@ -290,7 +287,6 @@ const lastComments = async (
       authorId,
       likes: likesData!.likes,
       liked: likesData!.liked,
-      idLiked: likesData!.idLiked,
       date: await getDate(updatedAt! || createdAt!),
       subCommentId,
       tableName,

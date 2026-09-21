@@ -52,7 +52,6 @@ async function getFirstDrawings(pid: Tags, maxItems: number) {
         time: await getDate(updatedAt || createdAt!),
         liked: (await likeList(authorId!, 'fileId', fileId)).liked,
         likes: (await likeList(authorId!, 'fileId', fileId)).likes,
-        idLiked: (await likeList(authorId!, 'fileId', fileId)).idLiked,
       });
     }
 

@@ -36,8 +36,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       const role = await getFileRoleId(fileId, authorId!);
 
       role.roleId === 'no id' && NextResponse.json(filesArray);
+
       filesArray.push({
-        idLiked: '',
         liked: false,
         likes: 0,
         fileId,

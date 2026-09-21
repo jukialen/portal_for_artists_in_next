@@ -62,7 +62,6 @@ async function getTop10Drawings(maxItems: number) {
         time: await getDate(updatedAt || createdAt!),
         liked: (await likeList(authorId!, 'fileId', fileId)).liked,
         likes: (await likeList(authorId!, 'fileId', fileId)).likes,
-        idLiked: (await likeList(authorId!, 'fileId', fileId)).idLiked,
       });
     }
     return filesArray;
@@ -114,7 +113,6 @@ async function getTop10Pavo(maxItems: number, tag: Tags) {
         roleId: roleOkId,
         liked: likesData.liked,
         likes: likesData.likes,
-        idLiked: likesData.idLiked,
       });
     }
 

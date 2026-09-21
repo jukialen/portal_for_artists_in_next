@@ -39,7 +39,6 @@ async function postOne(postId: string, name: string) {
     roleId: '',
     shared: 0,
     title: '',
-    idLiked: '',
   };
 
   const supabase = await createServer();
@@ -55,12 +54,12 @@ async function postOne(postId: string, name: string) {
 
     const { data: lData } = await supabase.from('Liked').select('id, userId').match({ postId, userId: authorId });
 
-    const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
+    const likedData = lData?.find((v: { userId: string }) => v.userId === authorId);
 
     postsArray = {
       authorName: Users?.pseudonym!,
       authorProfilePhoto: Users?.profilePhoto!,
-      liked: indexCurrentUser >= 0,
+      liked: !!likedData,
       postId,
       title,
       content,
@@ -71,7 +70,6 @@ async function postOne(postId: string, name: string) {
       groupId,
       roleId: Roles?.id!,
       date: await getDate(updatedAt || createdAt!),
-      idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
     };
   }
   return postsArray;

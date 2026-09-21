@@ -88,7 +88,6 @@ export const NewComments = ({
 
       onReplyAddedAction?.({
         authorName: userData?.pseudonym!,
-        idLiked: newLike.idLiked,
         liked: false,
         likes: 0,
         role,

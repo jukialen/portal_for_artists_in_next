@@ -49,7 +49,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         roleId: role.roleId,
         liked: (await likeList(authorId!, 'fileId', fileId)).liked,
         likes: (await likeList(authorId!, 'fileId', fileId)).likes,
-        idLiked: (await likeList(authorId!, 'fileId', fileId)).idLiked,
       });
     }
     return NextResponse.json(filesArray);

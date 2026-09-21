@@ -1,4 +1,5 @@
-.container, .container__deleted {
+.container,
+.container__deleted {
   width: 95vw;
   max-width: 42.5rem;
   margin: 1.5rem auto;
@@ -52,6 +53,14 @@
       color: var(--third);
       border-color: transparent;
       cursor: pointer;
+      transition: transform 0.4s ease-in-out;
+      transform-origin: left center -0.5rem;
+
+      &:hover,
+      &:active {
+        transform: perspective(40rem) scale(1.2) rotateZ(-20deg) rotateY(15deg);
+        padding: 0;
+      }
     }
 
     .commentsButton {
@@ -88,10 +97,6 @@
       justify-content: flex-start;
     }
 
-    p:last-child {
-      justify-content: flex-end;
-    }
-
     .leftpadding {
       padding-left: 0.45rem;
     }
@@ -111,6 +116,11 @@
     .rightVerySmallpadding {
       padding-right: 0.3rem;
     }
+
+    .animatedNumber {
+      display: inline-block;
+      animation: pop-number 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
   }
 
   .commentsSection {
@@ -127,4 +137,16 @@
 .container__deleted {
   display: none;
   visibility: hidden;
+}
+
+@keyframes pop-number {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

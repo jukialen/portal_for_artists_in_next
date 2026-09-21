@@ -172,33 +172,29 @@ async function getFirstPosts(groupId: string, maxItems: number) {
     .order('createdAt', { ascending: false })
     .limit(maxItems);
 
-  if (!!error) {
-    // console.error(error);
-    return postsArray;
-  }
+  if (!!error) return postsArray;
 
   for (const post of data!) {
     const { title, content, shared, commented, authorId, groupId, postId, createdAt, updatedAt, Users, Roles } = post;
 
-    const { data: lData, count } = await supabase.from('Liked').select('id, userId').match({ postId, authorId });
+    const { data: lData } = await supabase.from('Liked').select('userId').eq('postId', postId);
 
-    const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
+    const likedData = lData?.find((v: { userId: string }) => v.userId === authorId);
 
     postsArray.push({
       authorName: Users?.pseudonym!,
       authorProfilePhoto: supabaseStorageProfileUrl + '/' + Users?.profilePhoto!,
-      liked: indexCurrentUser >= 0,
+      liked: !!likedData,
       postId,
       title,
       content,
-      likes: count || 0,
+      likes: lData?.length || 0,
       shared,
       commented,
       authorId,
       groupId,
       roleId: Roles?.id!,
       date: await getDate(updatedAt || createdAt!),
-      idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
     });
   }
   return postsArray;
