@@ -67,6 +67,10 @@
       }
     }
   }
+
+  &:last-child {
+    margin-bottom: 6rem;
+  }
 }
 
 .main__container__mode .modeImage {

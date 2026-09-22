@@ -1,17 +1,17 @@
 .container,
 .container__user {
-  width: 100%;
+  width: 100dvw;
   position: relative;
   height: 100dvh;
 
   .main__container,
   .user__container {
     width: 100%;
-    height: 100%;
+    height: calc(100% + 12rem);
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
-    padding-top: 1rem;
+    margin: -3rem auto -6rem;
+    padding-top: 6rem;
     padding-bottom: 6rem;
     overflow: hidden auto;
 
@@ -38,6 +38,10 @@
       background: var(--secondary__opacity);
       border-radius: 0.6rem;
     }
+
+    > div, > section {
+      margin: auto;
+    }
   }
 }
 
@@ -48,14 +52,6 @@
 
 .loading {
   font-size: x-large;
-}
-
-@media (min-width: 768px) {
-  .container .main__container,
-  .container__user .user__container {
-    padding-top: 6rem;
-    padding-bottom: 1rem;
-  }
 }
 
 @media (min-width: 1024px) {
