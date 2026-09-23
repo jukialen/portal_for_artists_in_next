@@ -39,8 +39,13 @@
       border-radius: 0.6rem;
     }
 
-    > div, > section {
-      margin: auto;
+    > div,
+    > section {
+      margin: 0 auto;
+
+      &:not([class*='login'], [class*='create__account']) {
+        margin: 5rem auto 0;
+      }
     }
   }
 }

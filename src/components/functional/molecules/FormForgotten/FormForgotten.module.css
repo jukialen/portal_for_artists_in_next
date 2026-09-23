@@ -1,36 +1,37 @@
 .forgotten {
-  width: 30rem;
-  max-width: 94vw;
-  height: calc(100dvh - 4rem);
+  width: min(95%, 30rem);
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-self: center;
-  margin: -3rem auto 0;
+  margin: 0 auto;
 
   .borderContainer {
-    padding: 4rem 9% 3rem;
-    box-shadow: 0 0 1.4rem var(--third);
+    display: grid;
+    gap: 1rem;
+    padding: 3rem 2rem;
     border-radius: 2rem;
+    box-shadow: 0 0 1.4rem var(--third);
+
+    > * {
+      width: 100%;
+      border-radius: 0.5rem;
+    }
 
     .title {
       font-size: 1.5rem;
-    }
-
-    hr {
-      margin: 1rem auto;
+      line-height: 1.2;
     }
 
     .subTitle {
-      margin: 2rem auto;
       font-size: 1.3rem;
     }
 
     .inputForm, .inputForm__error {
-      width: 17rem;
-      max-width: 90%;
-      display: block;
-      margin: 1rem auto 1.5rem;
+      margin: .5rem auto 0;
+      padding: .5rem .75rem;
+      background-color: var(--background);
       color: var(--third);
     }
 
@@ -43,13 +44,16 @@
     }
 
     .submit__button {
-      width: fit-content;
       height: 2.5rem;
-      margin: 1rem auto;
-      border-radius: 0.5rem;
+      margin: 0;
       font-weight: bold;
-      background-color: rgba(0, 0, 0, 0);
       border: 0.1rem solid var(--secondary);
+      background-color: var(--background);
+
+      &:hover, &:active {
+        background-color: var(--secondary);
+        border-color: var(--secondary);
+      }
     }
   }
 

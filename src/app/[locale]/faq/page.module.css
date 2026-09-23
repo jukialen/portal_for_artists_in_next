@@ -1,11 +1,9 @@
 .site {
   width: 100%;
-  min-height: calc(100dvh - 3.3rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin-top: -3rem;
 
   .container {
     width: 100%;
@@ -13,9 +11,11 @@
     flex-direction: column;
 
     .h2 {
-      max-width: 97%;
-      margin: 3rem auto 0;
+      width: min(90dvw, 30rem);
+      margin: 6rem auto 0.15rem;
+      padding: 0 0.5rem;
       font-size: 1.9rem;
+      line-height: 1.2;
     }
 
     .accordionItem {
@@ -120,24 +120,6 @@
         line-height: 1.6;
       }
     }
-  }
-
-  @media (orientation: portrait) and (max-width: 767px) {
-    .accordionItem:last-child {
-      margin-bottom: 9rem;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .container .h2 {
-      margin-top: 6rem;
-    }
-  }
-
-  @media (min-height: 830px),
-    (orientation: landscape) and (min-height: 768px) and (max-height: 820px),
-    (width: 1114px) {
-    min-height: calc(100dvh - 5rem);
   }
 }
 

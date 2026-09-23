@@ -70,7 +70,7 @@ export const FormForgotten = ({ locale }: { locale: LangType }) => {
 
             <FormError nameError="email" />
 
-            <button type="submit" className={`button `} aria-label={t('Forgotten.buttonAria')}>
+            <button type="submit" className={`button ${styles.submit__button}`} aria-label={t('Forgotten.buttonAria')}>
               {t('AnotherForm.send')}
             </button>
 
