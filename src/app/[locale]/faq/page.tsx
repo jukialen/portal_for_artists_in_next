@@ -38,7 +38,7 @@ export default async function Faq({ params }: { params: Promise<{ locale: LangTy
   ];
 
   return (
-    <div className={styles.site}>
+    <div className={styles.faq}>
       <div className={styles.container}>
         <h2 className={styles.h2}>{t('Contact.toFAQHere')}</h2>
         <div className={styles.accordionRoot}>

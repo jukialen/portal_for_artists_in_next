@@ -43,7 +43,7 @@
     > section {
       margin: 0 auto;
 
-      &:not([class*='login'], [class*='create__account']) {
+      &:not([class*='login'], [class*='create__account'], [class*='faq']) {
         margin: 5rem auto 0;
       }
     }
