@@ -18,10 +18,7 @@ export const usePaddle = (
   const [paddle, setPaddle] = useState<Paddle>();
 
   useEffect(() => {
-    initializePaddle({
-      environment: process.env.NODE_ENV === 'production' ? 'production' : 'sandbox',
-      token: paddleClientId!,
-    })
+    initializePaddle({ environment: 'sandbox', token: paddleClientId!, })
       .then((paddleInstance: Paddle | undefined) => {
         if (paddleInstance) setPaddle(paddleInstance);
         else manualFaroLog('Paddle initialized successfully but returned undefined.');
