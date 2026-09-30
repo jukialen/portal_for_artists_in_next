@@ -20,7 +20,7 @@ export const paddleClientId = process.env.NEXT_PUBLIC_PADDLE_KEY;
 export const paddleServerId = process.env.PADDLE_KEY;
 export const paddleBuyLink = process.env.PADDLE_BUY_LINK;
 export const paddleCspLink = process.env.PADDLE_ENDPOINT_CSP;
-export const paddleStyles = process.env.PADDEL_STYLES;
+export const paddleStyles = process.env.PADDLE_STYLES;
 
 //GRAFANA CLOUD
 export const lokiHost = process.env.LOKI_HOST;

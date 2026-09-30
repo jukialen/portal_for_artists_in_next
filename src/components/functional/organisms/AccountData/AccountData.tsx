@@ -142,9 +142,6 @@ export const AccountData = ({
 
   const changeSubscription = async ({ newPlan, billCycle }: SubscriptionType, { resetForm }: ResetFormType) => {
     try {
-      console.log('newPlan', newPlan);
-      console.log('plan', userData?.plan!);
-
       if (!billCycle) {
         setValuesFieldsPlan(t('error'));
         return;
