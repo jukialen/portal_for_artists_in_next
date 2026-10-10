@@ -1,9 +1,10 @@
 .plansContainer {
   display: flex;
   flex-direction: column;
-  width: clamp(24rem, 94%, 77rem);
+  width: clamp(24rem, 100%, 77rem);
   align-items: center;
   gap: 1rem;
+  margin-left: 1.5rem;
 
   .cycleButtonContainer {
     width: inherit;

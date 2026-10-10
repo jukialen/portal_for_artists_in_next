@@ -39,11 +39,15 @@
       border-radius: 0.6rem;
     }
 
-    > div,
-    > section {
+    > :is(div, section):not([class^='A'], [class^='B'], [class^='C'], [class^='D'], [class^='E'], [class^='F'], [class^='G'],
+      [class^='H'], [class^='I'], [class^='J'], [class^='K'], [class^='L'], [class^='M'], [class^='N'],
+      [class^='O'], [class^='P'], [class^='Q'], [class^='R'], [class^='S'], [class^='T'], [class^='U'],
+      [class^='V'], [class^='W'], [class^='X'], [class^='Y'], [class^='Z']) {
       margin: 0 auto;
 
-      &:not([class*='login'], [class*='create__account'], [class*='faq']) {
+      &:not([class*='login'],
+        [class*='create__account'],
+        [class*='faq']) {
         margin: 5rem auto 0;
       }
     }
