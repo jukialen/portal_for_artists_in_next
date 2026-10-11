@@ -5,7 +5,7 @@
   margin-bottom: 1.5rem;
   justify-content: center;
   align-items: center;
-  padding-bottom: 1.5rem;
+  padding-bottom: 1rem;
   font-size: 1.4rem;
 
   details,
@@ -14,10 +14,6 @@
   }
 
   .title {
-    align-items: center;
-    justify-items: center;
-    margin: 0.4rem auto;
-
     &[open] .categoryArrow {
       transform: rotate(-180deg);
     }

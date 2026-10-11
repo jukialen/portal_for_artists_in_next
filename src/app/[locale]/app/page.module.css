@@ -3,3 +3,11 @@
   text-align: center;
   margin: 3rem auto 2rem;
 }
+
+.top__among__users:first-child {
+  margin-top: 5rem;
+
+  @media (min-width: 768px) {
+    margin-top: 8rem;
+  }
+}

@@ -1,10 +1,9 @@
 .mainData {
   max-width: 31rem;
-  margin: 2rem auto 1.5rem;
+  margin: 5rem auto 1.5rem;
 }
 
 .logoPseu {
-  width: min(90dvw, 36rem);
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
@@ -89,10 +88,10 @@
 }
 
 .tabsMenu {
-  justify-self: center;
+  display: none;
   align-items: center;
   margin: 0 auto;
-  display: none;
+
 
   .topTabList {
     display: flex;

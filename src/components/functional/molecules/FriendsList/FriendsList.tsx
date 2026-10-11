@@ -43,7 +43,7 @@ export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListCompo
       if (data?.length === 0) return friendsList;
 
       for (const _f of data!) {
-        const {} = _f;
+        const { } = _f;
         nextArray.push({
           favorite: _f.favorite!,
           pseudonym: _f.pseudonym!,
@@ -62,8 +62,7 @@ export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListCompo
   };
 
   return (
-    <div className={styles.container}>
-      <h2 className={styles.title}>{tFriends.friends}</h2>
+    <>
       <section className={styles.container__section}>
         {!!friendsList && friendsList.length > 0 ? (
           friendsList.map(({ pseudonym, fileUrl }, index) => (
@@ -74,6 +73,6 @@ export const FriendsList = ({ id, tFriends, firstFriendsList }: FriendsListCompo
         )}
       </section>
       {!!lastVisible && friendsList.length === maxItems * i && <MoreButton nextElementsAction={nextFriends} />}
-    </div>
-  );
+    </>
+  )
 };
