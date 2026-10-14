@@ -154,7 +154,6 @@
     -webkit-backdrop-filter: var(--backdrop-filter);
     backdrop-filter: var(--backdrop-filter);
     transition: opacity 0.5s ease;
-    /* Płynne pojawianie się przycisku */
     cursor: pointer;
     z-index: 1;
 
@@ -303,26 +302,22 @@
     display: grid;
     grid-template-columns: auto 1fr;
 
-    /*.user_container {*/
-      /* width: calc(100% - 20rem); */
+    .aside {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      padding-top: 3.5rem;
+      font-size: 1.5rem;
+      color: var(--text);
+    }
 
-      .aside {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        position: relative;
-        padding-top: 3.5rem;
-        font-size: 1.5rem;
-        color: var(--text);
-      }
+    .aside__right {
+      display: none;
+    }
 
-      .aside__right {
-        display: none;
-      }
-
-      .drawer {
-        display: none;
-      }
-    /*}*/
+    .drawer {
+      display: none;
+    }
   }
 }
