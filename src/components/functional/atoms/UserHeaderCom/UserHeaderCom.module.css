@@ -1,14 +1,11 @@
 .mobileAlaTabbar,
 .otherAlaTabbar {
-  width: 100dvw;
-  height: fit-content;
+  width: inherit;
   display: flex;
   justify-content: space-between;
-  margin: 0 auto;
 
   .leftPart {
     display: flex;
-    padding: 0 0.3rem;
     border-radius: 2rem;
     border-color: transparent;
     background-color: var(--primary__opacity);
@@ -18,13 +15,10 @@
   }
 
   .menu_buttons {
-    width: 4.1rem;
-    height: 3rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: auto;
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
     border-radius: 2rem;
@@ -35,6 +29,7 @@
     }
 
     &:active {
+
       p,
       svg {
         color: currentColor;
@@ -63,57 +58,73 @@
   #searchInput {
     width: 3.5rem;
     height: 3.5rem;
-    margin: auto 0.25rem;
-    border-radius: 50%;
+    anchor-name: --search-action;
     background-color: var(--primary__opacity);
     box-shadow: var(--box-shadow);
     -webkit-backdrop-filter: var(--backdrop-filter);
     backdrop-filter: var(--backdrop-filter);
+
+    p {
+      display: none;
+    }
   }
 }
 
 .otherAlaTabbar {
   display: none;
-  max-width: 23rem;
   border-radius: 2rem;
   background-color: var(--primary__opacity);
   box-shadow: var(--box-shadow);
   -webkit-backdrop-filter: var(--backdrop-filter);
   backdrop-filter: var(--backdrop-filter);
-
-  .menu_buttons {
-    margin: auto;
-  }
 }
 
 .search {
-  width: 100%;
-  max-width: 31rem;
-  display: grid;
+  width: min(100dvw, 36rem);
   grid-template-columns: 1fr 2.5rem;
-  position: absolute;
-  bottom: 5rem;
-  left: 0;
-  right: 0;
-  margin: auto;
+  align-items: center;
+  position: fixed;
+  position-anchor: --search-action;
+  position-area: top span-left;
+  position-try: top span-left;
+  position-try-fallbacks: flip-block;
+  margin: 0;
   padding: 0.45rem;
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   border: 0.1rem solid var(--secondary);
   background-color: var(--secondary__opacity);
-  transform: translateY(9rem);
-  transition: transform 0.9s 0.1s ease-in-out;
   box-shadow: var(--box-shadow);
-  -webkit-backdrop-filter: blur(3.5px);
-  backdrop-filter: blur(3.5px);
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  backdrop-filter: var(--backdrop-filter);
+  transform-origin: right bottom;
+  opacity: 0;
+  transform: scale(0.92) translateY(8px);
+  transition:
+    opacity 0.26s cubic-bezier(0.32, 0.72, 0, 1),
+    transform 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+    display 0.32s allow-discrete,
+    overlay 0.32s allow-discrete;
+
+  &:popover-open {
+    display: grid;
+    opacity: 1;
+    transform: scale(1) translateY(0);
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.92) translateY(8px);
+    }
+  }
 
   input::placeholder,
   input {
     height: 2.5rem;
-    padding: 0 0.5rem;
-    border-radius: 0.25rem;
+    padding: 0 0.75rem;
+    border-radius: 0.5rem;
     font-size: 1rem;
     background: transparent;
-    border: var(--text);
+    border: none;
+    outline: none;
     color: var(--text);
   }
 
@@ -122,10 +133,13 @@
     height: 2.5rem;
     display: flex;
     align-items: center;
+    justify-content: center;
     font-size: 1.25rem;
     margin-right: 0.3rem;
     border-radius: 0.75rem;
     border-color: transparent;
+    background: transparent;
+    color: var(--text);
     cursor: pointer;
   }
 }
@@ -134,18 +148,19 @@
   display: none;
 }
 
+@position-try --z-gory-na-dol {
+  position-area: bottom span-left;
+}
+
 .searching {
-  width: 100%;
-  max-width: 31rem;
-  min-height: 10rem;
-  max-height: calc(100dvh - 8.8rem);
+  width: min(100%, 36rem);
+  height: calc(100dvh - 8rem);
   position: inherit;
-  top: 0;
-  left: 0;
-  right: 0;
-  justify-content: center;
-  align-items: center;
-  margin: auto;
+  position-anchor: --search-action;
+  position-area: top span-left;
+  position-try: top span-left;
+  position-try-fallbacks: flip-block;
+  position-try-fallbacks: --z-gory-na-dol;
   padding: 0.45rem;
   border: 0.1rem solid var(--secondary);
   border-radius: 0.5rem;
@@ -207,10 +222,7 @@
   }
 }
 
-div.search__active {
-  transform: translateY(0);
-  transition: transform 0.9s 0.1s ease-in-out;
-}
+
 
 .menu_profile {
   transform: translate(17rem);
@@ -261,11 +273,6 @@ div.search__active {
   }
 }
 
-ul.menu_profile__active {
-  transform: translateX(0);
-  transition: transform 1.2s 0.1s ease-in-out;
-}
-
 @media (min-width: 500px) {
   .mobileAlaTabbar {
     display: none;
@@ -277,21 +284,6 @@ ul.menu_profile__active {
 
   .menu_buttons {
     gap: 0 0.3rem;
-
-    span,
-    svg {
-      height: 2.2rem;
-    }
-  }
-
-  .search {
-    bottom: unset;
-    top: 8.2rem;
-    transform: translateY(0);
-  }
-
-  div.search__active {
-    transform: translateY(-11rem);
   }
 
   .shortcut {
@@ -307,18 +299,27 @@ ul.menu_profile__active {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 700px) {
   .otherAlaTabbar {
-    max-width: max-content;
+    #searchInput {
+      width: unset;
+
+      p {
+        display: block;
+        border-radius: .5rem;
+      }
+    }
 
     .menu_buttons {
       width: unset;
       flex-direction: row;
       padding: 0.5rem;
       font-size: 1rem;
+
       &:has(div) {
         font-size: 1rem;
       }
+
       svg {
         width: 1.6rem;
         height: auto;
@@ -334,20 +335,6 @@ ul.menu_profile__active {
     li {
       height: 2.5rem;
     }
-  }
-
-  .search {
-    max-width: 38rem;
-    top: -5rem;
-  }
-
-  div.search__active {
-    transform: translateY(9rem);
-  }
-
-  .searching {
-    top: 7.6rem;
-    max-width: 38rem;
   }
 }
 

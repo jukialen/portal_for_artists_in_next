@@ -1,16 +1,19 @@
 .header {
-  width: 100%;
+  width: min(100dvw, 36rem);
+  height: fit-content;
   position: fixed;
-  bottom: 0;
+  left: 0;
+  right: 0;
+  bottom: 1rem;
   display: flex;
+  justify-content: center;
+  margin: 0 auto;
   z-index: 9999;
-  padding: 1rem .5rem;
 }
 
 @media (min-width: 768px) {
   .header {
-    height: 4.75rem;
-    top: 0;
+    top: 1rem;
     bottom: unset;
   }
 }

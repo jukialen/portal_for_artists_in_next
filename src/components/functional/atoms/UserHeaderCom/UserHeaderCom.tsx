@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { KeyboardEvent as KeyEvent } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -53,17 +53,16 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   type SearchingValues = {
     categoryName: string;
     data:
-      | {
-          name: string;
-          description: string;
-          fileUrl: string;
-          tags?: Tags;
-        }
-      | typeof translated.notFound;
+    | {
+      name: string;
+      description: string;
+      fileUrl: string;
+      tags?: Tags;
+    }
+    | typeof translated.notFound;
   };
 
   const [profileMenu, showProfileMenu] = useState(false);
-  const [search, setSearch] = useState(false);
   const [searchValues, setSearchValues] = useState('');
   const { push, refresh } = useRouter();
   const [results, setResults] = useState<SearchingValues[]>([]);
@@ -86,16 +85,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   ];
 
   const clearInput = () => setSearchValues('');
-
-  const toggleSearch = () => {
-    if (search) {
-      setSearch(false);
-      !!searchValues && clearInput();
-    } else {
-      setSearch(true);
-      !!searchInputRef.current && searchInputRef.current.focus();
-    }
-  };
 
   const toggleProfileMenu = () => showProfileMenu(!profileMenu);
 
@@ -205,18 +194,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const handleShortcut = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        searchInputRef.current?.focus();
-      }
-    };
-
-    window.addEventListener('keydown', handleShortcut);
-    return () => window.removeEventListener('keydown', handleShortcut);
-  }, []);
-
   const handleKeyDown = async (e: KeyEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -227,7 +204,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   const closeInputAndDIalog = (e: Dialog.OpenChangeDetails) => {
     setOpen(e.open);
     if (!e.open) {
-      setSearch(true);
       clearInput();
       setResults([]);
     }
@@ -267,7 +243,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
           </svg>
           <p>{headers.friends}</p>
         </button>
-        <button className={styles.menu_buttons} onClick={toggleProfileMenu}>
+        <button className={styles.menu_buttons} popoverTarget="userButton" popoverTargetAction="toggle">
           <Avatar
             fallbackName={userData?.pseudonym!}
             src={`${supabaseStorageProfileUrl}/${userData?.profilePhoto!}`}
@@ -279,28 +255,35 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     );
   };
 
+  const seaarchButton = <button
+    className={styles.menu_buttons}
+    id={styles.searchInput}
+    popoverTarget='user-header-search'
+    popoverTargetAction='toggle'
+    aria-label="this button shows searching">
+    <IoSearch />
+    <p>{headers.search}</p>
+  </button>
+
   return (
     <>
       <section className={styles.mobileAlaTabbar}>
         <div className={styles.leftPart}>{leftPart()}</div>
-        <button
-          className={styles.menu_buttons}
-          id={styles.searchInput}
-          onClick={toggleSearch}
-          aria-label="this button shows searching">
-          <IoSearch />
-        </button>
+        {seaarchButton}
       </section>
 
       <section className={styles.otherAlaTabbar}>
         {leftPart()}
-        <button className={styles.menu_buttons} onClick={toggleSearch} aria-label="this button shows searching">
-          <IoSearch />
-          <p>{headers.search}</p>
-        </button>
+        {seaarchButton}
       </section>
 
-      <div className={`${styles.search} ${search ? styles.search__active : ''}`}>
+      <div
+        className={styles.search}
+        id='user-header-search'
+        popover='auto'
+        onToggle={(e: any) => {
+          if (e.newState === 'open') searchInputRef.current?.focus();
+        }}>
         <input
           ref={searchInputRef}
           type="search"
@@ -317,7 +300,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
         </button>
       </div>
 
-      <Dialog.Root id="user-header-search" lazyMount unmountOnExit open={open} onOpenChange={closeInputAndDIalog}>
+      <Dialog.Root id="user-header-search-dialog" lazyMount unmountOnExit open={open} onOpenChange={closeInputAndDIalog}>
         <Dialog.Content className={styles.searching}>
           <div className={styles.closeButton}>
             <Dialog.CloseTrigger>
