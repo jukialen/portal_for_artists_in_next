@@ -28,14 +28,11 @@
       font-size: 0.6rem;
     }
 
-    &:active {
-
-      p,
-      svg {
-        color: currentColor;
-        stroke: currentColor;
-        fill: currentColor;
-      }
+    &:active p,
+    &:active svg {
+      color: currentColor;
+      stroke: currentColor;
+      fill: currentColor;
     }
 
     svg,
@@ -53,6 +50,10 @@
         color: var(--text);
       }
     }
+  }
+
+  #accountButton {
+    anchor-name: --account;
   }
 
   #searchInput {
@@ -84,6 +85,7 @@
   grid-template-columns: 1fr 2.5rem;
   align-items: center;
   position: fixed;
+  anchor-name: --search-result;
   position-anchor: --search-action;
   position-area: top span-left;
   position-try: top span-left;
@@ -148,19 +150,13 @@
   display: none;
 }
 
-@position-try --z-gory-na-dol {
-  position-area: bottom span-left;
-}
-
 .searching {
   width: min(100%, 36rem);
-  height: calc(100dvh - 8rem);
-  position: inherit;
-  position-anchor: --search-action;
-  position-area: top span-left;
-  position-try: top span-left;
-  position-try-fallbacks: flip-block;
-  position-try-fallbacks: --z-gory-na-dol;
+  height: calc(100dvh - 8.1rem);
+  position: fixed;
+  position-anchor: --search-result;
+  position-area: block-start;
+  position-try: flip-block;
   padding: 0.45rem;
   border: 0.1rem solid var(--secondary);
   border-radius: 0.5rem;
@@ -173,29 +169,30 @@
   -webkit-backdrop-filter: var(--backdrop-filter);
   backdrop-filter: var(--backdrop-filter);
 
+  &:popover-open {
+    display: block;
+  }
+
   .closeButton {
-    width: inherit;
+    width: 3rem;
+    height: 3rem;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    border-radius: 0.5rem;
+    border-color: transparent;
+    z-index: 1;
 
-    button {
-      width: 3rem;
-      height: 3rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 0.5rem;
-      border-color: transparent;
-
-      svg {
-        width: 1.5rem;
-        height: 1.5rem;
-      }
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
     }
   }
 
   .searchValues {
     width: inherit;
+    margin-top: -2rem;
     padding: 1rem 0.5rem;
     font-size: 1.5rem;
   }
@@ -222,24 +219,39 @@
   }
 }
 
-
-
 .menu_profile {
-  transform: translate(17rem);
-  transition: transform 1s 0.1s ease-in-out;
-  height: max-content;
-  position: absolute;
-  right: 0;
-  bottom: 5rem;
-  display: flex;
+  position: fixed;
+  position-anchor: --account;
+  position-area: top span-right;
+  position-try: top span-right;
+  position-try-fallbacks: flip-block;
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.2rem 0 0.4rem;
-  border-radius: 0.5rem 0 0 0.5rem;
+  border-radius: 0.5rem;
   background-color: var(--primary__opacity);
   box-shadow: var(--box-shadow);
-  -webkit-backdrop-filter: blur(3.5px);
-  backdrop-filter: blur(3.5px);
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  backdrop-filter: var(--backdrop-filter);
+  transform-origin: right bottom;
+  opacity: 0;
+  transform: scale(0.92) translateY(8px);
+  transition:
+    opacity 0.26s cubic-bezier(0.32, 0.72, 0, 1),
+    transform 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+    display 0.32s allow-discrete,
+    overlay 0.32s allow-discrete;
+
+  &:popover-open {
+    display: grid;
+    opacity: 1;
+    transform: scale(1) translateY(0);
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.92) translateY(8px);
+    }
+  }
 
   li {
     width: 8rem;
@@ -326,25 +338,12 @@
       }
     }
   }
-
-  .menu_profile {
-    bottom: unset;
-    top: 4.5rem;
-    padding: 0.3rem 0;
-
-    li {
-      height: 2.5rem;
-    }
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .menu_profile__active {
-    transition: none;
-  }
 
-  .search,
-  .search__active {
+  .menu_profile,
+  .search {
     transition: none;
   }
 }

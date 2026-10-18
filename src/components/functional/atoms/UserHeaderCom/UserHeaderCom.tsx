@@ -1,11 +1,9 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import type { KeyboardEvent as KeyEvent } from 'react';
-
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Dialog } from '@ark-ui/react/dialog';
 
 import { createClient } from 'utils/supabase/clientCSR';
 
@@ -62,11 +60,9 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     | typeof translated.notFound;
   };
 
-  const [profileMenu, showProfileMenu] = useState(false);
   const [searchValues, setSearchValues] = useState('');
-  const { push, refresh } = useRouter();
+  const { refresh } = useRouter();
   const [results, setResults] = useState<SearchingValues[]>([]);
-  const [open, setOpen] = useState(false);
 
   const supabase = createClient();
 
@@ -84,14 +80,9 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     translated.videos,
   ];
 
-  const clearInput = () => setSearchValues('');
-
-  const toggleProfileMenu = () => showProfileMenu(!profileMenu);
-
   const sign__out = async () => {
     try {
       await supabase.auth.signOut();
-      toggleProfileMenu();
       refresh();
     } catch (e) {
       console.error(e);
@@ -182,17 +173,13 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
 
       searchArray.length === 0 && noSearchResults(searchArray);
       setResults(searchArray);
-      setOpen(true);
     } catch (e) {
       console.error(e);
       noSearchResults(searchArray);
-      setOpen(true);
     }
   };
 
   const updateVal = (e: EventType) => setSearchValues(e.currentTarget.value);
-
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyDown = async (e: KeyEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -201,32 +188,18 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     }
   };
 
-  const closeInputAndDIalog = (e: Dialog.OpenChangeDetails) => {
-    setOpen(e.open);
-    if (!e.open) {
-      clearInput();
-      setResults([]);
-    }
-  };
-
   const leftPart = () => {
     return (
       <>
-        <button
-          onClick={() => push('/app')}
-          className={styles.menu_buttons}
-          aria-label="this button redirect to groups's section">
+        <Link href='/app' className={styles.menu_buttons} aria-label="this button redirect to groups's section">
           <MdOutlineHome />
           <p>{headers.home}</p>
-        </button>
-        <button onClick={() => push('/groups/list')} className={styles.menu_buttons} aria-label="button for groups">
+        </Link>
+        <Link href='/groups/list' className={styles.menu_buttons} aria-label="button for groups">
           <MdOutlineGroups />
           <p>{headers.groups}</p>
-        </button>
-        <button
-          onClick={() => push('/friends')}
-          className={styles.menu_buttons}
-          aria-label="this button redirect to friends's section">
+        </Link>
+        <Link href='/friends' className={styles.menu_buttons} aria-label="this button redirect to friends's section">
           <svg
             width="22"
             height="22"
@@ -242,8 +215,8 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </svg>
           <p>{headers.friends}</p>
-        </button>
-        <button className={styles.menu_buttons} popoverTarget="userButton" popoverTargetAction="toggle">
+        </Link>
+        <button className={styles.menu_buttons} id={styles.accountButton} popoverTarget="userButton" popoverTargetAction="toggle">
           <Avatar
             fallbackName={userData?.pseudonym!}
             src={`${supabaseStorageProfileUrl}/${userData?.profilePhoto!}`}
@@ -255,7 +228,7 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     );
   };
 
-  const seaarchButton = <button
+  const searchButton = <button
     className={styles.menu_buttons}
     id={styles.searchInput}
     popoverTarget='user-header-search'
@@ -265,90 +238,85 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     <p>{headers.search}</p>
   </button>
 
-  return (
-    <>
-      <section className={styles.mobileAlaTabbar}>
-        <div className={styles.leftPart}>{leftPart()}</div>
-        {seaarchButton}
-      </section>
+  return <>
+    <section className={styles.mobileAlaTabbar}>
+      <div className={styles.leftPart}>{leftPart()}</div>
+      {searchButton}
+    </section>
 
-      <section className={styles.otherAlaTabbar}>
-        {leftPart()}
-        {seaarchButton}
-      </section>
-
-      <div
-        className={styles.search}
-        id='user-header-search'
-        popover='auto'
-        onToggle={(e: any) => {
-          if (e.newState === 'open') searchInputRef.current?.focus();
-        }}>
-        <input
-          ref={searchInputRef}
-          type="search"
-          id="search"
-          name="search"
-          placeholder={headers.search}
-          value={searchValues}
-          onChange={updateVal}
-          onKeyDown={handleKeyDown}
-        />
-        <span className={styles.shortcut}>Ctrl/Cmd+k</span>
-        <button className={styles.rightButton} aria-label="search phrases" onClick={searching}>
-          <IoSearch />
-        </button>
+    <section className={styles.otherAlaTabbar}>
+      {leftPart()}
+      {searchButton}
+    </section>
+    <div className={styles.search} id='user-header-search' popover='auto'>
+      <input
+        type="search"
+        id="search"
+        name="search"
+        placeholder={headers.search}
+        value={searchValues}
+        onChange={updateVal}
+        onKeyDown={handleKeyDown}
+        autoFocus
+      />
+      <span className={styles.shortcut}>Ctrl/Cmd+k</span>
+      <button className={styles.rightButton} aria-label="search phrases" onClick={searching} popoverTarget="user-header-search-results"
+        popoverTargetAction="show">
+        <IoSearch />
+      </button>
+    </div>
+    <div className={styles.searching} id='user-header-search-results' popover='auto'>
+      <button
+        className={styles.closeButton}
+        popoverTarget='user-header-search'
+        popoverTargetAction='hide'
+        aria-label="close search">
+        <IoCloseOutline />
+      </button>
+      <div className={styles.searchValues}>
+        {translated.searchResultTitle}
+        {searchValues}
       </div>
+      <div className={styles.searchResults}>
+        {results.map((option, key) => (
+          <section key={key} className={styles.dataSearching}>
+            <h4 className={styles.categoryName}>{option.categoryName}</h4>
+            <div className={styles.data}>
+              {typeof option.data === 'string' ? (
+                translated.notFound
+              ) : (
+                <>
+                  <Avatar src={option.data.fileUrl} fallbackName={option.data.name} alt={option.data.description} />
+                  <p>{option.data.name}</p>
+                  <p>{option.data.description}</p>
+                  {option.data.tags && <p>{option.data.tags}</p>}
+                </>
+              )}
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
 
-      <Dialog.Root id="user-header-search-dialog" lazyMount unmountOnExit open={open} onOpenChange={closeInputAndDIalog}>
-        <Dialog.Content className={styles.searching}>
-          <div className={styles.closeButton}>
-            <Dialog.CloseTrigger>
-              <IoCloseOutline />
-            </Dialog.CloseTrigger>
-          </div>
-          <Dialog.Title className={styles.searchValues}>
-            {translated.searchResultTitle}
-            {searchValues}
-          </Dialog.Title>
-          <Dialog.Description className={styles.searchResults}>
-            {results.map((option, key) => (
-              <section key={key} className={styles.dataSearching}>
-                <h4 className={styles.categoryName}>{option.categoryName}</h4>
-                <div className={styles.data}>
-                  {typeof option.data === 'string' ? (
-                    translated.notFound
-                  ) : (
-                    <>
-                      <Avatar src={option.data.fileUrl} fallbackName={option.data.name} alt={option.data.description} />
-                      <p>{option.data.name}</p>
-                      <p>{option.data.description}</p>
-                      {option.data.tags && <p>{option.data.tags}</p>}
-                    </>
-                  )}
-                </div>
-              </section>
-            ))}
-          </Dialog.Description>
-        </Dialog.Content>
-      </Dialog.Root>
-      <ul className={`${styles.menu_profile} ${profileMenu ? styles.menu_profile__active : ''}`}>
-        <li>
-          <Link href={`/account/${userData?.pseudonym}`} onClick={toggleProfileMenu}>
-            {headers.profile}
-          </Link>
-        </li>
-        <li>
-          <Link href={'/settings'} onClick={toggleProfileMenu}>
-            {headers.title}
-          </Link>
-        </li>
-        <li>
-          <button onClick={sign__out} type="submit">
-            {headers.signOut}
-          </button>
-        </li>
-      </ul>
-    </>
-  );
-};
+    <ul className={styles.menu_profile} id='userButton' popover='auto'>
+      <li>
+        <Link href={`/account/${userData?.pseudonym}`} popoverTarget="userButton"
+          popoverTargetAction='hide'>
+          {headers.profile}
+        </Link>
+      </li>
+      <li>
+        <Link href={'/settings'} popoverTarget="userButton"
+          popoverTargetAction='hide'>
+          {headers.title}
+        </Link>
+      </li>
+      <li>
+        <button onClick={sign__out} type="submit" popoverTarget="userButton"
+          popoverTargetAction='hide'>
+          {headers.signOut}
+        </button>
+      </li>
+    </ul>
+  </>
+}
