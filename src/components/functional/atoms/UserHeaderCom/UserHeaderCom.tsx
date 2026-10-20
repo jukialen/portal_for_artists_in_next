@@ -2,32 +2,21 @@
 
 import { useState } from 'react';
 import type { KeyboardEvent as KeyEvent } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 import { createClient } from 'utils/supabase/clientCSR';
-
-import { supabaseStorageProfileUrl } from 'constants/links';
 import { EventType, Tags, UserType } from 'types/global.types';
 
 import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
 
 import styles from './UserHeaderCom.module.css';
-import { MdOutlineGroups, MdOutlineHome } from 'react-icons/md';
 import { IoCloseOutline, IoSearch } from 'react-icons/io5';
 
 type HeadersType = {
   headers: {
-    home: string;
     groups: string;
     friends: string;
     search: string;
     account: string;
-    profile: string;
-    title: string;
-    signOut: string;
-    signIn: string;
-    signup: string;
   };
   userData: UserType;
   translated: {
@@ -61,7 +50,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
   };
 
   const [searchValues, setSearchValues] = useState('');
-  const { refresh } = useRouter();
   const [results, setResults] = useState<SearchingValues[]>([]);
 
   const supabase = createClient();
@@ -79,15 +67,6 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     translated.animations,
     translated.videos,
   ];
-
-  const sign__out = async () => {
-    try {
-      await supabase.auth.signOut();
-      refresh();
-    } catch (e) {
-      console.error(e);
-    }
-  };
 
   const addData = (
     title: number,
@@ -188,135 +167,63 @@ export const UserHeaderCom = ({ headers, userData, translated }: HeadersType) =>
     }
   };
 
-  const leftPart = () => {
-    return (
-      <>
-        <Link href='/app' className={styles.menu_buttons} aria-label="this button redirect to groups's section">
-          <MdOutlineHome />
-          <p>{headers.home}</p>
-        </Link>
-        <Link href='/groups/list' className={styles.menu_buttons} aria-label="button for groups">
-          <MdOutlineGroups />
-          <p>{headers.groups}</p>
-        </Link>
-        <Link href='/friends' className={styles.menu_buttons} aria-label="this button redirect to friends's section">
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#000000"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-          </svg>
-          <p>{headers.friends}</p>
-        </Link>
-        <button className={styles.menu_buttons} id={styles.accountButton} popoverTarget="userButton" popoverTargetAction="toggle">
-          <Avatar
-            fallbackName={userData?.pseudonym!}
-            src={`${supabaseStorageProfileUrl}/${userData?.profilePhoto!}`}
-            alt=""
-          />
-          <p>{headers.account}</p>
+  return (
+    <>
+      <div className={styles.search} id='user-header-search' popover='auto'>
+        <input
+          type="search"
+          id="search"
+          name="search"
+          placeholder={headers.search}
+          value={searchValues}
+          onChange={updateVal}
+          onKeyDown={handleKeyDown}
+          autoFocus
+        />
+        <span className={styles.shortcut}>Ctrl/Cmd+k</span>
+        <button
+          className={styles.rightButton}
+          aria-label="search phrases"
+          onClick={searching}
+          popoverTarget="user-header-search-results"
+          popoverTargetAction="show">
+          <IoSearch />
         </button>
-      </>
-    );
-  };
-
-  const searchButton = <button
-    className={styles.menu_buttons}
-    id={styles.searchInput}
-    popoverTarget='user-header-search'
-    popoverTargetAction='toggle'
-    aria-label="this button shows searching">
-    <IoSearch />
-    <p>{headers.search}</p>
-  </button>
-
-  return <>
-    <section className={styles.mobileAlaTabbar}>
-      <div className={styles.leftPart}>{leftPart()}</div>
-      {searchButton}
-    </section>
-
-    <section className={styles.otherAlaTabbar}>
-      {leftPart()}
-      {searchButton}
-    </section>
-    <div className={styles.search} id='user-header-search' popover='auto'>
-      <input
-        type="search"
-        id="search"
-        name="search"
-        placeholder={headers.search}
-        value={searchValues}
-        onChange={updateVal}
-        onKeyDown={handleKeyDown}
-        autoFocus
-      />
-      <span className={styles.shortcut}>Ctrl/Cmd+k</span>
-      <button className={styles.rightButton} aria-label="search phrases" onClick={searching} popoverTarget="user-header-search-results"
-        popoverTargetAction="show">
-        <IoSearch />
-      </button>
-    </div>
-    <div className={styles.searching} id='user-header-search-results' popover='auto'>
-      <button
-        className={styles.closeButton}
-        popoverTarget='user-header-search'
-        popoverTargetAction='hide'
-        aria-label="close search">
-        <IoCloseOutline />
-      </button>
-      <div className={styles.searchValues}>
-        {translated.searchResultTitle}
-        {searchValues}
       </div>
-      <div className={styles.searchResults}>
-        {results.map((option, key) => (
-          <section key={key} className={styles.dataSearching}>
-            <h4 className={styles.categoryName}>{option.categoryName}</h4>
-            <div className={styles.data}>
-              {typeof option.data === 'string' ? (
-                translated.notFound
-              ) : (
-                <>
-                  <Avatar src={option.data.fileUrl} fallbackName={option.data.name} alt={option.data.description} />
-                  <p>{option.data.name}</p>
-                  <p>{option.data.description}</p>
-                  {option.data.tags && <p>{option.data.tags}</p>}
-                </>
-              )}
-            </div>
-          </section>
-        ))}
-      </div>
-    </div>
 
-    <ul className={styles.menu_profile} id='userButton' popover='auto'>
-      <li>
-        <Link href={`/account/${userData?.pseudonym}`} popoverTarget="userButton"
-          popoverTargetAction='hide'>
-          {headers.profile}
-        </Link>
-      </li>
-      <li>
-        <Link href={'/settings'} popoverTarget="userButton"
-          popoverTargetAction='hide'>
-          {headers.title}
-        </Link>
-      </li>
-      <li>
-        <button onClick={sign__out} type="submit" popoverTarget="userButton"
-          popoverTargetAction='hide'>
-          {headers.signOut}
+      <div className={styles.searching} id='user-header-search-results' popover='auto'>
+        <button
+          className={styles.closeButton}
+          popoverTarget='user-header-search'
+          popoverTargetAction='hide'
+          aria-label="close search">
+          <IoCloseOutline />
         </button>
-      </li>
-    </ul>
-  </>
-}
+        <div className={styles.searchValues}>
+          {translated.searchResultTitle}
+          {searchValues}
+        </div>
+        <div className={styles.searchResults}>
+          {results.map((option, key) => (
+            <section key={key} className={styles.dataSearching}>
+              <h4 className={styles.categoryName}>{option.categoryName}</h4>
+              <div className={styles.data}>
+                {typeof option.data === 'string' ? (
+                  translated.notFound
+                ) : (
+                  <>
+                    <Avatar src={option.data.fileUrl} fallbackName={option.data.name} alt={option.data.description} />
+                    <p>{option.data.name}</p>
+                    <p>{option.data.description}</p>
+                    {option.data.tags && <p>{option.data.tags}</p>}
+                  </>
+                )}
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+

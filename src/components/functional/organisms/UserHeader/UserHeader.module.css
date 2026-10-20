@@ -9,11 +9,214 @@
   justify-content: center;
   margin: 0 auto;
   z-index: 9999;
+
+  .tabbar {
+    width: inherit;
+    display: flex;
+    justify-content: space-between;
+
+    .leftPart {
+      display: flex;
+      border-radius: 2rem;
+      border-color: transparent;
+      background-color: var(--primary__opacity);
+      box-shadow: var(--box-shadow);
+      -webkit-backdrop-filter: var(--backdrop-filter);
+      backdrop-filter: var(--backdrop-filter);
+    }
+
+    .menu_buttons {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.75rem;
+      border-radius: 2rem;
+      border-color: transparent;
+      color: inherit;
+      text-decoration: none;
+
+      &:has(div) {
+        font-size: 0.6rem;
+      }
+
+      &:active p,
+      &:active svg {
+        color: currentColor;
+        stroke: currentColor;
+        fill: currentColor;
+      }
+
+      svg,
+      span#avatar {
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: inherit;
+
+        path,
+        circle {
+          stroke: var(--text);
+          color: var(--text);
+        }
+      }
+    }
+
+    #accountButton {
+      anchor-name: --account;
+      background: transparent;
+      border: transparent;
+      cursor: pointer;
+    }
+
+    #searchInput {
+      width: 3.5rem;
+      height: 3.5rem;
+      anchor-name: --search-action;
+      background-color: var(--primary__opacity);
+      box-shadow: var(--box-shadow);
+      -webkit-backdrop-filter: var(--backdrop-filter);
+      backdrop-filter: var(--backdrop-filter);
+      cursor: pointer;
+
+      p {
+        display: none;
+      }
+    }
+  }
+}
+
+.menu_profile {
+  position: fixed;
+  position-anchor: --account;
+  position-area: top;
+  position-try: top;
+  position-try-fallbacks: flip-block;
+  gap: 0.5rem;
+  padding: 0.2rem 0 0.4rem;
+  border-radius: 0.5rem;
+  background-color: var(--primary__opacity);
+  box-shadow: var(--box-shadow);
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  backdrop-filter: var(--backdrop-filter);
+  transform-origin: right bottom;
+  opacity: 0;
+  transform: scale(0.92) translateY(8px);
+  transition:
+    opacity 0.26s cubic-bezier(0.32, 0.72, 0, 1),
+    transform 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+    display 0.32s allow-discrete,
+    overlay 0.32s allow-discrete;
+
+  &:popover-open {
+    display: grid;
+    opacity: 1;
+    transform: scale(1) translateY(0);
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.92) translateY(8px);
+    }
+  }
+
+  li {
+    width: 8rem;
+    height: 3rem;
+
+    form {
+      width: 100%;
+      height: 100%;
+    }
+
+    a,
+    button {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      color: inherit;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--hover);
+        border-radius: 0.4rem;
+      }
+    }
+
+    a:hover {
+      color: black;
+    }
+
+    button {
+      background-color: transparent;
+      border: transparent;
+      font-weight: normal;
+    }
+  }
+}
+
+@media (min-width: 600px) {
+  .header .tabbar {
+    width: max-content;
+    justify-content: center;
+    border-radius: 2rem;
+    background-color: var(--primary__opacity);
+    box-shadow: var(--box-shadow);
+    -webkit-backdrop-filter: var(--backdrop-filter);
+    backdrop-filter: var(--backdrop-filter);
+
+    .leftPart {
+      gap: .3rem;
+      background: none;
+      border-radius: 2rem 0 0 2rem;
+      box-shadow: none;
+      backdrop-filter: unset;
+    }
+
+    .menu_buttons,
+    #searchInput {
+      flex-direction: row;
+      gap: 0 0.3rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+      background-color: unset;
+      box-shadow: none;
+      backdrop-filter: unset;
+
+      &:has(div) {
+        font-size: 1rem;
+      }
+    }
+
+    .menu_buttons:first-child {
+      padding-left: 1rem;
+    }
+
+    #searchInput {
+      width: auto;
+      padding-right: 1rem;
+
+      p {
+        display: block;
+      }
+    }
+  }
 }
 
 @media (min-width: 768px) {
   .header {
     top: 1rem;
     bottom: unset;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu_profile {
+    transition: none;
   }
 }

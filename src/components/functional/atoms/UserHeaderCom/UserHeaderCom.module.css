@@ -1,85 +1,3 @@
-.mobileAlaTabbar,
-.otherAlaTabbar {
-  width: inherit;
-  display: flex;
-  justify-content: space-between;
-
-  .leftPart {
-    display: flex;
-    border-radius: 2rem;
-    border-color: transparent;
-    background-color: var(--primary__opacity);
-    box-shadow: var(--box-shadow);
-    -webkit-backdrop-filter: var(--backdrop-filter);
-    backdrop-filter: var(--backdrop-filter);
-  }
-
-  .menu_buttons {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    border-radius: 2rem;
-    border-color: transparent;
-
-    &:has(div) {
-      font-size: 0.6rem;
-    }
-
-    &:active p,
-    &:active svg {
-      color: currentColor;
-      stroke: currentColor;
-      fill: currentColor;
-    }
-
-    svg,
-    span#avatar {
-      width: 2rem;
-      height: 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: inherit;
-
-      path,
-      circle {
-        stroke: var(--text);
-        color: var(--text);
-      }
-    }
-  }
-
-  #accountButton {
-    anchor-name: --account;
-  }
-
-  #searchInput {
-    width: 3.5rem;
-    height: 3.5rem;
-    anchor-name: --search-action;
-    background-color: var(--primary__opacity);
-    box-shadow: var(--box-shadow);
-    -webkit-backdrop-filter: var(--backdrop-filter);
-    backdrop-filter: var(--backdrop-filter);
-
-    p {
-      display: none;
-    }
-  }
-}
-
-.otherAlaTabbar {
-  display: none;
-  border-radius: 2rem;
-  background-color: var(--primary__opacity);
-  box-shadow: var(--box-shadow);
-  -webkit-backdrop-filter: var(--backdrop-filter);
-  backdrop-filter: var(--backdrop-filter);
-}
-
 .search {
   width: min(100dvw, 36rem);
   grid-template-columns: 1fr 2.5rem;
@@ -182,6 +100,9 @@
     margin-left: auto;
     border-radius: 0.5rem;
     border-color: transparent;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
     z-index: 1;
 
     svg {
@@ -219,85 +140,7 @@
   }
 }
 
-.menu_profile {
-  position: fixed;
-  position-anchor: --account;
-  position-area: top span-right;
-  position-try: top span-right;
-  position-try-fallbacks: flip-block;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.2rem 0 0.4rem;
-  border-radius: 0.5rem;
-  background-color: var(--primary__opacity);
-  box-shadow: var(--box-shadow);
-  -webkit-backdrop-filter: var(--backdrop-filter);
-  backdrop-filter: var(--backdrop-filter);
-  transform-origin: right bottom;
-  opacity: 0;
-  transform: scale(0.92) translateY(8px);
-  transition:
-    opacity 0.26s cubic-bezier(0.32, 0.72, 0, 1),
-    transform 0.32s cubic-bezier(0.32, 0.72, 0, 1),
-    display 0.32s allow-discrete,
-    overlay 0.32s allow-discrete;
-
-  &:popover-open {
-    display: grid;
-    opacity: 1;
-    transform: scale(1) translateY(0);
-
-    @starting-style {
-      opacity: 0;
-      transform: scale(0.92) translateY(8px);
-    }
-  }
-
-  li {
-    width: 8rem;
-    height: 3rem;
-
-    a,
-    button {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.2rem;
-      color: inherit;
-
-      &:hover {
-        background-color: var(--hover);
-        border-radius: 0.4rem;
-      }
-    }
-
-    a:hover {
-      color: black;
-    }
-
-    button {
-      background-color: transparent;
-      border: transparent;
-      font-weight: normal;
-    }
-  }
-}
-
 @media (min-width: 500px) {
-  .mobileAlaTabbar {
-    display: none;
-  }
-
-  .otherAlaTabbar {
-    display: flex;
-  }
-
-  .menu_buttons {
-    gap: 0 0.3rem;
-  }
-
   .shortcut {
     display: flex;
     position: absolute;
@@ -311,38 +154,7 @@
   }
 }
 
-@media (min-width: 700px) {
-  .otherAlaTabbar {
-    #searchInput {
-      width: unset;
-
-      p {
-        display: block;
-        border-radius: .5rem;
-      }
-    }
-
-    .menu_buttons {
-      width: unset;
-      flex-direction: row;
-      padding: 0.5rem;
-      font-size: 1rem;
-
-      &:has(div) {
-        font-size: 1rem;
-      }
-
-      svg {
-        width: 1.6rem;
-        height: auto;
-      }
-    }
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-
-  .menu_profile,
   .search {
     transition: none;
   }

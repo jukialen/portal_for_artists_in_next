@@ -63,13 +63,14 @@ body {
   }
 
   button,
-  button[class] {
+  button[class],
+  a[class*='menu_buttons'] {
     background-color: transparent;
     cursor: pointer;
 
     &:hover {
-      border-color: var(--hover);
-      background-color: var(--hover);
+      border-color: var(--hover) !important;
+      background-color: var(--hover) !important;
     }
 
     &:focus {
@@ -78,12 +79,12 @@ body {
     }
 
     &:active {
-      border-color: var(--active);
-      background-color: var(--active);
-      color: revert;
+      border-color: var(--active) !important;
+      background-color: var(--active) !important;
+      color: revert !important;
 
       svg {
-        color: inherit;
+        color: inherit !important;
       }
     }
   }

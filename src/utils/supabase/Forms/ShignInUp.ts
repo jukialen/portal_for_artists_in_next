@@ -85,3 +85,11 @@ export async function signup(formData: FormData) {
   revalidatePath('/', 'layout');
   redirect('/auth/callback');
 }
+
+export async function signOut() {
+  const supabase = await createServer();
+  await supabase.auth.signOut();
+  revalidatePath('/', 'layout');
+  redirect('/signin');
+}
+

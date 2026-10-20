@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Viewport } from 'next';
 import { GoogleTagManager } from '@next/third-parties/google';
 import { getScopedI18n, getStaticParams } from 'locales/server';
+import { setStaticParamsLocale } from 'next-international/server';
 
 import { backUrl, GTM_ID } from 'constants/links';
 import { FriendsListArrayType, GroupsType, LangType } from 'types/global.types';
@@ -104,6 +105,7 @@ async function getGroupsList(id: string, maxItems: number) {
 
 export default async function RootLayout({ children, params }: ChildrenType) {
   const { locale } = await params;
+  setStaticParamsLocale(locale);
 
   const lang = locale as LangType;
   const tAside = await getScopedI18n('Aside');
