@@ -16,7 +16,7 @@ import {
 const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com
-     ${projectUrl} https://region1.analytics.google.com ${paddleCspLink} https://public.profitwell.com;
+     ${projectUrl} https://region1.analytics.google.com ${paddleCspLink} https://public.profitwell.com https://cdn-cookieyes.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com ${paddleCspLink} ${paddleBuyLink} ${paddleStyles};
     img-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} https://www.google.pl;
     media-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} https://www.google.pl;

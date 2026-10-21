@@ -159,7 +159,7 @@ export default async function RootLayout({ children, params }: ChildrenType) {
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      {!!GTM_ID && typeof window !== 'undefined' && <GoogleTagManager gtmId={GTM_ID} />}
+      {!!GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
 
       <body>
         <SWStart locale={lang}>
