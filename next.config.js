@@ -16,7 +16,7 @@ import {
 const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com
-     ${projectUrl} https://region1.analytics.google.com ${paddleCspLink} https://public.profitwell.com;
+     ${projectUrl} https://region1.analytics.google.com ${paddleCspLink} https://public.profitwell.com https://cdn-cookieyes.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com ${paddleCspLink} ${paddleBuyLink} ${paddleStyles};
     img-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} https://www.google.pl;
     media-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} https://www.google.pl;
@@ -25,7 +25,7 @@ const cspHeader = `
     base-uri 'self';
     form-action 'self';
     frame-ancestors none;
-    connect-src 'self' https://www.google.com https://www.gstatic.com https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl}  ${lokiHost} ${faroHost}
+    connect-src 'self' https://www.google.com https://www.gstatic.com https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl}  ${lokiHost} ${faroHost} https://cdn-cookieyes.com https://cookieyes.com  https://www.googletagmanager.com/td 
     https://api.paddle.com https://checkout.paddle.com https://events.paddle.com ${paddleCspLink} https://www.google.com/pay https://sandbox-checkout.paddle.com https://*.profitwell.com;
     frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl} https://checkout.paddle.com 
     ${paddleBuyLink} https://play.google.com ${paddleCspLink} https://www.google.com/pay;
