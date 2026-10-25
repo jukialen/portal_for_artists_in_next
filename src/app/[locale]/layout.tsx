@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Viewport } from 'next';
-import { GoogleTagManager } from '@next/third-parties/google';
+import Script from 'next/script';
 import { getScopedI18n, getStaticParams } from 'locales/server';
 import { setStaticParamsLocale } from 'next-international/server';
 
@@ -25,7 +25,6 @@ import 'styles/reset.css';
 import 'styles/global.css';
 import 'styles/_variables.css';
 import { RiArrowDownSLine } from 'react-icons/ri';
-
 
 type ChildrenType = {
   children: ReactNode;
@@ -129,39 +128,64 @@ export default async function RootLayout({ children, params }: ChildrenType) {
         <Groups groupsAsideList={groupsAsideList!} />
         <Friends friendsAsideList={friendsAsideList!} />
       </div>
-    )
-  };
+    );
+  }
 
   const userMenuComponents = {
     userHeader: <UserHeader />,
     header: <Header />,
-    aside: <>
-      <aside className={styles.aside}>
-        <AsideBody />
-      </aside>
-      <button popoverTarget="mobile-drawer" className={styles.aside__right}>
-        <RiArrowDownSLine />
-      </button>
-      <div id="mobile-drawer" popover="auto" className={styles.drawer}>
-        <div className={styles.drawerBody}>
-          <div className={styles.blur} />
+    aside: (
+      <>
+        <aside className={styles.aside}>
           <AsideBody />
-        </div>
-
-        <button popoverTarget="mobile-drawer" popoverTargetAction="hide" className={styles.drawer__right}>
+        </aside>
+        <button popoverTarget="mobile-drawer" className={styles.aside__right}>
           <RiArrowDownSLine />
         </button>
-      </div>
-    </>
+        <div id="mobile-drawer" popover="auto" className={styles.drawer}>
+          <div className={styles.drawerBody}>
+            <div className={styles.blur} />
+            <AsideBody />
+          </div>
+
+          <button popoverTarget="mobile-drawer" popoverTargetAction="hide" className={styles.drawer__right}>
+            <RiArrowDownSLine />
+          </button>
+        </div>
+      </>
+    ),
   };
 
   const user = await getUserData();
 
   return (
     <html lang={locale} suppressHydrationWarning>
-      {!!GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
+      <head>
+        {/* <!-- Google Tag Manager --> */}
+        {!!GTM_ID && (
+          <Script
+            id="gtm-script"
+            src={`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`}
+            strategy="beforeInteractive"
+          />
+        )}
+        {/* <!-- End Google Tag Manager --> */}
+      </head>
 
       <body>
+        {/* <!-- Google Tag Manager (noscript) --> */}
+        {!!GTM_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            />
+          </noscript>
+        )}
+        {/* <!-- End Google Tag Manager (noscript) --> */}
+
         <SWStart locale={lang}>
           <ModeProvider>
             {!!user ? userMenuComponents.userHeader : userMenuComponents.header}
@@ -177,4 +201,3 @@ export default async function RootLayout({ children, params }: ChildrenType) {
     </html>
   );
 }
-

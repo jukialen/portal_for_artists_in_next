@@ -7,7 +7,7 @@
   .main__container,
   .user__container {
     width: inherit;
-    height: calc(100% + 12rem);
+    height: calc(100% + 8rem);
     display: flex;
     flex-direction: column;
     margin: -3rem auto -6rem;

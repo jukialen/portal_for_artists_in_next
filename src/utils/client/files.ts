@@ -4,7 +4,7 @@ import { FilesUploadType } from 'types/global.types';
 import { filesProfileTypes, filesTypes } from 'utils/common/files';
 
 export const isFileAccessApiSupported =
-  typeof window !== 'undefined' && typeof window.showOpenFilePicker === 'function';
+  typeof window !== 'undefined' && typeof window?.showOpenFilePicker! === 'function';
 
 export const handleFileSelection = async (
   filesUploadTranslated: FilesUploadType,
