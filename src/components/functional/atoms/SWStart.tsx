@@ -35,7 +35,7 @@ export const SWStart = ({ children, locale }: childrenType) => {
   }, []);
 
   useEffect(() => {
-    faroConfig(); // initialises in the browser
+    faroConfig();
   }, []);
 
   useEffect(() => {
