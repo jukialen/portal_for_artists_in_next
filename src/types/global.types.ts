@@ -321,7 +321,7 @@ export type LastCommentType = Comment & {
 export type ContainerType = {
   question: JSX.Element | string;
   answer: string;
-  imageSource: StaticImageData[];
+  imageSource: (StaticImageData | string)[];
   imageAlt: string[];
   quality: number;
   mode?: boolean;

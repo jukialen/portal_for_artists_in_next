@@ -45,33 +45,17 @@ export const HomeImageContainers = ({ containerData, width, height }: HomeImageC
   return (
     <>
       {containerData.map((item, index) => (
-        <article className={item.mode ? styles.main__container__mode : styles.main__container} key={index}>
+        <article className={styles.main__container} key={index}>
           <div className={styles.container}>
             <h4 className={styles.question}>{item.question}</h4>
             <p className={styles.answer}>{item.answer}</p>
           </div>
 
           {item.mode ? (
-            <div className={styles.image}>
-              <div className={styles.modeImage}>
-                <Image
-                  src={item.imageSource[0]}
-                  width={width}
-                  height={height}
-                  loading="lazy"
-                  alt={item.imageAlt[0]}
-                  quality={item.quality}
-                />
-                <Image
-                  src={item.imageSource[1]}
-                  width={width}
-                  height={height}
-                  loading="lazy"
-                  alt={item.imageAlt[1]}
-                  quality={item.quality}
-                />
-              </div>
-            </div>
+            <video muted loop autoPlay playsInline preload="auto" width={width} height={height} className={styles.image}>
+              <source src={item.imageSource[0] as string} type='video/mp4; codecs="hvc1"' />
+              <source src={item.imageSource[1] as string} type='video/mp4' />
+            </video>
           ) : (
             <Image
               src={item.imageSource[0]}

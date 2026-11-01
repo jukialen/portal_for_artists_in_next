@@ -10,8 +10,6 @@ import { ContainerType, LangType } from 'types/global.types';
 import { HomeImageContainers } from 'components/functional/atoms/HomeImageContainers/HomeImageContainers';
 
 import styles from './page.module.css';
-import dark_mode from '../../../public/dark_mode.png';
-import light_mode from '../../../public/light_mode.png';
 import friends from '../../../public/friends.png';
 import categories from '../../../public/categories.png';
 import groups from '../../../public/groups.png';
@@ -79,7 +77,7 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
     {
       question: t('containerSixthQuestion'),
       answer: t('containerSixthAnswer'),
-      imageSource: [light_mode, dark_mode],
+      imageSource: ['/mode-h.265-hevc-pfartists.mp4', '/mode-h.264-pfartists.mp4'],
       imageAlt: ['light mode photo file', 'dark mode photo file'],
       quality,
       mode: true,
