@@ -32,17 +32,30 @@ export default {
         },
       },
     },
+    // Google Fonts style sheets (CSS)
     {
-      urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
+      urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+      handler: 'StaleWhileRevalidate',
+      options: {
+        cacheName: 'google-fonts-stylesheets',
+      },
+    },
+    // The correct font files (woff2)
+    {
+      urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
       handler: 'CacheFirst',
       options: {
-        cacheName: 'google-fonts',
+        cacheName: 'google-fonts-webfonts',
         expiration: {
-          maxEntries: 4,
+          maxEntries: 30,
           maxAgeSeconds: 365 * 24 * 60 * 60, // 1 Year
+        },
+        cacheableResponse: {
+          statuses: [0, 200], // allows saving opaque cross-origin responses
         },
       },
     },
+
     {
       urlPattern: /\.(?:png|jpg|jpeg|webp|avif|ico)$/i,
       handler: 'StaleWhileRevalidate',
