@@ -1,4 +1,9 @@
+.filesUploadRoot {
+  display: contents;
+}
+
 .updateLogo {
+  anchor-name: --files-upload-trigger;
   display: flex;
   align-items: center;
   justify-self: flex-start;
@@ -31,27 +36,36 @@
 }
 
 .modelContent {
+  position-anchor: --files-upload-trigger;
+  position: fixed;
+  position-area: bottom span-right;
+  position-try-fallbacks: --fallback-right, --fallback-top;
   width: min(100dvw, 25rem);
-  height: max-content;
-  flex-direction: column;
-  margin: auto;
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
   padding: 0 1rem 1rem;
-  position: absolute;
-  top: 5rem;
-  left: 0;
-  right: 0;
-  z-index: 1;
+  border: none;
   border-radius: 1rem;
   color: var(--primary);
   background-color: var(--background);
   box-shadow: var(--modal-box-shadow);
+  opacity: 0;
+  transform: scale(0.92) translateY(0.5rem);
+  transition:
+    opacity 0.26s cubic-bezier(0.32, 0.72, 0, 1),
+    transform 0.32s cubic-bezier(0.32, 0.72, 0, 1),
+    display 0.32s allow-discrete,
+    overlay 0.32s allow-discrete;
 
-  [data-state='open'] {
-    display: flex;
-  }
+  &:popover-open {
+    display: grid;
+    opacity: 1;
+    transform: scale(1) translateY(0);
 
-  [data-state='closed'] {
-    display: none;
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.92) translateY(0.5rem);
+    }
   }
 
   .modelContentHeader {
@@ -92,7 +106,7 @@
           justify-content: flex-start;
           gap: 1.25rem;
           border: 1px solid transparent;
-          padding: 10px;
+          padding: 0.625rem;
           transition: 0.4s;
           color: var(--text);
           background-color: var(--background);
@@ -143,6 +157,7 @@
       min-height: 2.5rem;
       margin: 0.5rem;
       padding: 0.45rem 1rem;
+      overflow: hidden auto;
       resize: vertical;
       border-radius: 1rem;
       border-color: var(--third);
@@ -238,4 +253,13 @@
       }
     }
   }
+}
+
+@position-try --fallback-right {
+  position-area: right;
+  align-self: anchor-center;
+}
+
+@position-try --fallback-top {
+  position-area: top span-right;
 }

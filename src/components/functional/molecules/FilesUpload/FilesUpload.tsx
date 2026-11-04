@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Upload } from 'tus-js-client';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { SchemaValidation } from 'schemasValidation/schemaValidation';
-import { Dialog } from '@ark-ui/react/dialog';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -33,6 +32,18 @@ const initialValues: FileDataType = {
   tags: '',
 };
 
+const POPOVER_ID = 'files-upload-popover';
+
+const TAG_KEYS = [
+  'realistic',
+  'manga',
+  'anime',
+  'comics',
+  'photographs',
+  'videos',
+  'animations',
+] as const;
+
 export const FilesUpload = ({
   userId,
   plan,
@@ -46,7 +57,6 @@ export const FilesUpload = ({
   const [valuesFields, setValuesFields] = useState<string>('');
   const [progressUpload, setProgressUpload] = useState<number>(0);
   const [required, setRequired] = useState(false);
-  const [open, setOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const supabase = createClient();
@@ -59,39 +69,36 @@ export const FilesUpload = ({
     shortDescription: SchemaValidation().shortDescription,
   });
 
-  const closePreviewPhoto = () => {
-    setPreviewUrl(null);
-    setFile(null);
+  const selectOptions = [
+    { value: '', name: t('chooseTag') },
+    ...TAG_KEYS.map((key) => ({ value: key, name: tAside(key) })),
+  ];
+
+  const setChosenFile = (newFile: File | null) => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+
+    setFile(newFile);
+    setPreviewUrl(newFile ? URL.createObjectURL(newFile) : null);
   };
 
-  useEffect(() => {
-    if (!file) {
-      closePreviewPhoto();
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
-
-    return () => {
-      URL.revokeObjectURL(objectUrl);
-    };
-  }, [file]);
+  const closePreviewPhoto = () => setChosenFile(null);
 
   const handleChangeFile = async (e: EventType) => {
-    if (e.target.files?.[0]) {
-      setFile(e.target.files[0]);
-      setRequired(false);
-    } else {
-      closePreviewPhoto();
-      setRequired(true);
-    }
+    const selected = e.target.files?.[0];
+
+    setChosenFile(selected ?? null);
+    setRequired(!selected);
   };
 
   const handleFile = async () => {
     const result = await handleFileSelection(fileTranslated, false);
 
-    typeof result === 'string' ? setValuesFields(result) : setFile(result);
+    if (typeof result === 'string') {
+      setValuesFields(result);
+    } else if (result) {
+      setChosenFile(result);
+      setRequired(false);
+    }
   };
 
   const uploadFiles = async ({ tags, shortDescription }: FileDataType, { resetForm }: ResetFormType) => {
@@ -105,41 +112,36 @@ export const FilesUpload = ({
         const fileName = userId + '-' + Date.now() + '-' + file!.name!;
         const filePath = userId + '/' + fileName;
 
+        const insertFileRecord = async () => {
+          const { data: fileData, error: insertError } = await supabase
+            .from('Files')
+            .insert([{ name: fileName, shortDescription, authorId: userId, tags, fileUrl: filePath }])
+            .select();
+
+          if (!fileData || fileData.length === 0 || insertError) return false;
+
+          const { error: roleError } = await supabase.from('Roles').insert([
+            { fileId: fileData[0].fileId, role: 'AUTHOR', userId },
+          ]);
+
+          if (roleError) return false;
+
+          return true;
+        };
+
         if (file.size <= MAX_PHOTO_SIZE) {
           const { data, error } = await supabase.storage.from('basic').upload(`/${filePath}`, file);
 
-          if (!!error) console.error(error);
-
-          const { data: fileData, error: er } = await supabase
-            .from('Files')
-            .insert([
-              {
-                name: fileName,
-                shortDescription,
-                authorId: userId,
-                tags,
-                fileUrl: data?.path!,
-              },
-            ])
-            .select();
-
-          if (!fileData || fileData.length === 0 || !!error) {
-            console.error(error);
+          if (error || !data) {
+            setValuesFields(tAnotherForm('notUploadFile'));
             return;
           }
 
-          const { data: roleData, error: roleEr } = await supabase.from('Roles').insert([
-            {
-              fileId: fileData[0].fileId,
-              role: 'AUTHOR',
-              userId,
-            },
-          ]);
-
-          if (!!er) {
-            const { error: deleteFileError } = await supabase.storage.from('basic').remove([data?.id!]);
-
+          const saved = await insertFileRecord();
+          if (!saved) {
+            await supabase.storage.from('basic').remove([filePath]);
             setValuesFields(tAnotherForm('notUploadFile'));
+            return;
           }
         } else {
           return new Promise<void>(async (resolve, reject) => {
@@ -161,64 +163,28 @@ export const FilesUpload = ({
               },
               chunkSize: 6 * 1024 * 1024,
               onError: function (error) {
-                console.error('Failed because: ' + error);
                 setValuesFields(tAnotherForm('notUploadFile'));
                 reject(error);
               },
               onProgress: function (bytesUploaded, bytesTotal) {
                 let percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-                console.log(bytesUploaded, bytesTotal, percentage);
                 setProgressUpload(parseInt(percentage));
               },
-
               onSuccess: async function () {
-                console.log('Download %s from %s', file.name, upload.url);
                 setProgressUpload(100);
-                setValuesFields(tAnotherForm('uploadFile'));
-
-                if (progressUpload === 100) {
-                  const { data: fileProgressData, error } = await supabase
-                    .from('Files')
-                    .insert([
-                      {
-                        name: Date.now() + '/' + userId + '/' + file!.name!,
-                        shortDescription,
-                        authorId: userId,
-                        tags,
-                        fileUrl: upload.url!,
-                      },
-                    ])
-                    .select();
-
-                  if (!fileProgressData || fileProgressData.length === 0 || !!error) {
-                    console.error(error);
-                    setValuesFields(tAnotherForm('notUploadFile'));
-                    return;
-                  }
-
-                  const { data: roleData, error: roleEr } = await supabase.from('Roles').insert([
-                    {
-                      fileId: fileProgressData[0].fileId,
-                      role: 'AUTHOR',
-                      userId,
-                    },
-                  ]);
-
-                  if (roleData) {
-                    setValuesFields(tAnotherForm('notUploadFile'));
-                    return;
-                  }
+                const saved = await insertFileRecord();
+                if (!saved) {
+                  setValuesFields(tAnotherForm('notUploadFile'));
+                  return;
                 }
+                setValuesFields(tAnotherForm('uploadFile'));
                 resolve();
               },
             });
-            // Check if there are any previous uploads to continue.
+
             const previousUploads = await upload.findPreviousUploads();
-            // Found previous uploads so we select the first one.
-            if (previousUploads.length) {
-              upload.resumeFromPreviousUpload(previousUploads[0]);
-            }
-            // Start the upload
+            if (previousUploads.length) upload.resumeFromPreviousUpload(previousUploads[0]);
+
             upload.start();
           });
         }
@@ -231,121 +197,114 @@ export const FilesUpload = ({
       setRequired(false);
       resetForm(initialValues);
     } catch (e) {
-      console.error(e);
       setValuesFields(tAnotherForm('notUploadFile'));
     }
   };
 
-  type SelectOptionsType = { value: string; name: string };
-
-  const selectOptions: SelectOptionsType[] = [
-    { value: '', name: t('chooseTag') },
-    { value: 'realistic', name: tAside('realistic') },
-    { value: 'manga', name: tAside('manga') },
-    { value: 'anime', name: tAside('anime') },
-    { value: 'comics', name: tAside('comics') },
-    { value: 'photographs', name: tAside('photographs') },
-    { value: 'videos', name: tAside('videos') },
-    { value: 'animations', name: tAside('animations') },
-  ];
-
   return (
-    <Dialog.Root
-      id={`files-upload-${userId}`}
-      restoreFocus
-      open={open}
-      onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-      <Dialog.Trigger asChild>
-        <button aria-label="new logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
-          <MdUploadFile className={styles.icon} />
-          {t('newFile')}
-        </button>
-      </Dialog.Trigger>
+    <div className={styles.filesUploadRoot}>
+      <button
+        aria-label="new logo"
+        className={styles.updateLogo}
+        popoverTarget={POPOVER_ID}
+        popoverTargetAction="toggle"
+      >
+        <MdUploadFile className={styles.icon} />
+        {t('newFile')}
+      </button>
 
-      <Dialog.Content className={styles.modelContent}>
+      <div
+        popover="auto"
+        id={POPOVER_ID}
+        className={styles.modelContent}
+      >
         <div className={styles.modelContentHeader}>
-          <Dialog.Title>{tAnotherForm('fileTitle')}</Dialog.Title>
+          <h2>{tAnotherForm('fileTitle')}</h2>
         </div>
-        <Dialog.Description>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={schemaFile}
-            onSubmit={(values: FileDataType, formikBag: ResetFormType) =>
-              uploadFiles(values, { resetForm: formikBag.resetForm })
-            }>
-            {({ values, handleChange, handleBlur, errors, touched }) => (
-              <Form className={styles.adding__files}>
-                <div className={styles.select}>
-                  <select
-                    name="tags"
-                    value={values.tags}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={errors.tags && touched.tags ? styles.tags__error : styles.tags}>
-                    {selectOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
 
-                <FormError nameError="tags" />
-
-                {isFileAccessApiSupported ? (
-                  <button onClick={handleFile} className={styles.filePickerButton}>
-                    {tAnotherForm('file')}
-                  </button>
-                ) : (
-                  <input
-                    name="file"
-                    type="file"
-                    accept={`${filesProfileTypes}, ${filesTypes}`}
-                    onChange={handleChangeFile}
-                    placeholder={tAnotherForm('file')}
-                    className={!file && required ? styles.input__error : styles.input}
-                  />
-                )}
-
-                {!!previewUrl && <img src={previewUrl} alt="preview new logo" className={styles.filePickerImage} />}
-
-                <p className={styles.error}>{!file && required && t('NavForm.validateRequired')}</p>
-
-                <textarea
-                  name="shortDescription"
-                  value={values.shortDescription}
+        <Formik
+          initialValues={initialValues}
+          validationSchema={schemaFile}
+          onSubmit={(values: FileDataType, formikBag: ResetFormType) =>
+            uploadFiles(values, { resetForm: formikBag.resetForm })
+          }>
+          {({ values, handleChange, handleBlur, errors, touched }) => (
+            <Form className={styles.adding__files}>
+              <div className={styles.select}>
+                <select
+                  name="tags"
+                  value={values.tags}
                   onChange={handleChange}
-                  placeholder="short description for file"
-                  className={
-                    !!errors.shortDescription && touched.shortDescription
-                      ? styles.shortDescription__error
-                      : styles.shortDescription
-                  }
+                  onBlur={handleBlur}
+                  className={errors.tags && touched.tags ? styles.tags__error : styles.tags}>
+                  {selectOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <FormError nameError="tags" />
+
+              {isFileAccessApiSupported ? (
+                <button onClick={handleFile} className={styles.filePickerButton}>
+                  {tAnotherForm('file')}
+                </button>
+              ) : (
+                <input
+                  name="file"
+                  type="file"
+                  accept={`${filesProfileTypes}, ${filesTypes}`}
+                  onChange={handleChangeFile}
+                  placeholder={tAnotherForm('file')}
+                  className={!file && required ? styles.input__error : styles.input}
                 />
+              )}
 
-                {!!errors.shortDescription && touched.shortDescription && (
-                  <div className={styles.error_wrap}>
-                    <FormError nameError="shortDescription" />
-                  </div>
-                )}
+              {!!previewUrl && <img src={previewUrl} alt="preview new logo" className={styles.filePickerImage} />}
 
-                {progressUpload >= 1 && !(valuesFields === tAnotherForm('uploadFile')) && (
-                  <ProgressBar value={progressUpload} />
-                )}
+              <p className={styles.error}>{!file && required && t('NavForm.validateRequired')}</p>
 
-                {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+              <textarea
+                name="shortDescription"
+                value={values.shortDescription}
+                onChange={handleChange}
+                placeholder="short description for file"
+                className={
+                  !!errors.shortDescription && touched.shortDescription
+                    ? styles.shortDescription__error
+                    : styles.shortDescription
+                }
+              />
 
-                <div className={styles.buttons}>
-                  <Dialog.CloseTrigger onClick={closePreviewPhoto}>
-                    {t('DeletionFile.cancelButton')}
-                  </Dialog.CloseTrigger>
-                  <button type="submit">{t('Description.submit')}</button>
+              {!!errors.shortDescription && touched.shortDescription && (
+                <div className={styles.error_wrap}>
+                  <FormError nameError="shortDescription" />
                 </div>
-              </Form>
-            )}
-          </Formik>
-        </Dialog.Description>
-      </Dialog.Content>
-    </Dialog.Root>
+              )}
+
+              {progressUpload >= 1 && !(valuesFields === tAnotherForm('uploadFile')) && (
+                <ProgressBar value={progressUpload} />
+              )}
+
+              {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
+
+              <div className={styles.buttons}>
+                <button
+                  type="button"
+                  onClick={closePreviewPhoto}
+                  popoverTarget={POPOVER_ID}
+                  popoverTargetAction="hide"
+                >
+                  {t('DeletionFile.cancelButton')}
+                </button>
+                <button type="submit">{t('Description.submit')}</button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </div>
   );
 };
