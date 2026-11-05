@@ -56,10 +56,12 @@ export const validateFile = async (
 
   switch (profile) {
     case true:
-      error = !ACCEPTED_IMAGE_TYPES.includes(file.type) ? filesUploadTranslated.unsupportedFileType : null;
-
-      error = file.size > MAX_PHOTO_SIZE ? filesUploadTranslated.fileTooLarge : null;
-      break;
+      if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+        error = filesUploadTranslated.unsupportedFileType;
+      } else if (file.size > MAX_PHOTO_SIZE) {
+        error = filesUploadTranslated.fileTooLarge;
+      }
+      return error;
     case false:
       if (!ACCEPTED_IMAGE_TYPES.includes(file.type) && !ACCEPTED_ANIM_VIDEOS_TYPES.includes(file.type)) {
         const fileType = ACCEPTED_IMAGE_TYPES.includes(file.type) ? 'PHOTO' : 'VIDEO';

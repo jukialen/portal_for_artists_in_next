@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { Dialog } from '@ark-ui/react/dialog';
+import { useRouter } from 'next/navigation';
 
-import { createClient } from 'utils/supabase/clientCSR';
-import { handleFileSelection, isFileAccessApiSupported } from 'utils/client/files';
+import { updateProfilePhoto } from 'app/actions/files';
 import { filesProfileTypes, validateFile } from 'utils/common/files';
 import { useScopedI18n } from 'locales/client';
 
@@ -15,6 +14,8 @@ import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
 
 import styles from './UpdateProfilePhotoOnAccount.module.css';
 import { MdCameraEnhance } from 'react-icons/md';
+
+const POPOVER_ID = 'update-profile-photo';
 
 export const UpdateProfilePhotoOnAccount = ({
   tCurrPrPhoto,
@@ -33,93 +34,42 @@ export const UpdateProfilePhotoOnAccount = ({
   const [valuesFields, setValuesFields] = useState('');
   const [required, setRequired] = useState(false);
   const [newLogo, setNewLogo] = useState<File | null>(null);
-  const [open, setOpen] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const supabase = createClient();
+  const previewUrl = useMemo(() => (newLogo ? URL.createObjectURL(newLogo) : null), [newLogo]);
 
+  const router = useRouter();
   const tAnotherForm = useScopedI18n('AnotherForm');
 
-  const closePreviewPhoto = () => {
-    setPreviewUrl(null);
-    setNewLogo(null);
-  };
-
-  useEffect(() => {
-    if (!newLogo) {
-      closePreviewPhoto();
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(newLogo);
-    setPreviewUrl(objectUrl);
-
-    return () => {
-      URL.revokeObjectURL(objectUrl);
-    };
-  }, [newLogo]);
-
   const changeFile = (e: EventType) => {
-    if (e.target.files?.[0]) {
-      setNewLogo(e.target.files[0]);
-      setRequired(false);
-    } else {
-      closePreviewPhoto();
-      setRequired(true);
-    }
-  };
-
-  const handleFile = async (): Promise<void> => {
-    const result = await handleFileSelection(fileTranslated, false);
-
-    if (typeof result === 'string') {
-      setValuesFields(result);
-      setRequired(false);
-    } else {
-      setNewLogo(result);
-      setRequired(true);
-    }
+    e.preventDefault()
+    const file = e.target.files?.[0];
+    setNewLogo(file ?? null);
+    setRequired(!file);
   };
 
   const updateLogo = async () => {
     try {
       if (!!newLogo && !required) {
-        if (!(await validateFile(fileTranslated, newLogo, userData?.plan!))) {
-          const pathPhoto = `/${userData?.id!}/${newLogo.name}`;
+        const validationError = await validateFile(fileTranslated, newLogo, userData?.plan!);
+        if (!validationError) {
+          const formData = new FormData();
+          formData.append('photo', newLogo);
 
-          if (!!userData?.profilePhoto) {
-            const { data: fileList, error: listError } = await supabase.storage.from('profiles').list(userData?.id);
+          const result = await updateProfilePhoto(formData);
 
-            if (!listError && fileList && fileList.length > 0) {
-              const filesToRemove = fileList.map((file) => `${userData?.id}/${file.name}`);
-
-              await supabase.storage.from('profiles').remove(filesToRemove);
-            }
-
-            const { data, error } = await supabase.storage.from('profiles').upload(pathPhoto, newLogo, {
-              contentType: newLogo.type,
-              upsert: !!userData?.profilePhoto,
-            });
-
-            console.log('data', data);
-
-            if (!!error) console.error(error);
-
-            await supabase.from('Users').update({ profilePhoto: data?.path }).eq('id', userData?.id!);
-
-            !error && setValuesFields(tAnotherForm('uploadFile'));
-            return;
+          if (result.success) {
+            setValuesFields(tAnotherForm('uploadFile'));
+            router.refresh();
+          } else {
+            setValuesFields(tAnotherForm('notUploadFile'));
           }
-
-          const { error } = await supabase.storage.from('profiles').upload(pathPhoto, newLogo, {
-            contentType: newLogo.type,
-          });
-
-          !!error && setValuesFields(tAnotherForm('notUploadFile'));
           return;
         } else {
+          setValuesFields(validationError);
           setRequired(true);
         }
+      } else {
+        setRequired(true);
       }
     } catch (e) {
       console.error(e);
@@ -128,42 +78,49 @@ export const UpdateProfilePhotoOnAccount = ({
   };
 
   return (
-    <Dialog.Root
-      id={`update-profile-photo-${userData.id}`}
-      lazyMount
-      unmountOnExit
-      onExitComplete={() => console.log('onExitComplete invoked')}
-      open={open}
-      onOpenChange={(e: { open: boolean | ((prevState: boolean) => boolean) }) => setOpen(e.open)}>
-      <Dialog.Trigger asChild>
-        <button aria-label="update logo" className={styles.updateLogo} onClick={() => setOpen(true)}>
-          <MdCameraEnhance />
-        </button>
-      </Dialog.Trigger>
-      <Dialog.Content className={styles.logoContent} id={!!newLogo ? styles.logoContentPreview : ''}>
-        <Dialog.Title className={styles.logoHeader}>Update logo</Dialog.Title>
+    <>
+      <button
+        aria-label="update logo"
+        className={styles.updateLogo}
+        popoverTarget={POPOVER_ID}>
+        <MdCameraEnhance />
+      </button>
 
-        <Dialog.Description className={!newLogo && required ? styles.logBody__error : styles.logBody}>
-          {isFileAccessApiSupported ? (
-            <button onClick={() => handleFile()} className={styles.filePickerButton}>
-              {tAnotherForm('file')}
-            </button>
-          ) : (
-            <input type="file" name="newLogo" id={styles.newLogo} accept={filesProfileTypes} onChange={changeFile} />
-          )}
+      <div
+        id={POPOVER_ID}
+        popover="auto"
+        className={styles.logoContent}>
+        <p className={styles.logoHeader}>Update logo</p>
+
+        <div className={!newLogo && required ? styles.logBody__error : styles.logBody}>
+          <label className={styles.newLogo}>
+            {tAnotherForm('file')}
+            <input type="file" name="newLogo" className={styles.visuallyHidden} accept={filesProfileTypes} onChange={changeFile} />
+          </label>
+
           {!newLogo && required && <p>{tCurrPrPhoto!.validateRequired}</p>}
           {!!previewUrl && <Image src={previewUrl} alt="preview new logo" fill priority />}
           {valuesFields !== '' && <Alerts valueFields={valuesFields} />}
-        </Dialog.Description>
+        </div>
+
         <div className={styles.logoFooter}>
-          <Dialog.CloseTrigger className={styles.cancel} onClick={closePreviewPhoto}>
+          <button
+            className={styles.cancel}
+            popoverTarget={POPOVER_ID}
+            popoverTargetAction="hide"
+            onClick={() => setNewLogo(null)}>
             {tCurrPrPhoto!.cancelButton}
-          </Dialog.CloseTrigger>
-          <button type="submit" className={styles.edit} onClick={updateLogo}>
+          </button>
+          <button
+            type="submit"
+            className={styles.edit}
+            onClick={updateLogo}
+            popoverTarget={POPOVER_ID}
+            popoverTargetAction="hide">
             {tCurrPrPhoto!.submit}
           </button>
         </div>
-      </Dialog.Content>
-    </Dialog.Root>
+      </div >
+    </>
   );
 };

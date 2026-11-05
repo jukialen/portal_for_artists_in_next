@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { selectFiles } from 'constants/selects';
 import { FileType, IndexType, Tags } from 'types/global.types';
 
@@ -258,5 +259,56 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
   } catch (e) {
     console.error(e);
     return nextArray;
+  }
+};
+
+export const updateProfilePhoto = async (
+  formData: FormData,
+): Promise<{ success: boolean; error?: string; path?: string }> => {
+  const file = formData.get('photo') as File | null;
+  if (!file) return { success: false, error: 'no-file' };
+
+  try {
+    const supabase = await createServer();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: 'unauthorized' };
+
+    const pathPhoto = `/${user.id}/${file.name}`;
+
+    const { data: fileList, error: listError } = await supabase.storage.from('profiles').list(user.id);
+
+    if (!listError && fileList && fileList.length > 0) {
+      const filesToRemove = fileList.map((f) => `${user.id}/${f.name}`);
+      await supabase.storage.from('profiles').remove(filesToRemove);
+    }
+
+    const { data, error: uploadError } = await supabase.storage.from('profiles').upload(pathPhoto, file, {
+      contentType: file.type,
+      upsert: true,
+    });
+
+    if (uploadError || !data?.path) {
+      console.error(uploadError);
+      return { success: false, error: uploadError?.message || 'upload-error' };
+    }
+
+    const { error: dbError } = await supabase
+      .from('Users')
+      .update({ profilePhoto: data.path })
+      .eq('id', user.id);
+
+    if (dbError) {
+      console.error(dbError);
+      return { success: false, error: dbError.message };
+    }
+
+    revalidatePath('/', 'layout');
+    return { success: true, path: data.path };
+  } catch (e: any) {
+    console.error(e);
+    return { success: false, error: e?.message || 'unknown-error' };
   }
 };

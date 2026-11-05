@@ -9,7 +9,6 @@ import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { handleFileSelection, isFileAccessApiSupported } from 'utils/client/files';
 import { filesProfileTypes, filesTypes, MAX_PHOTO_SIZE, validateFile } from 'utils/common/files';
 
 import { projectUrl } from 'constants/links';
@@ -88,17 +87,6 @@ export const FilesUpload = ({
 
     setChosenFile(selected ?? null);
     setRequired(!selected);
-  };
-
-  const handleFile = async () => {
-    const result = await handleFileSelection(fileTranslated, false);
-
-    if (typeof result === 'string') {
-      setValuesFields(result);
-    } else if (result) {
-      setChosenFile(result);
-      setRequired(false);
-    }
   };
 
   const uploadFiles = async ({ tags, shortDescription }: FileDataType, { resetForm }: ResetFormType) => {
@@ -247,20 +235,16 @@ export const FilesUpload = ({
 
               <FormError nameError="tags" />
 
-              {isFileAccessApiSupported ? (
-                <button onClick={handleFile} className={styles.filePickerButton}>
-                  {tAnotherForm('file')}
-                </button>
-              ) : (
+              <label className={styles.filePickerButton}>
+                {tAnotherForm('file')}
                 <input
                   name="file"
                   type="file"
                   accept={`${filesProfileTypes}, ${filesTypes}`}
                   onChange={handleChangeFile}
-                  placeholder={tAnotherForm('file')}
-                  className={!file && required ? styles.input__error : styles.input}
+                  className={styles.visuallyHidden}
                 />
-              )}
+              </label>
 
               {!!previewUrl && <img src={previewUrl} alt="preview new logo" className={styles.filePickerImage} />}
 
