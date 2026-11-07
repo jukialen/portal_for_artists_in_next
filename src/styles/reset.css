@@ -112,6 +112,13 @@ button {
   border-width: 0;
 }
 
+input,
+select,
+label,
+textarea {
+  cursor: pointer;
+}
+
 input {
   color: var(--text);
 

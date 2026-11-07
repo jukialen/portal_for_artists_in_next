@@ -174,9 +174,10 @@ export default {
   AnotherForm: {
     pseudonym: 'あだ名',
     profilePhoto: 'プロフィールの写真',
-    description: '叙述',
+    description: '説明',
     fileTitle: 'ファイルが追加',
     tags: 'タグ',
+    shortDescription: 'ファイルの簡単な説明',
     file: 'ファイル',
     send: '送る',
     uploadFile: 'ファイルがアップロードされました。',

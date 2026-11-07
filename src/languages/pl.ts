@@ -178,6 +178,7 @@ export default {
     description: 'Opis',
     fileTitle: 'Dodaj plik',
     tags: 'Tagi',
+    shortDescription: 'krótki opis dla pliku',
     file: 'Plik',
     send: 'Wyślij',
     uploadFile: 'Plik został wysłany.',

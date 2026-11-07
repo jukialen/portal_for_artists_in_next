@@ -11,15 +11,10 @@ import { HomeImageContainers } from 'components/functional/atoms/HomeImageContai
 
 import styles from './page.module.css';
 import friends from '../../../public/friends.png';
-import categories from '../../../public/categories.png';
 import groups from '../../../public/groups.png';
 import diary from '../../../public/diary.jpg';
 import artist from '../../../public/artist.jpg';
 import searchingService from '../../../public/searching.jpg';
-import upload from '../../../public/upload.png';
-import authorButton from '../../../public/authorButton.png';
-import top from '../../../public/top.jpg';
-import minimalism from '../../../public/minimalism.png';
 import likes from '../../../public/likes.png';
 
 export const metadata: Metadata = HeadCom('Main site.');
@@ -27,6 +22,12 @@ export const metadata: Metadata = HeadCom('Main site.');
 export default async function Home({ params }: { params: Promise<{ locale: LangType }> }) {
   const { locale } = await params;
   setStaticParamsLocale(locale);
+
+  const { default: authorButton } = await import(`../../../public/authorButton-${locale}.png`);
+  const { default: categories } = await import(`../../../public/categories-${locale}.png`);
+  const { default: minimalism } = await import(`../../../public/minimalism-${locale}.png`);
+  const { default: uploadImage } = await import(`../../../public/upload-${locale}.png`);
+  const { default: top } = await import(`../../../public/top-${locale}.png`);
 
   const t = await getScopedI18n('Main');
   const width = 450;
@@ -37,7 +38,7 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
     {
       question: t('containerFirstQuestion'),
       answer: t('containerFirstAnswer'),
-      imageSource: [upload],
+      imageSource: [uploadImage],
       imageAlt: ['picture.jpg'],
       quality,
     },

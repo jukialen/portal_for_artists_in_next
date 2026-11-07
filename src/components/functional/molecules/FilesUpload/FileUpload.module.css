@@ -92,8 +92,8 @@
       .tags__error {
         width: inherit;
         margin: 0.5rem auto;
-        padding: 0.5rem;
-        border-color: var(--third);
+        padding: 0.5rem 1rem;
+        border: 2px ridge var(--third);
         border-radius: 1rem;
         background-color: var(--background);
 
@@ -129,7 +129,7 @@
       }
 
       .tags__error {
-        border: 1px solid var(--required);
+        border-color: var(--required);
         color: var(--required);
 
         div {
@@ -160,7 +160,7 @@
       overflow: hidden auto;
       resize: vertical;
       border-radius: 1rem;
-      border-color: var(--third);
+      border: 2px ridge var(--third);
       background-color: var(--background);
 
       &::placeholder {

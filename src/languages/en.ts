@@ -176,6 +176,7 @@ export default {
     description: 'Description',
     fileTitle: 'Adding a file',
     tags: 'Tags',
+    shortDescription: 'short description for file',
     file: 'File',
     send: 'Send',
     uploadFile: 'File has been uploaded.',

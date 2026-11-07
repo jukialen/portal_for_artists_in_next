@@ -254,7 +254,7 @@ export const FilesUpload = ({
                 name="shortDescription"
                 value={values.shortDescription}
                 onChange={handleChange}
-                placeholder="short description for file"
+                placeholder={tAnotherForm('shortDescription')}
                 className={
                   !!errors.shortDescription && touched.shortDescription
                     ? styles.shortDescription__error
