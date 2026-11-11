@@ -217,6 +217,7 @@ export default {
       more: 'Więcej',
       all: 'To już wszystkie grupy.',
     },
+    allGroups: 'Wszystkie grupy',
     noGroups: 'Brak ulubionych grup',
     noPermission: 'Aby zobaczyć posty musisz dołączyć do grupy.',
     deleteGroup: 'Usuń grupę',

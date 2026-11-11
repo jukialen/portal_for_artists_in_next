@@ -36,7 +36,7 @@ export const Groups = async ({ groupsAsideList }: { groupsAsideList: GroupsType[
             <p className={styles.no__groups}>{t('Groups.noGroups')}</p>
           )}
           <Link href="/groups/list" className={styles.listButton} aria-label="all group link">
-            All groups
+            {t('Groups.allGroups')}
           </Link>
         </section>
       </details>

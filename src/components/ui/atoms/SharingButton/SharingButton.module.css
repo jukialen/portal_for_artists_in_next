@@ -24,10 +24,7 @@
     position: absolute;
     top: anchor(bottom);
     right: anchor(right);
-    position-area: bottom span-left;
-    position-try-options: flip-block;
-    position-try-fallbacks: flip-block;
-    padding: 1rem;
+    padding: 0.3rem 1rem;
     color: var(--third);
   }
 

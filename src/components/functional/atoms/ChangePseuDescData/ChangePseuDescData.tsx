@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createClient } from 'utils/supabase/clientCSR';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -8,7 +8,6 @@ import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
 import { useI18n, useScopedI18n } from 'locales/client';
 
-import { isFileAccessApiSupported, handleFileSelection } from 'utils/client/files';
 import { filesProfileTypes, validateFile } from 'utils/common/files';
 
 import { EventType, FilesUploadType, ResetFormType, UserType } from 'types/global.types';
@@ -32,7 +31,6 @@ export const ChangePseuDescData = ({
 }) => {
   const [valuesFields, setValuesFields] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const supabase = createClient();
 
@@ -51,30 +49,10 @@ export const ChangePseuDescData = ({
     newDescription: SchemaValidation().description,
   });
 
-  useEffect(() => {
-    if (!photo) {
-      setPreviewUrl(null);
-      return;
-    }
-
-    console.log('photo', photo);
-    const objectUrl = URL.createObjectURL(photo);
-    setPreviewUrl(objectUrl);
-
-    return () => {
-      URL.revokeObjectURL(objectUrl);
-    };
-  }, [photo]);
-
   const handleChangeFile = async (e: EventType) => {
     e.target.files?.[0] && setPhoto(e.target.files[0]);
   };
 
-  const handleFile = async () => {
-    const result = await handleFileSelection(fileTranslated);
-
-    typeof result === 'string' ? setValuesFields(result) : setPhoto(result);
-  };
   const updateProfileData = async ({ newPseudonym, newDescription }: ProfileType, { resetForm }: ResetFormType) => {
     setValuesFields('');
 
@@ -136,26 +114,18 @@ export const ChangePseuDescData = ({
       {({ errors, touched }) => (
         <Form className={styles.form}>
           <div className={styles.container}>
-            {isFileAccessApiSupported ? (
-              <button type="button" onClick={() => handleFile()} className={`${styles.filePickerButton} button`}>
-                {tAnotherForm('profilePhoto')}
-              </button>
-            ) : (
-              <>
-                <label htmlFor={tAnotherForm('profilePhoto')} className={styles.title}>
-                  {tAnotherForm('profilePhoto')}
-                </label>
-                <input
-                  id="photoInput"
-                  name="photo"
-                  type="file"
-                  accept={filesProfileTypes}
-                  onChange={handleChangeFile}
-                  placeholder={tAnotherForm('profilePhoto')}
-                  className={!photo && touched.photo ? styles.input__error : styles.input}
-                />
-              </>
-            )}
+            <label htmlFor={tAnotherForm('profilePhoto')} className={styles.title}>
+              {tAnotherForm('profilePhoto')}
+            </label>
+            <input
+              id="photoInput"
+              name="photo"
+              type="file"
+              accept={filesProfileTypes}
+              onChange={handleChangeFile}
+              placeholder={tAnotherForm('profilePhoto')}
+              className={!photo && touched.photo ? styles.input__error : styles.input}
+            />
           </div>
 
           {!photo && touched.photo && <p className={styles.error_profile}>{t('NavForm.validateRequired')}</p>}

@@ -216,6 +216,7 @@ export default {
       more: 'もっと',
       all: 'これがもう皆あります。',
     },
+    allGroups: '全グループ',
     noGroups: '愛用の団体がありません',
     noPermission: '追加が見られる様に、この団体が付けないと行けない。',
     deleteGroup: 'グループは消します',

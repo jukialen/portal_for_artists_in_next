@@ -215,6 +215,7 @@ export default {
       more: 'More',
       all: 'These are already all groups.',
     },
+    allGroups: 'All groups',
     noGroups: 'No favorite group',
     noPermission: 'In order to can see a posts, you need to join to the group.',
     deleteGroup: 'Delete Group',

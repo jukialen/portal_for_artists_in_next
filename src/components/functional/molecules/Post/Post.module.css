@@ -56,10 +56,16 @@
       transition: transform 0.4s ease-in-out;
       transform-origin: left center -0.5rem;
 
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+
       &:hover,
       &:active {
         transform: perspective(40rem) scale(1.2) rotateZ(-20deg) rotateY(15deg);
         padding: 0;
+        background: none !important;
       }
     }
 
@@ -83,7 +89,7 @@
     display: grid;
     grid-template-columns: 30% 1fr 30%;
     justify-items: center;
-    padding: 1rem 0.3rem;
+    padding: 0.3rem;
     color: var(--third);
 
     p {
@@ -143,9 +149,11 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.4);
   }
+
   100% {
     transform: scale(1);
   }

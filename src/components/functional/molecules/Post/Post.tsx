@@ -118,9 +118,7 @@ export const Post = ({
             {likeCount}
           </span>
         </p>
-        <p>
-          {commented} {commented === 1 ? 'comment' : 'comments'}
-        </p>
+        <p>{commented}</p>
       </div>
       <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
         <NewComments

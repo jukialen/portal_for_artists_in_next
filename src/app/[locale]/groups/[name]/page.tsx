@@ -7,15 +7,16 @@ import { HeadCom } from 'constants/HeadCom';
 import { backUrl, supabaseStorageProfileUrl } from 'constants/links';
 import { LangType, MemberType, PostsType } from 'types/global.types';
 
-import { getUserData } from 'helpers/getUserData';
 import { getDate } from 'helpers/getDate';
+import { getLinkUrl } from 'helpers/getLinkUrl';
+import { getUserData } from 'helpers/getUserData';
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { UpdateGroupLogo } from 'components/functional/molecules/UpdateGroupLogo/UpdateGroupLogo';
 import { NameGroupPage } from 'components/Views/NameGroupPage/NameGroupPage';
 
 import styles from './page.module.css';
-import { getLinkUrl } from '../../../../helpers/getLinkUrl';
+
 
 type JoinUser = {
   join: boolean;
@@ -164,7 +165,7 @@ async function getFirstPosts(groupId: string, maxItems: number) {
   const postsArray: PostsType[] = [];
 
   const supabase = await createServer();
-
+  const userId = (await getUserData())?.id;
   const { data, error } = await supabase
     .from('Posts')
     .select('*, Users (pseudonym, profilePhoto), Roles!roleId (id)')
@@ -179,12 +180,12 @@ async function getFirstPosts(groupId: string, maxItems: number) {
 
     const { data: lData } = await supabase.from('Liked').select('userId').eq('postId', postId);
 
-    const likedData = lData?.find((v: { userId: string }) => v.userId === authorId);
+    const likedData = lData?.find((v: { userId: string }) => v.userId === userId);
 
     postsArray.push({
       authorName: Users?.pseudonym!,
       authorProfilePhoto: supabaseStorageProfileUrl + '/' + Users?.profilePhoto!,
-      liked: !!likedData,
+      liked: !!likedData?.userId,
       postId,
       title,
       content,

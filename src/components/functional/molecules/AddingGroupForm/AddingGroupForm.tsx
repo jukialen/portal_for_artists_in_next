@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 import { SchemaValidation } from 'schemasValidation/schemaValidation';
 
 import { createClient } from 'utils/supabase/clientCSR';
-import { handleFileSelection, isFileAccessApiSupported } from 'utils/client/files';
 import { filesProfileTypes, MAX_PHOTO_SIZE, validateFile } from 'utils/common/files';
 import { useI18n, useScopedI18n } from 'locales/client';
 
@@ -65,12 +64,6 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
   };
 
   const handleChangeFile = async (e: EventType) => setLogoGroup(e.target.files?.[0] ? e.target.files[0] : null);
-
-  const handleFile = async () => {
-    const result = await handleFileSelection(fileTranslated, false);
-
-    typeof result === 'string' ? setValuesFields(result) : setLogoGroup(result);
-  };
 
   const createGroup = async ({ name, description }: AddingGroupType, { resetForm }: ResetFormType) => {
     try {
@@ -177,20 +170,16 @@ export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
 
           <FormError nameError="description" />
 
-          {isFileAccessApiSupported ? (
-            <button type="button" onClick={handleFile} className={styles.filePickerButton}>
-              {tr.profilePhoto}
-            </button>
-          ) : (
+          <label className={styles.input}>
+            {tr.profilePhoto}
             <input
               name="logo"
               type="file"
               accept={filesProfileTypes}
               onChange={handleChangeFile}
-              placeholder={tr.profilePhoto}
-              className={styles.input}
+              className={styles.visuallyHidden}
             />
-          )}
+          </label>
 
           <button type="submit" className={`button ${styles.submit__button}`} aria-label={tr.ariaLabelButton}>
             {tr.send}

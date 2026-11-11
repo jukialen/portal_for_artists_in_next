@@ -10,12 +10,9 @@ import { ContainerType, LangType } from 'types/global.types';
 import { HomeImageContainers } from 'components/functional/atoms/HomeImageContainers/HomeImageContainers';
 
 import styles from './page.module.css';
-import friends from '../../../public/friends.png';
-import groups from '../../../public/groups.png';
 import diary from '../../../public/diary.jpg';
 import artist from '../../../public/artist.jpg';
 import searchingService from '../../../public/searching.jpg';
-import likes from '../../../public/likes.png';
 
 export const metadata: Metadata = HeadCom('Main site.');
 
@@ -25,6 +22,9 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
 
   const { default: authorButton } = await import(`../../../public/authorButton-${locale}.png`);
   const { default: categories } = await import(`../../../public/categories-${locale}.png`);
+  const { default: likes } = await import(`../../../public/likes-${locale}.png`);
+  const { default: friends } = await import(`../../../public/friends-${locale}.png`);
+  const { default: groups } = await import(`../../../public/groups-${locale}.png`);
   const { default: minimalism } = await import(`../../../public/minimalism-${locale}.png`);
   const { default: uploadImage } = await import(`../../../public/upload-${locale}.png`);
   const { default: top } = await import(`../../../public/top-${locale}.png`);

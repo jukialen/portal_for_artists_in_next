@@ -129,7 +129,7 @@
       }
 
       .tags__error {
-        border-color: var(--required);
+        border: 1px solid var(--required);
         color: var(--required);
 
         div {
@@ -197,17 +197,6 @@
       border: 1px solid var(--third);
       border-radius: 1rem;
       font-size: 1rem;
-
-      &::-webkit-file-upload-button {
-        border: none;
-        padding: 0.5rem 1rem;
-        margin-right: 0.5rem;
-        border-radius: 0.5rem;
-        cursor: pointer;
-        transition: background 0.3s;
-        background-color: var(--primary);
-        color: var(--background);
-      }
 
       &__error {
         border-color: var(--required);
