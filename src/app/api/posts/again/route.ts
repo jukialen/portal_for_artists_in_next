@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { createServer } from 'utils/supabase/clientSSR';
 
 import { PostsType } from 'types/global.types';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
   const groupId = searchParams.get('groupId')!;
   const lastVisible = searchParams.get('lastVisible');
@@ -33,7 +32,7 @@ export async function GET(req: NextRequest) {
 
       const { data: lData, count } = await supabase.from('Liked').select('id, userId').match({ postId, authorId });
 
-      const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
+      const likedData = lData?.find((v: { userId: string }) => v.userId === authorId);
 
       const { data: rData, error: rEr } = await supabase
         .from('Roles')
@@ -49,18 +48,17 @@ export async function GET(req: NextRequest) {
       nextArray.push({
         authorName: Users?.pseudonym!,
         authorProfilePhoto: Users?.profilePhoto!,
-        liked: indexCurrentUser >= 0,
+        liked: !!likedData,
         postId,
         title,
         content,
-        likes: count || 0,
+        likes: lData?.length || 0,
         shared,
         commented,
         authorId,
         groupId,
         roleId: rData?.id || Roles?.id!,
-        date: await getDate(updatedAt! || createdAt!, await dateData()),
-        idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
+        date: await getDate(updatedAt! || createdAt!),
       });
     }
 

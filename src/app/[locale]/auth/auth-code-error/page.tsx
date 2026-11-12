@@ -5,7 +5,7 @@ import { getScopedI18n } from 'locales/server';
 
 import { LangType } from 'types/global.types';
 
-import styles from './AuthErrorPage.module.scss';
+import styles from './AuthErrorPage.module.css';
 
 export default async function AuthErrorPage({ params }: { params: Promise<{ locale: LangType }> }) {
   const { locale } = await params;

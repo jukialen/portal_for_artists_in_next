@@ -7,28 +7,27 @@ import { getScopedI18n } from 'locales/server';
 import { HeadCom } from 'constants/HeadCom';
 import { ContainerType, LangType } from 'types/global.types';
 
-import { HomeImageContainers } from 'components/atoms/HomeImageContainers/HomeImageContainers';
+import { HomeImageContainers } from 'components/functional/atoms/HomeImageContainers/HomeImageContainers';
 
-import styles from './page.module.scss';
-import dark_mode from '../../../public/dark_mode.png';
-import light_mode from '../../../public/light_mode.png';
-import friends from '../../../public/friends.png';
-import categories from '../../../public/categories.png';
-import groups from '../../../public/groups.png';
+import styles from './page.module.css';
 import diary from '../../../public/diary.jpg';
 import artist from '../../../public/artist.jpg';
 import searchingService from '../../../public/searching.jpg';
-import upload from '../../../public/upload.png';
-import authorButton from '../../../public/authorButton.png';
-import top from '../../../public/top.jpg';
-import minimalism from '../../../public/minimalism.png';
-import likes from '../../../public/likes.png';
 
 export const metadata: Metadata = HeadCom('Main site.');
 
 export default async function Home({ params }: { params: Promise<{ locale: LangType }> }) {
   const { locale } = await params;
   setStaticParamsLocale(locale);
+
+  const { default: authorButton } = await import(`../../../public/authorButton-${locale}.png`);
+  const { default: categories } = await import(`../../../public/categories-${locale}.png`);
+  const { default: likes } = await import(`../../../public/likes-${locale}.png`);
+  const { default: friends } = await import(`../../../public/friends-${locale}.png`);
+  const { default: groups } = await import(`../../../public/groups-${locale}.png`);
+  const { default: minimalism } = await import(`../../../public/minimalism-${locale}.png`);
+  const { default: uploadImage } = await import(`../../../public/upload-${locale}.png`);
+  const { default: top } = await import(`../../../public/top-${locale}.png`);
 
   const t = await getScopedI18n('Main');
   const width = 450;
@@ -39,7 +38,7 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
     {
       question: t('containerFirstQuestion'),
       answer: t('containerFirstAnswer'),
-      imageSource: [upload],
+      imageSource: [uploadImage],
       imageAlt: ['picture.jpg'],
       quality,
     },
@@ -79,7 +78,7 @@ export default async function Home({ params }: { params: Promise<{ locale: LangT
     {
       question: t('containerSixthQuestion'),
       answer: t('containerSixthAnswer'),
-      imageSource: [light_mode, dark_mode],
+      imageSource: ['/mode-h.265-hevc-pfartists.mp4', '/mode-h.264-pfartists.mp4'],
       imageAlt: ['light mode photo file', 'dark mode photo file'],
       quality,
       mode: true,

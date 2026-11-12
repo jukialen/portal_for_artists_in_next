@@ -1,44 +1,53 @@
+'use client';
+
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Tabs } from '@ark-ui/react/tabs';
 
-import { getI18n, getScopedI18n } from 'locales/server';
+import { useI18n, useScopedI18n } from 'locales/client';
 
-import { getUserData } from 'helpers/getUserData';
+import { FilesUploadType, FileType, FriendsListType, GroupUserType, UserType } from 'types/global.types';
 
-import { supabaseStorageProfileUrl } from 'constants/links';
-import { FilesUploadType, FileType, FriendsListType, GroupUserType } from 'types/global.types';
-
-import { FriendsButtons } from 'components/atoms/FriendsButtons/FriendsButtons';
+const FriendsButtons = dynamic(() =>
+  import('components/functional/atoms/FriendsButtons/FriendsButtons').then((p) => p.FriendsButtons),
+);
 
 const FriendsList = dynamic(() =>
-  import('components/molecules/FriendsList/FriendsList').then((mod) => mod.FriendsList),
+  import('components/functional/molecules/FriendsList/FriendsList').then((mod) => mod.FriendsList),
 );
-const GroupUsers = dynamic(() => import('components/organisms/GroupUsers/GroupUsers').then((mod) => mod.GroupUsers));
+const GroupUsers = dynamic(() =>
+  import('components/functional/organisms/GroupUsers/GroupUsers').then((mod) => mod.GroupUsers),
+);
 const PhotosGallery = dynamic(() =>
-  import('components/organisms/PhotosGallery/PhotosGallery').then((mod) => mod.PhotosGallery),
+  import('components/functional/organisms/PhotosGallery/PhotosGallery').then((mod) => mod.PhotosGallery),
 );
 const AnimatedGallery = dynamic(() =>
-  import('components/organisms/AnimatedGallery/AnimatedGallery').then((mod) => mod.AnimatedGallery),
+  import('components/functional/organisms/AnimatedGallery/AnimatedGallery').then((mod) => mod.AnimatedGallery),
 );
 const VideoGallery = dynamic(() =>
-  import('components/organisms/VideoGallery/VideoGallery').then((mod) => mod.VideoGallery),
+  import('components/functional/organisms/VideoGallery/VideoGallery').then((mod) => mod.VideoGallery),
 );
 const UpdateProfilePhotoOnAccount = dynamic(() =>
-  import('components/atoms/UpdateProfilePhotoOnAccount/UpdateProfilePhotoOnAccount').then(
+  import('components/functional/atoms/UpdateProfilePhotoOnAccount/UpdateProfilePhotoOnAccount').then(
     (main) => main.UpdateProfilePhotoOnAccount,
   ),
 );
-const FilesUpload = dynamic(() => import('components/molecules/FilesUpload/FilesUpload').then((fu) => fu.FilesUpload));
+const FilesUpload = dynamic(() =>
+  import('components/functional/molecules/FilesUpload/FilesUpload').then((fu) => fu.FilesUpload),
+);
 
-import styles from './ProfilePage.module.scss';
+import styles from './ProfilePage.module.css';
 import { RiArrowUpSLine } from 'react-icons/ri';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 type ProfilePageType = {
   id: string;
   author: string;
   myProfile?: boolean;
+  userData: UserType | null;
+  photo: string;
   firstFriendsList: FriendsListType[] | undefined;
   firstAdminList: GroupUserType[] | undefined;
   firstModsUsersList:
@@ -50,42 +59,39 @@ type ProfilePageType = {
   firstGraphics: FileType[] | undefined;
   firstAnimations: FileType[] | undefined;
   firstVideos: FileType[] | undefined;
-  fidsFavs?: null | {
-    friendIds: {
-      friendId: string;
-      favorite: boolean;
-    }[];
-    pseudonymId: any;
-    profilePhotoUser: any;
-    descriptionUser: any;
-  };
   favs?: number;
-  fave?:
-    | {
-        friendId: string;
-        favorite: boolean;
-      }
-    | undefined;
+  faved?: {
+    favorite: boolean;
+    pseudonym: string;
+  };
 };
 
-export const ProfilePage = async ({
+export const ProfilePage = ({
   id,
   author,
-  myProfile,
+  myProfile = false,
+  userData,
+  photo,
   firstFriendsList,
   firstAdminList,
   firstModsUsersList,
   firstGraphics,
   firstAnimations,
   firstVideos,
-  fidsFavs,
   favs,
-  fave,
+  faved,
 }: ProfilePageType) => {
-  const t = await getI18n();
-  const tAnotherForm = await getScopedI18n('AnotherForm');
-  const tAside = await getScopedI18n('Aside');
-  const tMenu = await getScopedI18n('Account.aMenu');
+  const pseudonym = decodeURIComponent(userData?.pseudonym!);
+  const { push } = useRouter();
+
+  useEffect(() => {
+    id === userData?.id! && push(`/account/${pseudonym}`);
+  }, [id, userData?.id]);
+
+  const t = useI18n();
+  const tAnotherForm = useScopedI18n('AnotherForm');
+  const tAside = useScopedI18n('Aside');
+  const tMenu = useScopedI18n('Account.aMenu');
 
   const tDash = {
     friends: tMenu('friends'),
@@ -115,7 +121,6 @@ export const ProfilePage = async ({
     fileTooLarge: tAnotherForm('fileTooLarge'),
     unsupportedFileType: tAnotherForm('unsupportedFileType'),
   };
-
   const fileTabList = [tDash?.friends, tDash?.groups, tDash?.photos, tDash?.animations, tDash?.videos];
   const tFriends = {
     friends: t('Nav.friends'),
@@ -128,16 +133,13 @@ export const ProfilePage = async ({
     addedMax: t('Friends.addedMax'),
   };
 
-  const userData = await getUserData();
-  const pseudonym = userData?.pseudonym!;
-
   const fileComps = [
     <FriendsList id={id} tFriends={tFriends!} firstFriendsList={firstFriendsList!} key="0" />,
     <GroupUsers id={id} firstAdminList={firstAdminList!} firstModsUsersList={firstModsUsersList!} key="1" />,
     <PhotosGallery
       id={id}
       pseudonym={pseudonym!}
-      author={author!}
+      author={author}
       tGallery={tGallery}
       firstGraphics={firstGraphics}
       key="2"
@@ -165,34 +167,29 @@ export const ProfilePage = async ({
       <article className={styles.mainData}>
         <div className={styles.logoPseu}>
           <div className={styles.logo}>
-            <Image
-              src={`${supabaseStorageProfileUrl}/${userData?.profilePhoto!}`}
-              fill
-              alt={`${userData?.pseudonym} logo`}
-              priority
-            />
+            <Image src={photo} fill alt={myProfile ? 'my logo' : `${author} logo`} priority />
             {myProfile && (
               <UpdateProfilePhotoOnAccount userData={userData!} fileTranslated={fileTranslated} tCurrPrPhoto={tMain} />
             )}
           </div>
-          <h1 className={styles.name}>{userData?.pseudonym}</h1>
+          <h1 className={styles.name}>{author}</h1>
         </div>
         <div className={styles.description}>{userData?.description}</div>
-        {myProfile && <FilesUpload userId={userData?.id!} fileTranslated={fileTranslated} />}
+        {myProfile && <FilesUpload userId={userData?.id!} plan={userData?.plan!} fileTranslated={fileTranslated} />}
       </article>
 
       {!myProfile && (
         <FriendsButtons
-          id={id}
-          fid={fidsFavs?.pseudonymId!}
-          pseudonym={userData?.pseudonym!}
-          favLength={favs!}
-          fav={fave!.favorite}
-          friendBool={fave!.favorite}
+          id={userData?.id!}
+          fid={id}
+          favLength={favs || 0}
+          fav={faved?.favorite!}
+          friendBool={!!faved?.pseudonym || false}
           translated={tFriends}
         />
       )}
-      <Tabs.Root className={styles.tabsMenu} defaultValue={fileTabList[0]} defaultChecked lazyMount unmountOnExit>
+
+      <Tabs.Root className={styles.tabsMenu} defaultValue={fileTabList[0]} unmountOnExit>
         <Tabs.List className={styles.topTabList}>
           {fileTabList.map((tab) => (
             <Tabs.Trigger key={tab} className={styles.tabForPanels} value={tab!}>
@@ -210,13 +207,13 @@ export const ProfilePage = async ({
         </div>
       </Tabs.Root>
 
-      {fileTabList.map((tab) => (
+      {Object.entries(tDash).map(([key, value]) => (
         <Link
-          href={`/account/${author}/${tab!.toLowerCase()}?back=/account/${userData?.pseudonym}`}
+          href={`/${myProfile ? 'account' : 'user'}/${myProfile ? pseudonym : author}/${key}`}
           className={styles.mobileTabs}
-          key={tab}
+          key={key}
           aria-label="">
-          <span>{tab}</span>
+          <span>{value}</span>
           <RiArrowUpSLine />
         </Link>
       ))}

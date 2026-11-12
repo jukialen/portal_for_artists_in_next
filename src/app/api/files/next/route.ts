@@ -1,12 +1,12 @@
+import { NextRequest, NextResponse } from 'next/server';
+
 import { selectFiles } from 'constants/selects';
 import { FileType, Tags } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
-import { dateData } from 'helpers/dateData';
-
-import { getFileRoleId } from 'utils/roles';
+import { getFileRoleId } from 'app/actions/roles';
+import { likeList } from 'app/actions/likes';
 import { createServer } from 'utils/supabase/clientSSR';
-import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (req: NextRequest) => {
   const supabase = await createServer();
@@ -31,9 +31,9 @@ export const GET = async (req: NextRequest) => {
     for (const file of data) {
       const { fileId, name, shortDescription, Users, tags, fileUrl, authorId, createdAt, updatedAt } = file;
 
-      const roleId = await getFileRoleId(fileId, authorId!);
+      const role = await getFileRoleId(fileId, authorId!);
 
-      if (roleId === 'no id') return;
+      if (role.roleId === 'no id') return;
 
       nextArray.push({
         fileId,
@@ -43,7 +43,11 @@ export const GET = async (req: NextRequest) => {
         authorProfilePhoto: Users?.profilePhoto!,
         fileUrl,
         tags,
-        time: await getDate(updatedAt! || createdAt!, await dateData()),
+        time: await getDate(updatedAt! || createdAt!),
+        authorId: authorId!,
+        roleId: role.roleId,
+        liked: (await likeList(authorId!, 'fileId', fileId))!.liked,
+        likes: (await likeList(authorId!, 'fileId', fileId))!.likes,
       });
     }
 

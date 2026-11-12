@@ -1,0 +1,135 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { Avatar } from 'components/ui/atoms/Avatar/Avatar';
+
+import { getUserData } from 'helpers/getUserData';
+import { createClient } from 'utils/supabase/clientCSR';
+
+import { backUrl } from 'constants/links';
+import { PostsType } from 'types/global.types';
+
+import { useI18n } from 'locales/client';
+
+import { DeletePost } from 'components/functional/atoms/DeletionPost/DeletionPost';
+import { NewComments } from 'components/functional/atoms/NewComments/NewComments';
+import { SharingButton } from 'components/ui/atoms/SharingButton/SharingButton';
+import { Comments } from '../Comments/Comments';
+
+import styles from './Post.module.css';
+import group from '../../../../../public/group.svg';
+import { AiFillLike, AiOutlineLike } from 'react-icons/ai';
+
+export const Post = ({
+  userId,
+  name,
+  profilePhoto,
+  postOnGroup,
+}: {
+  userId: string;
+  name: string;
+  profilePhoto: string;
+  postOnGroup: PostsType;
+}) => {
+  const {
+    postId,
+    title,
+    content,
+    likes,
+    shared,
+    commented,
+    authorId,
+    groupId,
+    date,
+    liked,
+    authorName,
+    authorProfilePhoto,
+    roleId,
+  } = postOnGroup;
+
+  const [showComments, setShowComments] = useState(false);
+  const [newReply, setNewReply] = useState<any>(null);
+  const [deleted, setDeleted] = useState(false);
+  let [like, setLike] = useState(liked);
+  let [likeCount, setLikeCount] = useState(likes);
+  const link = `${backUrl}/groups/${name}/${authorName}/${postId}`;
+  const supabase = createClient();
+
+  const showingComments = () => setShowComments(!showComments);
+
+  const addLike = async () => {
+    const currentUserId = (await getUserData())?.id!;
+
+    if (like) {
+      const { error } = await supabase.from('Liked').delete().match({ postId, userId: currentUserId });
+
+      if (!error) {
+        setLike(false);
+        setLikeCount(likeCount - 1);
+      }
+    } else {
+      const { data, error } = await supabase.from('Liked').insert([{ postId, userId: currentUserId }]);
+
+      if (!!data || !error) {
+        setLike(true);
+        setLikeCount(likeCount + 1);
+      }
+    }
+  };
+
+  const t = useI18n();
+
+  return (
+    <article className={deleted ? styles.container__deleted : styles.container}>
+      <div className={styles.avatarWithUsername}>
+        <Avatar src={authorProfilePhoto || group} fallbackName={authorName} alt="my profile photo icon" />
+        <div className={styles.username}>
+          <Link href={`/user/${authorName}`}>{authorName}</Link>
+          <h4 className={styles.time}>{date}</h4>
+        </div>
+        {userId === authorId && (
+          <DeletePost
+            postId={postId!}
+            groupId={groupId}
+            userId={userId}
+            roleId={roleId}
+            onDeletionAction={setDeleted}
+          />
+        )}
+      </div>
+      <h2 className={styles.titlePost}>{title}</h2>
+      <h3 className={styles.description}>{content}</h3>
+      <div className={styles.options}>
+        <button
+          aria-label={like ? t('Posts.likedAria') : t('Posts.likeAria')}
+          className={styles.likes}
+          onClick={addLike}>
+          {like ? <AiFillLike size="sm" /> : <AiOutlineLike size="sm" />}
+        </button>
+        <button onClick={showingComments} className={styles.commentsButton}>
+          {t('Comments.comments')}
+        </button>
+        <SharingButton shareUrl={link} authorName={authorName} name={title} shared={shared} postId={postId!} />
+      </div>
+      <div className={styles.likesShComs}>
+        <p className={likeCount < 100 ? (likeCount < 10 ? styles.leftpadding : styles.leftSmallpadding) : ''}>
+          <span key={likeCount} className={styles.animatedNumber}>
+            {likeCount}
+          </span>
+        </p>
+        <p>{commented}</p>
+      </div>
+      <article className={`${styles.commentsSection} ${showComments ? styles.showComments : ''}`}>
+        <NewComments
+          authorId={authorId}
+          profilePhoto={profilePhoto}
+          roleId={roleId}
+          postId={postId}
+          onReplyAddedAction={setNewReply}
+        />
+        <Comments postId={postId!} roleId={roleId} newReply={newReply} />
+      </article>
+    </article>
+  );
+};

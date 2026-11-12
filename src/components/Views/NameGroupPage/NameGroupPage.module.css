@@ -1,0 +1,188 @@
+.nameGroupLogoAndData {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+
+  .nameGroup {
+    align-items: center;
+    padding: 1rem 0;
+    font-size: 2rem;
+    line-height: 1.4;
+  }
+
+  .adminButton {
+    anchor-name: --delete-group;
+    position-area: self-block-start center;
+    position-try: flip-block;
+    position-try-fallbacks: bottom;
+    display: flex;
+    align-self: flex-end;
+    gap: 0.5rem;
+    align-items: center;
+    margin: auto 0;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+    background: transparent;
+    border-color: transparent;
+    border: 1px groove var(--secondary__opacity);
+    color: var(--third);
+  }
+
+  .joined {
+    anchor-name: --to-join;
+    position-area: self-block-start center;
+    position-try: flip-block;
+    position-try-fallbacks: bottom;
+    margin: auto 0;
+    background: transparent;
+    color: var(--third);
+    border: 1px groove var(--secondary__opacity);
+    display: flex;
+    align-self: flex-end;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-size: 1rem;
+  }
+}
+
+.buttons, .deletingbuttons {
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  position: fixed;
+  position-anchor: --to-join;
+  top: anchor(bottom);
+  right: anchor(right);
+  position-area: bottom;
+  position-try: bottom;
+  position-try-fallbacks: flip-block;
+  padding: 0.5rem;
+  background-color: var(--primary__opacity);
+  box-shadow: var(--box-shadow);
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  backdrop-filter: var(--backdrop-filter);
+  border-radius: 1rem;
+  opacity: 0;
+  transform: translateY(-0.625rem);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    display 0.2s allow-discrete,
+    overlay 0.2s allow-discrete;
+
+  &:popover-open {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(-0.625rem);
+    }
+  }
+
+  .button {
+    width: 80%;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+    border: 2px groove var(--third);
+    color: var(--text);
+  }
+
+  p {
+    max-width: 84%;
+    display: flex;
+    align-self: flex-end;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    color: var(--text__opacity);
+  }
+
+  .leaveGroup {
+    margin-top: -0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--required);
+  }
+}
+
+.deletingbuttons {
+  position-anchor: --delete-group;
+  width: 20rem;
+  padding: 1rem;
+  gap: 1rem;
+
+  .deleteTitle, .deleteSubTitle {
+    width: calc(100% - 2rem);
+    max-width: unset;
+    text-align: left;
+    margin: auto;
+  }
+
+  .deleteTitle {
+    font-size: 1.25rem;
+    color: var(--text);
+  }
+
+  .deleteSubTitle {
+    font-size: 1rem;
+    color: var(--required);
+  }
+
+  .button {
+    border-color: var(--required);
+    color: var(--required);
+  }
+}
+
+.tabs {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+  align-self: center;
+  justify-self: center;
+  margin: 0 auto;
+
+  .tablist .tab {
+    height: 2.5rem;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0 1rem/3rem;
+    background-color: transparent;
+    border-color: var(--third);
+
+    &[data-selected] {
+      background: var(--secondary__opacity);
+    }
+
+    &:hover {
+      border-color: var(--hover);
+    }
+
+    &:active {
+      border-color: var(--active);
+    }
+
+    &:focus {
+      border-color: var(--focus);
+    }
+  }
+
+  .noPermission {
+    display: flex;
+    justify-content: center;
+    margin: 2rem auto;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 1rem 2rem;
+    line-height: 1.5;
+  }
+}

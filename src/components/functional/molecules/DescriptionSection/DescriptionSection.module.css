@@ -1,0 +1,79 @@
+.container {
+  width: inherit;
+  margin: 1rem auto;
+
+  .title {
+    margin: 1rem;
+  }
+
+  .field {
+    display: grid;
+    grid-template-columns: 1fr 4rem;
+    margin: 1rem auto;
+
+    .form {
+      width: 95%;
+      display: flex;
+      flex-direction: column;
+      margin: 1rem;
+      justify-self: center;
+      align-items: center;
+
+      textarea {
+        resize: vertical;
+      }
+
+      .updateField,
+      .updateField__error {
+        width: stretch;
+        width: 100%;
+        min-height: 3.5rem;
+        margin-bottom: 0.5rem;
+        padding: .5rem;
+        resize: vertical;
+        border-radius: 0.5rem;
+        background-color: var(--background);
+        border: 0.1rem solid var(--third);
+        color: var(--third);
+      }
+
+      .updateField__error {
+        border-color: var(--required);
+      }
+
+      .addingButton {
+        align-self: normal;
+        margin: 1rem 0 2rem;
+        padding: .5rem 1rem;
+        border-radius: 0.5rem;
+        border: 0.1rem solid var(--third);
+        background-color: var(--third);
+      }
+    }
+
+    .changeButton {
+      width: 2.8rem;
+      height: 2.8rem;
+      margin: 1rem auto;
+      background: var(--primary);
+      border: 0.1rem solid var(--primary);
+      border-radius: 0.75rem;
+      color: black;
+      cursor: pointer;
+
+      svg {
+        font-size: 1.3rem;
+      }
+    }
+  }
+
+  .items, .regulations__item {
+    width: inherit;
+    margin: 0 1rem 1.5rem;
+    line-height: 1.5;
+  }
+
+  .regulations__item {
+    margin-bottom: 8rem;
+  }
+}

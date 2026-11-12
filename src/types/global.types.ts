@@ -1,51 +1,52 @@
-import { ChangeEvent, JSX, ReactNode } from 'react';
+import { ChangeEvent, JSX } from 'react';
 import { Database } from './database.types';
 import { StaticImageData } from 'next/image';
+import { ICustomData } from '@paddle/paddle-node-sdk';
 
 //GENERAL
-type Like = { likes: number; liked: boolean };
+export type Like = { likes: number; liked: boolean };
 type Time = { createdAt?: string; updatedAt?: string };
 
 export type IndexType = 'photographs' | 'videos' | 'animations';
-export type LangType = 'en' | 'pl' | 'jp';
+export type LangType = 'en' | 'pl' | 'ja';
 export type Plan = Database['public']['Enums']['Plan'];
 export type Provider = Database['public']['Enums']['Provider'];
-export type TableNameType = 'Comments' | 'FilesComments' | 'LastComments' | 'SubComments';
+export type CommentsTableNameType = 'Comments' | 'FilesComments' | 'LastComments' | 'SubComments';
+export type ColumnCommentsTableNameType =
+  | 'postId'
+  | 'fileId'
+  | 'fileCommentId'
+  | 'commentId'
+  | 'subCommentId'
+  | 'lastCommentId';
 export type Tags = Database['public']['Enums']['Tags'];
+
+export type ContainerLinkType = {
+  link: string;
+  name: string;
+  description: string;
+  logo: string | StaticImageData;
+  alt: string;
+};
 
 //FORMS & CONTROLLERS ELEMENTS
 export type EventType = ChangeEvent<EventTarget & HTMLInputElement>;
 export type RoleType = Database['public']['Enums']['Role'];
-export type ResetFormType = {
-  resetForm: any;
-};
+export type ResetFormType = { resetForm: any };
 
 export type ModeType = 'light' | 'dark';
 
-export type NewPlanType = {
-  newPlan?: Plan;
-};
-
-//DATE OBJECT
-export type DateObjectType = {
-  second: string;
-  minute: string;
-  hour: string;
-  day: string;
-  yearDateSeparator: string;
-};
-
 //USERS
-export type UserType = NewPlanType &
-  Time & {
-    id?: string;
-    pseudonym: string;
-    description?: string;
-    profilePhoto?: string;
-    email: string;
-    plan: Plan;
-    provider?: Database['public']['Enums']['Provider'];
-  };
+export type UserType = Time & {
+  id?: string;
+  pseudonym: string;
+  description?: string;
+  profilePhoto?: string;
+  email: string;
+  plan: Plan;
+  billingCycle: BillingCycleType;
+  provider?: Database['public']['Enums']['Provider'];
+};
 
 export type UserFormType = {
   email: string;
@@ -61,28 +62,28 @@ export type ProfileType = {
 };
 
 //FILES
-export type FileType = Time & {
+type File = Like & {
   fileId?: string;
   name?: string;
   shortDescription?: string;
-  tags?: Database['public']['Enums']['Tags'];
-  pseudonym?: string;
-  authorProfilePhoto?: string;
-  authorName: string;
-  profileType?: boolean;
-  fileUrl: string;
+  tags: Tags;
   time: string;
+  fileUrl: string;
+  authorName: string;
+  authorId: string;
+  roleId: string;
 };
 
-export type ArticleVideosType = {
-  fileId: string;
-  name: string;
-  fileUrl: string;
-  shortDescription: string;
-  authorName: string;
+export type FileType = Time &
+  File & {
+    pseudonym?: string;
+    authorProfilePhoto?: string;
+    profileType?: boolean;
+  };
+
+export type ArticleVideosType = File & {
   authorBool: boolean;
-  tags: Database['public']['Enums']['Tags'];
-  time: string;
+  commentsBool?: boolean;
 };
 
 export type FilesUploadType = {
@@ -94,15 +95,6 @@ export type FilesUploadType = {
 };
 
 //FRIENDS
-export type FriendType = Time & {
-  id?: string;
-  usernameId: string;
-  favorite: boolean;
-  pseudonym: string;
-  profilePhoto: string;
-  time?: string;
-};
-
 export type FriendsListArrayType = {
   pseudonym: string;
   profilePhoto: string;
@@ -112,7 +104,7 @@ export type FriendsListArrayType = {
 export type FriendsListType = {
   fileUrl: string;
   pseudonym: string;
-  plan: string;
+  plan: Plan;
   favorite: boolean;
   createdAt: string;
 };
@@ -234,7 +226,6 @@ export type PostsType = Time &
     groupId: string;
     roleId: string;
     date?: string;
-    idLiked: string;
   };
 
 //GALLERY
@@ -261,35 +252,43 @@ export type GalleryType = {
 };
 
 // COMMENTS
-type Comment = Time & {
-  authorId: string;
-  fileUrl?: string;
+export type CommentsColumnIds = {
+  commentId?: string | null;
+  fileCommentId?: string | null;
+  subCommentId?: string;
+  lastCommentId?: string;
+  postId?: string;
+  fileId?: string;
   roleId?: string;
-  role: RoleType;
-  date?: string;
-  pseudonym?: string;
-  content: string;
-  liked: boolean;
-  likes: number;
+  newReply?: CommentType | null;
 };
 
-export type NewCommentsType = {
+export type Comment = CommentsColumnIds &
+  Time &
+  Like & {
+    authorId: string;
+    fileUrl?: string;
+    role: RoleType;
+    date?: string;
+    pseudonym?: string;
+    content: string;
+  };
+
+////INSERT
+export type NewCommentsType = CommentsColumnIds & {
   authorId: string;
-  profilePhoto?: string;
   roleId: string;
   content: string;
+  profilePhoto?: string;
   fileId?: string;
-  postId?: string;
-  fileCommentId?: string;
-  commentId?: string;
-  subCommentId?: string;
 };
 
+////SELECT
 export type CommentType = Comment & {
   authorName: string;
   authorProfilePhoto: string;
-  commentId: string;
-  postId: string;
+  fileId?: string;
+  tableName: CommentsTableNameType;
 };
 
 export type FilesCommentsType = Comment & {
@@ -297,6 +296,7 @@ export type FilesCommentsType = Comment & {
   authorProfilePhoto: string;
   fileCommentId: string;
   fileId: string;
+  tableName: CommentsTableNameType;
 };
 
 export type SubCommentType = Comment & {
@@ -307,7 +307,6 @@ export type SubCommentType = Comment & {
   commentId?: string;
   fileCommentId?: string;
   fileId?: string;
-  postId?: string;
   groupsPostsRoleId?: string;
 };
 
@@ -318,12 +317,66 @@ export type LastCommentType = Comment & {
   subCommentId: string;
 };
 
-//PAGes TYPES
+//PAGES TYPES
 export type ContainerType = {
   question: JSX.Element | string;
   answer: string;
-  imageSource: StaticImageData[];
+  imageSource: (StaticImageData | string)[];
   imageAlt: string[];
   quality: number;
   mode?: boolean;
 };
+
+//PAYMENTS
+export type BillingCycleType = 'year' | 'month';
+
+type PlanPricingType = {
+  id: string;
+  name: Plan;
+  description: string;
+  prices: { key: LangType; value: string }[];
+};
+
+export type SubscriptionPricingType = PlanPricingType & {
+  billingCycle: BillingCycleType;
+};
+
+export type OnetimePricingType = PlanPricingType & {
+  customData: ICustomData | null;
+};
+
+//PLANS
+export type PlanDataType = {
+  plan: Plan;
+  amountMonth: string;
+  amountYear: string;
+  grLength: string;
+  animLength: string;
+  vidLength: string;
+  grAnimSize: string;
+  vidSize: string;
+  noAds: string;
+  choosePlan: string;
+  support: string;
+};
+
+export type PlanOtherDataType = {
+  signIn: string;
+  signUp: string;
+  id?: string;
+  email?: string;
+  pseudonym?: string;
+  plan: Plan;
+  billingCycle: BillingCycleType;
+  subscriptionsOptionsList: SubscriptionPricingType[] | undefined;
+  periodMonth: string;
+  periodYear: string;
+};
+
+export type PlanBlockType = {
+  dataPlan: PlanDataType[];
+  other: PlanOtherDataType;
+  locale: LangType;
+};
+
+export type NewPlanType = { plan: Plan; cycle: BillingCycleType };

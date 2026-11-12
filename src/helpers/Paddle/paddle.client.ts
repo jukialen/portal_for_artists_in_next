@@ -1,0 +1,100 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { initializePaddle, Paddle } from '@paddle/paddle-js';
+
+import { backUrl, paddleClientId } from 'constants/links';
+import { LangType, ModeType } from 'types/global.types';
+import { manualFaroLog } from '../Grafana/client/methods';
+
+export const usePaddle = (
+  locale: LangType,
+): {
+  paddle: Paddle | undefined;
+  openSubscriptionCheckout: (priceId: string, userId: string, email: string, previousPage: string) => void;
+  openOneTimeCheckout: (priceId: string, userId: string, email: string) => void;
+  closeCheckout: () => void;
+} => {
+  const [paddle, setPaddle] = useState<Paddle>();
+
+  useEffect(() => {
+    initializePaddle({ environment: 'sandbox', token: paddleClientId!, })
+      .then((paddleInstance: Paddle | undefined) => {
+        if (paddleInstance) setPaddle(paddleInstance);
+        else manualFaroLog('Paddle initialized successfully but returned undefined.');
+      })
+      .catch((error) => {
+        manualFaroLog('Error during Paddle initialization:' + error.message);
+      });
+  }, []);
+
+  const openSubscriptionCheckout = (priceId: string, userId: string, email: string, previousPage: string): void => {
+    paddle?.Checkout.open({
+      items: [{ priceId, quantity: 1 }],
+      settings: {
+        allowLogout: false,
+        displayMode: 'overlay',
+        successUrl: `${backUrl}/api/pay/success?previousPage=${previousPage}`,
+        variant: 'one-page',
+        locale,
+        theme: localStorage.getItem('mode')! as ModeType,
+        allowedPaymentMethods: [
+          'alipay',
+          'apple_pay',
+          'google_pay',
+          'paypal',
+          'card',
+          'kakao_pay',
+          'samsung_pay',
+          'south_korea_local_card',
+          'naver_pay',
+        ],
+      },
+      customer: { id: userId },
+      customData: {
+        id: userId,
+        email,
+      },
+    });
+  };
+
+  const openOneTimeCheckout = (priceId: string, userId: string, email: string): void => {
+    paddle?.Checkout.open({
+      items: [{ priceId, quantity: 1 }],
+      settings: {
+        allowLogout: false,
+        displayMode: 'overlay',
+        successUrl: `${backUrl}/api/pay/success`,
+        variant: 'one-page',
+        theme: localStorage.getItem('mode')! as ModeType,
+        allowedPaymentMethods: [
+          'alipay',
+          'apple_pay',
+          'google_pay',
+          'paypal',
+          'card',
+          'kakao_pay',
+          'samsung_pay',
+          'south_korea_local_card',
+          'naver_pay',
+        ],
+      },
+      customer: { id: userId },
+      customData: {
+        id: userId,
+        email,
+      },
+    });
+  };
+
+  const closeCheckout = (): void => {
+    paddle?.Checkout.close();
+  };
+
+  return {
+    paddle,
+    openSubscriptionCheckout,
+    openOneTimeCheckout,
+    closeCheckout,
+  };
+};

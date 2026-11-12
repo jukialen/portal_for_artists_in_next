@@ -1,0 +1,24 @@
+.link {
+    min-width: 20rem;
+    max-width: 20rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.75rem 0.5rem 0.75rem 1rem;
+
+    .image {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.6rem;
+        font-size: 1rem;
+    }
+
+    .name {
+        margin-left: 0.5rem;
+    }
+
+    &:hover {
+        background-color: var(--secondary);
+        color: var(--text) !important;
+    }
+}

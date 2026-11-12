@@ -6,9 +6,11 @@ import { LangType } from 'types/global.types';
 import { getI18n } from 'locales/server';
 
 import { getUserData } from 'helpers/getUserData';
-import { getFirstFriends } from 'utils/friends';
+import { getFirstFriends } from 'app/actions/friends';
 
-import { FriendsList } from 'components/molecules/FriendsList/FriendsList';
+import { FriendsList } from 'components/functional/molecules/FriendsList/FriendsList';
+
+import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Subpage with another categories');
 
@@ -26,5 +28,7 @@ export default async function Friends({ params }: { params: Promise<{ locale: La
     noFriends: t('Friends.noFriends'),
   };
 
-  return <FriendsList id={userData?.id!} firstFriendsList={firstFriendsList!} tFriends={tFriends} />;
+  return <div className={styles.container}>
+    <h2 className={styles.title}>{tFriends.friends}</h2><FriendsList id={userData?.id!} firstFriendsList={firstFriendsList!} tFriends={tFriends} />
+  </div>
 }

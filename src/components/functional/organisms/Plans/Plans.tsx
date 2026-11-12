@@ -1,0 +1,35 @@
+'use client';
+import { useState } from 'react';
+
+import { BillingCycleType, PlanBlockType } from 'types/global.types';
+import { PlanBlock } from 'components/ui/molecules/PlanBlock/PlanBlock';
+
+import styles from './Plans.module.css';
+
+export const PlansContainer = ({ dataPlan, other, locale }: PlanBlockType) => {
+  const [cycle, setCycle] = useState<BillingCycleType>(other.billingCycle || 'month');
+
+  return (
+    <section className={styles.plansContainer}>
+      <div className={styles.cycleButtonContainer}>
+        <button
+          className={cycle === 'month' ? styles.cycleButton__active : styles.cycleButton}
+          onClick={() => setCycle('month')}>
+          {other.periodMonth}
+        </button>
+        <button
+          className={cycle === 'year' ? styles.cycleButton__active : styles.cycleButton}
+          onClick={() => setCycle('year')}>
+          {other.periodYear}
+        </button>
+      </div>
+      <div className={styles.plansDataContainer}>
+        <div className={styles.plansWrapper}>
+          <PlanBlock dataPlan={dataPlan[0]} other={other} billingCycle={cycle} locale={locale} />
+          <PlanBlock dataPlan={dataPlan[1]} other={other} billingCycle={cycle} locale={locale} />
+          <PlanBlock dataPlan={dataPlan[2]} other={other} billingCycle={cycle} locale={locale} />
+        </div>
+      </div>
+    </section>
+  );
+};

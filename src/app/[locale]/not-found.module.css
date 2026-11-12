@@ -1,0 +1,14 @@
+.notFound {
+  display: grid;
+  gap: 3rem;
+  padding: 2rem;
+  text-align: center;
+
+  h1 {
+    font-size: 2.4rem;
+  }
+
+  a {
+    font-size: 2rem;
+  }
+}

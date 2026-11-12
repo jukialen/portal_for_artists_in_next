@@ -1,18 +1,19 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import { notFound } from 'next/navigation';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
-import { FileType, LangType } from 'types/global.types';
+import { LangType } from 'types/global.types';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
-import { getFileRoleId } from 'utils/roles';
+import { getFileRoleId } from 'app/actions/roles';
+import { likeList } from 'app/actions/likes';
 import { createServer } from 'utils/supabase/clientSSR';
 
 const FileContainer = dynamic(() =>
-  import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
+  import('components/functional/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
 
 type PropsType = {
@@ -33,75 +34,66 @@ export async function generateMetadata({ params }: PropsType): Promise<Metadata>
 }
 
 async function oneFile(fileId: string) {
-  try {
-    const supabase = await createServer();
+  const supabase = await createServer();
 
+  try {
     const { data, error } = await supabase
       .from('Files')
-      .select('fileUrl, shortDescription, tags, authorId, createdAt, updatedAt')
+      .select(
+        'fileId, fileUrl, shortDescription, tags, authorId, createdAt, updatedAt, Users!authorId (pseudonym, profilePhoto)',
+      )
       .eq('fileId', fileId)
-      .limit(1)
-      .single();
-
-    if (!!error) {
-      console.error(error);
-      return;
-    }
-
-    const { data: d, error: er } = await supabase
-      .from('Users')
-      .select('pseudonym, profilePhoto')
-      .eq('id', data?.authorId!)
       .limit(1)
       .maybeSingle();
 
-    if (!!er) {
-      console.error(er);
+    if (!!error || !data) {
+      console.error('/[...file] error', error);
       return;
     }
 
-    const { fileUrl, shortDescription, tags, authorId, createdAt, updatedAt } = data;
+    const role = await getFileRoleId(fileId, data.authorId!);
 
-    const roleId = await getFileRoleId(fileId, authorId!);
+    const { fileUrl, shortDescription, tags, authorId, createdAt, updatedAt, Users } = data;
 
-    if (roleId === 'no id') return;
+    const { data: storageData, error: storageError } = await supabase.storage
+      .from('basic')
+      .createSignedUrl(fileUrl, 3600 * 24);
 
-    const postData: FileType = {
-      authorName: d?.pseudonym!,
-      authorProfilePhoto: d?.profilePhoto!,
-      fileUrl,
+    if (storageError) return;
+
+    return {
+      authorName: Users!.pseudonym,
+      authorProfilePhoto: Users!.profilePhoto,
+      fileUrl: storageData?.signedUrl,
       shortDescription: shortDescription!,
       tags,
-      time: await getDate(updatedAt! || createdAt!, await dateData()),
+      roleId: role.roleId,
+      authorId: authorId!,
+      time: await getDate(updatedAt! || createdAt!),
+      liked: (await likeList(authorId!, 'fileId', fileId)).liked,
+      likes: (await likeList(authorId!, 'fileId', fileId)).likes,
+      fileId,
     };
-
-    return postData;
   } catch (e) {
     console.error(e);
+    return;
   }
 }
 
 export default async function Post({ params }: PropsType) {
-  const { locale, name, file } = await params;
+  const { locale, file } = await params;
   setStaticParamsLocale(locale);
 
-  const fileId = file[1];
+  const userData = await getUserData();
+  const fileId = file[0];
 
   const authorPost = await oneFile(fileId);
-  const userData = await getUserData();
 
-  const { fileUrl, shortDescription, tags, authorName, time } = authorPost!;
+  if (!authorPost) return notFound();
 
   return (
     <FileContainer
-      fileId={fileId!}
-      name={name!}
-      fileUrl={fileUrl}
-      shortDescription={shortDescription!}
-      tags={tags!}
-      authorName={authorName!}
-      authorBool={authorName === userData?.pseudonym!}
-      time={time}
+      fileData={{ ...authorPost, authorBool: authorPost.authorName === userData?.pseudonym!, commentsBool: true }}
     />
   );
 }

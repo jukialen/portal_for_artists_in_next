@@ -1,0 +1,36 @@
+button.upBox,
+.upBox__active {
+  position: fixed;
+  width: 3rem;
+  height: 3rem;
+  bottom: 6rem;
+  right: 1rem;
+  padding: 0.25rem;
+  border-radius: 50%;
+  border: 2px ridge var(--primary__opacity);
+  background-color: var(--primary__opacity) !important;
+  box-shadow: var(--box-shadow);
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  backdrop-filter: var(--backdrop-filter);
+  z-index: 2;
+
+  .up {
+    width: 100%;
+    height: auto;
+  }
+
+  @media (min-width: 768px) {
+    &__active {
+      bottom: 3rem;
+    }
+  }
+}
+
+.upBox {
+  transform: translateY(9rem);
+  transition: transform 0.5s ease-in-out;
+}
+
+.upBox__active {
+  transform: translateY(0);
+}

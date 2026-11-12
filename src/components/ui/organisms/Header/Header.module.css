@@ -1,0 +1,118 @@
+.header {
+  width: 100dvw;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem .5rem;
+  z-index: 9999;
+
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto 0.5rem;
+    cursor: pointer;
+
+    img {
+      border-radius: 50%;
+    }
+  }
+
+  .menuButtons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    border-radius: 2rem;
+    padding: 0.25rem;
+    background-color: var(--primary__opacity);
+    box-shadow: var(--box-shadow);
+    -webkit-backdrop-filter: var(--backdrop-filter);
+    backdrop-filter: var(--backdrop-filter);
+
+    #signupLink {
+      display: none;
+    }
+
+    .menu_button {
+      height: 3.5rem;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.8rem;
+      justify-self: end;
+      align-items: center;
+      margin: auto 0;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2rem;
+      color: var(--text);
+      cursor: pointer;
+
+      svg {
+        width: 2rem;
+        height: 2rem;
+      }
+
+      &:hover {
+        background-color: var(--hover);
+        color: var(--text);
+      }
+
+      &:active {
+        background-color: var(--active);
+        color: var(--text);
+      }
+
+      &:focus {
+        background-color: var(--focus);
+      }
+
+      p {
+        font-size: 0.75rem;
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .header {
+    top: 0;
+    bottom: unset;
+
+    .title {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .menuButtons {
+      height: 3rem;
+      margin-right: 0.5rem;
+      border-radius: 2rem;
+      justify-self: end;
+      align-items: center;
+      gap: 0;
+      padding: 0;
+
+      #signupLink {
+        display: flex;
+      }
+
+      .menu_button {
+        width: max-content;
+        height: inherit;
+        margin: 0;
+        padding: .3rem 1rem;
+        align-items: center;
+
+        svg {
+          display: none;
+        }
+
+        p {
+          height: inherit;
+          align-content: center;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}

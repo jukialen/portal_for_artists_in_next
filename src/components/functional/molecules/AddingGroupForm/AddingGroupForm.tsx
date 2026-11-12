@@ -1,0 +1,193 @@
+'use client';
+
+import { useState } from 'react';
+import { Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { SchemaValidation } from 'schemasValidation/schemaValidation';
+
+import { createClient } from 'utils/supabase/clientCSR';
+import { filesProfileTypes, MAX_PHOTO_SIZE, validateFile } from 'utils/common/files';
+import { useI18n, useScopedI18n } from 'locales/client';
+
+import { EventType, FilesUploadType, ResetFormType, UserType } from 'types/global.types';
+
+import { FormError } from 'components/ui/atoms/FormError/FormError';
+import { Alerts } from 'components/ui/atoms/Alerts/Alerts';
+
+import styles from './AddingGroup.module.css';
+
+type AddingGroupType = {
+  name: string;
+  description: string;
+};
+
+type AddingGroupTr = {
+  tr: {
+    title: string;
+    name: string;
+    description: string;
+    profilePhoto: string;
+    send: string;
+    uploadFile: string;
+    notUploadFile: string;
+    ariaLabelButton: string;
+    error: string;
+    success: string;
+  };
+  userData: UserType;
+};
+
+export const AddingGroupForm = ({ tr, userData }: AddingGroupTr) => {
+  const [valuesFields, setValuesFields] = useState<string>('');
+  const [logoGroup, setLogoGroup] = useState<File | null>(null);
+
+  const initialValues = {
+    name: '',
+    description: '',
+  };
+
+  const schemaValidation = Yup.object({
+    name: SchemaValidation().groupName,
+    description: SchemaValidation().description,
+  });
+
+  const supabase = createClient();
+
+  const t = useI18n();
+  const tAnotherForm = useScopedI18n('AnotherForm');
+  const fileTranslated: FilesUploadType = {
+    fileSelectionCancelled: tAnotherForm('fileSelectionCancelled'),
+    errorOpeningFilePicker: tAnotherForm('errorOpeningFilePicker'),
+    validateRequired: t('NavForm.validateRequired'),
+    fileTooLarge: tAnotherForm('fileTooLarge'),
+    unsupportedFileType: tAnotherForm('unsupportedFileType'),
+  };
+
+  const handleChangeFile = async (e: EventType) => setLogoGroup(e.target.files?.[0] ? e.target.files[0] : null);
+
+  const createGroup = async ({ name, description }: AddingGroupType, { resetForm }: ResetFormType) => {
+    try {
+      if (!!logoGroup) {
+        if (!(await validateFile(fileTranslated, logoGroup, userData.plan, false))) {
+          const sanitizeString = (str: string) => {
+            return str
+              .replace(/\s+/g, '-')
+              .replace(/[^a-zA-Z0-9.\-_]/g, '')
+              .toLowerCase();
+          };
+          const fileName = sanitizeString(name + '-' + Date.now() + '-' + logoGroup.name);
+          const filePath = sanitizeString(name) + '/' + fileName;
+
+          if (logoGroup.size <= MAX_PHOTO_SIZE) {
+            const { data, error } = await supabase.storage.from('logos').upload(filePath, logoGroup);
+
+            if (!!error || !data) {
+              setValuesFields(tr.notUploadFile);
+              console.error(error);
+              return;
+            }
+
+            const { error: er } = await supabase.from('Groups').insert([
+              {
+                name,
+                description,
+                adminId: userData?.id!,
+                logo: data?.path!,
+              },
+            ]);
+
+            if (!!er) {
+              setValuesFields(tr.uploadFile);
+              return await supabase.storage.from('logos').remove([filePath]);
+            }
+
+            await resetForm(initialValues);
+            setLogoGroup(null);
+          }
+        }
+      } else {
+        const { data, error } = await supabase
+          .from('Groups')
+          .insert([
+            {
+              name,
+              description,
+              adminId: userData?.id!,
+            },
+          ])
+          .select('groupId')
+          .limit(1)
+          .single();
+
+        if (!!error || !data) {
+          setValuesFields(tr.error);
+          return;
+        }
+
+        const { error: rError } = await supabase
+          .from('Roles')
+          .insert([{ groupId: data.groupId, userId: userData?.id!, role: 'ADMIN' }]);
+
+        if (!!rError) {
+          setValuesFields(tr.error);
+          return await supabase.from('Groups').delete().eq('groupId', data.groupId);
+        }
+
+        setValuesFields(tr.success);
+        return await resetForm(initialValues);
+      }
+    } catch (e) {
+      console.error(e);
+      setValuesFields(tr.error);
+    }
+  };
+
+  return (
+    <Formik initialValues={initialValues} validationSchema={schemaValidation} onSubmit={createGroup}>
+      {({ values, handleChange, errors, touched }) => (
+        <Form className={styles.container__form}>
+          <h2 className={styles.title}>{tr.title}</h2>
+
+          <input
+            id="name"
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+            placeholder={tr.name}
+            className={touched.name && !!errors.name ? styles.field__error : styles.field}
+          />
+
+          <FormError nameError="groupName" />
+
+          <textarea
+            id="description"
+            name="description"
+            value={values.description}
+            onChange={handleChange}
+            placeholder={tr.description}
+            className={touched.description && !!errors.description ? styles.field__error : styles.field}
+          />
+
+          <FormError nameError="description" />
+
+          <label className={styles.input}>
+            {tr.profilePhoto}
+            <input
+              name="logo"
+              type="file"
+              accept={filesProfileTypes}
+              onChange={handleChangeFile}
+              className={styles.visuallyHidden}
+            />
+          </label>
+
+          <button type="submit" className={`button ${styles.submit__button}`} aria-label={tr.ariaLabelButton}>
+            {tr.send}
+          </button>
+
+          <div className={styles.alert}>{!!valuesFields && <Alerts valueFields={valuesFields} />}</div>
+        </Form>
+      )}
+    </Formik>
+  );
+};

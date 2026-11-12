@@ -1,30 +1,44 @@
 // next.config.js
 /** @type {import("next").NextConfig} */
 
-import { GenerateSW } from 'workbox-webpack-plugin';
-import path from 'path';
-import { projectUrl, projectUrlWithOutPrefix } from './src/constants/links.js';
+import {
+  backUrl,
+  faroHost,
+  faroHostWithoutProtocol,
+  lokiHost,
+  paddleBuyLink,
+  paddleCspLink,
+  paddleStyles,
+  projectUrl,
+  projectUrlWithOutPrefix,
+} from './src/constants/links.js';
 
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com ${projectUrl} https://region1.analytics.google.com ;
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    img-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} ${projectUrlWithOutPrefix} https://www.google.pl;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com
+     ${projectUrl} https://region1.analytics.google.com ${paddleCspLink} https://public.profitwell.com https://cdn-cookieyes.com https://*.cookieyes.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com ${paddleCspLink} ${paddleBuyLink} ${paddleStyles} https://www.googletagmanager.com;
+    img-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} https://www.google.pl https://cdn-cookieyes.com https://*.cookieyes.com https://www.googletagmanager.com https://fonts.gstatic.com;
+    media-src 'self' blob: data: https://www.google.com https://www.gstatic.com ${projectUrl} https://www.google.pl;
     font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
-    connect-src 'self' https://www.google.com https://www.gstatic.com https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl};
-    frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl};
+    connect-src 'self' https://www.google.com https://www.gstatic.com https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl}  ${lokiHost} ${faroHost} https://cdn-cookieyes.com https://cookieyes.com  https://www.googletagmanager.com/td https://*.cookieyes.com 
+    https://api.paddle.com https://checkout.paddle.com https://events.paddle.com ${paddleCspLink} https://www.google.com/pay https://sandbox-checkout.paddle.com https://*.profitwell.com;
+    frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/ ${projectUrl} https://checkout.paddle.com 
+    ${paddleBuyLink} https://play.google.com ${paddleCspLink} https://www.google.com/pay https://cdn-cookieyes.com https://*.cookieyes.com;
     worker-src 'self'; 
-    child-src 'self';
+    child-src 'self' https://cdn-cookieyes.com https://*.cookieyes.com;
 `;
 
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    qualities: [75, 100],
     remotePatterns: [
+      new URL(`${backUrl}/**`),
       {
         protocol: 'https',
         hostname: 'cdn-cookieyes.com',
@@ -48,6 +62,12 @@ const nextConfig = {
         hostname: 'res.cloudinary.com',
         port: '',
         pathname: '/pfartists/**',
+      },
+      {
+        protocol: 'https',
+        hostname: faroHostWithoutProtocol,
+        port: '',
+        pathname: '/**',
       },
     ],
     formats: ['image/avif', 'image/webp'],
@@ -76,24 +96,7 @@ const nextConfig = {
         ],
       },
       {
-        source: '/sw.js',
-        headers: [
-          {
-            key: 'Content-Type',
-            value: 'application/javascript; charset=utf-8',
-          },
-          {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self'",
-          },
-        ],
-      },
-      {
-        source: '/workbox-:hash.js',
+        source: '/(sw.js|workbox-.*.js)',
         headers: [
           {
             key: 'Content-Type',
@@ -106,103 +109,6 @@ const nextConfig = {
         ],
       },
     ];
-  },
-  webpack: (config, { isServer, dev }) => {
-    if (!isServer && !dev) {
-      config.output.publicPath = '/_next/';
-
-      const publicFolderRoot = path.join(process.cwd(), 'public');
-
-      config.plugins.push(
-        new GenerateSW({
-          swDest: path.join(publicFolderRoot, 'sw.js'),
-          clientsClaim: true,
-          skipWaiting: true,
-          include: [
-            /^\/_next\/static\//,
-            '/',
-            '/manifest.webmanifest',
-            '/icon-192x192.png',
-            '/icon-256x256.png',
-            '/icon-384x384.png',
-            '/icon-512x512.png',
-            '/maskable_icon-512x512.png',
-            '/apple-touch-icon.png',
-            '/pfartists.png',
-            '/desktop-screenshot.png',
-            '/mobile-screenshot.png',
-          ],
-          exclude: [
-            /\.map$/,
-            /asset-manifest\.json$/,
-            /\/_next\/static\/webpack\//,
-            /\/_next\/static\/chunks\/(pages|app)\/_app\.js/,
-            /\/_next\/static\/chunks\/pages\/_error\.js/,
-            /\/_next\/static\/chunks\/pages\/_document\.js/,
-          ],
-          runtimeCaching: [
-            {
-              urlPattern: /^\/_next\/static\/chunks\/(pages|app)\/.*\.js$/,
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'next-js-chunks',
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 7 * 24 * 60 * 60,
-                },
-                cacheableResponse: {
-                  statuses: [0, 200],
-                },
-              },
-            },
-            {
-              urlPattern: ({ url }) => url.origin === self.location.origin,
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'nextjs-cache',
-                expiration: {
-                  maxEntries: 100,
-                  maxAgeSeconds: 30 * 24 * 60 * 60,
-                },
-              },
-            },
-            {
-              urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif|apng|webm|mp4)$/,
-              handler: 'CacheFirst',
-              options: {
-                cacheName: 'media-cache',
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 30 * 24 * 60 * 60,
-                },
-              },
-            },
-            {
-              urlPattern: ({ url }) => url.pathname.startsWith('/languages/'),
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'language-files-cache',
-                expiration: {
-                  maxAgeSeconds: 7 * 24 * 60 * 60,
-                },
-              },
-            },
-            {
-              urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'api-cache',
-                expiration: {
-                  maxEntries: 10,
-                  maxAgeSeconds: 60 * 60,
-                },
-              },
-            },
-          ],
-        }),
-      );
-    }
-    return config;
   },
 };
 

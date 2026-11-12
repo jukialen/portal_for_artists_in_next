@@ -1,0 +1,152 @@
+.box {
+  width: min(82dvw, 23rem);
+  min-height: 32rem;
+  display: grid;
+  grid-template-rows: 5rem 3.5rem 1fr 5rem;
+  align-items: center;
+  justify-items: center;
+  padding: 1rem 0;
+  border-radius: 1rem;
+  background-color: var(--primary);
+
+  .title {
+    /*width: inherit;*/
+    display: flex;
+    justify-content: center;
+    /*margin: 3rem auto 1rem;*/
+    font-size: 2.4rem;
+    color: black;
+  }
+
+  .priceCount {
+    display: flex;
+    margin-top: -1.5rem;
+    font-size: 1.6rem;
+    color: black;
+  }
+
+  .list {
+    width: 99%;
+    margin: 0 auto;
+
+    ul li {
+      display: flex;
+      align-items: center;
+      margin: 1rem 2rem 0.6rem 1rem;
+
+      svg.icon {
+        margin: 0 0.8rem 0 0.3rem;
+        font-size: 1.4rem;
+        color: var(--focus);
+      }
+
+      p {
+        margin: auto 0;
+        font-size: 1rem;
+        color: black;
+      }
+    }
+  }
+
+  .choosePlan {
+    position: relative;
+    font-size: 2rem;
+    margin-bottom: -1.5rem;
+
+    details.openButton {
+      a {
+        &:hover {
+          color: var(--text);
+          background-color: var(--hover);
+        }
+
+        &:focus {
+          background-color: var(--focus);
+          color: var(--background);
+        }
+
+        &:active {
+          background-color: var(--active);
+          color: var(--text);
+        }
+      }
+
+      .choose {
+        width: max-content;
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        list-style: none;
+        background-color: var(--opacity);
+        border-color: transparent;
+        cursor: pointer;
+
+        a {
+          display: flex;
+          gap: 0.5rem;
+          align-items: center;
+          color: var(--text);
+
+          svg {
+            width: 1.5rem;
+            height: auto;
+          }
+        }
+
+        svg {
+          color: inherit;
+        }
+
+        &:hover {
+          background-color: var(--hover);
+        }
+
+        &:focus {
+          background-color: var(--focus);
+          color: var(--background);
+        }
+
+        &:active {
+          background-color: var(--active);
+          color: var(--text);
+        }
+      }
+
+      .noUsersPlan {
+        width: 100%;
+        display: none;
+        flex-direction: column;
+        gap: 0.5rem;
+        position: absolute;
+        top: -6.5rem;
+        left: 0;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0;
+        border: 1px solid transparent;
+        box-shadow: var(--box-shadow);
+        background: var(--primary);
+
+        a.button {
+          padding: 0.5rem 1rem;
+          font-size: 1.2rem;
+          color: var(--text);
+          cursor: pointer;
+        }
+      }
+    }
+
+    details[open] .noUsersPlan {
+      display: flex;
+    }
+  }
+
+  &:nth-of-type(2) {
+    background-color: var(--secondary);
+
+    .choosePlan .openButton .noUsersPlan {
+      background-color: var(--secondary);
+    }
+  }
+}

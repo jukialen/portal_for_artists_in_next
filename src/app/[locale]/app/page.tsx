@@ -1,31 +1,30 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import { NextResponse } from 'next/server';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
-import { DateObjectType, FileType, LangType, Tags } from 'types/global.types';
+import { FileType, LangType, RoleType, Tags } from 'types/global.types';
 
 import { getScopedI18n } from 'locales/server';
-
 import { getDate } from 'helpers/getDate';
+import { getLinkUrl } from 'helpers/getLinkUrl';
 import { getUserData } from 'helpers/getUserData';
-import { dateData } from 'helpers/dateData';
-import { getFileRoleId } from 'utils/roles';
+import { getFileRoleId } from 'app/actions/roles';
+import { likeList } from 'app/actions/likes';
 import { createServer } from 'utils/supabase/clientSSR';
 
-import { AppWrapper } from 'components/atoms/AppWrapper/AppWrapper';
-const ZeroFiles = dynamic(() => import('components/atoms/ZeroFiles/ZeroFiles').then((zf) => zf.ZeroFiles));
+import { AppWrapper } from 'components/wrappers/AppWrapper/AppWrapper';
+const ZeroFiles = dynamic(() => import('components/ui/atoms/ZeroFiles/ZeroFiles').then((zf) => zf.ZeroFiles));
 const FileContainer = dynamic(() =>
-  import('components/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
+  import('components/functional/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
 );
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Main site for logged in users.');
 
-async function getTop10Drawings(maxItems: number, dataDateObject: DateObjectType) {
+async function getTop10Drawings(maxItems: number) {
   try {
     const filesArray: FileType[] = [];
 
@@ -38,64 +37,83 @@ async function getTop10Drawings(maxItems: number, dataDateObject: DateObjectType
       .order('createdAt', { ascending: false })
       .limit(maxItems);
 
-    if (data?.length === 0 || !!error) {
-      return filesArray;
-    }
+    if (data?.length === 0 || !!error) return filesArray;
 
     for (const draw of data) {
-      const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt } = draw;
+      const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt, tags } = draw;
+
+      const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
 
       const roleId = await getFileRoleId(fileId, authorId!);
+      // @ts-ignore
+      if (roleId.roleId === 'no id') return filesArray;
 
-      roleId === 'no id' && NextResponse.json(filesArray);
+      const roleOkId = roleId.roleId as RoleType;
+
       filesArray.push({
         fileId,
         name,
         shortDescription: shortDescription!,
         authorName: Users?.pseudonym!,
-        fileUrl,
-        time: await getDate(updatedAt! || createdAt!, dataDateObject),
+        authorId: authorId!,
+        fileUrl: photoLink,
+        tags,
+        roleId: roleOkId,
+        time: await getDate(updatedAt || createdAt!),
+        liked: (await likeList(authorId!, 'fileId', fileId)).liked,
+        likes: (await likeList(authorId!, 'fileId', fileId)).likes,
       });
     }
-
     return filesArray;
   } catch (e) {
     console.error('10drawingsE', e);
   }
 }
 
-async function getTop10Pavo(maxItems: number, tag: Tags, dataDateObject: DateObjectType) {
+async function getTop10Pavo(maxItems: number, tag: Tags) {
   try {
     const filesArray: FileType[] = [];
 
     const supabase = await createServer();
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('Files')
       .select(selectFiles)
       .eq('tags', tag)
       .order('createdAt', { ascending: false })
       .limit(maxItems);
 
-    if (data?.length === 0) {
-      return filesArray;
-    }
+    if (data?.length === 0 || !!error) return filesArray;
 
-    if (!!data && data.length > 0) {
-      for (const draw of data!) {
-        const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt } = draw;
+    for (const draw of data!) {
+      const { fileId, name, shortDescription, fileUrl, Users, authorId, createdAt, updatedAt, tags } = draw;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
+      const { data: storageData, error: storageError } = await supabase.storage
+        .from('basic')
+        .createSignedUrl(fileUrl, 3600 * 24);
 
-        filesArray.push({
-          fileId,
-          name,
-          shortDescription: shortDescription!,
-          authorName: Users?.pseudonym!,
-          fileUrl,
-          time: await getDate(updatedAt! || createdAt!, dataDateObject),
-        });
-      }
+      if (storageError) return filesArray;
+
+      const { roleId } = await getFileRoleId(fileId, authorId!);
+
+      if (roleId === 'no id') return filesArray;
+      const roleOkId = roleId! as unknown as RoleType;
+
+      const likesData = await likeList(authorId!, 'fileId', fileId);
+
+      filesArray.push({
+        fileId,
+        name,
+        shortDescription: shortDescription!,
+        authorName: Users?.pseudonym!,
+        fileUrl: storageData?.signedUrl,
+        time: await getDate(updatedAt || createdAt!),
+        authorId: authorId!,
+        tags,
+        roleId: roleOkId,
+        liked: likesData.liked,
+        likes: likesData.likes,
+      });
     }
 
     return filesArray;
@@ -111,31 +129,19 @@ export default async function App({ params }: { params: Promise<{ locale: LangTy
   const tApp = await getScopedI18n('App');
   const tZero = await getScopedI18n('ZeroFiles');
 
-  const dataDateObject = await dateData();
-
   const maxItems = 10;
   const tags: Tags[] = ['photographs', 'animations', 'videos'];
   const userData = await getUserData();
   const pseudonym = userData?.pseudonym!;
 
-  const drawings = await getTop10Drawings(maxItems, dataDateObject);
-  const photos = await getTop10Pavo(maxItems, tags[0], dataDateObject);
-  const animations = await getTop10Pavo(maxItems, tags[1], dataDateObject);
-  const videos = await getTop10Pavo(maxItems, tags[2], dataDateObject);
+  const drawings = await getTop10Drawings(maxItems);
+  const photos = await getTop10Pavo(maxItems, tags[0]);
+  const animations = await getTop10Pavo(maxItems, tags[1]);
+  const videos = await getTop10Pavo(maxItems, tags[2]);
 
   const appData = (data: FileType[]) =>
-    data.map(({ fileId, name, fileUrl, shortDescription, tags, authorName, time }: FileType, index) => (
-      <FileContainer
-        fileId={fileId!}
-        name={name!}
-        fileUrl={fileUrl}
-        shortDescription={shortDescription!}
-        tags={tags!}
-        authorName={authorName!}
-        authorBool={authorName === pseudonym!}
-        time={time}
-        key={index}
-      />
+    data.map((d: FileType, index) => (
+      <FileContainer fileData={{ ...d, authorBool: d.authorName === pseudonym! }} key={index} />
     ));
 
   return (

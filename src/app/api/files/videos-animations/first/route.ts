@@ -5,12 +5,11 @@ import { selectFiles } from 'constants/selects';
 import { FileType, Tags } from 'types/global.types';
 
 import { getDate } from 'helpers/getDate';
-import { dateData } from 'helpers/dateData';
-import { getFileRoleId } from 'utils/roles';
+import { getFileRoleId } from 'app/actions/roles';
 
 const tags: Tags[] = ['animations', 'videos'];
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const tag = searchParams.get('tag')!;
   const authorId = searchParams.get('authorId')!;
@@ -32,21 +31,27 @@ export async function GET(request: NextRequest) {
     if (data?.length === 0 || !!error) return NextResponse.json(filesArray);
 
     for (const file of data!) {
-      const { fileId, name, shortDescription, Users, authorId, fileUrl, createdAt, updatedAt } = file;
+      const { fileId, name, shortDescription, tags, Users, authorId, fileUrl, createdAt, updatedAt } = file;
 
-      const roleId = await getFileRoleId(fileId, authorId!);
+      const role = await getFileRoleId(fileId, authorId!);
 
-      roleId === 'no id' && NextResponse.json(filesArray);
+      role.roleId === 'no id' && NextResponse.json(filesArray);
+
       filesArray.push({
+        liked: false,
+        likes: 0,
         fileId,
         name,
         shortDescription: shortDescription!,
         authorName: Users?.pseudonym!,
         authorProfilePhoto: Users?.profilePhoto!,
         fileUrl,
-        time: await getDate(updatedAt! || createdAt!, await dateData()),
+        time: await getDate(updatedAt! || createdAt!),
         createdAt,
+        tags,
         updatedAt: updatedAt || undefined,
+        authorId: authorId!,
+        roleId: role.roleId,
       });
     }
     return NextResponse.json(filesArray);

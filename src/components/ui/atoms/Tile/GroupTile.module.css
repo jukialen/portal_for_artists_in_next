@@ -1,0 +1,30 @@
+.tile {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  max-width: 16rem;
+  margin: 2rem 3% 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 .5rem .1rem var(--third);
+
+  .link {
+    display: flex;
+    flex-direction: column;
+
+    .thumbnail {
+      border-radius: 1rem 1rem 0 0;
+      background: var(--third);
+    }
+
+    .nameGroup {
+      display: block;
+      padding: 0.5rem 1rem 0.5rem;
+      color: var(--text);
+    }
+
+    &:hover {
+      border-radius: 1rem;
+      background: var(--third);
+    }
+  }
+}

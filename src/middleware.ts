@@ -2,10 +2,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { createI18nMiddleware } from 'next-international/middleware';
 
-import { publishableKey, projectUrl } from 'constants/links';
-import { cookies } from 'next/headers';
+import { publishableKey, projectUrl, backUrl, newUserRed } from 'constants/links';
+import { locales } from 'constants/values';
+import { staticExtensions } from 'utils/common/files';
 
-const locales = ['en', 'pl', 'jp'];
 const defaultLocale = 'en';
 const publicForAll = ['/settings', '/terms', '/privacy', '/contact', '/faq', '/plans'];
 const onlyForGuests = ['/', '/signin', '/signup', '/forgotten'];
@@ -18,8 +18,22 @@ const i18nMiddleware = createI18nMiddleware({
 });
 
 export async function middleware(req: NextRequest) {
-  let response = NextResponse.next({ request: req });
-  const cookieStore = await cookies();
+  const { pathname } = req.nextUrl;
+
+  if (
+    pathname.startsWith('/sw.js') ||
+    pathname.startsWith('/workbox-') ||
+    staticExtensions.some((ext) => pathname.endsWith(ext)) ||
+    // pathname.startsWith('/api') ||
+    pathname.startsWith('/_next')
+  ) {
+    return NextResponse.next();
+  }
+
+  let response =
+    !pathname.startsWith('/auth') && !pathname.startsWith('/api')
+      ? i18nMiddleware(req)
+      : NextResponse.next({ request: req });
 
   const supabase = createServerClient(projectUrl!, publishableKey!, {
     cookies: {
@@ -28,7 +42,7 @@ export async function middleware(req: NextRequest) {
       },
       setAll(cookiesToSet) {
         try {
-          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
         } catch {
           // The `setAll` method was called from a Server Component.
           // This can be ignored if you have middleware refreshing
@@ -43,18 +57,14 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getSession();
 
   const redirectSignIntUrl = new URL('/signin', req.url);
-  const redirectToNewUser = new URL('/new-user', req.url);
+  const redirectToNewUser = new URL(newUserRed, req.url);
   const redirectToApp = new URL('/app', req.url);
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = req.nextUrl;
-
-  if (!pathname.startsWith('/auth')) {
-    response = i18nMiddleware(req);
-  }
+  if (pathname.startsWith('/api')) return response;
 
   let pathWithoutLocalePrefix = pathname;
 
@@ -73,9 +83,7 @@ export async function middleware(req: NextRequest) {
 
   if (pathname === '/') pathWithoutLocalePrefix = '/';
 
-  if (!pathWithoutLocalePrefix.startsWith('/')) {
-    pathWithoutLocalePrefix = `/${pathWithoutLocalePrefix}`;
-  }
+  if (!pathWithoutLocalePrefix.startsWith('/')) pathWithoutLocalePrefix = `/${pathWithoutLocalePrefix}`;
 
   const normalizedAuthPath =
     pathWithoutLocalePrefix.endsWith('/') && pathWithoutLocalePrefix !== '/'
@@ -93,7 +101,7 @@ export async function middleware(req: NextRequest) {
 
   if (((!isPublicPath && !isGuestOnlyPath) || isAuthCallback) && !id) return NextResponse.redirect(redirectSignIntUrl);
 
-  if ((normalizedAuthPath === '/new-user' || isGuestOnlyPath) && !!userData?.id)
+  if ((normalizedAuthPath === newUserRed || isGuestOnlyPath) && !!userData?.id)
     return NextResponse.redirect(redirectToApp);
 
   if (user?.app_metadata?.provider !== 'email' && !userData?.id && !!id) {
@@ -101,44 +109,17 @@ export async function middleware(req: NextRequest) {
     const email = user?.user_metadata?.email || user?.email;
     const provider = user?.app_metadata?.provider;
     const pseuusername =
-      user?.user_metadata?.custom_claims.global_name ||
-      user?.user_metadata?.full_name ||
-      user?.user_metadata?.full_name;
+      user?.user_metadata?.global_name || user?.user_metadata?.full_name || user?.user_metadata?.full_name;
+    const providerToken = session?.provider_token;
+    const providerId = user?.user_metadata?.provider_id;
 
-    const res = await fetch(avatarUrl, {
-      headers: {
-        Authorization: `Bearer ${session?.provider_token || user?.user_metadata?.provider_id}`,
-      },
+    const newUser = { avatarUrl, id, email, provider, pseuusername, providerToken, providerId };
+    const response = await fetch(`${backUrl}/api/auth/create-user`, {
+      method: 'POST',
+      body: JSON.stringify(newUser),
     });
 
-    const blob = await res.blob();
-
-    const pictureName = avatarUrl.split('/');
-
-    const { data, error: fileError } = await supabase.storage
-      .from('profiles')
-      .upload(`/${id}/${pictureName[pictureName.length - 1]}`, blob, {
-        contentType: blob.type,
-      });
-
-    if (!fileError || !!data) {
-      const { error } = await supabase.from('Users').insert([
-        {
-          id,
-          username: pseuusername,
-          pseudonym: pseuusername,
-          description: '',
-          profilePhoto: data?.path,
-          email,
-          provider,
-        },
-      ]);
-
-      if (!error) return NextResponse.redirect(redirectToApp);
-    } else {
-      console.log('not uploaded file', fileError);
-      return NextResponse.redirect(redirectSignIntUrl);
-    }
+    return NextResponse.redirect(response.ok ? redirectToApp : redirectToNewUser);
   }
 
   if (user?.app_metadata?.provider === 'email' && !userData?.id && !!id) {
@@ -150,6 +131,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|sw.js|api|workbox-.*\\.js|favicon.png|robots.txt|.well-known|.*\\.(?:svg|png|ico|json|webmanifest|jpg|jpeg|gif|webp|avif|heif|heic)$).*)',
+    '/((?!_next/static|_next/image|favicon.png|robots.txt|.well-known|.*\\.(?:svg|png|ico|json|webmanifest|jpg|jpeg|gif|webp|avif|heif|heic)$).*)',
   ],
 };

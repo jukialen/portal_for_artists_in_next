@@ -8,10 +8,10 @@ import { LangType } from 'types/global.types';
 
 import { HeadCom } from 'constants/HeadCom';
 
-import { Providers } from 'components/atoms/Providers/Providers';
-import { FormSignIn } from 'components/atoms/FormSignIn/FormSignIn';
+import { Providers } from 'components/functional/atoms/Providers/Providers';
+import { FormSignIn } from 'components/functional/atoms/FormSignIn/FormSignIn';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Sign in site');
 
@@ -32,30 +32,28 @@ export default async function Login({ params }: { params: Promise<{ locale: Lang
   };
 
   return (
-    <>
-      <div className={styles.login}>
-        <div className={styles.orientation}>
-          <FormSignIn translated={translated} />
+    <div className={styles.login}>
+      <div className={styles.orientation}>
+        <FormSignIn translated={translated} />
 
-          <Link href={'/forgotten'} className={styles.forgotten}>
-            {tNavForm('forgottenPasswordLink')}
-          </Link>
-        </div>
-        <div className={styles.orientation}>
-          <div className={styles.dividerWithText}>
-            <hr />
-            <h4 className={styles.provider__title}>{tNavForm('providerTitleLogin')}</h4>
-            <hr />
-          </div>
-
-          <Providers />
-
-          <p className={styles.changeForm}>
-            {tNavForm('changeToLogin')}
-            <Link href={'/signup'}>{t('Nav.signUp')}</Link>
-          </p>
-        </div>
+        <Link href={'/forgotten'} className={styles.forgotten}>
+          {tNavForm('forgottenPasswordLink')}
+        </Link>
       </div>
-    </>
+      <div className={styles.orientation}>
+        <div className={styles.dividerWithText}>
+          <hr />
+          <h4 className={styles.provider__title}>{tNavForm('providerTitleLogin')}</h4>
+          <hr />
+        </div>
+
+        <Providers />
+
+        <p className={styles.changeForm}>
+          {tNavForm('changeToLogin')}
+          <Link href={'/signup'}>{t('Nav.signUp')}</Link>
+        </p>
+      </div>
+    </div>
   );
 }

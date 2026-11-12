@@ -178,6 +178,7 @@ export default {
     description: 'Opis',
     fileTitle: 'Dodaj plik',
     tags: 'Tagi',
+    shortDescription: 'krótki opis dla pliku',
     file: 'Plik',
     send: 'Wyślij',
     uploadFile: 'Plik został wysłany.',
@@ -190,6 +191,7 @@ export default {
   AddingGroup: {
     title: 'Stwórz grupę',
     name: 'Nazwa grupy',
+    success: 'Grupa została utworzona pomyślnie! 😄',
   },
   Groups: {
     join: 'Dołącz',
@@ -215,6 +217,7 @@ export default {
       more: 'Więcej',
       all: 'To już wszystkie grupy.',
     },
+    allGroups: 'Wszystkie grupy',
     noGroups: 'Brak ulubionych grup',
     noPermission: 'Aby zobaczyć posty musisz dołączyć do grupy.',
     deleteGroup: 'Usuń grupę',
@@ -358,7 +361,8 @@ export default {
   Plans: {
     title: 'Pfartists plany',
     subTitle: 'Wybierz plan który jest najlepszy dla ciebie',
-    period: '/MIESIĘCZNIE',
+    periodMonth: 'miesięcznie',
+    periodYear: 'rocznie',
     grLength: 'Nielimitowana ilość plików graficznych*',
     animLength: 'Nielimitowana ilość animacji*',
     vidLength: 'Nielimitowana ilość filmów*',
@@ -375,6 +379,7 @@ export default {
     formats: '* wspierane formaty: ',
     supInfo: '** kontakt przez e-mail w ciągu 4 dni roboczych',
     pSupInfo: '*** kontakt przez emailw ciągu 2 dni roboczych. Dodatkowo dostęp do grupy na Slacku',
+    unavailable: 'Niedostępne',
   },
   EmailVerification: {
     sendedSuccess: 'Proszę sprawdzić swoją skrzynkę e-mailową i kliknąć w link w nim zawarty.',

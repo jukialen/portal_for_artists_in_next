@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "14.1"
   }
   graphql_public: {
     Tables: {
@@ -79,6 +79,13 @@ export type Database = {
             foreignKeyName: "public_Comments_authorId_fkey"
             columns: ["authorId"]
             isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
+          },
+          {
+            foreignKeyName: "public_Comments_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
           },
@@ -97,7 +104,7 @@ export type Database = {
           createdAt: string
           fileId: string
           fileUrl: string
-          fts_document: unknown | null
+          fts_document: unknown
           groupId: string | null
           name: string
           profileType: boolean
@@ -110,7 +117,7 @@ export type Database = {
           createdAt?: string
           fileId?: string
           fileUrl: string
-          fts_document?: unknown | null
+          fts_document?: unknown
           groupId?: string | null
           name: string
           profileType?: boolean
@@ -123,7 +130,7 @@ export type Database = {
           createdAt?: string
           fileId?: string
           fileUrl?: string
-          fts_document?: unknown | null
+          fts_document?: unknown
           groupId?: string | null
           name?: string
           profileType?: boolean
@@ -132,6 +139,13 @@ export type Database = {
           updatedAt?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "public_Files_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
+          },
           {
             foreignKeyName: "public_Files_authorId_fkey"
             columns: ["authorId"]
@@ -177,6 +191,13 @@ export type Database = {
           updatedAt?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "public_FilesComments_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
+          },
           {
             foreignKeyName: "public_FilesComments_authorId_fkey"
             columns: ["authorId"]
@@ -230,8 +251,22 @@ export type Database = {
             foreignKeyName: "public_Friends_friendId_fkey"
             columns: ["friendId"]
             isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
+          },
+          {
+            foreignKeyName: "public_Friends_friendId_fkey"
+            columns: ["friendId"]
+            isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_Friends_usernameId_fkey"
+            columns: ["usernameId"]
+            isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
           },
           {
             foreignKeyName: "public_Friends_usernameId_fkey"
@@ -273,7 +308,15 @@ export type Database = {
           regulation?: string | null
           updatedAt?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "Groups_adminId_fkey"
+            columns: ["adminId"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       LastComments: {
         Row: {
@@ -308,6 +351,13 @@ export type Database = {
             foreignKeyName: "public_LastComments_authorId_fkey"
             columns: ["authorId"]
             isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
+          },
+          {
+            foreignKeyName: "public_LastComments_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
           },
@@ -329,21 +379,33 @@ export type Database = {
       }
       Liked: {
         Row: {
+          commentId: string | null
+          fileCommentId: string | null
           fileId: string | null
           id: string
+          lastCommentId: string | null
           postId: string | null
+          subCommentId: string | null
           userId: string
         }
         Insert: {
+          commentId?: string | null
+          fileCommentId?: string | null
           fileId?: string | null
           id?: string
+          lastCommentId?: string | null
           postId?: string | null
+          subCommentId?: string | null
           userId: string
         }
         Update: {
+          commentId?: string | null
+          fileCommentId?: string | null
           fileId?: string | null
           id?: string
+          lastCommentId?: string | null
           postId?: string | null
+          subCommentId?: string | null
           userId?: string
         }
         Relationships: [
@@ -360,6 +422,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "Files"
             referencedColumns: ["fileId"]
+          },
+          {
+            foreignKeyName: "public_Liked_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
           },
           {
             foreignKeyName: "public_Liked_userId_fkey"
@@ -415,6 +484,13 @@ export type Database = {
             foreignKeyName: "public_Posts_authorId_fkey"
             columns: ["authorId"]
             isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
+          },
+          {
+            foreignKeyName: "public_Posts_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
           },
@@ -437,32 +513,105 @@ export type Database = {
       Roles: {
         Row: {
           commentId: string | null
+          fileCommentId: string | null
           fileId: string | null
           groupId: string | null
           id: string
+          lastCommentId: string | null
           postId: string | null
           role: Database["public"]["Enums"]["Role"]
+          subCommentId: string | null
           userId: string
         }
         Insert: {
           commentId?: string | null
+          fileCommentId?: string | null
           fileId?: string | null
           groupId?: string | null
           id?: string
+          lastCommentId?: string | null
           postId?: string | null
           role?: Database["public"]["Enums"]["Role"]
+          subCommentId?: string | null
           userId: string
         }
         Update: {
           commentId?: string | null
+          fileCommentId?: string | null
           fileId?: string | null
           groupId?: string | null
           id?: string
+          lastCommentId?: string | null
           postId?: string | null
           role?: Database["public"]["Enums"]["Role"]
+          subCommentId?: string | null
           userId?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "Roles_commentId_fkey"
+            columns: ["commentId"]
+            isOneToOne: false
+            referencedRelation: "Comments"
+            referencedColumns: ["commentId"]
+          },
+          {
+            foreignKeyName: "Roles_fileCommentId_fkey"
+            columns: ["fileCommentId"]
+            isOneToOne: false
+            referencedRelation: "FilesComments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Roles_fileId_fkey"
+            columns: ["fileId"]
+            isOneToOne: false
+            referencedRelation: "Files"
+            referencedColumns: ["fileId"]
+          },
+          {
+            foreignKeyName: "Roles_groupId_fkey"
+            columns: ["groupId"]
+            isOneToOne: false
+            referencedRelation: "Groups"
+            referencedColumns: ["groupId"]
+          },
+          {
+            foreignKeyName: "Roles_lastCommentId_fkey"
+            columns: ["lastCommentId"]
+            isOneToOne: false
+            referencedRelation: "LastComments"
+            referencedColumns: ["lastCommentId"]
+          },
+          {
+            foreignKeyName: "Roles_postId_fkey"
+            columns: ["postId"]
+            isOneToOne: false
+            referencedRelation: "Posts"
+            referencedColumns: ["postId"]
+          },
+          {
+            foreignKeyName: "Roles_subCommentId_fkey"
+            columns: ["subCommentId"]
+            isOneToOne: false
+            referencedRelation: "SubComments"
+            referencedColumns: ["subCommentId"]
+          },
+          {
+            foreignKeyName: "Roles_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
+          },
+          {
+            foreignKeyName: "Roles_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       SubComments: {
         Row: {
@@ -500,6 +649,13 @@ export type Database = {
             foreignKeyName: "public_SubComments_authorId_fkey"
             columns: ["authorId"]
             isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
+          },
+          {
+            foreignKeyName: "public_SubComments_authorId_fkey"
+            columns: ["authorId"]
+            isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
           },
@@ -528,6 +684,7 @@ export type Database = {
       }
       Users: {
         Row: {
+          billingCycle: Database["public"]["Enums"]["BillingCycleType"]
           createdAt: string
           description: string
           email: string
@@ -540,6 +697,7 @@ export type Database = {
           username: string
         }
         Insert: {
+          billingCycle?: Database["public"]["Enums"]["BillingCycleType"]
           createdAt?: string
           description?: string
           email?: string
@@ -552,6 +710,7 @@ export type Database = {
           username: string
         }
         Update: {
+          billingCycle?: Database["public"]["Enums"]["BillingCycleType"]
           createdAt?: string
           description?: string
           email?: string
@@ -622,6 +781,13 @@ export type Database = {
             foreignKeyName: "public_UsersGroups_userId_fkey"
             columns: ["userId"]
             isOneToOne: false
+            referencedRelation: "Friends_View"
+            referencedColumns: ["usernameId"]
+          },
+          {
+            foreignKeyName: "public_UsersGroups_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
           },
@@ -637,6 +803,7 @@ export type Database = {
           profilePhoto: string | null
           pseudonym: string | null
           updatedAt: string | null
+          usernameId: string | null
         }
         Relationships: []
       }
@@ -645,6 +812,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      BillingCycleType: "month" | "year"
       Plan: "FREE" | "PREMIUM" | "GOLD"
       Provider: "email" | "google" | "discord" | "spotify"
       Role: "ADMIN" | "MODERATOR" | "USER" | "AUTHOR"
@@ -659,449 +827,6 @@ export type Database = {
         | "others"
         | "profile"
         | "group"
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-  storage: {
-    Tables: {
-      buckets: {
-        Row: {
-          allowed_mime_types: string[] | null
-          avif_autodetection: boolean | null
-          created_at: string | null
-          file_size_limit: number | null
-          id: string
-          name: string
-          owner: string | null
-          owner_id: string | null
-          public: boolean | null
-          type: Database["storage"]["Enums"]["buckettype"]
-          updated_at: string | null
-        }
-        Insert: {
-          allowed_mime_types?: string[] | null
-          avif_autodetection?: boolean | null
-          created_at?: string | null
-          file_size_limit?: number | null
-          id: string
-          name: string
-          owner?: string | null
-          owner_id?: string | null
-          public?: boolean | null
-          type?: Database["storage"]["Enums"]["buckettype"]
-          updated_at?: string | null
-        }
-        Update: {
-          allowed_mime_types?: string[] | null
-          avif_autodetection?: boolean | null
-          created_at?: string | null
-          file_size_limit?: number | null
-          id?: string
-          name?: string
-          owner?: string | null
-          owner_id?: string | null
-          public?: boolean | null
-          type?: Database["storage"]["Enums"]["buckettype"]
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      buckets_analytics: {
-        Row: {
-          created_at: string
-          format: string
-          id: string
-          type: Database["storage"]["Enums"]["buckettype"]
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          format?: string
-          id: string
-          type?: Database["storage"]["Enums"]["buckettype"]
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          format?: string
-          id?: string
-          type?: Database["storage"]["Enums"]["buckettype"]
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      migrations: {
-        Row: {
-          executed_at: string | null
-          hash: string
-          id: number
-          name: string
-        }
-        Insert: {
-          executed_at?: string | null
-          hash: string
-          id: number
-          name: string
-        }
-        Update: {
-          executed_at?: string | null
-          hash?: string
-          id?: number
-          name?: string
-        }
-        Relationships: []
-      }
-      objects: {
-        Row: {
-          bucket_id: string | null
-          created_at: string | null
-          id: string
-          last_accessed_at: string | null
-          level: number | null
-          metadata: Json | null
-          name: string | null
-          owner: string | null
-          owner_id: string | null
-          path_tokens: string[] | null
-          updated_at: string | null
-          user_metadata: Json | null
-          version: string | null
-        }
-        Insert: {
-          bucket_id?: string | null
-          created_at?: string | null
-          id?: string
-          last_accessed_at?: string | null
-          level?: number | null
-          metadata?: Json | null
-          name?: string | null
-          owner?: string | null
-          owner_id?: string | null
-          path_tokens?: string[] | null
-          updated_at?: string | null
-          user_metadata?: Json | null
-          version?: string | null
-        }
-        Update: {
-          bucket_id?: string | null
-          created_at?: string | null
-          id?: string
-          last_accessed_at?: string | null
-          level?: number | null
-          metadata?: Json | null
-          name?: string | null
-          owner?: string | null
-          owner_id?: string | null
-          path_tokens?: string[] | null
-          updated_at?: string | null
-          user_metadata?: Json | null
-          version?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "objects_bucketId_fkey"
-            columns: ["bucket_id"]
-            isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      prefixes: {
-        Row: {
-          bucket_id: string
-          created_at: string | null
-          level: number
-          name: string
-          updated_at: string | null
-        }
-        Insert: {
-          bucket_id: string
-          created_at?: string | null
-          level?: number
-          name: string
-          updated_at?: string | null
-        }
-        Update: {
-          bucket_id?: string
-          created_at?: string | null
-          level?: number
-          name?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "prefixes_bucketId_fkey"
-            columns: ["bucket_id"]
-            isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      s3_multipart_uploads: {
-        Row: {
-          bucket_id: string
-          created_at: string
-          id: string
-          in_progress_size: number
-          key: string
-          owner_id: string | null
-          upload_signature: string
-          user_metadata: Json | null
-          version: string
-        }
-        Insert: {
-          bucket_id: string
-          created_at?: string
-          id: string
-          in_progress_size?: number
-          key: string
-          owner_id?: string | null
-          upload_signature: string
-          user_metadata?: Json | null
-          version: string
-        }
-        Update: {
-          bucket_id?: string
-          created_at?: string
-          id?: string
-          in_progress_size?: number
-          key?: string
-          owner_id?: string | null
-          upload_signature?: string
-          user_metadata?: Json | null
-          version?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "s3_multipart_uploads_bucket_id_fkey"
-            columns: ["bucket_id"]
-            isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      s3_multipart_uploads_parts: {
-        Row: {
-          bucket_id: string
-          created_at: string
-          etag: string
-          id: string
-          key: string
-          owner_id: string | null
-          part_number: number
-          size: number
-          upload_id: string
-          version: string
-        }
-        Insert: {
-          bucket_id: string
-          created_at?: string
-          etag: string
-          id?: string
-          key: string
-          owner_id?: string | null
-          part_number: number
-          size?: number
-          upload_id: string
-          version: string
-        }
-        Update: {
-          bucket_id?: string
-          created_at?: string
-          etag?: string
-          id?: string
-          key?: string
-          owner_id?: string | null
-          part_number?: number
-          size?: number
-          upload_id?: string
-          version?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "s3_multipart_uploads_parts_bucket_id_fkey"
-            columns: ["bucket_id"]
-            isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "s3_multipart_uploads_parts_upload_id_fkey"
-            columns: ["upload_id"]
-            isOneToOne: false
-            referencedRelation: "s3_multipart_uploads"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      add_prefixes: {
-        Args: { _bucket_id: string; _name: string }
-        Returns: undefined
-      }
-      can_insert_object: {
-        Args: { bucketid: string; metadata: Json; name: string; owner: string }
-        Returns: undefined
-      }
-      delete_prefix: {
-        Args: { _bucket_id: string; _name: string }
-        Returns: boolean
-      }
-      extension: {
-        Args: { name: string }
-        Returns: string
-      }
-      filename: {
-        Args: { name: string }
-        Returns: string
-      }
-      foldername: {
-        Args: { name: string }
-        Returns: string[]
-      }
-      get_level: {
-        Args: { name: string }
-        Returns: number
-      }
-      get_prefix: {
-        Args: { name: string }
-        Returns: string
-      }
-      get_prefixes: {
-        Args: { name: string }
-        Returns: string[]
-      }
-      get_size_by_bucket: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          bucket_id: string
-          size: number
-        }[]
-      }
-      list_multipart_uploads_with_delimiter: {
-        Args: {
-          bucket_id: string
-          delimiter_param: string
-          max_keys?: number
-          next_key_token?: string
-          next_upload_token?: string
-          prefix_param: string
-        }
-        Returns: {
-          created_at: string
-          id: string
-          key: string
-        }[]
-      }
-      list_objects_with_delimiter: {
-        Args: {
-          bucket_id: string
-          delimiter_param: string
-          max_keys?: number
-          next_token?: string
-          prefix_param: string
-          start_after?: string
-        }
-        Returns: {
-          id: string
-          metadata: Json
-          name: string
-          updated_at: string
-        }[]
-      }
-      operation: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      search: {
-        Args: {
-          bucketname: string
-          levels?: number
-          limits?: number
-          offsets?: number
-          prefix: string
-          search?: string
-          sortcolumn?: string
-          sortorder?: string
-        }
-        Returns: {
-          created_at: string
-          id: string
-          last_accessed_at: string
-          metadata: Json
-          name: string
-          updated_at: string
-        }[]
-      }
-      search_legacy_v1: {
-        Args: {
-          bucketname: string
-          levels?: number
-          limits?: number
-          offsets?: number
-          prefix: string
-          search?: string
-          sortcolumn?: string
-          sortorder?: string
-        }
-        Returns: {
-          created_at: string
-          id: string
-          last_accessed_at: string
-          metadata: Json
-          name: string
-          updated_at: string
-        }[]
-      }
-      search_v1_optimised: {
-        Args: {
-          bucketname: string
-          levels?: number
-          limits?: number
-          offsets?: number
-          prefix: string
-          search?: string
-          sortcolumn?: string
-          sortorder?: string
-        }
-        Returns: {
-          created_at: string
-          id: string
-          last_accessed_at: string
-          metadata: Json
-          name: string
-          updated_at: string
-        }[]
-      }
-      search_v2: {
-        Args: {
-          bucket_name: string
-          levels?: number
-          limits?: number
-          prefix: string
-          start_after?: string
-        }
-        Returns: {
-          created_at: string
-          id: string
-          key: string
-          metadata: Json
-          name: string
-          updated_at: string
-        }[]
-      }
-    }
-    Enums: {
-      buckettype: "STANDARD" | "ANALYTICS"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1232,6 +957,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      BillingCycleType: ["month", "year"],
       Plan: ["FREE", "PREMIUM", "GOLD"],
       Provider: ["email", "google", "discord", "spotify"],
       Role: ["ADMIN", "MODERATOR", "USER", "AUTHOR"],
@@ -1247,11 +973,6 @@ export const Constants = {
         "profile",
         "group",
       ],
-    },
-  },
-  storage: {
-    Enums: {
-      buckettype: ["STANDARD", "ANALYTICS"],
     },
   },
 } as const

@@ -1,0 +1,156 @@
+.file,
+.file__deleted {
+  width: min(34.5rem, 90dvw);
+  display: grid;
+  grid-template-rows: 1fr 3.25rem auto auto;
+  justify-self: center;
+  margin: 1rem auto;
+  padding: 0.5rem 0 2rem;
+  position: relative;
+  border: 0.1rem solid var(--third);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.5rem 0.1rem var(--third);
+
+  .item {
+    width: inherit;
+    height: 30rem;
+    display: block;
+    object-fit: contain;
+    background-color: transparent;
+  }
+
+  .video {
+    width: 99.5%;
+    height: max-content;
+    min-height: 20rem;
+    max-width: 37.5rem;
+    max-height: 37.5rem;
+  }
+
+  .timePlusTag {
+    width: 98%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--opacity);
+    margin: auto;
+    padding: 1rem;
+
+    .time {
+      display: block;
+    }
+  }
+
+  .shortDescription {
+    width: 93%;
+    margin: 0.5rem auto;
+    font-size: 1.5rem;
+  }
+
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 5rem 5rem;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 1rem 1.25rem;
+
+    &:last-of-type div,
+    button {
+      justify-self: center;
+    }
+
+    .author_name {
+      font-size: 1.2rem;
+      color: var(--secondary);
+    }
+
+    .likes {
+      width: 3rem;
+      height: 3rem;
+      margin: auto;
+      background-color: transparent;
+      color: var(--third);
+      border-color: transparent;
+      cursor: pointer;
+      transition: transform 0.4s ease-in-out;
+      transform-origin: left center -0.5rem;
+
+      &:hover,
+      &:active {
+        transform: perspective(40rem) scale(1.2) rotateZ(-20deg) rotateY(15deg);
+        padding: 0;
+      }
+
+      svg {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .likesCount {
+      width: 100%;
+      display: inline-flex;
+      justify-content: center;
+      padding: 0.5rem;
+      color: var(--third);
+
+      .animatedNumber {
+        display: inline-block;
+        animation: pop-number 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+    }
+
+    .commentsButton {
+      width: calc(100% - 1.5rem);
+      height: 100%;
+      margin: auto;
+      font-size: 1.2rem;
+      border-color: transparent;
+      border-radius: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--third);
+        color: currentColor;
+      }
+    }
+  }
+
+  .linkToComments {
+    width: 15rem;
+    max-width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0.1rem;
+    border-radius: 0.5rem;
+    margin: 1rem auto;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: var(--third);
+    color: var(--text);
+  }
+}
+
+.noComments {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.file__deleted {
+  display: none;
+  visibility: hidden;
+}
+
+@keyframes pop-number {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

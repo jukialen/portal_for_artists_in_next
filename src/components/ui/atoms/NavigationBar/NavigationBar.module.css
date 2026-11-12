@@ -1,0 +1,42 @@
+.tabs {
+  display: flex;
+  width: 100%;
+  height: 3.5rem;
+  position: fixed;
+  top: 0;
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  backdrop-filter: var(--backdrop-filter);
+  z-index: 3;
+
+  .arrow {
+    width: fit-content;
+    height: inherit;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0.5rem;
+    align-items: center;
+    position: absolute;
+
+    svg {
+      width: 3rem;
+      height: calc(3rem - 0.25rem);
+      transform: rotate(-90deg);
+    }
+
+    h3 {
+      width: 6rem;
+      margin-left: -0.5rem;
+    }
+  }
+
+  .title {
+    margin: auto;
+    font-size: 1.3rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .tabs {
+    position: unset;
+  }
+}

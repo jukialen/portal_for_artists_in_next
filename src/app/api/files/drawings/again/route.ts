@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { selectFiles } from 'constants/selects';
 import { FileType, IndexType } from 'types/global.types';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
-import { getFileRoleId } from 'utils/roles';
+import { getFileRoleId } from 'app/actions/roles';
+import { likeList } from 'app/actions/likes';
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
   const index = searchParams.get('index');
   const lastVisible = searchParams.get('lastVisible');
@@ -37,18 +37,22 @@ export async function GET(req: NextRequest) {
       for (const draw of data!) {
         const { fileId, name, fileUrl, tags, shortDescription, Users, authorId, createdAt, updatedAt } = draw;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
+        const role = await getFileRoleId(fileId, authorId!);
 
-        roleId == 'no id' && NextResponse.json(nextArray);
+        role.roleId == 'no id' && NextResponse.json(nextArray);
 
         nextArray.push({
           authorName: Users?.pseudonym!,
           fileId,
           name,
           shortDescription: shortDescription!,
+          authorId: authorId!,
           fileUrl,
           tags,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          roleId: role.roleId,
+          time: await getDate(updatedAt! || createdAt!),
+          liked: (await likeList(authorId!, 'fileId', fileId)).liked,
+          likes: (await likeList(authorId!, 'fileId', fileId)).likes,
         });
       }
 

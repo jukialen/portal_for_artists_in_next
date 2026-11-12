@@ -1,60 +1,21 @@
-import { DateObjectType, LangType } from 'types/global.types';
-import { getCurrentLocale } from '../locales/server';
+'use server';
 
-export const getDate = async (dateField: string, dataDateObject: DateObjectType) => {
+import { LangType } from 'types/global.types';
+import { getCurrentLocale } from 'locales/server';
+
+export const getDate = async (dateField: string) => {
   const locale: LangType = await getCurrentLocale();
-  const today = new Date(parseInt(dateField));
 
-  const second = today.getSeconds();
-  const hour = today.getHours();
-  const minute = today.getMinutes();
-  const day = today.getDate();
-  const month = today.getMonth() + 1;
-  const year = today.getFullYear();
+  if (!dateField) return '';
 
-  const currentTime = new Date();
-  const curretSeconds = currentTime.getSeconds();
-  const currentMinutes = currentTime.getMinutes();
-  const currentHour = currentTime.getHours();
-  const currentDay = currentTime.getDate();
-  const currentMonth = currentTime.getMonth() + 1;
-  const currentYear = currentTime.getFullYear();
+  const date = new Date(dateField);
 
-  const simpleSeconds = `${curretSeconds - second}${dataDateObject.second}`;
-  const simpleMinutes = `${currentMinutes - minute}${dataDateObject.minute}`;
-  const simpleHours = `${currentHour - hour}${dataDateObject.hour}`;
-  const simpleDays = `${currentDay - day}${dataDateObject.day}`;
-
-  const minutes = `${minute < 10 ? '0' : ''}${minute}`;
-  const hours = `${hour < 10 ? '0' : ''}${hour}`;
-  const days = `${day < 10 ? '0' : ''}${day}`;
-  const months = `${month < 10 ? '0' : ''}${month}`;
-  const years = `${year !== currentYear ? year : ''}`;
-
-  const simpleYearSeparator = `${year !== currentYear ? dataDateObject.yearDateSeparator : ''}`;
-  const simpleYears = locale === 'jp' ? `${years}${simpleYearSeparator}` : `${simpleYearSeparator}${years}`;
-
-  const jpTimes = `${hours}時${minutes}${dataDateObject.minute}`;
-  const jpDate = `${simpleYears}${months}月${days}${dataDateObject.day}`;
-
-  const times = `${hours}:${minutes}`;
-  const date = `${days}.${months}${simpleYears}`;
-
-  if (month === currentMonth && year === currentYear) {
-    if (day === currentDay) {
-      if (hour === currentHour) {
-        if (minute === currentMinutes) {
-          return simpleSeconds;
-        } else {
-          return simpleMinutes;
-        }
-      } else {
-        return simpleHours;
-      }
-    } else {
-      return simpleDays;
-    }
-  } else {
-    return locale === 'jp' ? `${jpDate} ${jpTimes}` : `${date} ${times}`;
-  }
+  return new Intl.DateTimeFormat(locale, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false, // optional, forces the 24-hour format
+  }).format(date);
 };

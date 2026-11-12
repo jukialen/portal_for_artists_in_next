@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { createServer } from 'utils/supabase/clientSSR';
 
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<NextResponse> {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
 

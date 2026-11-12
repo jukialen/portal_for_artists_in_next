@@ -6,7 +6,7 @@ import { LangType } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
 export const metadata: Metadata = HeadCom('Site with information about terms.');
 
@@ -187,7 +187,7 @@ export default async function Terms({ params }: { params: Promise<{ locale: Lang
       <p className={styles.param}>
         19) Integer sit amet tristique odio, eu aliquet ipsum. Morbi scelerisque neque sit amet purus vehicula pretium.
         Morbi felis libero, elementum quis ante in, commodo molestie leo. Ut sit amet justo id erat interdum euismod.
-        Suspendisse vel risus vitae mauris pellentesque finibus ac nec neque. Quisque at velit semper sem suscipit
+        Suspendisse vel risus vitae mauris pellentesque finibus ac nec neque. Gabriel iaculis semper sem suscipit
         ultricies. Praesent tincidunt posuere vulputate. Sed mauris ex, pharetra in mollis ut, faucibus ut magna. Cras
         pulvinar nulla dapibus, luctus mauris sit amet, egestas justo. Pellentesque hendrerit leo nec urna pellentesque
         dictum. Donec et mauris at ipsum blandit vehicula pellentesque vel lectus.

@@ -1,0 +1,68 @@
+.container {
+  width: calc(100% - 0.2rem);
+  margin: 1rem 0 0;
+  box-shadow: var(--box-shadow);
+  backdrop-filter: var(--backdrop-filter);
+
+  .comment {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    align-items: center;
+    padding: 0.5rem;
+
+    .rightSideComment {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .authorTopPartComment, .topPartComment {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .pseudonym {
+          font-size: 1.2rem;
+          text-align: inherit;
+          font-style: oblique;
+
+          &:hover {
+            scale: 1.1;
+            transition: scale 1.2s ease-in-out;
+          }
+        }
+
+        .date {
+          text-align: right;
+          font-size: 0.8rem;
+        }
+      }
+
+      .authorTopPartComment {
+        display: grid;
+        grid-template-columns: auto auto 1fr;
+        gap: 0.3rem;
+      }
+
+      .text {
+        line-height: 1.4;
+        white-space: pre-line;
+      }
+    }
+
+    &[data-part='image'] {
+      width: 2.5rem;
+      height: 2.5rem;
+      align-items: flex-start;
+    }
+
+    div:has([data-part='image']) {
+      display: flex;
+      height: 100%;
+      justify-content: center;
+    }
+  }
+
+  form {
+    margin-left: 1rem;
+  }
+}

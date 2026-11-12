@@ -1,0 +1,23 @@
+.loader {
+  height: 100dvh;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.spinner {
+  width: 3rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(farthest-side, var(--primary) 94%, #0000) top/.5rem 0.5rem no-repeat,
+    conic-gradient(#0000 30%, var(--primary));
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 0.5rem), var(--text) 0);
+  animation: s3 1s infinite linear;
+}
+
+@keyframes s3 {
+  100% {
+    transform: rotate(1turn);
+  }
+}

@@ -1,0 +1,23 @@
+.title {
+  width: inherit;
+  margin-left: 2.5rem;
+}
+
+.container__section {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 1rem auto;
+
+  .noFriends {
+    margin: 1rem auto;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .title {
+    display: none;
+  }
+}

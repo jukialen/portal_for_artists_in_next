@@ -1,0 +1,955 @@
+openapi: 3.0.0
+info:
+  title: Portal for Artists API
+  description: API documentation for Portal for Artists - a platform for artists to share and collaborate
+  version: 1.2.0
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:3000
+    description: Development Server
+  - url: https://pfartists.piotrbidny.ovh
+    description: Production Server
+
+tags:
+  - name: Authentication
+    description: User authentication and registration endpoints
+  - name: Friends
+    description: Friend management endpoints
+  - name: Files
+    description: File (graphics, videos, animations, drawings) management
+  - name: Comments
+    description: Comment management for posts
+  - name: File Comments
+    description: Comments on files
+  - name: Sub-Comments
+    description: Nested comments (second level)
+  - name: Last Comments
+    description: Fourth-level nested comments
+  - name: Likes
+    description: Like/favorite management for posts, files, and comments
+  - name: Posts
+    description: Group posts management
+  - name: Groups
+    description: Group management and listing
+  - name: Roles
+    description: User roles and permissions
+  - name: Contact
+    description: Contact and feedback endpoints
+
+paths:
+  # ==================== Authentication ====================
+  /api/auth/callback:
+    get:
+      tags:
+        - Authentication
+      summary: OAuth Callback Handler
+      description: Handles OAuth callback and exchanges authorization code for session using Supabase
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: OAuth authorization code
+      responses:
+        '200':
+          description: Session created successfully
+        '400':
+          description: Invalid authorization code
+        '500':
+          description: Server error
+
+  /api/auth/create-user:
+    post:
+      tags:
+        - Authentication
+      summary: Create New User
+      description: Creates new user after OAuth login, uploads avatar to storage, inserts user data into database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                displayName:
+                  type: string
+                  description: User's display name
+                pseudo:
+                  type: string
+                  description: User's pseudonym
+                avatar:
+                  type: string
+                  format: binary
+                  description: User's avatar image
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  displayName:
+                    type: string
+                  pseudo:
+                    type: string
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '500':
+          description: Server error
+
+  # ==================== Friends ====================
+  /api/friends/first:
+    get:
+      tags:
+        - Friends
+      summary: Get Initial Friends List
+      description: Fetches initial list of user's friends with profile info
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: User ID
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Friends list retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    pseudo:
+                      type: string
+                    photo:
+                      type: string
+                    plan:
+                      type: string
+                    isFavorite:
+                      type: boolean
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+
+  # ==================== Files ====================
+  /api/files/graphics/first:
+    get:
+      tags:
+        - Files
+      summary: Get Initial Graphics Files
+      description: Fetches first batch of graphic files by author with tags filtering
+      parameters:
+        - name: author
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Author pseudonym
+        - name: tags
+          in: query
+          schema:
+            type: string
+          description: Comma-separated tags to filter
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Graphics files retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      type: object
+                  lastVisible:
+                    type: string
+
+  /api/files/graphics/again:
+    get:
+      tags:
+        - Files
+      summary: Paginate Graphics Files
+      description: Paginates graphic files using lastVisible timestamp cursor
+      parameters:
+        - name: author
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: lastVisible
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Timestamp cursor for pagination
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Next batch of graphics files
+
+  /api/files/videos-animations/first:
+    get:
+      tags:
+        - Files
+      summary: Get Initial Videos/Animations
+      description: Fetches first batch of videos/animations with tag filtering
+      parameters:
+        - name: author
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: tags
+          in: query
+          schema:
+            type: string
+            description: Comma-separated tags
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Videos/animations files retrieved
+
+  /api/files/videos-animations/again:
+    get:
+      tags:
+        - Files
+      summary: Paginate Videos/Animations
+      parameters:
+        - name: author
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: lastVisible
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Next batch of videos/animations
+
+  /api/files/drawings/again:
+    get:
+      tags:
+        - Files
+      summary: Paginate Drawing Files
+      description: Paginates drawing files by index type (photographs, videos, animations)
+      parameters:
+        - name: author
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: indexType
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [photographs, videos, animations]
+        - name: lastVisible
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Next batch of drawing files
+
+  /api/files/next:
+    get:
+      tags:
+        - Files
+      summary: Get Next Batch of Files
+      description: Fetches next batch of files by category with pagination
+      parameters:
+        - name: pid
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Category/tag parameter
+        - name: lastVisible
+          in: query
+          schema:
+            type: string
+            description: Pagination cursor
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Next batch of files
+
+  # ==================== Comments ====================
+  /api/comments/new:
+    post:
+      tags:
+        - Comments
+      summary: Create New Comment
+      description: Creates new comment on post, file, or nested comment with role assignment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postId:
+                  type: string
+                  description: Post ID (if commenting on post)
+                fileId:
+                  type: string
+                  description: File ID (if commenting on file)
+                commentId:
+                  type: string
+                  description: Parent comment ID (if nested)
+                content:
+                  type: string
+                  description: Comment content
+                userId:
+                  type: string
+                  description: User ID
+              required:
+                - content
+                - userId
+      responses:
+        '201':
+          description: Comment created successfully
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '500':
+          description: Server error
+
+  /api/comments/first:
+    get:
+      tags:
+        - Comments
+      summary: Get Initial Comments
+      description: Fetches initial comments for a post with author info and likes
+      parameters:
+        - name: postId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Comments retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /api/comments/again:
+    get:
+      tags:
+        - Comments
+      summary: Paginate Comments
+      description: Paginates comments using lastVisible timestamp cursor
+      parameters:
+        - name: postId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: lastVisible
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Next batch of comments
+
+  /api/comments/update:
+    patch:
+      tags:
+        - Comments
+      summary: Update Comment
+      description: Updates comment content in any comments table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Comment ID
+                content:
+                  type: string
+                  description: Updated comment content
+                table:
+                  type: string
+                  enum: [Comments, FilesComments, SubComments, LastComments]
+                  description: Database table name
+              required:
+                - id
+                - content
+                - table
+      responses:
+        '200':
+          description: Comment updated successfully
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '404':
+          description: Comment not found
+
+  /api/comments/delete:
+    post:
+      tags:
+        - Comments
+      summary: Delete Comment
+      description: Deletes comment from specified table by id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Comment ID
+                table:
+                  type: string
+                  enum: [Comments, FilesComments, SubComments, LastComments]
+              required:
+                - id
+                - table
+      responses:
+        '200':
+          description: Comment deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Comment not found
+
+  # ==================== File Comments ====================
+  /api/files-comments/again:
+    get:
+      tags:
+        - File Comments
+      summary: Paginate File Comments
+      description: Paginates file comments using fileId as cursor
+      parameters:
+        - name: fileId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: lastVisible
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Next batch of file comments
+
+  # ==================== Sub-Comments ====================
+  /api/sub-comments/first:
+    get:
+      tags:
+        - Sub-Comments
+      summary: Get Initial Sub-Comments
+      description: Fetches initial sub-comments for a comment or file-comment
+      parameters:
+        - name: commentId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Sub-comments retrieved
+
+  /api/sub-comments/again:
+    get:
+      tags:
+        - Sub-Comments
+      summary: Paginate Sub-Comments
+      description: Paginates sub-comments with timestamp-based cursor
+      parameters:
+        - name: commentId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: lastVisible
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Next batch of sub-comments
+
+  # ==================== Last Comments ====================
+  /api/last-comments/first:
+    get:
+      tags:
+        - Last Comments
+      summary: Get Initial Last-Level Comments
+      description: Fetches initial last-level comments under a sub-comment
+      parameters:
+        - name: subCommentId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Last-level comments retrieved
+
+  /api/last-comments/again:
+    get:
+      tags:
+        - Last Comments
+      summary: Paginate Last-Level Comments
+      description: Paginates last-level comments using timestamp cursor
+      parameters:
+        - name: subCommentId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: lastVisible
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Next batch of last-level comments
+
+  # ==================== Likes ====================
+  /api/likes/list:
+    get:
+      tags:
+        - Likes
+      summary: Get Like Status and Count
+      description: Fetches like count and like status for posts, files, comments (all nested levels)
+      parameters:
+        - name: contentId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Post, file, or comment ID
+        - name: contentType
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [post, file, comment, fileComment, subComment, lastComment]
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Like information retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  isLiked:
+                    type: boolean
+
+  /api/likes/toggle:
+    post:
+      tags:
+        - Likes
+      summary: Add Like
+      description: Adds like to post, file, or comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contentId:
+                  type: string
+                contentType:
+                  type: string
+                  enum: [post, file, comment, fileComment, subComment, lastComment]
+                userId:
+                  type: string
+              required:
+                - contentId
+                - contentType
+                - userId
+      responses:
+        '201':
+          description: Like added successfully
+        '401':
+          description: Unauthorized
+
+    delete:
+      tags:
+        - Likes
+      summary: Remove Like
+      description: Removes like from post, file, or comment
+      parameters:
+        - name: contentId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: contentType
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [post, file, comment, fileComment, subComment, lastComment]
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Like removed successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Like not found
+
+  # ==================== Posts ====================
+  /api/posts/again:
+    get:
+      tags:
+        - Posts
+      summary: Paginate Group Posts
+      description: Paginates group posts with admin role check, returns likes and comment counts
+      parameters:
+        - name: groupId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: lastVisible
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Next batch of group posts
+
+  # ==================== Groups ====================
+  /api/groups/list:
+    get:
+      tags:
+        - Groups
+      summary: Get Groups List
+      description: Fetches paginated list of all groups with logos
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: lastVisible
+          in: query
+          schema:
+            type: string
+            description: Pagination cursor
+      responses:
+        '200':
+          description: Groups list retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    logo:
+                      type: string
+
+  /api/groups/mods-users/list:
+    get:
+      tags:
+        - Groups
+      summary: Get User's Groups by Role
+      description: Fetches groups where current user is moderator or member, separated by role
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User's groups retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  moderator:
+                    type: array
+                    items:
+                      type: object
+                  member:
+                    type: array
+                    items:
+                      type: object
+
+  /api/groups/admin/list:
+    get:
+      tags:
+        - Groups
+      summary: Get Admin Groups
+      description: Fetches groups where current user is admin
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Admin groups retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  # ==================== Roles ====================
+  /api/roles:
+    get:
+      tags:
+        - Roles
+      summary: Get Role Name
+      description: Gets role name by roleId and userId combination
+      parameters:
+        - name: roleId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Role retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roleName:
+                    type: string
+
+  /api/roles/give:
+    post:
+      tags:
+        - Roles
+      summary: Give Role
+      description: Retrieves role name by roleId
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                roleId:
+                  type: string
+              required:
+                - roleId
+      responses:
+        '200':
+          description: Role retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roleName:
+                    type: string
+
+  /api/roles/group:
+    get:
+      tags:
+        - Roles
+      summary: Get Group-Specific Role
+      description: Gets group-specific role for user by groupsPostsRoleId and userId
+      parameters:
+        - name: groupsPostsRoleId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Group role retrieved
+
+  # ==================== Contact ====================
+  /api/contact:
+    post:
+      tags:
+        - Contact
+      summary: Send Contact Form
+      description: Sends contact form submission via Mailer Send email service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Sender name
+                email:
+                  type: string
+                  format: email
+                  description: Sender email
+                subject:
+                  type: string
+                  description: Message subject
+                message:
+                  type: string
+                  description: Message content
+              required:
+                - name
+                - email
+                - subject
+                - message
+      responses:
+        '200':
+          description: Message sent successfully
+        '400':
+          description: Invalid input
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        status:
+          type: integer

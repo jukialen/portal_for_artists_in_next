@@ -1,0 +1,123 @@
+:root {
+  interpolate-size: allow-keywords;
+}
+
+* {
+  box-sizing: border-box;
+  font-family:
+    'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+}
+
+
+body {
+  width: 100%;
+  min-height: 100dvh;
+  background-color: var(--background);
+  color: var(--text);
+  margin-top: calc(env(safe-area-inset-top) - 6rem);
+  padding-top: 3rem;
+  margin-bottom: calc(env(safe-area-inset-bottom) - 6rem);
+  padding-bottom: 3rem;
+  overflow: hidden;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--secondary);
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  h4 {
+    font-size: 1.2rem;
+  }
+
+  a,
+  a:is([href], [class]) {
+    text-decoration: none;
+    color: var(--primary);
+    cursor: pointer;
+
+    &:visited {
+      color: var(--visited);
+    }
+
+    &:focus {
+      color: var(--focus);
+    }
+
+    &:hover {
+      color: var(--hover);
+    }
+
+    &:active {
+      color: var(--active);
+    }
+  }
+
+  button,
+  button[class],
+  a[class*='menu_buttons'] {
+    background-color: transparent;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--hover) !important;
+      background-color: var(--hover) !important;
+    }
+
+    &:focus {
+      border-color: var(--focus) !important;
+      background-color: var(--focus) !important;
+    }
+
+    &:active {
+      border-color: var(--active) !important;
+      background-color: var(--active) !important;
+      color: revert !important;
+
+      svg {
+        color: inherit !important;
+      }
+    }
+  }
+}
+
+.button {
+  width: min(95dvw, 21.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  margin: 1rem auto;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  border: 0.1rem solid var(--secondary);
+  cursor: pointer;
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+svg:not([class]),
+svg[class*='_icon'],
+button {
+  color: currentColor;
+}
+
+button[class*='__choosePlan']:focus svg {
+  color: var(--background);
+}

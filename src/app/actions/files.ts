@@ -1,22 +1,23 @@
 'use server';
 
-import { FileType, IndexType, Tags } from '../../types/global.types';
-import { createServer } from '../../utils/supabase/clientSSR';
-import { selectFiles } from '../../constants/selects';
-import { getFileRoleId } from '../../utils/roles';
-import { getDate } from '../../helpers/getDate';
-import { dateData } from '../../helpers/dateData';
+import { revalidatePath } from 'next/cache';
+import { selectFiles } from 'constants/selects';
+import { FileType, IndexType, Tags } from 'types/global.types';
 
-export const translated = async () => {
-  const { getScopedI18n } = await import('../../locales/server');
+import { getDate } from 'helpers/getDate';
+import { getLinkUrl } from 'helpers/getLinkUrl';
+import { createServer } from 'utils/supabase/clientSSR';
+import { getFileRoleId } from 'app/actions/roles';
+import { likeList } from 'app/actions/likes';
 
-  const tComments = await getScopedI18n('Comments');
-
-  return tComments('noComments');
-};
-
-export const graphics = async (maxItems: number, authorId: string, step: 'first' | 'again', lastVisible?: string) => {
+export const graphics = async (
+  maxItems: number,
+  authorId: string,
+  step: 'first' | 'again' = 'first',
+  lastVisible?: string,
+): Promise<FileType[]> => {
   const supabase = await createServer();
+  const inArray: Tags[] = ['realistic', 'manga', 'anime', 'comics', 'photographs'];
 
   const filesArray: FileType[] = [];
 
@@ -26,29 +27,35 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
         .from('Files')
         .select(selectFiles)
         .eq('authorId', authorId)
-        .in('tags', ['realistic', 'manga', 'anime', 'comics', 'photographs'])
+        .in('tags', inArray)
         .order('createdAt', { ascending: false })
         .limit(maxItems);
 
       if (data?.length === 0 || !!error) return filesArray;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = file;
+        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
+        const likeData = await likeList(authorId, 'fileId', fileId);
+        const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
 
-        if (roleId === 'no id') return filesArray;
+        const role = await getFileRoleId(fileId, authorId);
 
         filesArray.push({
+          authorId,
+          roleId: role.roleId,
           fileId,
           name,
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          fileUrl: photoLink,
+          tags,
+          time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
+          liked: likeData?.liked,
+          likes: likeData?.likes,
         });
       }
       return filesArray;
@@ -57,7 +64,7 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
         .from('Files')
         .select(selectFiles)
         .eq('authorId', authorId)
-        .in('tags', ['realistic', 'manga', 'anime', 'comics', 'photographs'])
+        .in('tags', inArray)
         .gt('createdAt', lastVisible)
         .order('createdAt', { ascending: false })
         .limit(maxItems);
@@ -65,31 +72,38 @@ export const graphics = async (maxItems: number, authorId: string, step: 'first'
       if (data?.length === 0 || !!error) return filesArray;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = file;
+        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
-
-        if (roleId === 'no id') return filesArray;
+        const likeData = await likeList(authorId, 'fileId', fileId);
+        const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
+        const role = await getFileRoleId(fileId, authorId);
 
         filesArray.push({
+          authorId,
+          roleId: role.roleId,
           fileId,
           name,
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          fileUrl: photoLink,
+          tags,
+          time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
+          liked: likeData?.liked,
+          likes: likeData?.likes,
         });
       }
 
       return filesArray;
     } else {
       console.log('Incorrect step');
+      return filesArray;
     }
   } catch (e) {
     console.error(e);
+    return filesArray;
   }
 };
 
@@ -97,9 +111,9 @@ export const videosAnimations = async (
   tag: 0 | 1,
   maxItems: number,
   authorId: string,
-  step: 'first' | 'again',
+  step: 'first' | 'again' = 'first',
   lastVisible?: string,
-) => {
+): Promise<FileType[]> => {
   const supabase = await createServer();
   const tags: Tags[] = ['animations', 'videos'];
 
@@ -118,21 +132,29 @@ export const videosAnimations = async (
       if (data?.length === 0 || !!error) return filesArray;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = file;
+        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
+        const likeData = await likeList(authorId, 'fileId', fileId);
+        const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
+        const role = await getFileRoleId(fileId, authorId!);
 
-        if (roleId === 'no id') return filesArray;
+        if (role.roleId === 'no id') return filesArray;
+
         filesArray.push({
+          authorId,
+          roleId: role.roleId,
+          tags,
           fileId,
           name,
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          fileUrl: photoLink,
+          time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || undefined,
+          liked: likeData?.liked,
+          likes: likeData?.likes,
         });
       }
       return filesArray;
@@ -149,27 +171,35 @@ export const videosAnimations = async (
       if (data?.length === 0 || !!error) return filesArray;
 
       for (const file of data!) {
-        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = file;
+        const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, tags } = file;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
+        const likeData = await likeList(authorId, 'fileId', fileId);
+        const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
+        const role = await getFileRoleId(fileId, authorId!);
 
-        if (roleId === 'no id') return filesArray;
+        if (role.roleId === 'no id') return filesArray;
 
         filesArray.push({
+          authorId,
+          roleId: role.roleId,
+          tags,
           fileId,
           name,
           shortDescription: shortDescription!,
           authorName: Users?.pseudonym!,
           authorProfilePhoto: Users?.profilePhoto!,
-          fileUrl,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          fileUrl: photoLink,
+          time: await getDate(updatedAt! || createdAt!),
           createdAt,
           updatedAt: updatedAt || '',
+          liked: likeData?.liked,
+          likes: likeData?.likes,
         });
       }
       return filesArray;
     } else {
       console.log('Incorrect step');
+      return filesArray;
     }
   } catch (e) {
     console.error('no your videos', e);
@@ -177,7 +207,7 @@ export const videosAnimations = async (
   }
 };
 
-export const drawings = async (index: IndexType, lastVisible: string, maxItems: number) => {
+export const drawings = async (index: IndexType, lastVisible: string, maxItems: number): Promise<FileType[]> => {
   const supabase = await createServer();
 
   const nextArray: FileType[] = [];
@@ -201,18 +231,24 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
       for (const draw of data!) {
         const { fileId, name, fileUrl, tags, shortDescription, Users, authorId, createdAt, updatedAt } = draw;
 
-        const roleId = await getFileRoleId(fileId, authorId!);
+        const likeData = await likeList(authorId!, 'fileId', fileId);
+        const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
+        const role = await getFileRoleId(fileId, authorId!);
 
-        if (roleId == 'no id') return nextArray;
+        if (role.roleId == 'no id') return nextArray;
 
         nextArray.push({
           authorName: Users?.pseudonym!,
           fileId,
+          authorId: authorId!,
+          roleId: role.roleId,
           name,
           shortDescription: shortDescription!,
-          fileUrl,
+          fileUrl: photoLink,
           tags,
-          time: await getDate(updatedAt! || createdAt!, await dateData()),
+          time: await getDate(updatedAt! || createdAt!),
+          liked: likeData?.liked,
+          likes: likeData?.likes,
         });
       }
 
@@ -223,5 +259,56 @@ export const drawings = async (index: IndexType, lastVisible: string, maxItems: 
   } catch (e) {
     console.error(e);
     return nextArray;
+  }
+};
+
+export const updateProfilePhoto = async (
+  formData: FormData,
+): Promise<{ success: boolean; error?: string; path?: string }> => {
+  const file = formData.get('photo') as File | null;
+  if (!file) return { success: false, error: 'no-file' };
+
+  try {
+    const supabase = await createServer();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: 'unauthorized' };
+
+    const pathPhoto = `/${user.id}/${file.name}`;
+
+    const { data: fileList, error: listError } = await supabase.storage.from('profiles').list(user.id);
+
+    if (!listError && fileList && fileList.length > 0) {
+      const filesToRemove = fileList.map((f) => `${user.id}/${f.name}`);
+      await supabase.storage.from('profiles').remove(filesToRemove);
+    }
+
+    const { data, error: uploadError } = await supabase.storage.from('profiles').upload(pathPhoto, file, {
+      contentType: file.type,
+      upsert: true,
+    });
+
+    if (uploadError || !data?.path) {
+      console.error(uploadError);
+      return { success: false, error: uploadError?.message || 'upload-error' };
+    }
+
+    const { error: dbError } = await supabase
+      .from('Users')
+      .update({ profilePhoto: data.path })
+      .eq('id', user.id);
+
+    if (dbError) {
+      console.error(dbError);
+      return { success: false, error: dbError.message };
+    }
+
+    revalidatePath('/', 'layout');
+    return { success: true, path: data.path };
+  } catch (e: any) {
+    console.error(e);
+    return { success: false, error: e?.message || 'unknown-error' };
   }
 };

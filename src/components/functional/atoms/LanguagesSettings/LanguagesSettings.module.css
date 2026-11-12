@@ -1,0 +1,111 @@
+.langMenu {
+  display: flex;
+  width: inherit;
+  height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.2rem;
+
+  > div {
+    display: inline-flex;
+    align-items: center;
+
+    .icon {
+      width: 1.4rem;
+      height: 1.4rem;
+      margin-right: 0.2rem;
+    }
+  }
+
+  .languages {
+    width: 6rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 1.1rem;
+    list-style-type: none;
+    position: relative;
+    border-radius: 5px;
+    padding: 0;
+    font-weight: bold;
+    cursor: pointer;
+    color: currentColor;
+
+    .languages__select {
+      display: flex;
+      height: 2.5rem;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      border-radius: 0.5rem;
+      border: 0.1rem solid var(--secondary);
+      background-color: transparent;
+
+      &:hover {
+        background-color: var(--secondary);
+      }
+    }
+
+    .language, .language__active {
+      width: inherit;
+      flex-direction: column;
+      position: absolute;
+      top: 2.5rem;
+      border-radius: 0.5rem;
+      border: 0.2rem groove var(--secondary__opacity);
+      background-color: var(--background__opacity);
+      box-shadow: var(--box-shadow);
+      -webkit-backdrop-filter: var(--backdrop-filter);
+      backdrop-filter: var(--backdrop-filter);
+      z-index: 2;
+
+      .languages__version {
+        width: 100%;
+        height: 2.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.25rem 0;
+        font-size: 1rem;
+
+        &:first-child {
+          border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        &:last-child {
+          border-radius: 0 0 0.5rem 0.5rem;
+        }
+      }
+    }
+
+    .language {
+      display: none;
+    }
+
+    .language__active {
+      display: flex;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .langMenu {
+    > div {
+      width: 11rem;
+    }
+  }
+}
+
+@media (min-width: 1490px) {
+  .langMenu {
+    .languages {
+      li.languages__select {
+        width: 5.98rem;
+
+        p {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}

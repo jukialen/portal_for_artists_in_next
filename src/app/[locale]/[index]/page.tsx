@@ -1,35 +1,29 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { setStaticParamsLocale } from 'next-international/server';
-import { createServer } from 'utils/supabase/clientSSR';
 
 import { HeadCom } from 'constants/HeadCom';
 import { selectFiles } from 'constants/selects';
-import { DateObjectType, FileType, IndexType, LangType, Tags } from 'types/global.types';
+import { FileType, IndexType, LangType } from 'types/global.types';
 
 import { getI18n } from 'locales/server';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
+import { getLinkUrl } from 'helpers/getLinkUrl';
 import { getUserData } from 'helpers/getUserData';
+import { getFileRoleId } from 'app/actions/roles';
+import { likeList } from 'app/actions/likes';
+import { createServer } from 'utils/supabase/clientSSR';
 
 const FileContainerClient = dynamic(() =>
-  import('components/organisms/FileContainerClient/FileContainerClient').then((fc) => fc.FileContainerClient),
+  import('components/functional/organisms/FileContainerClient/FileContainerClient').then(
+    (fc) => fc.FileContainerClient,
+  ),
 );
 
-import styles from './page.module.scss';
-import { Database } from 'types/database.types';
+import styles from './page.module.css';
 
-const downloadDrawings = async ({
-  index,
-  maxItems,
-  dataDateObject,
-}: {
-  index: IndexType;
-  locale: LangType;
-  maxItems: number;
-  dataDateObject: DateObjectType;
-}) => {
+const downloadDrawings = async ({ index, maxItems }: { index: IndexType; locale: LangType; maxItems: number }) => {
   const filesArray: FileType[] = [];
 
   try {
@@ -45,15 +39,24 @@ const downloadDrawings = async ({
     if (!!error || data?.length === 0) return filesArray;
 
     for (const draw of data!) {
-      const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt } = draw;
+      const { fileId, name, shortDescription, Users, fileUrl, createdAt, updatedAt, authorId, tags } = draw;
+
+      const role = await getFileRoleId(fileId, authorId!);
+      const photoLink = await getLinkUrl('basic', `/#`, fileUrl);
+      if (role.roleId === 'no id') return filesArray;
 
       filesArray.push({
-        authorName: Users?.pseudonym!,
         fileId,
-        name,
         shortDescription: shortDescription!,
-        fileUrl,
-        time: await getDate(updatedAt! || createdAt!, dataDateObject),
+        fileUrl: photoLink,
+        tags,
+        name,
+        authorName: Users?.pseudonym!,
+        authorId: authorId!,
+        roleId: role.roleId,
+        time: await getDate(updatedAt || createdAt!),
+        liked: (await likeList(authorId!, 'fileId', fileId)).liked,
+        likes: (await likeList(authorId!, 'fileId', fileId)).likes,
       });
     }
 
@@ -80,7 +83,7 @@ export default async function Drawings({ params }: { params: Promise<{ locale: L
   const maxItems = 30;
   const userData = await getUserData();
 
-  const filesArray = await downloadDrawings({ index, locale, maxItems, dataDateObject: await dateData() });
+  const filesArray = await downloadDrawings({ index, locale, maxItems });
 
   return (
     <article className={styles.categories__index__in__account}>

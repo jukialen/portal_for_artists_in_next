@@ -176,6 +176,7 @@ export default {
     description: 'Description',
     fileTitle: 'Adding a file',
     tags: 'Tags',
+    shortDescription: 'short description for file',
     file: 'File',
     send: 'Send',
     uploadFile: 'File has been uploaded.',
@@ -188,6 +189,7 @@ export default {
   AddingGroup: {
     title: 'Create a group',
     name: 'Group name',
+    success: 'The group was created successfully! 😄',
   },
   Groups: {
     join: 'Join',
@@ -213,6 +215,7 @@ export default {
       more: 'More',
       all: 'These are already all groups.',
     },
+    allGroups: 'All groups',
     noGroups: 'No favorite group',
     noPermission: 'In order to can see a posts, you need to join to the group.',
     deleteGroup: 'Delete Group',
@@ -356,7 +359,8 @@ export default {
   Plans: {
     title: 'Pfartists plans',
     subTitle: 'Choose plan, which is the best for you',
-    period: '/MONTHLY',
+    periodMonth: 'monthly',
+    periodYear: 'yearly',
     grLength: 'Unlimited graphics files*',
     animLength: 'Unlimited animations*',
     vidLength: 'Unlimited videos*',
@@ -373,6 +377,7 @@ export default {
     formats: '* supported formats: ',
     supInfo: '** contact through e-mail within 4 working days',
     pSupInfo: '*** contact through e-mail within 2 working days. Additionally access to Slack.',
+    unavailable: 'Unavailable',
   },
   EmailVerification: {
     sendedSuccess: 'Please check your email and click the link in it.',

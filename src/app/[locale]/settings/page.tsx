@@ -3,21 +3,21 @@ import Link from 'next/link';
 import { setStaticParamsLocale } from 'next-international/server';
 
 import { getUserData } from 'helpers/getUserData';
+import { getSubscriptionsOptions } from 'helpers/Paddle/paddle.server';
 
 import { getI18n, getScopedI18n } from 'locales/server';
 
 import { HeadCom } from 'constants/HeadCom';
 import { FilesUploadType, LangType } from 'types/global.types';
 
-import { ChangePseuDescData } from 'components/atoms/ChangePseuDescData/ChangePseuDescData';
-import { LanguagesSettings } from 'components/atoms/LanguagesSettings';
-import { ModeContainer } from 'components/atoms/ModeContainer';
-import { DeleteAccount } from 'components/atoms/DeleteAccount/DeleteAccount';
-import { AccountData } from 'components/organisms/AccountData/AccountData';
+import { ChangePseuDescData } from 'components/functional/atoms/ChangePseuDescData/ChangePseuDescData';
+import { LanguagesSettings } from 'components/functional/atoms/LanguagesSettings';
+import { ModeContainer } from 'components/functional/atoms/ModeContainer';
+import { DeleteAccount } from 'components/functional/atoms/DeleteAccount/DeleteAccount';
+import { AccountData } from 'components/functional/organisms/AccountData/AccountData';
 
-import styles from './page.module.scss';
+import styles from './page.module.css';
 
-// @ts-ignore
 export const metadata: Metadata = HeadCom('Settings site for unlogged in users.');
 
 export default async function Settings({ params }: { params: Promise<{ locale: LangType }> }) {
@@ -35,6 +35,8 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
     unsupportedFileType: tAnotherForm('unsupportedFileType'),
   };
 
+  const subscriptionsOptionsList = await getSubscriptionsOptions(locale);
+
   const userData = await getUserData();
 
   return (
@@ -43,13 +45,12 @@ export default async function Settings({ params }: { params: Promise<{ locale: L
 
       <div className={styles.flow}>
         <ModeContainer light={tSettings('Mode.light')} dark={tSettings('Mode.dark')} />
-
         <LanguagesSettings locale={locale} />
       </div>
 
       {!!userData?.id && (
         <>
-          <AccountData userData={userData!} />
+          <AccountData userData={userData!} subscriptionsOptionsList={subscriptionsOptionsList} locale={locale} />
           <h3>{t('Nav.profile')}</h3>
           <ChangePseuDescData userData={userData!} fileTranslated={fileTranslated} />
         </>

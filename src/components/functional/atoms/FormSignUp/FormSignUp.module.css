@@ -1,0 +1,64 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 20rem;
+  margin: 0 auto;
+
+  .title {
+    margin: 2.5rem auto;
+    text-align: center;
+    font-size: 1.8rem;
+  }
+
+  .inputForm,
+  .inputForm__error {
+    display: block;
+    width: min(95dvw, 20rem);
+    margin: 1rem auto 0.5rem;
+    border-radius: 1rem;
+    padding: 0.75rem 1rem;
+    border-color: var(--third);
+    background-color: transparent;
+    font-size: 1rem;
+
+    &::placeholder {
+      color: inherit;
+    }
+  }
+
+  .inputGroup {
+    display: grid;
+    gap: 1rem;
+    position: relative;
+
+    .showingPass {
+      height: 2rem;
+      width: 2rem;
+      position: absolute;
+      top: 1.4rem;
+      right: 0.5rem;
+      border-radius: 0.75rem;
+      color: var(--text);
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .inputForm {
+      border-color: var(--third);
+
+      &:hover {
+        border-color: var(--third__opacity);
+      }
+
+      &__error {
+        border-color: var(--required);
+      }
+    }
+  }
+
+  .submit__button {
+    width: 10rem;
+    margin: 1.5rem auto 0;
+    color: var(--text);
+  }
+}

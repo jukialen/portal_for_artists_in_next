@@ -1,0 +1,71 @@
+'use client';
+
+import { Suspense, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
+
+import { FileType, GalleryType } from 'types/global.types';
+
+import { videosAnimations } from 'app/actions/files';
+
+import { Wrapper } from 'components/wrappers/Wrapper/Wrapper';
+import LoadingPage from 'components/ui/atoms/LoadingPage/LoadingPage';
+
+const MoreButton = dynamic(() => import('components/ui/atoms/MoreButton/MoreButton').then((mb) => mb.MoreButton), {
+  ssr: false,
+});
+const FileContainer = dynamic(() =>
+  import('components/functional/molecules/FileContainer/FileContainer').then((fc) => fc.FileContainer),
+);
+
+export const VideoGallery = ({ id, pseudonym, author, tGallery, firstVideos }: GalleryType) => {
+  const maxItems = 30;
+
+  const [userVideos, setUserVideos] = useState(firstVideos!);
+  const [lastVisible, setLastVisible] = useState(
+    firstVideos?.length === maxItems ? firstVideos[firstVideos!.length - 1].createdAt : '',
+  );
+  let [i, setI] = useState(1);
+  const [loadingFiles, setLoadingFiles] = useState(false);
+
+  const pathname = usePathname();
+
+  const nextElementsAction = async () => {
+    setLoadingFiles(!loadingFiles);
+
+    try {
+      const filesArray: FileType[] = (await videosAnimations(1, maxItems, id, 'again', lastVisible!))!;
+
+      const nextArray = userVideos.concat([...filesArray]);
+      setUserVideos(nextArray);
+
+      if (nextArray.length === maxItems) {
+        setLastVisible(nextArray[nextArray.length - 1].createdAt);
+        setI(i++);
+      }
+      setLoadingFiles(!loadingFiles);
+    } catch (e) {
+      console.error('no your videos', e);
+    }
+  };
+
+  return (
+    <article>
+      {decodeURIComponent(pathname!) === `/account/${author}` && <h2 className="title">{tGallery?.userVideosTitle}</h2>}
+
+      <Wrapper>
+        {userVideos.length > 0 ? (
+          userVideos.map((videos: FileType, index) => (
+            <Suspense key={index} fallback={<LoadingPage />}>
+              <FileContainer fileData={{ ...videos, authorBool: videos.authorName === pseudonym }} />
+            </Suspense>
+          ))
+        ) : (
+          <div>nie ma nic</div>
+        )}
+
+        {!!lastVisible && userVideos.length === maxItems * i && <MoreButton nextElementsAction={nextElementsAction} />}
+      </Wrapper>
+    </article>
+  );
+};

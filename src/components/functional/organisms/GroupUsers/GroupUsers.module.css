@@ -1,0 +1,38 @@
+.tilesSection {
+  width: min(95dvw, 43rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto 6rem;
+
+  .sectionTitleNewGroup {
+    width: inherit;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 .5rem 2rem;
+
+    .sectionTitleNewGroup__button {
+      width: fit-content;
+      height: 2.5rem;
+      margin: 0;
+      border-color: var(--third);
+    }
+  }
+
+  .title {
+    width: 90%;
+    font-size: 1.4rem;
+    margin-left: 1rem;
+    margin-top: 2rem;
+  }
+
+  .noGroups {
+    width: 80%;
+    margin: 2rem auto;
+    font-size: 1rem;
+    text-align: center;
+  }
+}
+

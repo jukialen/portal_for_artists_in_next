@@ -3,14 +3,13 @@ import { setStaticParamsLocale } from 'next-international/server';
 import { notFound } from 'next/navigation';
 
 import { HeadCom } from 'constants/HeadCom';
-import { DateObjectType, LangType, PostsType } from 'types/global.types';
+import { LangType, PostsType } from 'types/global.types';
 
-import { dateData } from 'helpers/dateData';
 import { getDate } from 'helpers/getDate';
 import { getUserData } from 'helpers/getUserData';
-import { createServer } from '../../../../../utils/supabase/clientSSR';
+import { createServer } from 'utils/supabase/clientSSR';
 
-import { Post } from 'components/molecules/Post/Post';
+import { Post } from 'components/functional/molecules/Post/Post';
 
 type PropsType = {
   params: Promise<{
@@ -27,7 +26,7 @@ export async function generateMetadata({ params }: PropsType): Promise<Metadata>
   return { ...HeadCom(`${authorName} user post subpage for group ${name}`) };
 }
 
-async function postOne(postId: string, name: string, dataDateObject: DateObjectType) {
+async function postOne(postId: string, name: string) {
   let postsArray: PostsType = {
     authorId: '',
     authorName: '',
@@ -40,7 +39,6 @@ async function postOne(postId: string, name: string, dataDateObject: DateObjectT
     roleId: '',
     shared: 0,
     title: '',
-    idLiked: '',
   };
 
   const supabase = await createServer();
@@ -56,12 +54,12 @@ async function postOne(postId: string, name: string, dataDateObject: DateObjectT
 
     const { data: lData } = await supabase.from('Liked').select('id, userId').match({ postId, userId: authorId });
 
-    const indexCurrentUser = lData?.findIndex((v) => v.userId === authorId) || -1;
+    const likedData = lData?.find((v: { userId: string }) => v.userId === authorId);
 
     postsArray = {
       authorName: Users?.pseudonym!,
       authorProfilePhoto: Users?.profilePhoto!,
-      liked: indexCurrentUser >= 0,
+      liked: !!likedData,
       postId,
       title,
       content,
@@ -71,8 +69,7 @@ async function postOne(postId: string, name: string, dataDateObject: DateObjectT
       authorId,
       groupId,
       roleId: Roles?.id!,
-      date: await getDate(updatedAt! || createdAt!, dataDateObject),
-      idLiked: !!lData && lData?.length > 0 ? lData[indexCurrentUser].id : '',
+      date: await getDate(updatedAt || createdAt!),
     };
   }
   return postsArray;
@@ -86,7 +83,7 @@ export default async function PostFromGroup({ params }: PropsType) {
 
   const userData = await getUserData();
 
-  const postOnGroup = await postOne(postId, name, await dateData());
+  const postOnGroup = await postOne(postId, name);
 
   if (!postOnGroup) return notFound();
 

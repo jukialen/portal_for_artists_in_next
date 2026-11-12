@@ -1,0 +1,46 @@
+.plansContainer {
+  display: flex;
+  flex-direction: column;
+  width: clamp(24rem, 100%, 77rem);
+  align-items: center;
+  gap: 1rem;
+  margin-left: 1.5rem;
+
+  .cycleButtonContainer {
+    width: inherit;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+
+    .cycleButton,
+    .cycleButton__active {
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.5rem;
+      border: 2px groove var(--primary__opacity);
+      font-size: 1rem;
+    }
+
+    .cycleButton__active {
+      background-color: var(--primary__opacity);
+    }
+  }
+
+  .plansDataContainer {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .plansWrapper {
+    display: flex;
+    gap: 2rem;
+    width: max-content;
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .plansContainer .plansWrapper {
+    padding-right: 3rem;
+  }
+}

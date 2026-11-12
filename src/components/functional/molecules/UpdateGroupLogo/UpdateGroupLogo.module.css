@@ -1,0 +1,81 @@
+.updateLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  anchor-name: --update-logo;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 2.8rem;
+  height: 2.8rem;
+  margin: 0 0.5rem;
+  font-size: 1.4rem;
+  border: 0.1rem solid var(--primary) !important;
+  border-radius: 0.75rem;
+  background-color: var(--primary__opacity) !important;
+  color: black;
+  cursor: pointer;
+}
+
+.modal {
+  position-anchor: --update-logo;
+  top: anchor(bottom);
+  right: anchor(right);
+  position-area: bottom span-left;
+  position-try-options: flip-block;
+  position-try-fallbacks: flip-block;
+  padding: 1rem;
+  background-color: var(--primary__opacity);
+  box-shadow: var(--box-shadow);
+  border-radius: 0.5rem;
+  border: 2px groove var(--primary__opacity);
+  -webkit-backdrop-filter: var(--backdrop-filter);
+  backdrop-filter: var(--backdrop-filter);
+  color: var(--text);
+
+  .input,
+  .input__error {
+    padding: 0.35rem 1rem;
+    margin: 0.5rem auto 1.5rem;
+    border-color: var(--third);
+  }
+
+  .input__error {
+    border-color: var(--required);
+  }
+
+  p {
+    color: var(--third);
+  }
+
+  .img {
+    display: flex;
+    justify-content: center;
+    width: 12rem;
+    height: 12rem;
+    margin: 1rem auto;
+    border-radius: 1rem;
+  }
+
+  .alert {
+    position: relative;
+    bottom: 2.5rem;
+  }
+
+  .actionButton {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+
+    .cancel,
+    .submit {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+    }
+
+    .submit {
+      border-color: var(--required);
+      background-color: var(--third);
+    }
+  }
+}
